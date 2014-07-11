@@ -34,7 +34,7 @@ module ConceptQL
       aliases: :s,
       desc: 'schema for database (PostgreSQL only)'
 
-    desc 'run_statement statement_file', 'Evals the statement from the statement file and executes it agains the DB specified by DB_URL'
+    desc 'run_statement statement_file', 'Reads the ConceptQL statement from the statement file and executes it against the DB'
     def run_statement(statement_file)
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
       puts q.query.sql
@@ -42,7 +42,19 @@ module ConceptQL
       pp q.execute
     end
 
-    desc 'fake_graph file', 'Evals the file and shows the contents as a ConceptQL graph'
+    desc 'show_graph statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
+    def show_graph(file)
+      graph_it(criteria_from_file(file))
+    end
+
+    desc 'show_and_tell_file statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph, then executes the statement against the DB'
+    option :full
+    def show_and_tell(file)
+      show_and_tell(criteria_from_file(file), options)
+    end
+
+    private
+    desc 'fake_graph file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
     def fake_graph(file)
       require_relative 'graph'
       require_relative 'tree'
@@ -52,17 +64,6 @@ module ConceptQL
          tree: ConceptQL::Tree.new(nodifier: ConceptQL::GraphNodifier.new)
       ).graph_it('/tmp/graph')
       system('open /tmp/graph.pdf')
-    end
-
-    desc 'show_graph file', 'Evals the file and shows the contents as a ConceptQL graph'
-    def show_graph(file)
-      graph_it(criteria_from_file(file))
-    end
-
-    desc 'show_and_tell_file file', 'Evals the file and shows the contents as a ConceptQL graph, then executes the statement against our test database'
-    option :full
-    def show_and_tell_file(file)
-      show_and_tell(criteria_from_file(file), options)
     end
 
     desc 'show_and_tell_db conceptql_id', 'Fetches the ConceptQL from a DB and shows the contents as a ConceptQL graph, then executes the statement against our test database'
@@ -79,7 +80,6 @@ module ConceptQL
       graph_it(result[:statement].to_hash, db, result[:label])
     end
 
-    private
     def fetch_conceptql(conceptql_id)
       my_db = db(options)
       my_db.extension(:pg_array, :pg_json)
