@@ -101,6 +101,8 @@ You might want to just take an existing statement from the statements in [test_c
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+Or, use the [conceptql-dev-box](https://github.com/outcomesinsights/conceptql-dev-box) to get yourself setup and hack on ConceptQL that way.
+
 ## Thanks
 - [Outcomes Insights, Inc.](http://outins.com)
     - Many thanks for allowing me to release a portion of my work as Open Source Software!
