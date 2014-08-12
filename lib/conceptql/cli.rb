@@ -53,19 +53,14 @@ module ConceptQL
       show_and_tell(criteria_from_file(file), options)
     end
 
-    private
     desc 'fake_graph file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
     def fake_graph(file)
-      require_relative 'graph'
-      require_relative 'tree'
-      require_relative 'graph_nodifier'
-      ConceptQL::Graph.new(criteria_from_file(file),
-         dangler: true,
-         tree: ConceptQL::Tree.new(nodifier: ConceptQL::GraphNodifier.new)
-      ).graph_it('/tmp/graph')
+      require_relative 'fake_grapher'
+      ConceptQL::FakeGrapher.new.graph_it(criteria_from_file(file), '/tmp/graph')
       system('open /tmp/graph.pdf')
     end
 
+    private
     desc 'show_and_tell_db conceptql_id', 'Fetches the ConceptQL from a DB and shows the contents as a ConceptQL graph, then executes the statement against our test database'
     option :full
     def show_and_tell_db(conceptql_id)
