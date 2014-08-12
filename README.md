@@ -45,6 +45,11 @@ As stated above, one of the goals of ConcegtQL is to make it easy to assemble fa
 If you're interested in reading more about ConceptQL, a rought draft of the specifications document is [available as a PDF](https://github.com/outcomesinsights/conceptql/blob/master/doc/ConceptQL%20Specification%20(alpha).pdf?raw=true) in this repository.
 
 
+## Try Before You Buy
+
+If you'd like to interact with ConceptQL a bit before deciding to dive in, head over to the [ConceptQL Sandbox](http://sandbox.cohortjigsaw.com) for an online demonstration of the language and its features.
+
+
 ## Requirements
 
 ConceptQL is in an early-alpha state.  For now it is limited to working with [OMOP CDM](http://omop.org/CDM)-structured data stored in the [PostgreSQL](http://www.postgresql.org/) database.  It has been tested under [Ubuntu Linux](http://www.ubuntu.com/) and Mac OS X 10.8+.  The interpreter is written in Ruby and theoretically should be platform independent, but your mileage may vary.
@@ -75,7 +80,7 @@ Or install it yourself as:
 
 ## Usage
 
-The easiest way to try out ConceptQL is to use the [conceptql-dev-box](http://github.com/outcomesinsights/conceptql-dev-box)
+The easiest way to try out ConceptQL locally is to use the [conceptql-dev-box](http://github.com/outcomesinsights/conceptql-dev-box)
 
 ConceptQL comes with a [Thor](http://whatisthor.com/)-based command-line program: `conceptql`
 
