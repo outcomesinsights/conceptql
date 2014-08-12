@@ -81,8 +81,12 @@ module ConceptQL
     class BinaryOperatorNode < DotNode
       def display_name
         output = name
-        output += "\n#{options.map{|k,v| "#{k}: #{v}"}.join("\n")}" unless options.nil? || options.empty?
+        output += "\n#{displayable_options.map{|k,v| "#{k}: #{v}"}.join("\n")}"
         output
+      end
+
+      def displayable_options
+        options.select{ |k,v| ![:left, :right].include?(k) } || {}
       end
 
       def left
