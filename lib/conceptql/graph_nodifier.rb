@@ -123,7 +123,9 @@ module ConceptQL
     BINARY_OPERATOR_TYPES = %w(before after meets met_by started_by starts contains during overlaps overlapped_by finished_by finishes coincides except person_filter less_than less_than_or_equal equal not_equal greater_than greater_than_or_equal filter).map { |temp| [temp, "not_#{temp}"] }.flatten.map(&:to_sym)
 
     def create(type, values)
-      return BinaryOperatorNode.new(type, values) if BINARY_OPERATOR_TYPES.include?(type)
+      if BINARY_OPERATOR_TYPES.include?(type)
+        return BinaryOperatorNode.new(type, values)
+      end
       DotNode.new(type, values)
     end
   end
