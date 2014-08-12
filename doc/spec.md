@@ -1205,4 +1205,14 @@ Filter node is the opposite of Except.  It only includes L if R matches.
 ### AS option for Except
 Just like Filter has an :as option, add one to Except node.  This would simplify some of the algorithms I've developed.
 
+
+### How to Handle fact_relationship Table from CDMv5
+Each relationship type could be a binary node box read as L <relationship> R. E.g. L 'parent of' R would take a L stream and only pass on parents of rows in R stream.
+
+We could implement a single node that takes a relationship as an argument (on top of the L and R arguments) or we could create a node class for each relationship.  I think it would be better to have a single relationship node class and take the relationship as the argument.
+
+The next question is: how do we actually join the two streams?  I suppose we could translate each "type" into a "domain" and then join where l.domain = domain_concept_id_1 and l.entity_id = fact_id_1 and R.domain = domain_concept_id_2 and R.entity_id = fact_id_2 where the relationship chosen = relationship_concept_id.
+
+Yup, that should work.  Phew!
+
 [^AIA]: J. Allen. Maintaining knowledge about temporal intervals. Communications of the ACM (1983) vol. 26 (11) pp. 832-843
