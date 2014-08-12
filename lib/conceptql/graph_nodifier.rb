@@ -11,10 +11,12 @@ module ConceptQL
         condition: :condition_occurrence,
         primary_diagnosis: :condition_occurrence,
         icd9: :condition_occurrence,
+        condition_type: :condition_occurrence,
 
         # Procedures
         procedure: :procedure_occurrence,
         cpt: :procedure_occurrence,
+        drg: :procedure_occurrence,
         hcpcs: :procedure_occurrence,
         icd9_procedure: :procedure_occurrence,
         procedure_cost: :procedure_cost,
@@ -45,7 +47,8 @@ module ConceptQL
         date_range: :date,
 
         # Miscelaneous nodes
-        concept: :misc
+        concept: :misc,
+        vsac: :misc
       }
 
       attr :values, :name
