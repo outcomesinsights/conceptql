@@ -10,7 +10,7 @@ module ConceptQL
     end
 
     def root(query)
-      @root ||= traverse(query.statement.symbolize_keys)
+      @root ||= traverse(query.statement.deep_symbolize_keys)
     end
 
     private
