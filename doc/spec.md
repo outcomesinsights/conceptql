@@ -1049,6 +1049,46 @@ I don't have a good feel for:
     - Do we throw an exception if not?
     - Do we require calling programs to invoke a check on the concept before generating the query?
 
+
+##### Update 2014-08-13
+I've hacked some variable support into an experimental branch of ConceptQL.  So far, here's how it works:
+- Define node
+    - Give it two params, a name, and a stream
+    - Stream is used to populate a temporary table that is named after the name
+    - name is plain english sentence that is then turned into a hexdigest for a name
+        - Avoids collisions with other names
+        - Avoids truncation issues if name is WAY long
+- From node
+    - Takes a single argument: the name used in a define node
+    - Re-written to fetch results from the temp table that has the name provided
+
+Current issues:
+
+- Sequel's create table statement runs out-of-band with rest of ConceptQL statemnt
+    - Gets executed immediately
+- Type information in "define" needs to be made available to "from"
+    - Currently attempting to pass this information from define to from using an attribute tacked onto the shared db connection
+    - From may not have access to this information until #query is called
+    - This is bad and needs to be fixed/rethought
+
+
+Considerations for the future:
+- Probably want to rename these nodes to something better
+- It would still be nice to drop a concept into a concept that has "slots" waiting
+    - Perhaps slot is a different node from "define"
+- I had to retool Tree and Query and Graph to expect an array of concepts in a ConceptQL statement
+    - I'm not sure I like this
+    - A ConceptQL statement perhaps should be only a single statement at the end
+    - If an array of sub-concepts is fed into Query, maybe we only execute the last one after parsing the others
+        - This is consistent with how Sequel wants to live and would yield a single set of results
+        - I think I like this
+- Defines need to occur before they are used
+    - Most languages have a "forward definition" ability
+        - I have no use cases for when we might need those?
+        - Perhaps a definition that uses a definition that doesn't exist?
+        - Is that recursive?
+    - Is that something we want/need in ConceptQL?
+
 ### Value Nodes
 So far, we can’t recreate the Charlson comorbidity index using ConceptQL.  If we added a “value” node, we could.
 
