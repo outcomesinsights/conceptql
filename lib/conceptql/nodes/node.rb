@@ -124,6 +124,12 @@ module ConceptQL
           children.map(&:types).flatten.uniq
         end
       end
+
+      def namify(name)
+        require 'digest'
+        digest = Digest::SHA256.hexdigest name
+        ('_' + digest).to_sym
+      end
     end
   end
 end
