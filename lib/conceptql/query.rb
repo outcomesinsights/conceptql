@@ -10,8 +10,12 @@ module ConceptQL
       @tree = tree
     end
 
-    def query
+    def queries
       build_query(db)
+    end
+
+    def query
+      queries.last
     end
 
     def sql
