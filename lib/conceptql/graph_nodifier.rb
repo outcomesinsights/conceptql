@@ -131,6 +131,10 @@ module ConceptQL
       def types
         @gn.types[namify(arguments.first)] = super
       end
+
+      def shape
+        :cds
+      end
     end
 
     class FromNode < DotNode
@@ -141,6 +145,10 @@ module ConceptQL
 
       def types
         @gn.types[namify(arguments.first)]
+      end
+
+      def shape
+        :cds
       end
     end
 
