@@ -41,7 +41,9 @@ module ConceptQL
 
         # Drug
         drug_exposure: :drug_exposure,
+        rxnorm: :drug_exposure,
         drug_cost: :drug_cost,
+        drug_type_concept_id: :drug_exposure,
 
         # Date Nodes
         date_range: :date,
