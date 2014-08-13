@@ -9,8 +9,8 @@ module ConceptQL
       @behavior = opts.fetch(:behavior, nil)
     end
 
-    def root(query)
-      @root ||= traverse(query.statement.deep_symbolize_keys)
+    def root(*queries)
+      @root ||= traverse(queries.flatten.map(&:statement).flatten.map(&:deep_symbolize_keys))
     end
 
     private

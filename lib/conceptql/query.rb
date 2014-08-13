@@ -15,7 +15,7 @@ module ConceptQL
     end
 
     def execute
-      build_query(db).all
+      build_query(db).each(&:all)
     end
 
     def types
@@ -26,7 +26,7 @@ module ConceptQL
     attr :yaml, :tree, :db
 
     def build_query(db)
-      tree.root(self).evaluate(db)
+      tree.root(self).map { |n| n.evaluate(db) }
     end
   end
 end
