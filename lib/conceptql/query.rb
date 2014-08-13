@@ -14,6 +14,10 @@ module ConceptQL
       build_query(db)
     end
 
+    def sql
+      query.map(&:sql).join('\n')
+    end
+
     def execute
       build_query(db).each(&:all)
     end
