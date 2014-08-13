@@ -23,7 +23,7 @@ module ConceptQL
     end
 
     def execute
-      build_query(db).each(&:all)
+      query.all
     end
 
     def types
