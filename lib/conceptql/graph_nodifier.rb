@@ -122,11 +122,54 @@ module ConceptQL
       end
     end
 
+    class DefineNode < DotNode
+      def initialize(*args)
+        @gn = args.pop
+        super(*args)
+      end
+
+      def types
+        @gn.types[namify(arguments.first)] = super
+      end
+    end
+
+    class FromNode < DotNode
+      def initialize(*args)
+        @gn = args.pop
+        super(*args)
+      end
+
+      def types
+        @gn.types[namify(arguments.first)]
+      end
+    end
+
+    class VsacNode < DotNode
+      def initialize(name, values, types)
+        @types = types
+        super(name, values)
+      end
+
+      def types
+        [ @types ].flatten.compact.map(&:to_sym)
+      end
+    end
+
     BINARY_OPERATOR_TYPES = %w(before after meets met_by started_by starts contains during overlaps overlapped_by finished_by finishes coincides except person_filter less_than less_than_or_equal equal not_equal greater_than greater_than_or_equal filter).map { |temp| [temp, "not_#{temp}"] }.flatten.map(&:to_sym)
 
+    def types
+      @types ||= {}
+    end
     def create(type, values)
       if BINARY_OPERATOR_TYPES.include?(type)
         return BinaryOperatorNode.new(type, values)
+      elsif type == :define
+        return DefineNode.new(type, values, self)
+      elsif type == :from
+        return FromNode.new(type, values, self)
+      elsif type == :vsac
+        types = values.pop
+        return VsacNode.new(type, values, types)
       end
       DotNode.new(type, values)
     end
