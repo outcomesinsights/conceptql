@@ -27,7 +27,7 @@ module ConceptQL
     end
 
     def types
-      tree.root(self).types
+      tree.root(self).last.types
     end
 
     private
