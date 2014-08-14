@@ -24,6 +24,7 @@ module ConceptQL
         # Visits
         visit_occurrence: :visit_occurrence,
         place_of_service: :visit_occurrence,
+        place_of_service_code: :visit_occurrence,
 
         # Person
         person: :person,
