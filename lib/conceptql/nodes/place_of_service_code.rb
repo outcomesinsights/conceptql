@@ -17,6 +17,7 @@ module ConceptQL
         db.from(:visit_occurrence_with_dates___v)
           .join(:vocabulary__concept___vc, { vc__concept_id: :v__place_of_service_concept_id })
           .where(vc__concept_code: arguments.map(&:to_s))
+          .where(vc__vocabulary_id: 14)
       end
     end
   end
