@@ -17,9 +17,7 @@ module ConceptQL
       end
 
       def select_it(query, specific_type = nil)
-        puts specific_type.inspect
         specific_type = type if specific_type.nil? && respond_to?(:type)
-        puts "sp: #{specific_type.inspect}"
         query.select(*columns(specific_type))
       end
 
@@ -55,7 +53,6 @@ module ConceptQL
       end
 
       def type_id(type = nil)
-        puts type.inspect
         return :criterion_id if type.nil?
         type = :person if type == :death
         (type.to_s + '_id').to_sym
