@@ -11,6 +11,7 @@ module ConceptQL
         condition: :condition_occurrence,
         primary_diagnosis: :condition_occurrence,
         icd9: :condition_occurrence,
+        icd10: :condition_occurrence,
         condition_type: :condition_occurrence,
 
         # Procedures
@@ -45,6 +46,7 @@ module ConceptQL
         rxnorm: :drug_exposure,
         drug_cost: :drug_cost,
         drug_type_concept_id: :drug_exposure,
+        drug_type_concept: :drug_exposure,
 
         # Date Nodes
         date_range: :date,
