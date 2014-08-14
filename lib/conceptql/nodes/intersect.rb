@@ -10,8 +10,9 @@ module ConceptQL
       def query(db)
         exprs = {}
         values.each do |expression|
+          evaled = expression.evaluate(db)
           expression.types.each do |type|
-            (exprs[type] ||= []) << expression.evaluate(db)
+            (exprs[type] ||= []) << evaled
           end
         end
         typed_queries = exprs.map do |type, queries|
