@@ -25,7 +25,7 @@ module ConceptQL
       end
 
       private
-      def date_columns
+      def date_columns(type = nil)
         [adjusted_start_date, adjusted_end_date]
       end
 
