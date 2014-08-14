@@ -23,7 +23,7 @@ module ConceptQL
     # occurrence, this node returns nothing for that person
     class Occurrence < Node
       def query(db)
-        db.from(stream.evaluate(db)
+        db.from(db.from(stream.evaluate(db))
           .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) })
           .where(rn: occurrence.abs)
       end
@@ -39,7 +39,7 @@ module ConceptQL
 
       def ordered_columns
         ordered_columns = [Sequel.send(asc_or_desc, :start_date)]
-        ordered_columns += types.map { |t| Sequel.asc(type_id(t)) }
+        ordered_columns += [:criterion_type, :criterion_id]
       end
     end
   end

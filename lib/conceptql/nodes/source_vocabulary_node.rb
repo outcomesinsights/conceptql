@@ -32,11 +32,12 @@ module ConceptQL
           .where(Sequel.expr(scm__source_code: values, scm__source_vocabulary_id: vocabulary_id).&(Sequel.expr(scm__source_code: table_source_column)))
       end
 
-      def types
-        [table]
+      def type
+        table
       end
 
       private
+
       def table_name
         @table_name ||= make_table_name(table)
       end

@@ -9,12 +9,12 @@ module ConceptQL
     # concept_name column of the concept table.  If you misspell the place_of_service_code name
     # you won't get any matches
     class PlaceOfServiceCode < Node
-      def types
-        [:visit_occurrence]
+      def type
+        :visit_occurrence
       end
 
       def query(db)
-        db.from(:visit_occurrence_with_dates___v)
+        db.from(:visit_occurrence___v)
           .join(:vocabulary__concept___vc, { vc__concept_id: :v__place_of_service_concept_id })
           .where(vc__concept_code: arguments.map(&:to_s))
           .where(vc__vocabulary_id: 14)
