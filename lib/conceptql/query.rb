@@ -1,6 +1,5 @@
 require 'psych'
 require_relative 'tree'
-require_relative 'view_maker'
 
 module ConceptQL
   class Query
@@ -16,7 +15,6 @@ module ConceptQL
     end
 
     def execute
-      ensure_views
       build_query(db).all
     end
 
@@ -29,11 +27,6 @@ module ConceptQL
 
     def build_query(db)
       tree.root(self).evaluate(db)
-    end
-
-    def ensure_views
-      return if db.views.include?(:person_with_dates)
-      ViewMaker.make_views(db)
     end
   end
 end
