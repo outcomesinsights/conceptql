@@ -9,9 +9,9 @@ module ConceptQL
     #
     # This node will look for a sub-concept that has been created through the
     # "define" node and will fetch the results cached in the corresponding table
-    class From < Node
+    class Recall < Node
       # Behind the scenes we simply fetch all rows from the temp table that
-      # corresponds to the name fed to "from"
+      # corresponds to the name fed to "recall"
       #
       # We also set the @types variable by pulling the type information out
       # of the hash piggybacking on the database connection.
