@@ -34,14 +34,16 @@ module ConceptQL
     attr :yaml, :tree, :db
 
     def build_graph(g)
-      last_node = tree.root(self)
-      last_node.graph_it(g, db)
-      if dangler
-        blank_node = g.add_nodes('')
-        blank_node[:shape] = 'none'
-        blank_node[:height] = 0
-        blank_node[:fixedsize] = true
-        last_node.link_to(g, blank_node)
+      tree.root(self).each.with_index do |last_node, index|
+        last_node.graph_it(g, db)
+        if dangler
+          blank_node = g.add_nodes("_#{index}")
+          blank_node[:shape] = 'none'
+          blank_node[:height] = 0
+          blank_node[:label] = ''
+          blank_node[:fixedsize] = true
+          last_node.link_to(g, blank_node)
+        end
       end
     end
   end

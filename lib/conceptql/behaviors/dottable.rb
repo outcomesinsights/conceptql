@@ -44,6 +44,7 @@ module ConceptQL
           me = g.add_nodes(node_name)
           me[:label] = display_name
           me[:color] = type_color(types)
+          me[:shape] = shape if respond_to?(:shape)
           me
         end
       end

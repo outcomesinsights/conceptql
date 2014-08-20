@@ -11,6 +11,7 @@ module ConceptQL
         condition: :condition_occurrence,
         primary_diagnosis: :condition_occurrence,
         icd9: :condition_occurrence,
+        icd10: :condition_occurrence,
         condition_type: :condition_occurrence,
 
         # Procedures
@@ -24,6 +25,7 @@ module ConceptQL
         # Visits
         visit_occurrence: :visit_occurrence,
         place_of_service: :visit_occurrence,
+        place_of_service_code: :visit_occurrence,
 
         # Person
         person: :person,
@@ -41,7 +43,10 @@ module ConceptQL
 
         # Drug
         drug_exposure: :drug_exposure,
+        rxnorm: :drug_exposure,
         drug_cost: :drug_cost,
+        drug_type_concept_id: :drug_exposure,
+        drug_type_concept: :drug_exposure,
 
         # Date Nodes
         date_range: :date,
@@ -120,11 +125,62 @@ module ConceptQL
       end
     end
 
+    class DefineNode < DotNode
+      def initialize(*args)
+        @gn = args.pop
+        super(*args)
+      end
+
+      def types
+        @gn.types[namify(arguments.first)] = super
+      end
+
+      def shape
+        :cds
+      end
+    end
+
+    class FromNode < DotNode
+      def initialize(*args)
+        @gn = args.pop
+        super(*args)
+      end
+
+      def types
+        @gn.types[namify(arguments.first)]
+      end
+
+      def shape
+        :cds
+      end
+    end
+
+    class VsacNode < DotNode
+      def initialize(name, values, types)
+        @types = types
+        super(name, values)
+      end
+
+      def types
+        [ @types ].flatten.compact.map(&:to_sym)
+      end
+    end
+
     BINARY_OPERATOR_TYPES = %w(before after meets met_by started_by starts contains during overlaps overlapped_by finished_by finishes coincides except person_filter less_than less_than_or_equal equal not_equal greater_than greater_than_or_equal filter).map { |temp| [temp, "not_#{temp}"] }.flatten.map(&:to_sym)
 
+    def types
+      @types ||= {}
+    end
     def create(type, values)
       if BINARY_OPERATOR_TYPES.include?(type)
         return BinaryOperatorNode.new(type, values)
+      elsif type == :define
+        return DefineNode.new(type, values, self)
+      elsif type == :from
+        return FromNode.new(type, values, self)
+      elsif type == :vsac
+        types = values.pop
+        return VsacNode.new(type, values, types)
       end
       DotNode.new(type, values)
     end

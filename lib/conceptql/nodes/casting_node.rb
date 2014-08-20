@@ -23,6 +23,10 @@ module ConceptQL
     # Also, if a casting node is passed no streams, it will return all the
     # rows in its table as results.
     class CastingNode < Node
+      def types
+        [type]
+      end
+
       def type
         my_type
       end
@@ -39,36 +43,52 @@ module ConceptQL
       private
 
       def base_query(db, stream_query)
-        if (stream.types & castables).length < stream.types.length
-          # We have a situation where one of the incoming streams
+        uncastable_types = stream.types - castables
+        to_me_types = stream.types & these_point_at_me
+        from_me_types = stream.types & i_point_at
+
+        destination_table = make_table_name(my_type)
+        casting_query = db.from(destination_table)
+        wheres = []
+
+        unless uncastable_types.empty?
+          # We have a situation where one or more of the incoming streams
           # isn't castable so we'll just return all rows for
-          # all people
-          db.from(make_table_name(my_type))
-            .where(person_id: db.from(stream_query).select_group(:person_id))
-        else
-          # Every type in the stream is castable, so let's setup a query that
+          # all people in each uncastable stream
+          uncastable_person_ids = db.from(stream_query)
+            .where(criterion_type: uncastable_types.map(&:to_s))
+            .select_group(:person_id)
+          wheres << Sequel.expr(person_id: uncastable_person_ids)
+        end
+
+        destination_type_id = type_id(my_type)
+
+        unless to_me_types.empty?
+          # For each castable type in the stream, setup a query that
           # casts each type to a set of IDs, union those IDs and fetch
           # them from the source table
-          my_ids = stream.types.map do |type|
-            cast_type(db, type, stream_query)
-          end.inject do |union_query, query|
-            union_query.union(query)
+          castable_type_queries = to_me_types.map do |source_type|
+            source_ids = db.from(stream_query)
+              .where(criterion_type: source_type.to_s)
+              .select_group(:criterion_id)
+            source_table = make_table_name(source_type)
+            source_type_id = type_id(source_type)
+
+            db.from(source_table)
+              .where(source_type_id => source_ids)
+              .select(destination_type_id)
           end
-
-          db.from(make_table_name(my_type))
-            .where(type_id(my_type) => my_ids)
+          wheres << Sequel.expr(destination_type_id => castable_type_queries)
         end
-      end
 
-      def cast_type(db, type, stream_query)
-        query = if i_point_at.include?(type)
-          db.from(make_table_name(my_type))
-            .where(type_id(type) => db.from(stream_query.select_group(type_id(type))))
-        else
-          db.from(make_table_name(type))
-            .where(type_id(type) => db.from(stream_query.select_group(type_id(type))))
+        unless from_me_types.empty?
+          from_me_types.each do |from_me_type|
+            fk_type_id = type_id(from_me_type)
+            wheres << Sequel.expr(fk_type_id => db.from(stream_query).where(criterion_type: from_me_type.to_s).select_group(:criterion_id))
+          end
         end
-        query.select(type_id(my_type))
+
+        casting_query.where(wheres.inject(&:|))
       end
     end
   end
