@@ -53,14 +53,14 @@ module ConceptQL
 
       # TODO: Fix this.  This is shameful.
       # In order to remember which types a table is storing, we need to preserve
-      # the type information outside of the "define" statement because the "from"
+      # the type information outside of the "define" statement because the "recall"
       # statement most likely doesn't have a reference to this node (that's the
       # whole point).
       #
       # There is only one object shared between all the nodes: the database
       # connection.  We'll do something terrible and piggyback the type
       # information about this variable on the database connection so that
-      # the "from" node can pull that information back out.
+      # the "recall" node can pull that information back out.
       #
       # Ugh.
       def stash_types(db, name, types)
