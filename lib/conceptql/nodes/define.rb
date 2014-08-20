@@ -29,14 +29,12 @@ module ConceptQL
       # execute immediately _during_ the processing of the ConceptQL statement.
       # We'll see what kinds of problems this causes
       #
-      # Lastly, to maintain the idea that "all nodes can be used in all places",
-      # the "define" node returns a "select * from <temp_table>" so that it
-      # can be used upstream from other nodes.  That means you can use "define"
-      # inline to set a variable, then the variable later on in your code.
+      # Lastly, this node does NOT pass its results to the next node.  The
+      # reason for this exception is to allow us to return the SQL that
+      # generates the temp table.  This is done so that the ConceptQL sandbox
+      # can return the entire set of SQL statements needed to run a query.
       #
-      # Perhaps to avoid a performance penalty, we'll only execute the last
-      # SQL statement in an array of ConceptQL statements so that we don't
-      # execute define's "select * from <temp_table>".
+      # Perhaps in the future we can find a way around this.
       #
       # Also, things will blow up if you try to use a variable that hasn't been
       # defined yet.
@@ -44,7 +42,7 @@ module ConceptQL
         table_name = namify(arguments.first)
         stash_types(db, table_name, types)
         db.create_table!(table_name, temp: true, as: stream.evaluate(db))
-        db.from(table_name)
+        db[db.send(:create_table_as_sql, table_name, stream.evaluate(db).sql, temp: true)]
       end
 
       def types
