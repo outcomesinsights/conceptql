@@ -140,7 +140,7 @@ module ConceptQL
       end
     end
 
-    class FromNode < DotNode
+    class RecallNode < DotNode
       def initialize(*args)
         @gn = args.pop
         super(*args)
@@ -176,8 +176,8 @@ module ConceptQL
         return BinaryOperatorNode.new(type, values)
       elsif type == :define
         return DefineNode.new(type, values, self)
-      elsif type == :from
-        return FromNode.new(type, values, self)
+      elsif type == :recall
+        return RecallNode.new(type, values, self)
       elsif type == :vsac
         types = values.pop
         return VsacNode.new(type, values, types)
