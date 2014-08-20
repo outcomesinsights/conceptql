@@ -10,12 +10,12 @@ module ConceptQL
     #
     # Multiple types can be specified at once
     class ConditionType < Node
-      def types
-        [:condition_occurrence]
+      def type
+        :condition_occurrence
       end
 
       def query(db)
-        db.from(:condition_occurrence_with_dates)
+        db.from(:condition_occurrence)
           .where(condition_type_concept_id: condition_occurrence_type_concept_ids)
       end
 

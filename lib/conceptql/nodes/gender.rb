@@ -3,8 +3,8 @@ require_relative 'node'
 module ConceptQL
   module Nodes
     class Gender < Node
-      def types
-        [:person]
+      def type
+        :person
       end
 
       def query(db)
@@ -19,7 +19,7 @@ module ConceptQL
           end
         end
 
-        db.from(:person_with_dates)
+        db.from(:person)
           .where(gender_concept_id: gender_concept_ids)
       end
     end

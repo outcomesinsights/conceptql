@@ -25,11 +25,11 @@ module ConceptQL
           .where(c__concept_code: values, c__vocabulary_id: vocabulary_id)
       end
 
-      def types
-        [table]
+      def type
+        table
       end
-
       private
+
       def table_name
         @table_name ||= make_table_name(table)
       end

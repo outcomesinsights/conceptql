@@ -1,6 +1,5 @@
 require 'psych'
 require_relative 'tree'
-require_relative 'view_maker'
 
 module ConceptQL
   class Query
@@ -11,29 +10,34 @@ module ConceptQL
       @tree = tree
     end
 
-    def query
+    def queries
       build_query(db)
     end
 
+    def query
+      queries.last
+    end
+
+    def sql
+      queries.map(&:sql).join(";\n") + ';'
+    end
+
+    # To avoid a performance penalty, only execute the last
+    # SQL statement in an array of ConceptQL statements so that define's
+    # "create_table" SQL isn't executed twice
     def execute
-      ensure_views
-      build_query(db).all
+      query.all
     end
 
     def types
-      tree.root(self).types
+      tree.root(self).last.types
     end
 
     private
     attr :yaml, :tree, :db
 
     def build_query(db)
-      tree.root(self).evaluate(db)
-    end
-
-    def ensure_views
-      return if db.views.include?(:person_with_dates)
-      ViewMaker.make_views(db)
+      tree.root(self).map { |n| n.evaluate(db) }
     end
   end
 end

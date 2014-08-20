@@ -49,7 +49,7 @@ module ConceptQL
 
     desc 'show_and_tell_file statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph, then executes the statement against the DB'
     option :full
-    def show_and_tell(file)
+    def show_and_tell_file(file)
       show_and_tell(criteria_from_file(file), options)
     end
 

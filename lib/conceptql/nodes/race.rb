@@ -9,12 +9,12 @@ module ConceptQL
     # concept_name column of the concept table.  If you misspell the race name
     # you won't get any matches
     class Race < Node
-      def types
-        [:person]
+      def type
+        :person
       end
 
       def query(db)
-        db.from(:person_with_dates___p)
+        db.from(:person___p)
           .join(:vocabulary__concept___vc, { vc__concept_id: :p__race_concept_id })
           .where(Sequel.function(:lower, :vc__concept_name) => arguments.map(&:downcase))
       end
