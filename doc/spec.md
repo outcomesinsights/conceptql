@@ -1058,7 +1058,7 @@ I've hacked some variable support into an experimental branch of ConceptQL.  So 
     - name is plain english sentence that is then turned into a hexdigest for a name
         - Avoids collisions with other names
         - Avoids truncation issues if name is WAY long
-- From node
+- Recall node
     - Takes a single argument: the name used in a define node
     - Re-written to fetch results from the temp table that has the name provided
 
@@ -1068,7 +1068,7 @@ Current issues:
     - Gets executed immediately
 - Type information in "define" needs to be made available to "from"
     - Currently attempting to pass this information from define to from using an attribute tacked onto the shared db connection
-    - From may not have access to this information until #query is called
+    - Recall may not have access to this information until #query is called
     - This is bad and needs to be fixed/rethought
 
 
@@ -1088,6 +1088,7 @@ Considerations for the future:
         - Perhaps a definition that uses a definition that doesn't exist?
         - Is that recursive?
     - Is that something we want/need in ConceptQL?
+
 
 ### Value Nodes
 So far, we can’t recreate the Charlson comorbidity index using ConceptQL.  If we added a “value” node, we could.
