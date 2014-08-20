@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.0.4 - 2014-08-19
+
+### Added
+- Support for 5 instead of 13 column internal representation of results.
+- `define` node, used to create "variables" in ConceptQL.
+- `recall` node, used to pull results from "variables" in ConceptQL.
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Support for 13 column results.
+- Dependency on a set of views to run SQL queries.
+
+### Fixed
+- Bug where `place_of_service_code` wasn't limited to vocabulary_id 14
+
+
 ## 0.0.3 - 2014-08-12
 
 ### Added
