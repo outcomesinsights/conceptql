@@ -19,9 +19,12 @@ module ConceptQL
     end
 
     def sql
-      query.map(&:sql).join('\n')
+      queries.map(&:sql).join(";\n") + ';'
     end
 
+    # To avoid a performance penalty, only execute the last
+    # SQL statement in an array of ConceptQL statements so that define's
+    # "create_table" SQL isn't executed twice
     def execute
       query.all
     end
