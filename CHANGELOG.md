@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.0.6 - 2014-08-20
+
+### Added
+- Nothing.
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Nothing.
+
+### Fixed
+- Bug in CastingNode that generate SQL returning multiple columns in a subquery.
+
+
 ## 0.0.5 - 2014-08-19
 
 ### Added
@@ -14,7 +29,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Bug in GraphNodifier not displaying types for `recall` nodes.
-
 
 
 ## 0.0.4 - 2014-08-19
