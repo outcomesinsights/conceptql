@@ -17,6 +17,10 @@ module ConceptQL
         select_it(query(db))
       end
 
+      def sql(db)
+        evaluate(db).sql
+      end
+
       def select_it(query, specific_type = nil)
         specific_type = type if specific_type.nil? && respond_to?(:type)
         query.select(*columns(specific_type))

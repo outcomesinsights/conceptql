@@ -37,7 +37,7 @@ module ConceptQL
     desc 'run_statement statement_file', 'Reads the ConceptQL statement from the statement file and executes it against the DB'
     def run_statement(statement_file)
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
-      puts q.query.sql
+      puts q.sql
       puts q.statement.to_yaml
       pp q.execute
     end

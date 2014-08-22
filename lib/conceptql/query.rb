@@ -19,7 +19,7 @@ module ConceptQL
     end
 
     def sql
-      queries.map(&:sql).join(";\n") + ';'
+      nodes.map { |node| node.sql(db) }.join(";\n") + ';'
     end
 
     # To avoid a performance penalty, only execute the last
@@ -37,7 +37,11 @@ module ConceptQL
     attr :yaml, :tree, :db
 
     def build_query(db)
-      tree.root(self).map { |n| n.evaluate(db) }
+      nodes.map { |n| n.evaluate(db) }
+    end
+
+    def nodes
+      @nodes ||= tree.root(self)
     end
   end
 end

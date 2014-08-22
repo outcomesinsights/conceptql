@@ -44,11 +44,15 @@ module ConceptQL
       # defined yet.
       def query(db)
         db.create_table!(table_name, temp: true, as: stream.evaluate(db))
-        db[db.send(:create_table_as_sql, table_name, stream.evaluate(db).sql, temp: true)]
+        db.from(table_name)
       end
 
       def types
         stream.types
+      end
+
+      def sql(db)
+        db[db.send(:create_table_as_sql, table_name, stream.evaluate(db).sql, temp: true)].sql
       end
 
       private
