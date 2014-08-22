@@ -13,6 +13,10 @@ module ConceptQL
     # and then insert that variable into the concept as needed.
     # run the query once and subsequent calls
     class Define < Node
+      def initialize(*args)
+        super
+        tree.defined[table_name] = self
+      end
       # Create a temporary table and store the stream of  results in that table.
       # This "caches" the results so we only have to execute stream's query
       # once.
@@ -39,8 +43,6 @@ module ConceptQL
       # Also, things will blow up if you try to use a variable that hasn't been
       # defined yet.
       def query(db)
-        table_name = namify(arguments.first)
-        stash_types(db, table_name, types)
         db.create_table!(table_name, temp: true, as: stream.evaluate(db))
         db[db.send(:create_table_as_sql, table_name, stream.evaluate(db).sql, temp: true)]
       end
@@ -51,23 +53,8 @@ module ConceptQL
 
       private
 
-      # TODO: Fix this.  This is shameful.
-      # In order to remember which types a table is storing, we need to preserve
-      # the type information outside of the "define" statement because the "recall"
-      # statement most likely doesn't have a reference to this node (that's the
-      # whole point).
-      #
-      # There is only one object shared between all the nodes: the database
-      # connection.  We'll do something terrible and piggyback the type
-      # information about this variable on the database connection so that
-      # the "recall" node can pull that information back out.
-      #
-      # Ugh.
-      def stash_types(db, name, types)
-        def db.types
-          @types ||= {}
-        end
-        db.types[name] = types
+      def table_name
+        @table_name ||= namify(arguments.first)
       end
     end
   end

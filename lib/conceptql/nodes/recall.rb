@@ -20,13 +20,16 @@ module ConceptQL
       # before we call #query.  Probably time to reevaluate how we're caching
       # the type information.
       def query(db)
-        table_name = namify(arguments.first)
-        @types = db.types[table_name]
         db.from(table_name)
       end
 
       def types
-        @types
+        tree.defined[table_name].types
+      end
+
+      private
+      def table_name
+        @table_name ||= namify(arguments.first)
       end
     end
   end
