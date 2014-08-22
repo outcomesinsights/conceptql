@@ -1,10 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.0.6 - 2014-08-20
+## Unreleased
 
 ### Added
-- Nothing.
+- Tree#defined to pass type information between Define and Recall.
+- Node#sql to produce SQL for each node.
+- Graph includes row count on each edge in the diagram.
 
 ### Deprecated
 - Nothing.
@@ -14,6 +16,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Bug in CastingNode that generate SQL returning multiple columns in a subquery.
+- Made ruby-graphviz a dependency so calling programs don't bomb out.
+- Define now passes rows on through like any other node!
 
 
 ## 0.0.5 - 2014-08-19
