@@ -56,6 +56,7 @@ module ConceptQL
           label = [' rows=' + my_count(db).to_s + ' ']
           label << ' n=' + my_n.to_s + ' '
           edge_options[:label] = label.join("\n")
+          edge_options[:style] = 'dashed' if my_n.zero?
         end
 
         types.each do |type|
