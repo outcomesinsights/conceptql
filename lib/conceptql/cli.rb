@@ -102,13 +102,13 @@ module ConceptQL
       puts results.length
     end
 
-    def graph_it(statement, db = nil, title = nil)
+    def graph_it(statement, title = nil)
       require_relative 'graph'
       require_relative 'tree'
       ConceptQL::Graph.new(statement,
                            dangler: true,
                            title: title,
-                           db: db
+                           db: db(options)
                           ).graph_it('/tmp/graph')
       system('open /tmp/graph.pdf')
     end

@@ -17,8 +17,8 @@ module ConceptQL
           sub.send("#{cluster_name}_left").send('[]', shape: 'point', color: type_color(types))
           sub.send("#{cluster_name}_right").send('[]', shape: 'point')
         end
-        left.link_to(g, me.send("#{cluster_name}_left"))
-        right.link_to(g, me.send("#{cluster_name}_right"))
+        left.link_to(g, me.send("#{cluster_name}_left"), db)
+        right.link_to(g, me.send("#{cluster_name}_right"), db)
         @__graph_node = me.send("#{cluster_name}_left")
       end
 
