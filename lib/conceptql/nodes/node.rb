@@ -3,7 +3,8 @@ module ConceptQL
   module Nodes
     class Node
       attr :values, :options
-      def initialize(*args)
+      def initialize(tree, *args)
+        @tree = tree
         args.flatten!
         if args.last.is_a?(Hash)
           @options = args.pop.symbolize_keys
@@ -48,6 +49,22 @@ module ConceptQL
       end
 
       private
+      # There have been a few times now that I've wanted a node to be able
+      # to pass information to another node that is not directly a child
+      #
+      # Since tree is only object that touches each node in a statement,
+      # I'm going to employ tree as a way to communicate between nodes
+      #
+      # This is an ugly hack, but the use case for this hack is I'm changing
+      # the way `define` and `recall` nodes pass type information between
+      # each other.  They used to take the type information onto the
+      # database connection, but there were issues where sometimes the
+      # type information was needed before we passed around the database
+      # connection.
+      #
+      # At least this way we don't have timing issues when reading types
+      attr :tree
+
       def criterion_id
         :criterion_id
       end

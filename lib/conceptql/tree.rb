@@ -23,7 +23,7 @@ module ConceptQL
         end
         type = obj.keys.first
         values = traverse(obj[type])
-        obj = nodifier.create(type, values)
+        obj = nodifier.create(type, values, self)
         obj.extend(behavior) if behavior
         obj
       when Array
