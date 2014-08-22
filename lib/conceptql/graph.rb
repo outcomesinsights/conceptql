@@ -42,7 +42,7 @@ module ConceptQL
           blank_node[:height] = 0
           blank_node[:label] = ''
           blank_node[:fixedsize] = true
-          last_node.link_to(g, blank_node)
+          last_node.link_to(g, blank_node, db)
         end
       end
     end

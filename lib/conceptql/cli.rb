@@ -37,7 +37,7 @@ module ConceptQL
     desc 'run_statement statement_file', 'Reads the ConceptQL statement from the statement file and executes it against the DB'
     def run_statement(statement_file)
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
-      puts q.query.sql
+      puts q.sql
       puts q.statement.to_yaml
       pp q.execute
     end
@@ -102,13 +102,13 @@ module ConceptQL
       puts results.length
     end
 
-    def graph_it(statement, db = nil, title = nil)
+    def graph_it(statement, title = nil)
       require_relative 'graph'
       require_relative 'tree'
       ConceptQL::Graph.new(statement,
                            dangler: true,
                            title: title,
-                           db: db
+                           db: db(options)
                           ).graph_it('/tmp/graph')
       system('open /tmp/graph.pdf')
     end

@@ -49,9 +49,18 @@ module ConceptQL
         end
       end
 
-      def link_to(g, dest_node)
+      def link_to(g, dest_node, db = nil)
+        edge_options = {}
+        if db
+          my_n = my_n(db)
+          label = [' rows=' + my_count(db).to_s + ' ']
+          label << ' n=' + my_n.to_s + ' '
+          edge_options[:label] = label.join("\n")
+          edge_options[:style] = 'dashed' if my_n.zero?
+        end
+
         types.each do |type|
-          e = g.add_edges(graph_node(g), dest_node)
+          e = g.add_edges(graph_node(g), dest_node, edge_options)
           e[:color] = type_color(type)
         end
       end
@@ -63,8 +72,16 @@ module ConceptQL
         end
         graph_node(g)
         children.each do |child|
-          child.link_to(g, graph_node(g))
+          child.link_to(g, graph_node(g), db)
         end
+      end
+
+      def my_count(db)
+        evaluate(db).count
+      end
+
+      def my_n(db)
+        evaluate(db).select_group(:person_id).count
       end
     end
   end

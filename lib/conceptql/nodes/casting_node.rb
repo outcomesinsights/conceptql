@@ -67,7 +67,7 @@ module ConceptQL
           # For each castable type in the stream, setup a query that
           # casts each type to a set of IDs, union those IDs and fetch
           # them from the source table
-          castable_type_queries = to_me_types.map do |source_type|
+          castable_type_query = to_me_types.map do |source_type|
             source_ids = db.from(stream_query)
               .where(criterion_type: source_type.to_s)
               .select_group(:criterion_id)
@@ -77,8 +77,10 @@ module ConceptQL
             db.from(source_table)
               .where(source_type_id => source_ids)
               .select(destination_type_id)
+          end.inject do |union_query, q|
+            union_query.union(q)
           end
-          wheres << Sequel.expr(destination_type_id => castable_type_queries)
+          wheres << Sequel.expr(destination_type_id => castable_type_query)
         end
 
         unless from_me_types.empty?
