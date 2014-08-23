@@ -59,7 +59,7 @@ module ConceptQL
       attr :values, :name
       def initialize(name, values)
         @name = name.to_s
-        super(values)
+        super(nil, values)
       end
 
       def display_name
@@ -171,7 +171,8 @@ module ConceptQL
     def types
       @types ||= {}
     end
-    def create(type, values)
+
+    def create(type, values, tree)
       if BINARY_OPERATOR_TYPES.include?(type)
         return BinaryOperatorNode.new(type, values)
       elsif type == :define
