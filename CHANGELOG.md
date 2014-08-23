@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.0.6 - 2014-08-23
 
 ### Added
 - Tree#defined to pass type information between Define and Recall.
