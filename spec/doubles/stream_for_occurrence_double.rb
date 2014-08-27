@@ -6,6 +6,10 @@ class StreamForOccurrenceDouble < ConceptQL::Nodes::Node
     ds
   end
 
+  def evaluate(db)
+    query(db)
+  end
+
   # Stole this from:
   # https://github.com/jeremyevans/sequel/blob/63397b787335d06de97dc89ddf49b7a3a93ffdc9/spec/core/expression_filters_spec.rb#L400
   #
