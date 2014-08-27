@@ -49,8 +49,8 @@ describe ConceptQL::Nodes::CastingNode do
       stream = StreamForCastingDouble.new
       stream.types = [:i_point1]
       sql = CastingDouble.new(stream).query(Sequel.mock).sql
-      sql.must_match 'my_type_id IN'
-      sql.must_match 'GROUP BY i_point1_id'
+      sql.must_match 'i_point1_id IN'
+      sql.must_match "criterion_type = 'i_point1'"
     end
 
     it 'uses and unions multiple castable types if possible' do
@@ -58,14 +58,13 @@ describe ConceptQL::Nodes::CastingNode do
       stream.types = [:i_point1, :at_me2]
       sql = CastingDouble.new(stream).query(Sequel.mock).sql
       sql.must_match 'my_type_id IN'
-      sql.must_match 'GROUP BY i_point1_id'
-      sql.must_match 'GROUP BY at_me2_id'
-      sql.must_match 'UNION'
+      sql.must_match 'i_point1_id IN'
+      sql.must_match "criterion_type = 'i_point1'"
     end
 
     it 'returns all rows of a table if passed the argument "true"' do
       sql = CastingDouble.new(true).query(Sequel.mock).sql
-      sql.must_match "SELECT * FROM my_type_with_dates AS tab"
+      sql.must_match "SELECT * FROM my_type AS tab"
     end
   end
 end
