@@ -3,8 +3,8 @@ module ConceptQL
   module Nodes
     class Node
       attr :values, :options
-      def initialize(tree, *args)
-        @tree = tree
+      attr_accessor :tree
+      def initialize(*args)
         args.flatten!
         if args.last.is_a?(Hash)
           @options = args.pop.symbolize_keys
