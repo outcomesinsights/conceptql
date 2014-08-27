@@ -7,10 +7,11 @@ describe ConceptQL::Query do
       yaml = Psych.dump({ icd9: '799.22' })
       mock_tree = Minitest::Mock.new
       mock_node = Minitest::Mock.new
+      mock_query = Minitest::Mock.new
 
       query = ConceptQL::Query.new(:mock_db, yaml, mock_tree)
       mock_tree.expect :root, mock_node, [query]
-      mock_node.expect :evaluate, nil, [:mock_db]
+      mock_node.expect :map, [mock_query]
       query.query
 
       mock_node.verify
