@@ -45,7 +45,7 @@ module ConceptQL
       def columns(local_type = nil)
         criterion_type = Sequel.expr(:criterion_type)
         if local_type
-          criterion_type = Sequel.expr(local_type.to_s).cast(:text)
+          criterion_type = Sequel.cast_string(local_type.to_s)
         end
         [:person_id___person_id,
          Sequel.expr(type_id(local_type)).as(:criterion_id),
@@ -128,10 +128,10 @@ module ConceptQL
 
       def assemble_date(*symbols)
         strings = symbols.map do |symbol|
-          Sequel.function(:coalesce, Sequel.expr(symbol).cast(:text), Sequel.expr('01').cast(:text)).cast(:text)
+          Sequel.cast_string(Sequel.function(:coalesce, symbol, '01'))
         end
         strings = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
-        Sequel.function(:date, Sequel.join(strings))
+        Sequel.lit('date ?', Sequel.join(strings))
       end
 
       def determine_types

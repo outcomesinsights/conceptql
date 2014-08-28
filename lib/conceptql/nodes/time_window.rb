@@ -45,7 +45,7 @@ module ConceptQL
         arg ||= ''
         return ['end_date', column].join('___').to_sym if arg.downcase == 'end'
         return ['start_date', column].join('___').to_sym if arg.downcase == 'start'
-        DateAdjuster.new(arg).adjustments.inject(Sequel.expr(column).cast(:date)) do |sql, (units, quantity)|
+        DateAdjuster.new(arg).adjustments.inject(column) do |sql, (units, quantity)|
           if quantity > 0
             Sequel.date_add(sql, units => quantity)
           else
