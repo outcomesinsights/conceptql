@@ -17,9 +17,7 @@ describe ConceptQL::Nodes::TimeWindow do
     @db_mock = Sequel.mock
     @sequel_mock = Minitest::Mock.new
     @sequel_mock.expect :expr, @sequel_mock, [:start_date]
-    @sequel_mock.expect :cast, @sequel_mock, [:date]
     @sequel_mock.expect :expr, @sequel_mock, [:end_date]
-    @sequel_mock.expect :cast, @sequel_mock, [:date]
     @sequel_mock.expect :as, @sequel_mock, [:start_date]
     @sequel_mock.expect :as, @sequel_mock, [:end_date]
   end
