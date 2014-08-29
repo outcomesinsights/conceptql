@@ -17,7 +17,7 @@ module ConceptQL
         end
         typed_queries = exprs.map do |type, queries|
           queries.inject do |q, query|
-            q.intersect(query, all: true)
+            q.intersect(query)
           end
         end
 

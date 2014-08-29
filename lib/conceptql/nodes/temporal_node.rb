@@ -10,7 +10,7 @@ module ConceptQL
     class TemporalNode < BinaryOperatorNode
       def query(db)
         db.from(db.from(left_stream(db))
-                  .join(right_stream(db), [:person_id])
+                  .join(right_stream(db), l__person_id: :r__person_id)
                   .where(where_clause)
                   .select_all(:l))
       end

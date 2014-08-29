@@ -16,16 +16,16 @@ module ConceptQL
     private
     def lookup
       {
-        'y' => 'year',
-        'm' => 'month',
-        'd' => 'day'
+        'y' => :years,
+        'm' => :months,
+        'd' => :days
       }
     end
 
     def parse(str)
       ConceptQL.logger.debug(str)
-      return [] if str.nil?
-      return ["#{str} days"] if str.match(/^[-+]?\d+$/)
+      return [] if str.nil? || str.empty?
+      return [[lookup['d'], str.to_i]] if str.match(/^[-+]?\d+$/)
       str.downcase.scan(/([-+]?\d*[dmy])/).map do |adjustment|
         adjustment = adjustment.first
         quantity = 1
@@ -37,8 +37,7 @@ module ConceptQL
           end
         end
         unit = lookup[adjustment.chars.last]
-        unit += 's' if quantity.abs > 1
-        [quantity, unit].join(' ')
+        [unit, quantity]
       end
     end
   end

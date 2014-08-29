@@ -10,6 +10,6 @@ describe ConceptQL::Nodes::Complement do
   it 'generates complement for single criteria' do
     double1 = QueryDouble.new(1)
     double1.must_behave_like(:evaluator)
-    ConceptQL::Nodes::Complement.new(double1).query(Sequel.mock).sql.must_equal "SELECT person_id AS person_id, CAST(NULL AS bigint) AS condition_occurrence_id, CAST(NULL AS bigint) AS death_id, CAST(NULL AS bigint) AS drug_cost_id, CAST(NULL AS bigint) AS drug_exposure_id, CAST(NULL AS bigint) AS observation_id, CAST(NULL AS bigint) AS payer_plan_period_id, CAST(NULL AS bigint) AS procedure_cost_id, CAST(NULL AS bigint) AS procedure_occurrence_id, visit_occurrence_id AS visit_occurrence_id, start_date, end_date FROM visit_occurrence_with_dates AS tab WHERE (visit_occurrence_id NOT IN (SELECT * FROM (SELECT visit_occurrence_id FROM table1) AS t1 WHERE (visit_occurrence_id IS NOT NULL)))"
+    ConceptQL::Nodes::Complement.new(double1).query(Sequel.mock).sql.must_equal "SELECT * FROM (SELECT person_id AS person_id, visit_occurrence_id AS criterion_id, CAST('visit_occurrence' AS varchar(255)) AS criterion_type, CAST(visit_start_date AS date) AS start_date, CAST(visit_end_date AS date) AS end_date FROM visit_occurrence AS tab WHERE (visit_occurrence_id NOT IN (SELECT criterion_id FROM (SELECT * FROM table1) AS t1 WHERE ((criterion_id IS NOT NULL) AND (criterion_type = 'visit_occurrence'))))) AS t1"
   end
 end

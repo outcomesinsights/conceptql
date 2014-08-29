@@ -3,7 +3,9 @@ module ConceptQL
   class Nodifier
     def create(type, values, tree)
       require_relative "nodes/#{type}"
-      "conceptQL/nodes/#{type}".camelize.constantize.new(tree, values)
+      node = "conceptQL/nodes/#{type}".camelize.constantize.new(values)
+      node.tree = tree
+      node
     end
   end
 end

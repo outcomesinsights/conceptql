@@ -80,8 +80,8 @@ describe ConceptQL::Behaviors::Dottable do
           mock.types
         end
 
-        def link_to(mock_graph, mock_node)
-          mock.link_to(mock_graph, mock_node)
+        def link_to(mock_graph, mock_node, db)
+          mock.link_to(mock_graph, mock_node, db)
         end
       end
 
@@ -95,7 +95,7 @@ describe ConceptQL::Behaviors::Dottable do
       mock_child = MockChild.new
       mock_child.mock = Minitest::Mock.new
       mock_child.mock.expect :graph_it, :child_node, [mock_graph, :db]
-      mock_child.mock.expect :link_to, nil, [mock_graph, mock_node]
+      mock_child.mock.expect :link_to, nil, [mock_graph, mock_node, :db]
 
       mock_child.must_behave_like(:node)
 

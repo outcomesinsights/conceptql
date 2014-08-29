@@ -15,7 +15,6 @@ module ConceptQL
     class Define < Node
       def initialize(*args)
         super
-        tree.defined[table_name] = self
       end
       # Create a temporary table and store the stream of  results in that table.
       # This "caches" the results so we only have to execute stream's query
@@ -53,6 +52,11 @@ module ConceptQL
 
       def sql(db)
         db[db.send(:create_table_as_sql, table_name, stream.evaluate(db).sql, temp: true)].sql
+      end
+
+      def tree=(tree)
+        super
+        tree.defined[table_name] = self
       end
 
       private

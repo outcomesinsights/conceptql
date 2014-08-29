@@ -10,9 +10,9 @@ module ConceptQL
     class DateRange < Node
       def query(db)
         db.from(:person)
-          .select_append(Sequel.cast('person', :text).as(:criterion_type))
+          .select_append(Sequel.cast_string('person').as(:criterion_type))
           .select_append(Sequel.expr(:person_id).as(:criterion_id))
-          .select_append(Sequel.expr(start_date(db)).cast(:date).as(:start_date),Sequel.expr(end_date(db)).cast(:date).as(:end_date)).from_self
+          .select_append(Sequel.lit('date ?', start_date(db)).as(:start_date), Sequel.lit('date ?', end_date(db)).as(:end_date)).from_self
       end
 
       def types
@@ -31,8 +31,8 @@ module ConceptQL
       # TODO: Select the earliest and latest dates of observation from
       # the proper CDM table to represent the start and end of data
       def date_from(db, str)
-        return db.from(:visit_occurrence_with_dates).select { min(:start_date) } if str.upcase == 'START'
-        return db.from(:visit_occurrence_with_dates).select { max(:end_date) } if str.upcase == 'END'
+        return db.from(:visit_occurrence).select { min(:start_date) } if str.upcase == 'START'
+        return db.from(:visit_occurrence).select { max(:end_date) } if str.upcase == 'END'
         return str
       end
     end

@@ -3,8 +3,8 @@ module ConceptQL
   module Nodes
     class Node
       attr :values, :options
-      def initialize(tree, *args)
-        @tree = tree
+      attr_accessor :tree
+      def initialize(*args)
         args.flatten!
         if args.last.is_a?(Hash)
           @options = args.pop.symbolize_keys
@@ -23,7 +23,7 @@ module ConceptQL
 
       def select_it(query, specific_type = nil)
         specific_type = type if specific_type.nil? && respond_to?(:type)
-        query.select(*columns(specific_type))
+        query.select(*columns(query, specific_type))
       end
 
       def types
@@ -42,14 +42,14 @@ module ConceptQL
         @arguments ||= values.reject { |v| v.is_a?(Node) }
       end
 
-      def columns(local_type = nil)
+      def columns(query, local_type = nil)
         criterion_type = Sequel.expr(:criterion_type)
         if local_type
-          criterion_type = Sequel.expr(local_type.to_s).cast(:text)
+          criterion_type = Sequel.cast_string(local_type.to_s)
         end
         [:person_id___person_id,
          Sequel.expr(type_id(local_type)).as(:criterion_id),
-         criterion_type.as(:criterion_type)] + date_columns(local_type)
+         criterion_type.as(:criterion_type)] + date_columns(query, local_type)
       end
 
       private
@@ -83,23 +83,23 @@ module ConceptQL
         "#{table}___tab".to_sym
       end
 
-      def date_columns(type = nil)
+      def date_columns(query, type = nil)
         return [:start_date, :end_date] unless type
-        sd = start_date_column(type)
+        sd = start_date_column(query, type)
         sd = Sequel.expr(sd).cast(:date).as(:start_date) unless sd == :start_date
-        ed = end_date_column(type)
+        ed = end_date_column(query, type)
         ed = Sequel.expr(ed).cast(:date).as(:end_date) unless ed == :end_date
         [sd, ed]
       end
 
-      def start_date_column(type)
+      def start_date_column(query, type)
         {
           condition_occurrence: :condition_start_date,
           death: :death_date,
           drug_exposure: :drug_exposure_start_date,
           drug_cost: nil,
           payer_plan_period: :payer_plan_period_start_date,
-          person: person_date_of_birth,
+          person: person_date_of_birth(query),
           procedure_occurrence: :procedure_date,
           procedure_cost: nil,
           observation: :observation_date,
@@ -107,14 +107,14 @@ module ConceptQL
         }[type]
       end
 
-      def end_date_column(type)
+      def end_date_column(query, type)
         {
           condition_occurrence: :condition_end_date,
           death: :death_date,
           drug_exposure: :drug_exposure_end_date,
           drug_cost: nil,
           payer_plan_period: :payer_plan_period_end_date,
-          person: person_date_of_birth,
+          person: person_date_of_birth(query),
           procedure_occurrence: :procedure_date,
           procedure_cost: nil,
           observation: :observation_date,
@@ -122,16 +122,21 @@ module ConceptQL
         }[type]
       end
 
-      def person_date_of_birth
-        assemble_date(:year_of_birth, :month_of_birth, :day_of_birth)
+      def person_date_of_birth(query)
+        assemble_date(query, :year_of_birth, :month_of_birth, :day_of_birth)
       end
 
-      def assemble_date(*symbols)
+      def assemble_date(query, *symbols)
         strings = symbols.map do |symbol|
-          Sequel.function(:coalesce, Sequel.expr(symbol).cast(:text), Sequel.expr('01').cast(:text)).cast(:text)
+          Sequel.cast_string(Sequel.function(:coalesce, Sequel.cast_string(symbol), Sequel.cast_string('01')))
         end
         strings = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
-        Sequel.function(:date, Sequel.join(strings))
+        concatted_strings = Sequel.join(strings)
+        unless query.db.database_type == :oracle
+          Sequel.cast(concatted_strings, Date)
+        else
+          Sequel.function(:to_date, concatted_strings, 'YYYY-MM-DD')
+        end
       end
 
       def determine_types

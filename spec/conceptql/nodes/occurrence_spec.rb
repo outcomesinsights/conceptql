@@ -81,7 +81,7 @@ describe ConceptQL::Nodes::Occurrence do
     end
 
     it 'should order by ascending start_date' do
-      subject.must_match ', condition_occurrence_id ASC'
+      subject.must_match ', criterion_type, criterion_id'
     end
   end
 end
