@@ -154,7 +154,7 @@ module ConceptQL
 
       def namify(name)
         digest = Zlib.crc32 name
-        ('_' + digest.to_s).tap {|s| puts s}.to_sym
+        ('_' + digest.to_s).to_sym
       end
     end
   end
