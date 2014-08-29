@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.0.7 - 2014-08-28
+## 0.0.8 - 2014-08-28
 
 ### Added
 - Support for Oracle.
@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - DateAdjuster/TimeWindow use Sequel's date_arithmetic extension to produce database agnostic date manipulation.
 - Breakage from Node#tree in GraphNodifier.
 - All tests are back to passing.
+- Changed from SHA1 to CRC32 hash since Oracle can't handle table names longer than 30 characters.
 
 
 ## 0.0.6 - 2014-08-23
