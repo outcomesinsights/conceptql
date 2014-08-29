@@ -10,7 +10,7 @@ module ConceptQL
     class DateRange < Node
       def query(db)
         db.from(:person)
-          .select_append(Sequel.expr('person').as(:criterion_type))
+          .select_append(Sequel.cast_string('person').as(:criterion_type))
           .select_append(Sequel.expr(:person_id).as(:criterion_id))
           .select_append(Sequel.lit('date ?', start_date(db)).as(:start_date), Sequel.lit('date ?', end_date(db)).as(:end_date)).from_self
       end
