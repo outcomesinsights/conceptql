@@ -128,7 +128,7 @@ module ConceptQL
 
       def assemble_date(query, *symbols)
         strings = symbols.map do |symbol|
-          Sequel.cast_string(Sequel.function(:coalesce, symbol, '01'))
+          Sequel.cast_string(Sequel.function(:coalesce, Sequel.cast_string(symbol), Sequel.cast_string('01')))
         end
         strings = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
         concatted_strings = Sequel.join(strings)
