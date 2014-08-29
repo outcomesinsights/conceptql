@@ -126,30 +126,12 @@ module ConceptQL
     end
 
     class DefineNode < DotNode
-      def initialize(*args)
-        @gn = args.pop
-        super(*args)
-      end
-
-      def types
-        @gn.types[namify(arguments.first)] = super
-      end
-
       def shape
         :cds
       end
     end
 
     class RecallNode < DotNode
-      def initialize(*args)
-        @gn = args.pop
-        super(*args)
-      end
-
-      def types
-        @gn.types[namify(arguments.first)]
-      end
-
       def shape
         :cds
       end
@@ -176,9 +158,9 @@ module ConceptQL
       if BINARY_OPERATOR_TYPES.include?(type)
         return BinaryOperatorNode.new(type, values)
       elsif type == :define
-        return DefineNode.new(type, values, self)
+        return DefineNode.new(type, values).tap { |n| n.tree = self }
       elsif type == :recall
-        return RecallNode.new(type, values, self)
+        return RecallNode.new(type, values).tap { |n| n.tree = self }
       elsif type == :vsac
         types = values.pop
         return VsacNode.new(type, values, types)
