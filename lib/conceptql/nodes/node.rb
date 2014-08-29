@@ -1,3 +1,4 @@
+require 'zlib'
 require 'active_support/core_ext/hash'
 module ConceptQL
   module Nodes
@@ -152,9 +153,8 @@ module ConceptQL
       end
 
       def namify(name)
-        require 'digest'
-        digest = Digest::SHA256.hexdigest name
-        ('_' + digest).to_sym
+        digest = Zlib.crc32 name
+        ('_' + digest.to_s).tap {|s| puts s}.to_sym
       end
     end
   end
