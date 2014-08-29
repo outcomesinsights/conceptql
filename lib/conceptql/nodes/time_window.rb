@@ -21,11 +21,12 @@ module ConceptQL
     # start: 'd', end: '' # Only adjust start_date by positive 1 day and leave end_date uneffected
     class TimeWindow < Node
       def query(db)
+        db.extension :date_arithmetic
         db.from(stream.evaluate(db))
       end
 
       private
-      def date_columns(type = nil)
+      def date_columns(query, type = nil)
         [adjusted_start_date, adjusted_end_date]
       end
 
@@ -44,8 +45,12 @@ module ConceptQL
         arg ||= ''
         return ['end_date', column].join('___').to_sym if arg.downcase == 'end'
         return ['start_date', column].join('___').to_sym if arg.downcase == 'start'
-        DateAdjuster.new(arg).adjustments.inject(Sequel.function(:date, column)) do |sql, adjustment|
-          Sequel.function(:date, sql + Sequel.lit("interval '#{adjustment}'"))
+        DateAdjuster.new(arg).adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
+          if quantity > 0
+            Sequel.date_add(sql, units => quantity)
+          else
+            Sequel.date_sub(sql, units => quantity.abs)
+          end
         end.as(column)
       end
     end

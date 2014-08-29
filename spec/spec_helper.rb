@@ -72,3 +72,15 @@ def require_double(double_name)
   p = p + 'spec' + 'doubles' + (double_name + '_double')
   require(p.expand_path)
 end
+
+def stub_const(klass, const, replace, &block)
+  klass.send(:const_set, const, replace)
+  if block_given?
+    yield
+    remove_stubbed_const(klass, const)
+  end
+end
+
+def remove_stubbed_const(klass, const)
+  klass.send(:remove_const, const)
+end

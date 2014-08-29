@@ -1,9 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.0.7 - 2014-08-28
 
 ### Added
+- Support for Oracle.
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Nothing.
+
+### Fixed
+- DateAdjuster/TimeWindow use Sequel's date_arithmetic extension to produce database agnostic date manipulation.
+- Breakage from Node#tree in GraphNodifier.
+- All tests are back to passing.
+
+
+## 0.0.6 - 2014-08-23
+
+### Added
+- Support for Oracle
 - Tree#defined to pass type information between Define and Recall.
 - Node#sql to produce SQL for each node.
 - Graph includes row count on each edge in the diagram.
@@ -18,6 +36,8 @@ All notable changes to this project will be documented in this file.
 - Bug in CastingNode that generate SQL returning multiple columns in a subquery.
 - Made ruby-graphviz a dependency so calling programs don't bomb out.
 - Define now passes rows on through like any other node!
+- DateAdjuster/TimeWindow use Sequel's date_arithmetic extension to produce database agnostic date manipulation.
+- All tests are back to passing.
 
 
 ## 0.0.5 - 2014-08-19
