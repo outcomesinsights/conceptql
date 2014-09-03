@@ -12,7 +12,7 @@ module ConceptQL
         db.from(:person)
           .select_append(Sequel.cast_string('person').as(:criterion_type))
           .select_append(Sequel.expr(:person_id).as(:criterion_id))
-          .select_append(Sequel.lit('date ?', start_date(db)).as(:start_date), Sequel.lit('date ?', end_date(db)).as(:end_date)).from_self
+          .select_append(start_date(db).as(:start_date), end_date(db).as(:end_date)).from_self
       end
 
       def types
@@ -33,7 +33,8 @@ module ConceptQL
       def date_from(db, str)
         return db.from(:visit_occurrence).select { min(:start_date) } if str.upcase == 'START'
         return db.from(:visit_occurrence).select { max(:end_date) } if str.upcase == 'END'
-        return str
+        return Sequel.lit('CONVERT(DATETIME, ?)', str) if db.database_type == :mssql
+        return Sequel.lit('date ?', str)
       end
     end
   end

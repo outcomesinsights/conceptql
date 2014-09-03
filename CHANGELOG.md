@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.0.9 - 2014-09-03
+
+### Added
+- Support for MSSQL (SQL Server).
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Nothing.
+
+### Fixed
+- Removed debug output from Node#namify
+
+
 ## 0.0.8 - 2014-08-28
 
 ### Added
