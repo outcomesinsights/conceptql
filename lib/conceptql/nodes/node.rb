@@ -133,10 +133,13 @@ module ConceptQL
         end
         strings = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
         concatted_strings = Sequel.join(strings)
-        unless query.db.database_type == :oracle
-          Sequel.cast(concatted_strings, Date)
-        else
+        case query.db.database_type
+        when :oracle
           Sequel.function(:to_date, concatted_strings, 'YYYY-MM-DD')
+        when :mssql
+          Sequel.lit('CONVERT(DATETIME, ?)', concatted_strings)
+        else
+          Sequel.cast(concatted_strings, Date)
         end
       end
 
