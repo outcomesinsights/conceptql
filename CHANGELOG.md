@@ -1,10 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.0.9 - 2014-09-03
 
 ### Added
-- Nothing.
+- Support for MSSQL (SQL Server).
 
 ### Deprecated
 - Nothing.
