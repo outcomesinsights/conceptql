@@ -44,13 +44,14 @@ module ConceptQL
       end
 
       def columns(query, local_type = nil)
-        criterion_type = Sequel.expr(:criterion_type)
+        criterion_type = :criterion_type
         if local_type
-          criterion_type = Sequel.cast_string(local_type.to_s)
+          criterion_type = Sequel.cast_string(local_type.to_s).as(:criterion_type)
         end
-        [:person_id___person_id,
-         Sequel.expr(type_id(local_type)).as(:criterion_id),
-         criterion_type.as(:criterion_type)] + date_columns(query, local_type)
+        columns = [:person_id,
+                    type_id(local_type),
+                    criterion_type]
+        columns += date_columns(query, local_type)
       end
 
       private
@@ -77,6 +78,10 @@ module ConceptQL
       def type_id(type = nil)
         return :criterion_id if type.nil?
         type = :person if type == :death
+        Sequel.expr(make_type_id(type)).as(:criterion_id)
+      end
+
+      def make_type_id(type)
         (type.to_s + '_id').to_sym
       end
 

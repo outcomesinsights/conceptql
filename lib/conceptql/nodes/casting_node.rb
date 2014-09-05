@@ -61,7 +61,7 @@ module ConceptQL
           wheres << Sequel.expr(person_id: uncastable_person_ids)
         end
 
-        destination_type_id = type_id(my_type)
+        destination_type_id = make_type_id(my_type)
 
         unless to_me_types.empty?
           # For each castable type in the stream, setup a query that
@@ -72,7 +72,7 @@ module ConceptQL
               .where(criterion_type: source_type.to_s)
               .select_group(:criterion_id)
             source_table = make_table_name(source_type)
-            source_type_id = type_id(source_type)
+            source_type_id = make_type_id(source_type)
 
             db.from(source_table)
               .where(source_type_id => source_ids)
@@ -85,7 +85,7 @@ module ConceptQL
 
         unless from_me_types.empty?
           from_me_types.each do |from_me_type|
-            fk_type_id = type_id(from_me_type)
+            fk_type_id = make_type_id(from_me_type)
             wheres << Sequel.expr(fk_type_id => db.from(stream_query).where(criterion_type: from_me_type.to_s).select_group(:criterion_id))
           end
         end
