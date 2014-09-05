@@ -59,7 +59,7 @@ module ConceptQL
       attr :values, :name
       def initialize(name, values)
         @name = name.to_s
-        super(nil, values)
+        super(values)
       end
 
       def display_name
