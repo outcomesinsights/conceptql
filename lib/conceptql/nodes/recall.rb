@@ -20,6 +20,11 @@ module ConceptQL
       # before we call #query.  Probably time to reevaluate how we're caching
       # the type information.
       def query(db)
+        # We're going to call evaluate on definition to ensure the definition
+        # has been created.  We were running into odd timing issues when
+        # drawing graphs where the recall node was being drawn before definition
+        # was drawn.
+        definition.evaluate(db)
         db.from(table_name)
       end
 

@@ -42,7 +42,13 @@ module ConceptQL
       # Also, things will blow up if you try to use a variable that hasn't been
       # defined yet.
       def query(db)
-        db.create_table!(table_name, temp: true, as: stream.evaluate(db))
+        # We'll wrap the creation of the temp table in memoization
+        # That way we can call #query multiple times, but only suffer the
+        # cost of creating the temp table just once
+        @_run ||= begin
+          db.create_table!(table_name, temp: true, as: stream.evaluate(db))
+          true
+        end
         db.from(table_name)
       end
 
