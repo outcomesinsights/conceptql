@@ -24,12 +24,16 @@ module ConceptQL
       end
 
       def types
-        tree.defined[table_name].types
+        definition.types
       end
 
       private
       def table_name
         @table_name ||= namify(arguments.first)
+      end
+
+      def definition
+        tree.defined[table_name]
       end
     end
   end
