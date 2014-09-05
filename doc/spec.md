@@ -932,7 +932,6 @@ A stream must be `define`d before `recall` can use it.
 ```
 
 
-
 ## Concepts within Concepts
 One of the main motivations behind keeping ConceptQL so flexible is to allow users to build ConceptQL statements from other ConceptQL statements.  This section loosely describes how this feature will work.  Its actual execution and implementation will differ from what is presented here.
 
@@ -978,6 +977,153 @@ In the actual implementation of the concept node, each ConceptQL statement will 
   procedure_cost: { concept: 2031 }
 }
 ```
+
+
+## Values
+A result can carry forward three different types of values, modeled after the behavior of the observation table:
+- value_as_numeric
+    - For values like lab values, counts of occurrence of results, cost information
+- value_as_string
+    - For value_as_string from observation table, or notes captured in EHR data
+- value_as_concept_id
+    - For values that are like factors from the observation value_as_concept_id column
+
+By default, all value fields are set to NULL, unless a criterion node is explicitly written to populate one or more of those fields.
+
+There are many operations that can be performed on the value_as\_\* columns and as those operations are implemented, this section will grow.
+
+For now we'll cover some of the general behavior of the value_as_numeric column and it's associated nodes.
+
+#### numeric
+- Takes 2 arguments
+    - A stream
+    - And a numeric value or a symbol representing the name of a column in CDM
+
+Passing streams through a `numeric` node changes the number stored in the value column:
+
+```ConceptQL
+# All MIs, setting value_as_numeric to 2
+{
+    numeric: [
+        { icd9: '412' },
+        2
+   ]
+}
+```
+
+`numeric` can also take a column name instead of a number.  It will derive the results row's value from the value stored in the column specified.
+```ConceptQL
+# All copays for 99214s
+{
+    numeric: [
+        { procedure_cost: { cpt: '99214' } },
+        :paid_copay
+    ]
+}
+```
+
+If something nonsensical happens, like the column specified isn't present in the table pointed to by a result row, value_as_numeric in the result row will be unaffected:
+```ConceptQL
+# Still all MIs with value_as_numeric defaulted to NULL.  condition_occurrence table doesn't have a "paid_copay" column
+{
+    value: [
+        { icd9: '412' },
+        :paid_copay
+   ]
+}
+```
+
+Or if the column specified exists, but refers to a non-numerical column, we'll set the value to 0
+```ConceptQL
+# All MIs, with value set to 0 since the column specified by value node is a non-numerical column
+{
+    value: [
+        { icd9: '412' },
+        :stop_reason
+   ]
+}
+```
+
+With a `numeric` node defined, we could introduce a sum node that will sum by patient and type.  This allows us to implement the Charlson comorbidity algorithm:
+```ConceptQL
+{
+   sum: [
+     {
+        union: [
+          {
+            numeric: [
+                  { person: { icd9: '412' } },
+                  1
+             ]
+          },
+          {
+             numeric: [
+                  { person: { icd9: '278.02' } },
+                  2
+             ]
+          }
+        ]
+     }
+   ]
+}
+```
+
+### Counting
+It might be helpful to count the number of occurrences of a result row in a stream.  A simple "count" node could group identical rows and store the number of occurrences in the value_as_numeric column.
+
+I need examples of algorithms that could benefit from this node.  I'm concerned that we'll want to roll up occurrences by person most of the time and that would require us to first cast streams to person before passing the person stream to count.
+```ConceptQL
+# Count the number of times each person was irritable
+{
+    count: { person: { icd9: '799.22' } }
+}
+```
+
+We could do dumb things like count the number of times a row shows up in a union:
+```ConceptQL
+# All rows with a value of 2 would be rows that were both MI and Primary
+{
+    count: {
+        union: [
+           { icd9: '412' },
+           { primary_diagnosis: true}
+        ]
+   }
+}
+```
+
+#### Numeric Value Comparison
+Acts like any other binary node.  L and R streams, joined by person.  Any L that pass comparison go downstream.  R is thrown out.  Comparison based on result row's value column.
+
+- Less than
+- Less than or equal
+- Equal
+- Greater than or equal
+- Greater than
+- Not equal
+
+
+### numeric as criterion node
+Numeric doesn't have to take a stream.  If it doesn't have a stream as an argument, it acts like a criterion node much like date_range
+```ConceptQL
+# People with more than 1 MI
+{
+
+    greater_than: {
+        left: { count: { person: { icd9: '412' }}},
+        right: { numeric: 1 }
+    }
+}
+```
+
+#### sum
+- Takes a stream of results and does some wild things
+    - Groups all results by person and type
+        - Sums the value_as_numeric column within that grouping
+        - Sets start_date to the earliest start_date in the group
+        - Sets the end_date to the most recent end_date in the group
+        - Sets criterion_id to 0 since there is no particular single row that the result refers to anymore
+
 
 # Appendix A - Criterion Nodes
 
@@ -1135,131 +1281,23 @@ But I don't have a good feel for:
 - Perhaps slot is a different node from "define"
 
 
-### Value Nodes
-So far, we can’t recreate the Charlson comorbidity index using ConceptQL.  If we added a “value” node, we could.
+### Considerations for Values
+I'm considering defaulting each value_as\_\* column to some value.
+- numeric => 1
+- concept_id => 0
+    - Or maybe the concept_id of the main concept_id value from the row?
+        - This would be confusing when pulling from the observation table
+        - What's the "main" concept_id of a person?
+        - Hm.  This feels a bit less like a good idea now
+- string
+    - source_value?
+    - Boy, this one is even harder to default
 
-By default each result row will carry a value column, set to 1.  Some examples:
 ```ConceptQL
-# All MIs, defaulting value to 1
+# All MIs, defaulting value_as_numeric to 1, concept_id to concept id for 412, string to condition_source_value
 { icd9: '412' }
 ```
 
-Passing streams through a value node changes the number stored in the value column:
-
-```ConceptQL
-# All MIs, changing value to 2
-{
-    value: [
-        { icd9: '412' },
-        2
-   ]
-}
-```
-
-Value can also take a column name instead of a number.  It will derive the results row's value from the value stored in the column specified.
-```ConceptQL
-# All copays for 99214s
-{
-    value: [
-        { procedure_cost: { cpt: '99214' } },
-        :paid_copay
-    ]
-}
-```
-
-If something nonsensical happens, like the column specified isn't present in the table pointed to by a result row, the value in the result row will be unaffected:
-```ConceptQL
-# Still all MIs with value defaulted to 1.  condition_occurrence table doesn't have a "paid_copay" column
-{
-    value: [
-        { icd9: '412' },
-        :paid_copay
-   ]
-}
-```
-
-Or if the column specified exists, but refers to a non-numerical column, we'll set the value to 0
-```ConceptQL
-# All MIs, with value set to 0 since the column specified by value node is a non-numerical column
-{
-    value: [
-        { icd9: '412' },
-        :stop_reason
-   ]
-}
-```
-
-With a value node defined, we could introduce a sum node that will sum by patient.  This allows us to implement the Charlson comorbidity algorithm:
-```ConceptQL
-{
-   sum: [
-     {
-        union: [
-          {
-            value: [
-                  { person: { icd9: '412' } },
-                  1
-             ]
-          },
-          {
-             value: [
-                  { person: { icd9: '278.02' } },
-                  2
-             ]
-          }
-        ]
-     }
-   ]
-}
-```
-
-### Counting
-It might be helpful to count the number of occurrences of a result row in a stream.  A simple "count" node could group identical rows and store the number of occurrences in the value column.
-
-I need examples of algorithms that could benefit from this node.  I'm concerned that we'll want to roll up occurrences by person most of the time and that would require us to first cast streams to person before passing the person stream to count.
-```ConceptQL
-# Count the number of times each person was irritable
-{
-    count: { person: { icd9: '799.22' } }
-}
-```
-
-We could do dumb things like count the number of times a row shows up in a union:
-```ConceptQL
-# All rows with a value of 2 would be rows that were both MI and Primary
-{
-    count: {
-        union: [
-           { icd9: '412' },
-           { primary_diagnosis: true}
-        ]
-   }
-}
-```
-
-### Value Comparison
-Acts like any other binary node.  L and R streams, joined by person.  Any L that pass comparison go downstream.  R is thrown out.  Comparison based on result row's value column.
-
-- Less than
-- Less than or equal
-- Equal
-- Greater than or equal
-- Greater than
-- Not equal
-- Between
-
-
-### value_literal
-```ConceptQL
-# People with more than 1 MI
-{
-
-    greater_than: {
-        left: { count: { person: { icd9: '412' }}},
-        right: { value_literal: 1 }
-    }
-}
-```
 
 ### Filter Node
 Inspired by person_filter, why not just have a "filter" node that filters L by R.  Takes L, R, and an "as" option.  As option temporarily casts the L and R streams to the type specified by :as and then does person by person comparison, only keeping rows that occur on both sides.  Handy for keeping procedures that coincide with conditions without fully casting the streams:

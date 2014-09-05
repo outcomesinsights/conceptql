@@ -14,3 +14,10 @@ And here is where I record information about some of the decisions I made.
         - Perhaps a definition that uses a definition that doesn't exist?
         - Is that recursive?
     - Is that something we want/need in ConceptQL?
+
+
+## Values
+- I had considered comparing a result set with a between operator, but this implies that the R stream needs a range somehow
+    - I don't think supporting a range is a good idea right now
+
+

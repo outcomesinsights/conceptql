@@ -9,7 +9,7 @@ describe ConceptQL::Nodes::TimeWindow do
     end
 
     def query(db)
-      db
+      db.from(:table)
     end
   end
 
