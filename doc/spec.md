@@ -478,7 +478,7 @@ For situations where we need to represent pre-defined date ranges, we can use "d
 - *Not yet implemented*
 
 
-#### What is \<date-format\>?
+#### What is <date-format\>?
 Dates follow these formats:
 
 - "YYYY-MM-DD"
@@ -848,6 +848,91 @@ And don't forget the left-hand side can have multiple types of streams:
 }
 ```
 
+
+## Sub-concepts within a Larger Concept
+If a concept is particularly complex, or has a stream of results that are used more than once, it can be helpful to break the concept into a set of sub-concepts.  This can be done using two nodes: define and recall
+
+#### define
+- Takes 2 arguments
+    - First argument is a string of arbitrary length that describe the stream to be save.  This is the "name" assigned to the stream for later recall
+    - Second argument is the stream to save under the name specified
+
+
+#### recall
+- Takes 1 argument
+    - The "name" of the stream previously saved using the `define` node
+
+
+A stream must be `define`d before `recall` can use it.
+
+```ConceptQL
+# Save away a stream of results to build the 1 inpatient, 2 outpatient pattern used in claims data algorithms
+[
+  {
+    define: [
+      'Heart Attack Visit',
+      { visit_occurrence: { icd9: '412' } }
+    ]
+  },
+
+  {
+    define: [
+      'Inpatient Heart Attack',
+      {
+        intersect: [
+          { recall: 'Heart Attack Visit'},
+          { place_of_service_code: 21 }
+        ]
+      }
+    ]
+  },
+
+  {
+    define: [
+      'Outpatient Heart Attack',
+      {
+        intersect: [
+          { recall: 'Heart Attack Visit'},
+          {
+            complement: {
+              place_of_service_code: 21
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    define: [
+      'Earlier of Two Outpatient Heart Attacks',
+      {
+        before: {
+          left: { recall: 'Outpatient Heart Attack' },
+          right: {
+            time_window: [
+              { recall: 'Outpatient Heart Attack' },
+              { start: '-30d', end: '0' }
+            ]
+          }
+        }
+      }
+    ]
+  },
+
+  {
+    first: {
+      union: [
+        { recall: 'Inpatient Heart Attack' },
+        { recall: 'Earlier of Two Outpatient Heart Attacks'}
+      ]
+    }
+  }
+]
+```
+
+
+
 ## Concepts within Concepts
 One of the main motivations behind keeping ConceptQL so flexible is to allow users to build ConceptQL statements from other ConceptQL statements.  This section loosely describes how this feature will work.  Its actual execution and implementation will differ from what is presented here.
 
@@ -1031,15 +1116,14 @@ ConceptQL is not yet fully specified.  These are modifications/enhancements that
 5. How do we want to look up standard vocab concepts?
      - I think Marc’s approach is a bit heavy-handed
 
-
-### Slots and Variables
 Some statements maybe very useful and it would be handy to reuse the bulk of the statement, but perhaps vary just a few things about it.  ConceptQL supports the idea of using variables to represent sub-expressions.  The variable node is used as a place holder to say "some criteria set belongs here".  That variable can be defined in another part of the criteria set and will be used in all places the variable node appears.
 
-If a variable node is used, but not defined, the concept is still valid, but will fail to run until a definition for all missing variables is provided.
 
-I don't have a good feel for:
+### Future Work for Define and Recall
+I'd like to make it so if a variable node is used, but not defined, the concept is still valid, but will fail to run until a definition for all missing variables is provided.
 
-- How to represent a variable node in a diagram
+But I don't have a good feel for:
+
 - Whether we should have users name the variables, or auto-assign a name?
     - We risk name collisions if a concept includes a sub-concept with the same variable name
     - Probably need to name space all variables
@@ -1048,46 +1132,7 @@ I don't have a good feel for:
 - We'll need to do a pass through a concept to find all variables and prompt a user, then do another pass through the concept before attempting to execute it to ensure all variables have values
     - Do we throw an exception if not?
     - Do we require calling programs to invoke a check on the concept before generating the query?
-
-
-##### Update 2014-08-13
-I've hacked some variable support into an experimental branch of ConceptQL.  So far, here's how it works:
-- Define node
-    - Give it two params, a name, and a stream
-    - Stream is used to populate a temporary table that is named after the name
-    - name is plain english sentence that is then turned into a hexdigest for a name
-        - Avoids collisions with other names
-        - Avoids truncation issues if name is WAY long
-- Recall node
-    - Takes a single argument: the name used in a define node
-    - Re-written to fetch results from the temp table that has the name provided
-
-Current issues:
-
-- Sequel's create table statement runs out-of-band with rest of ConceptQL statemnt
-    - Gets executed immediately
-- Type information in "define" needs to be made available to "from"
-    - Currently attempting to pass this information from define to from using an attribute tacked onto the shared db connection
-    - Recall may not have access to this information until #query is called
-    - This is bad and needs to be fixed/rethought
-
-
-Considerations for the future:
-- Probably want to rename these nodes to something better
-- It would still be nice to drop a concept into a concept that has "slots" waiting
-    - Perhaps slot is a different node from "define"
-- I had to retool Tree and Query and Graph to expect an array of concepts in a ConceptQL statement
-    - I'm not sure I like this
-    - A ConceptQL statement perhaps should be only a single statement at the end
-    - If an array of sub-concepts is fed into Query, maybe we only execute the last one after parsing the others
-        - This is consistent with how Sequel wants to live and would yield a single set of results
-        - I think I like this
-- Defines need to occur before they are used
-    - Most languages have a "forward definition" ability
-        - I have no use cases for when we might need those?
-        - Perhaps a definition that uses a definition that doesn't exist?
-        - Is that recursive?
-    - Is that something we want/need in ConceptQL?
+- Perhaps slot is a different node from "define"
 
 
 ### Value Nodes
