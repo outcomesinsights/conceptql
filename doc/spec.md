@@ -981,12 +981,14 @@ In the actual implementation of the concept node, each ConceptQL statement will 
 
 ## Values
 A result can carry forward three different types of values, modeled after the behavior of the observation table:
+
 - value_as_numeric
     - For values like lab values, counts of occurrence of results, cost information
 - value_as_string
     - For value_as_string from observation table, or notes captured in EHR data
 - value_as_concept_id
     - For values that are like factors from the observation value_as_concept_id column
+
 
 By default, all value fields are set to NULL, unless a criterion node is explicitly written to populate one or more of those fields.
 
