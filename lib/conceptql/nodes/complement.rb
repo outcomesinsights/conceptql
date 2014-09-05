@@ -11,7 +11,7 @@ module ConceptQL
             .exclude(:criterion_id => nil)
             .where(:criterion_type => type.to_s)
           query = db.from(make_table_name(type))
-            .exclude(type_id(type) => positive_query)
+            .exclude(make_type_id(type) => positive_query)
           db.from(select_it(query, type))
         end.inject do |union_query, q|
           union_query.union(q, all: true)

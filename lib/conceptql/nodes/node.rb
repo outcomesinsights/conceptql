@@ -3,6 +3,16 @@ require 'active_support/core_ext/hash'
 module ConceptQL
   module Nodes
     class Node
+      COLUMNS = [
+        :person_id,
+        :criterion_id,
+        :criterion_type,
+        :start_date,
+        :end_date,
+        :value_as_numeric,
+        :value_as_string,
+        :value_as_concept_id
+      ]
       attr :values, :options
       attr_accessor :tree
       def initialize(*args)
@@ -44,13 +54,15 @@ module ConceptQL
       end
 
       def columns(query, local_type = nil)
-        criterion_type = Sequel.expr(:criterion_type)
+        criterion_type = :criterion_type
         if local_type
-          criterion_type = Sequel.cast_string(local_type.to_s)
+          criterion_type = Sequel.cast_string(local_type.to_s).as(:criterion_type)
         end
-        [:person_id___person_id,
-         Sequel.expr(type_id(local_type)).as(:criterion_id),
-         criterion_type.as(:criterion_type)] + date_columns(query, local_type)
+        columns = [:person_id,
+                    type_id(local_type),
+                    criterion_type]
+        columns += date_columns(query, local_type)
+        columns += value_columns(query)
       end
 
       private
@@ -77,6 +89,10 @@ module ConceptQL
       def type_id(type = nil)
         return :criterion_id if type.nil?
         type = :person if type == :death
+        Sequel.expr(make_type_id(type)).as(:criterion_id)
+      end
+
+      def make_type_id(type)
         (type.to_s + '_id').to_sym
       end
 
@@ -84,7 +100,31 @@ module ConceptQL
         "#{table}___tab".to_sym
       end
 
+      def value_columns(query)
+        [
+          numeric_value(query),
+          string_value(query),
+          concept_id_value(query)
+        ]
+      end
+
+      def numeric_value(query)
+        return :value_as_numeric if query.columns.include?(:value_as_numeric)
+        Sequel.cast_numeric(nil, Float).as(:value_as_numeric)
+      end
+
+      def string_value(query)
+        return :value_as_string if query.columns.include?(:value_as_string)
+        Sequel.cast_string(nil).as(:value_as_string)
+      end
+
+      def concept_id_value(query)
+        return :value_as_concept_id if query.columns.include?(:value_as_concept_id)
+        Sequel.cast_numeric(nil).as(:value_as_concept_id)
+      end
+
       def date_columns(query, type = nil)
+        return [:start_date, :end_date] if (query.columns.include?(:start_date) && query.columns.include?(:end_date))
         return [:start_date, :end_date] unless type
         sd = start_date_column(query, type)
         sd = Sequel.expr(sd).cast(:date).as(:start_date) unless sd == :start_date

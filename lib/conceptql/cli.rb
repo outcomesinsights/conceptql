@@ -89,7 +89,7 @@ module ConceptQL
       puts 'JSON'
       puts JSON.pretty_generate(q.statement)
       STDIN.gets
-      graph_it(statement, my_db, title)
+      graph_it(statement, title)
       STDIN.gets
       puts q.query.sql
       STDIN.gets
