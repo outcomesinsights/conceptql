@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.1.0 - 2014-09-04
+
+### Added
+- Support for numeric, string, and concept_ids returned in results.
+- Many updates to the ConceptQL Specification document.
+- Added doc/implementation_notes.md to capture thoughts and bad ideas.
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Nothing.
+
+### Fixed
+- "Fake" graphs are now drawn correctly.
+- bin/conceptql doesn't bomb out drawing "fake" graphs
+
+
 ## 0.0.9 - 2014-09-03
 
 ### Added
