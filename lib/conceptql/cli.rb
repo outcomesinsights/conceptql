@@ -93,7 +93,7 @@ module ConceptQL
       puts JSON.pretty_generate(q.statement)
       graph_it(statement, title)
       STDIN.gets
-      puts q.query.sql
+      puts q.sql
       STDIN.gets
       results = q.all
       if options[:full]
