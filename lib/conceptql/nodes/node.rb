@@ -158,6 +158,7 @@ module ConceptQL
           procedure_occurrence: :procedure_date,
           procedure_cost: nil,
           observation: :observation_date,
+          observation_period: :observation_period_start_date,
           visit_occurrence: :visit_start_date
         }[type]
       end
@@ -173,6 +174,7 @@ module ConceptQL
           procedure_occurrence: :procedure_date,
           procedure_cost: nil,
           observation: :observation_date,
+          observation_period: :observation_period_end_date,
           visit_occurrence: :visit_end_date
         }[type]
       end
