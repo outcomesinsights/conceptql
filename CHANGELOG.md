@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.1.1 - 2014-09-18
+
+### Added
+- Nothing.
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Nothing.
+
+### Fixed
+- Calling Query#sql no longer creates a bunch of temporary tables
+
+
 ## 0.1.0 - 2014-09-04
 
 ### Added
