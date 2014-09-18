@@ -19,6 +19,7 @@ module ConceptQL
     end
 
     def sql
+      tree.opts[:sql_only] = true
       nodes.map { |node| node.sql(db) }.join(";\n") + ';'
     end
 

@@ -3,11 +3,12 @@ require 'active_support/core_ext/hash'
 
 module ConceptQL
   class Tree
-    attr :nodifier, :behavior, :defined
+    attr :nodifier, :behavior, :defined, :opts
     def initialize(opts = {})
       @nodifier = opts.fetch(:nodifier, Nodifier.new)
       @behavior = opts.fetch(:behavior, nil)
       @defined = {}
+      @opts = {}
     end
 
     def root(*queries)

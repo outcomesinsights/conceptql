@@ -28,6 +28,10 @@ module ConceptQL
         db.from(table_name)
       end
 
+      def columns(query, local_type)
+        COLUMNS
+      end
+
       def types
         definition.types
       end
