@@ -43,12 +43,14 @@ module ConceptQL
     end
 
     desc 'show_graph statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
+    option :watch_file
     def show_graph(file)
       graph_it(criteria_from_file(file))
     end
 
     desc 'show_and_tell_file statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph, then executes the statement against the DB'
     option :full
+    option :watch_file
     def show_and_tell_file(file)
       show_and_tell(criteria_from_file(file), options)
     end
@@ -63,6 +65,7 @@ module ConceptQL
     private
     desc 'show_and_tell_db conceptql_id', 'Fetches the ConceptQL from a DB and shows the contents as a ConceptQL graph, then executes the statement against our test database'
     option :full
+    option :watch_file
     def show_and_tell_db(conceptql_id)
       result = fetch_conceptql(conceptql_id, options)
       puts "Concept: #{result[:label]}"
@@ -88,7 +91,6 @@ module ConceptQL
       puts q.statement.to_yaml
       puts 'JSON'
       puts JSON.pretty_generate(q.statement)
-      STDIN.gets
       graph_it(statement, title)
       STDIN.gets
       puts q.query.sql
@@ -105,12 +107,18 @@ module ConceptQL
     def graph_it(statement, title = nil)
       require_relative 'graph'
       require_relative 'tree'
+      conn = db(options)
       ConceptQL::Graph.new(statement,
                            dangler: true,
                            title: title,
-                           db: db(options)
+                           db: conn
                           ).graph_it('/tmp/graph')
       system('open /tmp/graph.pdf')
+      if options[:watch_file]
+        require_relative 'debugger'
+        debugger = ConceptQL::Debugger.new(statement, db: conn, watch_ids: File.readlines(options[:watch_file]).map(&:to_i))
+        debugger.capture_results('/tmp/debug.xlsx')
+      end
     end
 
     def criteria_from_file(file)

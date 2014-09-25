@@ -15,8 +15,13 @@ module ConceptQL
         observation: 'magenta',
         misc: 'black'
       }
+
+      def node_number
+        @__node_number ||= (@@counter += 1)
+      end
+
       def node_name
-        @__node_name ||= self.class.name.split('::').last.underscore.gsub(/\W/, '_').downcase + '_' + (@@counter += 1).to_s
+        @__node_name ||= self.class.name.split('::').last.underscore.gsub(/\W/, '_').downcase + "_#{node_number}"
       end
 
       def display_name
