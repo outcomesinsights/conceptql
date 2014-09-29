@@ -23,10 +23,11 @@ module ConceptQL
     # occurrence, this node returns nothing for that person
     class Occurrence < Node
       def query(db)
-        stream.evaluate(db)
-          .from_self
-          .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) }
-          .from_self
+        db[:occurrences]
+          .with(:occurrences,
+            stream.evaluate(db)
+              .from_self
+              .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) })
           .where(rn: occurrence.abs)
       end
 

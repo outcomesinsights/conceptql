@@ -42,17 +42,7 @@ module ConceptQL
       # Also, things will blow up if you try to use a variable that hasn't been
       # defined yet.
       def query(db)
-        # We'll wrap the creation of the temp table in memoization
-        # That way we can call #query multiple times, but only suffer the
-        # cost of creating the temp table just once
-        @_run ||= begin
-          if tree.opts[:sql_only]
-            db.create_table!(table_name, temp: true, as: fake_row(db))
-          else
-            db.create_table!(table_name, temp: true, as: stream.evaluate(db))
-          end
-          true
-        end
+        ensure_temp_tables(db)
         db.from(table_name)
       end
 
@@ -64,31 +54,19 @@ module ConceptQL
         stream.types
       end
 
-      def sql(db)
-        db[db.send(:create_table_as_sql, table_name, stream.evaluate(db).sql, temp: true)].sql
-      end
-
       def tree=(tree)
         super
         tree.defined[table_name] = self
+      end
+
+      def needed_temp_tables(db)
+        { table_name => stream.evaluate(db) }
       end
 
       private
 
       def table_name
         @table_name ||= namify(arguments.first)
-      end
-
-      def fake_row(db)
-        db
-          .select(Sequel.cast(nil, Bignum).as(:person_id))
-          .select_append(Sequel.cast(nil, Bignum).as(:criterion_id))
-          .select_append(Sequel.cast(nil, String).as(:criterion_type))
-          .select_append(Sequel.cast(nil, Date).as(:start_date))
-          .select_append(Sequel.cast(nil, Date).as(:end_date))
-          .select_append(Sequel.cast(nil, Bignum).as(:value_as_numeric))
-          .select_append(Sequel.cast(nil, String).as(:value_as_string))
-          .select_append(Sequel.cast(nil, Bignum).as(:value_as_concept_id))
       end
     end
   end

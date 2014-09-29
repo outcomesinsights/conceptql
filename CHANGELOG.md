@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+- Optimized After/Before nodes when multi-person results are in the right stream.
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Nothing.
+
+### Fixed
+- Nothing.
+
+
 ## 0.1.1 - 2014-09-18
 
 ### Added
@@ -13,7 +28,7 @@ All notable changes to this project will be documented in this file.
 - Nothing.
 
 ### Fixed
-- Calling Query#sql no longer creates a bunch of temporary tables
+- Calling Query#sql no longer creates a bunch of temporary tables.
 
 
 ## 0.1.0 - 2014-09-04

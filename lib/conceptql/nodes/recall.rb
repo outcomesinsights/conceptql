@@ -24,7 +24,6 @@ module ConceptQL
         # has been created.  We were running into odd timing issues when
         # drawing graphs where the recall node was being drawn before definition
         # was drawn.
-        definition.evaluate(db)
         db.from(table_name)
       end
 
