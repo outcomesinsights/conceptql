@@ -18,9 +18,9 @@ module ConceptQL
         end
       end
 
-=begin
-This is an alternate, but equally accurate way to do complement.
-We'll need to benchmark which is faster.
+
+      # This is an alternate, but equally accurate way to do complement.
+      # We'll need to benchmark which is faster.
       def query2(db)
         child = children.first
         froms = child.types.map do |type|
@@ -29,7 +29,6 @@ We'll need to benchmark which is faster.
         big_from = froms.inject { |union_query, q| union_query.union(q, all:true) }
         db.from(big_from).except(child.evaluate(db))
       end
-=end
     end
   end
 end
