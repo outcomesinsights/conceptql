@@ -35,6 +35,7 @@ module ConceptQL
 
     def build_graph(g)
       tree.root(self).each.with_index do |last_node, index|
+        last_node.build_temp_tables(db)
         last_node.graph_it(g, db)
         if dangler
           blank_node = g.add_nodes("_#{index}")

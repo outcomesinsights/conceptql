@@ -39,7 +39,7 @@ module ConceptQL
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
       puts q.sql
       puts q.statement.to_yaml
-      pp q.execute
+      pp q.all
     end
 
     desc 'show_graph statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
@@ -95,7 +95,7 @@ module ConceptQL
       STDIN.gets
       puts q.query.sql
       STDIN.gets
-      results = q.execute
+      results = q.all
       if options[:full]
         pp results
       else
