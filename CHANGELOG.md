@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Optimized After/Before nodes when multi-person results are in the right stream.
 - Set end_date as coalesce(end_date, start_date) to make range if end_date missing.
+- Nodes
+    - Contains
+    - Overlaps
+    - ObservationPeriod
+- Nodes for CPRD
+    - Prodcode
+    - Medcode
+    - MedcodeProcedure
 
 ### Deprecated
 - Nothing.
@@ -14,7 +22,7 @@ All notable changes to this project will be documented in this file.
 - Nothing.
 
 ### Fixed
-- Nothing.
+- Many broken specs.
 
 
 ## 0.1.1 - 2014-09-18
