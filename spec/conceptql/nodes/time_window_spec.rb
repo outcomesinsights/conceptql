@@ -20,6 +20,8 @@ describe ConceptQL::Nodes::TimeWindow do
     @sequel_mock.expect :expr, @sequel_mock, [:end_date]
     @sequel_mock.expect :as, @sequel_mock, [:start_date]
     @sequel_mock.expect :as, @sequel_mock, [:end_date]
+    @sequel_mock.expect :cast, @sequel_mock, [@sequel_mock, Date]
+    @sequel_mock.expect :cast, @sequel_mock, [@sequel_mock, Date]
   end
 
   describe '#evaluate' do
@@ -62,6 +64,20 @@ describe ConceptQL::Nodes::TimeWindow do
         ConceptQL::Nodes::TimeWindow.new(Stream4TimeWindowDouble.new, { start: 'dmy', end: '-d-m-y' }).evaluate(@db_mock)
       end
       @sequel_mock.verify
+    end
+
+    it 'can set start_date and end_date to specific dates' do
+      sequel_mock = Minitest::Mock.new
+      sequel_mock.expect :cast, sequel_mock, ['2000-01-01', Date]
+      sequel_mock.expect :cast, sequel_mock, ['2000-02-02', Date]
+      sequel_mock.expect :as, sequel_mock, [:start_date]
+      sequel_mock.expect :as, sequel_mock, [:end_date]
+
+      stub_const(ConceptQL::Nodes::TimeWindow, :Sequel, sequel_mock) do
+        ConceptQL::Nodes::TimeWindow.new(Stream4TimeWindowDouble.new, { start: '2000-01-01', end: '2000-02-02' }).evaluate(@db_mock)
+      end
+
+      sequel_mock.verify
     end
 
     it 'can set start_date to be end_date' do

@@ -143,7 +143,7 @@ module ConceptQL
         sd = start_date_column(query, type)
         sd = Sequel.expr(sd).cast(:date).as(:start_date) unless sd == :start_date
         ed = end_date_column(query, type)
-        ed = Sequel.expr(ed).cast(:date).as(:end_date) unless ed == :end_date
+        ed = Sequel.function(:coalesce, Sequel.expr(ed).cast(:date), Sequel.expr(start_date_column(query, type))).as(:end_date) unless ed == :end_date
         [sd, ed]
       end
 
@@ -158,6 +158,7 @@ module ConceptQL
           procedure_occurrence: :procedure_date,
           procedure_cost: nil,
           observation: :observation_date,
+          observation_period: :observation_period_start_date,
           visit_occurrence: :visit_start_date
         }[type]
       end
@@ -173,6 +174,7 @@ module ConceptQL
           procedure_occurrence: :procedure_date,
           procedure_cost: nil,
           observation: :observation_date,
+          observation_period: :observation_period_end_date,
           visit_occurrence: :visit_end_date
         }[type]
       end
