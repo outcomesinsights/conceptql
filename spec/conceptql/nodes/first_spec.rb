@@ -13,15 +13,15 @@ describe ConceptQL::Nodes::First do
 
   describe 'occurrence set to 1' do
     subject do
-      ConceptQL::Nodes::First.new(StreamForOccurrenceDouble.new).query(Sequel.mock).sql
+      ConceptQL::Nodes::First.new(StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
     end
 
     it 'should order by ascending start_date' do
-      subject.must_match 'ORDER BY start_date ASC'
+      subject.must_match 'ORDER BY "start_date" ASC'
     end
 
     it 'should partition by person_id' do
-      subject.must_match 'PARTITION BY person_id'
+      subject.must_match 'PARTITION BY "person_id"'
     end
 
     it 'should assign a row number' do
@@ -29,7 +29,7 @@ describe ConceptQL::Nodes::First do
     end
 
     it 'should find the all rows with rn = 1' do
-      subject.must_match 'rn = 1'
+      subject.must_match '"rn" = 1'
     end
   end
 end

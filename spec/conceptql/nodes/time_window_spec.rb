@@ -20,6 +20,8 @@ describe ConceptQL::Nodes::TimeWindow do
     @sequel_mock.expect :expr, @sequel_mock, [:end_date]
     @sequel_mock.expect :as, @sequel_mock, [:start_date]
     @sequel_mock.expect :as, @sequel_mock, [:end_date]
+    @sequel_mock.expect :cast, @sequel_mock, [@sequel_mock, Date]
+    @sequel_mock.expect :cast, @sequel_mock, [@sequel_mock, Date]
   end
 
   describe '#evaluate' do
