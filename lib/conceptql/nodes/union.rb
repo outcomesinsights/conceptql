@@ -5,7 +5,7 @@ module ConceptQL
     class Union < PassThru
       def query(db)
         values.map do |expression|
-          expression.evaluate(db)
+          expression.evaluate(db).from_self
         end.inject do |q, query|
           q.union(query, all: true)
         end
