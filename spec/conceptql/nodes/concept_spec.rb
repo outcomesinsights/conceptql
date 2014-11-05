@@ -12,20 +12,26 @@ describe ConceptQL::Nodes::Concept do
     end
 
     def set_statement(value)
-      # Do Nothing
+      @statement = { icd9: '412' }
     end
 
-    def stream
-      @stream ||= Minitest::Mock.new
+    def set_cql_query(db)
+      @cql_query ||= Minitest::Mock.new
+    end
+
+    def cql_query
+      set_cql_query(nil)
     end
   end
 
   describe '#query' do
     it 'evaluates child' do
       cd = ConceptDouble.new(1)
-      cd.stream.expect :evaluate, nil, [:db]
-      cd.query(:db)
-      cd.stream.verify
+      db = Sequel.mock
+      cd.cql_query.expect :query, cd.cql_query, []
+      cd.cql_query.expect :from_self, [], []
+      cd.query(db)
+      cd.cql_query.verify
     end
   end
 end

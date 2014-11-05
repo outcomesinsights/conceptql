@@ -53,6 +53,7 @@ module ConceptQL
       end
 
       def print_results(db, dir, watch_ids)
+        print_prep(db) if respond_to?(:print_prep)
         kids = children
         if self.is_a?(ConceptQL::Nodes::BinaryOperatorNode)
           kids = [left, right]
