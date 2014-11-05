@@ -20,6 +20,10 @@ module ConceptQL
         @__node_number ||= (@@counter += 1)
       end
 
+      def reset_node_number
+        @@counter = 0
+      end
+
       def node_name
         @__node_name ||= self.class.name.split('::').last.underscore.gsub(/\W/, '_').downcase + "_#{node_number}"
       end

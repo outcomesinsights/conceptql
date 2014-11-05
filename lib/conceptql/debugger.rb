@@ -18,7 +18,9 @@ module ConceptQL
       raise "Please specify path for debug file" unless path
       Dir.mktmpdir do |dir|
         dir = Pathname.new(dir)
-        csv_files = tree.root(self).map.with_index do |last_node, index|
+        nodes = tree.root(self)
+        nodes.first.reset_node_number
+        csv_files = nodes.map.with_index do |last_node, index|
           last_node.print_results(db, dir, watch_ids)
         end.flatten
         system("csv2xlsx #{path} #{csv_files.join(' ')}")
