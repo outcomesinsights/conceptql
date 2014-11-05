@@ -42,7 +42,7 @@ module ConceptQL
       # Also, things will blow up if you try to use a variable that hasn't been
       # defined yet.
       def query(db)
-        ensure_temp_tables(db)
+        build_temp_tables(db)
         db.from(table_name)
       end
 
