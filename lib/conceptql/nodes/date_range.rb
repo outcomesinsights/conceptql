@@ -31,8 +31,8 @@ module ConceptQL
       # TODO: Select the earliest and latest dates of observation from
       # the proper CDM table to represent the start and end of data
       def date_from(db, str)
-        return db.from(:visit_occurrence).select { min(:start_date) } if str.upcase == 'START'
-        return db.from(:visit_occurrence).select { max(:end_date) } if str.upcase == 'END'
+        return db.from(:observation_period).select { min(:observation_period_start_date) } if str.upcase == 'START'
+        return db.from(:observation_period).select { max(:observation_period_end_date) } if str.upcase == 'END'
         return Sequel.lit('CONVERT(DATETIME, ?)', str) if db.database_type == :mssql
         return Sequel.lit('date ?', str)
       end
