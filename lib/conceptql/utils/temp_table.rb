@@ -7,6 +7,10 @@ module ConceptQL
     end
 
     def build(db)
+      @built ||= build_it(db)
+    end
+
+    def build_it(db)
       puts "BUILDING #{ name }"
       db.create_table!(name, as: query, temp: true)
     end
