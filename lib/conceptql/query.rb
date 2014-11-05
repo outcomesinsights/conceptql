@@ -34,15 +34,15 @@ module ConceptQL
       tree.root(self).last.types
     end
 
+    def nodes
+      @nodes ||= tree.root(self)
+    end
+
     private
     attr :yaml, :tree, :db
 
     def build_query(db)
       nodes.map { |n| n.evaluate(db) }.each { |q| q.prep_proc = prep_proc }
-    end
-
-    def nodes
-      @nodes ||= tree.root(self)
     end
 
     def prep_proc
