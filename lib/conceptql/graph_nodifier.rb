@@ -13,6 +13,7 @@ module ConceptQL
         icd9: :condition_occurrence,
         icd10: :condition_occurrence,
         condition_type: :condition_occurrence,
+        medcode: :condition_occurrence,
 
         # Procedures
         procedure: :procedure_occurrence,
@@ -21,6 +22,7 @@ module ConceptQL
         hcpcs: :procedure_occurrence,
         icd9_procedure: :procedure_occurrence,
         procedure_cost: :procedure_cost,
+        medcode_procedure: :procedure_occurrence,
 
         # Visits
         visit_occurrence: :visit_occurrence,
@@ -40,13 +42,17 @@ module ConceptQL
 
         # Observation
         loinc: :observation,
+        from_seer_visits: :observation,
+        to_seer_visits: :observation,
 
         # Drug
         drug_exposure: :drug_exposure,
         rxnorm: :drug_exposure,
+        rxnorm: :drug_exposure,
         drug_cost: :drug_cost,
         drug_type_concept_id: :drug_exposure,
         drug_type_concept: :drug_exposure,
+        prodcode: :drug_exposure,
 
         # Date Nodes
         date_range: :date,
