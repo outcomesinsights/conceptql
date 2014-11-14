@@ -8,12 +8,24 @@ All notable changes to this project will be documented in this file.
 - Set end_date as coalesce(end_date, start_date) to make range if end_date missing.
 - Nodes
     - Contains
-    - Overlaps
+    - Filter
     - ObservationPeriod
+    - Overlaps
+    - TrimDateEnd
+    - TrimDateStart
+    - Ndc
 - Nodes for CPRD
     - Prodcode
     - Medcode
     - MedcodeProcedure
+- Nodes for SEER
+    - ToSeerVisits
+    - FromSeerVisits
+
+### Changed
+- Except now allows :ignore_date option
+    - Comparison is only done on criterion_id/type
+- DateRange START/END use observation_period instead of visit_occurrence
 
 ### Deprecated
 - Nothing.
@@ -23,6 +35,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Many broken specs.
+- Union calls #from_self on incoming streams to avoid column issues
+- Concept node now works again
+- Define ensures tables are built
 
 
 ## 0.1.1 - 2014-09-18
