@@ -4,7 +4,21 @@ module ConceptQL
   module Nodes
     class Except < BinaryOperatorNode
       def query(db)
-        left.evaluate(db).except(right.evaluate(db))
+        if ignore_dates?
+          query = db.from(Sequel.as(left.evaluate(db), :l))
+            .left_join(Sequel.as(right.evaluate(db), :r), l__criterion_id: :r__criterion_id, l__criterion_type: :r__criterion_type)
+            .where(r__criterion_id: nil)
+            .select_all(:l)
+          db.from(query)
+        else
+          left.evaluate(db).except(right.evaluate(db))
+        end
+      end
+
+      private
+
+      def ignore_dates?
+        options[:ignore_dates]
       end
     end
   end
