@@ -31,6 +31,7 @@ module ConceptQL
       def display_name
         @__display_name ||= begin
           output = self.class.name.split('::').last.titleize
+          output += " #{node_number}"
           output += ": #{arguments.join(', ')}" unless arguments.empty?
           if output.length > 100
             parts = output.split
@@ -86,6 +87,7 @@ module ConceptQL
       end
 
       def my_count(db, type)
+        puts "counting #{node_name} #{type}"
         evaluate(db).from_self.where(criterion_type: type.to_s).count
       end
 
