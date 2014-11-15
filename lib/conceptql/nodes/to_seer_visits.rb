@@ -8,7 +8,6 @@ module ConceptQL
       end
 
       def query(db)
-        debugger
         query = options.map do |k, v|
           next if v.nil?
           db[:observation]
