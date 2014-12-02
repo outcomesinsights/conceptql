@@ -4,6 +4,7 @@ require 'active_support/core_ext/hash'
 module ConceptQL
   class Tree
     attr :nodifier, :behavior, :defined, :opts
+    attr_accessor :person_ids
     def initialize(opts = {})
       @nodifier = opts.fetch(:nodifier, Nodifier.new)
       @behavior = opts.fetch(:behavior, nil)

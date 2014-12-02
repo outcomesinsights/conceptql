@@ -15,8 +15,10 @@ module ConceptQL
         :value_as_string,
         :value_as_concept_id
       ]
+
       attr :values, :options, :temp_tables
       attr_accessor :tree
+
       def initialize(*args)
         args.flatten!
         if args.last.is_a?(Hash)
@@ -37,7 +39,11 @@ module ConceptQL
 
       def select_it(query, specific_type = nil)
         specific_type = type if specific_type.nil? && respond_to?(:type)
-        query.select(*columns(query, specific_type))
+        q = query.select(*columns(query, specific_type))
+        if tree.person_ids
+          q = q.where(person_id: tree.person_ids).from_self
+        end
+        q
       end
 
       def types

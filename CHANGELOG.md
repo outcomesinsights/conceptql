@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Nodes for SEER
     - ToSeerVisits
     - FromSeerVisits
+- Ability to limit results to a set of patients by setting Tree#person_ids
 
 ### Changed
 - Except now allows :ignore_date option
