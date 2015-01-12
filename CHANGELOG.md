@@ -21,6 +21,8 @@ All notable changes to this project will be documented in this file.
 - Nodes for SEER
     - ToSeerVisits
     - FromSeerVisits
+- Nodes to support language itself
+    - Let
 - Ability to limit results to a set of patients by setting Tree#person_ids
 
 ### Changed
