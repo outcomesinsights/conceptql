@@ -11,7 +11,7 @@ module ConceptQL
         :criterion_type,
         :start_date,
         :end_date,
-        :value_as_numeric,
+        :value_as_number,
         :value_as_string,
         :value_as_concept_id
       ]
@@ -130,8 +130,8 @@ module ConceptQL
       end
 
       def numeric_value(query)
-        return :value_as_numeric if query.columns.include?(:value_as_numeric)
-        Sequel.cast_numeric(nil, Float).as(:value_as_numeric)
+        return :value_as_number if query.columns.include?(:value_as_number)
+        Sequel.cast_numeric(nil, Float).as(:value_as_number)
       end
 
       def string_value(query)
@@ -245,7 +245,7 @@ module ConceptQL
           .select_append(Sequel.cast(nil, String).as(:criterion_type))
           .select_append(Sequel.cast(nil, Date).as(:start_date))
           .select_append(Sequel.cast(nil, Date).as(:end_date))
-          .select_append(Sequel.cast(nil, Bignum).as(:value_as_numeric))
+          .select_append(Sequel.cast(nil, Bignum).as(:value_as_number))
           .select_append(Sequel.cast(nil, String).as(:value_as_string))
           .select_append(Sequel.cast(nil, Bignum).as(:value_as_concept_id))
       end
