@@ -155,22 +155,29 @@ module ConceptQL
 
     BINARY_OPERATOR_TYPES = %w(before after meets met_by started_by starts contains during overlaps overlapped_by finished_by finishes coincides except person_filter less_than less_than_or_equal equal not_equal greater_than greater_than_or_equal filter).map { |temp| [temp, "not_#{temp}"] }.flatten.map(&:to_sym)
 
+    def temp_tables
+      @temp_tables ||= {}
+    end
+
     def types
       @types ||= {}
     end
 
     def create(type, values, tree)
-      if BINARY_OPERATOR_TYPES.include?(type)
-        return BinaryOperatorNode.new(type, values)
+      node = if BINARY_OPERATOR_TYPES.include?(type)
+        BinaryOperatorNode.new(type, values)
       elsif type == :define
-        return DefineNode.new(type, values).tap { |n| n.tree = self }
+        DefineNode.new(type, values)
       elsif type == :recall
-        return RecallNode.new(type, values).tap { |n| n.tree = self }
+        RecallNode.new(type, values)
       elsif type == :vsac
         types = values.pop
-        return VsacNode.new(type, values, types)
+        VsacNode.new(type, values, types)
+      else
+        DotNode.new(type, values)
       end
-      DotNode.new(type, values)
+      node.tree = self
+      node
     end
   end
 end

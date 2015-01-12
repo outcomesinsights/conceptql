@@ -16,8 +16,10 @@ module ConceptQL
         :value_as_concept_id
       ]
 
-      attr :values, :options, :temp_tables
+      attr :values, :options
       attr_accessor :tree
+
+      delegate(:temp_tables, to: :tree)
 
       def initialize(*args)
         args.flatten!
@@ -26,7 +28,6 @@ module ConceptQL
         end
         @options ||= {}
         @values = args.flatten
-        @temp_tables = {}
       end
 
       def evaluate(db)
