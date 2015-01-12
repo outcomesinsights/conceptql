@@ -232,8 +232,8 @@ module ConceptQL
       end
 
       def temp_table(db, name, query)
+        return temp_tables[name] if temp_tables[name]
         t = TempTable.new(name, query)
-        return t if temp_tables[name]
         db.create_table!(name, temp: true, as: fake_row(db))
         temp_tables[name] = t
       end
