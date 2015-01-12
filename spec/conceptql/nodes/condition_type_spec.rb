@@ -57,6 +57,23 @@ describe ConceptQL::Nodes::ConditionType do
       ConceptQL::Nodes::ConditionType.new(:condition_era_30_day_window).query(Sequel.mock).sql.must_equal correct_query
     end
 
+    describe 'with primary' do
+      it 'works for just primary' do
+        correct_query = "SELECT * FROM condition_occurrence WHERE (condition_type_concept_id IN (38000183, 38000199, 38000215, 38000230))"
+        ConceptQL::Nodes::ConditionType.new(:primary).query(Sequel.mock).sql.must_equal correct_query
+      end
+
+      it 'works for inpatient_primary' do
+        correct_query = "SELECT * FROM condition_occurrence WHERE (condition_type_concept_id IN (38000183, 38000199))"
+        ConceptQL::Nodes::ConditionType.new(:inpatient_primary).query(Sequel.mock).sql.must_equal correct_query
+      end
+
+      it 'works for outpatient_primary' do
+        correct_query = "SELECT * FROM condition_occurrence WHERE (condition_type_concept_id IN (38000215, 38000230))"
+        ConceptQL::Nodes::ConditionType.new(:outpatient_primary).query(Sequel.mock).sql.must_equal correct_query
+      end
+    end
+
     describe 'with multiple arguments' do
       it 'works for inpatient_detail_1' do
         correct_query = "SELECT * FROM condition_occurrence WHERE (condition_type_concept_id IN (38000184, 38000185))"
