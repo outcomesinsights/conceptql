@@ -130,6 +130,24 @@ module ConceptQL
       end
     end
 
+    class LetNode < DotNode
+      def graph_it(g, db)
+        cluster_name = "cluster_#{node_name}"
+        linkable = nil
+        g.send(cluster_name) do |sub|
+          linkable = children.reverse.map do |child|
+            child.graph_it(sub, db)
+          end.first
+          sub[label: display_name, color: 'black']
+        end
+        @__graph_node = linkable
+      end
+
+      def types
+        children.last.types
+      end
+    end
+
     class DefineNode < DotNode
       def shape
         :cds
@@ -166,6 +184,8 @@ module ConceptQL
     def create(type, values, tree)
       node = if BINARY_OPERATOR_TYPES.include?(type)
         BinaryOperatorNode.new(type, values)
+      elsif type == :let
+        LetNode.new(type, values)
       elsif type == :define
         DefineNode.new(type, values)
       elsif type == :recall
