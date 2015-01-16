@@ -1,0 +1,14 @@
+require_relative 'temporal_node'
+
+module ConceptQL
+  module Nodes
+    class AnyOverlap < TemporalNode
+      def where_clause
+        l_partly_in_r = Sequel.expr { r__start_date <= l__start_date }.&(Sequel.expr { l__start_date <= r__end_date })
+        r_partly_in_l = Sequel.expr { l__start_date <= r__start_date }.&(Sequel.expr { r__start_date <= l__end_date })
+        l_partly_in_r.|(r_partly_in_l)
+      end
+    end
+  end
+end
+
