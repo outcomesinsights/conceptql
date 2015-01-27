@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
     - Prodcode
     - Medcode
     - MedcodeProcedure
+    - ObservationByEnttype
 - Nodes for SEER
     - ToSeerVisits
     - FromSeerVisits
