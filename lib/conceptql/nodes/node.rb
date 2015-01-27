@@ -13,7 +13,8 @@ module ConceptQL
         :end_date,
         :value_as_number,
         :value_as_string,
-        :value_as_concept_id
+        :value_as_concept_id,
+        :units_source_value
       ]
 
       attr :values, :options
@@ -125,7 +126,8 @@ module ConceptQL
         [
           numeric_value(query),
           string_value(query),
-          concept_id_value(query)
+          concept_id_value(query),
+          units_source_value(query)
         ]
       end
 
@@ -142,6 +144,11 @@ module ConceptQL
       def concept_id_value(query)
         return :value_as_concept_id if query.columns.include?(:value_as_concept_id)
         Sequel.cast_numeric(nil).as(:value_as_concept_id)
+      end
+
+      def units_source_value(query)
+        return :units_source_value if query.columns.include?(:units_source_value)
+        Sequel.cast_string(nil).as(:units_source_value)
       end
 
       def date_columns(query, type = nil)
