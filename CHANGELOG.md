@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
     - Filter
     - ObservationPeriod
     - Overlaps
+    - OverlappedBy
     - AnyOverlap
     - TrimDateEnd
     - TrimDateStart
