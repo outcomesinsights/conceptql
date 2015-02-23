@@ -42,7 +42,7 @@ module ConceptQL
       def select_it(query, specific_type = nil)
         specific_type = type if specific_type.nil? && respond_to?(:type)
         q = query.select(*columns(query, specific_type))
-        if tree.person_ids && children.empty?
+        if tree && tree.person_ids && children.empty?
           q = q.where(person_id: tree.person_ids).from_self
         end
         q
