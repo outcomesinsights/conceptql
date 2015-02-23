@@ -22,17 +22,17 @@ describe ConceptQL::Behaviors::Dottable do
   describe '#display_name' do
     it 'should show just the name if no children or arguments' do
       @obj.values = []
-      @obj.display_name.must_equal 'Node Double'
+      @obj.display_name.must_match(/Node Double \d+/)
     end
 
     it 'should show name and args' do
       @obj.values = [5, 10]
-      @obj.display_name.must_equal 'Node Double: 5, 10'
+      @obj.display_name.must_match(/Node Double \d+: 5, 10/)
     end
 
     it 'should not include children' do
       @obj.values = [::ConceptQL::Nodes::Node.new]
-      @obj.display_name.must_equal 'Node Double'
+      @obj.display_name.must_match(/Node Double \d+/)
     end
   end
 
