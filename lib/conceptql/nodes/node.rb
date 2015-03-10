@@ -73,7 +73,7 @@ module ConceptQL
                     type_id(local_type),
                     criterion_type]
         columns += date_columns(query, local_type)
-        columns += value_columns(query)
+        columns += value_columns(query, local_type)
       end
 
       def sql_for_temp_tables(db)
@@ -122,12 +122,13 @@ module ConceptQL
         "#{table}___tab".to_sym
       end
 
-      def value_columns(query)
+      def value_columns(query, type)
         [
           numeric_value(query),
           string_value(query),
           concept_id_value(query),
-          units_source_value(query)
+          units_source_value(query),
+          source_value(query, type)
         ]
       end
 
@@ -149,6 +150,11 @@ module ConceptQL
       def units_source_value(query)
         return :units_source_value if query.columns.include?(:units_source_value)
         Sequel.cast_string(nil).as(:units_source_value)
+      end
+
+      def source_value(query, type)
+        return :source_value if query.columns.include?(:source_value)
+        Sequel.cast_string(source_value_column(query, type)).as(:source_value)
       end
 
       def date_columns(query, type = nil)
@@ -190,6 +196,22 @@ module ConceptQL
           observation: :observation_date,
           observation_period: :observation_period_end_date,
           visit_occurrence: :visit_end_date
+        }[type]
+      end
+
+      def source_value_column(query, type)
+        {
+          condition_occurrence: :condition_source_value,
+          death: :cause_of_death_source_value,
+          drug_exposure: :drug_source_value,
+          drug_cost: nil,
+          payer_plan_period: :payer_plan_period_source_value,
+          person: :person_source_value,
+          procedure_occurrence: :procedure_source_value,
+          procedure_cost: nil,
+          observation: :observation_source_value,
+          observation_period: nil,
+          visit_occurrence: :place_of_service_source_value
         }[type]
       end
 
