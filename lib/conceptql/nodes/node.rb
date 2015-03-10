@@ -14,7 +14,8 @@ module ConceptQL
         :value_as_number,
         :value_as_string,
         :value_as_concept_id,
-        :units_source_value
+        :units_source_value,
+        :source_value
       ]
 
       attr :values, :options
