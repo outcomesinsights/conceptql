@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file.
 - Nodes to support language itself
     - Let
 - Ability to limit results to a set of patients by setting Tree#person_ids
-- "units_source_value" column in results
+- "units_source_value" and "source_value" columns in results
 
 ### Changed
 - Except now allows :ignore_date option
