@@ -5,11 +5,11 @@ module ConceptQL
     class Sum < PassThru
       def query(db)
         db.from(unioned(db))
-          .select_group(*(COLUMNS - [:start_date, :end_date, :criterion_id, :value_as_numeric]))
+          .select_group(*(COLUMNS - [:start_date, :end_date, :criterion_id, :value_as_number]))
           .select_append(Sequel.lit('?', 0).as(:criterion_id))
           .select_append{ min(start_date).as(:start_date) }
           .select_append{ max(end_date).as(:end_date) }
-          .select_append{sum(value_as_numeric).as(:value_as_numeric)}
+          .select_append{sum(value_as_number).as(:value_as_number)}
           .from_self
       end
 

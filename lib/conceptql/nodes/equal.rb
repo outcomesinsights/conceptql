@@ -4,7 +4,7 @@ module ConceptQL
   module Nodes
     class Equal < TemporalNode
       def where_clause
-        { r__value_as_numeric: :l__value_as_numeric }
+        { r__value_as_number: :l__value_as_number }
       end
     end
   end
