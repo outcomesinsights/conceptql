@@ -12,7 +12,7 @@ module ConceptQL
         inpatient = select_it(visit_query(db).where(place_of_service_concept_id: 8717), :visit_occurrence).from_self
         outpatient = select_it(visit_query(db).exclude(place_of_service_concept_id: 8717), :visit_occurrence).from_self
 
-        gap = options[:gap]
+        gap = options[:gap] || 30
         valid_outpatient_people = outpatient
           .group_by(:person_id)
           .select(:person_id)

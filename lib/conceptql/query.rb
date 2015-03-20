@@ -12,7 +12,6 @@ module ConceptQL
     def initialize(db, statement, tree = Tree.new)
       @db = db
       @db.extend_datasets(ConceptQL::Behaviors::Preppable)
-      @db.extension :error_sql
       @statement = statement
       @tree = tree
     end
