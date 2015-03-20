@@ -25,8 +25,8 @@ module ConceptQL
     end
 
     def sql
-      temp_tables = nodes.flat_map { |n| n.sql_for_temp_tables(db) }
-      sql = (temp_tables << nodes.last.evaluate(db).sql).join(";\n") + ';'
+      nodes.flat_map { |n| n.sql_for_temp_tables(db) }
+      sql = (nodes.last.sql_for_temp_tables(db) << nodes.last.evaluate(db).sql).join(";\n\n") + ';'
       sql
     end
 

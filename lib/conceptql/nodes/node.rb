@@ -78,8 +78,8 @@ module ConceptQL
       end
 
       def sql_for_temp_tables(db)
-        ensure_temp_tables(db)
-        children.map { |child| child.build_temp_tables(db) } + temp_tables.map { |n, tt| tt.sql(db) }
+        build_temp_tables(db)
+        temp_tables.map { |n, tt| tt.sql(db) }
       end
 
       def build_temp_tables(db)
