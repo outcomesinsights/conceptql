@@ -60,13 +60,22 @@ module ConceptQL
       end
 
       def needed_temp_tables(db)
-        { table_name => stream.evaluate(db) }
+        {
+          table_name => {
+            query: stream.evaluate(db),
+            description: description
+          }
+        }
       end
 
       private
 
       def table_name
-        @table_name ||= namify(arguments.first)
+        @table_name ||= namify(description)
+      end
+
+      def description
+        arguments.first
       end
     end
   end

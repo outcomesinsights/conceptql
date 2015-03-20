@@ -1,9 +1,10 @@
 module ConceptQL
   class TempTable
-    attr :name, :query
-    def initialize(name, query)
+    attr :name, :query, :description
+    def initialize(name, opts)
       @name = name
-      @query = query
+      @query = opts[:query]
+      @description = opts[:description]
     end
 
     def build(db)
@@ -16,7 +17,8 @@ module ConceptQL
     end
 
     def sql(db)
-      db[db.send(:create_table_as_sql, name, query.sql, temp: true)].sql
+      sql = db[db.send(:create_table_as_sql, name, query.sql, temp: true)].sql
+      ["-- #@description ", sql].join("\n")
     end
   end
 end

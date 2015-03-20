@@ -255,15 +255,15 @@ module ConceptQL
 
       def ensure_temp_tables(db)
         if respond_to?(:needed_temp_tables)
-          needed_temp_tables(db).each do |name, query|
-            temp_table(db, name, query)
+          needed_temp_tables(db).each do |name, opts|
+            temp_table(db, name, opts)
           end
         end
       end
 
-      def temp_table(db, name, query)
+      def temp_table(db, name, opts)
         return temp_tables[name] if temp_tables[name]
-        t = TempTable.new(name, query)
+        t = TempTable.new(name, opts)
         db.create_table!(name, temp: true, as: fake_row(db))
         temp_tables[name] = t
       end
