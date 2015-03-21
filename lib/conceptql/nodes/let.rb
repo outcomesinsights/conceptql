@@ -5,10 +5,7 @@ module ConceptQL
   module Nodes
     class Let < Node
       def query(db)
-        evaluated = children.map do |child|
-          child.evaluate(db)
-        end
-        evaluated.last
+        evaluated(db).last
       end
 
       def types
@@ -25,6 +22,18 @@ module ConceptQL
           sub[label: display_name, color: 'black']
         end
         @__graph_node = linkable
+      end
+
+      private
+      def evaluated(db)
+        @evaluated ||= perform_evaluations(db)
+      end
+
+      def perform_evaluations(db)
+        ConceptQL.logger.debug('evaling all kiddos')
+        children.map do |child|
+          child.evaluate(db)
+        end
       end
     end
   end

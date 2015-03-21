@@ -80,10 +80,11 @@ module ConceptQL
         children.each do |child|
           child.graph_it(g, db)
         end
-        graph_node(g)
+        node = graph_node(g)
         children.each do |child|
           child.link_to(g, graph_node(g), db)
         end
+        node
       end
 
       def my_count(db, type)
