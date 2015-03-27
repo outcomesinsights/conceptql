@@ -30,7 +30,6 @@ module ConceptQL
       end
 
       def perform_evaluations(db)
-        ConceptQL.logger.debug('evaling all kiddos')
         children.map do |child|
           child.evaluate(db)
         end
