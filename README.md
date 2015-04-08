@@ -7,6 +7,10 @@ This gem interprets the ConceptQL language and translates it into SQL queries co
 ## Under Active Development
 The ConceptQL language is under active development.  If you don't see any activity in the master branch, check the [develop branch](https://github.com/outcomesinsights/conceptql/tree/develop) to see the latest changes to the language.  I try to keep master nice and stable.
 
+## Further Reading
+
+If you're interested in reading up on ConceptQL, a rought draft of the specifications document is [available as a PDF](https://github.com/outcomesinsights/conceptql/blob/master/doc/ConceptQL%20Specification%20(alpha).pdf?raw=true) in this repository.
+
 ## Motivation for ConceptQL
 Outcomes Insights intends to build a vast library of research algorithms and apply those algorithms to large databases of claims data.  Early into building the library, we realized we had to overcome two major issues:
 
@@ -42,10 +46,6 @@ AND scm.source_code = co.condition_source_value
 
 As stated above, one of the goals of ConcegtQL is to make it easy to assemble fairly complex queries without having to roll up our sleeves and write raw SQL.  To accommodate this complexity, ConceptQL itself has some complexities of its own.  That said, we believe ConceptQL will help researchers define, hone, and share their research algorithms.
 
-
-## Further Reading
-
-If you're interested in reading more about ConceptQL, a rought draft of the specifications document is [available as a PDF](https://github.com/outcomesinsights/conceptql/blob/master/doc/ConceptQL%20Specification%20(alpha).pdf?raw=true) in this repository.
 
 
 ## Try Before You Buy
