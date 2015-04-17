@@ -1,4 +1,3 @@
-require 'active_support/inflector'
 require_relative '../behaviors/dottable'
 require_relative '../nodes/node'
 require_relative '../nodes/binary_operator_node'

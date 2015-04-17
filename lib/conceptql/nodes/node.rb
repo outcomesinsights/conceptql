@@ -1,10 +1,15 @@
 require 'zlib'
-require 'active_support/core_ext/hash'
 require_relative '../utils/temp_table'
+require_relative '../behaviors/metadatable'
+require 'facets/array/extract_options'
+require 'facets/hash/deep_rekey'
+require 'forwardable'
 
 module ConceptQL
   module Nodes
     class Node
+      extend Forwardable
+      extend Metadatable
       COLUMNS = [
         :person_id,
         :criterion_id,
@@ -21,15 +26,12 @@ module ConceptQL
       attr :values, :options
       attr_accessor :tree
 
-      delegate(:temp_tables, to: :tree)
+      def_delegators :tree, :temp_tables
 
       def initialize(*args)
-        args.flatten!
-        if args.last.is_a?(Hash)
-          @options = args.pop.symbolize_keys
-        end
-        @options ||= {}
-        @values = args.flatten
+        @options = args.extract_options!.deep_rekey
+        @children, @arguments = args.partition { |arg| arg.is_a?(Node) }
+        @values = args
       end
 
       def evaluate(db)

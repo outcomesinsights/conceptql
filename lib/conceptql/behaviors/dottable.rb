@@ -1,4 +1,5 @@
-require 'active_support/inflector'
+require 'facets/string/snakecase'
+
 module ConceptQL
   module Behaviors
     module Dottable
@@ -25,7 +26,7 @@ module ConceptQL
       end
 
       def node_name
-        @__node_name ||= self.class.name.split('::').last.underscore.gsub(/\W/, '_').downcase + "_#{node_number}"
+        @__node_name ||= self.class.name.split('::').last.snakecase.gsub(/\W/, '_').downcase + "_#{node_number}"
       end
 
       def display_name

@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'activesupport', '~> 4.1'
+  spec.add_dependency 'facets', '~> 3.0.0'
   spec.add_dependency 'sequelizer', '~> 0.0'
   spec.add_dependency 'thor', '~> 0.19'
   spec.add_dependency 'pg', '~> 0.17'

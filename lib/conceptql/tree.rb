@@ -1,5 +1,5 @@
 require_relative 'nodifier'
-require 'active_support/core_ext/hash'
+require 'facets/hash/deep_rekey'
 
 module ConceptQL
   class Tree
@@ -14,7 +14,7 @@ module ConceptQL
     end
 
     def root(*queries)
-      @root ||= traverse(queries.flatten.map(&:statement).flatten.map(&:deep_symbolize_keys))
+      @root ||= traverse(queries.flatten.map(&:statement).flatten.map(&:deep_rekey))
     end
 
     private
