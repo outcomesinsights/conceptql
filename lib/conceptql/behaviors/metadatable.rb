@@ -28,23 +28,25 @@ module Metadatable
     end
   end
 
-  def many_kids
-    @max_kids = 99
+  def allows_many_children
+    @max_children = 99
+  end
+
+  def allows_one_child
+    @max_children = 1
   end
 
   def just_class_name
     self.to_s.split('::').last
   end
 
-  def one_kid
-    @max_kids = 1
   end
 
   def to_metadata
     {
       preferred_name: @preferred_name || just_class_name,
       operation: self.to_s.methodize,
-      max_kids: @max_kids || 0,
+      max_children: @max_children || 0,
       arguments: @arguments || [],
       options: @options || {},
       desc: @desc
