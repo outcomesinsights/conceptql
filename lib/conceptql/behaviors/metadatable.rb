@@ -46,6 +46,10 @@ module Metadatable
     self.to_s.split('::').last
   end
 
+  def humanized_class_name
+    just_class_name.gsub(/([A-Z])/, ' \1').lstrip
+  end
+
   def inherited(child)
     (@options || {}).each do |name, opt|
       child.option name, opt
@@ -54,7 +58,7 @@ module Metadatable
 
   def to_metadata
     {
-      preferred_name: @preferred_name || just_class_name,
+      preferred_name: @preferred_name || humanized_class_name,
       operation: just_class_name.snakecase,
       max_children: @max_children || 0,
       arguments: @arguments || [],
