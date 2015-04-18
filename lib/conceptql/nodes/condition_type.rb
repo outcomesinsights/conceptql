@@ -10,6 +10,9 @@ module ConceptQL
     #
     # Multiple types can be specified at once
     class ConditionType < Node
+      desc 'Searches for conditions that match the given set of Condition Types'
+      argument :condition_types, type: :codelist, vocab: 'Condition Type'
+
       def type
         :condition_occurrence
       end

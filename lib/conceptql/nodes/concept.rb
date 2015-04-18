@@ -4,6 +4,7 @@ require_relative '../query'
 module ConceptQL
   module Nodes
     class Concept < Node
+      desc 'Given the UUID of another ConceptQL statement, returns the results of that statement.'
       attr :cql_query
       def query(db)
         set_cql_query(db)

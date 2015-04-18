@@ -3,6 +3,9 @@ require_relative 'pass_thru'
 module ConceptQL
   module Nodes
     class Complement < PassThru
+      desc 'Splits up the incoming result set by type and passes through all results for each type that are NOT in the current set.'
+      allows_one_child
+
       def query(db)
         child = children.first
         child.types.map do |type|

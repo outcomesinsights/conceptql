@@ -13,6 +13,21 @@ module ConceptQL
     # If the RHS result's end_date is earlier than the LHS start_date, the LHS
     # result is passed thru unaffected.
     class TrimDateStart < TemporalNode
+      desc <<-EOF
+Trims the start_date of the LHS set of results by the RHS's latest
+end_date (per person)
+If a the RHS contains an end_date that comes after the LHS's end_date
+that LHS result is completely discarded.
+
+If there is no RHS result for an LHS result, the LHS result is passed
+thru unaffected.
+
+If the RHS result's end_date is earlier than the LHS start_date, the LHS
+result is passed thru unaffected.
+      EOF
+
+      allows_one_child
+
       def query(db)
         grouped_right = db.from(right_stream(db)).select_group(:person_id).select_append(Sequel.as(Sequel.function(:max, :end_date), :end_date))
 

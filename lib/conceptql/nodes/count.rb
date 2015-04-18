@@ -3,6 +3,9 @@ require_relative 'pass_thru'
 module ConceptQL
   module Nodes
     class Count < PassThru
+      desc 'Counts the number of results the exactly match across all columns.'
+      allows_one_child
+
       def query(db)
         db.from(unioned(db))
           .group(*COLUMNS)

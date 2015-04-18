@@ -3,6 +3,11 @@ require_relative 'pass_thru'
 module ConceptQL
   module Nodes
     class Sum < PassThru
+      desc <<-EOF
+Sums value_as_number across all results that match on all but start_date, end_date.
+For start_date and end_date the min and max of each respectively is returned.'
+      EOF
+
       def query(db)
         db.from(unioned(db))
           .select_group(*(COLUMNS - [:start_date, :end_date, :criterion_id, :value_as_number]))
