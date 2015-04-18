@@ -62,6 +62,11 @@ module ConceptQL
       system('open /tmp/graph.pdf')
     end
 
+    desc 'metadata', 'Generates the metadata.js file for the JAM'
+    def metadata
+      File.write('/tmp/metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
+    end
+
     private
     desc 'show_and_tell_db conceptql_id', 'Fetches the ConceptQL from a DB and shows the contents as a ConceptQL graph, then executes the statement against our test database'
     option :full
