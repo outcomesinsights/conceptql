@@ -2,9 +2,9 @@ require 'facets/kernel/meta_def'
 require 'facets/string/methodize'
 
 module Metadatable
-  def name(value = nil)
-    return @name unless value
-    @name = value
+  def preferred_name(value = nil)
+    return @preferred_name unless value
+    @preferred_name = value
   end
 
   def desc(value = nil)
@@ -32,13 +32,17 @@ module Metadatable
     @max_kids = 99
   end
 
+  def just_class_name
+    self.to_s.split('::').last
+  end
+
   def one_kid
     @max_kids = 1
   end
 
   def to_metadata
     {
-      name: @name || self.to_s,
+      preferred_name: @preferred_name || just_class_name,
       operation: self.to_s.methodize,
       max_kids: @max_kids || 0,
       arguments: @arguments || [],
