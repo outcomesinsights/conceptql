@@ -1,5 +1,5 @@
 require 'facets/kernel/meta_def'
-require 'facets/string/methodize'
+require 'facets/string/snakecase'
 
 module Metadatable
   def preferred_name(value = nil)
@@ -51,7 +51,7 @@ module Metadatable
   def to_metadata
     {
       preferred_name: @preferred_name || just_class_name,
-      operation: self.to_s.methodize,
+      operation: just_class_name.snakecase,
       max_children: @max_children || 0,
       arguments: @arguments || [],
       options: @options || {},
