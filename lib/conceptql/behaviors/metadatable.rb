@@ -46,6 +46,10 @@ module Metadatable
     self.to_s.split('::').last
   end
 
+  def inherited(child)
+    (@options || {}).each do |name, opt|
+      child.option name, opt
+    end
   end
 
   def to_metadata
