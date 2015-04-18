@@ -4,6 +4,9 @@ module ConceptQL
   module Nodes
     # Base class for all nodes that take two streams, a left-hand and a right-hand
     class BinaryOperatorNode < Node
+      option :left, type: :child
+      option :right, type: :child
+
       def children
         [left]
       end

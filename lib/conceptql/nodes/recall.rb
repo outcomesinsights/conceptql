@@ -10,6 +10,12 @@ module ConceptQL
     # This node will look for a sub-concept that has been created through the
     # "define" node and will fetch the results cached in the corresponding table
     class Recall < Node
+      desc <<-EOF
+Recalls a set of named results that were previously stored using the Define operator.
+Must be surrounded by the same Let operator as surrounds the corresponding Define operator.
+      EOF
+      argument :name, type: :string
+
       # Behind the scenes we simply fetch all rows from the temp table that
       # corresponds to the name fed to "recall"
       #

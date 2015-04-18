@@ -20,6 +20,12 @@ module ConceptQL
     # pass '', '0', or nil as that argument.  E.g.:
     # start: 'd', end: '' # Only adjust start_date by positive 1 day and leave end_date uneffected
     class TimeWindow < Node
+      desc 'Adjusts the start_date and end_date columns to create a new window of time for each result.'
+      preferred_name 'Time Window'
+      option :start, type: :string
+      option :end, type: :string
+      allows_one_child
+
       def query(db)
         db.extension :date_arithmetic
         db.from(stream.evaluate(db))

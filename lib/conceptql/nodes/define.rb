@@ -13,6 +13,13 @@ module ConceptQL
     # and then insert that variable into the concept as needed.
     # run the query once and subsequent calls
     class Define < Node
+      desc <<-EOF
+Allows a set of results to be named and then used by the Recall operator to use those results later on in a statement.
+Must be surrounded by the Let operator.
+      EOF
+      argument :name, type: :string
+      allows_one_child
+
       def initialize(*args)
         super
       end

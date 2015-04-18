@@ -4,6 +4,9 @@ require_relative '../query'
 module ConceptQL
   module Nodes
     class Let < Node
+      desc 'Used to create a scope for Define/Recall operators.'
+      allows_many_children
+
       def query(db)
         evaluated(db).last
       end
