@@ -12,6 +12,11 @@ module Metadatable
     @desc = value
   end
 
+  def predominant_types(*values)
+    return @predominant_types if values.empty?
+    @predominant_types = values
+  end
+
   def argument(name, options = {})
     (@arguments ||= [])
     @arguments << [name, options]
@@ -23,6 +28,7 @@ module Metadatable
   end
 
   def types(*type_list)
+    @types = type_list
     define_method(:types) do
       type_list
     end
@@ -49,6 +55,7 @@ module Metadatable
       max_children: @max_children || 0,
       arguments: @arguments || [],
       options: @options || {},
+      predominant_types: @types || @predominant_types || [],
       desc: @desc
     }
   end
