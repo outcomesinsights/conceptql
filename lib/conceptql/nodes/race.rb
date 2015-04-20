@@ -9,9 +9,9 @@ module ConceptQL
     # concept_name column of the concept table.  If you misspell the race name
     # you won't get any matches
     class Race < Node
-      def type
-        :person
-      end
+      desc 'Finds all people that match the races'
+      argument :races, type: :codelist, vocab: 'Race'
+      types :person
 
       def query(db)
         db.from(:person___p)

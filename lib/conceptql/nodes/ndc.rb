@@ -3,6 +3,11 @@ require_relative 'source_vocabulary_node'
 module ConceptQL
   module Nodes
     class Ndc < SourceVocabularyNode
+      preferred_name 'NDC'
+      desc 'Searches the drug_exposure table for all procedures with matching NDC codes'
+      argument :ndcs, type: :codelist, vocab: 'NDC'
+      predominant_types :drug_exposure
+
       def table
         :drug_exposure
       end

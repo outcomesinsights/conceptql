@@ -3,6 +3,9 @@ require_relative 'pass_thru'
 module ConceptQL
   module Nodes
     class Intersect < PassThru
+      desc 'Passes thru any result row that appears in all incoming result sets.'
+      allows_many_children
+
       def types
         values.map(&:types).flatten.uniq
       end

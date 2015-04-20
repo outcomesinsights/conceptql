@@ -8,6 +8,10 @@ module ConceptQL
     # 'START' represents the first date of data in the data source,
     # 'END' represents the last date of data in the data source,
     class DateRange < Node
+      desc 'Used to represent a date literal.'
+      option :start, type: :string
+      option :end, type: :string
+
       def query(db)
         db.from(:person)
           .select_append(Sequel.cast_string('person').as(:criterion_type))

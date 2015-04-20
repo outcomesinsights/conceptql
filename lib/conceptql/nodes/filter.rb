@@ -3,6 +3,8 @@ require_relative 'binary_operator_node'
 module ConceptQL
   module Nodes
     class Filter < BinaryOperatorNode
+      desc 'Only pass through results from the LHR that have a corresponding RHR with the same person, criterion_id, and criterion_type'
+
       def query(db)
         rhs = right.evaluate(db)
         rhs = rhs.select_group(:person_id, :criterion_id, :criterion_type)

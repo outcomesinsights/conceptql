@@ -3,6 +3,11 @@ require_relative 'standard_vocabulary_node'
 module ConceptQL
   module Nodes
     class Snomed < StandardVocabularyNode
+      preferred_name 'SNOMED'
+      desc 'Find all condition_occurrences by SNOMED codes'
+      argument :snomeds, type: :codelist, vocab: 'SNOMED'
+      predominant_types :condition_occurrence
+
       def table
         :condition_occurrence
       end

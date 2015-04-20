@@ -9,9 +9,9 @@ module ConceptQL
     # concept_name column of the concept table.  If you misspell the place_of_service_code name
     # you won't get any matches
     class PlaceOfServiceCode < Node
-      def type
-        :visit_occurrence
-      end
+      desc 'Finds all visit_occurrences that match the Place of Service codes'
+      argument :places_of_service, type: :codelist, vocab: 'Place of Service'
+      types :visit_occurrence
 
       def query(db)
         db.from(:visit_occurrence___v)

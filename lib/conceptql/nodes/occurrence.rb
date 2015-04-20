@@ -22,6 +22,24 @@ module ConceptQL
     # If we ask for the second occurrence of something and a person has only one
     # occurrence, this node returns nothing for that person
     class Occurrence < Node
+      desc <<-EOF
+Groups all results by person, then orders by start_date, then finds the nth occurrence.
+nth occurrence can be positive or negative.
+1 => first
+2 => second
+...
+-1 => last
+-2 => second-to-last
+
+If two rows have the same start_date, the order of their ranking
+is arbitrary
+
+If we ask for the second occurrence of something and a person has only one
+occurrence, this node returns nothing for that person
+      EOF
+      argument :occurrence, type: :integer
+      allows_one_child
+
       def query(db)
         db[:occurrences]
           .with(:occurrences,

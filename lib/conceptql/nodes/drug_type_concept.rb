@@ -3,6 +3,9 @@ require_relative 'node'
 module ConceptQL
   module Nodes
     class DrugTypeConcept < Node
+      desc 'Given a set of concept IDs in RxNorm, returns that set of drug exposures'
+      argument :concept_ids, type: :codelist, vocab: 'RxNorm'
+
       def type
         :drug_exposure
       end
