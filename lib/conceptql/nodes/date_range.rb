@@ -11,6 +11,7 @@ module ConceptQL
       desc 'Used to represent a date literal.'
       option :start, type: :string
       option :end, type: :string
+      category %(Temporal Manipulation)
 
       def query(db)
         db.from(:person)

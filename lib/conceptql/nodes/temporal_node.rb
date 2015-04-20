@@ -8,6 +8,8 @@ module ConceptQL
     # a proc that can be executed as a Sequel "virtual row" e.g.
     # Proc.new { l.end_date < r.start_date }
     class TemporalNode < BinaryOperatorNode
+      reset_categories
+      category %w(Temporal Relative)
       def query(db)
         db.from(db.from(left_stream(db))
                   .join(right_stream(db), l__person_id: :r__person_id)

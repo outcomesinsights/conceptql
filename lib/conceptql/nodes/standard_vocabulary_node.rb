@@ -19,6 +19,8 @@ module ConceptQL
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for CPT, a value of 4 (for CPT-4)
     class StandardVocabularyNode < Node
+      category 'Standard Vocabulary'
+      category 'Code Lists'
       def query(db)
         db.from(table_name)
           .join(:vocabulary__concept___c, c__concept_id: table_concept_column)

@@ -39,6 +39,7 @@ occurrence, this node returns nothing for that person
       EOF
       argument :occurrence, type: :integer
       allows_one_child
+      category %w(Temporal Occurrence)
 
       def query(db)
         db[:occurrences]

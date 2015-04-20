@@ -50,9 +50,22 @@ module Metadatable
     just_class_name.gsub(/([A-Z])/, ' \1').lstrip
   end
 
+  def category(category)
+    (@categories ||= [])
+    @categories << Array(category)
+  end
+
+  def reset_categories
+    @categories = []
+  end
+
   def inherited(child)
     (@options || {}).each do |name, opt|
       child.option name, opt
+    end
+
+    (@categories || []).each do |cat|
+      child.category cat
     end
   end
 
@@ -64,7 +77,8 @@ module Metadatable
       arguments: @arguments || [],
       options: @options || {},
       predominant_types: @types || @predominant_types || [],
-      desc: @desc
+      desc: @desc,
+      categories: @categories || []
     }
   end
 end

@@ -26,6 +26,9 @@ module ConceptQL
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for ICD-9, a value of 2 (for ICD-9-CM)
     class SourceVocabularyNode < Node
+      category 'Source Vocabulary'
+      category 'Code Lists'
+
       def query(db)
         db.from(table_name)
           .join(:vocabulary__source_to_concept_map___scm, scm__target_concept_id: table_concept_column)

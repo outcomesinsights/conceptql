@@ -5,6 +5,7 @@ module ConceptQL
     class Union < PassThru
       desc 'Pools sets of incoming results into a single large set of results.'
       allows_many_children
+      category 'Set Logic'
 
       def query(db)
         values.map do |expression|

@@ -19,6 +19,7 @@ Must be surrounded by the Let operator.
       EOF
       argument :name, type: :string
       allows_one_child
+      category 'Assignment'
 
       def initialize(*args)
         super

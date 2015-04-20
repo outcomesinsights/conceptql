@@ -5,6 +5,7 @@ module ConceptQL
     class Intersect < PassThru
       desc 'Passes thru any result row that appears in all incoming result sets.'
       allows_many_children
+      category 'Set Logic'
 
       def types
         values.map(&:types).flatten.uniq

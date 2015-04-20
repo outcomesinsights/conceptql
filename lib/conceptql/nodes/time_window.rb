@@ -24,6 +24,7 @@ module ConceptQL
       option :start, type: :string
       option :end, type: :string
       allows_one_child
+      category %(Temporal Manipulation)
 
       def query(db)
         db.extension :date_arithmetic

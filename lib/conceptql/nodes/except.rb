@@ -4,6 +4,7 @@ module ConceptQL
   module Nodes
     class Except < BinaryOperatorNode
       desc 'If a LHR result appears in the RHR result, it is removed from the output result set.'
+      category 'Set Logic'
 
       def query(db)
         if ignore_dates?

@@ -5,6 +5,7 @@ module ConceptQL
     class Complement < PassThru
       desc 'Splits up the incoming result set by type and passes through all results for each type that are NOT in the current set.'
       allows_one_child
+      category 'Set Logic'
 
       def query(db)
         child = children.first
