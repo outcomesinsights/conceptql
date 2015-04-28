@@ -67,6 +67,13 @@ module Metadatable
     (@categories || []).each do |cat|
       upstream.category cat
     end
+
+    case @max_upstreams
+    when 1
+      upstream.allows_one_upstream
+    when 99
+      upstream.allows_many_upstreams
+    end
   end
 
   def to_metadata
