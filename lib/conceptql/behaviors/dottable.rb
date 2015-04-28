@@ -78,12 +78,12 @@ module ConceptQL
 
       def graph_it(g, db)
         graph_prep(db) if respond_to?(:graph_prep)
-        children.each do |child|
-          child.graph_it(g, db)
+        upstreams.each do |upstream|
+          upstream.graph_it(g, db)
         end
         node = graph_node(g)
-        children.each do |child|
-          child.link_to(g, graph_node(g), db)
+        upstreams.each do |upstream|
+          upstream.link_to(g, graph_node(g), db)
         end
         node
       end

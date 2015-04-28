@@ -18,7 +18,7 @@ Allows a set of results to be named and then used by the Recall operator to use 
 Must be surrounded by the Let operator.
       EOF
       argument :name, type: :string
-      allows_one_child
+      allows_one_upstream
       category 'Assignment'
 
       def initialize(*args)

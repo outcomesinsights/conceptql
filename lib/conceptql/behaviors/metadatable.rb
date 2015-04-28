@@ -34,12 +34,12 @@ module Metadatable
     end
   end
 
-  def allows_many_children
-    @max_children = 99
+  def allows_many_upstreams
+    @max_upstreams = 99
   end
 
-  def allows_one_child
-    @max_children = 1
+  def allows_one_upstream
+    @max_upstreams = 1
   end
 
   def just_class_name
@@ -59,13 +59,13 @@ module Metadatable
     @categories = []
   end
 
-  def inherited(child)
+  def inherited(upstream)
     (@options || {}).each do |name, opt|
-      child.option name, opt
+      upstream.option name, opt
     end
 
     (@categories || []).each do |cat|
-      child.category cat
+      upstream.category cat
     end
   end
 
@@ -73,7 +73,7 @@ module Metadatable
     {
       preferred_name: @preferred_name || humanized_class_name,
       operation: just_class_name.snakecase,
-      max_children: @max_children || 0,
+      max_upstreams: @max_upstreams || 0,
       arguments: @arguments || [],
       options: @options || {},
       predominant_types: @types || @predominant_types || [],

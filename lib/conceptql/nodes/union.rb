@@ -4,7 +4,7 @@ module ConceptQL
   module Nodes
     class Union < PassThru
       desc 'Pools sets of incoming results into a single large set of results.'
-      allows_many_children
+      allows_many_upstreams
       category 'Set Logic'
 
       def query(db)

@@ -4,13 +4,13 @@ module ConceptQL
   module Nodes
     class Complement < PassThru
       desc 'Splits up the incoming result set by type and passes through all results for each type that are NOT in the current set.'
-      allows_one_child
+      allows_one_upstream
       category 'Set Logic'
 
       def query(db)
-        child = children.first
-        child.types.map do |type|
-          positive_query = db.from(child.evaluate(db))
+        upstream = upstreams.first
+        upstream.types.map do |type|
+          positive_query = db.from(upstream.evaluate(db))
             .select(:criterion_id)
             .exclude(:criterion_id => nil)
             .where(:criterion_type => type.to_s)
@@ -26,12 +26,12 @@ module ConceptQL
       # This is an alternate, but equally accurate way to do complement.
       # We'll need to benchmark which is faster.
       def query2(db)
-        child = children.first
-        froms = child.types.map do |type|
+        upstream = upstreams.first
+        froms = upstream.types.map do |type|
           select_it(db.from(make_table_name(type)), type)
         end
         big_from = froms.inject { |union_query, q| union_query.union(q, all:true) }
-        db.from(big_from).except(child.evaluate(db))
+        db.from(big_from).except(upstream.evaluate(db))
       end
     end
   end

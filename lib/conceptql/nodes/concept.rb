@@ -11,8 +11,8 @@ module ConceptQL
         db.from(cql_query.query.from_self)
       end
 
-      def children
-        @children ||= cql_query.nodes
+      def upstreams
+        @upstreams ||= cql_query.nodes
       end
 
       def graph_prep(db)

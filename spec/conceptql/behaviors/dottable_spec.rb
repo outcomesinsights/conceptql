@@ -20,7 +20,7 @@ describe ConceptQL::Behaviors::Dottable do
   end
 
   describe '#display_name' do
-    it 'should show just the name if no children or arguments' do
+    it 'should show just the name if no upstreams or arguments' do
       @obj.values = []
       @obj.display_name.must_match(/Node Double \d+/)
     end
@@ -30,14 +30,14 @@ describe ConceptQL::Behaviors::Dottable do
       @obj.display_name.must_match(/Node Double \d+: 5, 10/)
     end
 
-    it 'should not include children' do
+    it 'should not include upstreams' do
       @obj.values = [::ConceptQL::Nodes::Node.new]
       @obj.display_name.must_match(/Node Double \d+/)
     end
   end
 
   describe '#node_name' do
-    it 'should show just the name and digit if no children' do
+    it 'should show just the name and digit if no upstreams' do
       @obj.values = [::ConceptQL::Nodes::Node.new]
       @obj.node_name.must_match(/^node_double_\d+$/)
     end
@@ -47,14 +47,14 @@ describe ConceptQL::Behaviors::Dottable do
       @obj.node_name.must_match(/^node_double_\d+$/)
     end
 
-    it 'should not include children' do
+    it 'should not include upstreams' do
       @obj.values = [::ConceptQL::Nodes::Node.new]
       @obj.node_name.must_match(/^node_double_\d+$/)
     end
   end
 
   describe '#graph_it' do
-    it 'should add itself as a node if no children' do
+    it 'should add itself as a node if no upstreams' do
       @obj.values = []
       mock_graph = Minitest::Mock.new
       mock_node = Minitest::Mock.new
@@ -67,8 +67,8 @@ describe ConceptQL::Behaviors::Dottable do
       mock_graph.verify
     end
 
-    it 'should add its children, then link itself as a node if children' do
-      class MockChild < ConceptQL::Nodes::Node
+    it 'should add its upstreams, then link itself as a node if upstreams' do
+      class MockUpstream < ConceptQL::Nodes::Node
         include ConceptQL::Behaviors::Dottable
 
         attr_accessor :mock
@@ -92,20 +92,20 @@ describe ConceptQL::Behaviors::Dottable do
       mock_graph = Minitest::Mock.new
       mock_graph.expect :add_nodes, mock_node, [@obj.node_name]
 
-      mock_child = MockChild.new
-      mock_child.mock = Minitest::Mock.new
-      mock_child.mock.expect :graph_it, :child_node, [mock_graph, :db]
-      mock_child.mock.expect :link_to, nil, [mock_graph, mock_node, :db]
+      mock_upstream = MockUpstream.new
+      mock_upstream.mock = Minitest::Mock.new
+      mock_upstream.mock.expect :graph_it, :upstream_node, [mock_graph, :db]
+      mock_upstream.mock.expect :link_to, nil, [mock_graph, mock_node, :db]
 
-      mock_child.must_behave_like(:node)
+      mock_upstream.must_behave_like(:node)
 
-      @obj.values = [mock_child]
+      @obj.values = [mock_upstream]
 
       @obj.graph_it(mock_graph, :db)
 
       mock_node.verify
       mock_graph.verify
-      mock_child.mock.verify
+      mock_upstream.mock.verify
     end
   end
 end

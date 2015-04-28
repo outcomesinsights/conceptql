@@ -25,7 +25,7 @@ describe ConceptQL::Nodes::Concept do
   end
 
   describe '#query' do
-    it 'evaluates child' do
+    it 'evaluates upstream' do
       cd = ConceptDouble.new(1)
       db = Sequel.mock
       cd.cql_query.expect :query, cd.cql_query, []

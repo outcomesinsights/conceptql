@@ -9,7 +9,7 @@ Represents a common pattern in research algorithms: searching for a condition
 that appears either two times in an outpatient setting with a 30-day gap or once
 in an inpatient setting
       EOF
-      allows_one_child
+      allows_one_upstream
 
       def types
         [:visit_occurrence]

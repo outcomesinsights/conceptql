@@ -83,7 +83,7 @@ module ConceptQL
       end
 
       def types
-        types = [TYPES[name.to_sym] || children.map(&:types)].flatten.uniq
+        types = [TYPES[name.to_sym] || upstreams.map(&:types)].flatten.uniq
         types.empty? ? [:misc] : types
       end
     end
@@ -135,8 +135,8 @@ module ConceptQL
         cluster_name = "cluster_#{node_name}"
         linkable = nil
         g.send(cluster_name) do |sub|
-          linkable = children.reverse.map do |child|
-            child.graph_it(sub, db)
+          linkable = upstreams.reverse.map do |upstream|
+            upstream.graph_it(sub, db)
           end.first
           sub[label: display_name, color: 'black']
         end
@@ -144,7 +144,7 @@ module ConceptQL
       end
 
       def types
-        children.last.types
+        upstreams.last.types
       end
     end
 

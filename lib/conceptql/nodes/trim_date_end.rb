@@ -25,7 +25,7 @@ thru unaffected.
 If the RHS result's start_date is later than the LHS end_date, the LHS
 result is passed thru unaffected.
       EOF
-      allows_one_child
+      allows_one_upstream
       category %(Temporal Manipulation)
 
       def query(db)

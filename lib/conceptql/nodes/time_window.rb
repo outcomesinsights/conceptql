@@ -23,7 +23,7 @@ module ConceptQL
       desc 'Adjusts the start_date and end_date columns to create a new window of time for each result.'
       option :start, type: :string
       option :end, type: :string
-      allows_one_child
+      allows_one_upstream
       category %(Temporal Manipulation)
 
       def query(db)

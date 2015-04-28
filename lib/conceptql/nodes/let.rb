@@ -5,7 +5,7 @@ module ConceptQL
   module Nodes
     class Let < Node
       desc 'Used to create a scope for Define/Recall operators.'
-      allows_many_children
+      allows_many_upstreams
       category 'Assignment'
 
       def query(db)
@@ -13,15 +13,15 @@ module ConceptQL
       end
 
       def types
-        children.last.types
+        upstreams.last.types
       end
 
       def graph_it(g, db)
         cluster_name = "cluster_#{node_name}"
         linkable = nil
         g.send(cluster_name) do |sub|
-          linkable = children.reverse.map do |child|
-            child.graph_it(sub, db)
+          linkable = upstreams.reverse.map do |upstream|
+            upstream.graph_it(sub, db)
           end.first
           sub[label: display_name, color: 'black']
         end
@@ -34,8 +34,8 @@ module ConceptQL
       end
 
       def perform_evaluations(db)
-        children.map do |child|
-          child.evaluate(db)
+        upstreams.map do |upstream|
+          upstream.evaluate(db)
         end
       end
     end

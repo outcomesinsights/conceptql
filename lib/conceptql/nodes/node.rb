@@ -30,7 +30,7 @@ module ConceptQL
 
       def initialize(*args)
         @options = args.extract_options!.deep_rekey
-        @children, @arguments = args.partition { |arg| arg.is_a?(Node) }
+        @upstreams, @arguments = args.partition { |arg| arg.is_a?(Node) }
         @values = args
       end
 
@@ -45,7 +45,7 @@ module ConceptQL
       def select_it(query, specific_type = nil)
         specific_type = type if specific_type.nil? && respond_to?(:type)
         q = query.select(*columns(query, specific_type))
-        if tree && tree.person_ids && children.empty?
+        if tree && tree.person_ids && upstreams.empty?
           q = q.where(person_id: tree.person_ids).from_self
         end
         q
@@ -55,12 +55,12 @@ module ConceptQL
         @types ||= determine_types
       end
 
-      def children
-        @children ||= values.select { |v| v.is_a?(Node) }
+      def upstreams
+        @upstreams ||= values.select { |v| v.is_a?(Node) }
       end
 
       def stream
-        @stream ||= children.first
+        @stream ||= upstreams.first
       end
 
       def arguments
@@ -85,14 +85,14 @@ module ConceptQL
       end
 
       def build_temp_tables(db)
-        children.each { |child| child.build_temp_tables(db) }
+        upstreams.each { |upstream| upstream.build_temp_tables(db) }
         ensure_temp_tables(db)
         temp_tables.each { |n, tt| tt.build(db) }
       end
 
       private
       # There have been a few times now that I've wanted a node to be able
-      # to pass information to another node that is not directly a child
+      # to pass information to another node that is not directly a upstream
       #
       # Since tree is only object that touches each node in a statement,
       # I'm going to employ tree as a way to communicate between nodes
@@ -239,14 +239,14 @@ module ConceptQL
       end
 
       def determine_types
-        if children.empty?
+        if upstreams.empty?
           if respond_to?(:type)
             [type]
           else
             raise "Node doesn't seem to specify any type"
           end
         else
-          children.map(&:types).flatten.uniq
+          upstreams.map(&:types).flatten.uniq
         end
       end
 

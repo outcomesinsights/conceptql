@@ -4,7 +4,7 @@ module ConceptQL
   module Nodes
     class Count < PassThru
       desc 'Counts the number of results the exactly match across all columns.'
-      allows_one_child
+      allows_one_upstream
 
       def query(db)
         db.from(unioned(db))
@@ -15,7 +15,7 @@ module ConceptQL
       end
 
       def unioned(db)
-        children.map { |c| c.evaluate(db) }.inject do |uni, q|
+        upstreams.map { |c| c.evaluate(db) }.inject do |uni, q|
           uni.union(q)
         end
       end

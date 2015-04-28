@@ -38,7 +38,7 @@ If we ask for the second occurrence of something and a person has only one
 occurrence, this node returns nothing for that person
       EOF
       argument :occurrence, type: :integer
-      allows_one_child
+      allows_one_upstream
       category %w(Temporal Occurrence)
 
       def query(db)

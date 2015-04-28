@@ -19,7 +19,7 @@ For start_date and end_date the min and max of each respectively is returned.'
       end
 
       def unioned(db)
-        children.map { |c| c.evaluate(db) }.inject do |uni, q|
+        upstreams.map { |c| c.evaluate(db) }.inject do |uni, q|
           uni.union(q)
         end
       end

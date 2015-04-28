@@ -3,8 +3,8 @@ require_relative 'casting_node'
 module ConceptQL
   module Nodes
     class VisitOccurrence < CastingNode
-      desc 'Returns all visits in the database, or if given a child, converts all results to the set of visit_occurrences related to those results.'
-      allows_one_child
+      desc 'Returns all visits in the database, or if given a upstream, converts all results to the set of visit_occurrences related to those results.'
+      allows_one_upstream
       types :visit_occurrence
 
       def my_type

@@ -4,7 +4,7 @@ module ConceptQL
   module Nodes
     class Intersect < PassThru
       desc 'Passes thru any result row that appears in all incoming result sets.'
-      allows_many_children
+      allows_many_upstreams
       category 'Set Logic'
 
       def types

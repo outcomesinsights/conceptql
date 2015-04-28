@@ -42,7 +42,7 @@ end
 shared_examples_for(:node) do |subject|
   subject.must_respond_to(:values)
   subject.must_respond_to(:arguments)
-  subject.must_respond_to(:children)
+  subject.must_respond_to(:upstreams)
 end
 
 shared_examples_for(:temporal_node) do |subject|

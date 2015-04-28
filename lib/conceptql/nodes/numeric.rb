@@ -24,7 +24,7 @@ Accepts two params:
 - An optional stream
       EOF
       argument :value, type: :float
-      allows_one_child
+      allows_one_upstream
 
       def query(db)
         stream.nil? ? as_criterion(db) : with_kids(db)
