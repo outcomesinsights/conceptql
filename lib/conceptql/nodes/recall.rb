@@ -15,7 +15,7 @@ Recalls a set of named results that were previously stored using the Define oper
 Must be surrounded by the same Let operator as surrounds the corresponding Define operator.
       EOF
       argument :name, type: :string
-      category 'Assignment'
+      category 'Variable Assignment'
 
       # Behind the scenes we simply fetch all rows from the temp table that
       # corresponds to the name fed to "recall"

@@ -19,7 +19,7 @@ Must be surrounded by the Let operator.
       EOF
       argument :name, type: :string
       allows_one_upstream
-      category 'Assignment'
+      category 'Variable Assignment'
 
       def initialize(*args)
         super

@@ -6,7 +6,7 @@ module ConceptQL
     class Let < Node
       desc 'Used to create a scope for Define/Recall operators.'
       allows_many_upstreams
-      category 'Assignment'
+      category 'Variable Assignment'
 
       def query(db)
         evaluated(db).last
