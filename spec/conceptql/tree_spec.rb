@@ -18,7 +18,7 @@ describe ConceptQL::Tree do
       @mock_nodifier.expect :create, :success_indicator, [:icd9, '799.22', @tree]
       @mock_query_obj.expect :statement, { icd9: '799.22' }
 
-      @tree.root(@mock_query_obj).must_equal [:success_indicator]
+      @tree.root(@mock_query_obj).must_equal :success_indicator
     end
 
     it 'should extend all nodes created with behavior passed in' do
@@ -38,16 +38,16 @@ describe ConceptQL::Tree do
 
       @mock_query_obj.expect :statement, { nth: { occurrence: 1, expression: { icd9: '799.22' } } }
 
-      @tree.root(@mock_query_obj).must_equal [:success_indicator]
+      @tree.root(@mock_query_obj).must_equal :success_indicator
     end
 
     it 'should walk multi-node criteria tree and convert to nodes' do
       @mock_nodifier.expect :create, :mock_icd9, [:icd9, '799.22', @tree]
-      @mock_nodifier.expect :create, :success_indicator, [:any, [:mock_icd9], @tree]
+      @mock_nodifier.expect :create, :success_indicator, [:any, :mock_icd9, @tree]
 
       @mock_query_obj.expect :statement, { any: [{ icd9: '799.22' }] }
 
-      @tree.root(@mock_query_obj).must_equal [:success_indicator]
+      @tree.root(@mock_query_obj).must_equal :success_indicator
     end
   end
 end

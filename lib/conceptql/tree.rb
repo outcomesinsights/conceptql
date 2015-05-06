@@ -1,5 +1,7 @@
 require_relative 'nodifier'
+require_relative 'converter'
 require 'facets/hash/deep_rekey'
+require 'facets/array/recurse'
 
 module ConceptQL
   class Tree
@@ -13,28 +15,36 @@ module ConceptQL
       @opts = {}
     end
 
-    def root(*queries)
-      @root ||= traverse(queries.flatten.map(&:statement).flatten.map(&:deep_rekey))
+    def root(query)
+      @root ||= start_traverse(query.statement)
     end
 
     private
-    def traverse(obj)
-      case obj
+
+    def start_traverse(stmt)
+      case stmt
       when Hash
-        if obj.keys.length > 1
-          obj = Hash[obj.map { |key, value| [ key, traverse(value) ]}]
-          return obj
-        end
-        type = obj.keys.first
-        values = traverse(obj[type])
-        obj = nodifier.create(type, values, self)
-        obj.extend(behavior) if behavior
-        obj
+        traverse(converter.convert(stmt))
       when Array
-        obj.map { |value| traverse(value) }
-      else
-        obj
+        traverse(stmt)
       end
+    end
+
+    def traverse(stmt)
+      stmt.recurse(Array, Hash) do |arr_or_hash|
+        if arr_or_hash.is_a?(Array)
+          type = arr_or_hash.shift
+          obj = nodifier.create(type, *arr_or_hash, self)
+          obj.extend(behavior) if behavior
+          obj
+        else
+          arr_or_hash
+        end
+      end
+    end
+
+    def converter
+      @converter ||= Converter.new
     end
   end
 end
