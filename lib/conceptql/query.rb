@@ -16,41 +16,34 @@ module ConceptQL
       @tree = tree
     end
 
-    def queries
+    def query
       build_query(db)
     end
 
-    def query
-      queries.last
-    end
-
     def sql
-      nodes.flat_map { |n| n.sql_for_temp_tables(db) }
-      sql = (nodes.last.sql_for_temp_tables(db) << nodes.last.evaluate(db).sql).join(";\n\n") + ';'
-      sql
+      (node.sql_for_temp_tables(db) << node.evaluate(db).sql).join(";\n\n") + ';'
     end
 
     def types
-      tree.root(self).last.types
+      tree.root(self).types
     end
 
-    def nodes
-      @nodes ||= tree.root(self)
+    def node
+      @node ||= tree.root(self)
     end
 
     private
     attr :yaml, :tree, :db
 
     def build_query(db)
-      nodes.map { |n| n.evaluate(db) }.each { |q| q.prep_proc = prep_proc }
+      node.evaluate(db).tap { |q| q.prep_proc = prep_proc }
     end
 
     def prep_proc
-      @prep_proc = Proc.new { puts 'PREPPING'; nodes.each { |n| n.build_temp_tables(db) } }
+      @prep_proc = Proc.new { puts 'PREPPING'; node.build_temp_tables(db) }
     end
 
     def prepped_query
-#      @prepped_query ||= PreppedQuery.new(query, Proc.new { puts 'PREPPING'; nodes.each { |n| n.build_temp_tables(db) } })
       query
     end
   end
