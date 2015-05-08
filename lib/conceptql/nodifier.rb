@@ -19,8 +19,8 @@ module ConceptQL
       end
     end
 
-    def create(operator, values, tree)
-      node = operators[operator].new(values)
+    def create(tree, operator, *values)
+      node = operators[operator].new(*values)
       node.tree = tree
       node
     end

@@ -34,7 +34,7 @@ module ConceptQL
       stmt.recurse(Array, Hash) do |arr_or_hash|
         if arr_or_hash.is_a?(Array)
           type = arr_or_hash.shift
-          obj = nodifier.create(type, *arr_or_hash, self)
+          obj = nodifier.create(self, type, *arr_or_hash)
           obj.extend(behavior) if behavior
           obj
         else
