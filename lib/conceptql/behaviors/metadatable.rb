@@ -32,6 +32,11 @@ module Metadatable
     define_method(:types) do
       type_list
     end
+    if type_list.length == 1
+      define_method(:type) do
+        type_list.first
+      end
+    end
   end
 
   def allows_many_upstreams
