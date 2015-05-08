@@ -8,12 +8,12 @@ module ConceptQL
       category 'Set Logic'
 
       def types
-        values.map(&:types).flatten.uniq
+        upstreams.map(&:types).flatten.uniq
       end
 
       def query(db)
         exprs = {}
-        values.each do |expression|
+        upstreams.each do |expression|
           evaled = expression.evaluate(db)
           expression.types.each do |type|
             (exprs[type] ||= []) << evaled
