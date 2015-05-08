@@ -10,6 +10,7 @@ module ConceptQL
     class TemporalNode < BinaryOperatorNode
       reset_categories
       category %w(Temporal Relative)
+
       def query(db)
         db.from(db.from(left_stream(db))
                   .join(right_stream(db), l__person_id: :r__person_id)
