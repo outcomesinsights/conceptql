@@ -26,6 +26,8 @@ module ConceptQL
       attr :values, :options
       attr_accessor :tree
 
+      option :label, type: :string
+
       def_delegators :tree, :temp_tables
 
       def initialize(*args)
