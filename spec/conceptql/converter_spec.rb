@@ -36,6 +36,16 @@ describe ConceptQL::Converter do
       }
       ConceptQL::Converter.new.convert(statement).must_equal [:after, { left: [:icd9, '412'], right: [:icd9, '200'] }]
     end
+
+    it 'converts operators with an array of upstreams' do
+      statement = {
+        intersect: [
+          { icd9: '412' },
+          { condition_type: :inpatient_header }
+        ]
+      }
+      ConceptQL::Converter.new.convert(statement).must_equal [:intersect, [ :icd9, '412' ], [ :condition_type, :inpatient_header ] ]
+    end
   end
 end
 
