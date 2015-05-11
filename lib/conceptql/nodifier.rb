@@ -19,9 +19,9 @@ module ConceptQL
       end
     end
 
-    def create(tree, operator, *values)
+    def create(scope, operator, *values)
       node = operators[operator].new(*values)
-      node.tree = tree
+      node.scope = scope
       node
     end
 

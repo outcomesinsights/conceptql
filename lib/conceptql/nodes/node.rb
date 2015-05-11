@@ -1,5 +1,4 @@
 require 'zlib'
-require_relative '../utils/temp_table'
 require_relative '../behaviors/metadatable'
 require 'facets/array/extract_options'
 require 'facets/hash/deep_rekey'
@@ -23,17 +22,19 @@ module ConceptQL
         :source_value
       ]
 
-      attr_accessor :tree
       attr :values, :options, :arguments, :upstreams
 
       option :label, type: :string
-
-      def_delegators :tree, :temp_tables
 
       def initialize(*args)
         @options = args.extract_options!.deep_rekey
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Node) }
         @values = args
+      end
+
+      def scope=(scope)
+        @scope = scope
+        scope.add_operator(self)
       end
 
       def evaluate(db)
@@ -47,8 +48,8 @@ module ConceptQL
       def select_it(query, specific_type = nil)
         specific_type = type if specific_type.nil? && respond_to?(:type)
         q = query.select(*columns(query, specific_type))
-        if tree && tree.person_ids && upstreams.empty?
-          q = q.where(person_id: tree.person_ids).from_self
+        if scope && scope.person_ids && upstreams.empty?
+          q = q.where(person_id: scope.person_ids).from_self
         end
         q
       end
@@ -73,33 +74,12 @@ module ConceptQL
         columns += value_columns(query, local_type)
       end
 
-      def sql_for_temp_tables(db)
-        build_temp_tables(db)
-        temp_tables.map { |n, tt| tt.sql(db) }
-      end
-
-      def build_temp_tables(db)
-        upstreams.each { |upstream| upstream.build_temp_tables(db) }
-        ensure_temp_tables(db)
-        temp_tables.each { |n, tt| tt.build(db) }
+      def label
+        options[:label]
       end
 
       private
-      # There have been a few times now that I've wanted a node to be able
-      # to pass information to another node that is not directly a upstream
-      #
-      # Since tree is only object that touches each node in a statement,
-      # I'm going to employ tree as a way to communicate between nodes
-      #
-      # This is an ugly hack, but the use case for this hack is I'm changing
-      # the way `define` and `recall` nodes pass type information between
-      # each other.  They used to take the type information onto the
-      # database connection, but there were issues where sometimes the
-      # type information was needed before we passed around the database
-      # connection.
-      #
-      # At least this way we don't have timing issues when reading types
-      attr :tree
+      attr :scope
 
       def criterion_id
         :criterion_id
@@ -242,38 +222,6 @@ module ConceptQL
         else
           upstreams.map(&:types).flatten.uniq
         end
-      end
-
-      def namify(name)
-        digest = Zlib.crc32 name
-        ('_' + digest.to_s).to_sym
-      end
-
-      def ensure_temp_tables(db)
-        if respond_to?(:needed_temp_tables)
-          needed_temp_tables(db).each do |name, opts|
-            temp_table(db, name, opts)
-          end
-        end
-      end
-
-      def temp_table(db, name, opts)
-        return temp_tables[name] if temp_tables[name]
-        t = TempTable.new(name, opts)
-        db.create_table!(name, temp: true, as: fake_row(db))
-        temp_tables[name] = t
-      end
-
-      def fake_row(db)
-        db
-          .select(Sequel.cast(nil, Bignum).as(:person_id))
-          .select_append(Sequel.cast(nil, Bignum).as(:criterion_id))
-          .select_append(Sequel.cast(nil, String).as(:criterion_type))
-          .select_append(Sequel.cast(nil, Date).as(:start_date))
-          .select_append(Sequel.cast(nil, Date).as(:end_date))
-          .select_append(Sequel.cast(nil, Bignum).as(:value_as_number))
-          .select_append(Sequel.cast(nil, String).as(:value_as_string))
-          .select_append(Sequel.cast(nil, Bignum).as(:value_as_concept_id))
       end
     end
   end

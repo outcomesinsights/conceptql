@@ -21,7 +21,7 @@ module ConceptQL
     end
 
     def sql
-      (node.sql_for_temp_tables(db) << node.evaluate(db).sql).join(";\n\n") + ';'
+      (tree.scope.sql(db) << node.sql(db)).join(";\n\n") + ';'
     end
 
     def types
@@ -40,7 +40,7 @@ module ConceptQL
     end
 
     def prep_proc
-      @prep_proc = Proc.new { puts 'PREPPING'; node.build_temp_tables(db) }
+      @prep_proc = Proc.new { puts 'PREPPING'; tree.scope.prep(db) }
     end
 
     def prepped_query
