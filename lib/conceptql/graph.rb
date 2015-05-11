@@ -19,11 +19,11 @@ module ConceptQL
 
     def graph_it(file_path)
       build_graph(g)
-      g.output(suffix.to_sym =>  file_path + ".#{suffix}")
+      graph.output(suffix.to_sym =>  file_path + ".#{suffix}")
     end
 
-    def g
-      @g ||= begin
+    def graph
+      @graph ||= begin
         opts = { type: :digraph }
         opts[:label] = title if title
         GraphViz.new(:G, opts)
