@@ -1,12 +1,12 @@
 require 'spec_helper'
 require 'conceptql/nodes/standard_vocabulary_node'
 
-describe ConceptQL::Nodes::StandardVocabularyNode do
+describe ConceptQL::Operators::StandardVocabularyNode do
   it 'behaves itself' do
-    ConceptQL::Nodes::StandardVocabularyNode.new.must_behave_like(:evaluator)
+    ConceptQL::Operators::StandardVocabularyNode.new.must_behave_like(:evaluator)
   end
 
-  class StandardVocabularyDouble < ConceptQL::Nodes::StandardVocabularyNode
+  class StandardVocabularyDouble < ConceptQL::Operators::StandardVocabularyNode
     def table
       :table
     end

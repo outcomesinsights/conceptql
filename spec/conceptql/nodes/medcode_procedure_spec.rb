@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/medcode_procedure'
 
-describe ConceptQL::Nodes::MedcodeProcedure do
+describe ConceptQL::Operators::MedcodeProcedure do
   it 'behaves itself' do
-    ConceptQL::Nodes::MedcodeProcedure.new.must_behave_like(:source_vocabulary_node)
+    ConceptQL::Operators::MedcodeProcedure.new.must_behave_like(:source_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::MedcodeProcedure.new
+    ConceptQL::Operators::MedcodeProcedure.new
   end
 
   describe '#table' do

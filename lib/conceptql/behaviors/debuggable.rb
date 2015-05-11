@@ -18,7 +18,7 @@ module ConceptQL
 
         def make_file
           CSV.open(file_path, 'w') do |csv|
-            csv << ConceptQL::Nodes::Node::COLUMNS
+            csv << ConceptQL::Operators::Node::COLUMNS
             results.each do |result|
               csv << result
             end
@@ -43,7 +43,7 @@ module ConceptQL
           end
 
           q.order([:person_id, :criterion_type, :start_date, :end_date, :criterion_id])
-            .select_map(ConceptQL::Nodes::Node::COLUMNS)
+            .select_map(ConceptQL::Operators::Node::COLUMNS)
         end
 
         def abbreviate(type)
@@ -54,7 +54,7 @@ module ConceptQL
       def print_results(db, dir, watch_ids)
         print_prep(db) if respond_to?(:print_prep)
         kids = upstreams
-        if self.is_a?(ConceptQL::Nodes::BinaryOperatorNode)
+        if self.is_a?(ConceptQL::Operators::BinaryOperatorNode)
           kids = [left, right]
         end
         files = kids.map do |upstream|

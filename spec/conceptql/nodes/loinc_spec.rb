@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/loinc'
 
-describe ConceptQL::Nodes::Loinc do
+describe ConceptQL::Operators::Loinc do
   it 'behaves itself' do
-    ConceptQL::Nodes::Loinc.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Loinc.new.must_behave_like(:standard_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::Loinc.new
+    ConceptQL::Operators::Loinc.new
   end
 
   describe '#table' do

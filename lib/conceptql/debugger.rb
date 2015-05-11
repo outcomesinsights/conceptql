@@ -9,7 +9,7 @@ module ConceptQL
       @statement = statement
       @db = opts.fetch(:db, nil)
       @tree = opts.fetch(:tree, Tree.new)
-      ConceptQL::Nodes::Node.send(:include, ConceptQL::Behaviors::Debuggable)
+      ConceptQL::Operators::Node.send(:include, ConceptQL::Behaviors::Debuggable)
       @watch_ids = opts.fetch(:watch_ids, [])
       raise "Please specify one or more person_ids you'd like to debug" unless @watch_ids
     end

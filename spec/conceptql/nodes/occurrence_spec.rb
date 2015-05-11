@@ -2,14 +2,14 @@ require 'spec_helper'
 require 'conceptql/nodes/occurrence'
 require_double('stream_for_occurrence')
 
-describe ConceptQL::Nodes::Occurrence do
+describe ConceptQL::Operators::Occurrence do
   it 'behaves itself' do
-    ConceptQL::Nodes::Occurrence.new.must_behave_like(:evaluator)
+    ConceptQL::Operators::Occurrence.new.must_behave_like(:evaluator)
   end
 
   describe 'occurrence set to 1' do
     subject do
-      ConceptQL::Nodes::Occurrence.new(1, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
+      ConceptQL::Operators::Occurrence.new(1, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
     end
 
     it 'should order by ascending start_date' do
@@ -31,7 +31,7 @@ describe ConceptQL::Nodes::Occurrence do
 
   describe 'occurrence set to 2' do
     subject do
-      ConceptQL::Nodes::Occurrence.new(2, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
+      ConceptQL::Operators::Occurrence.new(2, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
     end
 
     it 'should order by ascending start_date' do
@@ -45,7 +45,7 @@ describe ConceptQL::Nodes::Occurrence do
 
   describe 'occurrence set to -1' do
     subject do
-      ConceptQL::Nodes::Occurrence.new(-1, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
+      ConceptQL::Operators::Occurrence.new(-1, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
     end
 
     it 'should order by ascending start_date' do
@@ -59,7 +59,7 @@ describe ConceptQL::Nodes::Occurrence do
 
   describe 'occurrence set to -2' do
     subject do
-      ConceptQL::Nodes::Occurrence.new(-2, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
+      ConceptQL::Operators::Occurrence.new(-2, StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
     end
 
     it 'should order by ascending start_date' do
@@ -77,7 +77,7 @@ describe ConceptQL::Nodes::Occurrence do
       def dub.types
         [:condition_occurrence]
       end
-      ConceptQL::Nodes::Occurrence.new(-2, dub).query(Sequel.mock(host: 'postgres')).sql
+      ConceptQL::Operators::Occurrence.new(-2, dub).query(Sequel.mock(host: 'postgres')).sql
     end
 
     it 'should order by ascending start_date' do

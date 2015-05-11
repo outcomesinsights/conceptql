@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'conceptql/nodes/node'
 require 'conceptql/behaviors/dottable'
 
-class NodeDouble < ConceptQL::Nodes::Node
+class NodeDouble < ConceptQL::Operators::Node
   include ConceptQL::Behaviors::Dottable
 
   attr_accessor :values, :options
@@ -31,14 +31,14 @@ describe ConceptQL::Behaviors::Dottable do
     end
 
     it 'should not include upstreams' do
-      @obj.values = [::ConceptQL::Nodes::Node.new]
+      @obj.values = [::ConceptQL::Operators::Node.new]
       @obj.display_name.must_match(/Node Double \d+/)
     end
   end
 
   describe '#node_name' do
     it 'should show just the name and digit if no upstreams' do
-      @obj.values = [::ConceptQL::Nodes::Node.new]
+      @obj.values = [::ConceptQL::Operators::Node.new]
       @obj.node_name.must_match(/^node_double_\d+$/)
     end
 
@@ -48,7 +48,7 @@ describe ConceptQL::Behaviors::Dottable do
     end
 
     it 'should not include upstreams' do
-      @obj.values = [::ConceptQL::Nodes::Node.new]
+      @obj.values = [::ConceptQL::Operators::Node.new]
       @obj.node_name.must_match(/^node_double_\d+$/)
     end
   end
@@ -68,7 +68,7 @@ describe ConceptQL::Behaviors::Dottable do
     end
 
     it 'should add its upstreams, then link itself as a node if upstreams' do
-      class MockUpstream < ConceptQL::Nodes::Node
+      class MockUpstream < ConceptQL::Operators::Node
         include ConceptQL::Behaviors::Dottable
 
         attr_accessor :mock

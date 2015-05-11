@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/icd9'
 
-describe ConceptQL::Nodes::Icd9 do
+describe ConceptQL::Operators::Icd9 do
   it 'behaves itself' do
-    ConceptQL::Nodes::Icd9.new.must_behave_like(:source_vocabulary_node)
+    ConceptQL::Operators::Icd9.new.must_behave_like(:source_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::Icd9.new
+    ConceptQL::Operators::Icd9.new
   end
 
   describe '#table' do

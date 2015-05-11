@@ -1,5 +1,5 @@
 require 'conceptql/nodes/node'
-class QueryDouble < ConceptQL::Nodes::Node
+class QueryDouble < ConceptQL::Operators::Node
   def initialize(num, type = :visit_occurrence)
     @num = num
     @type = type

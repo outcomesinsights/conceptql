@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/snomed'
 
-describe ConceptQL::Nodes::Snomed do
+describe ConceptQL::Operators::Snomed do
   it 'behaves itself' do
-    ConceptQL::Nodes::Snomed.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Snomed.new.must_behave_like(:standard_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::Snomed.new
+    ConceptQL::Operators::Snomed.new
   end
 
   describe '#table' do

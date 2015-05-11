@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/cpt'
 
-describe ConceptQL::Nodes::Cpt do
+describe ConceptQL::Operators::Cpt do
   it 'behaves itself' do
-    ConceptQL::Nodes::Cpt.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Cpt.new.must_behave_like(:standard_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::Cpt.new
+    ConceptQL::Operators::Cpt.new
   end
 
   describe '#table' do

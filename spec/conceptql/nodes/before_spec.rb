@@ -2,13 +2,13 @@ require 'spec_helper'
 require 'conceptql/nodes/before'
 require_double('stream_for_temporal')
 
-describe ConceptQL::Nodes::Before do
+describe ConceptQL::Operators::Before do
   it 'behaves itself' do
-    ConceptQL::Nodes::Before.new.must_behave_like(:temporal_node)
+    ConceptQL::Operators::Before.new.must_behave_like(:temporal_node)
   end
 
   subject do
-    ConceptQL::Nodes::Before.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
+    ConceptQL::Operators::Before.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
   end
 
   it 'should use proper where clause' do

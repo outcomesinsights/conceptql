@@ -2,14 +2,14 @@ require 'spec_helper'
 require 'conceptql/nodes/contains'
 require_double('stream_for_temporal')
 
-describe ConceptQL::Nodes::Contains do
+describe ConceptQL::Operators::Contains do
   it 'behaves itself' do
-    ConceptQL::Nodes::Contains.new.must_behave_like(:temporal_node)
+    ConceptQL::Operators::Contains.new.must_behave_like(:temporal_node)
   end
 
   describe 'when not inclusive' do
     subject do
-      ConceptQL::Nodes::Contains.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
+      ConceptQL::Operators::Contains.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
     end
 
     it 'should use proper where clause' do

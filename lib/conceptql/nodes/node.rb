@@ -5,7 +5,7 @@ require 'facets/hash/deep_rekey'
 require 'forwardable'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Node
       extend Forwardable
       extend Metadatable

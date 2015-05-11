@@ -14,7 +14,7 @@ module ConceptQL
       @tree = opts.fetch(:tree, Tree.new)
       @title = opts.fetch(:title, nil)
       @suffix = opts.fetch(:suffix, 'pdf')
-      ConceptQL::Nodes::Node.send(:include, ConceptQL::Behaviors::Dottable)
+      ConceptQL::Operators::Node.send(:include, ConceptQL::Behaviors::Dottable)
     end
 
     def graph_it(file_path)

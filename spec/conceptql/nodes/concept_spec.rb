@@ -1,12 +1,12 @@
 require 'spec_helper'
 require 'conceptql/nodes/concept'
 
-describe ConceptQL::Nodes::Concept do
+describe ConceptQL::Operators::Concept do
   it 'behaves itself' do
-    ConceptQL::Nodes::Concept.new.must_behave_like(:evaluator)
+    ConceptQL::Operators::Concept.new.must_behave_like(:evaluator)
   end
 
-  class ConceptDouble < ConceptQL::Nodes::Concept
+  class ConceptDouble < ConceptQL::Operators::Concept
     def arguments
       [1]
     end

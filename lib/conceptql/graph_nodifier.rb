@@ -3,7 +3,7 @@ require_relative 'nodes/node'
 
 module ConceptQL
   class GraphNodifier
-    class DotNode < ConceptQL::Nodes::Node
+    class DotNode < ConceptQL::Operators::Node
       include ConceptQL::Behaviors::Dottable
 
       TYPES = {
@@ -53,7 +53,7 @@ module ConceptQL
         drug_type_concept: :drug_exposure,
         prodcode: :drug_exposure,
 
-        # Date Nodes
+        # Date Operators
         date_range: :date,
 
         # Miscelaneous nodes

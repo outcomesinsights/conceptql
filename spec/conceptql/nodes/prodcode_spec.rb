@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/prodcode'
 
-describe ConceptQL::Nodes::Prodcode do
+describe ConceptQL::Operators::Prodcode do
   it 'behaves itself' do
-    ConceptQL::Nodes::Prodcode.new.must_behave_like(:source_vocabulary_node)
+    ConceptQL::Operators::Prodcode.new.must_behave_like(:source_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::Prodcode.new
+    ConceptQL::Operators::Prodcode.new
   end
 
   describe '#table' do

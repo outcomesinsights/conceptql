@@ -2,12 +2,12 @@ require 'spec_helper'
 require 'conceptql/nodes/temporal_node'
 require_double('stream_for_temporal')
 
-describe ConceptQL::Nodes::TemporalNode do
+describe ConceptQL::Operators::TemporalNode do
   it 'behaves itself' do
-    ConceptQL::Nodes::TemporalNode.new.must_behave_like(:evaluator)
+    ConceptQL::Operators::TemporalNode.new.must_behave_like(:evaluator)
   end
 
-  class TemporalDouble < ConceptQL::Nodes::TemporalNode
+  class TemporalDouble < ConceptQL::Operators::TemporalNode
     def where_clause
       Proc.new do
         l__end_date < r__start_date

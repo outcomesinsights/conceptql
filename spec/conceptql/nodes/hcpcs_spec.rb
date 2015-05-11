@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/hcpcs'
 
-describe ConceptQL::Nodes::Hcpcs do
+describe ConceptQL::Operators::Hcpcs do
   it 'behaves itself' do
-    ConceptQL::Nodes::Hcpcs.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Hcpcs.new.must_behave_like(:standard_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::Hcpcs.new
+    ConceptQL::Operators::Hcpcs.new
   end
 
   describe '#table' do

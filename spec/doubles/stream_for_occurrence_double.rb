@@ -1,4 +1,4 @@
-class StreamForOccurrenceDouble < ConceptQL::Nodes::Node
+class StreamForOccurrenceDouble < ConceptQL::Operators::Node
   def query(db)
     ds = db.from(:table)
     # Occurrence needs window functions to work

@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'conceptql/nodes/rxnorm'
 
-describe ConceptQL::Nodes::Rxnorm do
+describe ConceptQL::Operators::Rxnorm do
   it 'behaves itself' do
-    ConceptQL::Nodes::Rxnorm.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Rxnorm.new.must_behave_like(:standard_vocabulary_node)
   end
 
   subject do
-    ConceptQL::Nodes::Rxnorm.new
+    ConceptQL::Operators::Rxnorm.new
   end
 
   describe '#table' do

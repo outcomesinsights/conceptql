@@ -2,18 +2,18 @@ require 'spec_helper'
 require 'conceptql/nodes/first'
 require_double('stream_for_occurrence')
 
-describe ConceptQL::Nodes::First do
+describe ConceptQL::Operators::First do
   it 'behaves itself' do
-    ConceptQL::Nodes::First.new.must_behave_like(:evaluator)
+    ConceptQL::Operators::First.new.must_behave_like(:evaluator)
   end
 
   it 'should have occurrence pegged at 1' do
-    ConceptQL::Nodes::First.new.occurrence.must_equal(1)
+    ConceptQL::Operators::First.new.occurrence.must_equal(1)
   end
 
   describe 'occurrence set to 1' do
     subject do
-      ConceptQL::Nodes::First.new(StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
+      ConceptQL::Operators::First.new(StreamForOccurrenceDouble.new).query(Sequel.mock(host: 'postgres')).sql
     end
 
     it 'should order by ascending start_date' do

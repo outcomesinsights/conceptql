@@ -2,14 +2,14 @@ require 'spec_helper'
 require 'conceptql/nodes/overlapped_by'
 require_double('stream_for_temporal')
 
-describe ConceptQL::Nodes::OverlappedBy do
+describe ConceptQL::Operators::OverlappedBy do
   it 'behaves itself' do
-    ConceptQL::Nodes::OverlappedBy.new.must_behave_like(:temporal_node)
+    ConceptQL::Operators::OverlappedBy.new.must_behave_like(:temporal_node)
   end
 
   describe 'when not inclusive' do
     subject do
-      ConceptQL::Nodes::OverlappedBy.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
+      ConceptQL::Operators::OverlappedBy.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
     end
 
     it 'should use proper where clause' do
@@ -21,7 +21,7 @@ describe ConceptQL::Nodes::OverlappedBy do
 
   describe 'when inclusive' do
     subject do
-      ConceptQL::Nodes::OverlappedBy.new(inclusive: true, left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
+      ConceptQL::Operators::OverlappedBy.new(inclusive: true, left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new)
     end
 
     it 'should use proper where clause' do
