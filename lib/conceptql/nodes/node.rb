@@ -23,8 +23,8 @@ module ConceptQL
         :source_value
       ]
 
-      attr :values, :options
       attr_accessor :tree
+      attr :values, :options, :arguments, :upstreams
 
       option :label, type: :string
 
@@ -57,16 +57,8 @@ module ConceptQL
         @types ||= determine_types
       end
 
-      def upstreams
-        @upstreams ||= values.select { |v| v.is_a?(Node) }
-      end
-
       def stream
         @stream ||= upstreams.first
-      end
-
-      def arguments
-        @arguments ||= values.reject { |v| v.is_a?(Node) }
       end
 
       def columns(query, local_type = nil)
