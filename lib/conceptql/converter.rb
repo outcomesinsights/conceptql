@@ -5,7 +5,7 @@ require 'facets/hash/update_values'
 module ConceptQL
   class Converter
     def convert(statement)
-      traverse(statement).toConceptQL2
+      traverse(statement).to_list_syntax
     end
 
   private
@@ -28,17 +28,17 @@ module ConceptQL
       def converted_options
         options.update_values do |value|
           if value.is_a?(Operator)
-            value.toConceptQL2
+            value.to_list_syntax
           else
             value
           end
         end
       end
 
-      def toConceptQL2
+      def to_list_syntax
         stmt = [type]
         stmt += args unless args.empty?
-        stmt += upstreams.map(&:toConceptQL2) unless upstreams.empty?
+        stmt += upstreams.map(&:to_list_syntax) unless upstreams.empty?
         stmt << converted_options unless options.empty?
         stmt
       end
