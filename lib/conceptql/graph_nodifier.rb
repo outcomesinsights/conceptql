@@ -110,7 +110,7 @@ module ConceptQL
       def graph_it(g, db)
         left.graph_it(g, db)
         right.graph_it(g, db)
-        cluster_name = "cluster_#{node_name}"
+        cluster_name = "cluster_#{operator_name}"
         me = g.send(cluster_name) do |sub|
           sub[rank: 'same', label: display_name, color: 'black']
           sub.send("#{cluster_name}_left").send('[]', shape: 'point', color: type_color(types))
@@ -118,7 +118,7 @@ module ConceptQL
         end
         left.link_to(g, me.send("#{cluster_name}_left"))
         right.link_to(g, me.send("#{cluster_name}_right"))
-        @__graph_node = me.send("#{cluster_name}_left")
+        @__graph_operator = me.send("#{cluster_name}_left")
       end
 
       def types
@@ -132,7 +132,7 @@ module ConceptQL
 
     class LetOperator < DotOperator
       def graph_it(g, db)
-        cluster_name = "cluster_#{node_name}"
+        cluster_name = "cluster_#{operator_name}"
         linkable = nil
         g.send(cluster_name) do |sub|
           linkable = upstreams.reverse.map do |upstream|
@@ -140,7 +140,7 @@ module ConceptQL
           end.first
           sub[label: display_name, color: 'black']
         end
-        @__graph_node = linkable
+        @__graph_operator = linkable
       end
 
       def types
@@ -182,7 +182,7 @@ module ConceptQL
     end
 
     def create(type, values, tree)
-      node = if BINARY_OPERATOR_TYPES.include?(type)
+      operator = if BINARY_OPERATOR_TYPES.include?(type)
         BinaryOperatorOperator.new(type, values)
       elsif type == :let
         LetOperator.new(type, values)
@@ -196,8 +196,8 @@ module ConceptQL
       else
         DotOperator.new(type, values)
       end
-      node.tree = self
-      node
+      operator.tree = self
+      operator
     end
   end
 end

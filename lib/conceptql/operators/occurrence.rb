@@ -2,7 +2,7 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # Represents a node that will grab the Nth occurrence of something
+    # Represents a operator that will grab the Nth occurrence of something
     #
     # Specify occurrences as integers, excluding O
     # 1 => first
@@ -11,16 +11,16 @@ module ConceptQL
     # -1 => last
     # -2 => second-to-last
     #
-    # The node treats all streams as a single, large stream.  It partitions
+    # The operator treats all streams as a single, large stream.  It partitions
     # that larget stream by person_id, then sorts within those groupings
     # by start_date and then select at most one row per person, regardless
-    # of how many different types of streams enter the node
+    # of how many different types of streams enter the operator
     #
     # If two rows have the same start_date, the order of their ranking
     # is arbitrary
     #
     # If we ask for the second occurrence of something and a person has only one
-    # occurrence, this node returns nothing for that person
+    # occurrence, this operator returns nothing for that person
     class Occurrence < Operator
       preferred_name 'Nth Occurrence'
       desc <<-EOF
@@ -36,7 +36,7 @@ If two rows have the same start_date, the order of their ranking
 is arbitrary
 
 If we ask for the second occurrence of something and a person has only one
-occurrence, this node returns nothing for that person
+occurrence, this operator returns nothing for that person
       EOF
       argument :occurrence, type: :integer
       allows_one_upstream

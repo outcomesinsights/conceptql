@@ -24,7 +24,7 @@ shared_examples_for(:evaluator) do |subject|
   subject.must_respond_to(:types)
 end
 
-shared_examples_for(:source_vocabulary_node) do |subject|
+shared_examples_for(:source_vocabulary_operator) do |subject|
   subject.must_behave_like(:evaluator)
   subject.must_respond_to(:table)
   subject.must_respond_to(:concept_column)
@@ -32,25 +32,25 @@ shared_examples_for(:source_vocabulary_node) do |subject|
   subject.must_respond_to(:vocabulary_id)
 end
 
-shared_examples_for(:standard_vocabulary_node) do |subject|
+shared_examples_for(:standard_vocabulary_operator) do |subject|
   subject.must_behave_like(:evaluator)
   subject.must_respond_to(:table)
   subject.must_respond_to(:concept_column)
   subject.must_respond_to(:vocabulary_id)
 end
 
-shared_examples_for(:node) do |subject|
+shared_examples_for(:operator) do |subject|
   subject.must_respond_to(:values)
   subject.must_respond_to(:arguments)
   subject.must_respond_to(:upstreams)
 end
 
-shared_examples_for(:temporal_node) do |subject|
+shared_examples_for(:temporal_operator) do |subject|
   subject.must_behave_like(:evaluator)
   subject.must_respond_to(:where_clause)
 end
 
-shared_examples_for(:casting_node) do |subject|
+shared_examples_for(:casting_operator) do |subject|
   subject.must_behave_like(:evaluator)
   subject.must_respond_to(:my_type)
   subject.must_respond_to(:i_point_at)

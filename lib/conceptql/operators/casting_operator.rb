@@ -9,18 +9,18 @@ module ConceptQL
     # - i_point_at
     # - these_point_at_me
     #
-    # i_point_at returns a list of types for which the node's table of origin
+    # i_point_at returns a list of types for which the operator's table of origin
     # has foreign_keys pointing to another table, e.g.:
     # procedure_occurrence has an FK to visit_occurrence, so we'd put
     # :visit_occurrence in the i_point_at array
     #
     # these_point_at_me is a list of types for which that type's table
-    # of origin has a FK  pointing to the current node's
+    # of origin has a FK  pointing to the current operator's
     # table of origin, e.g.:
     # procedure_cost has an FK to procedure_occurrence so we'd
     # put :procedure_cost in procedure_occurrence's these_point_at_me array
     #
-    # Also, if a casting node is passed no streams, it will return all the
+    # Also, if a casting operator is passed no streams, it will return all the
     # rows in its table as results.
     class CastingOperator < Operator
       category 'Casting'

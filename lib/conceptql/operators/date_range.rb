@@ -2,7 +2,7 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # Represents a node that will create a date_range for every person in the database
+    # Represents a operator that will create a date_range for every person in the database
     #
     # Accepts two params: start and end formateed as 'YYYY-MM-DD' or 'START' or 'END'
     # 'START' represents the first date of data in the data source,

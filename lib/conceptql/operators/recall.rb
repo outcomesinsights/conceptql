@@ -2,13 +2,13 @@ require_relative 'pass_thru'
 
 module ConceptQL
   module Operators
-    # Mimics using a variable that has been set via "define" node
+    # Mimics using a variable that has been set via "define" operator
     #
     # The idea is that a concept might be very complex and it helps to break
     # that complex concept into a set of sub-concepts to better understand it.
     #
-    # This node will look for a sub-concept that has been created through the
-    # "define" node and will fetch the results cached in the corresponding table
+    # This operator will look for a sub-concept that has been created through the
+    # "define" operator and will fetch the results cached in the corresponding table
     class Recall < Operator
       desc <<-EOF
 Recalls a set of named results that were previously stored using the Define operator.

@@ -20,9 +20,9 @@ module ConceptQL
     end
 
     def create(scope, operator, *values)
-      node = operators[operator].new(*values)
-      node.scope = scope
-      node
+      operator = operators[operator].new(*values)
+      operator.scope = scope
+      operator
     end
 
     def to_metadata

@@ -22,7 +22,7 @@ describe ConceptQL::Operators::StandardVocabularyOperator do
 
   describe StandardVocabularyDouble do
     it 'behaves itself' do
-      StandardVocabularyDouble.new.must_behave_like(:standard_vocabulary_node)
+      StandardVocabularyDouble.new.must_behave_like(:standard_vocabulary_operator)
     end
   end
 

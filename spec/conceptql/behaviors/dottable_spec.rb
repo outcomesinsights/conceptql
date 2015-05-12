@@ -16,7 +16,7 @@ end
 describe ConceptQL::Behaviors::Dottable do
   before do
     @obj = OperatorDouble.new
-    @obj.must_behave_like(:node)
+    @obj.must_behave_like(:operator)
   end
 
   describe '#display_name' do
@@ -36,38 +36,38 @@ describe ConceptQL::Behaviors::Dottable do
     end
   end
 
-  describe '#node_name' do
+  describe '#operator_name' do
     it 'should show just the name and digit if no upstreams' do
       @obj.values = [::ConceptQL::Operators::Operator.new]
-      @obj.node_name.must_match(/^node_double_\d+$/)
+      @obj.operator_name.must_match(/^operator_double_\d+$/)
     end
 
     it 'should not show args' do
       @obj.values = [5, 10]
-      @obj.node_name.must_match(/^node_double_\d+$/)
+      @obj.operator_name.must_match(/^operator_double_\d+$/)
     end
 
     it 'should not include upstreams' do
       @obj.values = [::ConceptQL::Operators::Operator.new]
-      @obj.node_name.must_match(/^node_double_\d+$/)
+      @obj.operator_name.must_match(/^operator_double_\d+$/)
     end
   end
 
   describe '#graph_it' do
-    it 'should add itself as a node if no upstreams' do
+    it 'should add itself as a operator if no upstreams' do
       @obj.values = []
       mock_graph = Minitest::Mock.new
-      mock_node = Minitest::Mock.new
-      mock_graph.expect :add_nodes, mock_node, [@obj.node_name]
-      mock_node.expect :[]=, nil, [:label, @obj.display_name]
-      mock_node.expect :[]=, nil, [:color, 'black']
+      mock_operator = Minitest::Mock.new
+      mock_graph.expect :add_nodes, mock_operator, [@obj.operator_name]
+      mock_operator.expect :[]=, nil, [:label, @obj.display_name]
+      mock_operator.expect :[]=, nil, [:color, 'black']
       @obj.graph_it(mock_graph, Sequel.mock)
 
-      mock_node.verify
+      mock_operator.verify
       mock_graph.verify
     end
 
-    it 'should add its upstreams, then link itself as a node if upstreams' do
+    it 'should add its upstreams, then link itself as a operator if upstreams' do
       class MockUpstream < ConceptQL::Operators::Operator
         include ConceptQL::Behaviors::Dottable
 
@@ -80,30 +80,30 @@ describe ConceptQL::Behaviors::Dottable do
           mock.types
         end
 
-        def link_to(mock_graph, mock_node, db)
-          mock.link_to(mock_graph, mock_node, db)
+        def link_to(mock_graph, mock_operator, db)
+          mock.link_to(mock_graph, mock_operator, db)
         end
       end
 
-      mock_node = Minitest::Mock.new
-      mock_node.expect :[]=, nil, [:label, @obj.display_name]
-      mock_node.expect :[]=, nil, [:color, 'black']
+      mock_operator = Minitest::Mock.new
+      mock_operator.expect :[]=, nil, [:label, @obj.display_name]
+      mock_operator.expect :[]=, nil, [:color, 'black']
 
       mock_graph = Minitest::Mock.new
-      mock_graph.expect :add_nodes, mock_node, [@obj.node_name]
+      mock_graph.expect :add_nodes, mock_operator, [@obj.operator_name]
 
       mock_upstream = MockUpstream.new
       mock_upstream.mock = Minitest::Mock.new
-      mock_upstream.mock.expect :graph_it, :upstream_node, [mock_graph, :db]
-      mock_upstream.mock.expect :link_to, nil, [mock_graph, mock_node, :db]
+      mock_upstream.mock.expect :graph_it, :upstream_operator, [mock_graph, :db]
+      mock_upstream.mock.expect :link_to, nil, [mock_graph, mock_operator, :db]
 
-      mock_upstream.must_behave_like(:node)
+      mock_upstream.must_behave_like(:operator)
 
       @obj.values = [mock_upstream]
 
       @obj.graph_it(mock_graph, :db)
 
-      mock_node.verify
+      mock_operator.verify
       mock_graph.verify
       mock_upstream.mock.verify
     end

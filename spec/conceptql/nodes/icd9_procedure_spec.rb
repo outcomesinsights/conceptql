@@ -3,7 +3,7 @@ require 'conceptql/operators/icd9_procedure'
 
 describe ConceptQL::Operators::Icd9Procedure do
   it 'behaves itself' do
-    ConceptQL::Operators::Icd9Procedure.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Icd9Procedure.new.must_behave_like(:standard_vocabulary_operator)
   end
 
   subject do

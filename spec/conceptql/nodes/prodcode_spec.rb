@@ -3,7 +3,7 @@ require 'conceptql/operators/prodcode'
 
 describe ConceptQL::Operators::Prodcode do
   it 'behaves itself' do
-    ConceptQL::Operators::Prodcode.new.must_behave_like(:source_vocabulary_node)
+    ConceptQL::Operators::Prodcode.new.must_behave_like(:source_vocabulary_operator)
   end
 
   subject do

@@ -2,7 +2,7 @@ require_relative 'pass_thru'
 
 module ConceptQL
   module Operators
-    # Represents a node that will either:
+    # Represents a operator that will either:
     # - create a value_as_number value for every person in the database
     # - change the value_as_number value for every every result passed in
     #   - either to a number
@@ -13,7 +13,7 @@ module ConceptQL
     # - An optional stream
     class Numeric < PassThru
       desc <<-EOF
-Represents a node that will either:
+Represents a operator that will either:
 - create a value_as_number value for every person in the database
 - change the value_as_number value for every every result passed in
   - either to a number

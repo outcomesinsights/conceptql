@@ -20,7 +20,7 @@ module ConceptQL
         # when there is no explicit casting defined, is to convert everything to
         # person IDs
         #
-        # So by defining no known castable relationships in this node, all
+        # So by defining no known castable relationships in this operator, all
         # types will be converted to person
         []
       end

@@ -23,7 +23,7 @@ describe ConceptQL::Operators::CastingOperator do
 
   describe CastingDouble do
     it 'must behave' do
-      CastingDouble.new.must_behave_like(:casting_node)
+      CastingDouble.new.must_behave_like(:casting_operator)
     end
   end
 

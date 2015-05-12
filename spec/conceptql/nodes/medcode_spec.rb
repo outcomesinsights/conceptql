@@ -3,7 +3,7 @@ require 'conceptql/operators/medcode'
 
 describe ConceptQL::Operators::Medcode do
   it 'behaves itself' do
-    ConceptQL::Operators::Medcode.new.must_behave_like(:source_vocabulary_node)
+    ConceptQL::Operators::Medcode.new.must_behave_like(:source_vocabulary_operator)
   end
 
   subject do

@@ -3,7 +3,7 @@ require 'conceptql/operators/cpt'
 
 describe ConceptQL::Operators::Cpt do
   it 'behaves itself' do
-    ConceptQL::Operators::Cpt.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Cpt.new.must_behave_like(:standard_vocabulary_operator)
   end
 
   subject do

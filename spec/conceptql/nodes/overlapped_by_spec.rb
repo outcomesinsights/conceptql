@@ -4,7 +4,7 @@ require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::OverlappedBy do
   it 'behaves itself' do
-    ConceptQL::Operators::OverlappedBy.new.must_behave_like(:temporal_node)
+    ConceptQL::Operators::OverlappedBy.new.must_behave_like(:temporal_operator)
   end
 
   describe 'when not inclusive' do

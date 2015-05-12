@@ -7,13 +7,13 @@ module ConceptQL
     module Debuggable
       include Dottable
       class ResultPrinter
-        attr :db, :dir, :type, :watch_ids, :node
-        def initialize(db, dir, type, watch_ids, node)
+        attr :db, :dir, :type, :watch_ids, :operator
+        def initialize(db, dir, type, watch_ids, operator)
           @db = db
           @dir = dir
           @type = type
           @watch_ids = watch_ids
-          @node = node
+          @operator = operator
         end
 
         def make_file
@@ -31,11 +31,11 @@ module ConceptQL
         end
 
         def file_name
-          @file_name ||= [node.node_name, abbreviate(type)].join('_')
+          @file_name ||= [operator.operator_name, abbreviate(type)].join('_')
         end
 
         def results
-          q = node.evaluate(db)
+          q = operator.evaluate(db)
             .from_self
             .where(criterion_type: type.to_s)
           unless watch_ids.empty?

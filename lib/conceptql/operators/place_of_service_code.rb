@@ -2,7 +2,7 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # Represents a node that will grab all person rows that match the given place_of_service_codes
+    # Represents a operator that will grab all person rows that match the given place_of_service_codes
     #
     # PlaceOfServiceCode parameters are passed in as a set of strings.  Each string represents
     # a single place_of_service_code.  The place_of_service_code string must match one of the values in the

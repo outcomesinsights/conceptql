@@ -3,7 +3,7 @@ require 'conceptql/operators/rxnorm'
 
 describe ConceptQL::Operators::Rxnorm do
   it 'behaves itself' do
-    ConceptQL::Operators::Rxnorm.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Rxnorm.new.must_behave_like(:standard_vocabulary_operator)
   end
 
   subject do

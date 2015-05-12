@@ -16,14 +16,14 @@ describe ConceptQL::Tree do
       @mock_scope.verify
     end
 
-    it 'should walk single node criteria tree and convert to node' do
+    it 'should walk single operator criteria tree and convert to operator' do
       @mock_nodifier.expect :create, :success_indicator, [@mock_scope, :icd9, '799.22']
       @mock_query_obj.expect :statement, { icd9: '799.22' }
 
       @tree.root(@mock_query_obj).must_equal :success_indicator
     end
 
-    it 'should extend all nodes created with behavior passed in' do
+    it 'should extend all operators created with behavior passed in' do
       mock_icd9_obj = Minitest::Mock.new
       mock_icd9_obj.expect :extend, nil, [:mock_behavior]
 
@@ -34,7 +34,7 @@ describe ConceptQL::Tree do
       tree.root(@mock_query_obj)
     end
 
-    it 'should walk multi-criteria node' do
+    it 'should walk multi-criteria operator' do
       @mock_nodifier.expect :create, :mock_icd9, [@mock_scope, :icd9, '799.22']
       @mock_nodifier.expect :create, :success_indicator, [@mock_scope, :nth, { occurrence: 1, expression: :mock_icd9 }]
 
@@ -43,7 +43,7 @@ describe ConceptQL::Tree do
       @tree.root(@mock_query_obj).must_equal :success_indicator
     end
 
-    it 'should walk multi-node criteria tree and convert to nodes' do
+    it 'should walk multi-operator criteria tree and convert to operators' do
       @mock_nodifier.expect :create, :mock_icd9, [@mock_scope, :icd9, '799.22']
       @mock_nodifier.expect :create, :success_indicator, [@mock_scope, :any, :mock_icd9]
 

@@ -19,9 +19,9 @@ module ConceptQL
       Dir.mktmpdir do |dir|
         dir = Pathname.new(dir)
         operators = tree.root(self)
-        operators.first.reset_node_number
-        csv_files = operators.map.with_index do |last_node, index|
-          last_node.print_results(db, dir, watch_ids)
+        operators.first.reset_operator_number
+        csv_files = operators.map.with_index do |last_operator, index|
+          last_operator.print_results(db, dir, watch_ids)
         end.flatten
         system("csv2xlsx #{path} #{csv_files.join(' ')}")
       end
@@ -31,15 +31,15 @@ module ConceptQL
     attr :yaml, :tree, :db
 
     def build_graph(g)
-      tree.root(self).each.with_index do |last_node, index|
-        last_node.graph_it(g, db)
+      tree.root(self).each.with_index do |last_operator, index|
+        last_operator.graph_it(g, db)
         if dangler
-          blank_node = g.add_nodes("_#{index}")
-          blank_node[:shape] = 'none'
-          blank_node[:height] = 0
-          blank_node[:label] = ''
-          blank_node[:fixedsize] = true
-          last_node.link_to(g, blank_node, db)
+          blank_operator = g.add_nodes("_#{index}")
+          blank_operator[:shape] = 'none'
+          blank_operator[:height] = 0
+          blank_operator[:label] = ''
+          blank_operator[:fixedsize] = true
+          last_operator.link_to(g, blank_operator, db)
         end
       end
     end

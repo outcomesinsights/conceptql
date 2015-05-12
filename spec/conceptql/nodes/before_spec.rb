@@ -4,7 +4,7 @@ require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::Before do
   it 'behaves itself' do
-    ConceptQL::Operators::Before.new.must_behave_like(:temporal_node)
+    ConceptQL::Operators::Before.new.must_behave_like(:temporal_operator)
   end
 
   subject do

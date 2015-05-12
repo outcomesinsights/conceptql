@@ -21,22 +21,22 @@ module ConceptQL
     end
 
     def sql
-      (tree.scope.sql(db) << node.sql(db)).join(";\n\n") + ';'
+      (tree.scope.sql(db) << operator.sql(db)).join(";\n\n") + ';'
     end
 
     def types
       tree.root(self).types
     end
 
-    def node
-      @node ||= tree.root(self)
+    def operator
+      @operator ||= tree.root(self)
     end
 
     private
     attr :yaml, :tree, :db
 
     def build_query(db)
-      node.evaluate(db).tap { |q| q.prep_proc = prep_proc }
+      operator.evaluate(db).tap { |q| q.prep_proc = prep_proc }
     end
 
     def prep_proc

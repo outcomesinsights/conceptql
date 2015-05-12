@@ -3,7 +3,7 @@ require 'conceptql/operators/hcpcs'
 
 describe ConceptQL::Operators::Hcpcs do
   it 'behaves itself' do
-    ConceptQL::Operators::Hcpcs.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Hcpcs.new.must_behave_like(:standard_vocabulary_operator)
   end
 
   subject do

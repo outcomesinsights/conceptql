@@ -3,7 +3,7 @@ require 'conceptql/operators/snomed'
 
 describe ConceptQL::Operators::Snomed do
   it 'behaves itself' do
-    ConceptQL::Operators::Snomed.new.must_behave_like(:standard_vocabulary_node)
+    ConceptQL::Operators::Snomed.new.must_behave_like(:standard_vocabulary_operator)
   end
 
   subject do

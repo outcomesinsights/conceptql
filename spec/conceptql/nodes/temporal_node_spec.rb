@@ -17,7 +17,7 @@ describe ConceptQL::Operators::TemporalOperator do
 
   describe TemporalDouble do
     it 'behaves itself' do
-      TemporalDouble.new.must_behave_like(:temporal_node)
+      TemporalDouble.new.must_behave_like(:temporal_operator)
     end
   end
 
