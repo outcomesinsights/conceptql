@@ -10,7 +10,7 @@ module ConceptQL
       @operators = {}
       dir = Pathname.new(__FILE__).dirname()
       dir.chdir do
-        Pathname.glob("nodes/*.rb").each do |file|
+        Pathname.glob("operators/*.rb").each do |file|
           require_relative file
           operator = file.basename('.*').to_s.to_sym
           klass = Object.const_get("conceptQL/operators/#{operator}".modulize)

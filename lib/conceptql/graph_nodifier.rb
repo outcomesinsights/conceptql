@@ -1,5 +1,5 @@
 require_relative 'behaviors/dottable'
-require_relative 'nodes/operator'
+require_relative 'operators/operator'
 
 module ConceptQL
   class GraphNodifier
@@ -56,7 +56,7 @@ module ConceptQL
         # Date Operators
         date_range: :date,
 
-        # Miscelaneous nodes
+        # Miscelaneous operators
         concept: :misc,
         vsac: :misc
       }

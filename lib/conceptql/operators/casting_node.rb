@@ -2,7 +2,7 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # Parent class of all casting nodes
+    # Parent class of all casting operators
     #
     # Subclasses must implement the following methods:
     # - my_type

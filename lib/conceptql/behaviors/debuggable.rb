@@ -1,6 +1,6 @@
 require_relative '../behaviors/dottable'
-require_relative '../nodes/operator'
-require_relative '../nodes/binary_operator_node'
+require_relative '../operators/operator'
+require_relative '../operators/binary_operator_node'
 require 'csv'
 module ConceptQL
   module Behaviors

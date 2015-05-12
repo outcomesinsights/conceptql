@@ -1,7 +1,7 @@
 require 'psych'
 require 'graphviz'
 require_relative 'tree'
-require_relative 'nodes/operator'
+require_relative 'operators/operator'
 require_relative 'behaviors/dottable'
 
 module ConceptQL

@@ -12,7 +12,7 @@ module ConceptQL
       end
 
       def upstreams
-        @upstreams ||= cql_query.nodes
+        @upstreams ||= cql_query.operators
       end
 
       def graph_prep(db)

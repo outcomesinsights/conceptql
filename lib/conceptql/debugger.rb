@@ -1,5 +1,5 @@
 require_relative 'tree'
-require_relative 'nodes/operator'
+require_relative 'operators/operator'
 require_relative 'behaviors/debuggable'
 
 module ConceptQL
@@ -18,9 +18,9 @@ module ConceptQL
       raise "Please specify path for debug file" unless path
       Dir.mktmpdir do |dir|
         dir = Pathname.new(dir)
-        nodes = tree.root(self)
-        nodes.first.reset_node_number
-        csv_files = nodes.map.with_index do |last_node, index|
+        operators = tree.root(self)
+        operators.first.reset_node_number
+        csv_files = operators.map.with_index do |last_node, index|
           last_node.print_results(db, dir, watch_ids)
         end.flatten
         system("csv2xlsx #{path} #{csv_files.join(' ')}")

@@ -2,7 +2,7 @@ require_relative 'binary_operator_node'
 
 module ConceptQL
   module Operators
-    # Base class for all temporal nodes
+    # Base class for all temporal operators
     #
     # Subclasses must implement the where_clause method which should probably return
     # a proc that can be executed as a Sequel "virtual row" e.g.
