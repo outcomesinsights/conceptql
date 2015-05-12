@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'conceptql/nodes/time_window'
-require 'conceptql/nodes/node'
+require 'conceptql/nodes/operator'
 
 describe ConceptQL::Operators::TimeWindow do
-  class Stream4TimeWindowDouble < ConceptQL::Operators::Node
+  class Stream4TimeWindowDouble < ConceptQL::Operators::Operator
     def types
       [:visit_occurrence]
     end

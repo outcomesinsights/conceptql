@@ -1,4 +1,4 @@
-class StreamForTemporalDouble < ConceptQL::Operators::Node
+class StreamForTemporalDouble < ConceptQL::Operators::Operator
   def query(db)
     db.from(:table)
   end

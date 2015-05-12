@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
@@ -8,7 +8,7 @@ module ConceptQL
     # a single race.  The race string must match one of the values in the
     # concept_name column of the concept table.  If you misspell the race name
     # you won't get any matches
-    class Race < Node
+    class Race < Operator
       desc 'Finds all people that match the races'
       argument :races, type: :codelist, vocab: 'Race'
       types :person

@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
@@ -8,7 +8,7 @@ module ConceptQL
     # a single place_of_service_code.  The place_of_service_code string must match one of the values in the
     # concept_name column of the concept table.  If you misspell the place_of_service_code name
     # you won't get any matches
-    class PlaceOfServiceCode < Node
+    class PlaceOfServiceCode < Operator
       desc 'Finds all visit_occurrences that match the Place of Service codes'
       argument :places_of_service, type: :codelist, vocab: 'Place of Service'
       types :visit_occurrence

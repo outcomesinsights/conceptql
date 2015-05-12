@@ -1,7 +1,7 @@
 require 'psych'
 require 'graphviz'
 require_relative 'tree'
-require_relative 'nodes/node'
+require_relative 'nodes/operator'
 require_relative 'behaviors/dottable'
 
 module ConceptQL
@@ -14,7 +14,7 @@ module ConceptQL
       @tree = opts.fetch(:tree, Tree.new)
       @title = opts.fetch(:title, nil)
       @suffix = opts.fetch(:suffix, 'pdf')
-      ConceptQL::Operators::Node.send(:include, ConceptQL::Behaviors::Dottable)
+      ConceptQL::Operators::Operator.send(:include, ConceptQL::Behaviors::Dottable)
     end
 
     def graph_it(file_path)

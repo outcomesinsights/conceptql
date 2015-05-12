@@ -9,7 +9,7 @@ module ConceptQL
     #
     # This node will look for a sub-concept that has been created through the
     # "define" node and will fetch the results cached in the corresponding table
-    class Recall < Node
+    class Recall < Operator
       desc <<-EOF
 Recalls a set of named results that were previously stored using the Define operator.
 Must be surrounded by the same Let operator as surrounds the corresponding Define operator.

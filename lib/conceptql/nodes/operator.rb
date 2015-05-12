@@ -6,7 +6,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    class Node
+    class Operator
       extend Forwardable
       extend Metadatable
       COLUMNS = [
@@ -28,7 +28,7 @@ module ConceptQL
 
       def initialize(*args)
         @options = args.extract_options!.deep_rekey
-        @upstreams, @arguments = args.partition { |arg| arg.is_a?(Node) }
+        @upstreams, @arguments = args.partition { |arg| arg.is_a?(Operator) }
         @values = args
       end
 
@@ -217,7 +217,7 @@ module ConceptQL
           if respond_to?(:type)
             [type]
           else
-            raise "Node doesn't seem to specify any type"
+            raise "Operator doesn't seem to specify any type"
           end
         else
           upstreams.map(&:types).flatten.uniq

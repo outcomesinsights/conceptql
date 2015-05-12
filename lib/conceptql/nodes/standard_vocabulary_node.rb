@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
@@ -18,7 +18,7 @@ module ConceptQL
     # * vocabulary_id
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for CPT, a value of 4 (for CPT-4)
-    class StandardVocabularyNode < Node
+    class StandardVocabularyNode < Operator
       category 'Standard Vocabulary'
       category 'Code Lists'
       def query(db)

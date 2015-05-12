@@ -1,8 +1,8 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
-    class FromSeerVisits < Node
+    class FromSeerVisits < Operator
       def type
         :observation
       end

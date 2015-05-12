@@ -1,9 +1,9 @@
 require_relative 'behaviors/dottable'
-require_relative 'nodes/node'
+require_relative 'nodes/operator'
 
 module ConceptQL
   class GraphNodifier
-    class DotNode < ConceptQL::Operators::Node
+    class DotNode < ConceptQL::Operators::Operator
       include ConceptQL::Behaviors::Dottable
 
       TYPES = {

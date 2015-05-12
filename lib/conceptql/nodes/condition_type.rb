@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
@@ -9,7 +9,7 @@ module ConceptQL
     # the raw data, e.g. primary inpatient header or 15th outpatient detail
     #
     # Multiple types can be specified at once
-    class ConditionType < Node
+    class ConditionType < Operator
       desc 'Searches for conditions that match the given set of Condition Types'
       argument :condition_types, type: :codelist, vocab: 'Condition Type'
 

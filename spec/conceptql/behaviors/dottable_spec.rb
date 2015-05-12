@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'conceptql/nodes/node'
+require 'conceptql/nodes/operator'
 require 'conceptql/behaviors/dottable'
 
-class NodeDouble < ConceptQL::Operators::Node
+class NodeDouble < ConceptQL::Operators::Operator
   include ConceptQL::Behaviors::Dottable
 
   attr_accessor :values, :options
@@ -22,23 +22,23 @@ describe ConceptQL::Behaviors::Dottable do
   describe '#display_name' do
     it 'should show just the name if no upstreams or arguments' do
       @obj.values = []
-      @obj.display_name.must_match(/Node Double \d+/)
+      @obj.display_name.must_match(/Operator Double \d+/)
     end
 
     it 'should show name and args' do
       @obj.values = [5, 10]
-      @obj.display_name.must_match(/Node Double \d+: 5, 10/)
+      @obj.display_name.must_match(/Operator Double \d+: 5, 10/)
     end
 
     it 'should not include upstreams' do
-      @obj.values = [::ConceptQL::Operators::Node.new]
-      @obj.display_name.must_match(/Node Double \d+/)
+      @obj.values = [::ConceptQL::Operators::Operator.new]
+      @obj.display_name.must_match(/Operator Double \d+/)
     end
   end
 
   describe '#node_name' do
     it 'should show just the name and digit if no upstreams' do
-      @obj.values = [::ConceptQL::Operators::Node.new]
+      @obj.values = [::ConceptQL::Operators::Operator.new]
       @obj.node_name.must_match(/^node_double_\d+$/)
     end
 
@@ -48,7 +48,7 @@ describe ConceptQL::Behaviors::Dottable do
     end
 
     it 'should not include upstreams' do
-      @obj.values = [::ConceptQL::Operators::Node.new]
+      @obj.values = [::ConceptQL::Operators::Operator.new]
       @obj.node_name.must_match(/^node_double_\d+$/)
     end
   end
@@ -68,7 +68,7 @@ describe ConceptQL::Behaviors::Dottable do
     end
 
     it 'should add its upstreams, then link itself as a node if upstreams' do
-      class MockUpstream < ConceptQL::Operators::Node
+      class MockUpstream < ConceptQL::Operators::Operator
         include ConceptQL::Behaviors::Dottable
 
         attr_accessor :mock

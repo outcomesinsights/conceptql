@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
@@ -7,7 +7,7 @@ module ConceptQL
     # Accepts two params: start and end formateed as 'YYYY-MM-DD' or 'START' or 'END'
     # 'START' represents the first date of data in the data source,
     # 'END' represents the last date of data in the data source,
-    class DateRange < Node
+    class DateRange < Operator
       desc 'Used to represent a date literal.'
       option :start, type: :string
       option :end, type: :string

@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
@@ -25,7 +25,7 @@ module ConceptQL
     # * vocabulary_id
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for ICD-9, a value of 2 (for ICD-9-CM)
-    class SourceVocabularyNode < Node
+    class SourceVocabularyNode < Operator
       category 'Source Vocabulary'
       category 'Code Lists'
 

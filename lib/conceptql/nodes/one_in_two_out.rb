@@ -1,9 +1,9 @@
-require_relative 'node'
+require_relative 'operator'
 require_relative 'visit_occurrence'
 
 module ConceptQL
   module Nodes
-    class OneInTwoOut < Node
+    class OneInTwoOut < Operator
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for a condition
 that appears either two times in an outpatient setting with a 30-day gap or once
@@ -44,7 +44,7 @@ in an inpatient setting
           .from_self
       end
 
-      class FakeNode < Node
+      class FakeNode < Operator
         attr :types
         def initialize(query, types)
           @query = query

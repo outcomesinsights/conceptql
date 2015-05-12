@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 require_relative '../date_adjuster'
 
 module ConceptQL
@@ -19,7 +19,7 @@ module ConceptQL
     # Both start and end arguments must be provided, but if you do not wish to adjust a date just
     # pass '', '0', or nil as that argument.  E.g.:
     # start: 'd', end: '' # Only adjust start_date by positive 1 day and leave end_date uneffected
-    class TimeWindow < Node
+    class TimeWindow < Operator
       desc 'Adjusts the start_date and end_date columns to create a new window of time for each result.'
       option :start, type: :string
       option :end, type: :string

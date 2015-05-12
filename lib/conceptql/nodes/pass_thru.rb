@@ -1,8 +1,8 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
-    class PassThru < Node
+    class PassThru < Operator
       def types
         upstreams.map(&:types).flatten.uniq
       end

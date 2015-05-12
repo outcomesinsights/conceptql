@@ -1,4 +1,4 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
@@ -22,7 +22,7 @@ module ConceptQL
     #
     # Also, if a casting node is passed no streams, it will return all the
     # rows in its table as results.
-    class CastingNode < Node
+    class CastingNode < Operator
       category 'Casting'
       def types
         [type]

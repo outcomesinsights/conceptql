@@ -1,4 +1,4 @@
-class StreamForCastingDouble < ConceptQL::Operators::Node
+class StreamForCastingDouble < ConceptQL::Operators::Operator
   def query(db)
     db.from(:table)
   end

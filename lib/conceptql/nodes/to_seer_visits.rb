@@ -1,8 +1,8 @@
-require_relative 'node'
+require_relative 'operator'
 
 module ConceptQL
   module Nodes
-    class ToSeerVisits < Node
+    class ToSeerVisits < Operator
       def type
         :visit_occurrence
       end
