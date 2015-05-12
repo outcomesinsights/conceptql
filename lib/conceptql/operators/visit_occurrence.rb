@@ -1,4 +1,4 @@
-require_relative 'casting_node'
+require_relative 'casting_operator'
 
 module ConceptQL
   module Operators

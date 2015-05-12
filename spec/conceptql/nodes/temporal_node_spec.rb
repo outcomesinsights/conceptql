@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/operators/temporal_node'
+require 'conceptql/operators/temporal_operator'
 require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::TemporalOperator do

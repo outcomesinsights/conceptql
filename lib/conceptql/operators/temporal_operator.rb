@@ -1,4 +1,4 @@
-require_relative 'binary_operator_node'
+require_relative 'binary_operator_operator'
 
 module ConceptQL
   module Operators

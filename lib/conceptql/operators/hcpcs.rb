@@ -1,4 +1,4 @@
-require_relative 'standard_vocabulary_node'
+require_relative 'standard_vocabulary_operator'
 
 module ConceptQL
   module Operators

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/operators/standard_vocabulary_node'
+require 'conceptql/operators/standard_vocabulary_operator'
 
 describe ConceptQL::Operators::StandardVocabularyOperator do
   it 'behaves itself' do

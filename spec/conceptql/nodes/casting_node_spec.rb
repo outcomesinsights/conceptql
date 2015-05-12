@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/operators/casting_node'
+require 'conceptql/operators/casting_operator'
 require_double('stream_for_casting')
 
 describe ConceptQL::Operators::CastingOperator do

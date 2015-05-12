@@ -1,4 +1,4 @@
-require_relative 'temporal_node'
+require_relative 'temporal_operator'
 
 module ConceptQL
   module Operators
