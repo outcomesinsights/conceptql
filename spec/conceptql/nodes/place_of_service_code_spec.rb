@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/place_of_service_code'
+require 'conceptql/operators/place_of_service_code'
 
 describe ConceptQL::Operators::PlaceOfServiceCode do
   it 'behaves itself' do

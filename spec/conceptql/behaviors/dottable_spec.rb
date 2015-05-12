@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'conceptql/nodes/operator'
+require 'conceptql/operators/operator'
 require 'conceptql/behaviors/dottable'
 
-class NodeDouble < ConceptQL::Operators::Operator
+class OperatorDouble < ConceptQL::Operators::Operator
   include ConceptQL::Behaviors::Dottable
 
   attr_accessor :values, :options
@@ -15,7 +15,7 @@ end
 
 describe ConceptQL::Behaviors::Dottable do
   before do
-    @obj = NodeDouble.new
+    @obj = OperatorDouble.new
     @obj.must_behave_like(:node)
   end
 

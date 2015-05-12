@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/race'
+require 'conceptql/operators/race'
 
 describe ConceptQL::Operators::Race do
   it 'behaves itself' do

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/intersect'
+require 'conceptql/operators/intersect'
 require_relative 'query_double'
 
 describe ConceptQL::Operators::Intersect do

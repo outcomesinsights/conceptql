@@ -1,4 +1,4 @@
-require 'conceptql/nodes/operator'
+require 'conceptql/operators/operator'
 class QueryDouble < ConceptQL::Operators::Operator
   def initialize(num, type = :visit_occurrence)
     @num = num

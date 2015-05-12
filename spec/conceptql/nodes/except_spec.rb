@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/except'
+require 'conceptql/operators/except'
 require_relative 'query_double'
 
 describe ConceptQL::Operators::Except do

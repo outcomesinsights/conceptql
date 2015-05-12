@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/gender'
+require 'conceptql/operators/gender'
 
 describe ConceptQL::Operators::Gender do
   it 'behaves itself' do

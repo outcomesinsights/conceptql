@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/concept'
+require 'conceptql/operators/concept'
 
 describe ConceptQL::Operators::Concept do
   it 'behaves itself' do

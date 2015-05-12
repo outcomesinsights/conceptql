@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/condition_type'
+require 'conceptql/operators/condition_type'
 
 describe ConceptQL::Operators::ConditionType do
   it 'behaves itself' do

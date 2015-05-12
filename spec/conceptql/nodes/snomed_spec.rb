@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/snomed'
+require 'conceptql/operators/snomed'
 
 describe ConceptQL::Operators::Snomed do
   it 'behaves itself' do

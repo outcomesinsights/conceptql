@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/first'
+require 'conceptql/operators/first'
 require_double('stream_for_occurrence')
 
 describe ConceptQL::Operators::First do

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/last'
+require 'conceptql/operators/last'
 require_double('stream_for_occurrence')
 
 describe ConceptQL::Operators::Last do

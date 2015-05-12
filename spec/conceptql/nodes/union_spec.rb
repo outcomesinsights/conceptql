@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/union'
+require 'conceptql/operators/union'
 require_relative 'query_double'
 
 describe ConceptQL::Operators::Union do

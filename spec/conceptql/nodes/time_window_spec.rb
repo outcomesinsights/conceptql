@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'conceptql/nodes/time_window'
-require 'conceptql/nodes/operator'
+require 'conceptql/operators/time_window'
+require 'conceptql/operators/operator'
 
 describe ConceptQL::Operators::TimeWindow do
   class Stream4TimeWindowDouble < ConceptQL::Operators::Operator

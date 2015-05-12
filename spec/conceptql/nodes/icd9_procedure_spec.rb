@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/icd9_procedure'
+require 'conceptql/operators/icd9_procedure'
 
 describe ConceptQL::Operators::Icd9Procedure do
   it 'behaves itself' do

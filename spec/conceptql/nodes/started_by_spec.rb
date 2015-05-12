@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/started_by'
+require 'conceptql/operators/started_by'
 require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::StartedBy do

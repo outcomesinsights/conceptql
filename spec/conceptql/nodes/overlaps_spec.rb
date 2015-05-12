@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/overlaps'
+require 'conceptql/operators/overlaps'
 require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::Overlaps do

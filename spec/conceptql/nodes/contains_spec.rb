@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/contains'
+require 'conceptql/operators/contains'
 require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::Contains do

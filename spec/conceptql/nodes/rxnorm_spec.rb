@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/rxnorm'
+require 'conceptql/operators/rxnorm'
 
 describe ConceptQL::Operators::Rxnorm do
   it 'behaves itself' do

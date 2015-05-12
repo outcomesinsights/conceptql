@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/hcpcs'
+require 'conceptql/operators/hcpcs'
 
 describe ConceptQL::Operators::Hcpcs do
   it 'behaves itself' do

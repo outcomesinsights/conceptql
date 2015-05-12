@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/complement'
+require 'conceptql/operators/complement'
 require_relative 'query_double'
 
 describe ConceptQL::Operators::Complement do

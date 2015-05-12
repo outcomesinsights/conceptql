@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/medcode_procedure'
+require 'conceptql/operators/medcode_procedure'
 
 describe ConceptQL::Operators::MedcodeProcedure do
   it 'behaves itself' do

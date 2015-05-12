@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/occurrence'
+require 'conceptql/operators/occurrence'
 require_double('stream_for_occurrence')
 
 describe ConceptQL::Operators::Occurrence do

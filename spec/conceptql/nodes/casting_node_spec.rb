@@ -1,13 +1,13 @@
 require 'spec_helper'
-require 'conceptql/nodes/casting_node'
+require 'conceptql/operators/casting_node'
 require_double('stream_for_casting')
 
-describe ConceptQL::Operators::CastingNode do
+describe ConceptQL::Operators::CastingOperator do
   it 'behaves itself' do
-    ConceptQL::Operators::CastingNode.new.must_behave_like(:evaluator)
+    ConceptQL::Operators::CastingOperator.new.must_behave_like(:evaluator)
   end
 
-  class CastingDouble < ConceptQL::Operators::CastingNode
+  class CastingDouble < ConceptQL::Operators::CastingOperator
     def my_type
       :my_type
     end

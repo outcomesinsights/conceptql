@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/person_filter'
+require 'conceptql/operators/person_filter'
 require_relative 'query_double'
 
 describe ConceptQL::Operators::PersonFilter do

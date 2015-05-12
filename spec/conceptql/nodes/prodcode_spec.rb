@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/prodcode'
+require 'conceptql/operators/prodcode'
 
 describe ConceptQL::Operators::Prodcode do
   it 'behaves itself' do

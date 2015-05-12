@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/loinc'
+require 'conceptql/operators/loinc'
 
 describe ConceptQL::Operators::Loinc do
   it 'behaves itself' do

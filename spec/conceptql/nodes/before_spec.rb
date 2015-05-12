@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/before'
+require 'conceptql/operators/before'
 require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::Before do

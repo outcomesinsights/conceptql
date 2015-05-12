@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/date_range'
+require 'conceptql/operators/date_range'
 
 describe ConceptQL::Operators::DateRange do
   it 'behaves itself' do

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'conceptql/nodes/from'
+require 'conceptql/operators/from'
 require_relative 'query_double'
 
 describe ConceptQL::Operators::From do
