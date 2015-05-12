@@ -2,7 +2,7 @@ require_relative 'binary_operator_node'
 
 module ConceptQL
   module Operators
-    class Filter < BinaryOperatorNode
+    class Filter < BinaryOperatorOperator
       desc 'Only pass through results from the LHR that have a corresponding RHR with the same person, criterion_id, and criterion_type'
 
       def query(db)

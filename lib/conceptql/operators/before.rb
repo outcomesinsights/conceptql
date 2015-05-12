@@ -2,7 +2,7 @@ require_relative 'temporal_node'
 
 module ConceptQL
   module Operators
-    class Before < TemporalNode
+    class Before < TemporalOperator
       desc <<-EOF
 Compares all results on a person-by-person basis between the left hand results (LHR) and the right hand resuls (RHR).
 For any result in the LHR whose end_date occurs before the most recent start_date of the RHR, that result is passed through.

@@ -22,7 +22,7 @@ module ConceptQL
     #
     # Also, if a casting node is passed no streams, it will return all the
     # rows in its table as results.
-    class CastingNode < Operator
+    class CastingOperator < Operator
       category 'Casting'
       def types
         [type]

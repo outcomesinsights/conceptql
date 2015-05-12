@@ -2,7 +2,7 @@ require_relative 'temporal_node'
 
 module ConceptQL
   module Operators
-    class AnyOverlap < TemporalNode
+    class AnyOverlap < TemporalOperator
       desc 'If a result from the LHR overlaps in any way a result from the RHR it is passed along.'
       def where_clause
         l_partly_in_r = Sequel.expr { r__start_date <= l__start_date }.&(Sequel.expr { l__start_date <= r__end_date })

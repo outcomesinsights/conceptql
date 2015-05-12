@@ -2,7 +2,7 @@ require_relative 'source_vocabulary_node'
 
 module ConceptQL
   module Operators
-    class Medcode < SourceVocabularyNode
+    class Medcode < SourceVocabularyOperator
       desc 'Searches the condition_occurrence table for all conditions with matching Medcodes'
       argument :medcodes, type: :codelist, vocab_id: '203'
       predominant_types :condition_occurrence

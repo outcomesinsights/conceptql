@@ -2,7 +2,7 @@ require_relative 'binary_operator_node'
 
 module ConceptQL
   module Operators
-    class Except < BinaryOperatorNode
+    class Except < BinaryOperatorOperator
       desc 'If a LHR result appears in the RHR result, it is removed from the output result set.'
       category 'Set Logic'
 

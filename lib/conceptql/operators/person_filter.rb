@@ -2,7 +2,7 @@ require_relative 'binary_operator_node'
 
 module ConceptQL
   module Operators
-    class PersonFilter < BinaryOperatorNode
+    class PersonFilter < BinaryOperatorOperator
       desc 'Only passes through a result from the LHR if the person appears in the RHR.'
       def query(db)
         db.from(left.evaluate(db))

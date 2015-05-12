@@ -2,7 +2,7 @@ require_relative 'standard_vocabulary_node'
 
 module ConceptQL
   module Operators
-    class Rxnorm < StandardVocabularyNode
+    class Rxnorm < StandardVocabularyOperator
       preferred_name 'RxNorm'
       desc 'Finds all drug_exposures by RxNorm codes'
       argument :rxnorms, type: :codelist, vocab: 'RxNorm'

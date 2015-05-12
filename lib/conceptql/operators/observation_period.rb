@@ -2,7 +2,7 @@ require_relative 'casting_node'
 
 module ConceptQL
   module Operators
-    class ObservationPeriod < CastingNode
+    class ObservationPeriod < CastingOperator
       desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming result set.'
       types :observation_period
       allows_one_upstream

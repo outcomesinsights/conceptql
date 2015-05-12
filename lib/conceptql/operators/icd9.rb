@@ -2,7 +2,7 @@ require_relative 'source_vocabulary_node'
 
 module ConceptQL
   module Operators
-    class Icd9 < SourceVocabularyNode
+    class Icd9 < SourceVocabularyOperator
       preferred_name 'ICD-9 CM'
       desc 'Searches the condition_occurrence table for the given set of ICD-9 codes.'
       argument :icd9s, type: :codelist, vocab: 'ICD9CM'

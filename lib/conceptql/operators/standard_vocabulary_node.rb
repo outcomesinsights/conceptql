@@ -2,7 +2,7 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # A StandardVocabularyNode is a superclass for a node that represents a criterion whose column stores information associated with a standard vocabulary.
+    # A StandardVocabularyOperator is a superclass for a node that represents a criterion whose column stores information associated with a standard vocabulary.
     #
     # If that seems confusing, then think of CPT or SNOMED criteria.  That type of criterion takes a set of values that live in the OMOP concept table.
     #
@@ -18,7 +18,7 @@ module ConceptQL
     # * vocabulary_id
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for CPT, a value of 4 (for CPT-4)
-    class StandardVocabularyNode < Operator
+    class StandardVocabularyOperator < Operator
       category 'Standard Vocabulary'
       category 'Code Lists'
       def query(db)

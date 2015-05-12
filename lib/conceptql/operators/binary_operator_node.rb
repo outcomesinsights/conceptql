@@ -3,7 +3,7 @@ require_relative 'operator'
 module ConceptQL
   module Operators
     # Base class for all operators that take two streams, a left-hand and a right-hand
-    class BinaryOperatorNode < Operator
+    class BinaryOperatorOperator < Operator
       option :left, type: :upstream
       option :right, type: :upstream
 

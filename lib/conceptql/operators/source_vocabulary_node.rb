@@ -2,7 +2,7 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # A SourceVocabularyNode is a superclass for a node that represents a criterion whose column stores information associated with a source vocabulary.
+    # A SourceVocabularyOperator is a superclass for a node that represents a criterion whose column stores information associated with a source vocabulary.
     #
     # If that seems confusing, then think of ICD-9 or NDC criteria.  That type of criterion takes a set of values that are mapped via the source_to_concept_map table into a standard vocabulary.
     #
@@ -25,7 +25,7 @@ module ConceptQL
     # * vocabulary_id
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for ICD-9, a value of 2 (for ICD-9-CM)
-    class SourceVocabularyNode < Operator
+    class SourceVocabularyOperator < Operator
       category 'Source Vocabulary'
       category 'Code Lists'
 

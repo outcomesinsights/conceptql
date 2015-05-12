@@ -7,7 +7,7 @@ module ConceptQL
     # Subclasses must implement the where_clause method which should probably return
     # a proc that can be executed as a Sequel "virtual row" e.g.
     # Proc.new { l.end_date < r.start_date }
-    class TemporalNode < BinaryOperatorNode
+    class TemporalOperator < BinaryOperatorOperator
       reset_categories
       category %w(Temporal Relative)
 

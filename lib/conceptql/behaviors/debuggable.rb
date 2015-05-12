@@ -54,7 +54,7 @@ module ConceptQL
       def print_results(db, dir, watch_ids)
         print_prep(db) if respond_to?(:print_prep)
         kids = upstreams
-        if self.is_a?(ConceptQL::Operators::BinaryOperatorNode)
+        if self.is_a?(ConceptQL::Operators::BinaryOperatorOperator)
           kids = [left, right]
         end
         files = kids.map do |upstream|

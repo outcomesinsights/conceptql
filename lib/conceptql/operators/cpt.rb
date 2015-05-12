@@ -2,7 +2,7 @@ require_relative 'standard_vocabulary_node'
 
 module ConceptQL
   module Operators
-    class Cpt < StandardVocabularyNode
+    class Cpt < StandardVocabularyOperator
       preferred_name 'CPT'
       desc 'Searches the procedure_occurrence table for all procedures with matching CPT codes'
       argument :cpts, type: :codelist, vocab: 'CPT4'

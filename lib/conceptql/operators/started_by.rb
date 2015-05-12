@@ -2,7 +2,7 @@ require_relative 'temporal_node'
 
 module ConceptQL
   module Operators
-    class StartedBy < TemporalNode
+    class StartedBy < TemporalOperator
       desc <<-EOF
 If LHR has the same start date as RHR, but LHR's end_date falls on or after end_date of RHR, LHR is passed through.
 L----Y----L

@@ -2,7 +2,7 @@ require_relative 'casting_node'
 
 module ConceptQL
   module Operators
-    class Death < CastingNode
+    class Death < CastingOperator
       desc 'Generates all death records, or, if fed a stream, fetches all death records for the people represented in the incoming result set.'
       types :death
       allows_one_upstream

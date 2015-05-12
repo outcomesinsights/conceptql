@@ -33,7 +33,7 @@ in an inpatient setting
 
       private
       def visit_query(db)
-        VisitOccurrence.new(FakeNode.new(stream.evaluate(db).from_self, stream.types)).query(db)
+        VisitOccurrence.new(FakeOperator.new(stream.evaluate(db).from_self, stream.types)).query(db)
       end
 
       def earliest(db, query)
@@ -44,7 +44,7 @@ in an inpatient setting
           .from_self
       end
 
-      class FakeNode < Operator
+      class FakeOperator < Operator
         attr :types
         def initialize(query, types)
           @query = query

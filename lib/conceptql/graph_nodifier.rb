@@ -3,7 +3,7 @@ require_relative 'operators/operator'
 
 module ConceptQL
   class GraphNodifier
-    class DotNode < ConceptQL::Operators::Operator
+    class DotOperator < ConceptQL::Operators::Operator
       include ConceptQL::Behaviors::Dottable
 
       TYPES = {
@@ -88,7 +88,7 @@ module ConceptQL
       end
     end
 
-    class BinaryOperatorNode < DotNode
+    class BinaryOperatorOperator < DotOperator
       def display_name
         output = name
         output += "\n#{displayable_options.map{|k,v| "#{k}: #{v}"}.join("\n")}"
@@ -130,7 +130,7 @@ module ConceptQL
       end
     end
 
-    class LetNode < DotNode
+    class LetOperator < DotOperator
       def graph_it(g, db)
         cluster_name = "cluster_#{node_name}"
         linkable = nil
@@ -148,19 +148,19 @@ module ConceptQL
       end
     end
 
-    class DefineNode < DotNode
+    class DefineOperator < DotOperator
       def shape
         :cds
       end
     end
 
-    class RecallNode < DotNode
+    class RecallOperator < DotOperator
       def shape
         :cds
       end
     end
 
-    class VsacNode < DotNode
+    class VsacOperator < DotOperator
       def initialize(name, values, types)
         @types = types
         super(name, values)
@@ -183,18 +183,18 @@ module ConceptQL
 
     def create(type, values, tree)
       node = if BINARY_OPERATOR_TYPES.include?(type)
-        BinaryOperatorNode.new(type, values)
+        BinaryOperatorOperator.new(type, values)
       elsif type == :let
-        LetNode.new(type, values)
+        LetOperator.new(type, values)
       elsif type == :define
-        DefineNode.new(type, values)
+        DefineOperator.new(type, values)
       elsif type == :recall
-        RecallNode.new(type, values)
+        RecallOperator.new(type, values)
       elsif type == :vsac
         types = values.pop
-        VsacNode.new(type, values, types)
+        VsacOperator.new(type, values, types)
       else
-        DotNode.new(type, values)
+        DotOperator.new(type, values)
       end
       node.tree = self
       node

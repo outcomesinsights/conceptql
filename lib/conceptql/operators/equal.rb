@@ -2,7 +2,7 @@ require_relative 'temporal_node'
 
 module ConceptQL
   module Operators
-    class Equal < TemporalNode
+    class Equal < TemporalOperator
       desc 'If a LHR result has the same value_as_number as a RHR result, it is passed through'
 
       def where_clause
