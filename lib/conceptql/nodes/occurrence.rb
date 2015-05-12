@@ -1,7 +1,7 @@
 require_relative 'operator'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Represents a node that will grab the Nth occurrence of something
     #
     # Specify occurrences as integers, excluding O

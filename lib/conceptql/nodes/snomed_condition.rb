@@ -1,7 +1,7 @@
 require_relative 'standard_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class SnomedCondition < StandardVocabularyNode
       preferred_name 'SNOMED'
       desc 'Find all condition_occurrences by SNOMED codes'

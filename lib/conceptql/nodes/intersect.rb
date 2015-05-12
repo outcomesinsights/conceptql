@@ -1,7 +1,7 @@
 require_relative 'pass_thru'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Intersect < PassThru
       desc 'Passes thru any result row that appears in all incoming result sets.'
       allows_many_upstreams

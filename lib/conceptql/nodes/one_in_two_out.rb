@@ -2,7 +2,7 @@ require_relative 'operator'
 require_relative 'visit_occurrence'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class OneInTwoOut < Operator
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for a condition

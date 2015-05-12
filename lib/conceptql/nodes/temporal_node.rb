@@ -1,7 +1,7 @@
 require_relative 'binary_operator_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Base class for all temporal nodes
     #
     # Subclasses must implement the where_clause method which should probably return

@@ -1,7 +1,7 @@
 require_relative 'temporal_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Trims the end_date of the LHS set of results by the RHS's earliest
     # start_date (per person)
     # If a the RHS contains a start_date that comes before the LHS's start_date

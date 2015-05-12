@@ -1,7 +1,7 @@
 require_relative 'pass_thru'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Count < PassThru
       desc 'Counts the number of results the exactly match across all columns.'
       allows_one_upstream

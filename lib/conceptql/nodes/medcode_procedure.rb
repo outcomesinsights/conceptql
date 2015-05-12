@@ -1,7 +1,7 @@
 require_relative 'source_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class MedcodeProcedure < SourceVocabularyNode
       desc 'Searches the procedure_occurrence table for all procedures with matching Medcodes'
       argument :medcodes, type: :codelist, vocab: '204'

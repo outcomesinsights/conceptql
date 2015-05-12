@@ -1,7 +1,7 @@
 require_relative 'temporal_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class AnyOverlap < TemporalNode
       desc 'If a result from the LHR overlaps in any way a result from the RHR it is passed along.'
       def where_clause

@@ -1,7 +1,7 @@
 require_relative 'operator'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Represents a node that will grab all person rows that match the given races
     #
     # Race parameters are passed in as a set of strings.  Each string represents

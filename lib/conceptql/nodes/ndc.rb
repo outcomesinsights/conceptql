@@ -1,7 +1,7 @@
 require_relative 'source_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Ndc < SourceVocabularyNode
       preferred_name 'NDC'
       desc 'Searches the drug_exposure table for all procedures with matching NDC codes'

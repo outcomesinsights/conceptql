@@ -1,7 +1,7 @@
 require_relative 'operator'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Gender < Operator
       desc 'Returns all person records that match the selected gender.'
       argument :gender, type: :string, options: ['Male', 'Female']

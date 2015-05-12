@@ -1,7 +1,7 @@
 require_relative 'casting_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class ProcedureOccurrence < CastingNode
       desc 'Generates all procedure_occurrence records, or, if fed a stream, fetches all procedure_occurrence records for the people represented in the incoming result set.'
       types :procedure_occurrence

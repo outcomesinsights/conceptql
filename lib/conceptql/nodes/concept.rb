@@ -2,7 +2,7 @@ require_relative 'operator'
 require_relative '../query'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Concept < Operator
       desc 'Given the UUID of another ConceptQL statement, returns the results of that statement.'
       attr :cql_query

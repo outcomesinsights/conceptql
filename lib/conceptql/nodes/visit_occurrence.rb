@@ -1,7 +1,7 @@
 require_relative 'casting_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class VisitOccurrence < CastingNode
       desc 'Returns all visits in the database, or if given a upstream, converts all results to the set of visit_occurrences related to those results.'
       allows_one_upstream

@@ -1,7 +1,7 @@
 require_relative 'standard_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Cpt < StandardVocabularyNode
       preferred_name 'CPT'
       desc 'Searches the procedure_occurrence table for all procedures with matching CPT codes'

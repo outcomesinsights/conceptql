@@ -1,7 +1,7 @@
 require_relative 'standard_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Hcpcs < StandardVocabularyNode
       preferred_name 'HCPCS'
       desc 'Searches the procedure_occurrence table for all procedures with matching HCPCS codes'

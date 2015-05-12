@@ -1,7 +1,7 @@
 require_relative 'source_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Prodcode < SourceVocabularyNode
       desc 'Searches the drug_exposure table for all conditions with matching Prodcodes'
       argument :prodcodes, type: :codelist, vocab_id: '203'

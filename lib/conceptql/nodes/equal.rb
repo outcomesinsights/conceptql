@@ -1,7 +1,7 @@
 require_relative 'temporal_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Equal < TemporalNode
       desc 'If a LHR result has the same value_as_number as a RHR result, it is passed through'
 

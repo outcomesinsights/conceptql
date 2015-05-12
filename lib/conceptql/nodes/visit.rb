@@ -1,7 +1,7 @@
 require_relative 'operator'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Visit < Operator
       desc 'Generates all visit_occurrence records, or, if fed a stream, fetches all visit_occurrence records for the people represented in the incoming result set.'
       types :visit_occurrence

@@ -1,7 +1,7 @@
 require_relative 'standard_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Icd9Procedure < StandardVocabularyNode
       preferred_name 'ICD-9 Proc'
       desc 'Searches the procedure_occurrence table for the given set of ICD-9 codes.'

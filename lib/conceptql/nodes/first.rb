@@ -1,7 +1,7 @@
 require_relative 'occurrence'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Represents a node that will grab the first occurrence of something
     #
     # The node treats all streams as a single, large stream.  It partitions

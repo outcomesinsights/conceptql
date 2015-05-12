@@ -1,7 +1,7 @@
 require_relative 'standard_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Loinc < StandardVocabularyNode
       preferred_name 'LOINC'
       desc 'Searches the observation table for all observations with matching LOINC codes'

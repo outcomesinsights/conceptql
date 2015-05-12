@@ -2,7 +2,7 @@ require_relative 'operator'
 require_relative '../date_adjuster'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # A TimeWindow adjusts the start_date and end_date the incoming stream by the values specified in
     # the start and end arguments.
     #

@@ -1,7 +1,7 @@
 require_relative 'pass_thru'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Mimics using a variable that has been set via "define" node
     #
     # The idea is that a concept might be very complex and it helps to break

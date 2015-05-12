@@ -1,7 +1,7 @@
 require_relative 'casting_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Person < CastingNode
       desc 'Returns all people in the database, or if given a upstream, converts all results to the set of patients contained in those results.'
       allows_one_upstream

@@ -1,7 +1,7 @@
 require_relative 'pass_thru'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class From < Operator
       def query(db)
         db.from(values.first)

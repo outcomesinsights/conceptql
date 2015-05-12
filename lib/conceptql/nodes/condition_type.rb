@@ -1,7 +1,7 @@
 require_relative 'operator'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Represents a node that will grab all conditions that match the
     # condition type passed in
     #

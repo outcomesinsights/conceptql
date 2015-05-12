@@ -1,7 +1,7 @@
 require_relative 'source_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Icd10 < SourceVocabularyNode
       preferred_name 'ICD-10 CM'
       desc 'Searches the condition_occurrence table for the given set of ICD-10 codes.'

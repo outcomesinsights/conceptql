@@ -1,7 +1,7 @@
 require_relative 'temporal_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class During < TemporalNode
       desc <<-EOF
 Compares all results on a person-by-person basis between the left hand results (LHR) and the right hand resuls (RHR).

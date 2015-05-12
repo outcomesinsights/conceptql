@@ -1,7 +1,7 @@
 require_relative 'pass_thru'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Union < PassThru
       desc 'Pools sets of incoming results into a single large set of results.'
       allows_many_upstreams

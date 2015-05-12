@@ -1,7 +1,7 @@
 require_relative 'temporal_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Contains < TemporalNode
       desc <<-EOF
 Any result in the LHR whose start_date is on or before and whose end_date is on or after a result from the RHR.

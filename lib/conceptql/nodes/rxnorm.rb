@@ -1,7 +1,7 @@
 require_relative 'standard_vocabulary_node'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class Rxnorm < StandardVocabularyNode
       preferred_name 'RxNorm'
       desc 'Finds all drug_exposures by RxNorm codes'

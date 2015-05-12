@@ -1,7 +1,7 @@
 require_relative 'operator'
 
 module ConceptQL
-  module Nodes
+  module Operators
     class DrugTypeConcept < Operator
       desc 'Given a set of concept IDs in RxNorm, returns that set of drug exposures'
       argument :concept_ids, type: :codelist, vocab: 'RxNorm'

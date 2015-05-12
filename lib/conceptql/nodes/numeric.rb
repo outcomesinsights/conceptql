@@ -1,7 +1,7 @@
 require_relative 'pass_thru'
 
 module ConceptQL
-  module Nodes
+  module Operators
     # Represents a node that will either:
     # - create a value_as_number value for every person in the database
     # - change the value_as_number value for every every result passed in

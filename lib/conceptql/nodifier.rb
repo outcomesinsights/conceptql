@@ -13,7 +13,7 @@ module ConceptQL
         Pathname.glob("nodes/*.rb").each do |file|
           require_relative file
           operator = file.basename('.*').to_s.to_sym
-          klass = Object.const_get("conceptQL/nodes/#{operator}".modulize)
+          klass = Object.const_get("conceptQL/operators/#{operator}".modulize)
           @operators[operator] = klass
         end
       end
