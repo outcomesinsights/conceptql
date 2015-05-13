@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'csv2xlsx'
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.3'
-  spec.add_development_dependency 'minitest', '~> 5.4'
-  spec.add_development_dependency 'guard-minitest', '~> 2.3'
+  spec.add_development_dependency 'rspec', '~> 3.2'
+  spec.add_development_dependency 'guard-rspec', '~> 4.5'
   spec.add_development_dependency 'byebug', '~> 4.0.5'
 end

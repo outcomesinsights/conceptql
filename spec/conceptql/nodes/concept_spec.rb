@@ -2,11 +2,11 @@ require 'spec_helper'
 require 'conceptql/operators/concept'
 
 describe ConceptQL::Operators::Concept do
-  it 'behaves itself' do
-    ConceptQL::Operators::Concept.new.must_behave_like(:evaluator)
-  end
+  it_behaves_like(:evaluator)
 
   class ConceptDouble < ConceptQL::Operators::Concept
+    attr_accessor :cql_query
+
     def arguments
       [1]
     end
@@ -16,7 +16,7 @@ describe ConceptQL::Operators::Concept do
     end
 
     def set_cql_query(db)
-      @cql_query ||= Minitest::Mock.new
+      @cql_query ||= nil
     end
 
     def cql_query
@@ -28,10 +28,10 @@ describe ConceptQL::Operators::Concept do
     it 'evaluates upstream' do
       cd = ConceptDouble.new(1)
       db = Sequel.mock
-      cd.cql_query.expect :query, cd.cql_query, []
-      cd.cql_query.expect :from_self, [], []
+      cd.cql_query = double("query")
+      expect(cd.cql_query).to receive(:query).and_return(cd.cql_query)
+      expect(cd.cql_query).to receive(:from_self)
       cd.query(db)
-      cd.cql_query.verify
     end
   end
 end

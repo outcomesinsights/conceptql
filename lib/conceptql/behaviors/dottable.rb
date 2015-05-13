@@ -1,4 +1,5 @@
 require 'facets/string/snakecase'
+require 'facets/string/titlecase'
 
 module ConceptQL
   module Behaviors
@@ -31,7 +32,7 @@ module ConceptQL
 
       def display_name
         @__display_name ||= begin
-          output = self.class.name.split('::').last.titleize
+          output = self.class.name.split('::').last.snakecase.titlecase
           #output += " #{operator_number}"
           output += ": #{arguments.join(', ')}" unless arguments.empty?
           if output.length > 100

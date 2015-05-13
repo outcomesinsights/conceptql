@@ -1,4 +1,5 @@
 require_relative 'operator'
+require 'facets/string/titlecase'
 
 module ConceptQL
   module Operators
@@ -26,7 +27,7 @@ module ConceptQL
       end
 
       def display_name
-        self.class.name.split('::').last.titleize
+        self.class.name.split('::').last.snakecase.titlecase
       end
 
       private

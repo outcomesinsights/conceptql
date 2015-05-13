@@ -3,13 +3,11 @@ require 'conceptql/operators/from'
 require_relative 'query_double'
 
 describe ConceptQL::Operators::From do
-  it 'behaves itself' do
-    ConceptQL::Operators::From.new.must_behave_like(:evaluator)
-  end
+  it_behaves_like(:evaluator)
 
   describe '#query' do
     it 'works for single criteria' do
-      ConceptQL::Operators::From.new(:table1).query(Sequel.mock).sql.must_equal "SELECT * FROM table1"
+      expect(ConceptQL::Operators::From.new(:table1).query(Sequel.mock).sql).to eq("SELECT * FROM table1")
     end
   end
 end

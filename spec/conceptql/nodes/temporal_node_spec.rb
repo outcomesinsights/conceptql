@@ -3,9 +3,7 @@ require 'conceptql/operators/temporal_operator'
 require_double('stream_for_temporal')
 
 describe ConceptQL::Operators::TemporalOperator do
-  it 'behaves itself' do
-    ConceptQL::Operators::TemporalOperator.new.must_behave_like(:evaluator)
-  end
+  it_behaves_like(:evaluator)
 
   class TemporalDouble < ConceptQL::Operators::TemporalOperator
     def where_clause
@@ -16,41 +14,37 @@ describe ConceptQL::Operators::TemporalOperator do
   end
 
   describe TemporalDouble do
-    it 'behaves itself' do
-      TemporalDouble.new.must_behave_like(:temporal_operator)
-    end
+    it_behaves_like(:temporal_operator)
   end
 
   describe StreamForTemporalDouble do
-    it 'behaves itself' do
-      StreamForTemporalDouble.new.must_behave_like(:evaluator)
-    end
+    it_behaves_like(:evaluator)
   end
 
   describe '#inclusive?' do
     it 'defaults to false' do
-      refute(TemporalDouble.new.inclusive?)
+      expect(TemporalDouble.new.inclusive?).to be_falsy
     end
 
     it 'can be set to true' do
-      assert(TemporalDouble.new(inclusive: true).inclusive?)
+      expect(TemporalDouble.new(inclusive: true).inclusive?).to be_truthy
     end
   end
 
   describe '#query' do
     it 'uses logic from where_clause' do
       sql = TemporalDouble.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new).query(Sequel.mock).sql
-      sql.must_match('l.end_date < r.start_date')
+      expect(sql).to match('l.end_date < r.start_date')
     end
 
     it 'pulls from the right tables' do
       sql = TemporalDouble.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new).query(Sequel.mock).sql
-      sql.must_match('FROM table')
+      expect(sql).to match('FROM table')
     end
 
     it 'is ok with symbols' do
       sql = TemporalDouble.new(left: StreamForTemporalDouble.new, right: StreamForTemporalDouble.new).query(Sequel.mock).sql
-      sql.must_match('FROM table')
+      expect(sql).to match('FROM table')
     end
   end
 end

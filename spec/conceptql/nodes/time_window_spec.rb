@@ -13,87 +13,63 @@ describe ConceptQL::Operators::TimeWindow do
     end
   end
 
+  let (:sequel_mock) do
+    sequel_mock = double("sequel")
+  end
+
   before do
     @db_mock = Sequel.mock
-    @sequel_mock = Minitest::Mock.new
-    @sequel_mock.expect :expr, @sequel_mock, [:start_date]
-    @sequel_mock.expect :expr, @sequel_mock, [:end_date]
-    @sequel_mock.expect :as, @sequel_mock, [:start_date]
-    @sequel_mock.expect :as, @sequel_mock, [:end_date]
-    @sequel_mock.expect :cast, @sequel_mock, [@sequel_mock, Date]
-    @sequel_mock.expect :cast, @sequel_mock, [@sequel_mock, Date]
   end
 
   describe '#evaluate' do
     it 'adjusts start by 1 day' do
-      @sequel_mock.expect :date_add, @sequel_mock, [@sequel_mock, days: 1]
+      expect(sequel_mock).to receive(:date_add).with(Sequel.identifier("start_date"), days: 1).and_return(sequel_mock)
+      expect(@db_mock).to receive(:extension).with(:date_arithmetic)
 
-      stub_const(ConceptQL::Operators::TimeWindow, :Sequel, @sequel_mock) do
-        ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: 'd', end: '' }).evaluate(@db_mock)
-      end
-      @sequel_mock.verify
+      described_class.new(Stream4TimeWindowDouble.new, { start: 'd', end: '', date_manipulator: sequel_mock }).evaluate(@db_mock)
     end
 
-    it 'adjusts start by 1 day' do
-      @sequel_mock.expect :date_add, @sequel_mock, [@sequel_mock, days: 1]
-      stub_const(ConceptQL::Operators::TimeWindow, :Sequel, @sequel_mock) do
-        ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: '', end: 'd' }).evaluate(@db_mock)
-      end
-      @sequel_mock.verify
+    it 'adjusts end by 1 day' do
+      expect(sequel_mock).to receive(:date_add).with(Sequel.identifier("end_date"), days: 1).and_return(sequel_mock)
+      described_class.new(Stream4TimeWindowDouble.new, { start: '', end: 'd', date_manipulator: sequel_mock }).evaluate(@db_mock)
     end
 
     it 'adjusts both values by 1 day' do
-      @sequel_mock.expect :date_add, @sequel_mock, [@sequel_mock, days: 1]
-      @sequel_mock.expect :date_add, @sequel_mock, [@sequel_mock, days: 1]
-      stub_const(ConceptQL::Operators::TimeWindow, :Sequel, @sequel_mock) do
-        ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: 'd', end: 'd' }).evaluate(@db_mock)
-      end
-      @sequel_mock.verify
+      expect(sequel_mock).to receive(:date_add).with(Sequel.identifier("start_date"), days: 1).and_return(sequel_mock)
+      expect(sequel_mock).to receive(:date_add).with(Sequel.identifier("end_date"), days: 1).and_return(sequel_mock)
+      described_class.new(Stream4TimeWindowDouble.new, { start: 'd', end: 'd', date_manipulator: sequel_mock }).evaluate(@db_mock)
     end
 
     it 'makes multiple adjustments to both values' do
-      @sequel_mock.expect :date_add, @sequel_mock, [@sequel_mock, days: 1]
-      @sequel_mock.expect :date_add, @sequel_mock, [@sequel_mock, months: 1]
-      @sequel_mock.expect :date_add, @sequel_mock, [@sequel_mock, years: 1]
+      expect(sequel_mock).to receive(:date_add).with(Sequel.identifier("start_date"), days: 1).and_return(sequel_mock)
+      expect(sequel_mock).to receive(:date_add).with(sequel_mock, months: 1).and_return(sequel_mock)
+      expect(sequel_mock).to receive(:date_add).with(sequel_mock, years: 1).and_return(sequel_mock)
 
-      @sequel_mock.expect :date_sub, @sequel_mock, [@sequel_mock, days: 1]
-      @sequel_mock.expect :date_sub, @sequel_mock, [@sequel_mock, months: 1]
-      @sequel_mock.expect :date_sub, @sequel_mock, [@sequel_mock, years: 1]
+      expect(sequel_mock).to receive(:date_sub).with(Sequel.identifier("end_date"), days: 1).and_return(sequel_mock)
+      expect(sequel_mock).to receive(:date_sub).with(sequel_mock, months: 1).and_return(sequel_mock)
+      expect(sequel_mock).to receive(:date_sub).with(sequel_mock, years: 1).and_return(sequel_mock)
 
-      stub_const(ConceptQL::Operators::TimeWindow, :Sequel, @sequel_mock) do
-        ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: 'dmy', end: '-d-m-y' }).evaluate(@db_mock)
-      end
-      @sequel_mock.verify
+      described_class.new(Stream4TimeWindowDouble.new, { start: 'dmy', end: '-d-m-y', date_manipulator: sequel_mock }).evaluate(@db_mock)
     end
 
     it 'can set start_date and end_date to specific dates' do
-      sequel_mock = Minitest::Mock.new
-      sequel_mock.expect :cast, sequel_mock, ['2000-01-01', Date]
-      sequel_mock.expect :cast, sequel_mock, ['2000-02-02', Date]
-      sequel_mock.expect :as, sequel_mock, [:start_date]
-      sequel_mock.expect :as, sequel_mock, [:end_date]
-
-      stub_const(ConceptQL::Operators::TimeWindow, :Sequel, sequel_mock) do
-        ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: '2000-01-01', end: '2000-02-02' }).evaluate(@db_mock)
-      end
-
-      sequel_mock.verify
+      described_class.new(Stream4TimeWindowDouble.new, { start: '2000-01-01', end: '2000-02-02' }).evaluate(@db_mock)
     end
 
     it 'can set start_date to be end_date' do
-      ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: 'end', end: '' }).evaluate(@db_mock)
+      described_class.new(Stream4TimeWindowDouble.new, { start: 'end', end: '' }).evaluate(@db_mock)
     end
 
     it 'can set end_date to be start_date' do
-      ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: '', end: 'start' }).evaluate(@db_mock)
+      described_class.new(Stream4TimeWindowDouble.new, { start: '', end: 'start' }).evaluate(@db_mock)
     end
 
     it 'will swap start and end dates, though this is a bad idea but you should probably know about this' do
-      ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: 'end', end: 'start' }).evaluate(@db_mock)
+      described_class.new(Stream4TimeWindowDouble.new, { start: 'end', end: 'start' }).evaluate(@db_mock)
     end
 
     it 'handles nil arguments to both start and end' do
-      ConceptQL::Operators::TimeWindow.new(Stream4TimeWindowDouble.new, { start: nil, end: nil }).evaluate(@db_mock)
+      described_class.new(Stream4TimeWindowDouble.new, { start: nil, end: nil }).evaluate(@db_mock)
     end
   end
 end

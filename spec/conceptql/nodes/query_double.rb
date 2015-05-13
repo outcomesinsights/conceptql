@@ -1,8 +1,9 @@
 require 'conceptql/operators/operator'
 class QueryDouble < ConceptQL::Operators::Operator
-  def initialize(num, type = :visit_occurrence)
-    @num = num
-    @type = type
+  def initialize(*args)
+    super
+    @num = arguments.first
+    @type = arguments[1] || :visit_occurrence
   end
 
   def types

@@ -2,29 +2,27 @@ require 'spec_helper'
 require 'conceptql/operators/snomed'
 
 describe ConceptQL::Operators::Snomed do
-  it 'behaves itself' do
-    ConceptQL::Operators::Snomed.new.must_behave_like(:standard_vocabulary_operator)
-  end
+  it_behaves_like(:standard_vocabulary_operator)
 
   subject do
-    ConceptQL::Operators::Snomed.new
+    described_class.new
   end
 
   describe '#table' do
     it 'should be condition_occurrence' do
-      subject.table.must_equal :condition_occurrence
+      expect(subject.table).to eq(:condition_occurrence)
     end
   end
 
   describe '#concept_column' do
     it 'should be condition_concept_id' do
-      subject.concept_column.must_equal :condition_concept_id
+      expect(subject.concept_column).to eq(:condition_concept_id)
     end
   end
 
   describe '#vocabulary_id' do
     it 'should be 1' do
-      subject.vocabulary_id.must_equal 1
+      expect(subject.vocabulary_id).to eq(1)
     end
   end
 end

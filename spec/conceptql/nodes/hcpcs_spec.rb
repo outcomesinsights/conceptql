@@ -2,29 +2,27 @@ require 'spec_helper'
 require 'conceptql/operators/hcpcs'
 
 describe ConceptQL::Operators::Hcpcs do
-  it 'behaves itself' do
-    ConceptQL::Operators::Hcpcs.new.must_behave_like(:standard_vocabulary_operator)
-  end
+  it_behaves_like(:standard_vocabulary_operator)
 
   subject do
-    ConceptQL::Operators::Hcpcs.new
+    described_class.new
   end
 
   describe '#table' do
     it 'should be procedure_occurrence' do
-      subject.table.must_equal :procedure_occurrence
+      expect(subject.table).to eq(:procedure_occurrence)
     end
   end
 
   describe '#concept_column' do
     it 'should be procedure_concept_id' do
-      subject.concept_column.must_equal :procedure_concept_id
+      expect(subject.concept_column).to eq(:procedure_concept_id)
     end
   end
 
   describe '#vocabulary_id' do
     it 'should be 5' do
-      subject.vocabulary_id.must_equal 5
+      expect(subject.vocabulary_id).to eq(5)
     end
   end
 end

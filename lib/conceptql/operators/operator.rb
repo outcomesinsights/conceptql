@@ -27,6 +27,14 @@ module ConceptQL
       option :label, type: :string
 
       def initialize(*args)
+        set_values(*args)
+      end
+
+      def values=(*args)
+        set_values(*args)
+      end
+
+      def set_values(*args)
         @options = args.extract_options!.deep_rekey
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Operator) }
         @values = args

@@ -5,22 +5,18 @@ describe ConceptQL::Query do
   describe '#query' do
     it 'passes request on to tree' do
       yaml = Psych.dump({ icd9: '799.22' })
-      mock_tree = Minitest::Mock.new
-      mock_operator = Minitest::Mock.new
-      mock_query = Minitest::Mock.new
-      mock_db = Minitest::Mock.new
+      mock_tree = double("tree")
+      mock_operator = double("operator")
+      mock_query = double("query")
+      mock_db = double("db")
 
-      mock_db.expect :extend_datasets, mock_db, [Module]
+      expect(mock_db).to receive(:extend_datasets).with(Module).and_return(mock_db)
 
       query = ConceptQL::Query.new(mock_db, yaml, mock_tree)
-      mock_tree.expect :root, mock_operator, [query]
-      mock_operator.expect :evaluate, mock_query, [mock_db]
-      mock_query.expect :tap, mock_query
-      mock_query.expect :prep_proc=, nil, [Proc]
+      expect(mock_tree).to receive(:root).with(query).and_return(mock_operator)
+      expect(mock_operator).to receive(:evaluate).with(mock_db).and_return(mock_query)
+      expect(mock_query).to receive(:tap).and_return(mock_query)
       query.query
-
-      mock_operator.verify
-      mock_tree.verify
     end
   end
 end
