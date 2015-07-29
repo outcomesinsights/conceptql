@@ -20,6 +20,10 @@ module ConceptQL
     end
 
     def create(scope, operator, *values)
+      operator = operator.to_sym
+      if operators[operator].nil?
+        raise "Can't find operator for '#{operator}' in #{operators.keys.sort}"
+      end
       operator = operators[operator].new(*values)
       operator.scope = scope
       operator
