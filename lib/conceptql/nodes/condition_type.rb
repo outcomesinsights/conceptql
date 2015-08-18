@@ -12,6 +12,8 @@ module ConceptQL
     class ConditionType < Node
       desc 'Searches for conditions that match the given set of Condition Types'
       argument :condition_types, type: :codelist, vocab: 'Condition Type'
+      category %(Occurrence Type)
+      predominant_types :condition_occurrence
 
       def type
         :condition_occurrence

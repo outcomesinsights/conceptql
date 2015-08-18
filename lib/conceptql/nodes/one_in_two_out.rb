@@ -10,6 +10,7 @@ that appears either two times in an outpatient setting with a 30-day gap or once
 in an inpatient setting
       EOF
       allows_one_upstream
+      category %w(Temporal Relative)
 
       def types
         [:visit_occurrence]
