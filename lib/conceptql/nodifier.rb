@@ -10,19 +10,23 @@ module ConceptQL
       @operators = {}
       dir = Pathname.new(__FILE__).dirname()
       dir.chdir do
-        Pathname.glob("nodes/*.rb").each do |file|
+        Pathname.glob("operators/*.rb").each do |file|
           require_relative file
           operator = file.basename('.*').to_s.to_sym
-          klass = Object.const_get("conceptQL/nodes/#{operator}".modulize)
+          klass = Object.const_get("conceptQL/operators/#{operator}".modulize)
           @operators[operator] = klass
         end
       end
     end
 
-    def create(operator, values, tree)
-      node = operators[operator].new(values)
-      node.tree = tree
-      node
+    def create(scope, operator, *values)
+      operator = operator.to_sym
+      if operators[operator].nil?
+        raise "Can't find operator for '#{operator}' in #{operators.keys.sort}"
+      end
+      operator = operators[operator].new(*values)
+      operator.scope = scope
+      operator
     end
 
     def to_metadata

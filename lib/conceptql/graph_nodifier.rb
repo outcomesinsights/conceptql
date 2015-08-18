@@ -1,9 +1,9 @@
 require_relative 'behaviors/dottable'
-require_relative 'nodes/node'
+require_relative 'operators/operator'
 
 module ConceptQL
   class GraphNodifier
-    class DotNode < ConceptQL::Nodes::Node
+    class DotOperator < ConceptQL::Operators::Operator
       include ConceptQL::Behaviors::Dottable
 
       TYPES = {
@@ -53,10 +53,10 @@ module ConceptQL
         drug_type_concept: :drug_exposure,
         prodcode: :drug_exposure,
 
-        # Date Nodes
+        # Date Operators
         date_range: :date,
 
-        # Miscelaneous nodes
+        # Miscelaneous operators
         concept: :misc,
         vsac: :misc
       }
@@ -88,7 +88,7 @@ module ConceptQL
       end
     end
 
-    class BinaryOperatorNode < DotNode
+    class BinaryOperatorOperator < DotOperator
       def display_name
         output = name
         output += "\n#{displayable_options.map{|k,v| "#{k}: #{v}"}.join("\n")}"
@@ -110,7 +110,7 @@ module ConceptQL
       def graph_it(g, db)
         left.graph_it(g, db)
         right.graph_it(g, db)
-        cluster_name = "cluster_#{node_name}"
+        cluster_name = "cluster_#{operator_name}"
         me = g.send(cluster_name) do |sub|
           sub[rank: 'same', label: display_name, color: 'black']
           sub.send("#{cluster_name}_left").send('[]', shape: 'point', color: type_color(types))
@@ -118,7 +118,7 @@ module ConceptQL
         end
         left.link_to(g, me.send("#{cluster_name}_left"))
         right.link_to(g, me.send("#{cluster_name}_right"))
-        @__graph_node = me.send("#{cluster_name}_left")
+        @__graph_operator = me.send("#{cluster_name}_left")
       end
 
       def types
@@ -130,9 +130,9 @@ module ConceptQL
       end
     end
 
-    class LetNode < DotNode
+    class LetOperator < DotOperator
       def graph_it(g, db)
-        cluster_name = "cluster_#{node_name}"
+        cluster_name = "cluster_#{operator_name}"
         linkable = nil
         g.send(cluster_name) do |sub|
           linkable = upstreams.reverse.map do |upstream|
@@ -140,7 +140,7 @@ module ConceptQL
           end.first
           sub[label: display_name, color: 'black']
         end
-        @__graph_node = linkable
+        @__graph_operator = linkable
       end
 
       def types
@@ -148,19 +148,19 @@ module ConceptQL
       end
     end
 
-    class DefineNode < DotNode
+    class DefineOperator < DotOperator
       def shape
         :cds
       end
     end
 
-    class RecallNode < DotNode
+    class RecallOperator < DotOperator
       def shape
         :cds
       end
     end
 
-    class VsacNode < DotNode
+    class VsacOperator < DotOperator
       def initialize(name, values, types)
         @types = types
         super(name, values)
@@ -182,22 +182,22 @@ module ConceptQL
     end
 
     def create(type, values, tree)
-      node = if BINARY_OPERATOR_TYPES.include?(type)
-        BinaryOperatorNode.new(type, values)
+      operator = if BINARY_OPERATOR_TYPES.include?(type)
+        BinaryOperatorOperator.new(type, values)
       elsif type == :let
-        LetNode.new(type, values)
+        LetOperator.new(type, values)
       elsif type == :define
-        DefineNode.new(type, values)
+        DefineOperator.new(type, values)
       elsif type == :recall
-        RecallNode.new(type, values)
+        RecallOperator.new(type, values)
       elsif type == :vsac
         types = values.pop
-        VsacNode.new(type, values, types)
+        VsacOperator.new(type, values, types)
       else
-        DotNode.new(type, values)
+        DotOperator.new(type, values)
       end
-      node.tree = self
-      node
+      operator.tree = self
+      operator
     end
   end
 end

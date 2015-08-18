@@ -67,6 +67,19 @@ module ConceptQL
       File.write('/tmp/metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
     end
 
+    desc 'convert', 'Converts from hash-based syntax to list-based syntax'
+    def convert(file)
+      require 'conceptql/converter'
+      require 'json'
+      begin
+        puts JSON.pretty_generate(ConceptQL::Converter.new.convert(criteria_from_file(file)))
+      rescue
+        puts "Couldn't convert #{file}"
+        puts $!.message
+        puts $!.backtrace.join("\n")
+      end
+    end
+
     private
     desc 'show_and_tell_db conceptql_id', 'Fetches the ConceptQL from a DB and shows the contents as a ConceptQL graph, then executes the statement against our test database'
     option :full

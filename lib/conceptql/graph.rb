@@ -1,7 +1,7 @@
 require 'psych'
 require 'graphviz'
 require_relative 'tree'
-require_relative 'nodes/node'
+require_relative 'operators/operator'
 require_relative 'behaviors/dottable'
 
 module ConceptQL
@@ -14,7 +14,7 @@ module ConceptQL
       @tree = opts.fetch(:tree, Tree.new)
       @title = opts.fetch(:title, nil)
       @suffix = opts.fetch(:suffix, 'pdf')
-      ConceptQL::Nodes::Node.send(:include, ConceptQL::Behaviors::Dottable)
+      ConceptQL::Operators::Operator.send(:include, ConceptQL::Behaviors::Dottable)
     end
 
     def graph_it(file_path)
@@ -34,16 +34,16 @@ module ConceptQL
     attr :yaml, :tree, :db
 
     def build_graph(g)
-      tree.root(self).each.with_index do |last_node, index|
-        last_node.build_temp_tables(db)
-        last_node.graph_it(g, db)
+      tree.root(self).each.with_index do |last_operator, index|
+        last_operator.build_temp_tables(db)
+        last_operator.graph_it(g, db)
         if dangler
-          blank_node = g.add_nodes("_#{index}")
-          blank_node[:shape] = 'none'
-          blank_node[:height] = 0
-          blank_node[:label] = ''
-          blank_node[:fixedsize] = true
-          last_node.link_to(g, blank_node, db)
+          blank_operator = g.add_nodes("_#{index}")
+          blank_operator[:shape] = 'none'
+          blank_operator[:height] = 0
+          blank_operator[:label] = ''
+          blank_operator[:fixedsize] = true
+          last_operator.link_to(g, blank_operator, db)
         end
       end
     end

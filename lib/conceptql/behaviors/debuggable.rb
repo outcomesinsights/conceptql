@@ -1,24 +1,24 @@
 require_relative '../behaviors/dottable'
-require_relative '../nodes/node'
-require_relative '../nodes/binary_operator_node'
+require_relative '../operators/operator'
+require_relative '../operators/binary_operator_operator'
 require 'csv'
 module ConceptQL
   module Behaviors
     module Debuggable
       include Dottable
       class ResultPrinter
-        attr :db, :dir, :type, :watch_ids, :node
-        def initialize(db, dir, type, watch_ids, node)
+        attr :db, :dir, :type, :watch_ids, :operator
+        def initialize(db, dir, type, watch_ids, operator)
           @db = db
           @dir = dir
           @type = type
           @watch_ids = watch_ids
-          @node = node
+          @operator = operator
         end
 
         def make_file
           CSV.open(file_path, 'w') do |csv|
-            csv << ConceptQL::Nodes::Node::COLUMNS
+            csv << ConceptQL::Operators::Operator::COLUMNS
             results.each do |result|
               csv << result
             end
@@ -31,11 +31,11 @@ module ConceptQL
         end
 
         def file_name
-          @file_name ||= [node.node_name, abbreviate(type)].join('_')
+          @file_name ||= [operator.operator_name, abbreviate(type)].join('_')
         end
 
         def results
-          q = node.evaluate(db)
+          q = operator.evaluate(db)
             .from_self
             .where(criterion_type: type.to_s)
           unless watch_ids.empty?
@@ -43,7 +43,7 @@ module ConceptQL
           end
 
           q.order([:person_id, :criterion_type, :start_date, :end_date, :criterion_id])
-            .select_map(ConceptQL::Nodes::Node::COLUMNS)
+            .select_map(ConceptQL::Operators::Operator::COLUMNS)
         end
 
         def abbreviate(type)
@@ -54,7 +54,7 @@ module ConceptQL
       def print_results(db, dir, watch_ids)
         print_prep(db) if respond_to?(:print_prep)
         kids = upstreams
-        if self.is_a?(ConceptQL::Nodes::BinaryOperatorNode)
+        if self.is_a?(ConceptQL::Operators::BinaryOperatorOperator)
           kids = [left, right]
         end
         files = kids.map do |upstream|
