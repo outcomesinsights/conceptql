@@ -145,10 +145,16 @@ module ConceptQL
       def date_columns(query, type = nil)
         return [:start_date, :end_date] if (query.columns.include?(:start_date) && query.columns.include?(:end_date))
         return [:start_date, :end_date] unless type
+
+        date_klass = Date
+        if query.db.database_type == :impala
+          date_klass = DateTime
+        end
+
         sd = start_date_column(query, type)
-        sd = Sequel.expr(sd).cast(:date).as(:start_date) unless sd == :start_date
+        sd = Sequel.cast(Sequel.expr(sd), date_klass).as(:start_date) unless sd == :start_date
         ed = end_date_column(query, type)
-        ed = Sequel.function(:coalesce, Sequel.expr(ed).cast(:date), Sequel.expr(start_date_column(query, type))).as(:end_date) unless ed == :end_date
+        ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, type)), date_klass).as(:end_date) unless ed == :end_date
         [sd, ed]
       end
 
@@ -206,15 +212,25 @@ module ConceptQL
 
       def assemble_date(query, *symbols)
         strings = symbols.map do |symbol|
-          Sequel.cast_string(Sequel.function(:coalesce, Sequel.cast_string(symbol), Sequel.cast_string('01')))
+          sub = '2000'
+          col = Sequel.cast_string(symbol)
+          if symbol != :year_of_birth
+            sub = '01'
+            col = Sequel.function(:lpad, col, 2, '0')
+          end
+          Sequel.function(:coalesce, col, Sequel.expr(sub))
         end
-        strings = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
-        concatted_strings = Sequel.join(strings)
+
+        strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
+        concatted_strings = Sequel.join(strings_with_dashes)
+
         case query.db.database_type
         when :oracle
           Sequel.function(:to_date, concatted_strings, 'YYYY-MM-DD')
         when :mssql
           Sequel.lit('CONVERT(DATETIME, ?)', concatted_strings)
+        when :impala
+          Sequel.cast(Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime), DateTime)
         else
           Sequel.cast(concatted_strings, Date)
         end
