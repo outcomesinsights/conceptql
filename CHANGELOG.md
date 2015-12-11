@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.2.0 - 2015-12-11
 
 ### Added
 - Optimized After/Before nodes when multi-person results are in the right stream.
