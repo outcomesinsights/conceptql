@@ -1,38 +1,53 @@
 require_relative 'nodifier'
-require 'active_support/core_ext/hash'
+require_relative 'converter'
+require_relative 'scope'
+require 'facets/hash/deep_rekey'
+require 'facets/array/recurse'
 
 module ConceptQL
+  # Tree is used to walk through a ConceptQL statement, instantiate
+  # all operators, and then provide access to the root operator
   class Tree
-    attr :nodifier, :behavior, :defined, :opts
+    attr :nodifier, :behavior, :defined, :opts, :temp_tables, :scope
     def initialize(opts = {})
       @nodifier = opts.fetch(:nodifier, Nodifier.new)
       @behavior = opts.fetch(:behavior, nil)
       @defined = {}
+      @temp_tables = {}
       @opts = {}
+      @scope = opts.fetch(:scope, Scope.new)
     end
 
-    def root(*queries)
-      @root ||= traverse(queries.flatten.map(&:statement).flatten.map(&:deep_symbolize_keys))
+    def root(query)
+      @root ||= start_traverse(query.statement)
     end
 
     private
-    def traverse(obj)
-      case obj
+
+    def start_traverse(stmt)
+      case stmt
       when Hash
-        if obj.keys.length > 1
-          obj = Hash[obj.map { |key, value| [ key, traverse(value) ]}]
-          return obj
-        end
-        type = obj.keys.first
-        values = traverse(obj[type])
-        obj = nodifier.create(type, values, self)
-        obj.extend(behavior) if behavior
-        obj
+        traverse(converter.convert(stmt))
       when Array
-        obj.map { |value| traverse(value) }
-      else
-        obj
+        traverse(stmt)
       end
+    end
+
+    def traverse(stmt)
+      stmt.recurse(Array, Hash) do |arr_or_hash|
+        if arr_or_hash.is_a?(Array)
+          type = arr_or_hash.shift
+          obj = nodifier.create(scope, type, *arr_or_hash)
+          obj.extend(behavior) if behavior
+          obj
+        else
+          arr_or_hash
+        end
+      end
+    end
+
+    def converter
+      @converter ||= Converter.new
     end
   end
 end

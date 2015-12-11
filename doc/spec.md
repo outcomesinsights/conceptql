@@ -153,7 +153,7 @@ Virtually all other nodes add, remove, filter, or otherwise alter streams of res
 Because streams represent sets of results, its makes sense to include a nodes that operate on sets
 
 ### Union
-- Takes any number of child nodes and aggregates their streams
+- Takes any number of upstream nodes and aggregates their streams
     - Unions together streams with identical types
         - Think of streams with the same type flowing together into a single stream
         - We're really just gathering the union of all IDs for identically-typed streams
@@ -1333,7 +1333,7 @@ Just like Filter has an :as option, add one to Except node.  This would simplify
 
 
 ### How to Handle fact_relationship Table from CDMv5
-Each relationship type could be a binary node box read as L <relationship> R. E.g. L 'parent of' R would take a L stream and only pass on parents of rows in R stream.
+Each relationship type could be a binary node box read as L <relationship> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
 
 We could implement a single node that takes a relationship as an argument (on top of the L and R arguments) or we could create a node class for each relationship.  I think it would be better to have a single relationship node class and take the relationship as the argument.
 

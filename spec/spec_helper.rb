@@ -1,86 +1,102 @@
 require 'sequel'
 
-class Minitest::SharedExamples < Module
-  include Minitest::Spec::DSL
-
-  def self.find(name)
-    @shared_examples ||= {}
-    @shared_examples[name]
+shared_examples_for(:evaluator) do
+  let(:evaluator) { described_class.new }
+  it "should respond to evaluate" do
+    expect(evaluator.respond_to?(:evaluate)).to be true
   end
 
-  def self.register(name, &block)
-    @shared_examples ||= {}
-    @shared_examples[name] = block
+  it "should respond to query" do
+    expect(evaluator.respond_to?(:query)).to be true
   end
-end
 
-def shared_examples_for(name, &block)
-  Minitest::SharedExamples.register(name, &block)
-end
-
-shared_examples_for(:evaluator) do |subject|
-  subject.must_respond_to(:evaluate)
-  subject.must_respond_to(:query)
-  subject.must_respond_to(:types)
-end
-
-shared_examples_for(:source_vocabulary_node) do |subject|
-  subject.must_behave_like(:evaluator)
-  subject.must_respond_to(:table)
-  subject.must_respond_to(:concept_column)
-  subject.must_respond_to(:source_column)
-  subject.must_respond_to(:vocabulary_id)
-end
-
-shared_examples_for(:standard_vocabulary_node) do |subject|
-  subject.must_behave_like(:evaluator)
-  subject.must_respond_to(:table)
-  subject.must_respond_to(:concept_column)
-  subject.must_respond_to(:vocabulary_id)
-end
-
-shared_examples_for(:node) do |subject|
-  subject.must_respond_to(:values)
-  subject.must_respond_to(:arguments)
-  subject.must_respond_to(:children)
-end
-
-shared_examples_for(:temporal_node) do |subject|
-  subject.must_behave_like(:evaluator)
-  subject.must_respond_to(:where_clause)
-end
-
-shared_examples_for(:casting_node) do |subject|
-  subject.must_behave_like(:evaluator)
-  subject.must_respond_to(:my_type)
-  subject.must_respond_to(:i_point_at)
-  subject.must_respond_to(:these_point_at_me)
-end
-
-module Minitest::Assertions
-  def assert_behaves_like(subject, name, msg = nil)
-    Minitest::SharedExamples.find(name).call(subject)
+  it "shoudl respond to types" do
+    expect(evaluator.respond_to?(:types)).to be true
   end
 end
 
-module Minitest::Expectations
-  infect_an_assertion :assert_behaves_like, :must_behave_like, :reverse
+shared_examples_for(:source_vocabulary_operator) do
+  let(:source_vocabulary_operator) { described_class.new }
+  it_behaves_like :evaluator
+
+  it "should respond to #table" do
+    expect(source_vocabulary_operator.respond_to?(:table)).to be true
+  end
+
+  it "should respond to #concept_column" do
+    expect(source_vocabulary_operator.respond_to?(:concept_column)).to be true
+  end
+
+  it "should respond to #source_column" do
+    expect(source_vocabulary_operator.respond_to?(:source_column)).to be true
+  end
+
+  it "should respond to #vocabulary_id" do
+    expect(source_vocabulary_operator.respond_to?(:vocabulary_id)).to be true
+  end
+end
+
+shared_examples_for(:standard_vocabulary_operator) do
+  let(:standard_vocabulary_operator) { described_class.new }
+
+  it_behaves_like :evaluator
+
+  it "should respond to #table" do
+    expect(standard_vocabulary_operator.respond_to?(:table)).to be true
+  end
+
+  it "should respond to #concept_column" do
+    expect(standard_vocabulary_operator.respond_to?(:concept_column)).to be true
+  end
+
+  it "should respond to #vocabulary_id" do
+    expect(standard_vocabulary_operator.respond_to?(:vocabulary_id)).to be true
+  end
+end
+
+shared_examples_for(:operator) do
+  let(:operator) { described_class.new }
+
+  it "should respond to #values" do
+    expect(operator.respond_to?(:values)).to be true
+  end
+
+  it "should respond to #arguments" do
+    expect(operator.respond_to?(:arguments)).to be true
+  end
+
+  it "should respond to #upstreams" do
+    expect(operator.respond_to?(:upstreams)).to be true
+  end
+end
+
+shared_examples_for(:temporal_operator) do
+  let(:temporal_operator) { described_class.new }
+
+  it "should respond to #where_clause" do
+    expect(temporal_operator.respond_to?(:where_clause)).to be true
+  end
+end
+
+shared_examples_for(:casting_operator) do
+  let(:casting_operator) { described_class.new }
+  it_behaves_like(:evaluator)
+
+  it "should respond to #my_type" do
+    expect(casting_operator.respond_to?(:my_type)).to be true
+  end
+
+  it "should respond to #i_point_at" do
+    expect(casting_operator.respond_to?(:i_point_at)).to be true
+  end
+
+  it "should respond to #these_point_at_me" do
+    expect(casting_operator.respond_to?(:these_point_at_me)).to be true
+  end
 end
 
 def require_double(double_name)
   p = Pathname.new('.')
   p = p + 'spec' + 'doubles' + (double_name + '_double')
   require(p.expand_path)
-end
-
-def stub_const(klass, const, replace, &block)
-  klass.send(:const_set, const, replace)
-  if block_given?
-    yield
-    remove_stubbed_const(klass, const)
-  end
-end
-
-def remove_stubbed_const(klass, const)
-  klass.send(:remove_const, const)
 end

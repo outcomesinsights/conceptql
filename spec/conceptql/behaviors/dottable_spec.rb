@@ -1,74 +1,68 @@
 require 'spec_helper'
-require 'conceptql/nodes/node'
+require 'conceptql/operators/operator'
 require 'conceptql/behaviors/dottable'
 
-class NodeDouble < ConceptQL::Nodes::Node
+class OperatorDouble < ConceptQL::Operators::Operator
   include ConceptQL::Behaviors::Dottable
 
-  attr_accessor :values, :options
-  def initialize(*values)
-    @values = values
-    @options = {}
+  def initialize(*args)
+    super
     @types = []
   end
 end
 
 describe ConceptQL::Behaviors::Dottable do
   before do
-    @obj = NodeDouble.new
-    @obj.must_behave_like(:node)
+    @obj = OperatorDouble.new
   end
 
   describe '#display_name' do
-    it 'should show just the name if no children or arguments' do
+    it 'should show just the name if no upstreams or arguments' do
       @obj.values = []
-      @obj.display_name.must_equal 'Node Double'
+      expect(@obj.display_name).to match(/Operator Double( \d+)?/)
     end
 
     it 'should show name and args' do
       @obj.values = [5, 10]
-      @obj.display_name.must_equal 'Node Double: 5, 10'
+      expect(@obj.display_name).to match(/Operator Double( \d+)?: 5, 10/)
     end
 
-    it 'should not include children' do
-      @obj.values = [::ConceptQL::Nodes::Node.new]
-      @obj.display_name.must_equal 'Node Double'
+    it 'should not include upstreams' do
+      @obj.values = [::ConceptQL::Operators::Operator.new]
+      expect(@obj.display_name).to match(/Operator Double( \d+)?/)
     end
   end
 
-  describe '#node_name' do
-    it 'should show just the name and digit if no children' do
-      @obj.values = [::ConceptQL::Nodes::Node.new]
-      @obj.node_name.must_match(/^node_double_\d+$/)
+  describe '#operator_name' do
+    it 'should show just the name and digit if no upstreams' do
+      @obj.values = [::ConceptQL::Operators::Operator.new]
+      expect(@obj.operator_name).to match(/^operator_double_\d+$/)
     end
 
     it 'should not show args' do
       @obj.values = [5, 10]
-      @obj.node_name.must_match(/^node_double_\d+$/)
+      expect(@obj.operator_name).to match(/^operator_double_\d+$/)
     end
 
-    it 'should not include children' do
-      @obj.values = [::ConceptQL::Nodes::Node.new]
-      @obj.node_name.must_match(/^node_double_\d+$/)
+    it 'should not include upstreams' do
+      @obj.values = [::ConceptQL::Operators::Operator.new]
+      expect(@obj.operator_name).to match(/^operator_double_\d+$/)
     end
   end
 
   describe '#graph_it' do
-    it 'should add itself as a node if no children' do
+    it 'should add itself as a operator if no upstreams' do
       @obj.values = []
-      mock_graph = Minitest::Mock.new
-      mock_node = Minitest::Mock.new
-      mock_graph.expect :add_nodes, mock_node, [@obj.node_name]
-      mock_node.expect :[]=, nil, [:label, @obj.display_name]
-      mock_node.expect :[]=, nil, [:color, 'black']
+      mock_graph = double("graph")
+      mock_operator = double("operator")
+      expect(mock_graph).to receive(:add_nodes).with(@obj.operator_name).and_return(mock_operator)
+      expect(mock_operator).to receive(:[]=).with(:label, @obj.display_name).and_return(nil)
+      expect(mock_operator).to receive(:[]=).with(:color, 'black').and_return(nil)
       @obj.graph_it(mock_graph, Sequel.mock)
-
-      mock_node.verify
-      mock_graph.verify
     end
 
-    it 'should add its children, then link itself as a node if children' do
-      class MockChild < ConceptQL::Nodes::Node
+    it 'should add its upstreams, then link itself as a operator if upstreams' do
+      class MockUpstream < ConceptQL::Operators::Operator
         include ConceptQL::Behaviors::Dottable
 
         attr_accessor :mock
@@ -80,32 +74,26 @@ describe ConceptQL::Behaviors::Dottable do
           mock.types
         end
 
-        def link_to(mock_graph, mock_node, db)
-          mock.link_to(mock_graph, mock_node, db)
+        def link_to(mock_graph, mock_operator, db)
+          mock.link_to(mock_graph, mock_operator, db)
         end
       end
 
-      mock_node = Minitest::Mock.new
-      mock_node.expect :[]=, nil, [:label, @obj.display_name]
-      mock_node.expect :[]=, nil, [:color, 'black']
+      mock_operator = double("operator")
+      expect(mock_operator).to receive(:[]=).with(:label, @obj.display_name).and_return(nil)
+      expect(mock_operator).to receive(:[]=).with(:color, 'black').and_return(nil)
 
-      mock_graph = Minitest::Mock.new
-      mock_graph.expect :add_nodes, mock_node, [@obj.node_name]
+      mock_graph = double("graph")
+      expect(mock_graph).to receive(:add_nodes).with(@obj.operator_name).and_return(mock_operator)
 
-      mock_child = MockChild.new
-      mock_child.mock = Minitest::Mock.new
-      mock_child.mock.expect :graph_it, :child_node, [mock_graph, :db]
-      mock_child.mock.expect :link_to, nil, [mock_graph, mock_node, :db]
+      mock_upstream = MockUpstream.new
+      mock_upstream.mock = double("upstream")
+      expect(mock_upstream.mock).to receive(:graph_it).with(mock_graph, :db).and_return(:upstream_operator)
+      expect(mock_upstream.mock).to receive(:link_to).with(mock_graph, mock_operator, :db).and_return(nil)
 
-      mock_child.must_behave_like(:node)
-
-      @obj.values = [mock_child]
+      @obj.values = mock_upstream
 
       @obj.graph_it(mock_graph, :db)
-
-      mock_node.verify
-      mock_graph.verify
-      mock_child.mock.verify
     end
   end
 end

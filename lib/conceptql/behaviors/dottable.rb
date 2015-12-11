@@ -1,4 +1,6 @@
-require 'active_support/inflector'
+require 'facets/string/snakecase'
+require 'facets/string/titlecase'
+
 module ConceptQL
   module Behaviors
     module Dottable
@@ -15,13 +17,23 @@ module ConceptQL
         observation: 'magenta',
         misc: 'black'
       }
-      def node_name
-        @__node_name ||= self.class.name.split('::').last.underscore.gsub(/\W/, '_').downcase + '_' + (@@counter += 1).to_s
+
+      def operator_number
+        @__operator_number ||= (@@counter += 1)
+      end
+
+      def reset_operator_number
+        @@counter = 0
+      end
+
+      def operator_name
+        @__operator_name ||= self.class.name.split('::').last.snakecase.gsub(/\W/, '_').downcase + "_#{operator_number}"
       end
 
       def display_name
         @__display_name ||= begin
-          output = self.class.name.split('::').last.titleize
+          output = self.class.name.split('::').last.snakecase.titlecase
+          #output += " #{operator_number}"
           output += ": #{arguments.join(', ')}" unless arguments.empty?
           if output.length > 100
             parts = output.split
@@ -39,9 +51,9 @@ module ConceptQL
         types.length == 1 ? TYPE_COLORS[types.first] || 'black' : 'black'
       end
 
-      def graph_node(g)
-        @__graph_node ||= begin
-          me = g.add_nodes(node_name)
+      def graph_operator(g)
+        @__graph_operator ||= begin
+          me = g.add_nodes(operator_name)
           me[:label] = display_name
           me[:color] = type_color(types)
           me[:shape] = shape if respond_to?(:shape)
@@ -49,7 +61,7 @@ module ConceptQL
         end
       end
 
-      def link_to(g, dest_node, db = nil)
+      def link_to(g, dest_operator, db = nil)
         edge_options = {}
 
         types.each do |type|
@@ -60,23 +72,25 @@ module ConceptQL
             edge_options[:label] = label.join("\n")
             edge_options[:style] = 'dashed' if my_n.zero?
           end
-          e = g.add_edges(graph_node(g), dest_node, edge_options)
+          e = g.add_edges(graph_operator(g), dest_operator, edge_options)
           e[:color] = type_color(type)
         end
       end
 
       def graph_it(g, db)
         graph_prep(db) if respond_to?(:graph_prep)
-        children.each do |child|
-          child.graph_it(g, db)
+        upstreams.each do |upstream|
+          upstream.graph_it(g, db)
         end
-        graph_node(g)
-        children.each do |child|
-          child.link_to(g, graph_node(g), db)
+        operator = graph_operator(g)
+        upstreams.each do |upstream|
+          upstream.link_to(g, graph_operator(g), db)
         end
+        operator
       end
 
       def my_count(db, type)
+        puts "counting #{operator_name} #{type}"
         evaluate(db).from_self.where(criterion_type: type.to_s).count
       end
 

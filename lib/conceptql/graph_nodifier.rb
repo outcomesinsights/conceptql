@@ -1,9 +1,9 @@
 require_relative 'behaviors/dottable'
-require_relative 'nodes/node'
+require_relative 'operators/operator'
 
 module ConceptQL
   class GraphNodifier
-    class DotNode < ConceptQL::Nodes::Node
+    class DotOperator < ConceptQL::Operators::Operator
       include ConceptQL::Behaviors::Dottable
 
       TYPES = {
@@ -13,6 +13,7 @@ module ConceptQL
         icd9: :condition_occurrence,
         icd10: :condition_occurrence,
         condition_type: :condition_occurrence,
+        medcode: :condition_occurrence,
 
         # Procedures
         procedure: :procedure_occurrence,
@@ -21,6 +22,7 @@ module ConceptQL
         hcpcs: :procedure_occurrence,
         icd9_procedure: :procedure_occurrence,
         procedure_cost: :procedure_cost,
+        medcode_procedure: :procedure_occurrence,
 
         # Visits
         visit_occurrence: :visit_occurrence,
@@ -40,6 +42,8 @@ module ConceptQL
 
         # Observation
         loinc: :observation,
+        from_seer_visits: :observation,
+        to_seer_visits: :observation,
 
         # Drug
         drug_exposure: :drug_exposure,
@@ -47,11 +51,12 @@ module ConceptQL
         drug_cost: :drug_cost,
         drug_type_concept_id: :drug_exposure,
         drug_type_concept: :drug_exposure,
+        prodcode: :drug_exposure,
 
-        # Date Nodes
+        # Date Operators
         date_range: :date,
 
-        # Miscelaneous nodes
+        # Miscelaneous operators
         concept: :misc,
         vsac: :misc
       }
@@ -78,12 +83,12 @@ module ConceptQL
       end
 
       def types
-        types = [TYPES[name.to_sym] || children.map(&:types)].flatten.uniq
+        types = [TYPES[name.to_sym] || upstreams.map(&:types)].flatten.uniq
         types.empty? ? [:misc] : types
       end
     end
 
-    class BinaryOperatorNode < DotNode
+    class BinaryOperatorOperator < DotOperator
       def display_name
         output = name
         output += "\n#{displayable_options.map{|k,v| "#{k}: #{v}"}.join("\n")}"
@@ -105,7 +110,7 @@ module ConceptQL
       def graph_it(g, db)
         left.graph_it(g, db)
         right.graph_it(g, db)
-        cluster_name = "cluster_#{node_name}"
+        cluster_name = "cluster_#{operator_name}"
         me = g.send(cluster_name) do |sub|
           sub[rank: 'same', label: display_name, color: 'black']
           sub.send("#{cluster_name}_left").send('[]', shape: 'point', color: type_color(types))
@@ -113,7 +118,7 @@ module ConceptQL
         end
         left.link_to(g, me.send("#{cluster_name}_left"))
         right.link_to(g, me.send("#{cluster_name}_right"))
-        @__graph_node = me.send("#{cluster_name}_left")
+        @__graph_operator = me.send("#{cluster_name}_left")
       end
 
       def types
@@ -125,19 +130,37 @@ module ConceptQL
       end
     end
 
-    class DefineNode < DotNode
+    class LetOperator < DotOperator
+      def graph_it(g, db)
+        cluster_name = "cluster_#{operator_name}"
+        linkable = nil
+        g.send(cluster_name) do |sub|
+          linkable = upstreams.reverse.map do |upstream|
+            upstream.graph_it(sub, db)
+          end.first
+          sub[label: display_name, color: 'black']
+        end
+        @__graph_operator = linkable
+      end
+
+      def types
+        upstreams.last.types
+      end
+    end
+
+    class DefineOperator < DotOperator
       def shape
         :cds
       end
     end
 
-    class RecallNode < DotNode
+    class RecallOperator < DotOperator
       def shape
         :cds
       end
     end
 
-    class VsacNode < DotNode
+    class VsacOperator < DotOperator
       def initialize(name, values, types)
         @types = types
         super(name, values)
@@ -150,22 +173,31 @@ module ConceptQL
 
     BINARY_OPERATOR_TYPES = %w(before after meets met_by started_by starts contains during overlaps overlapped_by finished_by finishes coincides except person_filter less_than less_than_or_equal equal not_equal greater_than greater_than_or_equal filter).map { |temp| [temp, "not_#{temp}"] }.flatten.map(&:to_sym)
 
+    def temp_tables
+      @temp_tables ||= {}
+    end
+
     def types
       @types ||= {}
     end
 
     def create(type, values, tree)
-      if BINARY_OPERATOR_TYPES.include?(type)
-        return BinaryOperatorNode.new(type, values)
+      operator = if BINARY_OPERATOR_TYPES.include?(type)
+        BinaryOperatorOperator.new(type, values)
+      elsif type == :let
+        LetOperator.new(type, values)
       elsif type == :define
-        return DefineNode.new(type, values).tap { |n| n.tree = self }
+        DefineOperator.new(type, values)
       elsif type == :recall
-        return RecallNode.new(type, values).tap { |n| n.tree = self }
+        RecallOperator.new(type, values)
       elsif type == :vsac
         types = values.pop
-        return VsacNode.new(type, values, types)
+        VsacOperator.new(type, values, types)
+      else
+        DotOperator.new(type, values)
       end
-      DotNode.new(type, values)
+      operator.tree = self
+      operator
     end
   end
 end

@@ -1,48 +1,50 @@
 require 'psych'
+require 'forwardable'
+require_relative 'behaviors/preppable'
 require_relative 'tree'
 
 module ConceptQL
   class Query
+    extend Forwardable
+    def_delegators :prepped_query, :all, :count, :execute, :order
+
     attr :statement
     def initialize(db, statement, tree = Tree.new)
       @db = db
+      @db.extend_datasets(ConceptQL::Behaviors::Preppable)
       @statement = statement
       @tree = tree
     end
 
-    def queries
+    def query
       build_query(db)
     end
 
-    def query
-      queries.last
-    end
-
     def sql
-      tree.opts[:sql_only] = true
-      nodes.map { |node| node.sql(db) }.join(";\n") + ';'
-    end
-
-    # To avoid a performance penalty, only execute the last
-    # SQL statement in an array of ConceptQL statements so that define's
-    # "create_table" SQL isn't executed twice
-    def execute
-      query.all
+      (tree.scope.sql(db) << operator.sql(db)).join(";\n\n") + ';'
     end
 
     def types
-      tree.root(self).last.types
+      tree.root(self).types
+    end
+
+    def operator
+      @operator ||= tree.root(self)
     end
 
     private
     attr :yaml, :tree, :db
 
     def build_query(db)
-      nodes.map { |n| n.evaluate(db) }
+      operator.evaluate(db).tap { |q| q.prep_proc = prep_proc }
     end
 
-    def nodes
-      @nodes ||= tree.root(self)
+    def prep_proc
+      @prep_proc = Proc.new { puts 'PREPPING'; tree.scope.prep(db) }
+    end
+
+    def prepped_query
+      query
     end
   end
 end

@@ -39,16 +39,18 @@ module ConceptQL
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
       puts q.sql
       puts q.statement.to_yaml
-      pp q.execute
+      pp q.all
     end
 
     desc 'show_graph statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
+    option :watch_file
     def show_graph(file)
       graph_it(criteria_from_file(file))
     end
 
     desc 'show_and_tell_file statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph, then executes the statement against the DB'
     option :full
+    option :watch_file
     def show_and_tell_file(file)
       show_and_tell(criteria_from_file(file), options)
     end
@@ -60,9 +62,28 @@ module ConceptQL
       system('open /tmp/graph.pdf')
     end
 
+    desc 'metadata', 'Generates the metadata.js file for the JAM'
+    def metadata
+      File.write('/tmp/metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
+    end
+
+    desc 'convert', 'Converts from hash-based syntax to list-based syntax'
+    def convert(file)
+      require 'conceptql/converter'
+      require 'json'
+      begin
+        puts JSON.pretty_generate(ConceptQL::Converter.new.convert(criteria_from_file(file)))
+      rescue
+        puts "Couldn't convert #{file}"
+        puts $!.message
+        puts $!.backtrace.join("\n")
+      end
+    end
+
     private
     desc 'show_and_tell_db conceptql_id', 'Fetches the ConceptQL from a DB and shows the contents as a ConceptQL graph, then executes the statement against our test database'
     option :full
+    option :watch_file
     def show_and_tell_db(conceptql_id)
       result = fetch_conceptql(conceptql_id, options)
       puts "Concept: #{result[:label]}"
@@ -88,12 +109,11 @@ module ConceptQL
       puts q.statement.to_yaml
       puts 'JSON'
       puts JSON.pretty_generate(q.statement)
-      STDIN.gets
       graph_it(statement, title)
       STDIN.gets
-      puts q.query.sql
+      puts q.sql
       STDIN.gets
-      results = q.execute
+      results = q.all
       if options[:full]
         pp results
       else
@@ -105,12 +125,18 @@ module ConceptQL
     def graph_it(statement, title = nil)
       require_relative 'graph'
       require_relative 'tree'
+      conn = db(options)
       ConceptQL::Graph.new(statement,
                            dangler: true,
                            title: title,
-                           db: db(options)
+                           db: conn
                           ).graph_it('/tmp/graph')
       system('open /tmp/graph.pdf')
+      if options[:watch_file]
+        require_relative 'debugger'
+        debugger = ConceptQL::Debugger.new(statement, db: conn, watch_ids: File.readlines(options[:watch_file]).map(&:to_i))
+        debugger.capture_results('/tmp/debug.xlsx')
+      end
     end
 
     def criteria_from_file(file)

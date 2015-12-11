@@ -1,6 +1,58 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.2.0 - 2015-12-11
+
+### Added
+- Optimized After/Before nodes when multi-person results are in the right stream.
+- Set end_date as coalesce(end_date, start_date) to make range if end_date missing.
+- Nodes
+    - AnyOverlap
+    - Contains
+    - Filter
+    - Ndc
+    - ObservationPeriod
+    - OneInTwoOut
+    - OverlappedBy
+    - Overlaps
+    - TrimDateEnd
+    - TrimDateStart
+- Nodes for CPRD
+    - Medcode
+    - MedcodeProcedure
+    - ObservationByEnttype
+    - Prodcode
+- Nodes for SEER
+    - FromSeerVisits
+    - ToSeerVisits
+- Ability to limit results to a set of patients by setting Tree#person_ids
+- "units_source_value" and "source_value" columns in results
+- TimeWindow supports date literals
+- ConditionType supports search for "primary"
+- Nodifier#to_metadata
+
+### Changed
+- Except now allows :ignore_date option
+    - Comparison is only done on criterion_id/type
+- DateRange START/END use observation_period instead of visit_occurrence
+- Operator#columns value_as_numeric => value_as_number
+- Syntax is now more "lispy"
+- Recall now uses any labeled operator as if that operator was fed to "Define" operator
+- Nodes now called Operators
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Let/Define operators
+
+### Fixed
+- Many broken specs.
+- Union calls #from_self on incoming streams to avoid column issues
+- Concept node now works again
+- Define ensures tables are built
+
+
 ## 0.1.1 - 2014-09-18
 
 ### Added
@@ -13,7 +65,7 @@ All notable changes to this project will be documented in this file.
 - Nothing.
 
 ### Fixed
-- Calling Query#sql no longer creates a bunch of temporary tables
+- Calling Query#sql no longer creates a bunch of temporary tables.
 
 
 ## 0.1.0 - 2014-09-04
