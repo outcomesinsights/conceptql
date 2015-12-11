@@ -39,6 +39,7 @@ module ConceptQL
         return db.from(:observation_period).select { min(:observation_period_start_date) } if str.upcase == 'START'
         return db.from(:observation_period).select { max(:observation_period_end_date) } if str.upcase == 'END'
         return Sequel.lit('CONVERT(DATETIME, ?)', str) if db.database_type == :mssql
+        return Sequel.lit('CAST(? as TIMESTAMP)', str) if db.database_type == :impala
         return Sequel.lit('date ?', str)
       end
     end
