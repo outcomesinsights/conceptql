@@ -96,7 +96,6 @@ shared_examples_for(:casting_operator) do
 end
 
 def require_double(double_name)
-  p = Pathname.new('.')
-  p = p + 'spec' + 'doubles' + (double_name + '_double')
-  require(p.expand_path)
+  p = File.join('.', 'spec', 'doubles', double_name + '_double')
+  require(File.expand_path(p))
 end

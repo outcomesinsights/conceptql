@@ -3,6 +3,8 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Rxnorm < StandardVocabularyOperator
+      register __FILE__
+
       preferred_name 'RxNorm'
       desc 'Finds all drug_exposures by RxNorm codes'
       argument :rxnorms, type: :codelist, vocab: 'RxNorm'

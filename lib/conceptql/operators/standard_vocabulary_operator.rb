@@ -19,6 +19,8 @@ module ConceptQL
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for CPT, a value of 4 (for CPT-4)
     class StandardVocabularyOperator < Operator
+      register __FILE__
+
       category 'Standard Vocabulary'
       category 'Code Lists'
       def query(db)

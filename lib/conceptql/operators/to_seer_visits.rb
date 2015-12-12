@@ -3,6 +3,8 @@ require_relative 'operator'
 module ConceptQL
   module Operators
     class ToSeerVisits < Operator
+      register __FILE__
+
       def type
         :visit_occurrence
       end

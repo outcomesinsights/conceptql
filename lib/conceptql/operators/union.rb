@@ -3,6 +3,8 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Union < PassThru
+      register __FILE__
+
       desc 'Pools sets of incoming results into a single large set of results.'
       allows_many_upstreams
       category 'Set Logic'

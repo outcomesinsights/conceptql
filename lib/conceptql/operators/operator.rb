@@ -6,6 +6,12 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
+    OPERATORS = {}
+
+    def self.operators
+      OPERATORS
+    end
+
     class Operator
       extend Forwardable
       extend Metadatable
@@ -25,6 +31,10 @@ module ConceptQL
       attr :values, :options, :arguments, :upstreams
 
       option :label, type: :string
+
+      def self.register(file)
+        OPERATORS[File.basename(file).sub(/\.rb\z/, '')] = self
+      end
 
       def initialize(*args)
         set_values(*args)
@@ -234,3 +244,9 @@ module ConceptQL
     end
   end
 end
+
+# Require all operator subclasses eagerly
+Dir.new(File.dirname(__FILE__)).
+  entries.
+  each{|filename| require_relative filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}
+ConceptQL::Operators.operators.freeze
