@@ -12,6 +12,8 @@ module ConceptQL
     # - Either a number value or a symbol representing a column name
     # - An optional stream
     class Numeric < PassThru
+      register __FILE__
+
       desc <<-EOF
 Represents a operator that will either:
 - create a value_as_number value for every person in the database

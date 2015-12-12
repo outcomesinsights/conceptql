@@ -3,6 +3,8 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Intersect < PassThru
+      register __FILE__
+
       desc 'Passes thru any result row that appears in all incoming result sets.'
       allows_many_upstreams
       category 'Set Logic'

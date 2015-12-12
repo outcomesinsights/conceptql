@@ -4,6 +4,8 @@ require_relative '../query'
 module ConceptQL
   module Operators
     class Concept < Operator
+      register __FILE__
+
       desc 'Given the UUID of another ConceptQL statement, returns the results of that statement.'
       attr :cql_query
       def query(db)

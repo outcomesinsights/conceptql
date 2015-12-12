@@ -3,6 +3,8 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class SnomedCondition < StandardVocabularyOperator
+      register __FILE__
+
       preferred_name 'SNOMED'
       desc 'Find all condition_occurrences by SNOMED codes'
       argument :snomeds, type: :codelist, vocab: 'SNOMED'

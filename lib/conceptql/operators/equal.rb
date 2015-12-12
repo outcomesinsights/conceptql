@@ -3,6 +3,8 @@ require_relative 'temporal_operator'
 module ConceptQL
   module Operators
     class Equal < TemporalOperator
+      register __FILE__
+
       desc 'If a LHR result has the same value_as_number as a RHR result, it is passed through'
 
       def where_clause

@@ -8,6 +8,8 @@ module ConceptQL
     # 'START' represents the first date of data in the data source,
     # 'END' represents the last date of data in the data source,
     class DateRange < Operator
+      register __FILE__
+
       desc 'Used to represent a date literal.'
       option :start, type: :string
       option :end, type: :string

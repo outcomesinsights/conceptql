@@ -3,6 +3,8 @@ require_relative 'source_vocabulary_operator'
 module ConceptQL
   module Operators
     class Prodcode < SourceVocabularyOperator
+      register __FILE__
+
       desc 'Searches the drug_exposure table for all conditions with matching Prodcodes'
       argument :prodcodes, type: :codelist, vocab_id: '203'
       predominant_types :drug_exposure

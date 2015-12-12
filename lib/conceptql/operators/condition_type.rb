@@ -10,6 +10,8 @@ module ConceptQL
     #
     # Multiple types can be specified at once
     class ConditionType < Operator
+      register __FILE__
+
       desc 'Searches for conditions that match the given set of Condition Types'
       argument :condition_types, type: :codelist, vocab: 'Condition Type'
       category %(Occurrence Type)

@@ -3,6 +3,8 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Count < PassThru
+      register __FILE__
+
       desc 'Counts the number of results the exactly match across all columns.'
       allows_one_upstream
 
