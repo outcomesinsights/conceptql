@@ -63,6 +63,10 @@ module ConceptQL
         evaluate(db).sql
       end
 
+      def unionable?(other)
+        false
+      end
+
       def select_it(query, specific_type = nil)
         specific_type = type if specific_type.nil? && respond_to?(:type)
         q = query.select(*columns(query, specific_type))

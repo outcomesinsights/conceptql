@@ -41,6 +41,16 @@ module ConceptQL
         table
       end
 
+      def unionable?(other)
+        other.is_a?(self.class)
+      end
+
+      def union(other)
+        n = dup
+        n.instance_variable_set(:@values, @values + other.values)
+        n
+      end
+
       private
 
       def table_name
