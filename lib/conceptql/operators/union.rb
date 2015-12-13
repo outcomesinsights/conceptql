@@ -10,7 +10,23 @@ module ConceptQL
       category 'Set Logic'
 
       def query(db)
-        values.map do |expression|
+        first, *rest = values
+        exprs = [first]
+
+        rest.each do |expression|
+          add = true
+          exprs.length.times do |i|
+            exp = exprs[i]
+            if exprs[i].unionable?(expression)
+              exprs[i] = exp.union(expression)
+              add = false
+              break
+            end
+          end
+          exprs << expression if add
+        end
+
+        exprs.map do |expression|
           expression.evaluate(db).from_self
         end.inject do |q, query|
           q.union(query, all: true)
