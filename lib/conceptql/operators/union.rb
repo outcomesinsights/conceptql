@@ -10,6 +10,14 @@ module ConceptQL
       category 'Set Logic'
 
       def query(db)
+        values.map do |expression|
+          expression.evaluate(db).from_self
+        end.inject do |q, query|
+          q.union(query, all: true)
+        end
+      end
+
+      def optimized
         first, *rest = values
         exprs = [first]
 
@@ -26,11 +34,7 @@ module ConceptQL
           exprs << expression if add
         end
 
-        exprs.map do |expression|
-          expression.evaluate(db).from_self
-        end.inject do |q, query|
-          q.union(query, all: true)
-        end
+        dup_values(exprs)
       end
     end
   end
