@@ -51,9 +51,7 @@ module ConceptQL
       end
 
       def dup_values(args)
-        n = dup
-        n.set_values(*args)
-        n
+        self.class.new(*args)
       end
 
       def scope=(scope)
@@ -70,7 +68,7 @@ module ConceptQL
       end
 
       def optimized
-        dup_values(values.map{|x| x.is_a?(Operator) ? x.optimized : self})
+        dup_values(values.map{|x| x.is_a?(Operator) ? x.optimized : x})
       end
 
       def unionable?(other)
