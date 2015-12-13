@@ -3,10 +3,10 @@ require_relative 'operators/operator'
 module ConceptQL
   class Nodifier
     def create(scope, operator, *values)
-      unless operators[operator.to_s]
+      unless klass = operators[operator.to_s]
         raise "Can't find operator for '#{operator}' in #{operators.keys.sort}"
       end
-      operator = operators[operator].new(*values)
+      operator = klass.new(*values)
       operator.scope = scope
       operator
     end
@@ -18,7 +18,7 @@ module ConceptQL
     private
 
     def operators
-      Operator.operators
+      Operators.operators
     end
   end
 end
