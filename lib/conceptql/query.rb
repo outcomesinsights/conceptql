@@ -40,7 +40,7 @@ module ConceptQL
     end
 
     def prep_proc
-      @prep_proc = Proc.new { puts 'PREPPING'; tree.scope.prep(db) }
+      @prep_proc = Proc.new { tree.scope.prep(db) }
     end
 
     def prepped_query
