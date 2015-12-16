@@ -33,8 +33,8 @@ module ConceptQL
 
       def query(db)
         db.from(table_name)
-          .join(:vocabulary__source_to_concept_map___scm, scm__target_concept_id: table_concept_column)
-          .where(Sequel.expr(scm__source_code: values, scm__source_vocabulary_id: vocabulary_id).&(Sequel.expr(scm__source_code: table_source_column)))
+          .join(:vocabulary__source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
+          .where(conditions)
       end
 
       def type
@@ -46,9 +46,11 @@ module ConceptQL
       end
 
       def union(other)
-        n = dup
-        n.instance_variable_set(:@values, @values + other.values)
-        n
+        dup_values(values + other.values)
+      end
+
+      def conditions
+        [[:scm__source_code, values], [:scm__source_vocabulary_id, vocabulary_id]]
       end
 
       private

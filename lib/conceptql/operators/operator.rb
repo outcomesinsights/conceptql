@@ -50,6 +50,10 @@ module ConceptQL
         @values = args
       end
 
+      def dup_values(args)
+        self.class.new(*args)
+      end
+
       def scope=(scope)
         @scope = scope
         scope.add_operator(self)
@@ -61,6 +65,10 @@ module ConceptQL
 
       def sql(db)
         evaluate(db).sql
+      end
+
+      def optimized
+        dup_values(values.map{|x| x.is_a?(Operator) ? x.optimized : x})
       end
 
       def unionable?(other)
