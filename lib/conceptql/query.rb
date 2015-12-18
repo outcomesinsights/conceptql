@@ -24,6 +24,10 @@ module ConceptQL
       (tree.scope.sql(db) << operator.sql(db)).join(";\n\n") + ';'
     end
 
+    def annotate
+      operator.annotate(db)
+    end
+
     def optimized
       n = dup
       n.instance_variable_set(:@operator, operator.optimized)

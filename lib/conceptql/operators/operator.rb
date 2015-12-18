@@ -50,6 +50,30 @@ module ConceptQL
         @values = args
       end
 
+      def annotate(db)
+        res = [self.class.just_class_name.underscore]
+        res.concat(upstreams.map { |op| op.annotate(db) })
+        res.concat(arguments)
+
+        metadata = {:annotation=>{}}
+        if name = self.class.preferred_name
+          metadata[:name] = name
+        end
+
+        annotation = metadata[:annotation]
+        evaluate(db)
+          .from_self
+          .select_group(:criterion_type)
+          .select_append{count{}.*.as(:rows)}
+          .select_append{count(:person_id).distinct.as(:n)}
+          .each do |h|
+            annotation[h.delete(:criterion_type).to_sym] = h
+        end
+        res << metadata
+
+        res
+      end
+
       def dup_values(args)
         self.class.new(*args)
       end
