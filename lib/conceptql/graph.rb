@@ -18,7 +18,7 @@ module ConceptQL
     end
 
     def graph_it(file_path)
-      build_graph(g)
+      build_graph(graph)
       graph.output(suffix.to_sym =>  file_path + ".#{suffix}")
     end
 
@@ -34,17 +34,15 @@ module ConceptQL
     attr :yaml, :tree, :db
 
     def build_graph(g)
-      tree.root(self).each.with_index do |last_operator, index|
-        last_operator.build_temp_tables(db)
-        last_operator.graph_it(g, db)
-        if dangler
-          blank_operator = g.add_nodes("_#{index}")
-          blank_operator[:shape] = 'none'
-          blank_operator[:height] = 0
-          blank_operator[:label] = ''
-          blank_operator[:fixedsize] = true
-          last_operator.link_to(g, blank_operator, db)
-        end
+      last_operator = tree.root(self)
+      last_operator.graph_it(g, db)
+      if dangler
+        blank_operator = g.add_nodes("_blank")
+        blank_operator[:shape] = 'none'
+        blank_operator[:height] = 0
+        blank_operator[:label] = ''
+        blank_operator[:fixedsize] = true
+        last_operator.link_to(g, blank_operator, db)
       end
     end
   end

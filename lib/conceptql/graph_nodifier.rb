@@ -62,9 +62,9 @@ module ConceptQL
       }
 
       attr :values, :name
-      def initialize(name, values)
+      def initialize(name, *values)
         @name = name.to_s
-        super(values)
+        super(*values)
       end
 
       def display_name
@@ -181,22 +181,22 @@ module ConceptQL
       @types ||= {}
     end
 
-    def create(type, values, tree)
+    def create(scope, type, *values)
       operator = if BINARY_OPERATOR_TYPES.include?(type)
-        BinaryOperatorOperator.new(type, values)
+        BinaryOperatorOperator.new(type, *values)
       elsif type == :let
-        LetOperator.new(type, values)
+        LetOperator.new(type, *values)
       elsif type == :define
-        DefineOperator.new(type, values)
+        DefineOperator.new(type, *values)
       elsif type == :recall
-        RecallOperator.new(type, values)
+        RecallOperator.new(type, *values)
       elsif type == :vsac
         types = values.pop
-        VsacOperator.new(type, values, types)
+        VsacOperator.new(type, *values, types)
       else
-        DotOperator.new(type, values)
+        DotOperator.new(type, *values)
       end
-      operator.tree = self
+      operator.scope = scope
       operator
     end
   end
