@@ -33,6 +33,11 @@ module ConceptQL
       end
 
       private
+
+      def annotate_values(db)
+        [{left: left.annotate(db), right: right.annotate(db)}] + arguments
+      end
+
       def left
         @left ||= options[:left]
       end
