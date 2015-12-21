@@ -1,4 +1,5 @@
 require 'psych'
+require 'json'
 require 'forwardable'
 require_relative 'behaviors/preppable'
 require_relative 'tree'
@@ -9,11 +10,17 @@ module ConceptQL
     def_delegators :prepped_query, :all, :count, :execute, :order
 
     attr :statement
-    def initialize(db, statement, tree = Tree.new)
+    def initialize(db, statement, opts={})
       @db = db
       @db.extend_datasets(ConceptQL::Behaviors::Preppable)
       @statement = statement
-      @tree = tree
+      opts = opts.dup
+      opts[:algorithm_fetcher] ||= proc do |alg|
+        statement, description = db[:concepts].where(concept_id: alg).get([:statement, :label])
+        statement = JSON.parse(statement) if statement.is_a?(String)
+        [statement, description]
+      end
+      @tree = opts[:tree] || Tree.new(opts)
     end
 
     def query

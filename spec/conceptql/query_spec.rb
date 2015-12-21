@@ -2,22 +2,22 @@ require 'spec_helper'
 require 'conceptql'
 
 describe ConceptQL::Query do
-  describe '#query' do
-    it 'passes request on to tree' do
-      yaml = Psych.dump({ icd9: '799.22' })
-      mock_tree = double("tree")
-      mock_operator = double("operator")
-      mock_query = double("query")
-      mock_db = double("db")
-
-      expect(mock_db).to receive(:extend_datasets).with(Module).and_return(mock_db)
-
-      query = ConceptQL::Query.new(mock_db, yaml, mock_tree)
-      expect(mock_tree).to receive(:root).with(query).and_return(mock_operator)
-      expect(mock_operator).to receive(:evaluate).with(mock_db).and_return(mock_query)
-      expect(mock_query).to receive(:tap).and_return(mock_query)
-      query.query
+  it 'should support named algorithms' do
+    db = Sequel.mock
+    db.fetch = proc do |sql|
+      case sql
+      when 'SELECT statement, label FROM concepts WHERE (concept_id = \'foo\') LIMIT 1'
+        {:statement=>'["icd9", "779.22"]', :label=>'foo-label'}
+      else
+      end
     end
+
+    query = ConceptQL::Query.new(db, [:algorithm, 'foo'])
+    expect(query.sql).to eq("SELECT person_id, condition_occurrence_id AS criterion_id, CAST('condition_occurrence' AS varchar(255)) AS criterion_type, CAST(condition_start_date AS date) AS start_date, coalesce(CAST(condition_end_date AS date), condition_start_date) AS end_date, CAST(NULL AS double precision) AS value_as_number, CAST(NULL AS varchar(255)) AS value_as_string, CAST(NULL AS integer) AS value_as_concept_id, CAST(NULL AS varchar(255)) AS units_source_value, CAST(condition_source_value AS varchar(255)) AS source_value FROM condition_occurrence AS tab INNER JOIN vocabulary.source_to_concept_map AS scm ON ((scm.target_concept_id = tab.condition_concept_id) AND (scm.source_code = tab.condition_source_value)) WHERE ((scm.source_code IN ('779.22')) AND (scm.source_vocabulary_id = 2));")
+
+    query = ConceptQL::Query.new(db, [:union, [:algorithm, 'foo'], [:medcode, '10101']])
+    expect(query.sql).to eq("SELECT person_id, criterion_id, criterion_type, start_date, end_date, CAST(NULL AS double precision) AS value_as_number, CAST(NULL AS varchar(255)) AS value_as_string, CAST(NULL AS integer) AS value_as_concept_id, CAST(NULL AS varchar(255)) AS units_source_value, CAST(NULL AS varchar(255)) AS source_value FROM (SELECT * FROM (SELECT person_id, condition_occurrence_id AS criterion_id, CAST('condition_occurrence' AS varchar(255)) AS criterion_type, CAST(condition_start_date AS date) AS start_date, coalesce(CAST(condition_end_date AS date), condition_start_date) AS end_date, CAST(NULL AS double precision) AS value_as_number, CAST(NULL AS varchar(255)) AS value_as_string, CAST(NULL AS integer) AS value_as_concept_id, CAST(NULL AS varchar(255)) AS units_source_value, CAST(condition_source_value AS varchar(255)) AS source_value FROM condition_occurrence AS tab INNER JOIN vocabulary.source_to_concept_map AS scm ON ((scm.target_concept_id = tab.condition_concept_id) AND (scm.source_code = tab.condition_source_value)) WHERE ((scm.source_code IN ('779.22')) AND (scm.source_vocabulary_id = 2))) AS t1 UNION ALL SELECT * FROM (SELECT person_id, condition_occurrence_id AS criterion_id, CAST('condition_occurrence' AS varchar(255)) AS criterion_type, CAST(condition_start_date AS date) AS start_date, coalesce(CAST(condition_end_date AS date), condition_start_date) AS end_date, CAST(NULL AS double precision) AS value_as_number, CAST(NULL AS varchar(255)) AS value_as_string, CAST(NULL AS integer) AS value_as_concept_id, CAST(NULL AS varchar(255)) AS units_source_value, CAST(condition_source_value AS varchar(255)) AS source_value FROM condition_occurrence AS tab INNER JOIN vocabulary.source_to_concept_map AS scm ON ((scm.target_concept_id = tab.condition_concept_id) AND (scm.source_code = tab.condition_source_value)) WHERE ((scm.source_code IN ('10101')) AND (scm.source_vocabulary_id = 203))) AS t1) AS t1;")
+    expect(query.optimized.sql).to eq("SELECT person_id, criterion_id, criterion_type, start_date, end_date, CAST(NULL AS double precision) AS value_as_number, CAST(NULL AS varchar(255)) AS value_as_string, CAST(NULL AS integer) AS value_as_concept_id, CAST(NULL AS varchar(255)) AS units_source_value, CAST(NULL AS varchar(255)) AS source_value FROM (SELECT person_id, condition_occurrence_id AS criterion_id, CAST('condition_occurrence' AS varchar(255)) AS criterion_type, CAST(condition_start_date AS date) AS start_date, coalesce(CAST(condition_end_date AS date), condition_start_date) AS end_date, CAST(NULL AS double precision) AS value_as_number, CAST(NULL AS varchar(255)) AS value_as_string, CAST(NULL AS integer) AS value_as_concept_id, CAST(NULL AS varchar(255)) AS units_source_value, CAST(condition_source_value AS varchar(255)) AS source_value FROM condition_occurrence AS tab INNER JOIN vocabulary.source_to_concept_map AS scm ON ((scm.target_concept_id = tab.condition_concept_id) AND (scm.source_code = tab.condition_source_value)) WHERE (((scm.source_code IN ('779.22')) AND (scm.source_vocabulary_id = 2)) OR ((scm.source_code IN ('10101')) AND (scm.source_vocabulary_id = 203)))) AS t1;")
   end
 
   describe '#annotate' do
