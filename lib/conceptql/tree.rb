@@ -10,7 +10,7 @@ module ConceptQL
   class Tree
     attr :nodifier, :behavior, :defined, :opts, :temp_tables, :scope
     def initialize(opts = {})
-      @nodifier = opts.fetch(:nodifier, Nodifier.new)
+      @nodifier = opts.fetch(:nodifier, Nodifier.new(self, opts))
       @behavior = opts.fetch(:behavior, nil)
       @defined = {}
       @temp_tables = {}
