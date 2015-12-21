@@ -14,7 +14,6 @@ module ConceptQL
       @behavior = opts.fetch(:behavior, nil)
       @defined = {}
       @temp_tables = {}
-      @opts = {}
       @scope = opts.fetch(:scope, Scope.new)
     end
 
