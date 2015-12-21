@@ -51,9 +51,7 @@ module ConceptQL
       end
 
       def annotate(db)
-        res = [self.class.just_class_name.underscore]
-        res.concat(upstreams.map { |op| op.annotate(db) })
-        res.concat(arguments)
+        res = [self.class.just_class_name.underscore] + annotate_values(db)
 
         metadata = {:annotation=>{}}
         if name = self.class.preferred_name
@@ -134,6 +132,10 @@ module ConceptQL
 
       private
       attr :scope
+
+      def annotate_values(db)
+        upstreams.map { |op| op.annotate(db) } + arguments
+      end
 
       def criterion_id
         :criterion_id
