@@ -70,7 +70,11 @@ module ConceptQL
         types.each do |type|
           annotation[type] ||= {:rows=>0, :n=>0}
         end
-        res << metadata
+        if res.last.is_a?(Hash)
+          res.last.merge!(metadata)
+        else
+          res << metadata
+        end
 
         res
       end
