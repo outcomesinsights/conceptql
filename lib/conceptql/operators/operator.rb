@@ -67,6 +67,9 @@ module ConceptQL
           .each do |h|
             annotation[h.delete(:criterion_type).to_sym] = h
         end
+        types.each do |type|
+          annotation[type] ||= {:rows=>0, :n=>0}
+        end
         res << metadata
 
         res

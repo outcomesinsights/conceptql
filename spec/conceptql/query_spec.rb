@@ -93,5 +93,14 @@ describe ConceptQL::Query do
         {:annotation=>{:condition_occurrence=>{:rows=>19228, :n=>15936},
                        :procedure_occurrence=>{:rows=>449428, :n=>81027}}}])
     end
+
+    it 'handles no rows returned' do
+      query = ConceptQL::Query.new(Sequel.mock, {:union=>[{:icd9=>"412"}, {:cpt=>"99214"}]})
+      expect(query.annotate).to eq(["union",
+        ["icd9", "412", {:name=>"ICD-9 CM", :annotation=>{:condition_occurrence=>{:rows=>0, :n=>0}}}],
+        ["cpt", "99214", {:name=>"CPT", :annotation=>{:procedure_occurrence=>{:rows=>0, :n=>0}}}],
+        {:annotation=>{:condition_occurrence=>{:rows=>0, :n=>0},
+                       :procedure_occurrence=>{:rows=>0, :n=>0}}}])
+    end
   end
 end
