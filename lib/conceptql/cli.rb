@@ -42,6 +42,12 @@ module ConceptQL
       pp q.all
     end
 
+    desc "annotate statement", "Reads in a statement and annotates it"
+    def annotate_statement(statement_file)
+      q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
+      pp q.annotate
+    end
+
     desc 'show_graph statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
     option :watch_file
     def show_graph(file)
