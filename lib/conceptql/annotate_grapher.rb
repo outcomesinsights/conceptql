@@ -17,7 +17,7 @@ module ConceptQL
       blank[:fixedsize] = true
       link_to(g, statement, root, blank)
 
-      g.output(:pdf => file_path)
+      g.output(File.extname(file_path).sub('.', '') => file_path)
     end
 
     private
