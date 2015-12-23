@@ -3,23 +3,19 @@ require 'facets/string/titlecase'
 
 module ConceptQL
   class AnnotateGrapher
-    def initialize(statement)
-      @statement = statement
-      @counter = 0
+    def graph_it(statement, file_path, opts={})
       raise "statement not annotated" unless statement.last[:annotation]
-    end
-
-    def graph_it(file_path, opts={})
+      @counter = 0
       opts  = opts.merge( type: :digraph )
       g = GraphViz.new(:G, opts)
-      root = traverse(g, @statement)
+      root = traverse(g, statement)
 
       blank = g.add_nodes("_blank")
       blank[:shape] = 'none'
       blank[:height] = 0
       blank[:label] = ''
       blank[:fixedsize] = true
-      link_to(g, @statement, root, blank)
+      link_to(g, statement, root, blank)
 
       g.output(:pdf => file_path)
     end
