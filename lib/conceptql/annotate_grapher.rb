@@ -73,12 +73,17 @@ module ConceptQL
         me[:color] = type_color(*types(op))
       end
       label = opts[:name] || op_name.to_s.titlecase
-      label += ": #{args.join(', ')}" unless args.empty?
-      if label.length > 100
-        parts = label.split
-        label = parts.each_slice(label.length / parts.count).map do |subparts|
-          subparts.join(' ')
-        end.join ('\n')
+      unless args.empty?
+        label += ":\n"
+        args_str = args.join(', ')
+        if args_str.length <= 100
+          label += args_str
+        else
+          parts = args_str.split
+          label += parts.each_slice(args_str.length / parts.count).map do |subparts|
+            subparts.join(' ')
+          end.join ('\n')
+        end
       end
       exclude = [:annotation, :name, :left, :right]
       label_opts = opts.reject{|k,_| exclude.include?(k)}
