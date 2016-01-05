@@ -5,11 +5,6 @@ module ConceptQL
     class ConditionOccurrenceSourceVocabularyOperatorUnion < ConditionOccurrenceSourceVocabularyOperator
       register __FILE__
 
-      #preferred_name ''
-      desc 'Searches the condition_occurrence table based on a union of multiple source vocabulary operators.'
-      #argument :source_vocabulary_operators, type: :codelist, vocab: ''
-      predominant_types :condition_occurrence
-
       def union(other)
         if other.is_a?(self.class)
           dup_values(values + other.values)
