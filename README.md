@@ -101,6 +101,46 @@ If you're feeling bold, feel free to try your hand at authoring a ConceptQL stat
 
 You might want to just take an existing statement from the statements in [test_conceptql](https://github.com/outcomesinsights/test_conceptql) and modify that.
 
+## Testing
+
+### Setup
+
+In order to run the tests for ConceptQL, you first have to create a database and load the OMOP vocabularies into it.  You can use [loadmop](https://github.com/outcomesinsights/loadmop/tree/develop) do to so.
+
+Before using loadmop, you must first download the restricted vocabulary data from IMEDS, read the loadmop README for how to do that.
+After the data is downloaded, you can load it into the database using something like:
+
+```sh
+cd /path/to/loadmop
+mkdir omop_vocab
+cd omop_vocab
+unzip /path/to/vocabulary_4_5_restricted_csv.zip
+cd ..
+createdb -E SQL_ASCII -T template0 conceptql_test
+bin/loadmop create_vocab_database -a postgres conceptql_test /path/to/loadmop/omop_vocab
+```
+
+Unfortunately, this cannot be made significantly easier as
+the restricted vocabulary data can not be reformatted and
+redistributed due to the licensing agreement.
+
+When using PostgreSQL, make sure to use the following entry
+in loadmop's .env file to ensure the data is put in the
+correct schema:
+
+  SEQUELIZER_SEARCH_PATH=vocabulary,public
+
+After loading the vocabulary data file into the database,
+create an .env file in the root of the conceptql directory,
+similar or identical to the one used for loadmop.  Then
+run `rake test_db_setup`.  This will load the ConceptQL test
+data into the database.  This only needs to be done once.
+
+### Running
+
+After the test database has been setup, you can run the tests
+using `rake`, as the default task is set to run the tests.
+
 ## Contributing
 
 1. Fork it ( http://github.com/outcomesinsights/conceptql/fork )
