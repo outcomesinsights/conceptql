@@ -64,7 +64,7 @@ occurrence, this operator returns nothing for that person
 
       def ordered_columns
         ordered_columns = [Sequel.send(asc_or_desc, :start_date)]
-        ordered_columns += [:criterion_type, :criterion_id]
+        ordered_columns += [:criterion_id]
       end
     end
   end

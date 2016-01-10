@@ -25,11 +25,11 @@ module ConceptQL
       end
 
       def left_stream(db)
-        Sequel.expr(left.evaluate(db)).as(:l)
+        Sequel.expr(left.evaluate(db).from_self).as(:l)
       end
 
       def right_stream(db)
-        Sequel.expr(right.evaluate(db)).as(:r)
+        Sequel.expr(right.evaluate(db).from_self).as(:r)
       end
     end
   end
