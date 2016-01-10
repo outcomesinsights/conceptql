@@ -5,8 +5,7 @@ module ConceptQL
     # Base class for all temporal operators
     #
     # Subclasses must implement the where_clause method which should probably return
-    # a proc that can be executed as a Sequel "virtual row" e.g.
-    # Proc.new { l.end_date < r.start_date }
+    # a Sequel expression to use for filtering.
     class TemporalOperator < BinaryOperatorOperator
       register __FILE__
 
