@@ -24,7 +24,7 @@ describe ConceptQL::Operators::PersonFilter do
         },
         right: { gender: 'Male' }
       }
-    ).must_equal("condition_occurrence"=>56, "procedure_occurrence"=>609)
+    ).must_equal("condition_occurrence"=>28, "procedure_occurrence"=>609)
 
     criteria_ids(
       person_filter: {

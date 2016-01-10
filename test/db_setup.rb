@@ -241,19 +241,39 @@ tables = [
   :procedure_cost
 ]
 
-puts "Inserting data"
-
 tables.each do |t|
   data = CSV.parse(File.binread("test/data/#{t}.csv"))
+  next if data.empty?
   ds = DB[t]
+
+  case ds.count
+  when 0
+    # nothing
+  when data.length
+    next
+  else
+    ds.delete
+  end
+
+  puts "Inserting data into #{t}"
+
+  if DB.database_type == :impala
+    types = DB.schema(t).map{|_,s| s[:db_type]}
+    data = data.map do |row|
+      row.zip(types).map do |v, t|
+        Sequel.cast(v, t)
+      end
+    end
+  end
+
   unless ds.count == data.length
-    ds.import(ds.columns, data)
+    ds.import(ds.columns, data, :slice=>1000)
   end
 end
 
-puts "Creating indexes"
-
 unless DB.database_type == :impala
+  puts "Creating indexes"
+
   DB.alter_table(:care_site) do
     add_index [:location_id, :organization_id, :place_of_service_source_value], :name=>:care_site_location_id_organization_id_place_of_service_sour_key, :unique=>true, :ignore_add_index_errors=>true
     add_index [:organization_id], :name=>:carsit_orgid, :ignore_add_index_errors=>true
