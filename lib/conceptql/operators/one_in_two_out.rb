@@ -22,13 +22,18 @@ in an inpatient setting
         inpatient = select_it(visit_query(db).where(place_of_service_concept_id: 8717), :visit_occurrence).from_self
         outpatient = select_it(visit_query(db).exclude(place_of_service_concept_id: 8717), :visit_occurrence).from_self
 
+        date_diff = if db.database_type == :impala
+          Sequel.function(:datediff, Sequel.function(:max, :start_date), Sequel.function(:min, :end_date))
+        else
+          Sequel.function(:max, :start_date) - Sequel.function(:min, :end_date)
+        end
+
         gap = options[:gap] || 30
         valid_outpatient_people = outpatient
-          .group_by(:person_id)
-          .select(:person_id)
-          .select_append(Sequel.expr(Sequel.function(:max, :start_date) - Sequel.function(:min, :end_date)).as(:date_diff))
+          .select_group(:person_id)
+          .select_append(date_diff.as(:date_diff))
           .from_self
-            .where{ date_diff >= gap}
+            .where{ date_diff() >= gap}
 
         relevant_outpatient = outpatient.where(person_id: valid_outpatient_people.select(:person_id))
         earliest(db, inpatient.union(relevant_outpatient))
