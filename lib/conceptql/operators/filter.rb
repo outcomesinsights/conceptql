@@ -9,7 +9,7 @@ module ConceptQL
 
       def query(db)
         rhs = right.evaluate(db)
-        rhs = rhs.select_group(:person_id, :criterion_id, :criterion_type)
+        rhs = rhs.from_self.select_group(:person_id, :criterion_id, :criterion_type)
         query = db.from(Sequel.as(left.evaluate(db), :l))
         query = query
           .left_join(Sequel.as(rhs, :r), l__person_id: :r__person_id, l__criterion_id: :r__criterion_id, l__criterion_type: :r__criterion_type)

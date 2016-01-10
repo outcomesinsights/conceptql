@@ -310,4 +310,5 @@ end
 Dir.new(File.dirname(__FILE__)).
   entries.
   each{|filename| require_relative filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}
+ConceptQL::Operators::OPERATORS['snomed_condition'] = ConceptQL::Operators::Snomed
 ConceptQL::Operators.operators.freeze

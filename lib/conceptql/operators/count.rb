@@ -10,8 +10,7 @@ module ConceptQL
 
       def query(db)
         db.from(unioned(db))
-          .group(*COLUMNS)
-          .select(*(COLUMNS - [:value_as_number]))
+          .select_group(*(COLUMNS - [:value_as_number]))
           .select_append{count(1).as(:value_as_number)}
           .from_self
       end

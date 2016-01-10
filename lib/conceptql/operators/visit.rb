@@ -9,6 +9,14 @@ module ConceptQL
       types :visit_occurrence
       allows_one_upstream
 
+      def query(db)
+        ds = db.from(:visit_occurrence)
+        if upstream = upstreams.first
+          ds = ds.where(:person_id=>upstream.query(db).select(:person_id))
+        end
+        ds
+      end
+
       def types
         [:visit_occurrence]
       end

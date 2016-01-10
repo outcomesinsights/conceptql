@@ -17,11 +17,19 @@ class Minitest::Spec
   end
 
   def criteria_ids(statement)
-    dataset(statement).from_self.distinct.order(:criterion_id).to_hash_groups(:criterion_type, :criterion_id)
+    hash_groups(statement, :criterion_type, :criterion_id)
+  end
+
+  def numeric_values(statement)
+    hash_groups(statement, :criterion_type, :value_as_number)
   end
 
   def criteria_counts(statement)
     dataset(statement).from_self.group_and_count(:criterion_type).to_hash(:criterion_type, :count)
+  end
+
+  def hash_groups(statement, key, value)
+    dataset(statement).from_self.distinct.order(*value).to_hash_groups(key, value)
   end
 
   def log
