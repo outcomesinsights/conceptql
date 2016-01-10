@@ -12,7 +12,7 @@ END
   exit 1
 end
 
-unless DB.opts[:database] =~ /test/
+if DB.opts[:database] && DB.opts[:database] !~ /test/
   $stderr.puts <<END
 The test database name doesn't include the substring "test".
 Exiting now to avoid potential modification of non-test database.
