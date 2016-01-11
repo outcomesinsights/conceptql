@@ -261,7 +261,7 @@ tables.each do |t|
     types = DB.schema(t).map{|_,s| s[:db_type]}
     data = data.map do |row|
       row.zip(types).map do |v, t|
-        Sequel.cast(v, t)
+        Sequel.cast(v, t == 'double' ? 'float' : t)
       end
     end
   end
