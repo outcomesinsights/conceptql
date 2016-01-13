@@ -19,5 +19,52 @@ describe ConceptQL::Operators::Union do
       ]
     ).must_equal("condition_occurrence"=>1175, "visit_occurrence"=>170)
   end
-end
 
+  it "annotate should produce correct results" do
+    query(
+      union: [
+        { icd9: '412' },
+        { icd9: '401.9' }
+      ]
+    ).annotate.must_equal(
+      ["union",
+       ["icd9",
+        "412",
+        {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}},
+         :name=>"ICD-9 CM"}],
+       ["icd9",
+        "401.9",
+        {:annotation=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
+         :name=>"ICD-9 CM"}],
+       {:annotation=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}]
+    )    
+
+    query(
+      union: [
+        {union: [
+          { icd9: '412' },
+          { icd9: '401.9' }
+        ]},
+        { place_of_service_code: '21' }
+      ]
+    ).annotate.must_equal(
+      ["union",
+       ["union",
+        ["icd9",
+         "412",
+         {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}},
+          :name=>"ICD-9 CM"}],
+        ["icd9",
+         "401.9",
+         {:annotation=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
+          :name=>"ICD-9 CM"}],
+        {:annotation=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}],
+       ["place_of_service_code",
+        "21",
+        {:annotation=>{:visit_occurrence=>{:rows=>170, :n=>92}}}],
+       {:annotation=>
+         {:condition_occurrence=>{:rows=>1175, :n=>213},
+          :visit_occurrence=>{:rows=>170, :n=>92}}}]
+    )
+  end
+end
