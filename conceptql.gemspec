@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest', '~> 5.0'
   spec.add_development_dependency 'guard-rspec', '~> 4.5'
   spec.add_development_dependency 'byebug', '~> 4.0'
+  spec.add_development_dependency 'simplecov', '~> 0.11'
 end
