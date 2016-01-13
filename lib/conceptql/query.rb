@@ -1,7 +1,6 @@
 require 'psych'
 require 'json'
 require 'forwardable'
-require_relative 'behaviors/preppable'
 require_relative 'tree'
 
 module ConceptQL
@@ -12,7 +11,6 @@ module ConceptQL
     attr :statement
     def initialize(db, statement, opts={})
       @db = db
-      @db.extend_datasets(ConceptQL::Behaviors::Preppable)
       @statement = statement
       opts = opts.dup
       opts[:algorithm_fetcher] ||= proc do |alg|
@@ -24,7 +22,7 @@ module ConceptQL
     end
 
     def query
-      build_query(db)
+      tree.scope.with_ctes(operator.evaluate(db), db)
     end
 
     def sql
@@ -51,20 +49,5 @@ module ConceptQL
 
     private
     attr :yaml, :tree, :db
-
-    def build_query(db)
-      operator.evaluate(db).tap { |q| q.prep_proc = prep_proc }
-    rescue
-      ConceptQL.logger.debug(statement.inspect)
-      raise
-    end
-
-    def prep_proc
-      @prep_proc = Proc.new { tree.scope.prep(db) }
-    end
-
-    def prepped_query
-      query
-    end
   end
 end

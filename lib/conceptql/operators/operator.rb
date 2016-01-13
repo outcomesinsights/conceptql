@@ -87,7 +87,7 @@ module ConceptQL
 
       def scope=(scope)
         @scope = scope
-        scope.add_operator(self)
+        scope.add_operator(self) if label
       end
 
       def evaluate(db)

@@ -23,6 +23,14 @@ module ConceptQL
         end
         operator = klass.new(*values)
         operator.scope = scope
+
+        # If operator has a replace, replace it with a recall so all references
+        # to it use the same code.
+        if operator.label
+          operator = Operators::Recall.new(operator.label)
+          operator.scope = scope
+        end
+
         operator
       end
     end

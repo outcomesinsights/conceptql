@@ -15,52 +15,45 @@ module ConceptQL
     attr :known_operators
     def initialize
       @known_operators = {}
-      @flagged = {}
     end
 
     def add_operator(operator)
-      # Recall operators respond to source, so when we add such an
-      # operator, we want to flag it so that we can come back to it later
-      # and create the appropriate temp tables
-      if operator.respond_to?(:source)
-        flagged[operator.source] = true
-      end
-      return unless operator.label
       known_operators[operator.label] = operator
     end
 
     def from(db, label)
-      temp_table(db, label).from(db)
+      ds = db.from(label)
+
+      # Work around requests for columns by operators.  These
+      # would fail because the CTE would not be defined.  You
+      # don't want to define the CTE normally, but to allow the
+      # columns to still work, send the columns request to the
+      # underlying operator.
+      op = fetch_operator(label)
+      (class << ds; self; end).send(:define_method, :columns) do
+        (@main_op ||= op.evaluate(db)).columns
+      end
+
+      ds
     end
 
     def types(label)
       fetch_operator(label).types
     end
 
-    def sql(db)
-      temp_tables(db).values.map do |temp|
-        temp.sql(db)
+    def with_ctes(query, db)
+      known_operators.each do |label, operator|
+        query = query.with(label, operator.evaluate(db))
       end
-    end
 
-    def prep(db)
-      temp_tables(db).values.map do |temp|
-        temp.build(db)
+      if with = query.opts[:with]
+        with.uniq!{|h| h[:name]}
       end
+
+      query
     end
 
     private
-    attr :flagged
-
-    def temp_tables(db)
-      Hash[flagged.keys.map do |label|
-        [label, TempTable.new(fetch_operator(label), db)]
-      end]
-    end
-
-    def temp_table(db, label)
-      temp_tables(db)[label]
-    end
 
     def fetch_operator(label)
       known_operators[label] || raise("No operator with label: '#{label}'")
