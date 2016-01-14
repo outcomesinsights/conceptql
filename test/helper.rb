@@ -22,9 +22,11 @@ require 'minitest/autorun'
 
 require 'logger'
 
+CDB = ConceptQL::Database.new(DB)
+
 class Minitest::Spec
   def query(statement)
-    ConceptQL::Query.new(DB, statement)
+    CDB.query(statement)
   end
   
   def dataset(statement)
