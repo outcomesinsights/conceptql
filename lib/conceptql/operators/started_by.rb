@@ -3,7 +3,7 @@ require_relative 'temporal_operator'
 module ConceptQL
   module Operators
     class StartedBy < TemporalOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc <<-EOF
 If LHR has the same start date as RHR, but LHR's end_date falls on or after end_date of RHR, LHR is passed through.

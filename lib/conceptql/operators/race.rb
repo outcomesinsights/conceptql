@@ -9,7 +9,7 @@ module ConceptQL
     # concept_name column of the concept table.  If you misspell the race name
     # you won't get any matches
     class Race < Operator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Finds all people that match the races'
       argument :races, type: :codelist, vocab: 'Race'

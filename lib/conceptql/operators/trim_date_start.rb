@@ -13,7 +13,7 @@ module ConceptQL
     # If the RHS result's end_date is earlier than the LHS start_date, the LHS
     # result is passed thru unaffected.
     class TrimDateStart < TemporalOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc <<-EOF
 Trims the start_date of the LHS set of results by the RHS's latest

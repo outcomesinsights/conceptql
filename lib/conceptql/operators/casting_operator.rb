@@ -23,8 +23,6 @@ module ConceptQL
     # Also, if a casting operator is passed no streams, it will return all the
     # rows in its table as results.
     class CastingOperator < Operator
-      register __FILE__
-
       category 'Casting'
       def types
         [type]

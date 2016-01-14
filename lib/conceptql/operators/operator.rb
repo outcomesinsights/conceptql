@@ -6,7 +6,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {}
+    OPERATORS = {:omopv4=>{}}.freeze
 
     def self.operators
       OPERATORS
@@ -32,8 +32,10 @@ module ConceptQL
 
       option :label, type: :string
 
-      def self.register(file)
-        OPERATORS[File.basename(file).sub(/\.rb\z/, '')] = self
+      def self.register(file, *data_models)
+        data_models.each do |dm|
+          OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
+        end
       end
 
       def initialize(*args)
@@ -310,5 +312,4 @@ end
 Dir.new(File.dirname(__FILE__)).
   entries.
   each{|filename| require_relative filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}
-ConceptQL::Operators::OPERATORS['snomed_condition'] = ConceptQL::Operators::Snomed
-ConceptQL::Operators.operators.freeze
+ConceptQL::Operators.operators.values.each(&:freeze)

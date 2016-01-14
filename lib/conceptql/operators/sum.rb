@@ -3,7 +3,7 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Sum < PassThru
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc <<-EOF
 Sums value_as_number across all results that match on all but start_date, end_date.

@@ -2,10 +2,11 @@ require_relative 'operators/operator'
 
 module ConceptQL
   class Nodifier
-    attr :tree, :algorithm_fetcher
+    attr :tree, :data_model, :algorithm_fetcher
 
     def initialize(tree, opts={})
       @tree = tree
+      @data_model = opts[:data_model] || :omopv4
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
         nil
       end)
@@ -33,7 +34,7 @@ module ConceptQL
     private
 
     def operators
-      Operators.operators
+      @operators ||= Operators.operators[@data_model]
     end
   end
 end

@@ -3,7 +3,7 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class From < Operator
-      register __FILE__
+      register __FILE__, :omopv4
 
       def query(db)
         db.from(values.first)

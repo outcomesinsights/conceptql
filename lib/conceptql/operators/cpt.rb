@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Cpt < StandardVocabularyOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       preferred_name 'CPT'
       desc 'Searches the procedure_occurrence table for all procedures with matching CPT codes'
