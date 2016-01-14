@@ -5,8 +5,6 @@ module ConceptQL
   module Operators
     # Base class for all operators that take two streams, a left-hand and a right-hand
     class BinaryOperatorOperator < Operator
-      register __FILE__
-
       option :left, type: :upstream
       option :right, type: :upstream
 

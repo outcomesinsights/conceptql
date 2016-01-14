@@ -3,7 +3,7 @@ require_relative 'condition_occurrence_source_vocabulary_operator'
 module ConceptQL
   module Operators
     class Medcode < ConditionOccurrenceSourceVocabularyOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Searches the condition_occurrence table for all conditions with matching Medcodes'
       argument :medcodes, type: :codelist, vocab_id: '203'

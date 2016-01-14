@@ -20,7 +20,7 @@ module ConceptQL
     # pass '', '0', or nil as that argument.  E.g.:
     # start: 'd', end: '' # Only adjust start_date by positive 1 day and leave end_date uneffected
     class TimeWindow < Operator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Adjusts the start_date and end_date columns to create a new window of time for each result.'
       option :start, type: :string

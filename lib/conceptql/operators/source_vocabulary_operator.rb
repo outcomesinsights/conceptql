@@ -26,8 +26,6 @@ module ConceptQL
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for ICD-9, a value of 2 (for ICD-9-CM)
     class SourceVocabularyOperator < Operator
-      register __FILE__
-
       category 'Source Vocabulary'
       category 'Code Lists'
 

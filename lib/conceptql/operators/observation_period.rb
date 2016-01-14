@@ -3,7 +3,7 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class ObservationPeriod < CastingOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming result set.'
       types :observation_period

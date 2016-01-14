@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Loinc < StandardVocabularyOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       preferred_name 'LOINC'
       desc 'Searches the observation table for all observations with matching LOINC codes'

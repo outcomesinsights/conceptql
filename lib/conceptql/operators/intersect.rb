@@ -3,7 +3,7 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Intersect < PassThru
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Passes thru any result row that appears in all incoming result sets.'
       allows_many_upstreams

@@ -8,7 +8,7 @@ module ConceptQL
     # 'START' represents the first date of data in the data source,
     # 'END' represents the last date of data in the data source,
     class DateRange < Operator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Used to represent a date literal.'
       option :start, type: :string

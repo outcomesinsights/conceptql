@@ -3,8 +3,6 @@ require_relative 'condition_occurrence_source_vocabulary_operator'
 module ConceptQL
   module Operators
     class ConditionOccurrenceSourceVocabularyOperatorUnion < ConditionOccurrenceSourceVocabularyOperator
-      register __FILE__
-
       def union(other)
         if other.is_a?(self.class)
           dup_values(values + other.values)

@@ -3,8 +3,6 @@ require_relative 'source_vocabulary_operator'
 module ConceptQL
   module Operators
     class ConditionOccurrenceSourceVocabularyOperator < SourceVocabularyOperator
-      register __FILE__
-
       def unionable?(other)
         other.is_a?(ConditionOccurrenceSourceVocabularyOperator)
       end

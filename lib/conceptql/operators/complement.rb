@@ -3,7 +3,7 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Complement < PassThru
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Splits up the incoming result set by type and passes through all results for each type that are NOT in the current set.'
       allows_one_upstream

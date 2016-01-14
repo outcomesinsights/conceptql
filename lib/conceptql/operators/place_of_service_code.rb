@@ -9,7 +9,7 @@ module ConceptQL
     # concept_name column of the concept table.  If you misspell the place_of_service_code name
     # you won't get any matches
     class PlaceOfServiceCode < Operator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Finds all visit_occurrences that match the Place of Service codes'
       argument :places_of_service, type: :codelist, vocab: 'Place of Service'

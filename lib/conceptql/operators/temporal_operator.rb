@@ -7,8 +7,6 @@ module ConceptQL
     # Subclasses must implement the where_clause method which should probably return
     # a Sequel expression to use for filtering.
     class TemporalOperator < BinaryOperatorOperator
-      register __FILE__
-
       reset_categories
       category %w(Temporal Relative)
 

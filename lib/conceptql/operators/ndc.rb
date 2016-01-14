@@ -3,7 +3,7 @@ require_relative 'source_vocabulary_operator'
 module ConceptQL
   module Operators
     class Ndc < SourceVocabularyOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       preferred_name 'NDC'
       desc 'Searches the drug_exposure table for all procedures with matching NDC codes'

@@ -4,7 +4,7 @@ require_relative 'visit_occurrence'
 module ConceptQL
   module Operators
     class OneInTwoOut < Operator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for a condition

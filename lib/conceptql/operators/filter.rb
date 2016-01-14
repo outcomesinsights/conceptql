@@ -3,7 +3,7 @@ require_relative 'binary_operator_operator'
 module ConceptQL
   module Operators
     class Filter < BinaryOperatorOperator
-      register __FILE__
+      register __FILE__, :omopv4
 
       desc 'Only pass through results from the LHR that have a corresponding RHR with the same person, criterion_id, and criterion_type'
 
