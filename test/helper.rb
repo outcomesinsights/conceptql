@@ -21,9 +21,18 @@ require 'minitest/spec'
 require 'minitest/autorun'
 
 require 'logger'
+require 'pp'
 
 class Minitest::Spec
+  def convert(statement)
+    ConceptQL::Converter.new.convert(statement).pretty_inspect.split("\n").map{|l,i| " " * 6 + l}.join("\n")
+  end
+
   def query(statement)
+    if statement.is_a?(Hash)
+      $stderr.puts "\nstatement hash:\n      #{statement.inspect}\n\nconverted to array:\n#{convert(statement)}"
+      raise "Hash statement provided. Convert statement to array format."
+    end
     ConceptQL::Query.new(DB, statement)
   end
   

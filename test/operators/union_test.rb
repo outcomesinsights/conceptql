@@ -3,29 +3,19 @@ require_relative '../helper'
 describe ConceptQL::Operators::Union do
   it "should produce correct results" do
     criteria_counts(
-      union: [
-        { icd9: '412' },
-        { icd9: '401.9' }
-      ]
+      [:union, [:icd9, "412"], [:icd9, "401.9"]]
     ).must_equal("condition_occurrence"=>1175)
 
     criteria_counts(
-      union: [
-        {union: [
-          { icd9: '412' },
-          { icd9: '401.9' }
-        ]},
-        { place_of_service_code: '21' }
-      ]
+      [:union,
+       [:union, [:icd9, "412"], [:icd9, "401.9"]],
+       [:place_of_service_code, "21"]]
     ).must_equal("condition_occurrence"=>1175, "visit_occurrence"=>170)
   end
 
   it "annotate should produce correct results" do
     query(
-      union: [
-        { icd9: '412' },
-        { icd9: '401.9' }
-      ]
+      [:union, [:icd9, "412"], [:icd9, "401.9"]]
     ).annotate.must_equal(
       ["union",
        ["icd9",
@@ -40,13 +30,9 @@ describe ConceptQL::Operators::Union do
     )    
 
     query(
-      union: [
-        {union: [
-          { icd9: '412' },
-          { icd9: '401.9' }
-        ]},
-        { place_of_service_code: '21' }
-      ]
+      [:union,
+       [:union, [:icd9, "412"], [:icd9, "401.9"]],
+       [:place_of_service_code, "21"]]
     ).annotate.must_equal(
       ["union",
        ["union",
