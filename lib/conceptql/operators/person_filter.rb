@@ -6,6 +6,7 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc 'Only passes through a result from the LHR if the person appears in the RHR.'
+      category 'Filter'
       def query(db)
         db.from(left.evaluate(db))
           .where(person_id: right.evaluate(db).select_group(:person_id))
