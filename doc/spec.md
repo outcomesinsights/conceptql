@@ -26,7 +26,10 @@ For instance, using ConceptQL we can take a statement that looks like this:
 And generate a diagram that looks like this:
 
 ```ConceptQL
-{ icd9: '412' }
+[
+  "icd9",
+  "412"
+]
 ```
 
 And generate SQL that looks like this:
@@ -62,18 +65,23 @@ Reading ConceptQL in YAML or JSON seems hard to me.  I prefer to explore Concept
 
 ```ConceptQL
 # All Conditions Matching MI
-{ icd9: '412' }
+[
+  "icd9",
+  "412"
+]
 ```
 
 Each oval depicts a "operator", or rather, a ConceptQL expression.  An arrow between a pair of operators indicates that the results from the operator on the tail of the arrow pass on to the operator at the head of the arrow.  A simple example should help here:
 
 ```ConceptQL
 # First Office Visit Per Patient
-{
-  first: {
-    cpt: '99214'
-  }
-}
+[
+  "first",
+  [
+    "cpt",
+    "99214"
+  ]
+]
 ```
 
 The diagram above reads "get all procedures that match the CPT 99214 (Office Visit) and then filter them down to the first occurrence for each person".  The diagram is much more terse than that and to accurately read the diagram, you need a lot of implicit knowledge about how each operator operates.  Fortunately, this document will (hopefully) impart that knowledge to you.
@@ -125,14 +133,20 @@ So when we execute this ConceptQL statement, the resulting "stream" is all the p
 
 ```ConceptQL
 # All Male Patients
-{ gender: 'Male' }
+[
+  "gender",
+  "Male"
+]
 ```
 
 When we execute this ConceptQL statement, the resulting "stream" is all condition_occurrence IDs that match ICD-9 799.22:
 
 ```ConceptQL
 # All Condition Occurrences that match ICD-9 799.22
-{ icd9: '799.22' }
+[
+  "icd9",
+  "799.22"
+]
 ```
 
 Generally, I find it helpful to just think of those queries generating a "stream of people" or a "stream of conditions" and not worry about the table of origin or the fact that they are just IDs.
@@ -171,36 +185,58 @@ Because streams represent sets of results, its makes sense to include a operator
 
 ```ConceptQL
 # Two streams of the same type (condition_occurrence) joined into a single stream
-{
-  union: [
-    { icd9: '412' },
-    { icd9: '799.22' }
+[
+  "union",
+  [
+    "icd9",
+    "412"
+  ],
+  [
+    "icd9",
+    "799.22"
   ]
-}
+]
 ```
 
 ```ConceptQL
 # Two streams of the same type (condition_occurrence) joined into a single stream, then a different stream (visit_occurrence) flows concurrently
-{
-  union: [
-    {union: [
-      { icd9: '412' },
-      { icd9: '799.22' }
-    ]},
-    { place_of_service: 'Inpatient' }
+[
+  "union",
+  [
+    "union",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "icd9",
+      "799.22"
+    ]
+  ],
+  [
+    "place_of_service",
+    "Inpatient"
   ]
-}
+]
 ```
 
 ```ConceptQL
 # Two streams of the same type (condition_occurrence) joined into a single stream, along with a different stream (visit_occurrence) flows concurrently (same as above example)
-{
-  union: [
-    { icd9: '412' },
-    { icd9: '799.22' },
-    { place_of_service: 'Inpatient' }
+[
+  "union",
+  [
+    "icd9",
+    "412"
+  ],
+  [
+    "icd9",
+    "799.22"
+  ],
+  [
+    "place_of_service",
+    "Inpatient"
   ]
-}
+]
 ```
 
 ### Intersect
@@ -213,34 +249,55 @@ Because streams represent sets of results, its makes sense to include a operator
 
 ```ConceptQL
 # Yields a single stream of all Conditions where MI was Primary Diagnosis.  This involves two Condition streams and so results are intersected
-{
-  intersect: [
-    { icd9: '412' },
-    { primary_diagnosis: true }
+[
+  "intersect",
+  [
+    "icd9",
+    "412"
+  ],
+  [
+    "primary_diagnosis",
+    true
   ]
-}
+]
 ```
 
 ```ConceptQL
 # Yields two streams: a stream of all MI Conditions and a stream of all Male patients.  This is essentially the same behavior as Union in this case
-{
-  intersect: [
-    { icd9: '412' },
-    { gender: 'Male' }
+[
+  "intersect",
+  [
+    "icd9",
+    "412"
+  ],
+  [
+    "gender",
+    "Male"
   ]
-}
+]
 ```
 
 ```ConceptQL
 # Yields two streams: a stream of all Conditions where MI was Primary Diagnosis and a stream of all White, Male patients.
-{
-  intersect: [
-    { icd9: '412' },
-    { primary_diagnosis: true },
-    { gender: 'Male' },
-    { race: 'White' }
+[
+  "intersect",
+  [
+    "icd9",
+    "412"
+  ],
+  [
+    "primary_diagnosis",
+    true
+  ],
+  [
+    "gender",
+    "Male"
+  ],
+  [
+    "race",
+    "White"
   ]
-}
+]
 ```
 
 ### Complement
@@ -249,74 +306,137 @@ This operator will take the complement of each set of IDs in the incoming stream
 
 ```ConceptQL
 # All non-MI Conditions
-{
-  complement: { icd9: '412' }
-}
+[
+  "complement",
+  [
+    "icd9",
+    "412"
+  ]
+]
 ```
 
 If you're familiar with set operations, the complement of a union is the intersect of the complements of the items unioned.  So in our world, these next two examples are identical:
 
 ```ConceptQL
 # All Conditions where the Condition isn't an MI as the Primary Diagnosis
-{
-  complement: {
-    union: [
-      { icd9: '412' },
-      { primary_diagnosis: true }
+[
+  "complement",
+  [
+    "union",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "primary_diagnosis",
+      true
     ]
-  }
-}
+  ]
+]
 ```
 
 ```ConceptQL
 # All Conditions where the Condition isn't an MI as the Primary Diagnosis (same as above)
-{
-  intersect: [
-    { complement: { icd9: '412' } },
-    { complement: {  primary_diagnosis: true } }
+[
+  "intersect",
+  [
+    "complement",
+    [
+      "icd9",
+      "412"
+    ]
+  ],
+  [
+    "complement",
+    [
+      "primary_diagnosis",
+      true
+    ]
   ]
-}
+]
 ```
 
 But please be aware that this behavior of complement only affects streams of the same type.  If more than one stream is involved, you need to evaluate the effects of complement on a stream-by-stream basis:
 
 ```ConceptQL
 # Yields two streams: a stream of all Conditions where the conditions isn't an MI and Primary Diagnosis and a stream of all non-office visit Procedures
-{
-  complement: {
-    union: [
-      { icd9: '412' },
-      { primary_diagnosis: true },
-      { cpt: '99214' }
+[
+  "complement",
+  [
+    "union",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "primary_diagnosis",
+      true
+    ],
+    [
+      "cpt",
+      "99214"
     ]
-  }
-}
-```
-
-```ConceptQL
-# Yields two streams: a stream of all Conditions where the conditions isn't an MI and Primary Diagnosis and a stream of all non-office visit Procedures (same as above)
-{
-  intersect: [
-    { complement: { icd9: '412' } },
-    { complement: {  primary_diagnosis: true } },
-    { complement: {  cpt: '99214' } }
   ]
-}
+]
 ```
 
 ```ConceptQL
 # Yields two streams: a stream of all Conditions where the conditions isn't an MI and Primary Diagnosis and a stream of all non-office visit Procedures (same as above)
-{
-  union: [
-    {
-      intersect: [
-        { complement: { icd9: '412' } },
-        { complement: {  primary_diagnosis: true } }
+[
+  "intersect",
+  [
+    "complement",
+    [
+      "icd9",
+      "412"
+    ]
+  ],
+  [
+    "complement",
+    [
+      "primary_diagnosis",
+      true
+    ]
+  ],
+  [
+    "complement",
+    [
+      "cpt",
+      "99214"
+    ]
+  ]
+]
+```
+
+```ConceptQL
+# Yields two streams: a stream of all Conditions where the conditions isn't an MI and Primary Diagnosis and a stream of all non-office visit Procedures (same as above)
+[
+  "union",
+  [
+    "intersect",
+    [
+      "complement",
+      [
+        "icd9",
+        "412"
       ]
-    },
-    { complement: {  cpt: '99214' } }
+    ],
+    [
+      "complement",
+      [
+        "primary_diagnosis",
+        true
+      ]
+    ]
+  ],
+  [
+    "complement",
+    [
+      "cpt",
+      "99214"
+    ]
   ]
-}
+]
 ```
 
 
@@ -326,57 +446,93 @@ This operator takes two sets of incoming streams, a left-hand stream and a right
 
 ```ConceptQL
 # All Conditions that are MI unless they are primary diagnoses
-{
-  except: {
-    left: { icd9: '412' },
-    right: { primary_diagnosis: true }
+[
+  "except",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "primary_diagnosis",
+      true
+    ]
   }
-}
+]
 ```
 
 ```ConceptQL
 # All Conditions that are MI unless they are primary diagnoses (same as above)
-{
-  intersect: [
-    { icd9: '412' },
-    { complement: { primary_diagnosis: true } }
+[
+  "intersect",
+  [
+    "icd9",
+    "412"
+  ],
+  [
+    "complement",
+    [
+      "primary_diagnosis",
+      true
+    ]
   ]
-}
+]
 ```
 
 If the left-hand stream has no types that match the right-hand stream, the left-hand stream passes through unaffected:
 
 ```ConceptQL
 # All Conditions that are MI
-{
-  except: {
-    left: { icd9: '412' },
-    right: { cpt: '99214' }
+[
+  "except",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "cpt",
+      "99214"
+    ]
   }
-}
+]
 ```
 
 And just to show how multiple streams behave:
 
 ```ConceptQL
 # Passes three streams downstream: a stream of Conditions that are MI but not primary diagnosis, a stream of People that are Male but not White, and a stream of Procedures that are office visits (this stream is completely unaffected by the right hand stream)
-{
-  except: {
-    left: {
-      union: [
-        { icd9: '412' },
-        { gender: 'Male' },
-        { cpt: '99214' }
+[
+  "except",
+  {
+    "left": [
+      "union",
+      [
+        "icd9",
+        "412"
+      ],
+      [
+        "gender",
+        "Male"
+      ],
+      [
+        "cpt",
+        "99214"
       ]
-    },
-    right: {
-      union: [
-        { primary_diagnosis: true },
-        { race: 'White' },
+    ],
+    "right": [
+      "union",
+      [
+        "primary_diagnosis",
+        true
+      ],
+      [
+        "race",
+        "White"
       ]
-    }
+    ]
   }
-}
+]
 ```
 
 ### Discussion about Set Operators
@@ -390,14 +546,20 @@ And just to show how multiple streams behave:
 
 ```ConceptQL
 # First occurrence of either MI or Death for each patient
-{
-  first: {
-    union: [
-      { icd9: '412' },
-      { death: true }
+[
+  "first",
+  [
+    "union",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "death",
+      true
     ]
-  }
-}
+  ]
+]
 ```
 
 ##### Q. Why aren't all streams passed forward unaltered?  Why union like-typed streams?
@@ -407,32 +569,46 @@ And just to show how multiple streams behave:
 
 ```ConceptQL
 # Two streams: a stream of all Conditions matching either 412 or 799.22 and a stream of Procedures matching 99214
-{
-  intersect: [
-    {
-      union: [
-        { icd9: '412' },
-        { icd9: '799.22' },
-      ]
-    },
-    { cpt: '99214' }
+[
+  "intersect",
+  [
+    "union",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "icd9",
+      "799.22"
+    ]
+  ],
+  [
+    "cpt",
+    "99214"
   ]
-}
+]
 ```
 
 ```ConceptQL
 # Two streams: a stream of all Conditions matching either 412 AND 799.22 (an empty stream, a condition cannot be both 412 and 799.22 at the same time) and a stream of Procedures matching 99214
-{
-  intersect: [
-    {
-      intersect: [
-        { icd9: '412' },
-        { icd9: '799.22' },
-      ]
-    },
-    { cpt: '99214' }
+[
+  "intersect",
+  [
+    "intersect",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "icd9",
+      "799.22"
+    ]
+  ],
+  [
+    "cpt",
+    "99214"
   ]
-}
+]
 ```
 
 ## Time-oriented Operators
@@ -463,12 +639,14 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 ```ConceptQL
 # For each patient, select the Condition that represents the third occurrence of an MI
-{
-  occurrence: [
-    { icd9: '412' },
-    3
+[
+  "occurrence",
+  3,
+  [
+    "icd9",
+    "412"
   ]
-}
+]
 ```
 
 #### first
@@ -477,9 +655,13 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 ```ConceptQL
 # For each patient, select the Condition that represents the first occurrence of an MI
-{
-  first: { icd9: '412' }
-}
+[
+  "first",
+  [
+    "icd9",
+    "412"
+  ]
+]
 ```
 
 #### last
@@ -488,9 +670,13 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 ```ConceptQL
 # For each patient, select the Condition that represents the last occurrence of an MI
-{
-  last: { icd9: '412' }
-}
+[
+  "last",
+  [
+    "icd9",
+    "412"
+  ]
+]
 ```
 
 ### Date Literals
@@ -554,17 +740,22 @@ When comparing results in L against a date range, results in L continue downstre
 
 ```ConceptQL
 # All MIs for the year 2010
-{
-  during: {
-    left: { icd9: '412' },
-    right: {
-      date_range: {
-        start: '2010-01-01',
-        end: '2010-12-31'
+[
+  "during",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "date_range",
+      {
+        "start": "2010-01-01",
+        "end": "2010-12-31"
       }
-    }
+    ]
   }
-}
+]
 ```
 
 When comparing results in L against a set of results in R, the temporal operator compares results in stream L against results in stream R on a person-by-person basis.
@@ -575,12 +766,19 @@ When comparing results in L against a set of results in R, the temporal operator
 
 ```ConceptQL
 # All MIs While Patients had Part A Medicare
-{
-  during: {
-    left: { icd9: '412' },
-    right: { payer: 'Part A' }
+[
+  "during",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "payer",
+      "Part A"
+    ]
   }
-}
+]
 ```
 
 #### Edge behaviors
@@ -596,28 +794,41 @@ If we're looking for events in L that occur before events in R, then any event i
 
 ```ConceptQL
 # All MIs that occurred before a patient's __last__ case of irritability (799.22)
-{
-  before: {
-    left: { icd9: '412' },
-    right: { icd9: '799.22' }
+[
+  "before",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "icd9",
+      "799.22"
+    ]
   }
-}
+]
 ```
 
 If this is not the behavior you desire, use one of the sequence operators to select which event in R should be the one used to do comparison
 
 ```ConceptQL
 # All MIs that occurred before a patient's __first__ case of irritability (799.22)
-{
-  before: {
-    left: { icd9: '412' },
-    right: {
-      first: {
-        icd9: '799.22'
-      }
-    }
+[
+  "before",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "first",
+      [
+        "icd9",
+        "799.22"
+      ]
+    ]
   }
-}
+]
 ```
 
 ### Time Windows
@@ -647,57 +858,86 @@ There are situations when the date columns associated with a result should have 
 
 ```ConceptQL
 # All Diagnoses of Irritability (ICD-9 799.22) within 30 days of an MI
-{
-  during: {
-    left: { icd9: '799.22' },
-    right: {
-      time_window: [
-        { icd9: '412' },
-        { start: '-30d', end: '30d' }
-      ]
-    }
+[
+  "during",
+  {
+    "left": [
+      "icd9",
+      "799.22"
+    ],
+    "right": [
+      "time_window",
+      [
+        "icd9",
+        "412"
+      ],
+      {
+        "start": "-30d",
+        "end": "30d"
+      }
+    ]
   }
-}
+]
 ```
 
 ```ConceptQL
 # Shift the window for all MIs back by 2 years
-{
-  time_window: [
-    { icd9: '412' },
-    { start: '-2y', end: '-2y' }
-  ]
-}
+[
+  "time_window",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "start": "-2y",
+    "end": "-2y"
+  }
+]
 ```
 
 ```ConceptQL
 # Expand the dates for all MIs to a window ranging from 2 months and 2 days prior to 1 year and 3 days after the MI
-{
-  time_window: [
-    { icd9: '412' },
-    { start: '-2m-2d', end: '3d1y' }
-  ]
-}
+[
+  "time_window",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "start": "-2m-2d",
+    "end": "3d1y"
+  }
+]
 ```
 
 ```ConceptQL
 # Collapse all hospital visits' date ranges down to just the date of admission by leaving start_date unaffected and setting end_date to start_date
-{
-  time_window: [
-    { place_of_service: 'inpatient' },
-    { start: '', end: 'start' }
-  ]
-}
+[
+  "time_window",
+  [
+    "place_of_service",
+    "inpatient"
+  ],
+  {
+    "start": "",
+    "end": "start"
+  }
+]
 ```
 
 ```ConceptQL
 # Nonsensical, but allowed: swap the start_date and end_date for a range
-{
-  time_window: [
-    { icd9: '412' },
-    { start: 'end', end: 'start' }
-  ]
-}
+[
+  "time_window",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "start": "end",
+    "end": "start"
+  }
+]
 ```
 
 #### Temporal Operators and Person Streams
@@ -706,20 +946,26 @@ Person streams carry a patient's date of birth in their date columns.  This make
 
 ```ConceptQL
 # All MIs that occurred after a male patient's 50th birthday
-{
-  after: {
-    left: { icd9: '412' },
-    right: {
-      time_window: [
-        { gender: 'Male' },
-        {
-          start: '50y',
-          end: '50y'
-        }
-      ]
-    }
+[
+  "after",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "time_window",
+      [
+        "gender",
+        "Male"
+      ],
+      {
+        "start": "50y",
+        "end": "50y"
+      }
+    ]
   }
-}
+]
 ```
 
 ## Type Conversion
@@ -733,11 +979,13 @@ There are situations where it is appropriate to convert the type of a stream of 
 
 ```ConceptQL
 # All People Who Had an MI
-{
-  person: {
-    icd9: '412'
-  }
-}
+[
+  "person",
+  [
+    "icd9",
+    "412"
+  ]
+]
 ```
 
 ### Casting to a visit_occurrence
@@ -750,20 +998,23 @@ There are situations where it is appropriate to convert the type of a stream of 
 
 ```ConceptQL
 # All Visits Where a Patient Had an MI During and Office Visit
-{
-  intersect: [
-    {
-      visit_occurrence: {
-        icd9: '412'
-      }
-    },
-    {
-      visit_occurrence: {
-        cpt: '99214'
-      }
-    }
+[
+  "intersect",
+  [
+    "visit_occurrence",
+    [
+      "icd9",
+      "412"
+    ]
+  ],
+  [
+    "visit_occurrence",
+    [
+      "cpt",
+      "99214"
+    ]
   ]
-}
+]
 ```
 
 Many tables have a foreign key (FK) reference to the visit_occurrence table.  If we cast a result to a visit_occurrence, and its table of origin has a visit_occurrence_id FK column, the result becomes a visit_occurrence result corresponding to the row pointed to by visit_occurrence_id.  If the row's visit_occurrence_id is NULL, the result is discarded from the stream.
@@ -772,11 +1023,13 @@ If the result's table of origin has no visit_occurrence_id column, we will inste
 
 ```ConceptQL
 # All Visits for All Male Patients
-{
-  visit_occurrence: {
-    gender: 'Male'
-  }
-}
+[
+  "visit_occurrence",
+  [
+    "gender",
+    "Male"
+  ]
+]
 ```
 
 ### Casting Loses All Original Information
@@ -793,21 +1046,33 @@ INSERT HANDY TABLE SHOWING CONVERSION MATRIX HERE
 
 ```ConceptQL
 # Cost of 70012 while Hospitalized for MI
-{
-  procedure_cost: {
-    intersect: [
-      { cpt: '70012' },
-      procedure: {
-        intersect: [
-          { place_of_service: 'inpatient' },
-          visit_occurrence: {
-            icd9: '412'
-          }
+[
+  "procedure_cost",
+  [
+    "intersect",
+    [
+      "cpt",
+      "70012"
+    ],
+    [
+      "procedure",
+      [
+        "intersect",
+        [
+          "place_of_service",
+          "inpatient"
+        ],
+        [
+          "visit_occurrence",
+          [
+            "icd9",
+            "412"
+          ]
         ]
-      }
+      ]
     ]
-  }
-}
+  ]
+]
 ```
 
 ### Casting as a way to fetch all rows
@@ -816,19 +1081,29 @@ The casting operator doubles as a way to fetch all rows for a single type.  Prov
 
 ```ConceptQL
 # All death results in the database
-{ death: true }
+[
+  "death",
+  true
+]
 ```
 
 This comes in handy for situations like these:
 
 ```ConceptQL
 # All Male patients who died
-{
-  person_filter: {
-    left: { gender: 'Male' },
-    right: { death: true },
+[
+  "person_filter",
+  {
+    "left": [
+      "gender",
+      "Male"
+    ],
+    "right": [
+      "death",
+      true
+    ]
   }
-}
+]
 ```
 
 ## Filtering by People
@@ -839,66 +1114,108 @@ Unlike the ```except``` operator, the person_filter operator will use all types 
 
 ```ConceptQL
 # All MI Conditions for people who are male
-{
-  person_filter: {
-    left: { icd9: '412' },
-    right: { gender: 'Male'}
+[
+  "person_filter",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "gender",
+      "Male"
+    ]
   }
-}
+]
 ```
 
 But we can get crazier.  The right-hand side doesn't have to be a person stream.  If a non-person stream is used in the right-hand side, the person_filter will cast all right-hand streams to person first and use the union of those streams:
 
 ```ConceptQL
 # All MI Conditions for people who had an office visit at some point in the data
-{
-  person_filter: {
-    left: { icd9: '412' },
-    right: { cpt: '99214' }
+[
+  "person_filter",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "cpt",
+      "99214"
+    ]
   }
-}
+]
 ```
 
 ```ConceptQL
 # All MI Conditions for people who had an office visit at some point in the data (an explicit representation of what's happening in the diagram above)
-{
-  person_filter: {
-    left: { icd9: '412' },
-    right: { person: { cpt: '99214' } }
+[
+  "person_filter",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "person",
+      [
+        "cpt",
+        "99214"
+      ]
+    ]
   }
-}
+]
 ```
 
 ```ConceptQL
 # All MI Conditions for people who are Male OR had an office visit at some point in the data
-{
-  person_filter: {
-    left: { icd9: '412' },
-    right: {
-      union: [
-        { cpt: '99214' },
-        { gender: 'Male' }
+[
+  "person_filter",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "union",
+      [
+        "cpt",
+        "99214"
+      ],
+      [
+        "gender",
+        "Male"
       ]
-    }
+    ]
   }
-}
+]
 ```
 
 And don't forget the left-hand side can have multiple types of streams:
 
 ```ConceptQL
 # Yields two streams: a stream of all MI Conditions for people who are Male and a stream of all office visit Procedures for people who are Male
-{
-  person_filter: {
-    left: {
-      union: [
-         { icd9: '412' },
-         { cpt: '99214' }
+[
+  "person_filter",
+  {
+    "left": [
+      "union",
+      [
+        "icd9",
+        "412"
+      ],
+      [
+        "cpt",
+        "99214"
       ]
-    },
-    right: { gender: 'Male' }
+    ],
+    "right": [
+      "gender",
+      "Male"
+    ]
   }
-}
+]
 ```
 
 ## Sub-algorithms within a Larger Algorithm
@@ -920,30 +1237,59 @@ A stream must be `define`d before `recall` can use it.
 # Save away a stream of results to build the 1 inpatient, 2 outpatient pattern used in claims data algorithms
 [
   [
-    "first", [
-    "union",
-      ['intersect',
-          [ 'visit_occurrence',
-              [ 'icd9', '412' ],
-              label: 'Heart Attack Visit'
+    "first",
+    [
+      "union",
+      [
+        "intersect",
+        [
+          "visit_occurrence",
+          [
+            "icd9",
+            "412"
           ],
-          [ "place_of_service_code", 21 ]
+          {
+            "label": "Heart Attack Visit"
+          }
+        ],
+        [
+          "place_of_service_code",
+          21
+        ]
       ],
-      ['before',
-          left: [
-              'intersect',
-                  [ 'recall', 'Heart Attack Visit'],
-                  [ 'complement',
-                      [ 'place_of_service_code', 21 ]
-                  ],
-                  label: 'Outpatient Heart Attack'
-              ],
-          right: [
-              'time_window',
-                  [ 'recall', 'Outpatient Heart Attack' ],
-                  { start: '-30d', end: '0' }
+      [
+        "before",
+        {
+          "left": [
+            "intersect",
+            [
+              "recall",
+              "Heart Attack Visit"
+            ],
+            [
+              "complement",
+              [
+                "place_of_service_code",
+                21
+              ]
+            ],
+            {
+              "label": "Outpatient Heart Attack"
+            }
           ],
-          label: 'Earliest of Two Outpatient Heart Attacks'
+          "right": [
+            "time_window",
+            [
+              "recall",
+              "Outpatient Heart Attack"
+            ],
+            {
+              "start": "-30d",
+              "end": "0"
+            }
+          ],
+          "label": "Earliest of Two Outpatient Heart Attacks"
+        }
       ]
     ]
   ]
@@ -958,45 +1304,74 @@ Say a ConceptQL statement gathers all visit_occurrences where a patient had an M
 
 ```ConceptQL
 # All Visits where a Patient had both an MI and a Hospital Encounter
-{
-  intersect: [
-    { visit_occurrence: { icd9: '412' } },
-    { visit_occurrence: { cpt: '99231' } }
+[
+  "intersect",
+  [
+    "visit_occurrence",
+    [
+      "icd9",
+      "412"
+    ]
+  ],
+  [
+    "visit_occurrence",
+    [
+      "cpt",
+      "99231"
+    ]
   ]
-}
+]
 ```
 
 If we wanted to gather all costs for all procedures for those visits, we could use the "algorithm" operator to represent the algorithm defined above in a new concept:
 
 ```ConceptQL
 # All Procedure Costs for All Visits as defined above
-{
-  procedure_cost: {
-    algorithm: "\nAll Visits\nwhere a Patient had\nboth an MI and\na Hospital Encounter"
-  }
-}
+[
+  "procedure_cost",
+  [
+    "algorithm",
+    "\nAll Visits\nwhere a Patient had\nboth an MI and\na Hospital Encounter"
+  ]
+]
 ```
 
 The color and edge coming from the algorithm operator are black to denote that we don't know what types or streams are coming from the concept.  In reality, any program that uses ConceptQL can ask the algorithm represented by the algorithm operator for the concept's types.  The result of nesting one algorithm within another is exactly the same had we taken algorithm operator and replaced it with the ConceptQL statement for the algorithm it represents.
 
 ```ConceptQL
 # Procedure Costs for All Visits where a Patient had both an MI and a Hospital Encounter (same as above)
-{
-  procedure_cost: {
-    intersect: [
-      { visit_occurrence: { icd9: '412' } },
-      { visit_occurrence: { cpt: '99231' } }
+[
+  "procedure_cost",
+  [
+    "intersect",
+    [
+      "visit_occurrence",
+      [
+        "icd9",
+        "412"
+      ]
+    ],
+    [
+      "visit_occurrence",
+      [
+        "cpt",
+        "99231"
+      ]
     ]
-  }
-}
+  ]
+]
 ```
 
 In the actual implementation of the algorithm operator, each ConceptQL statement will have a unique identifier which the algorithm operator will use.  So, assuming that the ID 2031 represents the algorithm we want to gather all procedure costs for, our example should really read:
 
 ```ConceptQL
-{
-  procedure_cost: { concept: 2031 }
-}
+[
+  "procedure_cost",
+  [
+    "concept",
+    2031
+  ]
+]
 ```
 
 ## Values
@@ -1026,73 +1401,92 @@ Passing streams through a `numeric` operator changes the number stored in the va
 
 ```ConceptQL
 # All MIs, setting value_as_numeric to 2
-{
-    numeric: [
-        { icd9: '412' },
-        2
-   ]
-}
+[
+  "numeric",
+  2,
+  [
+    "icd9",
+    "412"
+  ]
+]
 ```
 
 `numeric` can also take a column name instead of a number.  It will derive the results row's value from the value stored in the column specified.
 
 ```ConceptQL
 # All copays for 99214s
-{
-    numeric: [
-        { procedure_cost: { cpt: '99214' } },
-        :paid_copay
+[
+  "numeric",
+  "paid_copay",
+  [
+    "procedure_cost",
+    [
+      "cpt",
+      "99214"
     ]
-}
+  ]
+]
 ```
 
 If something nonsensical happens, like the column specified isn't present in the table pointed to by a result row, value_as_numeric in the result row will be unaffected:
 
 ```ConceptQL
 # Still all MIs with value_as_numeric defaulted to NULL.  condition_occurrence table doesn't have a "paid_copay" column
-{
-    value: [
-        { icd9: '412' },
-        :paid_copay
-   ]
-}
+[
+  "value",
+  "paid_copay",
+  [
+    "icd9",
+    "412"
+  ]
+]
 ```
 
 Or if the column specified exists, but refers to a non-numerical column, we'll set the value to 0
 
 ```ConceptQL
 # All MIs, with value set to 0 since the column specified by value operator is a non-numerical column
-{
-    value: [
-        { icd9: '412' },
-        :stop_reason
-   ]
-}
+[
+  "value",
+  "stop_reason",
+  [
+    "icd9",
+    "412"
+  ]
+]
 ```
 
 With a `numeric` operator defined, we could introduce a sum operator that will sum by patient and type.  This allows us to implement the Charlson comorbidity algorithm:
 
 ```ConceptQL
-{
-   sum: [
-     {
-        union: [
-          {
-            numeric: [
-                  { person: { icd9: '412' } },
-                  1
-             ]
-          },
-          {
-             numeric: [
-                  { person: { icd9: '278.02' } },
-                  2
-             ]
-          }
+[
+  "sum",
+  [
+    "union",
+    [
+      "numeric",
+      1,
+      [
+        "person",
+        [
+          "icd9",
+          "412"
         ]
-     }
-   ]
-}
+      ]
+    ],
+    [
+      "numeric",
+      2,
+      [
+        "person",
+        [
+          "icd9",
+          "278.02"
+        ]
+      ]
+    ]
+  ]
+]
 ```
 
 ### Counting
@@ -1103,23 +1497,36 @@ I need examples of algorithms that could benefit from this operator.  I'm concer
 
 ```ConceptQL
 # Count the number of times each person was irritable
-{
-    count: { person: { icd9: '799.22' } }
-}
+[
+  "count",
+  [
+    "person",
+    [
+      "icd9",
+      "799.22"
+    ]
+  ]
+]
 ```
 
 We could do dumb things like count the number of times a row shows up in a union:
 
 ```ConceptQL
 # All rows with a value of 2 would be rows that were both MI and Primary
-{
-    count: {
-        union: [
-           { icd9: '412' },
-           { primary_diagnosis: true}
-        ]
-   }
-}
+[
+  "count",
+  [
+    "union",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "primary_diagnosis",
+      true
+    ]
+  ]
+]
 ```
 
 #### Numeric Value Comparison
@@ -1139,13 +1546,25 @@ Numeric doesn't have to take a stream.  If it doesn't have a stream as an argume
 
 ```ConceptQL
 # People with more than 1 MI
-{
-
-    greater_than: {
-        left: { count: { person: { icd9: '412' }}},
-        right: { numeric: 1 }
-    }
-}
+[
+  "greater_than",
+  {
+    "left": [
+      "count",
+      [
+        "person",
+        [
+          "icd9",
+          "412"
+        ]
+      ]
+    ],
+    "right": [
+      "numeric",
+      1
+    ]
+  }
+]
 ```
 
 #### sum
@@ -1187,27 +1606,49 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
         - V45.1, V56.0, V56.31, V56.32, V56.8
 
 ```ConceptQL
-{
-  during: {
-    left: {
-      except: {
-        left: { icd9: '584' },
-        right: {
-          after: {
-            left: { icd9: '584' },
-            right: { icd9: [ 'V45.1', 'V56.0', 'V56.31', 'V56.32', 'V56.8' ] }
+[
+  "during",
+  {
+    "left": [
+      "except",
+      {
+        "left": [
+          "icd9",
+          "584"
+        ],
+        "right": [
+          "after",
+          {
+            "left": [
+              "icd9",
+              "584"
+            ],
+            "right": [
+              "icd9",
+              "V45.1",
+              "V56.0",
+              "V56.31",
+              "V56.32",
+              "V56.8"
+            ]
           }
-        }
+        ]
       }
-    },
-    right: {
-      time_window: [
-         { icd9_procedure: [ '39.95', '54.98' ] },
-         { start: '0', end: '60d' }
-      ]
-    }
+    ],
+    "right": [
+      "time_window",
+      [
+        "icd9_procedure",
+        "39.95",
+        "54.98"
+      ],
+      {
+        "start": "0",
+        "end": "60d"
+      }
+    ]
   }
-}
+]
 ```
 
 ### Mortality after Myocardial Infarction #3
@@ -1219,43 +1660,96 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
     - MI therapy within 60 days after 410
 
 ```ConceptQL
-{
-  during: {
-    left: {
-      before: {
-        left: { icd9: '410*' },
-        right: { death: true }
+[
+  "during",
+  {
+    "left": [
+      "before",
+      {
+        "left": [
+          "icd9",
+          "410*"
+        ],
+        "right": [
+          "death",
+          true
+        ]
       }
-    },
-    right: {
-      union: [
-        {
-          time_window: [
-            {
-              union: [
-                { cpt: [ '0146T', '75898', '82554', '92980', '93010', '93233', '93508', '93540', '93545' ] },
-                { icd9_procedure: [ '00.24', '36.02', '89.53', '89.57', '89.69' ] },
-                { loinc: [ '10839-9', '13969-1', '18843-3', '2154-3', '33204-9', '48425-3', '49259-5', '6597-9', '8634-8' ] }
-              ]
-            },
-            { start: '-30d', end: '0' }
+    ],
+    "right": [
+      "union",
+      [
+        "time_window",
+        [
+          "union",
+          [
+            "cpt",
+            "0146T",
+            "75898",
+            "82554",
+            "92980",
+            "93010",
+            "93233",
+            "93508",
+            "93540",
+            "93545"
+          ],
+          [
+            "icd9_procedure",
+            "00.24",
+            "36.02",
+            "89.53",
+            "89.57",
+            "89.69"
+          ],
+          [
+            "loinc",
+            "10839-9",
+            "13969-1",
+            "18843-3",
+            "2154-3",
+            "33204-9",
+            "48425-3",
+            "49259-5",
+            "6597-9",
+            "8634-8"
           ]
-        },
+        ],
         {
-          time_window: [
-            {
-              union: [
-                { cpt: [ '0146T', '75898', '82554', '92980', '93010', '93233'] },
-                { icd9_procedure: [ '00.24', '36.02', '89.53', '89.57', '89.69' ] }
-              ]
-            },
-            { start: '', end: '60d' }
+          "start": "-30d",
+          "end": "0"
+        }
+      ],
+      [
+        "time_window",
+        [
+          "union",
+          [
+            "cpt",
+            "0146T",
+            "75898",
+            "82554",
+            "92980",
+            "93010",
+            "93233"
+          ],
+          [
+            "icd9_procedure",
+            "00.24",
+            "36.02",
+            "89.53",
+            "89.57",
+            "89.69"
           ]
+        ],
+        {
+          "start": "",
+          "end": "60d"
         }
       ]
-    }
+    ]
   }
-}
+]
 ```
 
 ### GI Ulcer Hospitalization 2 (5000001002)
@@ -1266,22 +1760,59 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 
 ```ConceptQL
 # We use the fact that conditions, observations, and procedures all can be tied to a visit_occurrence to find situations where the appropriate conditions, diagnostic procedures, and place of service all occur in the same visit_occurrence
-{
-  union: [
-    { place_of_service: [ 'Inpatient' ]},
-    { visit_occurrence: { icd9: '410' } },
-    {
-      visit_occurrence: {
-        union: [
-          { cpt: [ '0008T', '3142F', '43205', '43236', '76975', '91110', '91111' ] },
-          { hcpcs: [ 'B4081', 'B4082' ] },
-          { icd9_procedure: [ '42.22', '42.23', '44.13', '45.13', '52.21', '97.01' ] },
-          { loinc: [ '16125-7', '17780-8', '40820-3', '50320-1', '5177-1', '7901-2' ] }
-        ]
-      }
-    }
+[
+  "union",
+  [
+    "place_of_service",
+    "Inpatient"
+  ],
+  [
+    "visit_occurrence",
+    [
+      "icd9",
+      "410"
+    ]
+  ],
+  [
+    "visit_occurrence",
+    [
+      "union",
+      [
+        "cpt",
+        "0008T",
+        "3142F",
+        "43205",
+        "43236",
+        "76975",
+        "91110",
+        "91111"
+      ],
+      [
+        "hcpcs",
+        "B4081",
+        "B4082"
+      ],
+      [
+        "icd9_procedure",
+        "42.22",
+        "42.23",
+        "44.13",
+        "45.13",
+        "52.21",
+        "97.01"
+      ],
+      [
+        "loinc",
+        "16125-7",
+        "17780-8",
+        "40820-3",
+        "50320-1",
+        "5177-1",
+        "7901-2"
+      ]
+    ]
   ]
-}
+]
 ```
 
 ## Appendix C - Under Development
@@ -1335,7 +1866,10 @@ I'm considering defaulting each value_as\_\* column to some value.
 
 ```ConceptQL
 # All MIs, defaulting value_as_numeric to 1, concept_id to concept id for 412, string to condition_source_value
-{ icd9: '412' }
+[
+  "icd9",
+  "412"
+]
 ```
 
 
@@ -1345,26 +1879,40 @@ Inspired by person_filter, why not just have a "filter" operator that filters L 
 
 ```ConceptQL
 # All 99214's where person was irritable during a visit
-{
-    filter: {
-        left:  { cpt: '99214' },
-        right: {  icd9: '799.22' },
-        as: 'visit_occurrence'
-    }
-}
+[
+  "filter",
+  {
+    "left": [
+      "cpt",
+      "99214"
+    ],
+    "right": [
+      "icd9",
+      "799.22"
+    ],
+    "as": "visit_occurrence"
+  }
+]
 ```
 
 person_filter then becomes a special case of general filter:
 
 ```ConceptQL
 # All 99214's where person was irritable at some point in the data
-{
-    filter: {
-        left:  { cpt: '99214' },
-        right: {  icd9: '799.22' },
-        as: 'person'
-    }
-}
+[
+  "filter",
+  {
+    "left": [
+      "cpt",
+      "99214"
+    ],
+    "right": [
+      "icd9",
+      "799.22"
+    ],
+    "as": "person"
+  }
+]
 ```
 
 Filter operator is the opposite of Except.  It only includes L if R matches.
