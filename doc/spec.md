@@ -3,6 +3,7 @@
 ConceptQL (pronounced concept-Q-L) is a high-level language that allows researchers to unambiguously define their research algorithms.
 
 ## Motivation for ConceptQL
+
 Outcomes Insights intends to build a vast library of research algorithms and apply those algorithms to large databases of claims data.  Early into building the library, we realized we had to overcome two major issues:
 
 1. Methods sections of research papers commonly use natural language to specify the criteria used to build cohorts from a claims database.
@@ -36,7 +37,7 @@ AND scm.source_vocabulary_id = 2
 AND scm.source_code = co.condition_source_value
 ```
 
-As stated above, one of the goals of ConcegtQL is to make it easy to assemble fairly complex queries without having to roll up our sleeves and write raw SQL.  To accommodate this complexity, ConceptQL itself has some complexities of its own.  That said, we believe ConceptQL will help researchers define, hone, and share their research algorithms.
+As stated above, one of the goals of ConceptQL is to make it easy to assemble fairly complex queries without having to roll up our sleeves and write raw SQL.  To accommodate this complexity, ConceptQL itself has some complexities of its own.  That said, we believe ConceptQL will help researchers define, hone, and share their research algorithms.
 
 
 ## ConceptQL Overview
@@ -47,7 +48,7 @@ I find seeing examples to be the quickest way to get a sense of a language.  Her
 ```YAML
 # Example 1: A simple example in YAML
 # This is just a simple hash with a key of :icd9 and a value of 412
-# This example will search the condition_occurrence table for all conditions that match the ICD-9 concept of 412.
+# This example will search the condition_occurrence table for all conditions that match the ICD-9 code 412.
 ---
 :icd9: '412'
 ```
@@ -60,7 +61,7 @@ Reading ConceptQL in YAML or JSON seems hard to me.  I prefer to explore Concept
 ```
 
 
-Each oval depicts a "node", or rather, a ConceptQL expression.  An arrow between a pair of nodes indicates that the results from the node on the tail of the arrow pass on to the node at the head of the arrow.  A simple example should help here:
+Each oval depicts a "operator", or rather, a ConceptQL expression.  An arrow between a pair of operators indicates that the results from the operator on the tail of the arrow pass on to the operator at the head of the arrow.  A simple example should help here:
 ```ConceptQL
 # First Office Visit Per Patient
 {
@@ -71,19 +72,19 @@ Each oval depicts a "node", or rather, a ConceptQL expression.  An arrow between
 ```
 
 
-The diagram above reads "get all procedures that match the CPT 99214 (Office Visit) and then filter them down to the first occurrence for each person".  The diagram is much more terse than that and to accurately read the diagram, you need a lot of implicit knowledge about how each node operates.  Fortunately, this document will (hopefully) impart that knowledge to you.
+The diagram above reads "get all procedures that match the CPT 99214 (Office Visit) and then filter them down to the first occurrence for each person".  The diagram is much more terse than that and to accurately read the diagram, you need a lot of implicit knowledge about how each operator operates.  Fortunately, this document will (hopefully) impart that knowledge to you.
 
 Please note that all of my diagrams end with an arrow pointing at nothing.  You'll see why soon.
 
 
 ### Think of Results as a Stream
-I draw my ConceptQL diagrams with leaf nodes at the top and the "trunk" nodes at the bottom.  I like to think of the results of a ConceptQL statement as a flowing stream of data.  The leaf nodes, or nodes that gather results out of the database, act like tributaries.  The results flow downwards and either join with other results, or filter out other results until the streams emerge at the bottom of the diagram.  Think of each arrow as a stream of results, flowing down through one node to the next.
+I draw my ConceptQL diagrams with leaf operators at the top and the "trunk" operators at the bottom.  I like to think of the results of a ConceptQL statement as a flowing stream of data.  The leaf operators, or operators that gather results out of the database, act like tributaries.  The results flow downwards and either join with other results, or filter out other results until the streams emerge at the bottom of the diagram.  Think of each arrow as a stream of results, flowing down through one operator to the next.
 
 The trailing arrow in the diagrams serves as a reminder that ConceptQL yields a stream of results.
 
 
 ### Streams have Types
-You might have noticed that the nodes and edges in the diagrams often have a color.  That color represents what "type" of stream the node or edge represents.  There are many types in ConceptQL, and you'll notice they are __strongly__ correlated with the tables found in [CDM v4.0](http://omop.org/CDM):
+You might have noticed that the operators and edges in the diagrams often have a color.  That color represents what "type" of stream the operator or edge represents.  There are many types in ConceptQL, and you'll notice they are __strongly__ correlated with the tables found in [CDM v4.0](http://omop.org/CDM):
 
 - condition_occurrence
     - red
@@ -106,7 +107,7 @@ You might have noticed that the nodes and edges in the diagrams often have a col
 - visit_occurrence
     - orange
 
-Each stream has a point of origin (essentially, the table from which we pulled the results for a stream).  Based on that origin, each stream will have a particular type.  The stream carries this type information as it moves through each node.  When certain nodes, particularly set and temporal operation nodes, need to perform filtering, they can use this type information to determine how to best filter a stream.  There will be much more discussion about types woven throughout this document.  For now, it is sufficient to know that each stream has a type.
+Each stream has a point of origin (essentially, the table from which we pulled the results for a stream).  Based on that origin, each stream will have a particular type.  The stream carries this type information as it moves through each operator.  When certain operators, particularly set and temporal operators, need to perform filtering, they can use this type information to determine how to best filter a stream.  There will be much more discussion about types woven throughout this document.  For now, it is sufficient to know that each stream has a type.
 
 You'll also notice that the trailing arrow(s) at the end of the diagrams indicate which types of streams are ultimately passed on at the end of a ConceptQL statement.
 
@@ -139,21 +140,21 @@ When a ConceptQL statement is executed, it yields a final set of streams that ar
 
 This kind of aggregation and analysis is beyond the scope of ConceptQL.  ConceptQL will get you the IDs of the rows you're interested in, its up to other parts of the calling system to determine what you do with them.
 
-## Criterion Nodes
+## Selection Operators
 
-Criterion nodes are the parts of a ConceptQL query that search for specific values within the CDM data, e.g. searching the condition_occurrence table for a diagnosis of an old myocardial infarction (ICD-9 412) is a criterion.  Criterion nodes are always leaf nodes.
+Selection operators are the parts of a ConceptQL query that search for specific values within the CDM data, e.g. searching the condition_occurrence table for a diagnosis of an old myocardial infarction (ICD-9 412) is a selection.  Selection operators are always leaf operators.
 
-There are _many_ criterion nodes.  A list of currently implemented nodes is available in Appendix A.
+There are _many_ selection operators.  A list of currently implemented operators is available in Appendix A.
 
-## All Other Nodes
+## All Other Operators i.e. Mutation Operators
 
-Virtually all other nodes add, remove, filter, or otherwise alter streams of results.  They are discussed in this section.
+Virtually all other operators add, remove, filter, or otherwise alter streams of results.  They are discussed in this section.
 
-## Set Operation Nodes
-Because streams represent sets of results, its makes sense to include a nodes that operate on sets
+## Set Operators
+Because streams represent sets of results, its makes sense to include a operators that operate on sets
 
 ### Union
-- Takes any number of upstream nodes and aggregates their streams
+- Takes any number of upstream operators and aggregates their streams
     - Unions together streams with identical types
         - Think of streams with the same type flowing together into a single stream
         - We're really just gathering the union of all IDs for identically-typed streams
@@ -228,7 +229,7 @@ Because streams represent sets of results, its makes sense to include a nodes th
 ```
 
 ### Complement
-This node will take the complement of each set of IDs in the incoming streams.
+This operator will take the complement of each set of IDs in the incoming streams.
 ```ConceptQL
 # All non-MI Conditions
 {
@@ -298,7 +299,7 @@ But please be aware that this behavior of complement only affects streams of the
 
 
 ### Except
-This node takes two sets of incoming streams, a left-hand stream and a right-hand stream.  The node matches like-type streams between the left-hand and right-hand streams. The node removes any results in the left-hand stream if they appear in the right-hand stream.  The node passes only results for the left-hand stream downstream.  The node discards all results in the right-hand stream. For example:
+This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream.  The operator matches like-type streams between the left-hand and right-hand streams. The operator removes any results in the left-hand stream if they appear in the right-hand stream.  The operator passes only results for the left-hand stream downstream.  The operator discards all results in the right-hand stream. For example:
 ```ConceptQL
 # All Conditions that are MI unless they are primary diagnoses
 {
@@ -350,8 +351,8 @@ And just to show how multiple streams behave:
   }
 }
 ```
-### Discussion about Set Operation Nodes
-#### Union Nodes
+### Discussion about Set Operators
+#### Union Operators
 *Q. Why should we allow two different types of streams to continue downstream concurrently?*
 
 - This feature lets us do interesting things, like find the first occurrence of either an MI or Death as in the example below
@@ -406,7 +407,7 @@ Q. Why aren't all streams passed forward unaltered?  Why union like-typed stream
 }
 ```
 
-## Time-oriented Nodes
+## Time-oriented Operators
 All results in a stream carry a start_date and end_date with them.  All temporal comparisons of streams use these two date columns.  Each result in a stream derives its start and end date from its corresponding row in its table of origin.
 
 For instance, a visit_occurrence result derives its start_date from visit_start_date and its end_date from visit_end_date.
@@ -416,8 +417,8 @@ If a result comes from a table that only has a single date value, the result der
 The person stream is a special case.  Person results use the person's date of birth as the start_date and end_date.  This may sound strange, but we will explain below why this makes sense.
 
 
-### Relative Temporal Nodes
-When looking at a set of results for a person, perhaps we want to select just the chronologically first or last result.  Or maybe we want to select the 2nd result or 2nd to last result.  Relative temporal nodes provide this type of filtering.  Relative temporal nodes use a result's start_date to do chronological ordering.
+### Relative Temporal Operators
+When looking at a set of results for a person, perhaps we want to select just the chronologically first or last result.  Or maybe we want to select the 2nd result or 2nd to last result.  Relative temporal operators provide this type of filtering.  Relative temporal operators use a result's start_date to do chronological ordering.
 
 #### occurrence
 - Takes a two arguments: the stream to select from and an integer argument
@@ -442,7 +443,7 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 
 #### first
-- Node that is shorthand for writing "occurrence: 1"
+- Operator that is shorthand for writing "occurrence: 1"
 
 ```ConceptQL
 # For each patient, select the Condition that represents the first occurrence of an MI
@@ -453,7 +454,7 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 
 #### last
-- Node that is just shorthand for writing "occurrence: -1"
+- Operator that is just shorthand for writing "occurrence: -1"
 
 ```ConceptQL
 # For each patient, select the Condition that represents the last occurrence of an MI
@@ -464,7 +465,7 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 
 ### Date Literals
-For situations where we need to represent pre-defined date ranges, we can use "date literal" nodes.
+For situations where we need to represent pre-defined date ranges, we can use "date literal" operators.
 
 #### date_range
 - Takes a hash with two elements: { start: \<date-format\>, end: \<date-format\> }
@@ -489,12 +490,12 @@ Dates follow these formats:
     - Represents the last date of information available from the data source.
 
 
-### Temporal Comparison Nodes
-As described above, each result carries a start and end date, defining its own date range.  It is through these date ranges that we are able to do temporal filtering of streams via temporal nodes.
+### Temporal Comparison Operators
+As described above, each result carries a start and end date, defining its own date range.  It is through these date ranges that we are able to do temporal filtering of streams via temporal operators.
 
-Temporal nodes work by comparing a left-hand stream (L) against a right-hand stream (R).  R can be either a set of streams or a pre-defined date range.  Each temporal node has a comparison operator which defines how it compares dates between L and R.  A temporal node passes results only from L downstream.  A temporal node discards all results in the R stream after it makes all comparisons.
+Temporal operators work by comparing a left-hand stream (L) against a right-hand stream (R).  R can be either a set of streams or a pre-defined date range.  Each temporal operator has a comparison operator which defines how it compares dates between L and R.  A temporal operator passes results only from L downstream.  A temporal operator discards all results in the R stream after it makes all comparisons.
 
-The available set of temporal nodes comes from the work of Allen's Interval Algebra[^AIA].  Interval Algebra defines 13 distinct temporal relationships, as shown in this handy chart [borrowed from this website](http://people.kmi.open.ac.uk/carlos/174): ![](http://people.kmi.open.ac.uk/carlos/wp-content/uploads/2011/02/Allens-Algebra.png)
+The available set of temporal operators comes from the work of Allen's Interval Algebra[^AIA].  Interval Algebra defines 13 distinct temporal relationships, as shown in this handy chart [borrowed from this website](http://people.kmi.open.ac.uk/carlos/174): ![](http://people.kmi.open.ac.uk/carlos/wp-content/uploads/2011/02/Allens-Algebra.png)
 
 Our implementation of this algebra is originally going to be as strict as listed here, meaning that:
 
@@ -534,10 +535,10 @@ When comparing results in L against a date range, results in L continue downstre
 }
 ```
 
-When comparing results in L against a set of results in R, the temporal node compares results in stream L against results in stream R on a person-by-person basis.
+When comparing results in L against a set of results in R, the temporal operator compares results in stream L against results in stream R on a person-by-person basis.
 
 - If a person has results in L or R stream, but not in both, none of their results continue downstream
-- On a per person basis, the temporal node joins all results in the L stream to all results in the R stream
+- On a per person basis, the temporal operator joins all results in the L stream to all results in the R stream
     - Any results in the L stream that meet the temporal comparison against any results in the R stream continue downstream
 ```ConceptQL
 # All MIs While Patients had Part A Medicare
@@ -550,12 +551,12 @@ When comparing results in L against a set of results in R, the temporal node com
 ```
 
 #### Edge behaviors
-For 11 of the 13 temporal nodes, comparison of results is straight-forward.  However, the before/after nodes have a slight twist.
+For 11 of the 13 temporal operators, comparison of results is straight-forward.  However, the before/after operators have a slight twist.
 
 Imagine events 1-1-2-1-2-1.  In my mind, three 1's come before a 2 and two 1's come after a 2.  Accordingly:
 
-- When comparing L **before** R, the temporal node compares L against the **LAST** occurrence of R per person
-- When comparing L **after** R, the temporal node compares L against the **FIRST** occurrence of R per person
+- When comparing L **before** R, the temporal operator compares L against the **LAST** occurrence of R per person
+- When comparing L **after** R, the temporal operator compares L against the **FIRST** occurrence of R per person
 
 If we're looking for events in L that occur before events in R, then any event in L that occurs before the last event in R technically meet the comparison of "before".  The reverse is true for after: all events in L that occur after the first event in R technically occur after R.
 
@@ -570,7 +571,7 @@ If we're looking for events in L that occur before events in R, then any event i
 }
 ```
 
-If this is not the behavior you desire, use one of the sequence nodes to select which event in R should be the one used to do comparison
+If this is not the behavior you desire, use one of the sequence operators to select which event in R should be the one used to do comparison
 ```ConceptQL
 # All MIs that occurred before a patient's __first__ case of irritability (799.22)
 {
@@ -663,8 +664,8 @@ There are situations when the date columns associated with a result should have 
 }
 ```
 
-#### Temporal Nodes and Person Streams
-Person streams carry a patient's date of birth in their date columns.  This makes them almost useless when they are part of the L stream of a temporal node.  But person streams are useful as the R stream.  By ```time_window```ing the patient's date of birth, we can filter based on the patient's age like so:
+#### Temporal Operators and Person Streams
+Person streams carry a patient's date of birth in their date columns.  This makes them almost useless when they are part of the L stream of a temporal operator.  But person streams are useful as the R stream.  By ```time_window```ing the patient's date of birth, we can filter based on the patient's age like so:
 ```ConceptQL
 # All MIs that occurred after a male patient's 50th birthday
 {
@@ -734,7 +735,7 @@ If the result's table of origin has no visit_occurrence_id column, we will inste
 ```
 
 ### Casting Loses All Original Information
-After a result undergoes casting, it loses its original information.  E.g. casting a visit_occurrence to a person loses the visit_occurrence information and resets the start_date and end_date columns to the person's date of birth.  As a side note, this is actually handy if a stream’s dates have been altered by a time_window node and you want the original dates later on.  Just cast the stream to its same type and it will regain its original dates.
+After a result undergoes casting, it loses its original information.  E.g. casting a visit_occurrence to a person loses the visit_occurrence information and resets the start_date and end_date columns to the person's date of birth.  As a side note, this is actually handy if a stream’s dates have been altered by a time_window operator and you want the original dates later on.  Just cast the stream to its same type and it will regain its original dates.
 
 
 ### Cast all the Things!
@@ -764,7 +765,7 @@ INSERT HANDY TABLE SHOWING CONVERSION MATRIX HERE
 ```
 
 ### Casting as a way to fetch all rows
-The casting node doubles as a way to fetch all rows for a single type.  Provide the casting node with an argument of ```true``` (instead of an upstream node) to get all rows as results:
+The casting operator doubles as a way to fetch all rows for a single type.  Provide the casting operator with an argument of ```true``` (instead of an upstream operator) to get all rows as results:
 ```ConceptQL
 # All death results in the database
 { death: true }
@@ -783,9 +784,9 @@ This comes in handy for situations like these:
 
 
 ## Filtering by People
-Often we want to filter out a set of results by people.  For instance, say we wanted to find all MIs for all males.  We'd use the person_filter node for that.  Like the Except node, it takes a left-hand stream and a right-hand stream.
+Often we want to filter out a set of results by people.  For instance, say we wanted to find all MIs for all males.  We'd use the person_filter operator for that.  Like the Except operator, it takes a left-hand stream and a right-hand stream.
 
-Unlike the ```except``` node, the person_filter node will use all types of all streams in the right-hand side to filter out results in all types of all streams on the left hand side.
+Unlike the ```except``` operator, the person_filter operator will use all types of all streams in the right-hand side to filter out results in all types of all streams on the left hand side.
 
 
 ```ConceptQL
@@ -849,8 +850,8 @@ And don't forget the left-hand side can have multiple types of streams:
 ```
 
 
-## Sub-concepts within a Larger Concept
-If a concept is particularly complex, or has a stream of results that are used more than once, it can be helpful to break the concept into a set of sub-concepts.  This can be done using two nodes: define and recall
+## Sub-algorithms within a Larger Concept
+If a algorithm is particularly complex, or has a stream of results that are used more than once, it can be helpful to break the algorithm into a set of sub-algorithms.  This can be done using two operators: define and recall
 
 #### define
 - Takes 2 arguments
@@ -860,7 +861,7 @@ If a concept is particularly complex, or has a stream of results that are used m
 
 #### recall
 - Takes 1 argument
-    - The "name" of the stream previously saved using the `define` node
+    - The "name" of the stream previously saved using the `define` operator
 
 
 A stream must be `define`d before `recall` can use it.
@@ -932,7 +933,7 @@ A stream must be `define`d before `recall` can use it.
 ```
 
 
-## Concepts within Concepts
+## Algorithms within Algorithms
 One of the main motivations behind keeping ConceptQL so flexible is to allow users to build ConceptQL statements from other ConceptQL statements.  This section loosely describes how this feature will work.  Its actual execution and implementation will differ from what is presented here.
 
 Say a ConceptQL statement gathers all visit_occurrences where a patient had an MI and a Hospital encounter (CPT 99231):
@@ -947,16 +948,16 @@ Say a ConceptQL statement gathers all visit_occurrences where a patient had an M
 }
 ```
 
-If we wanted to gather all costs for all procedures for those visits, we could use the "concept" node to represent the concept defined above in a new concept:
+If we wanted to gather all costs for all procedures for those visits, we could use the "algorithm" operator to represent the algorithm defined above in a new concept:
 ```ConceptQL
 # All Procedure Costs for All Visits as defined above
 {
   procedure_cost: {
-    concept: "\nAll Visits\nwhere a Patient had\nboth an MI and\na Hospital Encounter"
+    algorithm: "\nAll Visits\nwhere a Patient had\nboth an MI and\na Hospital Encounter"
   }
 }
 ```
-The color and edge coming from the concept node are black to denote that we don't know what types or streams are coming from the concept.  In reality, any program that uses ConceptQL can ask the concept represented by the concept node for the concept's types.  The result of nesting one concept within another is exactly the same had we taken concept node and replaced it with the ConceptQL statement for the concept it represents.
+The color and edge coming from the algorithm operator are black to denote that we don't know what types or streams are coming from the concept.  In reality, any program that uses ConceptQL can ask the algorithm represented by the algorithm operator for the concept's types.  The result of nesting one algorithm within another is exactly the same had we taken algorithm operator and replaced it with the ConceptQL statement for the algorithm it represents.
 
 ```ConceptQL
 # Procedure Costs for All Visits where a Patient had both an MI and a Hospital Encounter (same as above)
@@ -970,7 +971,7 @@ The color and edge coming from the concept node are black to denote that we don'
 }
 ```
 
-In the actual implementation of the concept node, each ConceptQL statement will have a unique identifier which the concept node will use.  So, assuming that the ID 2031 represents the concept we want to gather all procedure costs for, our example should really read:
+In the actual implementation of the algorithm operator, each ConceptQL statement will have a unique identifier which the algorithm operator will use.  So, assuming that the ID 2031 represents the algorithm we want to gather all procedure costs for, our example should really read:
 
 ```ConceptQL
 {
@@ -990,18 +991,18 @@ A result can carry forward three different types of values, modeled after the be
     - For values that are like factors from the observation value_as_concept_id column
 
 
-By default, all value fields are set to NULL, unless a criterion node is explicitly written to populate one or more of those fields.
+By default, all value fields are set to NULL, unless a selection operator is explicitly written to populate one or more of those fields.
 
 There are many operations that can be performed on the value_as\_\* columns and as those operations are implemented, this section will grow.
 
-For now we'll cover some of the general behavior of the value_as_numeric column and it's associated nodes.
+For now we'll cover some of the general behavior of the value_as_numeric column and it's associated operators.
 
 #### numeric
 - Takes 2 arguments
     - A stream
     - And a numeric value or a symbol representing the name of a column in CDM
 
-Passing streams through a `numeric` node changes the number stored in the value column:
+Passing streams through a `numeric` operator changes the number stored in the value column:
 
 ```ConceptQL
 # All MIs, setting value_as_numeric to 2
@@ -1037,7 +1038,7 @@ If something nonsensical happens, like the column specified isn't present in the
 
 Or if the column specified exists, but refers to a non-numerical column, we'll set the value to 0
 ```ConceptQL
-# All MIs, with value set to 0 since the column specified by value node is a non-numerical column
+# All MIs, with value set to 0 since the column specified by value operator is a non-numerical column
 {
     value: [
         { icd9: '412' },
@@ -1046,7 +1047,7 @@ Or if the column specified exists, but refers to a non-numerical column, we'll s
 }
 ```
 
-With a `numeric` node defined, we could introduce a sum node that will sum by patient and type.  This allows us to implement the Charlson comorbidity algorithm:
+With a `numeric` operator defined, we could introduce a sum operator that will sum by patient and type.  This allows us to implement the Charlson comorbidity algorithm:
 ```ConceptQL
 {
    sum: [
@@ -1071,9 +1072,9 @@ With a `numeric` node defined, we could introduce a sum node that will sum by pa
 ```
 
 ### Counting
-It might be helpful to count the number of occurrences of a result row in a stream.  A simple "count" node could group identical rows and store the number of occurrences in the value_as_numeric column.
+It might be helpful to count the number of occurrences of a result row in a stream.  A simple "count" operator could group identical rows and store the number of occurrences in the value_as_numeric column.
 
-I need examples of algorithms that could benefit from this node.  I'm concerned that we'll want to roll up occurrences by person most of the time and that would require us to first cast streams to person before passing the person stream to count.
+I need examples of algorithms that could benefit from this operator.  I'm concerned that we'll want to roll up occurrences by person most of the time and that would require us to first cast streams to person before passing the person stream to count.
 ```ConceptQL
 # Count the number of times each person was irritable
 {
@@ -1095,7 +1096,7 @@ We could do dumb things like count the number of times a row shows up in a union
 ```
 
 #### Numeric Value Comparison
-Acts like any other binary node.  L and R streams, joined by person.  Any L that pass comparison go downstream.  R is thrown out.  Comparison based on result row's value column.
+Acts like any other binary operator.  L and R streams, joined by person.  Any L that pass comparison go downstream.  R is thrown out.  Comparison based on result row's value column.
 
 - Less than
 - Less than or equal
@@ -1105,8 +1106,8 @@ Acts like any other binary node.  L and R streams, joined by person.  Any L that
 - Not equal
 
 
-### numeric as criterion node
-Numeric doesn't have to take a stream.  If it doesn't have a stream as an argument, it acts like a criterion node much like date_range
+### numeric as selection operator
+Numeric doesn't have to take a stream.  If it doesn't have a stream as an argument, it acts like a selection operator much like date_range
 ```ConceptQL
 # People with more than 1 MI
 {
@@ -1124,12 +1125,12 @@ Numeric doesn't have to take a stream.  If it doesn't have a stream as an argume
         - Sums the value_as_numeric column within that grouping
         - Sets start_date to the earliest start_date in the group
         - Sets the end_date to the most recent end_date in the group
-        - Sets criterion_id to 0 since there is no particular single row that the result refers to anymore
+        - Sets selection_id to 0 since there is no particular single row that the result refers to anymore
 
 
-# Appendix A - Criterion Nodes
+# Appendix A - Selection Operators
 
-| Node Name | Stream Type | Arguments | Returns |
+| Operator Name | Stream Type | Arguments | Returns |
 | ---- | ---- | --------- | ------- |
 | cpt  | procedure_occurrence | 1 or more CPT codes | All results whose source_value match any of the CPT codes |
 | icd9 | condition_occurrence | 1 or more ICD-9 codes | All results whose source_value match any of the ICD-9 codes |
@@ -1144,8 +1145,8 @@ Numeric doesn't have to take a stream.  If it doesn't have a stream as an argume
 | snomed | condition_occurrence | 1 or more SNOMED codes | All results whose source_value match any of the SNOMED codes |
 
 
-# Appendix B - Concept Showcase
-Here I take some concepts from [OMOP's Health Outcomes of Interest](http://omop.org/HOI) and turn them into ConceptQL statements to give more examples.  I truncated some of the sets of codes to help ensure the diagrams didn't get too large.
+# Appendix B - Algorithm Showcase
+Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omop.org/HOI) and turn them into ConceptQL statements to give more examples.  I truncated some of the sets of codes to help ensure the diagrams didn't get too large.
 
 ### Acute Kidney Injury - Narrow Definition and diagnositc procedure
 
@@ -1264,23 +1265,23 @@ ConceptQL is not yet fully specified.  These are modifications/enhancements that
 5. How do we want to look up standard vocab concepts?
      - I think Marc’s approach is a bit heavy-handed
 
-Some statements maybe very useful and it would be handy to reuse the bulk of the statement, but perhaps vary just a few things about it.  ConceptQL supports the idea of using variables to represent sub-expressions.  The variable node is used as a place holder to say "some criteria set belongs here".  That variable can be defined in another part of the criteria set and will be used in all places the variable node appears.
+Some statements maybe very useful and it would be handy to reuse the bulk of the statement, but perhaps vary just a few things about it.  ConceptQL supports the idea of using variables to represent sub-expressions.  The variable operator is used as a place holder to say "some criteria set belongs here".  That variable can be defined in another part of the criteria set and will be used in all places the variable operator appears.
 
 
 ### Future Work for Define and Recall
-I'd like to make it so if a variable node is used, but not defined, the concept is still valid, but will fail to run until a definition for all missing variables is provided.
+I'd like to make it so if a variable operator is used, but not defined, the algorithm is still valid, but will fail to run until a definition for all missing variables is provided.
 
 But I don't have a good feel for:
 
 - Whether we should have users name the variables, or auto-assign a name?
-    - We risk name collisions if a concept includes a sub-concept with the same variable name
+    - We risk name collisions if a algorithm includes a sub-algorithm with the same variable name
     - Probably need to name space all variables
 - How to prompt users to enter values for variables in a concept
-    - If we have name-spaced variables and sub-concepts needing values, how do we show this in a coherent manner to a user?
-- We'll need to do a pass through a concept to find all variables and prompt a user, then do another pass through the concept before attempting to execute it to ensure all variables have values
+    - If we have name-spaced variables and sub-algorithms needing values, how do we show this in a coherent manner to a user?
+- We'll need to do a pass through a algorithm to find all variables and prompt a user, then do another pass through the algorithm before attempting to execute it to ensure all variables have values
     - Do we throw an exception if not?
-    - Do we require calling programs to invoke a check on the concept before generating the query?
-- Perhaps slot is a different node from "define"
+    - Do we require calling programs to invoke a check on the algorithm before generating the query?
+- Perhaps slot is a different operator from "define"
 
 
 ### Considerations for Values
@@ -1301,8 +1302,8 @@ I'm considering defaulting each value_as\_\* column to some value.
 ```
 
 
-### Filter Node
-Inspired by person_filter, why not just have a "filter" node that filters L by R.  Takes L, R, and an "as" option.  As option temporarily casts the L and R streams to the type specified by :as and then does person by person comparison, only keeping rows that occur on both sides.  Handy for keeping procedures that coincide with conditions without fully casting the streams:
+### Filter Operator
+Inspired by person_filter, why not just have a "filter" operator that filters L by R.  Takes L, R, and an "as" option.  As option temporarily casts the L and R streams to the type specified by :as and then does person by person comparison, only keeping rows that occur on both sides.  Handy for keeping procedures that coincide with conditions without fully casting the streams:
 ```ConceptQL
 # All 99214's where person was irritable during a visit
 {
@@ -1326,16 +1327,16 @@ person_filter then becomes a special case of general filter:
 }
 ```
 
-Filter node is the opposite of Except.  It only includes L if R matches.
+Filter operator is the opposite of Except.  It only includes L if R matches.
 
 ### AS option for Except
-Just like Filter has an :as option, add one to Except node.  This would simplify some of the algorithms I've developed.
+Just like Filter has an :as option, add one to Except operator.  This would simplify some of the algorithms I've developed.
 
 
 ### How to Handle fact_relationship Table from CDMv5
-Each relationship type could be a binary node box read as L <relationship> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
+Each relationship type could be a binary operator box read as L <relationship> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
 
-We could implement a single node that takes a relationship as an argument (on top of the L and R arguments) or we could create a node class for each relationship.  I think it would be better to have a single relationship node class and take the relationship as the argument.
+We could implement a single operator that takes a relationship as an argument (on top of the L and R arguments) or we could create a operator class for each relationship.  I think it would be better to have a single relationship operator class and take the relationship as the argument.
 
 The next question is: how do we actually join the two streams?  I suppose we could translate each "type" into a "domain" and then join where l.domain = domain_concept_id_1 and l.entity_id = fact_id_1 and R.domain = domain_concept_id_2 and R.entity_id = fact_id_2 where the relationship chosen = relationship_concept_id.
 
