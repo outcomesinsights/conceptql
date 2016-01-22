@@ -9,7 +9,7 @@ Outcomes Insights intends to build a vast library of research algorithms and app
 1. Methods sections of research papers commonly use natural language to specify the criteria used to build cohorts from a claims database.
     - Algorithms defined in natural language are often imprecise, open to multiple interpretations, and generally difficult to reproduce.
     - Researchers could benefit from a language that removes the ambiguity of natural language while increasing the reproducibility of their research algorithms.
-2. Querying against claims databases is often difficult.
+1. Querying against claims databases is often difficult.
     - Hand-coding algorithms to extract cohorts from datasets is time-consuming, error-prone, and opaque.
     - Researchers could benefit from a language that allows algorithms to be defined at a high-level and then gets translated into the appropriate queries against a database.
 
@@ -18,16 +18,19 @@ We developed ConceptQL to address these two issues.
 We are writing a tool that can read research algorithms defined in ConceptQL.  The tool can create a diagram for the algorithm which makes it easy to visualize and understand.  The tool can also translate the algorithm into a SQL query which runs against data structured in [OMOP's Common Data Model (CDM)](http://omop.org/CDM).  The purpose of the CDM is to standardize the format and content of observational data, so standardized applications, tools and methods can be applied to them.
 
 For instance, using ConceptQL we can take a statement that looks like this:
+
 ```YAML
 :icd9: '412'
 ```
 
 And generate a diagram that looks like this:
+
 ```ConceptQL
 { icd9: '412' }
 ```
 
 And generate SQL that looks like this:
+
 ```SQL
 SELECT *
 FROM cdm_data.condition_occurrence AS co
@@ -39,8 +42,8 @@ AND scm.source_code = co.condition_source_value
 
 As stated above, one of the goals of ConceptQL is to make it easy to assemble fairly complex queries without having to roll up our sleeves and write raw SQL.  To accommodate this complexity, ConceptQL itself has some complexities of its own.  That said, we believe ConceptQL will help researchers define, hone, and share their research algorithms.
 
-
 ## ConceptQL Overview
+
 ### What ConceptQL Looks Like
 
 I find seeing examples to be the quickest way to get a sense of a language.  Here is a trivial example to whet your appetite.  The example is in YAML, but could just as easily be in JSON or any other markup language capable of representing nested sets of heterogeneous arrays and hashes.  In fact, the ConceptQL "language" is a just set of nested hashes and arrays representing search criteria and some set operations and temporal operations to glue those criteria together.
@@ -54,14 +57,16 @@ I find seeing examples to be the quickest way to get a sense of a language.  Her
 ```
 
 ### ConceptQL Diagrams
+
 Reading ConceptQL in YAML or JSON seems hard to me.  I prefer to explore ConceptQL using directed graphs.  For instance, the diagram for the simple example listed in YAML above is:
+
 ```ConceptQL
 # All Conditions Matching MI
 { icd9: '412' }
 ```
 
-
 Each oval depicts a "operator", or rather, a ConceptQL expression.  An arrow between a pair of operators indicates that the results from the operator on the tail of the arrow pass on to the operator at the head of the arrow.  A simple example should help here:
+
 ```ConceptQL
 # First Office Visit Per Patient
 {
@@ -71,19 +76,18 @@ Each oval depicts a "operator", or rather, a ConceptQL expression.  An arrow bet
 }
 ```
 
-
 The diagram above reads "get all procedures that match the CPT 99214 (Office Visit) and then filter them down to the first occurrence for each person".  The diagram is much more terse than that and to accurately read the diagram, you need a lot of implicit knowledge about how each operator operates.  Fortunately, this document will (hopefully) impart that knowledge to you.
 
 Please note that all of my diagrams end with an arrow pointing at nothing.  You'll see why soon.
 
-
 ### Think of Results as a Stream
+
 I draw my ConceptQL diagrams with leaf operators at the top and the "trunk" operators at the bottom.  I like to think of the results of a ConceptQL statement as a flowing stream of data.  The leaf operators, or operators that gather results out of the database, act like tributaries.  The results flow downwards and either join with other results, or filter out other results until the streams emerge at the bottom of the diagram.  Think of each arrow as a stream of results, flowing down through one operator to the next.
 
 The trailing arrow in the diagrams serves as a reminder that ConceptQL yields a stream of results.
 
-
 ### Streams have Types
+
 You might have noticed that the operators and edges in the diagrams often have a color.  That color represents what "type" of stream the operator or edge represents.  There are many types in ConceptQL, and you'll notice they are __strongly__ correlated with the tables found in [CDM v4.0](http://omop.org/CDM):
 
 - condition_occurrence
@@ -111,19 +115,21 @@ Each stream has a point of origin (essentially, the table from which we pulled t
 
 You'll also notice that the trailing arrow(s) at the end of the diagrams indicate which types of streams are ultimately passed on at the end of a ConceptQL statement.
 
-
 ### What *are* Streams Really?
+
 Though I think that a "stream" is a helpful abstraction when thinking in ConceptQL, on a few occasions we need to know what's going on under the hood.
 
 Every table in the CDM structure has a surrogate key column (an ID column).  When we execute a ConceptQL statement, the "streams" that are generated by the statement are just sets of these IDs for rows that matched the ConceptQL criteria.  So each stream is just a set of IDs that point back to some rows in one of the CDM tables.  When a stream has a "type" it is really just that the stream contains IDs associated with its table of origin.
 
 So when we execute this ConceptQL statement, the resulting "stream" is all the person IDs for all male patients in the database:
+
 ```ConceptQL
 # All Male Patients
 { gender: 'Male' }
 ```
 
 When we execute this ConceptQL statement, the resulting "stream" is all condition_occurrence IDs that match ICD-9 799.22:
+
 ```ConceptQL
 # All Condition Occurrences that match ICD-9 799.22
 { icd9: '799.22' }
@@ -151,15 +157,18 @@ There are _many_ selection operators.  A list of currently implemented operators
 Virtually all other operators add, remove, filter, or otherwise alter streams of results.  They are discussed in this section.
 
 ## Set Operators
+
 Because streams represent sets of results, its makes sense to include a operators that operate on sets
 
 ### Union
+
 - Takes any number of upstream operators and aggregates their streams
     - Unions together streams with identical types
         - Think of streams with the same type flowing together into a single stream
         - We're really just gathering the union of all IDs for identically-typed streams
     - Streams with the different types flow along together concurrently without interacting
         - It does not make sense to union, say, condition_occurrence_ids with visit_occurrence_ids, so streams with different types won't mingle together, but will continue to flow downstream in parallel
+
 ```ConceptQL
 # Two streams of the same type (condition_occurrence) joined into a single stream
 {
@@ -169,6 +178,7 @@ Because streams represent sets of results, its makes sense to include a operator
   ]
 }
 ```
+
 ```ConceptQL
 # Two streams of the same type (condition_occurrence) joined into a single stream, then a different stream (visit_occurrence) flows concurrently
 {
@@ -181,6 +191,7 @@ Because streams represent sets of results, its makes sense to include a operator
   ]
 }
 ```
+
 ```ConceptQL
 # Two streams of the same type (condition_occurrence) joined into a single stream, along with a different stream (visit_occurrence) flows concurrently (same as above example)
 {
@@ -193,11 +204,13 @@ Because streams represent sets of results, its makes sense to include a operator
 ```
 
 ### Intersect
+
 1. Group incoming streams by type
-2. For each group of same-type streams
-     1. Intersect all streams, yielding a single stream that contains only those IDs common to those streams
-3. A single stream for each incoming type is sent downstream
-     1. If only a single stream of a type is upstream, that stream is essentially unaltered as it is passed downstream
+1. For each group of same-type streams
+     a. Intersect all streams, yielding a single stream that contains only those IDs common to those streams
+1. A single stream for each incoming type is sent downstream
+     a. If only a single stream of a type is upstream, that stream is essentially unaltered as it is passed downstream
+
 ```ConceptQL
 # Yields a single stream of all Conditions where MI was Primary Diagnosis.  This involves two Condition streams and so results are intersected
 {
@@ -207,6 +220,7 @@ Because streams represent sets of results, its makes sense to include a operator
   ]
 }
 ```
+
 ```ConceptQL
 # Yields two streams: a stream of all MI Conditions and a stream of all Male patients.  This is essentially the same behavior as Union in this case
 {
@@ -216,6 +230,7 @@ Because streams represent sets of results, its makes sense to include a operator
   ]
 }
 ```
+
 ```ConceptQL
 # Yields two streams: a stream of all Conditions where MI was Primary Diagnosis and a stream of all White, Male patients.
 {
@@ -229,7 +244,9 @@ Because streams represent sets of results, its makes sense to include a operator
 ```
 
 ### Complement
+
 This operator will take the complement of each set of IDs in the incoming streams.
+
 ```ConceptQL
 # All non-MI Conditions
 {
@@ -238,6 +255,7 @@ This operator will take the complement of each set of IDs in the incoming stream
 ```
 
 If you're familiar with set operations, the complement of a union is the intersect of the complements of the items unioned.  So in our world, these next two examples are identical:
+
 ```ConceptQL
 # All Conditions where the Condition isn't an MI as the Primary Diagnosis
 {
@@ -249,6 +267,7 @@ If you're familiar with set operations, the complement of a union is the interse
   }
 }
 ```
+
 ```ConceptQL
 # All Conditions where the Condition isn't an MI as the Primary Diagnosis (same as above)
 {
@@ -260,6 +279,7 @@ If you're familiar with set operations, the complement of a union is the interse
 ```
 
 But please be aware that this behavior of complement only affects streams of the same type.  If more than one stream is involved, you need to evaluate the effects of complement on a stream-by-stream basis:
+
 ```ConceptQL
 # Yields two streams: a stream of all Conditions where the conditions isn't an MI and Primary Diagnosis and a stream of all non-office visit Procedures
 {
@@ -272,6 +292,7 @@ But please be aware that this behavior of complement only affects streams of the
   }
 }
 ```
+
 ```ConceptQL
 # Yields two streams: a stream of all Conditions where the conditions isn't an MI and Primary Diagnosis and a stream of all non-office visit Procedures (same as above)
 {
@@ -282,6 +303,7 @@ But please be aware that this behavior of complement only affects streams of the
   ]
 }
 ```
+
 ```ConceptQL
 # Yields two streams: a stream of all Conditions where the conditions isn't an MI and Primary Diagnosis and a stream of all non-office visit Procedures (same as above)
 {
@@ -299,7 +321,9 @@ But please be aware that this behavior of complement only affects streams of the
 
 
 ### Except
+
 This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream.  The operator matches like-type streams between the left-hand and right-hand streams. The operator removes any results in the left-hand stream if they appear in the right-hand stream.  The operator passes only results for the left-hand stream downstream.  The operator discards all results in the right-hand stream. For example:
+
 ```ConceptQL
 # All Conditions that are MI unless they are primary diagnoses
 {
@@ -309,6 +333,7 @@ This operator takes two sets of incoming streams, a left-hand stream and a right
   }
 }
 ```
+
 ```ConceptQL
 # All Conditions that are MI unless they are primary diagnoses (same as above)
 {
@@ -320,6 +345,7 @@ This operator takes two sets of incoming streams, a left-hand stream and a right
 ```
 
 If the left-hand stream has no types that match the right-hand stream, the left-hand stream passes through unaffected:
+
 ```ConceptQL
 # All Conditions that are MI
 {
@@ -331,6 +357,7 @@ If the left-hand stream has no types that match the right-hand stream, the left-
 ```
 
 And just to show how multiple streams behave:
+
 ```ConceptQL
 # Passes three streams downstream: a stream of Conditions that are MI but not primary diagnosis, a stream of People that are Male but not White, and a stream of Procedures that are office visits (this stream is completely unaffected by the right hand stream)
 {
@@ -351,9 +378,12 @@ And just to show how multiple streams behave:
   }
 }
 ```
+
 ### Discussion about Set Operators
+
 #### Union Operators
-*Q. Why should we allow two different types of streams to continue downstream concurrently?*
+
+##### Q. Why should we allow two different types of streams to continue downstream concurrently?
 
 - This feature lets us do interesting things, like find the first occurrence of either an MI or Death as in the example below
     - Throw in a few more criteria and you could find the first occurrence of all censor events for each patient
@@ -370,8 +400,7 @@ And just to show how multiple streams behave:
 }
 ```
 
-
-Q. Why aren't all streams passed forward unaltered?  Why union like-typed streams?
+##### Q. Why aren't all streams passed forward unaltered?  Why union like-typed streams?
 
 - The way Intersect works, if we passed like-typed streams forward without unioning them, Intersect would end up intersecting the two un-unioned like-type streams and that's not what we intended
 - Essentially, these two diagrams would be identical:
@@ -391,7 +420,6 @@ Q. Why aren't all streams passed forward unaltered?  Why union like-typed stream
 }
 ```
 
-
 ```ConceptQL
 # Two streams: a stream of all Conditions matching either 412 AND 799.22 (an empty stream, a condition cannot be both 412 and 799.22 at the same time) and a stream of Procedures matching 99214
 {
@@ -408,6 +436,7 @@ Q. Why aren't all streams passed forward unaltered?  Why union like-typed stream
 ```
 
 ## Time-oriented Operators
+
 All results in a stream carry a start_date and end_date with them.  All temporal comparisons of streams use these two date columns.  Each result in a stream derives its start and end date from its corresponding row in its table of origin.
 
 For instance, a visit_occurrence result derives its start_date from visit_start_date and its end_date from visit_end_date.
@@ -416,11 +445,12 @@ If a result comes from a table that only has a single date value, the result der
 
 The person stream is a special case.  Person results use the person's date of birth as the start_date and end_date.  This may sound strange, but we will explain below why this makes sense.
 
-
 ### Relative Temporal Operators
+
 When looking at a set of results for a person, perhaps we want to select just the chronologically first or last result.  Or maybe we want to select the 2nd result or 2nd to last result.  Relative temporal operators provide this type of filtering.  Relative temporal operators use a result's start_date to do chronological ordering.
 
 #### occurrence
+
 - Takes a two arguments: the stream to select from and an integer argument
 - For the integer argument
     - Positive numbers mean 1st, 2nd, 3rd occurrence in chronological order
@@ -429,7 +459,7 @@ When looking at a set of results for a person, perhaps we want to select just th
     - Negative numbers mean 1st, 2nd, 3rd occurrence in reverse chronological order
         - e.g. -1 => last
         - e.g. -4 => fourth from last
-      - 0 is undefined?
+    - 0 is undefined?
 
 ```ConceptQL
 # For each patient, select the Condition that represents the third occurrence of an MI
@@ -441,8 +471,8 @@ When looking at a set of results for a person, perhaps we want to select just th
 }
 ```
 
-
 #### first
+
 - Operator that is shorthand for writing "occurrence: 1"
 
 ```ConceptQL
@@ -452,8 +482,8 @@ When looking at a set of results for a person, perhaps we want to select just th
 }
 ```
 
-
 #### last
+
 - Operator that is just shorthand for writing "occurrence: -1"
 
 ```ConceptQL
@@ -463,23 +493,24 @@ When looking at a set of results for a person, perhaps we want to select just th
 }
 ```
 
-
 ### Date Literals
+
 For situations where we need to represent pre-defined date ranges, we can use "date literal" operators.
 
 #### date_range
+
 - Takes a hash with two elements: { start: \<date-format\>, end: \<date-format\> }
 - Creates an inclusive, continuous range of dates defined by a start and end date
 
-
 #### day
+
 - Takes a single argument: \<date-format\>
 - Represents a single day
 - Shorthand for creating a date range that starts and ends on the same date
 - *Not yet implemented*
 
-
 #### What is <date-format\>?
+
 Dates follow these formats:
 
 - "YYYY-MM-DD"
@@ -489,8 +520,8 @@ Dates follow these formats:
 - "END"
     - Represents the last date of information available from the data source.
 
-
 ### Temporal Comparison Operators
+
 As described above, each result carries a start and end date, defining its own date range.  It is through these date ranges that we are able to do temporal filtering of streams via temporal operators.
 
 Temporal operators work by comparing a left-hand stream (L) against a right-hand stream (R).  R can be either a set of streams or a pre-defined date range.  Each temporal operator has a comparison operator which defines how it compares dates between L and R.  A temporal operator passes results only from L downstream.  A temporal operator discards all results in the R stream after it makes all comparisons.
@@ -520,6 +551,7 @@ Ryan's Sidebar on These Definitions:
 > We may want to adopt a less strict set of definitions, though their meaning may not be as easily defined as the one provided by Allen's Interval Algebra
 
 When comparing results in L against a date range, results in L continue downstream only if they pass the comparison.
+
 ```ConceptQL
 # All MIs for the year 2010
 {
@@ -540,6 +572,7 @@ When comparing results in L against a set of results in R, the temporal operator
 - If a person has results in L or R stream, but not in both, none of their results continue downstream
 - On a per person basis, the temporal operator joins all results in the L stream to all results in the R stream
     - Any results in the L stream that meet the temporal comparison against any results in the R stream continue downstream
+
 ```ConceptQL
 # All MIs While Patients had Part A Medicare
 {
@@ -551,6 +584,7 @@ When comparing results in L against a set of results in R, the temporal operator
 ```
 
 #### Edge behaviors
+
 For 11 of the 13 temporal operators, comparison of results is straight-forward.  However, the before/after operators have a slight twist.
 
 Imagine events 1-1-2-1-2-1.  In my mind, three 1's come before a 2 and two 1's come after a 2.  Accordingly:
@@ -559,7 +593,6 @@ Imagine events 1-1-2-1-2-1.  In my mind, three 1's come before a 2 and two 1's c
 - When comparing L **after** R, the temporal operator compares L against the **FIRST** occurrence of R per person
 
 If we're looking for events in L that occur before events in R, then any event in L that occurs before the last event in R technically meet the comparison of "before".  The reverse is true for after: all events in L that occur after the first event in R technically occur after R.
-
 
 ```ConceptQL
 # All MIs that occurred before a patient's __last__ case of irritability (799.22)
@@ -572,6 +605,7 @@ If we're looking for events in L that occur before events in R, then any event i
 ```
 
 If this is not the behavior you desire, use one of the sequence operators to select which event in R should be the one used to do comparison
+
 ```ConceptQL
 # All MIs that occurred before a patient's __first__ case of irritability (799.22)
 {
@@ -587,12 +621,14 @@ If this is not the behavior you desire, use one of the sequence operators to sel
 ```
 
 ### Time Windows
+
 There are situations when the date columns associated with a result should have their values shifted forward or backward in time to make a comparison with another set of dates.
 
 #### time_window
+
 - Takes 2 arguments
     - First argument is the stream on which to operate
-    - Second argument is a hash with two keys: [:start, :end] each with a value in the following format:  "(-?\d+[dmy])+"
+    - Second argument is a hash with two keys: \[:start, :end\] each with a value in the following format:  "(-?\d+\[dmy\])+"
         - Both start and end must be defined, even if you are only adjusting one of the dates
     - Some examples
         - 30d => 30 days
@@ -665,7 +701,9 @@ There are situations when the date columns associated with a result should have 
 ```
 
 #### Temporal Operators and Person Streams
+
 Person streams carry a patient's date of birth in their date columns.  This makes them almost useless when they are part of the L stream of a temporal operator.  But person streams are useful as the R stream.  By ```time_window```ing the patient's date of birth, we can filter based on the patient's age like so:
+
 ```ConceptQL
 # All MIs that occurred after a male patient's 50th birthday
 {
@@ -685,11 +723,14 @@ Person streams carry a patient's date of birth in their date columns.  This make
 ```
 
 ## Type Conversion
+
 There are situations where it is appropriate to convert the type of a stream of results into a different type.  In programmer parlance, we say "typecasting" or "casting", which is the terminology we'll use here.  A good analogy and mnemonic for casting is to think of taking a piece of metal, say a candle holder, melting it down, and recasting it into, say, a lamp.  We'll do something similar with streams.  We'll take, for example, a visit_occurrence stream and recast it into a stream of person.
 
 ### Casting to person
+
 - Useful if we're just checking for the presence of a condition for a person
 - E.g. We want to know *if* a person has an old MI, not when an MI or how many MIs occurred
+
 ```ConceptQL
 # All People Who Had an MI
 {
@@ -698,12 +739,15 @@ There are situations where it is appropriate to convert the type of a stream of 
   }
 }
 ```
+
 ### Casting to a visit_occurrence
+
 - It is common to look for a set of conditions that coincide with a set of procedures
 - Gathering conditions yields a condition stream, gathering procedures yields a procedure stream
     - It is not possible to compare those two streams directly using AND
     - It is possible to compare the streams temporally, but CDM provides a visit_occurrence table to explicitly tie a set of conditions to a set of procedures
 - Casting both streams to visit_occurrence streams allows us to gather all visit_occurrences for which a set of conditions/procedures occurred in the same visit
+
 ```ConceptQL
 # All Visits Where a Patient Had an MI During and Office Visit
 {
@@ -725,6 +769,7 @@ There are situations where it is appropriate to convert the type of a stream of 
 Many tables have a foreign key (FK) reference to the visit_occurrence table.  If we cast a result to a visit_occurrence, and its table of origin has a visit_occurrence_id FK column, the result becomes a visit_occurrence result corresponding to the row pointed to by visit_occurrence_id.  If the row's visit_occurrence_id is NULL, the result is discarded from the stream.
 
 If the result's table of origin has no visit_occurrence_id column, we will instead replace the result with ALL visit_occurrences for the person assigned to the result.  This allows us to convert between a person stream and visit_occurrence stream and back.  E.g. we can get all male patients, then ask for their visit_occurrences later downstream.
+
 ```ConceptQL
 # All Visits for All Male Patients
 {
@@ -735,10 +780,11 @@ If the result's table of origin has no visit_occurrence_id column, we will inste
 ```
 
 ### Casting Loses All Original Information
+
 After a result undergoes casting, it loses its original information.  E.g. casting a visit_occurrence to a person loses the visit_occurrence information and resets the start_date and end_date columns to the person's date of birth.  As a side note, this is actually handy if a stream’s dates have been altered by a time_window operator and you want the original dates later on.  Just cast the stream to its same type and it will regain its original dates.
 
-
 ### Cast all the Things!
+
 Although casting to visit_occurrence and person are the most common types of casting, we can cast to and from any of the types in the ConceptQL system.
 
 The general rule will be that if the source type has a defined relationship with the target type, we'll cast using that relationship, e.g. casting visit_occurrences to procedures will turn all visit_occurrence results into the set of procedure results that point at those original visit_occurrences.  But if there is no direct relationship, we'll do a generous casting, e.g. casting observations to procedures will return all procedures for all persons in the observation stream.
@@ -765,13 +811,16 @@ INSERT HANDY TABLE SHOWING CONVERSION MATRIX HERE
 ```
 
 ### Casting as a way to fetch all rows
+
 The casting operator doubles as a way to fetch all rows for a single type.  Provide the casting operator with an argument of ```true``` (instead of an upstream operator) to get all rows as results:
+
 ```ConceptQL
 # All death results in the database
 { death: true }
 ```
 
 This comes in handy for situations like these:
+
 ```ConceptQL
 # All Male patients who died
 {
@@ -782,12 +831,11 @@ This comes in handy for situations like these:
 }
 ```
 
-
 ## Filtering by People
+
 Often we want to filter out a set of results by people.  For instance, say we wanted to find all MIs for all males.  We'd use the person_filter operator for that.  Like the Except operator, it takes a left-hand stream and a right-hand stream.
 
 Unlike the ```except``` operator, the person_filter operator will use all types of all streams in the right-hand side to filter out results in all types of all streams on the left hand side.
-
 
 ```ConceptQL
 # All MI Conditions for people who are male
@@ -800,6 +848,7 @@ Unlike the ```except``` operator, the person_filter operator will use all types 
 ```
 
 But we can get crazier.  The right-hand side doesn't have to be a person stream.  If a non-person stream is used in the right-hand side, the person_filter will cast all right-hand streams to person first and use the union of those streams:
+
 ```ConceptQL
 # All MI Conditions for people who had an office visit at some point in the data
 {
@@ -809,6 +858,7 @@ But we can get crazier.  The right-hand side doesn't have to be a person stream.
   }
 }
 ```
+
 ```ConceptQL
 # All MI Conditions for people who had an office visit at some point in the data (an explicit representation of what's happening in the diagram above)
 {
@@ -818,6 +868,7 @@ But we can get crazier.  The right-hand side doesn't have to be a person stream.
   }
 }
 ```
+
 ```ConceptQL
 # All MI Conditions for people who are Male OR had an office visit at some point in the data
 {
@@ -834,6 +885,7 @@ But we can get crazier.  The right-hand side doesn't have to be a person stream.
 ```
 
 And don't forget the left-hand side can have multiple types of streams:
+
 ```ConceptQL
 # Yields two streams: a stream of all MI Conditions for people who are Male and a stream of all office visit Procedures for people who are Male
 {
@@ -849,20 +901,20 @@ And don't forget the left-hand side can have multiple types of streams:
 }
 ```
 
-
 ## Sub-algorithms within a Larger Concept
+
 If a algorithm is particularly complex, or has a stream of results that are used more than once, it can be helpful to break the algorithm into a set of sub-algorithms.  This can be done using two operators: define and recall
 
-#### define
+### define
+
 - Takes 2 arguments
     - First argument is a string of arbitrary length that describe the stream to be save.  This is the "name" assigned to the stream for later recall
     - Second argument is the stream to save under the name specified
 
+### recall
 
-#### recall
 - Takes 1 argument
     - The "name" of the stream previously saved using the `define` operator
-
 
 A stream must be `define`d before `recall` can use it.
 
@@ -932,8 +984,8 @@ A stream must be `define`d before `recall` can use it.
 ]
 ```
 
-
 ## Algorithms within Algorithms
+
 One of the main motivations behind keeping ConceptQL so flexible is to allow users to build ConceptQL statements from other ConceptQL statements.  This section loosely describes how this feature will work.  Its actual execution and implementation will differ from what is presented here.
 
 Say a ConceptQL statement gathers all visit_occurrences where a patient had an MI and a Hospital encounter (CPT 99231):
@@ -949,6 +1001,7 @@ Say a ConceptQL statement gathers all visit_occurrences where a patient had an M
 ```
 
 If we wanted to gather all costs for all procedures for those visits, we could use the "algorithm" operator to represent the algorithm defined above in a new concept:
+
 ```ConceptQL
 # All Procedure Costs for All Visits as defined above
 {
@@ -957,6 +1010,7 @@ If we wanted to gather all costs for all procedures for those visits, we could u
   }
 }
 ```
+
 The color and edge coming from the algorithm operator are black to denote that we don't know what types or streams are coming from the concept.  In reality, any program that uses ConceptQL can ask the algorithm represented by the algorithm operator for the concept's types.  The result of nesting one algorithm within another is exactly the same had we taken algorithm operator and replaced it with the ConceptQL statement for the algorithm it represents.
 
 ```ConceptQL
@@ -979,8 +1033,8 @@ In the actual implementation of the algorithm operator, each ConceptQL statement
 }
 ```
 
-
 ## Values
+
 A result can carry forward three different types of values, modeled after the behavior of the observation table:
 
 - value_as_numeric
@@ -990,14 +1044,14 @@ A result can carry forward three different types of values, modeled after the be
 - value_as_concept_id
     - For values that are like factors from the observation value_as_concept_id column
 
-
 By default, all value fields are set to NULL, unless a selection operator is explicitly written to populate one or more of those fields.
 
 There are many operations that can be performed on the value_as\_\* columns and as those operations are implemented, this section will grow.
 
 For now we'll cover some of the general behavior of the value_as_numeric column and it's associated operators.
 
-#### numeric
+### numeric
+
 - Takes 2 arguments
     - A stream
     - And a numeric value or a symbol representing the name of a column in CDM
@@ -1015,6 +1069,7 @@ Passing streams through a `numeric` operator changes the number stored in the va
 ```
 
 `numeric` can also take a column name instead of a number.  It will derive the results row's value from the value stored in the column specified.
+
 ```ConceptQL
 # All copays for 99214s
 {
@@ -1026,6 +1081,7 @@ Passing streams through a `numeric` operator changes the number stored in the va
 ```
 
 If something nonsensical happens, like the column specified isn't present in the table pointed to by a result row, value_as_numeric in the result row will be unaffected:
+
 ```ConceptQL
 # Still all MIs with value_as_numeric defaulted to NULL.  condition_occurrence table doesn't have a "paid_copay" column
 {
@@ -1037,6 +1093,7 @@ If something nonsensical happens, like the column specified isn't present in the
 ```
 
 Or if the column specified exists, but refers to a non-numerical column, we'll set the value to 0
+
 ```ConceptQL
 # All MIs, with value set to 0 since the column specified by value operator is a non-numerical column
 {
@@ -1048,6 +1105,7 @@ Or if the column specified exists, but refers to a non-numerical column, we'll s
 ```
 
 With a `numeric` operator defined, we could introduce a sum operator that will sum by patient and type.  This allows us to implement the Charlson comorbidity algorithm:
+
 ```ConceptQL
 {
    sum: [
@@ -1072,9 +1130,11 @@ With a `numeric` operator defined, we could introduce a sum operator that will s
 ```
 
 ### Counting
+
 It might be helpful to count the number of occurrences of a result row in a stream.  A simple "count" operator could group identical rows and store the number of occurrences in the value_as_numeric column.
 
 I need examples of algorithms that could benefit from this operator.  I'm concerned that we'll want to roll up occurrences by person most of the time and that would require us to first cast streams to person before passing the person stream to count.
+
 ```ConceptQL
 # Count the number of times each person was irritable
 {
@@ -1083,6 +1143,7 @@ I need examples of algorithms that could benefit from this operator.  I'm concer
 ```
 
 We could do dumb things like count the number of times a row shows up in a union:
+
 ```ConceptQL
 # All rows with a value of 2 would be rows that were both MI and Primary
 {
@@ -1096,6 +1157,7 @@ We could do dumb things like count the number of times a row shows up in a union
 ```
 
 #### Numeric Value Comparison
+
 Acts like any other binary operator.  L and R streams, joined by person.  Any L that pass comparison go downstream.  R is thrown out.  Comparison based on result row's value column.
 
 - Less than
@@ -1105,9 +1167,10 @@ Acts like any other binary operator.  L and R streams, joined by person.  Any L 
 - Greater than
 - Not equal
 
-
 ### numeric as selection operator
+
 Numeric doesn't have to take a stream.  If it doesn't have a stream as an argument, it acts like a selection operator much like date_range
+
 ```ConceptQL
 # People with more than 1 MI
 {
@@ -1120,6 +1183,7 @@ Numeric doesn't have to take a stream.  If it doesn't have a stream as an argume
 ```
 
 #### sum
+
 - Takes a stream of results and does some wild things
     - Groups all results by person and type
         - Sums the value_as_numeric column within that grouping
@@ -1127,8 +1191,7 @@ Numeric doesn't have to take a stream.  If it doesn't have a stream as an argume
         - Sets the end_date to the most recent end_date in the group
         - Sets selection_id to 0 since there is no particular single row that the result refers to anymore
 
-
-# Appendix A - Selection Operators
+## Appendix A - Selection Operators
 
 | Operator Name | Stream Type | Arguments | Returns |
 | ---- | ---- | --------- | ------- |
@@ -1144,18 +1207,19 @@ Numeric doesn't have to take a stream.  If it doesn't have a stream as an argume
 | rxnorm | drug_exposure | 1 or more RxNorm IDs | All results whose drug_concept_id match any of the RxNorm IDs|
 | snomed | condition_occurrence | 1 or more SNOMED codes | All results whose source_value match any of the SNOMED codes |
 
+## Appendix B - Algorithm Showcase
 
-# Appendix B - Algorithm Showcase
 Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omop.org/HOI) and turn them into ConceptQL statements to give more examples.  I truncated some of the sets of codes to help ensure the diagrams didn't get too large.
 
 ### Acute Kidney Injury - Narrow Definition and diagnositc procedure
 
 - ICD-9 of 584
 - AND
-  - ICD-9 procedure codes of 39.95 or 54.98 within 60 days after diagnosis
+    - ICD-9 procedure codes of 39.95 or 54.98 within 60 days after diagnosis
 - AND NOT
-  - A diagnostic code of chronic dialysis any time before initial diagnosis
-    - V45.1, V56.0, V56.31, V56.32, V56.8
+    - A diagnostic code of chronic dialysis any time before initial diagnosis
+        - V45.1, V56.0, V56.31, V56.32, V56.8
+
 ```ConceptQL
 {
   during: {
@@ -1181,11 +1245,13 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 ```
 
 ### Mortality after Myocardial Infarction #3
+
 - Person Died
 - And Occurrence of 410\* prior to death
 - And either
-     - MI diagnosis within 30 days prior to 410
-     - MI therapy within 60 days after 410
+    - MI diagnosis within 30 days prior to 410
+    - MI therapy within 60 days after 410
+
 ```ConceptQL
 {
   during: {
@@ -1227,9 +1293,11 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 ```
 
 ### GI Ulcer Hospitalization 2 (5000001002)
+
 - Occurrence of GI Ulcer diagnostic code
 - Hospitalization at time of diagnostic code
 - At least one diagnostic procedure during same hospitalization
+
 ```ConceptQL
 # We use the fact that conditions, observations, and procedures all can be tied to a visit_occurrence to find situations where the appropriate conditions, diagnostic procedures, and place of service all occur in the same visit_occurrence
 {
@@ -1250,25 +1318,27 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 }
 ```
 
-# Appendix C - Under Development
+## Appendix C - Under Development
+
 ConceptQL is not yet fully specified.  These are modifications/enhancements that are under consideration.  These ideas are most likely not completely refined and might actually represent changes that would fundamentally break ConceptQL.
 
 ### Todo List
+
 1. Handle costs
     - How do we aggregate?
-2. How do we count?
-3. How do we handle missing values in streams?
+1. How do we count?
+1. How do we handle missing values in streams?
     - For instance, missing DoB on patient?
-4. What does it mean to pass a date range as an L stream?
+1. What does it mean to pass a date range as an L stream?
     - I'm thinking we pass through no results
     - Turns out that, as implemented, a date_range is really a person_stream where the start and end dates represent the range (instead of the date of birth) so we're probably OK
-5. How do we want to look up standard vocab concepts?
-     - I think Marc’s approach is a bit heavy-handed
+1. How do we want to look up standard vocab concepts?
+    - I think Marc’s approach is a bit heavy-handed
 
 Some statements maybe very useful and it would be handy to reuse the bulk of the statement, but perhaps vary just a few things about it.  ConceptQL supports the idea of using variables to represent sub-expressions.  The variable operator is used as a place holder to say "some criteria set belongs here".  That variable can be defined in another part of the criteria set and will be used in all places the variable operator appears.
 
-
 ### Future Work for Define and Recall
+
 I'd like to make it so if a variable operator is used, but not defined, the algorithm is still valid, but will fail to run until a definition for all missing variables is provided.
 
 But I don't have a good feel for:
@@ -1283,9 +1353,10 @@ But I don't have a good feel for:
     - Do we require calling programs to invoke a check on the algorithm before generating the query?
 - Perhaps slot is a different operator from "define"
 
-
 ### Considerations for Values
+
 I'm considering defaulting each value_as\_\* column to some value.
+
 - numeric => 1
 - concept_id => 0
     - Or maybe the concept_id of the main concept_id value from the row?
@@ -1303,7 +1374,9 @@ I'm considering defaulting each value_as\_\* column to some value.
 
 
 ### Filter Operator
+
 Inspired by person_filter, why not just have a "filter" operator that filters L by R.  Takes L, R, and an "as" option.  As option temporarily casts the L and R streams to the type specified by :as and then does person by person comparison, only keeping rows that occur on both sides.  Handy for keeping procedures that coincide with conditions without fully casting the streams:
+
 ```ConceptQL
 # All 99214's where person was irritable during a visit
 {
@@ -1316,6 +1389,7 @@ Inspired by person_filter, why not just have a "filter" operator that filters L 
 ```
 
 person_filter then becomes a special case of general filter:
+
 ```ConceptQL
 # All 99214's where person was irritable at some point in the data
 {
@@ -1330,11 +1404,12 @@ person_filter then becomes a special case of general filter:
 Filter operator is the opposite of Except.  It only includes L if R matches.
 
 ### AS option for Except
+
 Just like Filter has an :as option, add one to Except operator.  This would simplify some of the algorithms I've developed.
 
-
 ### How to Handle fact_relationship Table from CDMv5
-Each relationship type could be a binary operator box read as L <relationship> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
+
+Each relationship type could be a binary operator box read as L \<relationship\> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
 
 We could implement a single operator that takes a relationship as an argument (on top of the L and R arguments) or we could create a operator class for each relationship.  I think it would be better to have a single relationship operator class and take the relationship as the argument.
 
