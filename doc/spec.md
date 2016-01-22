@@ -901,86 +901,52 @@ And don't forget the left-hand side can have multiple types of streams:
 }
 ```
 
-## Sub-algorithms within a Larger Concept
+## Sub-algorithms within a Larger Algorithm
 
-If a algorithm is particularly complex, or has a stream of results that are used more than once, it can be helpful to break the algorithm into a set of sub-algorithms.  This can be done using two operators: define and recall
+If a algorithm is particularly complex, or has a stream of results that are used more than once, it can be helpful to break the algorithm into a set of sub-algorithms.  This can be done using the `label` options and the `recall` operator.
 
-### define
+### `label` option
 
-- Takes 2 arguments
-    - First argument is a string of arbitrary length that describe the stream to be save.  This is the "name" assigned to the stream for later recall
-    - Second argument is the stream to save under the name specified
+Any ConceptQL operator can be assigned a label.  The label simply provides a way to apply a brief description to an operator, generally, what kind of results the operator is producing.  Any operator that has a label can be accessed via the `recall` operator.
 
-### recall
+### `recall` operator
 
 - Takes 1 argument
-    - The "name" of the stream previously saved using the `define` operator
+    - The "label" of an operator from which you'd like to pull the exact same set of results
 
 A stream must be `define`d before `recall` can use it.
 
 ```ConceptQL
 # Save away a stream of results to build the 1 inpatient, 2 outpatient pattern used in claims data algorithms
 [
-  {
-    define: [
-      'Heart Attack Visit',
-      { visit_occurrence: { icd9: '412' } }
-    ]
-  },
-
-  {
-    define: [
-      'Inpatient Heart Attack',
-      {
-        intersect: [
-          { recall: 'Heart Attack Visit'},
-          { place_of_service_code: 21 }
-        ]
-      }
-    ]
-  },
-
-  {
-    define: [
-      'Outpatient Heart Attack',
-      {
-        intersect: [
-          { recall: 'Heart Attack Visit'},
-          {
-            complement: {
-              place_of_service_code: 21
-            }
-          }
-        ]
-      }
-    ]
-  },
-
-  {
-    define: [
-      'Earlier of Two Outpatient Heart Attacks',
-      {
-        before: {
-          left: { recall: 'Outpatient Heart Attack' },
-          right: {
-            time_window: [
-              { recall: 'Outpatient Heart Attack' },
-              { start: '-30d', end: '0' }
-            ]
-          }
-        }
-      }
-    ]
-  },
-
-  {
-    first: {
-      union: [
-        { recall: 'Inpatient Heart Attack' },
-        { recall: 'Earlier of Two Outpatient Heart Attacks'}
+  [
+    "first", [
+    "union",
+      ['intersect',
+          [ 'visit_occurrence',
+              [ 'icd9', '412' ],
+              label: 'Heart Attack Visit'
+          ],
+          [ "place_of_service_code", 21 ]
+      ],
+      ['before',
+          left: [
+              'intersect',
+                  [ 'recall', 'Heart Attack Visit'],
+                  [ 'complement',
+                      [ 'place_of_service_code', 21 ]
+                  ],
+                  label: 'Outpatient Heart Attack'
+              ],
+          right: [
+              'time_window',
+                  [ 'recall', 'Outpatient Heart Attack' ],
+                  { start: '-30d', end: '0' }
+          ],
+          label: 'Earliest of Two Outpatient Heart Attacks'
       ]
-    }
-  }
+    ]
+  ]
 ]
 ```
 
