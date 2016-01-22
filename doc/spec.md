@@ -439,7 +439,6 @@ But please be aware that this behavior of complement only affects streams of the
 ]
 ```
 
-
 ### Except
 
 This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream.  The operator matches like-type streams between the left-hand and right-hand streams. The operator removes any results in the left-hand stream if they appear in the right-hand stream.  The operator passes only results for the left-hand stream downstream.  The operator discards all results in the right-hand stream. For example:
@@ -1871,7 +1870,6 @@ I'm considering defaulting each value_as\_\* column to some value.
   "412"
 ]
 ```
-
 
 ### Filter Operator
 
