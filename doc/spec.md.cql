@@ -214,8 +214,8 @@ Because streams represent sets of results, its makes sense to include a operator
     ]
   ],
   [
-    "place_of_service",
-    "Inpatient"
+    "place_of_service_code",
+    "21"
   ]
 ]
 ```
@@ -233,8 +233,8 @@ Because streams represent sets of results, its makes sense to include a operator
     "799.22"
   ],
   [
-    "place_of_service",
-    "Inpatient"
+    "place_of_service_code",
+    "21"
   ]
 ]
 ```
@@ -914,8 +914,8 @@ There are situations when the date columns associated with a result should have 
 [
   "time_window",
   [
-    "place_of_service",
-    "inpatient"
+    "place_of_service_code",
+    "21"
   ],
   {
     "start": "",
@@ -1058,8 +1058,8 @@ INSERT HANDY TABLE SHOWING CONVERSION MATRIX HERE
       [
         "intersect",
         [
-          "place_of_service",
-          "inpatient"
+          "place_of_service_code",
+          "21"
         ],
         [
           "visit_occurrence",
@@ -1235,61 +1235,59 @@ A stream must be `define`d before `recall` can use it.
 ```ConceptQL
 # Save away a stream of results to build the 1 inpatient, 2 outpatient pattern used in claims data algorithms
 [
+  "first",
   [
-    "first",
+    "union",
     [
-      "union",
+      "intersect",
       [
-        "intersect",
+        "visit_occurrence",
         [
-          "visit_occurrence",
-          [
-            "icd9",
-            "412"
-          ],
-          {
-            "label": "Heart Attack Visit"
-          }
+          "icd9",
+          "412"
         ],
-        [
-          "place_of_service_code",
-          21
-        ]
+        {
+          "label": "Heart Attack Visit"
+        }
       ],
       [
-        "before",
-        {
-          "left": [
-            "intersect",
-            [
-              "recall",
-              "Heart Attack Visit"
-            ],
-            [
-              "complement",
-              [
-                "place_of_service_code",
-                21
-              ]
-            ],
-            {
-              "label": "Outpatient Heart Attack"
-            }
-          ],
-          "right": [
-            "time_window",
-            [
-              "recall",
-              "Outpatient Heart Attack"
-            ],
-            {
-              "start": "-30d",
-              "end": "0"
-            }
-          ],
-          "label": "Earliest of Two Outpatient Heart Attacks"
-        }
+        "place_of_service_code",
+        "21"
       ]
+    ],
+    [
+      "before",
+      {
+        "left": [
+          "intersect",
+          [
+            "recall",
+            "Heart Attack Visit"
+          ],
+          [
+            "complement",
+            [
+              "place_of_service_code",
+              21
+            ]
+          ],
+          {
+            "label": "Outpatient Heart Attack"
+          }
+        ],
+        "right": [
+          "time_window",
+          [
+            "recall",
+            "Outpatient Heart Attack"
+          ],
+          {
+            "start": "-30d",
+            "end": "0"
+          }
+        ],
+        "label": "Earliest of Two Outpatient Heart Attacks"
+      }
     ]
   ]
 ]
@@ -1367,7 +1365,7 @@ In the actual implementation of the algorithm operator, each ConceptQL statement
 [
   "procedure_cost",
   [
-    "concept",
+    "algorithm",
     2031
   ]
 ]
@@ -1762,8 +1760,8 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 [
   "union",
   [
-    "place_of_service",
-    "Inpatient"
+    "place_of_service_code",
+    "21"
   ],
   [
     "visit_occurrence",
@@ -1921,7 +1919,7 @@ Just like Filter has an :as option, add one to Except operator.  This would simp
 
 ### How to Handle fact_relationship Table from CDMv5
 
-Each relationship type could be a binary operator box read as L \<relationship\> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
+Each relationship type could be a binary operator box read as L <relationship\> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
 
 We could implement a single operator that takes a relationship as an argument (on top of the L and R arguments) or we could create a operator class for each relationship.  I think it would be better to have a single relationship operator class and take the relationship as the argument.
 
