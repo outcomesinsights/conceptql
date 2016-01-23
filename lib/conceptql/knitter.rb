@@ -55,17 +55,18 @@ module ConceptQL
       end
 
       def output
+        diagram_markup
         cache.fetch_or_create(lines.join) do
           create_output
         end
       end
 
       def titleize(title)
-        return nil unless title
+        return '' unless title
         title.map(&:strip).join(" ").gsub('#', '')
       end
 
-      def create_output
+      def make_statement_and_title
         lines.shift
         lines.pop
         title, statement = lines.slice_before { |l| l =~ /^\s*#/ }.to_a
@@ -73,30 +74,43 @@ module ConceptQL
           statement = title
           title = nil
         end
-        stmt = eval(statement.join)
-        title = titleize(title)
+        @statement = eval(statement.join)
+        @title = titleize(title)
+      end
+
+      def statement
+        @statement || make_statement_and_title
+        @statement
+      end
+
+      def title
+        @title || make_statement_and_title
+        @title
+      end
+
+      def create_output
         output = []
-        output << title
+        output << title unless title.empty?
         output << ''
         output << "```YAML"
-        output << stmt.to_yaml
+        output << statement.to_yaml
         output << "```"
         output << ''
-        output << diagram_markup(title, stmt)
+        output << diagram_markup
         output << ''
-        output << table(stmt)
+        output << table
         output << ''
         output.compact.join("\n")
       end
 
-      def diagram_markup(title, stmt)
-        diagram_path = diagram(stmt)
+      def diagram_markup
+        diagram_path = diagram(statement)
         return "![#{title}](#{diagram_path})" if diagram_path
         nil
       end
 
-      def table(stmt)
-        results = query(stmt).query.limit(10).all rescue nil
+      def table
+        results = query(statement).query.limit(10).all rescue nil
         if results
           if results.empty?
             "```No Results found.```"
@@ -124,7 +138,14 @@ module ConceptQL
 
       def diagram(stmt)
         knitter.diagram_path(stmt) do |path_name|
-          annotated = query(stmt).annotate rescue FakeAnnotater.new(stmt).annotate
+          annotated = nil
+          begin
+            annotated = query(stmt).annotate
+          rescue
+            #puts $!.message
+            #puts $!.backtrace.join("\n")
+            annotated = FakeAnnotater.new(stmt).annotate
+          end
           ConceptQL::AnnotateGrapher.new.graph_it(annotated, path_name, output_type: 'png')
         end
       end
@@ -149,7 +170,7 @@ module ConceptQL
       def fetch_or_create(str, &block)
         cache_file = cache_file_path(str)
         return cache_file.read if cache_file.exist?
-        p ["cache miss for", str, cache_file]
+        #p ["cache miss for", str, cache_file]
         output = block.call(cache_file)
         cache_file.write(output) unless cache_file.exist?
         cache_file.read
