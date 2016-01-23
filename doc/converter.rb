@@ -23,7 +23,7 @@ end
 lines = File.readlines('doc/spec.md')
 chunks = lines.slice_before { |l| l =~ /```ConceptQL/ }.to_a
 outputs = []
-outputs << chunks.shift
+outputs << chunks.shift unless chunks.first =~ /```ConceptQL/
 puts chunks.count
 outputs += chunks.map do |chunk|
   cql, *remainder = chunk.slice_after { |l| l =~ /^```\n$/ }.to_a
