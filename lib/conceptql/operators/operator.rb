@@ -143,7 +143,7 @@ module ConceptQL
       attr :scope
 
       def annotate_values(db)
-        upstreams.map { |op| op.annotate(db) } + arguments
+        (upstreams.map { |op| op.annotate(db) } + arguments).push(options)
       end
 
       def criterion_id
