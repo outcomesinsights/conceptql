@@ -64,6 +64,7 @@ module ConceptQL
 
     def traverse(g, op)
       op_name, *args, opts = op
+      node_name = "#{op_name}_#{@counter += 1}"
       upstreams, args = args.partition { |arg| arg.is_a?(Array) }
       upstreams.map! do |upstream|
         [upstream, traverse(g, upstream)]
@@ -74,7 +75,7 @@ module ConceptQL
         left_node = traverse(g, left)
         right_node = traverse(g, right)
       else
-        me = g.add_nodes(op_name)
+        me = g.add_nodes(node_name)
         me[:color] = type_color(*types(op))
       end
       label = opts[:name] || op_name.to_s.titlecase
