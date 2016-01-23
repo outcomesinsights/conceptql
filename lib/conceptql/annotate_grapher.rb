@@ -54,7 +54,7 @@ module ConceptQL
       types(from).each do |type|
         n = opts[type][:n]
         if n
-          edge_options[:label] = " rows=#{opts[type][:rows]} \n n=#{n}"
+          edge_options[:label] = " rows=#{commatize(opts[type][:rows])} \n n=#{commatize(n)}"
           edge_options[:style] = 'dashed' if n.zero?
         end
         e = g.add_edges(from_node, to, edge_options)
@@ -94,7 +94,6 @@ module ConceptQL
       exclude = [:annotation, :name, :left, :right]
       label_opts = opts.reject{|k,_| exclude.include?(k)}
       label += "\n#{label_opts.map{|k,v| "#{k}: #{v}"}.join("\n")}" unless label_opts.nil? || label_opts.empty?
-      label
 
       upstreams.each do |upstream, node|
         link_to(g, upstream, node, me)
@@ -114,6 +113,10 @@ module ConceptQL
 
       me[:label] = label
       me
+    end
+
+    def commatize(number)
+      number.to_s.chars.reverse.each_slice(3).map(&:join).join(',').reverse
     end
   end
 end
