@@ -1,9 +1,12 @@
+$: << "lib"
+
 require 'thor'
 require 'sequelizer'
 require 'psych'
 require 'json'
 require 'pp'
 require_relative 'query'
+require_relative 'knitter'
 
 module ConceptQL
   class CLI < Thor
@@ -84,6 +87,11 @@ module ConceptQL
         puts $!.message
         puts $!.backtrace.join("\n")
       end
+    end
+
+    desc 'knit', 'Processes ConceptQL fenced code segments and produces a Markdown file'
+    def knit(file)
+      ConceptQL::Knitter.new(ConceptQL::Database.new(db), file).knit
     end
 
     private
