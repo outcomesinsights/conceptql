@@ -53,8 +53,10 @@ module ConceptQL
       opts = from.last[:annotation]
       types(from).each do |type|
         n = opts[type][:n]
-        edge_options[:label] = " rows=#{opts[type][:rows]} \n n=#{n}"
-        edge_options[:style] = 'dashed' if n.zero?
+        if n
+          edge_options[:label] = " rows=#{opts[type][:rows]} \n n=#{n}"
+          edge_options[:style] = 'dashed' if n.zero?
+        end
         e = g.add_edges(from_node, to, edge_options)
         e[:color] = type_color(type)
       end
