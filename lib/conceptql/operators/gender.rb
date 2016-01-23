@@ -8,6 +8,7 @@ module ConceptQL
       desc 'Returns all person records that match the selected gender.'
       argument :gender, type: :string, options: ['Male', 'Female']
       types :person
+      category "Standard Vocabulary"
 
       def query(db)
         gender_concept_ids = values.map do |value|
