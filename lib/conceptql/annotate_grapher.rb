@@ -6,6 +6,9 @@ module ConceptQL
     def graph_it(statement, file_path, opts={})
       raise "statement not annotated" unless statement.last[:annotation]
       @counter = 0
+
+      output_type = opts.delete(:output_type) || File.extname(file_path).sub('.', '')
+
       opts  = opts.merge( type: :digraph )
       g = GraphViz.new(:G, opts)
       root = traverse(g, statement)
@@ -17,7 +20,7 @@ module ConceptQL
       blank[:fixedsize] = true
       link_to(g, statement, root, blank)
 
-      g.output(File.extname(file_path).sub('.', '') => file_path)
+      g.output(output_type => file_path)
     end
 
     private
