@@ -54,6 +54,9 @@ module ConceptQL
 
     def build_query(db)
       operator.evaluate(db).tap { |q| q.prep_proc = prep_proc }
+    rescue
+      ConceptQL.logger.debug(statement.inspect)
+      raise
     end
 
     def prep_proc
