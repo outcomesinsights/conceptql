@@ -45,7 +45,7 @@ module ConceptQL
       pp q.all
     end
 
-    desc "annotate statement", "Reads in a statement and annotates it"
+    desc "annotate_statement", "Reads in a statement and annotates it"
     def annotate_statement(statement_file)
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
       pp q.annotate
