@@ -20,7 +20,6 @@ module ConceptQL
       chunks = lines.slice_before { |l| l =~ CONCEPTQL_CHUNK_START }.to_a
       outputs = []
       outputs << chunks.shift unless chunks.first =~ CONCEPTQL_CHUNK_START
-      puts chunks.count
       outputs += chunks.map do |chunk|
         cql, *remainder = chunk.slice_after { |l| l =~ /^```\n$/ }.to_a
         cql = ConceptQLChunk.new(cql, cache, self)
@@ -142,8 +141,8 @@ module ConceptQL
           begin
             annotated = query(stmt).annotate
           rescue
-            #puts $!.message
-            #puts $!.backtrace.join("\n")
+            puts $!.message
+            puts $!.backtrace.join("\n")
             annotated = FakeAnnotater.new(stmt).annotate
           end
           ConceptQL::AnnotateGrapher.new.graph_it(annotated, path_name, output_type: 'png')
