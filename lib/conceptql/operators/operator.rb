@@ -67,6 +67,7 @@ module ConceptQL
           .select_append{count{}.*.as(:rows)}
           .select_append{count(:person_id).distinct.as(:n)}
           .each do |h|
+            puts h
             annotation[h.delete(:criterion_type).to_sym] = h
         end
         types.each do |type|
@@ -281,17 +282,25 @@ module ConceptQL
         strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
         concatted_strings = Sequel.join(strings_with_dashes)
 
-        case query.db.database_type
-        when :oracle
-          Sequel.function(:to_date, concatted_strings, 'YYYY-MM-DD')
-        when :mssql
-          Sequel.lit('CONVERT(DATETIME, ?)', concatted_strings)
-        when :impala
-          Sequel.cast(Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime), DateTime)
-        else
-          Sequel.cast(concatted_strings, Date)
+	date = concatted_strings
+	if query.db.database_type == :impala
+          date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
         end
+        cast_date(query.db, date)
       end
+
+def  cast_date(db, date)
+        case db.database_type
+        when :oracle
+          Sequel.function(:to_date, date, 'YYYY-MM-DD')
+        when :mssql
+          Sequel.lit('CONVERT(DATETIME, ?)', date)
+        when :impala
+          Sequel.cast(Sequel.cast(date Sequel.function(:concat_ws, '-', *strings), DateTime), DateTime)
+        else
+          Sequel.cast(date, Date)
+        end
+end
 
       def determine_types
         if upstreams.empty?

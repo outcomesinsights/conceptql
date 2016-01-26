@@ -19,7 +19,8 @@ module ConceptQL
         db.from(:person)
           .select_append(Sequel.cast_string('person').as(:criterion_type))
           .select_append(Sequel.expr(:person_id).as(:criterion_id))
-          .select_append(Sequel.as(start_date(db), :start_date), Sequel.as(end_date(db), :end_date)).from_self
+          .select_append(Sequel.as(cast_date(db, start_date(db)), :start_date),
+                         Sequel.as(cast_date(db, end_date(db)), :end_date)).from_self
       end
 
       def types
@@ -40,9 +41,7 @@ module ConceptQL
       def date_from(db, str)
         return db.from(:observation_period).get { min(:observation_period_start_date) } if str.upcase == 'START'
         return db.from(:observation_period).get { max(:observation_period_end_date) } if str.upcase == 'END'
-        return Sequel.lit('CONVERT(DATETIME, ?)', str) if db.database_type == :mssql
-        return Sequel.lit('CAST(? as TIMESTAMP)', str) if db.database_type == :impala
-        return Sequel.lit('date ?', str)
+        return str
       end
     end
   end
