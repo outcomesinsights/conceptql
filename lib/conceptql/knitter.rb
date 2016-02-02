@@ -91,8 +91,8 @@ module ConceptQL
         output = []
         output << title unless title.empty?
         output << ''
-        output << "```YAML"
-        output << statement.to_yaml
+        output << "```JSON"
+        output << statement.to_json
         output << "```"
         output << ''
         output << diagram_markup
