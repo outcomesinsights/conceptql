@@ -9,7 +9,7 @@ The ConceptQL language is under active development.  If you don't see any activi
 
 ## Further Reading
 
-If you're interested in reading up on ConceptQL, a [rough draft of the specifications document is available](https://github.com/outcomesinsights/conceptql/blob/develop/doc/spec.md) in this repository.
+If you're interested in reading up on ConceptQL, a rough draft of the specifications document is [available in markdown format](https://github.com/outcomesinsights/conceptql_spec).
 
 ## Motivation for ConceptQL
 Outcomes Insights intends to build a vast library of research algorithms and apply those algorithms to large databases of claims data.  Early into building the library, we realized we had to overcome two major issues:
