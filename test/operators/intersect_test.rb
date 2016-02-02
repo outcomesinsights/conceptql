@@ -18,4 +18,14 @@ describe ConceptQL::Operators::Intersect do
        [:race, "White"]]
     ).must_equal("person"=>[1, 2, 5, 7, 8, 12, 14, 20, 23, 25, 27, 28, 38, 40, 45, 51, 53, 55, 59, 60, 63, 65, 68, 78, 80, 82, 85, 90, 91, 92, 95, 96, 99, 101, 107, 108, 110, 112, 119, 120, 125, 127, 128, 130, 131, 132, 138, 142, 143, 145, 146, 149, 150, 152, 153, 154, 158, 161, 164, 172, 174, 175, 178, 181, 183, 187, 189, 191, 192, 195, 203, 205, 206, 207, 212, 215, 218, 222, 227, 229, 231, 233, 238, 239, 244, 245, 246, 249, 251, 262, 266, 268, 270, 271, 273, 274, 275, 276, 279, 280, 285, 287, 288, 289], "condition_occurrence"=>[6083, 8618, 9882, 15149, 18412, 20005, 26766, 31877])
   end
+
+  it "#annotate should work correctly" do
+    query(
+      [:intersect, [:icd9, "412"], [:condition_type, :inpatient_header]]
+    ).annotate.must_equal(["intersect",
+      ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+      ["condition_type", :inpatient_header, {:annotation=>{:condition_occurrence=>{:rows=>1372, :n=>92}}}],
+      {:annotation=>{:condition_occurrence=>{:rows=>8, :n=>8}}}
+    ])
+  end
 end

@@ -10,4 +10,10 @@ describe ConceptQL::Operators::DateRange do
       [:date_range, {:start=>"START", :end=>"END"}]
     ).must_equal("person"=>250)
   end
+
+  it "#annotate should work correctly" do
+    query(
+      [:date_range, {:start=>"2008-03-13", :end=>"2008-03-20"}]
+    ).annotate.must_equal(["date_range", {:start=>"2008-03-13", :end=>"2008-03-20", :annotation=>{:person=>{:rows=>250, :n=>250}}}])
+  end
 end

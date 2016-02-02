@@ -67,7 +67,6 @@ module ConceptQL
           .select_append{count{}.*.as(:rows)}
           .select_append{count(:person_id).distinct.as(:n)}
           .each do |h|
-            puts h
             annotation[h.delete(:criterion_type).to_sym] = h
         end
         types.each do |type|

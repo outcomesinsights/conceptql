@@ -29,7 +29,7 @@ module ConceptQL
     end
 
     def diagram_dir
-      @diagram_dir ||= (file.dirname + file.basename('.md.cql')).tap { |d| d.rmtree if d.exist? ; d.mkpath }
+      @diagram_dir ||= (dir + file.basename('.md.cql')).tap { |d| d.rmtree if d.exist? ; d.mkpath }
     end
 
     def diagram_relative_path
