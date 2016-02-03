@@ -33,7 +33,7 @@ module ConceptQL
       private
 
       def annotate_values(db)
-        [{left: left.annotate(db), right: right.annotate(db)}] + arguments
+        [options.merge(left: left.annotate(db), right: right.annotate(db))] + arguments
       end
 
       def left
