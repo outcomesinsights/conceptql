@@ -66,8 +66,10 @@ module ConceptQL
 
     desc 'fake_graph file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
     def fake_graph(file)
-      require_relative 'fake_grapher'
-      ConceptQL::FakeGrapher.new.graph_it(criteria_from_file(file), '/tmp/graph')
+      require_relative 'fake_annotater'
+      annotated = ConceptQL::FakeAnnotater.new(criteria_from_file(file)).annotate
+      pp annotated
+      ConceptQL::AnnotateGrapher.new.graph_it(annotated, '/tmp/graph.pdf')
       system('open /tmp/graph.pdf')
     end
 
