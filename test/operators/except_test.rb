@@ -27,5 +27,15 @@ describe ConceptQL::Operators::Except do
        :right=>["condition_type", :inpatient_header, {:annotation=>{:condition_occurrence=>{:rows=>1372, :n=>92}}}],
        :annotation=>{:condition_occurrence=>{:rows=>42, :n=>33}}}
     ])
+
+    query(
+      [:except,
+       {:left=>[:icd9, "412"], :right=>[:condition_type, :inpatient_header], :foo=>true}]
+    ).annotate.must_equal(["except",
+      {:left=>["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       :right=>["condition_type", :inpatient_header, {:annotation=>{:condition_occurrence=>{:rows=>1372, :n=>92}}}],
+       :foo=>true,
+       :annotation=>{:condition_occurrence=>{:rows=>42, :n=>33}}}
+    ])
   end
 end
