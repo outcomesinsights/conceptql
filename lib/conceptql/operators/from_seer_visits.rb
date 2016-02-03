@@ -4,6 +4,7 @@ module ConceptQL
   module Operators
     class FromSeerVisits < Operator
       register __FILE__, :omopv4
+      query_columns :observation
 
       def type
         :observation

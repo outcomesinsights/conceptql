@@ -24,14 +24,16 @@ module ConceptQL
     def from(db, label)
       ds = db.from(label)
 
-      # Work around requests for columns by operators.  These
-      # would fail because the CTE would not be defined.  You
-      # don't want to define the CTE normally, but to allow the
-      # columns to still work, send the columns request to the
-      # underlying operator.
-      op = fetch_operator(label)
-      (class << ds; self; end).send(:define_method, :columns) do
-        (@main_op ||= op.evaluate(db)).columns
+      if ENV['CONCEPTQL_CHECK_COLUMNS']
+        # Work around requests for columns by operators.  These
+        # would fail because the CTE would not be defined.  You
+        # don't want to define the CTE normally, but to allow the
+        # columns to still work, send the columns request to the
+        # underlying operator.
+        op = fetch_operator(label)
+        (class << ds; self; end).send(:define_method, :columns) do
+          (@main_op ||= op.evaluate(db)).columns
+        end
       end
 
       ds

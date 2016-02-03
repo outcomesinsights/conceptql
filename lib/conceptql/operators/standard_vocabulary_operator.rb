@@ -21,10 +21,15 @@ module ConceptQL
     class StandardVocabularyOperator < Operator
       category 'Standard Vocabulary'
       category 'Code Lists'
+
       def query(db)
         db.from(table_name)
           .join(:vocabulary__concept___c, c__concept_id: table_concept_column)
           .where(c__concept_code: values, c__vocabulary_id: vocabulary_id)
+      end
+
+      def query_cols
+        table_columns(table_name, :concept)
       end
 
       def type

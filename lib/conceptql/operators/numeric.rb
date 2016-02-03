@@ -28,6 +28,10 @@ Accepts two params:
       argument :value, type: :float
       allows_one_upstream
 
+      def query_cols
+        SELECTED_COLUMNS - [:value_as_number] + [:value_as_number]
+      end
+
       def query(db)
         stream.nil? ? as_criterion(db) : with_kids(db)
       end
@@ -45,7 +49,7 @@ Accepts two params:
       end
 
       def as_criterion(db)
-        db.from(select_it(db.from(:person), :person))
+        db.from(select_it(db.from(:person).clone(:force_columns=>table_columns(:person)), :person))
           .select(*(COLUMNS - [:value_as_number]))
           .select_append(Sequel.lit('?', arguments.first).cast(Float).as(:value_as_number))
           .from_self

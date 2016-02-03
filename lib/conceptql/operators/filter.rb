@@ -6,6 +6,7 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc 'Only pass through results from the LHR that have a corresponding RHR with the same person, criterion_id, and criterion_type'
+      default_query_columns
 
       def query(db)
         rhs = right.evaluate(db)

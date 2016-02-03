@@ -7,6 +7,7 @@ module ConceptQL
 
       desc 'If a LHR result appears in the RHR result, it is removed from the output result set.'
       category 'Set Logic'
+      default_query_columns
 
       def query(db)
         if ignore_dates?

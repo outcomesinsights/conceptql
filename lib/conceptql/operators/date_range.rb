@@ -15,6 +15,10 @@ module ConceptQL
       option :end, type: :string
       category %(Temporal Manipulation)
 
+      def query_cols
+        table_columns(:person) + [:criterion_type, :criterion_id, :start_date, :end_date]
+      end
+
       def query(db)
         db.from(:person)
           .select_append(Sequel.cast_string('person').as(:criterion_type))
