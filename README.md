@@ -135,9 +135,15 @@ After loading the vocabulary data file into the database,
 create an .env file in the root of the conceptql directory,
 similar or identical to the one used for loadmop.  Then
 run `rake test_db_setup`.  This will load the ConceptQL test
-data into the database.  This only needs to be done once.
+data into the database.  This only needs to be done once, not
+everytime you run the tests.
 
 ### Running
+
+If any of the CSV files in `test/data` has been updated since you
+last updated the database, you should run `rake test_db_teardown test_db_setup`
+to reset the data in the database.  Updates to the CSV files in
+`test/data` should be infrequent.
 
 After the test database has been setup, you can run the tests
 using `rake`, as the default task is set to run the tests.
