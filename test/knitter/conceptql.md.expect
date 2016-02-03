@@ -26,11 +26,8 @@ For instance, using ConceptQL we can take a statement that looks like this:
 And generate a diagram that looks like this:
 
 
-```YAML
----
-- icd9
-- '412'
-
+```JSON
+["icd9","412"]
 ```
 
 ![](conceptql/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)
