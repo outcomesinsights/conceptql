@@ -73,6 +73,7 @@ module ConceptQL
     def traverse(stmt)
       stmt.recurse(Array, Hash) do |arr_or_hash|
         if arr_or_hash.is_a?(Array)
+          arr_or_hash.unshift(arr_or_hash.shift.to_sym)
           types = TYPES[arr_or_hash.first.to_sym]
           unless types
             types = previous_types(arr_or_hash)
@@ -89,7 +90,9 @@ module ConceptQL
           types.each do |type|
             annotate_hash[type] = {}
           end
+          save_types(arr_or_hash)
         else
+          arr_or_hash.deep_rekey!
           arr_or_hash[:annotation] ||= {}
         end
         arr_or_hash
@@ -97,12 +100,28 @@ module ConceptQL
     end
 
     def previous_types(arr)
-      extract = if arr.last.is_a?(Hash) && arr.last[:left]
+      extract = if arr.first == :recall
+        [fetch_types(arr[1])].compact
+      elsif arr.last.is_a?(Hash) && arr.last[:left]
         [arr.last[:left]]
       else
         arr.select { |e| e.is_a?(Array) }
       end
       extract.map { |e| e.last[:annotation].keys }.flatten.compact.uniq
+    end
+
+    def fetch_types(label)
+      recorded_types[label]
+    end
+
+    def save_types(op)
+      label = op.last[:label]
+      return unless label
+      recorded_types[label] = op
+    end
+
+    def recorded_types
+      @recorded_types ||= {}
     end
   end
 end
