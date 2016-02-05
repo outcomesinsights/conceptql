@@ -54,6 +54,7 @@ module ConceptQL
     option :watch_file
     def show_graph(file)
       graph_it(criteria_from_file(file))
+      system('open /tmp/graph.pdf')
     end
 
     desc 'show_and_tell_file statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph, then executes the statement against the DB'
@@ -95,7 +96,7 @@ module ConceptQL
     desc 'show_db_graph conceptql_id', 'Shows a graph for the conceptql statement represented by conceptql_id in the db specified by db_url'
     def show_db_graph(conceptql_id)
       result = fetch_conceptql(conceptql_id, options)
-      graph_it(result[:statement].to_hash, db, result[:label])
+      graph_it(result[:statement], db, result[:label])
     end
 
     def fetch_conceptql(conceptql_id)
@@ -107,8 +108,9 @@ module ConceptQL
     def show_and_tell(statement, options, title = nil)
       my_db = db(options)
       q = ConceptQL::Query.new(my_db, statement)
+      statement = q.annotate
       puts 'JSON'
-      puts JSON.pretty_generate(q.statement)
+      puts JSON.pretty_generate(statement)
       graph_it(statement, title)
       STDIN.gets
       puts q.sql
@@ -123,20 +125,9 @@ module ConceptQL
     end
 
     def graph_it(statement, title = nil)
-      require_relative 'graph'
-      require_relative 'tree'
-      conn = db(options)
-      ConceptQL::Graph.new(statement,
-                           dangler: true,
-                           title: title,
-                           db: conn
-                          ).graph_it('/tmp/graph')
-      system('open /tmp/graph.pdf')
-      if options[:watch_file]
-        require_relative 'debugger'
-        debugger = ConceptQL::Debugger.new(statement, db: conn, watch_ids: File.readlines(options[:watch_file]).map(&:to_i))
-        debugger.capture_results('/tmp/debug.xlsx')
-      end
+      my_db = db(options)
+      q = ConceptQL::Query.new(my_db, statement).annotate
+      ConceptQL::AnnotateGrapher.new.graph_it(q, '/tmp/graph.pdf')
     end
 
     def criteria_from_file(file)
