@@ -14,7 +14,7 @@ module ConceptQL
 
     def create(scope, operator, *values)
       if operator.to_s == 'algorithm'
-        statement, desc = algorithm_fetcher.call(values.first)   
+        statement, desc = algorithm_fetcher.call(values.first)
         raise "Can't find algorithm for '#{values.first}'" unless statement
         tree.send(:start_traverse, statement)
       else
@@ -24,10 +24,10 @@ module ConceptQL
         operator = klass.new(*values)
         operator.scope = scope
 
-        # If operator has a replace, replace it with a recall so all references
+        # If operator has a label, replace it with a recall so all references
         # to it use the same code.
         if operator.label
-          operator = Operators::Recall.new(operator.label)
+          operator = Operators::Recall.new(operator.label, original: operator)
           operator.scope = scope
         end
 

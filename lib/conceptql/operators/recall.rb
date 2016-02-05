@@ -34,6 +34,10 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       def source
         arguments.first
       end
+
+      def original
+        options[:original]
+      end
     end
   end
 end
