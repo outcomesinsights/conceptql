@@ -48,8 +48,7 @@ module ConceptQL
       end
 
       if with = query.opts[:with]
-        with.uniq!{|h| h[:name]}
-        with.reverse!
+        query.opts[:with] = reorder_with(with)
       end
 
       query
@@ -59,6 +58,35 @@ module ConceptQL
 
     def fetch_operator(label)
       known_operators[label] || raise("No operator with label: '#{label}'")
+    end
+
+    # We need to arrange the CTEs so that there are no forward references
+    # This means we need to make sure that if CTE A is used in CTE B, CTE A
+    # comes before CTE B.
+    #
+    # My strategy is to loop over all the CTEs, looking for those CTEs
+    # whose name don't appear in another CTE, meaning they aren't referenced
+    # by any other CTE.
+    #
+    # We'll pull those CTEs out and them to the beginning of the list of CTEs
+    # until all CTEs have been pulled out because all the CTEs that refer to
+    # them have already been pulled out.
+    #
+    # I wonder if there is a simpler way to do this?
+    def reorder_with(with)
+      revised = Hash[with.map { |h| [h[:name], h[:dataset]] }]
+      new_with = []
+      while !revised.keys.empty?
+        names = revised.keys
+        datasets = revised.values
+        unreferenced = names.reject do |name|
+          datasets.any? { |dataset| /from\s+[`"]#{name}[`"]/i =~ dataset.sql }
+        end
+        unreferenced.each do |unref|
+          new_with.unshift(name: unref, dataset: revised.delete(unref))
+        end
+      end
+      new_with.tap { |w| require 'pp' ; pp w}
     end
   end
 end
