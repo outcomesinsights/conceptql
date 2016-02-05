@@ -75,7 +75,7 @@ module ConceptQL
 
     desc 'metadata', 'Generates the metadata.js file for the JAM'
     def metadata
-      File.write('/tmp/metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
+      File.write('metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
     end
 
     desc 'convert', 'Converts from hash-based syntax to list-based syntax'
