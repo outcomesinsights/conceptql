@@ -9,6 +9,7 @@ module ConceptQL
     class TemporalOperator < BinaryOperatorOperator
       reset_categories
       category %w(Temporal Relative)
+      default_query_columns
 
       def query(db)
         db.from(db.from(left_stream(db))

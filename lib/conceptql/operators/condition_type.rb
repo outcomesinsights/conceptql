@@ -16,6 +16,7 @@ module ConceptQL
       argument :condition_types, type: :codelist, vocab: 'Condition Type'
       category %(Occurrence Type)
       predominant_types :condition_occurrence
+      query_columns :condition_occurrence
 
       def type
         :condition_occurrence

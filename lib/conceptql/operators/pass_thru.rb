@@ -8,6 +8,10 @@ module ConceptQL
       def types
         upstreams.map(&:types).flatten.uniq
       end
+
+      def query_cols
+        upstreams.first.query_cols
+      end
     end
   end
 end

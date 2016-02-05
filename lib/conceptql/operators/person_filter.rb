@@ -7,6 +7,8 @@ module ConceptQL
 
       desc 'Only passes through a result from the LHR if the person appears in the RHR.'
       category 'Filter'
+      default_query_columns
+
       def query(db)
         db.from(left.evaluate(db))
           .where(person_id: right.evaluate(db).select_group(:person_id))

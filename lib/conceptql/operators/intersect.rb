@@ -8,6 +8,7 @@ module ConceptQL
       desc 'Passes thru any result row that appears in all incoming result sets.'
       allows_many_upstreams
       category 'Set Logic'
+      default_query_columns
 
       def types
         upstreams.map(&:types).flatten.uniq

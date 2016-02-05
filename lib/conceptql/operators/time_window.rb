@@ -27,6 +27,7 @@ module ConceptQL
       option :end, type: :string
       allows_one_upstream
       category %(Temporal Manipulation)
+      default_query_columns
 
       def query(db)
         db.extension :date_arithmetic

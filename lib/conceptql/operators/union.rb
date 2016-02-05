@@ -8,6 +8,7 @@ module ConceptQL
       desc 'Pools sets of incoming results into a single large set of results.'
       allows_many_upstreams
       category 'Set Logic'
+      default_query_columns
 
       def query(db)
         values.map do |expression|

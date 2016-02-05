@@ -14,6 +14,7 @@ module ConceptQL
       desc 'Finds all people that match the races'
       argument :races, type: :codelist, vocab: 'Race'
       types :person
+      query_columns :person, :concept
 
       def query(db)
         db.from(:person___p)

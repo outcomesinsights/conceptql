@@ -44,6 +44,10 @@ occurrence, this operator returns nothing for that person
       allows_one_upstream
       category %w(Temporal Occurrence)
 
+      def query_cols
+        SELECTED_COLUMNS + [:rn]
+      end
+
       def query(db)
         db[:occurrences]
           .with(:occurrences,

@@ -4,6 +4,10 @@ module ConceptQL
   module Operators
     class From < Operator
       register __FILE__, :omopv4
+      
+      def query_cols
+        table_columns(values.first.to_sym)
+      end
 
       def query(db)
         db.from(values.first)

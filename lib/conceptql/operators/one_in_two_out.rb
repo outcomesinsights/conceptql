@@ -19,8 +19,9 @@ in an inpatient setting
       end
 
       def query(db)
-        inpatient = select_it(visit_query(db).where(place_of_service_concept_id: 8717), :visit_occurrence).from_self
-        outpatient = select_it(visit_query(db).exclude(place_of_service_concept_id: 8717), :visit_occurrence).from_self
+        ds = visit_query(db).clone(:force_columns=>table_columns(:visit_occurrence))
+        inpatient = select_it(ds.where(place_of_service_concept_id: 8717), :visit_occurrence).from_self
+        outpatient = select_it(ds.exclude(place_of_service_concept_id: 8717), :visit_occurrence).from_self
 
         date_diff = if db.database_type == :impala
           Sequel.function(:datediff, Sequel.function(:max, :start_date), Sequel.function(:min, :end_date))
@@ -39,6 +40,10 @@ in an inpatient setting
         earliest(db, inpatient.union(relevant_outpatient))
       end
 
+      def query_cols
+        SELECTED_COLUMNS + [:rn]
+      end
+
       private
       def visit_query(db)
         VisitOccurrence.new(FakeOperator.new(stream.evaluate(db).from_self, stream.types)).query(db)
@@ -53,6 +58,8 @@ in an inpatient setting
       end
 
       class FakeOperator < Operator
+        default_query_columns
+
         attr :types
         def initialize(query, types)
           @query = query

@@ -8,6 +8,10 @@ module ConceptQL
       desc 'Counts the number of results the exactly match across all columns.'
       allows_one_upstream
 
+      def query_cols
+        SELECTED_COLUMNS - [:value_as_number] + [:value_as_number]
+      end
+
       def query(db)
         db.from(unioned(db))
           .select_group(*(COLUMNS - [:value_as_number]))
