@@ -107,7 +107,7 @@ module ConceptQL
         end
 
         annotation = metadata[:annotation]
-        evaluate(db)
+        scope.with_ctes(evaluate(db), db)
           .from_self
           .select_group(:criterion_type)
           .select_append{count{}.*.as(:rows)}
