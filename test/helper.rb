@@ -39,7 +39,8 @@ class Minitest::Spec
   end
 
   def dataset(statement)
-    query(statement).query
+    statement = query(statement) unless statement.is_a?(ConceptQL::Query)
+    statement.query
   end
 
   def criteria_ids(statement)

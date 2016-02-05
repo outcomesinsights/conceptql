@@ -7,9 +7,67 @@ describe ConceptQL::Operators::Union do
     ).must_equal("condition_occurrence"=>1175)
 
     criteria_counts(
+      [:union, [:icd9, "412"], [:icd10, 'Z56.1']]
+    ).must_equal("condition_occurrence"=>51)
+
+    criteria_counts(
+      [:union, [:icd9, "412"], [:icd10, 'Z56.1'], [:icd9, "401.9"]]
+    ).must_equal("condition_occurrence"=>1176)
+
+    criteria_counts(
+      [:union, 
+        [:union, [:icd9, "412"], [:icd10, 'Z56.1']],
+        [:icd9, "401.9"]]
+    ).must_equal("condition_occurrence"=>1176)
+
+    criteria_counts(
       [:union,
        [:union, [:icd9, "412"], [:icd9, "401.9"]],
        [:place_of_service_code, "21"]]
+    ).must_equal("condition_occurrence"=>1175, "visit_occurrence"=>170)
+  end
+
+  it "optimize should produce correct results" do
+    criteria_counts(
+      query(
+        [:union, [:icd9, "412"], [:icd9, "401.9"]]
+      ).optimized
+    ).must_equal("condition_occurrence"=>1175)
+
+    criteria_counts(
+      query(
+        [:union, [:icd9, "412"], [:icd10, 'Z56.1']]
+      ).optimized
+    ).must_equal("condition_occurrence"=>51)
+
+    criteria_counts(
+      query(
+        [:union, [:icd9, "412"], [:icd10, 'Z56.1'], [:icd9, "401.9"]]
+      ).optimized
+    ).must_equal("condition_occurrence"=>1176)
+
+    criteria_counts(
+      query(
+        [:union, 
+          [:union, [:icd9, "412"], [:icd10, 'Z56.1']],
+          [:icd9, "401.9"]]
+      ).optimized
+    ).must_equal("condition_occurrence"=>1176)
+
+    criteria_counts(
+      query(
+        [:union,
+          [:union, [:icd9, "412"], [:icd9, "401.9"]],
+          [:union, [:icd9, "412"], [:icd9, "401.9"]]]
+      ).optimized
+    ).must_equal("condition_occurrence"=>1175)
+
+    criteria_counts(
+      query(
+        [:union,
+         [:union, [:icd9, "412"], [:icd9, "401.9"]],
+         [:place_of_service_code, "21"]]
+      ).optimized
     ).must_equal("condition_occurrence"=>1175, "visit_occurrence"=>170)
   end
 
