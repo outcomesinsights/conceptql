@@ -31,6 +31,27 @@ describe ConceptQL::Knitter do
     end
   end
 
+  it "handles graphs with union" do
+    # Also test cache
+    2.times do
+      knit('union').must_equal File.read("test/knitter/union.md.expect")
+    end
+  end
+
+  it "handles graphs with except" do
+    # Also test cache
+    2.times do
+      knit('except').must_equal File.read("test/knitter/except.md.expect")
+    end
+  end
+
+  it "handles graphs with large numbers of arguments" do
+    # Also test cache
+    2.times do
+      knit('many').must_equal File.read("test/knitter/many.md.expect")
+    end
+  end
+
   it "handles titles and no results" do
     2.times do
       knit('title').must_equal File.read("test/knitter/title.md.expect")
