@@ -1,5 +1,4 @@
 require_relative 'nodifier'
-require_relative 'converter'
 require_relative 'scope'
 require 'facets/hash/deep_rekey'
 require 'facets/array/recurse'
@@ -18,19 +17,10 @@ module ConceptQL
     end
 
     def root(query)
-      @root ||= start_traverse(query.statement)
+      @root ||= traverse(query.statement)
     end
 
     private
-
-    def start_traverse(stmt)
-      case stmt
-      when Hash
-        traverse(converter.convert(stmt))
-      when Array
-        traverse(stmt)
-      end
-    end
 
     def traverse(stmt)
       stmt.recurse(Array, Hash) do |arr_or_hash|
@@ -43,10 +33,6 @@ module ConceptQL
           arr_or_hash
         end
       end
-    end
-
-    def converter
-      @converter ||= Converter.new
     end
   end
 end

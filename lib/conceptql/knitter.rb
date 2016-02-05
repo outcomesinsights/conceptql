@@ -1,5 +1,5 @@
 require 'digest'
-require 'yaml'
+require 'json'
 require_relative 'annotate_grapher'
 require_relative 'fake_annotater'
 
@@ -175,10 +175,6 @@ module ConceptQL
         cache_file.read
       end
 
-      def remove
-        cache_dir.rmtree if cache_dir.exist?
-      end
-
       def cache_dir
         @cache_dir ||= (file.dirname + ".#{hash_it(hash_fodder)}").tap { |d| d.mkpath }
       end
@@ -202,10 +198,6 @@ module ConceptQL
 
     def cache
       @cache ||= Cache.new(db.db, file)
-    end
-
-    def hash(obj)
-      obj.to_s + db.opts.inspect
     end
   end
 end
