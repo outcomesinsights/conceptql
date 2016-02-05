@@ -7,6 +7,7 @@ module ConceptQL
 
       desc 'Given a set of concept IDs in RxNorm, returns that set of drug exposures'
       argument :concept_ids, type: :codelist, vocab: 'RxNorm'
+      query_columns :drug_exposure
 
       def type
         :drug_exposure

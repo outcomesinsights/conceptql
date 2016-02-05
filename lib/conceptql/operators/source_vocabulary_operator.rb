@@ -35,6 +35,10 @@ module ConceptQL
           .where(conditions)
       end
 
+      def query_cols
+        table_columns(table_name, :source_to_concept_map)
+      end
+
       def type
         table
       end

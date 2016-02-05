@@ -36,6 +36,10 @@ module ConceptQL
         (i_point_at + these_point_at_me)
       end
 
+      def query_cols
+        table_columns(make_table_name(my_type))
+      end
+
       def query(db)
         return db.from(make_table_name(my_type)) if stream.nil?
         base_query(db, stream.evaluate(db))

@@ -8,7 +8,8 @@ module ConceptQL
       desc 'Splits up the incoming result set by type and passes through all results for each type that are NOT in the current set.'
       allows_one_upstream
       category 'Set Logic'
-
+      default_query_columns
+      
       def query(db)
         upstream = upstreams.first
         upstream.types.map do |type|
@@ -18,12 +19,11 @@ module ConceptQL
             .where(:criterion_type => type.to_s)
           query = db.from(make_table_name(type))
             .exclude(make_type_id(type) => positive_query)
-          db.from(select_it(query, type))
+          db.from(select_it(query.clone(:force_columns=>table_columns(make_table_name(type))), type))
         end.inject do |union_query, q|
           union_query.union(q, all: true)
         end
       end
-
 
       # This is an alternate, but equally accurate way to do complement.
       # We'll need to benchmark which is faster.

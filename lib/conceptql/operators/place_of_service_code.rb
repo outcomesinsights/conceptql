@@ -16,6 +16,7 @@ module ConceptQL
       types :visit_occurrence
       category 'Code Lists'
       category 'Standard Vocabulary'
+      query_columns :visit_occurrence, :concept
 
       def query(db)
         db.from(:visit_occurrence___v)

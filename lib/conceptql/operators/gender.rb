@@ -9,6 +9,7 @@ module ConceptQL
       argument :gender, type: :string, options: ['Male', 'Female']
       types :person
       category "Standard Vocabulary"
+      query_columns :person
 
       def query(db)
         gender_concept_ids = values.map do |value|
