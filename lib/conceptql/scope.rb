@@ -49,6 +49,7 @@ module ConceptQL
 
       if with = query.opts[:with]
         with.uniq!{|h| h[:name]}
+        with.reverse!
       end
 
       query
