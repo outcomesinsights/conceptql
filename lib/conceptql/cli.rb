@@ -2,7 +2,6 @@ $: << "lib"
 
 require 'thor'
 require 'sequelizer'
-require 'psych'
 require 'json'
 require 'pp'
 require_relative 'query'
@@ -41,7 +40,7 @@ module ConceptQL
     def run_statement(statement_file)
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
       puts q.sql
-      puts q.statement.to_yaml
+      puts JSON.pretty_generate(q.statement)
       pp q.all
     end
 
@@ -108,8 +107,6 @@ module ConceptQL
     def show_and_tell(statement, options, title = nil)
       my_db = db(options)
       q = ConceptQL::Query.new(my_db, statement)
-      puts 'YAML'
-      puts q.statement.to_yaml
       puts 'JSON'
       puts JSON.pretty_generate(q.statement)
       graph_it(statement, title)

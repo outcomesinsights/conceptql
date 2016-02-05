@@ -1,5 +1,5 @@
 require 'digest'
-require 'yaml'
+require 'json'
 require_relative 'annotate_grapher'
 require_relative 'fake_annotater'
 

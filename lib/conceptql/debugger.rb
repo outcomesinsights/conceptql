@@ -28,7 +28,7 @@ module ConceptQL
     end
 
     private
-    attr :yaml, :tree, :db
+    attr :tree, :db
 
     def build_graph(g)
       tree.root(self).each.with_index do |last_operator, index|

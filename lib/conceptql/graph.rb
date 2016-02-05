@@ -31,7 +31,7 @@ module ConceptQL
     end
 
     private
-    attr :yaml, :tree, :db
+    attr :tree, :db
 
     def build_graph(g)
       last_operator = tree.root(self)

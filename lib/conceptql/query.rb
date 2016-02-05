@@ -50,7 +50,7 @@ module ConceptQL
     end
 
     private
-    attr :yaml, :tree, :db
+    attr :tree, :db
 
     def build_query(db)
       operator.evaluate(db).tap { |q| q.prep_proc = prep_proc }
