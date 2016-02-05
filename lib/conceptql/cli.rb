@@ -78,19 +78,6 @@ module ConceptQL
       File.write('/tmp/metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
     end
 
-    desc 'convert', 'Converts from hash-based syntax to list-based syntax'
-    def convert(file)
-      require 'conceptql/converter'
-      require 'json'
-      begin
-        puts JSON.pretty_generate(ConceptQL::Converter.new.convert(criteria_from_file(file)))
-      rescue
-        puts "Couldn't convert #{file}"
-        puts $!.message
-        puts $!.backtrace.join("\n")
-      end
-    end
-
     desc 'knit', 'Processes ConceptQL fenced code segments and produces a Markdown file'
     def knit(file)
       ConceptQL::Knitter.new(ConceptQL::Database.new(db), file).knit
