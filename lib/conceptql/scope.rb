@@ -1,6 +1,5 @@
-require_relative 'utils/temp_table'
 module ConceptQL
-  # Scope coordinates the creation of any TempTables that might
+  # Scope coordinates the creation of any common table expressions that might
   # be used when a Recall operator is present in the statement.
   #
   # Any time an operator is given a label, it becomes a candidate
