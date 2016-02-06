@@ -15,6 +15,7 @@ module ConceptQL
       argument :races, type: :codelist, vocab: 'Race'
       types :person
       query_columns :person, :concept
+      validate_no_upstreams
 
       def query(db)
         db.from(:person___p)

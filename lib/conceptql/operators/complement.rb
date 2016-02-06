@@ -9,6 +9,7 @@ module ConceptQL
       allows_one_upstream
       category 'Set Logic'
       default_query_columns
+      validate_one_upstream
       
       def query(db)
         upstream = upstreams.first

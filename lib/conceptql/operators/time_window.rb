@@ -26,6 +26,7 @@ module ConceptQL
       option :start, type: :string
       option :end, type: :string
       allows_one_upstream
+      validate_one_upstream
       category %(Temporal Manipulation)
       default_query_columns
 

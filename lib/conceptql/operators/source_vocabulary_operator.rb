@@ -28,6 +28,7 @@ module ConceptQL
     class SourceVocabularyOperator < Operator
       category 'Source Vocabulary'
       category 'Code Lists'
+      validate_no_upstreams
 
       def query(db)
         db.from(table_name)

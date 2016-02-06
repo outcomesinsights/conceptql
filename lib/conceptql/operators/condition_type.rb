@@ -17,6 +17,7 @@ module ConceptQL
       category %(Occurrence Type)
       predominant_types :condition_occurrence
       query_columns :condition_occurrence
+      validate_no_upstreams
 
       def type
         :condition_occurrence

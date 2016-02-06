@@ -28,4 +28,12 @@ describe ConceptQL::Operators::Intersect do
       {:annotation=>{:condition_occurrence=>{:rows=>8, :n=>8}}}
     ])
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:intersect]
+    ).annotate.must_equal(
+      ["intersect", {:annotation=>{:errors=>[["has no upstream"]]}}]
+    )
+  end
 end

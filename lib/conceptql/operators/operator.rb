@@ -65,34 +65,59 @@ module ConceptQL
 
       option :label, type: :string
 
-      def self.register(file, *data_models)
-        data_models.each do |dm|
-          OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
-        end
-      end
+      @validations = []
 
-      def self.query_columns(*tables)
-        define_method(:query_cols) do
-          table_columns(*tables)
-        end
-      end
+      class << self
+        attr :validations
 
-      def self.default_query_columns
-        define_method(:query_cols) do
-          SELECTED_COLUMNS
-        end
-      end
-
-      def self.new(*)
-        operator = super
-
-        # If operator has a label, replace it with a recall so all references
-        # to it use the same code.
-        if operator.label
-          operator = Operators::Recall.new(operator.nodifier, operator.label, original: operator)
+        def register(file, *data_models)
+          data_models.each do |dm|
+            OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
+          end
         end
 
-        operator
+        def query_columns(*tables)
+          define_method(:query_cols) do
+            table_columns(*tables)
+          end
+        end
+
+        def default_query_columns
+          define_method(:query_cols) do
+            SELECTED_COLUMNS
+          end
+        end
+
+        validation_meths = (<<-END).split.map(&:to_sym)
+          no_upstreams
+          one_upstream
+          at_least_one_upstream
+          at_most_one_upstream
+        END
+
+        validation_meths.each do |type|
+          meth = :"validate_#{type}"
+          define_method(meth) do |*args|
+            validations << [meth, *args]
+          end
+        end
+
+        def inherited(subclass)
+          super
+          subclass.instance_variable_set(:@validations, validations.dup)
+        end
+
+        def new(*)
+          operator = super
+
+          # If operator has a label, replace it with a recall so all references
+          # to it use the same code.
+          if operator.label
+            operator = Operators::Recall.new(operator.nodifier, operator.label)
+          end
+
+          operator
+        end
       end
 
       def initialize(nodifier, *args)
@@ -115,32 +140,41 @@ module ConceptQL
       end
 
       def annotate(db)
-        res = [self.class.just_class_name.underscore] + annotate_values(db)
+        return @annotation if defined?(@annotation)
 
-        metadata = {:annotation=>{}}
+        scope_key = options[:id]||self.class.just_class_name.underscore
+        annotation = {}
+        metadata = {:annotation=>annotation}
         if name = self.class.preferred_name
           metadata[:name] = name
         end
+        res = [self.class.just_class_name.underscore, *annotate_values(db)] 
 
-        annotation = metadata[:annotation]
-        scope.with_ctes(evaluate(db), db)
-          .from_self
-          .select_group(:criterion_type)
-          .select_append{count{}.*.as(:rows)}
-          .select_append{count(:person_id).distinct.as(:n)}
-          .each do |h|
-            annotation[h.delete(:criterion_type).to_sym] = h
+        if upstreams_valid?
+          scope.with_ctes(evaluate(db), db)
+            .from_self
+            .select_group(:criterion_type)
+            .select_append{count{}.*.as(:rows)}
+            .select_append{count(:person_id).distinct.as(:n)}
+            .each do |h|
+              annotation[h.delete(:criterion_type).to_sym] = h
+          end
+          types.each do |type|
+            counts = annotation[type] ||= {:rows=>0, :n=>0}
+            scope.add_counts(scope_key, type, counts)
+          end
+        elsif !errors.empty?
+          annotation[:errors] = errors
+          scope.add_errors(scope_key, errors)
         end
-        types.each do |type|
-          annotation[type] ||= {:rows=>0, :n=>0}
-        end
+
         if res.last.is_a?(Hash)
           res.last.merge!(metadata)
         else
           res << metadata
         end
 
-        res
+        @annotation = res
       end
 
       def dup_values(args)
@@ -198,6 +232,19 @@ module ConceptQL
 
       def label
         options[:label]
+      end
+
+      attr :errors
+
+      def valid?
+        return @errors.empty? if defined?(@errors)
+        @errors = []
+        validate
+        errors.empty?
+      end
+
+      def upstreams_valid?
+        valid? && upstreams.all?(&:upstreams_valid?)
       end
 
       private
@@ -405,6 +452,35 @@ end
         else
           upstreams.map(&:types).flatten.uniq
         end
+      end
+
+      # Validation Related
+
+      def validate
+        self.class.validations.each do |args|
+          send(*args)
+        end
+      end
+
+      def validate_no_upstreams
+        add_error("has upstreams") unless @upstreams.empty?
+      end
+
+      def validate_one_upstream
+        validate_at_least_one_upstream
+        validate_at_most_one_upstream
+      end
+
+      def validate_at_most_one_upstream
+        add_error("has multiple upstreams") if @upstreams.length > 1
+      end
+
+      def validate_at_least_one_upstream
+        add_error("has no upstream") if @upstreams.empty?
+      end
+
+      def add_error(*args)
+        errors << args
       end
     end
   end

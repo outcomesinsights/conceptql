@@ -12,12 +12,24 @@ module ConceptQL
   class Scope
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation
 
     def initialize
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
+      @annotation = {}
+      @annotation[:errors] = @errors = {}
+      @annotation[:counts] = @counts= {}
+    end
+
+    def add_errors(key, errors)
+      @errors[key] = errors 
+    end
+
+    def add_counts(key, type, counts)
+      c = @counts[key] ||= {}
+      c[type] = counts
     end
 
     def nest(op)
@@ -88,8 +100,6 @@ module ConceptQL
 
       query
     end
-
-    private
 
     def fetch_operator(label)
       known_operators[label] || raise("No operator with label: '#{label}'")

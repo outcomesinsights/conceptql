@@ -10,6 +10,7 @@ module ConceptQL
       types :person
       category "Standard Vocabulary"
       query_columns :person
+      validate_no_upstreams
 
       def query(db)
         gender_concept_ids = values.map do |value|

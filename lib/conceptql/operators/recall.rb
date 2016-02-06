@@ -18,6 +18,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       EOF
       argument :name, type: :string
       category 'Variable Assignment'
+      validate_no_upstreams
 
       def query(db)
         scope.from(db, source)
@@ -36,11 +37,15 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       end
 
       def annotate(db)
-        original.annotate(db)
+        if valid?
+          original.annotate(db)
+        else
+          super
+        end
       end
 
       def original
-        options[:original]
+        nodifier.scope.fetch_operator(source)
       end
     end
   end

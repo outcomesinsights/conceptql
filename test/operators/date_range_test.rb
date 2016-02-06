@@ -16,4 +16,14 @@ describe ConceptQL::Operators::DateRange do
       [:date_range, {:start=>"2008-03-13", :end=>"2008-03-20"}]
     ).annotate.must_equal(["date_range", {:start=>"2008-03-13", :end=>"2008-03-20", :annotation=>{:person=>{:rows=>250, :n=>250}}}])
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:date_range, [:icd9, "412"], {:start=>"START", :end=>"END"}]
+    ).annotate.must_equal(
+      ["date_range",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:start=>"START", :end=>"END", :annotation=>{:errors=>[["has upstreams"]]}}]
+    )
+  end
 end

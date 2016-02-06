@@ -14,6 +14,7 @@ module ConceptQL
       option :start, type: :string
       option :end, type: :string
       category %(Temporal Manipulation)
+      validate_no_upstreams
 
       def query_cols
         table_columns(:person) + [:criterion_type, :criterion_id, :start_date, :end_date]

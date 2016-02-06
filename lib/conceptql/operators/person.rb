@@ -7,6 +7,7 @@ module ConceptQL
 
       desc 'Returns all people in the database, or if given a upstream, converts all results to the set of patients contained in those results.'
       allows_one_upstream
+      validate_at_most_one_upstream
       types :person
 
       def my_type

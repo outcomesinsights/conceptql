@@ -52,7 +52,8 @@ module ConceptQL
 
       opts = from.last[:annotation]
       types(from).each do |type|
-        n = opts[type][:n]
+        next unless (type_opts = opts[type]).is_a?(Hash)
+        n = type_opts[:n]
         if n
           edge_options[:label] = " rows=#{commatize(opts[type][:rows])} \n n=#{commatize(n)}"
           edge_options[:style] = 'dashed' if n.zero?

@@ -69,6 +69,16 @@ describe ConceptQL::Operators::ConditionType do
     criteria_counts(
       [:condition_type, 'inpatient_header_5']
     ).must_equal("condition_occurrence"=>158)
-
   end
+
+  it "should handle upstream errors in annotations" do
+    query(
+      [:condition_type, [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["condition_type",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:errors=>[["has upstreams"]]}}]
+    )
+  end
+
 end

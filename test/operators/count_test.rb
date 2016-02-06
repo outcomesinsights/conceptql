@@ -14,6 +14,23 @@ describe ConceptQL::Operators::Count do
       [:count, [:numeric, 1]]
     )["person"].inject(:+).must_equal(35929)
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:count]
+    ).annotate.must_equal(
+      ["count", {:annotation=>{:errors=>[["has no upstream"]]}}]
+    )
+
+    query(
+      [:count, [:icd9, "412"], [:icd9, "401.9"]]
+    ).annotate.must_equal(
+      ["count",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "401.9", {:annotation=>{:condition_occurrence=>{:rows=>1125, :n=>213}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+    )
+  end
 end
 
 

@@ -14,7 +14,12 @@ describe ConceptQL::Operators::Sum do
       [:sum, [:numeric, 1]]
     ).must_equal("person"=>[1]*250)
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:sum]
+    ).annotate.must_equal(
+      ["sum", {:annotation=>{:errors=>[["has no upstream"]]}}]
+    )
+  end
 end
-
-
-

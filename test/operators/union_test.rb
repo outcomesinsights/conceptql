@@ -111,4 +111,47 @@ describe ConceptQL::Operators::Union do
           :visit_occurrence=>{:rows=>170, :n=>92}}}]
     )
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:union]
+    ).annotate.must_equal(
+      ["union", {:annotation=>{:errors=>[["has no upstream"]]}}]
+    )
+
+    query(
+      [:union, "123"]
+    ).annotate.must_equal(
+      ["union", "123", {:annotation=>{:errors=>[["has no upstream"]]}}]
+    )
+
+    query(
+      [:union, [:foo, "123"]]
+    ).annotate.must_equal(
+      ["union", ["invalid", {:annotation=>{:errors=>["invalid operator", :foo]}}], {:annotation=>{}}]
+    )
+
+    query(
+      [:union, [:union, [:foo, "123"]]]
+    ).annotate.must_equal(
+      ["union", ["union", ["invalid", {:annotation=>{:errors=>["invalid operator", :foo]}}], {:annotation=>{}}], {:annotation=>{}}]
+    )
+  end
+
+  it "should handle scope annotations" do
+    query(
+      [:union]
+    ).scope_annotate.must_equal(
+      {:errors=>{"union"=>[["has no upstream"]]}, :counts=>{}}
+    )
+
+    query(
+      [:union, [:icd9, "412", {:id=>1}], [:icd9, "401.9", {:id=>2}]]
+    ).scope_annotate.must_equal(
+      {:errors=>{},
+       :counts=>{1=>{:condition_occurrence=>{:rows=>50, :n=>38}},
+                 2=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
+                 "union"=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}
+    )
+  end
 end

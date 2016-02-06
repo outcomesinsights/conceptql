@@ -10,4 +10,15 @@ describe ConceptQL::Operators::Person do
       [:person, true]
     ).must_equal("person"=>250)
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:person, [:icd9, "412"], [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["person",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+    )
+  end
 end

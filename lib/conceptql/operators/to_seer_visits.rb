@@ -4,6 +4,7 @@ module ConceptQL
   module Operators
     class ToSeerVisits < Operator
       register __FILE__, :omopv4
+      validate_no_upstreams
 
       def type
         :visit_occurrence

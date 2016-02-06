@@ -9,6 +9,7 @@ module ConceptQL
       allows_many_upstreams
       category 'Set Logic'
       default_query_columns
+      validate_at_least_one_upstream
 
       def query(db)
         upstreams.map do |expression|

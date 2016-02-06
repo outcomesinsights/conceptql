@@ -8,6 +8,7 @@ module ConceptQL
       desc 'Generates all death records, or, if fed a stream, fetches all death records for the people represented in the incoming result set.'
       types :death
       allows_one_upstream
+      validate_at_most_one_upstream
 
       def my_type
         :death

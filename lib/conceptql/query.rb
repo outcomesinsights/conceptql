@@ -32,6 +32,11 @@ module ConceptQL
     def annotate
       operator.annotate(db)
     end
+    
+    def scope_annotate
+      annotate
+      nodifier.scope.annotation
+    end
 
     def optimized
       n = dup

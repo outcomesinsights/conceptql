@@ -7,6 +7,7 @@ module ConceptQL
 
       desc 'Returns all visits in the database, or if given a upstream, converts all results to the set of visit_occurrences related to those results.'
       allows_one_upstream
+      validate_at_most_one_upstream
       types :visit_occurrence
 
       def my_type
