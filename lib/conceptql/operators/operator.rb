@@ -61,7 +61,7 @@ module ConceptQL
         :source_value
       ]
 
-      attr :values, :options, :arguments, :upstreams
+      attr :nodifier, :values, :options, :arguments, :upstreams
 
       option :label, type: :string
 
@@ -83,18 +83,35 @@ module ConceptQL
         end
       end
 
-      def initialize(*args)
-        set_values(*args)
+      def self.new(*)
+        operator = super
+
+        # If operator has a label, replace it with a recall so all references
+        # to it use the same code.
+        if operator.label
+          operator = Operators::Recall.new(operator.nodifier, operator.label, original: operator)
+        end
+
+        operator
       end
 
-      def values=(*args)
-        set_values(*args)
-      end
-
-      def set_values(*args)
+      def initialize(nodifier, *args)
+        @nodifier = nodifier
         @options = args.extract_options!.deep_rekey
-        @upstreams, @arguments = args.partition { |arg| arg.is_a?(Operator) }
+        @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operator) }
         @values = args
+        scope.nest(self) do
+          create_upstreams
+        end
+        scope.add_operator(self) if label
+      end
+
+      def create_upstreams
+        @upstreams.map!{|stmt| to_op(stmt)}
+      end
+
+      def to_op(stmt)
+        stmt.is_a?(Operator) ? stmt : nodifier.create(*stmt)
       end
 
       def annotate(db)
@@ -128,12 +145,11 @@ module ConceptQL
       end
 
       def dup_values(args)
-        self.class.new(*args)
+        self.class.new(nodifier, *args)
       end
 
-      def scope=(scope)
-        @scope = scope
-        scope.add_operator(self) if label
+      def inspect
+        "<##{self.class} upstreams=[#{upstreams.map(&:inspect).join(', ')}] arguments=[#{arguments.map(&:inspect).join(', ')}]>"
       end
 
       def evaluate(db)
@@ -186,7 +202,10 @@ module ConceptQL
       end
 
       private
-      attr :scope
+
+      def scope
+        nodifier.scope
+      end
 
       def annotate_values(db)
         (upstreams.map { |op| op.annotate(db) } + arguments).push(options)

@@ -11,7 +11,7 @@ module ConceptQL
       default_query_columns
 
       def query(db)
-        values.map do |expression|
+        upstreams.map do |expression|
           expression.evaluate(db).from_self
         end.inject do |q, query|
           q.union(query, all: true)
@@ -20,9 +20,9 @@ module ConceptQL
 
       def flattened
         exprs = []
-        values.each do |x|
+        upstreams.each do |x|
           if x.is_a?(Union)
-            exprs.concat x.flattened.values
+            exprs.concat x.flattened.upstreams
           else
             exprs << x
           end
@@ -31,7 +31,7 @@ module ConceptQL
       end
 
       def optimized
-        first, *rest = flattened.values
+        first, *rest = flattened.upstreams
         exprs = [first]
 
         rest.each do |expression|

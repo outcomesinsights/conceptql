@@ -2,36 +2,26 @@ require_relative 'operators/operator'
 
 module ConceptQL
   class Nodifier
-    attr :tree, :data_model, :algorithm_fetcher
+    attr :scope, :data_model, :algorithm_fetcher
 
-    def initialize(tree, opts={})
-      @tree = tree
+    def initialize(scope, opts={})
+      @scope = opts[:scope] || Scope.new
       @data_model = opts[:data_model] || :omopv4
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
         nil
       end)
     end
 
-    def create(scope, operator, *values)
+    def create(operator, *values)
       if operator.to_s == 'algorithm'
         statement, desc = algorithm_fetcher.call(values.first)
         raise "Can't find algorithm for '#{values.first}'" unless statement
-        tree.send(:start_traverse, statement)
+        create(*statement)
       else
         unless klass = operators[operator.to_s]
           raise "Can't find operator for '#{operator}' in #{operators.keys.sort}"
         end
-        operator = klass.new(*values)
-        operator.scope = scope
-
-        # If operator has a label, replace it with a recall so all references
-        # to it use the same code.
-        if operator.label
-          operator = Operators::Recall.new(operator.label, original: operator)
-          operator.scope = scope
-        end
-
-        operator
+        klass.new(self, *values)
       end
     end
 

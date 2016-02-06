@@ -11,9 +11,27 @@ module ConceptQL
   # labeled operators.
   class Scope
     attr_accessor :person_ids
-    attr :known_operators
+
+    attr :known_operators, :recall_stack, :recall_dependencies
+
     def initialize
       @known_operators = {}
+      @recall_dependencies = {}
+      @recall_stack = []
+    end
+
+    def nest(op)
+      return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
+      begin
+        recall_dependencies[label] ||= []
+        if last = recall_stack.last
+          recall_dependencies[last] << label
+        end
+        recall_stack.push(label)
+        yield
+      ensure
+        recall_stack.pop if recall_stack.last == label
+      end
     end
 
     def add_operator(operator)
@@ -42,13 +60,30 @@ module ConceptQL
       fetch_operator(label).types
     end
 
-    def with_ctes(query, db)
-      known_operators.each do |label, operator|
-        query = query.with(label, operator.evaluate(db))
+    def sort_ctes(sorted, unsorted, deps)
+      if unsorted.empty?
+        return sorted
       end
 
-      if with = query.opts[:with]
-        query.opts[:with] = reorder_with(with)
+      add, unsorted = unsorted.partition do |label, _|
+        deps[label].length == 0
+      end
+
+      sorted += add
+
+      new_deps = {}
+      deps.map do |label, deps|
+        new_deps[label] = deps - sorted.map(&:first)
+      end
+
+      sort_ctes(sorted, unsorted, new_deps)
+    end
+
+    def with_ctes(query, db)
+      ctes = sort_ctes([], known_operators, recall_dependencies)
+
+      ctes.each do |label, operator|
+        query = query.with(label, operator.evaluate(db))
       end
 
       query
@@ -58,35 +93,6 @@ module ConceptQL
 
     def fetch_operator(label)
       known_operators[label] || raise("No operator with label: '#{label}'")
-    end
-
-    # We need to arrange the CTEs so that there are no forward references
-    # This means we need to make sure that if CTE A is used in CTE B, CTE A
-    # comes before CTE B.
-    #
-    # My strategy is to loop over all the CTEs, looking for those CTEs
-    # whose name don't appear in another CTE, meaning they aren't referenced
-    # by any other CTE.
-    #
-    # We'll pull those CTEs out and them to the beginning of the list of CTEs
-    # until all CTEs have been pulled out because all the CTEs that refer to
-    # them have already been pulled out.
-    #
-    # I wonder if there is a simpler way to do this?
-    def reorder_with(with)
-      revised = Hash[with.map { |h| [h[:name], h[:dataset]] }]
-      new_with = []
-      while !revised.keys.empty?
-        names = revised.keys
-        datasets = revised.values
-        unreferenced = names.reject do |name|
-          datasets.any? { |dataset| /from\s+[`"]#{name}[`"]/i =~ dataset.sql }
-        end
-        unreferenced.each do |unref|
-          new_with.unshift(name: unref, dataset: revised.delete(unref))
-        end
-      end
-      new_with.tap { |w| require 'pp' ; pp w}
     end
   end
 end

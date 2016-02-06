@@ -16,18 +16,17 @@ module ConceptQL
         self.class.name.split('::').last.snakecase.titlecase
       end
 
+      attr :left, :right
+
       private
 
       def annotate_values(db)
         [options.merge(left: left.annotate(db), right: right.annotate(db))] + arguments
       end
 
-      def left
-        @left ||= options[:left]
-      end
-
-      def right
-        @right ||= options[:right]
+      def create_upstreams
+        @left = to_op(options[:left])
+        @right = to_op(options[:right])
       end
     end
   end

@@ -1,12 +1,12 @@
-require 'psych'
 require 'json'
 require 'forwardable'
-require_relative 'tree'
+require_relative 'scope'
+require_relative 'nodifier'
 
 module ConceptQL
   class Query
     extend Forwardable
-    def_delegators :prepped_query, :all, :count, :execute, :order
+    def_delegators :all, :count, :execute, :order
 
     attr :statement
     def initialize(db, statement, opts={})
@@ -18,15 +18,15 @@ module ConceptQL
         statement = JSON.parse(statement) if statement.is_a?(String)
         [statement, description]
       end
-      @tree = opts[:tree] || Tree.new(opts)
+      @nodifier = opts[:nodifier] || Nodifier.new(opts)
     end
 
     def query
-      tree.scope.with_ctes(operator.evaluate(db), db)
+      nodifier.scope.with_ctes(operator.evaluate(db), db)
     end
 
     def sql
-      (tree.scope.sql(db) << operator.sql(db)).join(";\n\n") + ';'
+      operator.sql(db)
     end
 
     def annotate
@@ -40,14 +40,14 @@ module ConceptQL
     end
 
     def types
-      tree.root(self).types
+      operator.types
     end
 
     def operator
-      @operator ||= tree.root(self)
+      @operator ||= nodifier.create(*statement)
     end
 
     private
-    attr :yaml, :tree, :db
+    attr :db, :nodifier
   end
 end

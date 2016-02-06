@@ -13,7 +13,7 @@ module ConceptQL
         elsif other.is_a?(ConditionOccurrenceSourceVocabularyOperatorUnion)
           other.union(self)
         else
-          ConditionOccurrenceSourceVocabularyOperatorUnion.new(self, other)
+          ConditionOccurrenceSourceVocabularyOperatorUnion.new(nodifier, self, other)
         end
       end
 

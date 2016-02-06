@@ -46,7 +46,7 @@ in an inpatient setting
 
       private
       def visit_query(db)
-        VisitOccurrence.new(FakeOperator.new(stream.evaluate(db).from_self, stream.types)).query(db)
+        VisitOccurrence.new(nodifier, FakeOperator.new(nodifier, stream.evaluate(db).from_self, stream.types)).query(db)
       end
 
       def earliest(db, query)
@@ -61,9 +61,11 @@ in an inpatient setting
         default_query_columns
 
         attr :types
-        def initialize(query, types)
+        def initialize(nodifier, query, types)
+          @nodifier = nodifier
           @query = query
           @types = types
+          @options = {}
         end
 
         def query(db)
