@@ -422,14 +422,14 @@ module ConceptQL
         strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
         concatted_strings = Sequel.join(strings_with_dashes)
 
-	date = concatted_strings
-	if query.db.database_type == :impala
+	      date = concatted_strings
+	      if query.db.database_type == :impala
           date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
         end
         cast_date(query.db, date)
       end
 
-def  cast_date(db, date)
+      def  cast_date(db, date)
         case db.database_type
         when :oracle
           Sequel.function(:to_date, date, 'YYYY-MM-DD')
@@ -440,7 +440,7 @@ def  cast_date(db, date)
         else
           Sequel.cast(date, Date)
         end
-end
+      end
 
       def determine_types
         if upstreams.empty?
