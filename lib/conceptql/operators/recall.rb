@@ -35,6 +35,10 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         arguments.first
       end
 
+      def annotate(db)
+        original.annotate(db)
+      end
+
       def original
         options[:original]
       end

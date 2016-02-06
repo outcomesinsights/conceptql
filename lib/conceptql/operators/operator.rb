@@ -115,7 +115,6 @@ module ConceptQL
       end
 
       def annotate(db)
-        return original.annotate(db) if respond_to?(:original) && original
         res = [self.class.just_class_name.underscore] + annotate_values(db)
 
         metadata = {:annotation=>{}}
