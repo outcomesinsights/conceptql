@@ -50,6 +50,37 @@ describe ConceptQL::Operators::Recall do
     )
 
     query(
+      [:union,
+       [:union, ["recall", "Heart Attack"]],
+       {"label": "Heart Attack"}]
+    ).annotate.must_equal(
+      ["union",
+       ["union",
+        ["recall",
+         "Heart Attack",
+         {:annotation=>{:errors=>[["nested recall"]]}}],
+        {:annotation=>{}}],
+       {:label=>"Heart Attack", :annotation=>{}}]
+    )
+
+    query(
+      [:union,
+       [:union, ["recall", "HA1"], {"label": "HA2"}],
+       [:union, ["recall", "HA2"], {"label": "HA1"}]]
+    ).annotate.must_equal(
+      ["union",
+       ["recall", "HA2", {:annotation=>{:errors=>[["mutually referential recalls", "HA1"]]}}],
+       ["recall", "HA1", {:annotation=>{:errors=>[["mutually referential recalls", "HA2"]]}}],
+       {:annotation=>{}}]
+    )
+
+    query(
+      ["recall", "HA1"]
+    ).annotate.must_equal(
+      ["recall", "HA1", {:annotation=>{:errors=>[["no matching label"]]}}]
+    )
+
+    query(
       [:recall]
     ).annotate.must_equal(
       ["recall", {:annotation=>{:errors=>[["has no arguments"]]}}]

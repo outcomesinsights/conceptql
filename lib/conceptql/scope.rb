@@ -34,11 +34,21 @@ module ConceptQL
 
     def nest(op)
       return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
-      begin
-        recall_dependencies[label] ||= []
-        if last = recall_stack.last
-          recall_dependencies[last] << label
+      recall_dependencies[label] ||= []
+
+      if recall_stack.include?(label)
+        op.instance_eval do
+          @errors = []
+          add_error("nested recall")
         end
+        return
+      end
+
+      if last = recall_stack.last
+        recall_dependencies[last] << label
+      end
+
+      begin
         recall_stack.push(label)
         yield
       ensure
@@ -102,7 +112,7 @@ module ConceptQL
     end
 
     def fetch_operator(label)
-      known_operators[label] || raise("No operator with label: '#{label}'")
+      known_operators[label]
     end
   end
 end
