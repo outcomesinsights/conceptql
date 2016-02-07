@@ -3,7 +3,7 @@ require_relative '../helper'
 describe ConceptQL::Operators::Visit do
   it "should produce correct results" do
     criteria_counts(
-      [:visit, true]
+      [:visit]
     ).must_equal("visit_occurrence"=>14931)
 
     criteria_counts(
@@ -23,6 +23,15 @@ describe ConceptQL::Operators::Visit do
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
        {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+    )
+
+    query(
+      [:visit, 21, [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["visit",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       21,
+       {:annotation=>{:errors=>[["has arguments"]]}}]
     )
   end
 end

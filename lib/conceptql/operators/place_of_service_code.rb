@@ -18,6 +18,7 @@ module ConceptQL
       category 'Standard Vocabulary'
       query_columns :visit_occurrence, :concept
       validate_no_upstreams
+      validate_at_least_one_argument
 
       def query(db)
         db.from(:visit_occurrence___v)

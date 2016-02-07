@@ -5,6 +5,7 @@ module ConceptQL
     class From < Operator
       register __FILE__, :omopv4
       validate_no_upstreams
+      validate_one_argument
       
       def query_cols
         table_columns(values.first.to_sym)

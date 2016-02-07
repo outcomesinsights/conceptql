@@ -21,6 +21,12 @@ describe ConceptQL::Operators::First do
     ).annotate.must_equal(
       ["first", {:annotation=>{:errors=>[["has no upstream"]]}}]
     )
+
+    query(
+      [:first, 1]
+    ).annotate.must_equal(
+      ["first", 1, {:annotation=>{:errors=>[["has no upstream"], ["has arguments"]]}}]
+    )
   end
 end
 

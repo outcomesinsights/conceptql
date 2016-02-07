@@ -16,6 +16,7 @@ module ConceptQL
       types :person
       query_columns :person, :concept
       validate_no_upstreams
+      validate_at_least_one_argument
 
       def query(db)
         db.from(:person___p)

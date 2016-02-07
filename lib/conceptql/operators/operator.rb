@@ -93,6 +93,10 @@ module ConceptQL
           one_upstream
           at_least_one_upstream
           at_most_one_upstream
+          no_arguments
+          one_argument
+          at_least_one_argument
+          at_most_one_argument
         END
 
         validation_meths.each do |type|
@@ -123,6 +127,7 @@ module ConceptQL
       def initialize(nodifier, *args)
         @nodifier = nodifier
         @options = args.extract_options!.deep_rekey
+        args.reject!{|arg| arg.nil? || arg == ''}
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operator) }
         @values = args
         scope.nest(self) do
@@ -477,6 +482,23 @@ module ConceptQL
 
       def validate_at_least_one_upstream
         add_error("has no upstream") if @upstreams.empty?
+      end
+
+      def validate_no_arguments
+        add_error("has arguments") unless @arguments.empty?
+      end
+
+      def validate_one_argument
+        validate_at_least_one_argument
+        validate_at_most_one_argument
+      end
+
+      def validate_at_most_one_argument
+        add_error("has multiple arguments") if @arguments.length > 1
+      end
+
+      def validate_at_least_one_argument
+        add_error("has no arguments") if @arguments.empty?
       end
 
       def add_error(*args)

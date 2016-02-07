@@ -35,5 +35,11 @@ describe ConceptQL::Operators::Intersect do
     ).annotate.must_equal(
       ["intersect", {:annotation=>{:errors=>[["has no upstream"]]}}]
     )
+
+    query(
+      [:intersect, 1]
+    ).annotate.must_equal(
+      ["intersect", 1, {:annotation=>{:errors=>[["has no upstream"], ["has arguments"]]}}]
+    )
   end
 end

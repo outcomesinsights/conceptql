@@ -42,5 +42,20 @@ describe ConceptQL::Operators::After do
                  {:start=>"50y", :end=>"50y", :annotation=>{:person=>{:rows=>126, :n=>126}}}],
         :annotation=>{}}]
     )
+
+    query(
+      [:after,
+       1,
+       {:left=>[:icd9, "412"],
+        :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}]}]
+    ).annotate.must_equal(
+      ["after",
+       {:left=>["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+        :right=>["time_window",
+                 ["gender", "Male",{:annotation=>{:person=>{:rows=>126, :n=>126}}}],
+                 {:start=>"50y", :end=>"50y", :annotation=>{:person=>{:rows=>126, :n=>126}}}]},
+       1,
+       {:annotation=>{:errors=>[["has arguments"]]}}]
+    )
   end
 end

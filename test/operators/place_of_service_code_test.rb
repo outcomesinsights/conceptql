@@ -16,5 +16,12 @@ describe ConceptQL::Operators::PlaceOfServiceCode do
        21,
        {:annotation=>{:errors=>[["has upstreams"]]}}]
     )
+
+    query(
+      [:place_of_service_code]
+    ).annotate.must_equal(
+      ["place_of_service_code",
+       {:annotation=>{:errors=>[["has no arguments"]]}}]
+    )
   end
 end

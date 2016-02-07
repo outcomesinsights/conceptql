@@ -19,6 +19,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       argument :name, type: :string
       category 'Variable Assignment'
       validate_no_upstreams
+      validate_one_argument
 
       def query(db)
         scope.from(db, source)

@@ -20,5 +20,11 @@ describe ConceptQL::Operators::DrugTypeConcept do
        2,
        {:annotation=>{:errors=>[["has upstreams"]]}}]
     )
+
+    query(
+      [:drug_type_concept] 
+    ).annotate.must_equal(
+      ["drug_type_concept", {:annotation=>{:errors=>[["has no arguments"]]}}]
+    )
   end
 end

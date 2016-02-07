@@ -7,6 +7,7 @@ module ConceptQL
     class BinaryOperatorOperator < Operator
       option :left, type: :upstream
       option :right, type: :upstream
+      validate_no_arguments
 
       def upstreams
         [left]

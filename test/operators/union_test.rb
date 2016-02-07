@@ -122,7 +122,7 @@ describe ConceptQL::Operators::Union do
     query(
       [:union, "123"]
     ).annotate.must_equal(
-      ["union", "123", {:annotation=>{:errors=>[["has no upstream"]]}}]
+      ["union", "123", {:annotation=>{:errors=>[["has no upstream"], ["has arguments"]]}}]
     )
 
     query(

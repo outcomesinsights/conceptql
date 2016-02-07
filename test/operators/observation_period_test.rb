@@ -24,5 +24,14 @@ describe ConceptQL::Operators::ObservationPeriod do
        ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
        {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
     )
+
+    query(
+      [:observation_period, 1, [:gender, 'Male']]
+    ).annotate.must_equal(
+      ["observation_period",
+       ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
+       1,
+       {:annotation=>{:errors=>[["has arguments"]]}}]
+    )
   end
 end

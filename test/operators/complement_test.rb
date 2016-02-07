@@ -63,6 +63,15 @@ describe ConceptQL::Operators::Complement do
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
        {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
     )
+
+    query(
+      [:complement, "412", [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["complement",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       "412",
+       {:annotation=>{:errors=>[["has arguments"]]}}]
+    )
   end
 end
 

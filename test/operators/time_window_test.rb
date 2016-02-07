@@ -27,6 +27,15 @@ describe ConceptQL::Operators::TimeWindow do
     )
 
     query(
+      [:time_window, 21, [:icd9, "412"], {:start=>"-2y", :end=>"-2y"}]
+    ).annotate.must_equal(
+      ["time_window",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       21,
+       {:start=>"-2y", :end=>"-2y", :annotation=>{:errors=>[["has arguments"]]}}]
+    )
+
+    query(
       [:time_window, [:icd9, "412"], [:place_of_service_code, "21"], {:start=>"-2y", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",

@@ -22,6 +22,7 @@ module ConceptQL
       category 'Standard Vocabulary'
       category 'Code Lists'
       validate_no_upstreams
+      validate_at_least_one_argument
 
       def query(db)
         db.from(table_name)

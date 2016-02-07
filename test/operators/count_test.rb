@@ -23,6 +23,12 @@ describe ConceptQL::Operators::Count do
     )
 
     query(
+      [:count, 1]
+    ).annotate.must_equal(
+      ["count", 1, {:annotation=>{:errors=>[["has no upstream"], ["has arguments"]]}}]
+    )
+
+    query(
       [:count, [:icd9, "412"], [:icd9, "401.9"]]
     ).annotate.must_equal(
       ["count",

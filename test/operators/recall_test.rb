@@ -103,5 +103,17 @@ describe ConceptQL::Operators::Recall do
         {:annotation=>{:errors=>[["has upstreams"]]}}],
       {:annotation=>{}}]
     )
+
+    query(
+      [:recall]
+    ).annotate.must_equal(
+      ["recall", {:annotation=>{:errors=>[["has no arguments"]]}}]
+    )
+
+    query(
+      [:recall, "foo", "bar"]
+    ).annotate.must_equal(
+      ["recall", "foo", "bar", {:annotation=>{:errors=>[["has multiple arguments"]]}}]
+    )
   end
 end

@@ -9,6 +9,7 @@ module ConceptQL
       types :visit_occurrence
       allows_one_upstream
       validate_at_most_one_upstream
+      validate_no_arguments
       query_columns :visit_occurrence
 
       def query(db)

@@ -17,7 +17,7 @@ describe ConceptQL::Operators::Cpt do
     ).annotate.must_equal(
       ["cpt",
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:errors=>[["has upstreams"]]}, :name=>"CPT"}]
+       {:annotation=>{:errors=>[["has upstreams"], ["has no arguments"]]}, :name=>"CPT"}]
     )
   end
 end

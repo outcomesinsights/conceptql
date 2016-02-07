@@ -25,5 +25,13 @@ describe ConceptQL::Operators::DateRange do
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
        {:start=>"START", :end=>"END", :annotation=>{:errors=>[["has upstreams"]]}}]
     )
+
+    query(
+      [:date_range, "412", {:start=>"START", :end=>"END"}]
+    ).annotate.must_equal(
+      ["date_range",
+       "412",
+       {:start=>"START", :end=>"END", :annotation=>{:errors=>[["has arguments"]]}}]
+    )
   end
 end

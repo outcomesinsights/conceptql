@@ -9,6 +9,7 @@ module ConceptQL
       argument :concept_ids, type: :codelist, vocab: 'RxNorm'
       query_columns :drug_exposure
       validate_no_upstreams
+      validate_at_least_one_argument
 
       def type
         :drug_exposure

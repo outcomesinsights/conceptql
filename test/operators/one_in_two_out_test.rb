@@ -15,6 +15,12 @@ describe ConceptQL::Operators::OneInTwoOut do
     )
 
     query(
+      [:one_in_two_out, 1, {:gap=>30, :blah=>true}]
+    ).annotate.must_equal(
+      ["one_in_two_out", 1, {:gap=>30, :blah=>true, :annotation=>{:errors=>[["has no upstream"], ["has arguments"]]}}]
+    )
+
+    query(
       [:one_in_two_out, [:icd9, "412"], [:icd9, "412"], {:gap=>30, :blah=>true}]
     ).annotate.must_equal(
       ["one_in_two_out",

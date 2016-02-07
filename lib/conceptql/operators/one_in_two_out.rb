@@ -13,6 +13,7 @@ in an inpatient setting
       EOF
       allows_one_upstream
       validate_one_upstream
+      validate_no_arguments
       category %w(Temporal Relative)
 
       def types

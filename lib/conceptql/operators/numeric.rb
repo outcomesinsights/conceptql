@@ -28,6 +28,7 @@ Accepts two params:
       argument :value, type: :float
       allows_one_upstream
       validate_at_most_one_upstream
+      validate_one_argument
 
       def query_cols
         SELECTED_COLUMNS - [:value_as_number] + [:value_as_number]

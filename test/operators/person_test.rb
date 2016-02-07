@@ -7,7 +7,7 @@ describe ConceptQL::Operators::Person do
     ).must_equal("person"=>[17, 37, 53, 59, 64, 71, 75, 79, 86, 88, 91, 104, 108, 128, 146, 149, 158, 160, 168, 173, 180, 183, 190, 191, 206, 207, 209, 212, 215, 222, 226, 231, 251, 255, 258, 260, 266, 270])
 
     criteria_counts(
-      [:person, true]
+      [:person]
     ).must_equal("person"=>250)
   end
 
@@ -19,6 +19,14 @@ describe ConceptQL::Operators::Person do
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
        {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+    )
+
+    query(
+      [:person, "412"]
+    ).annotate.must_equal(
+      ["person",
+       "412",
+       {:annotation=>{:errors=>[["has arguments"]]}}]
     )
   end
 end

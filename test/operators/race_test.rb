@@ -16,5 +16,12 @@ describe ConceptQL::Operators::Race do
        "Black or African American",
        {:annotation=>{:errors=>[["has upstreams"]]}}]
     )
+
+    query(
+      [:race]
+    ).annotate.must_equal(
+      ["race",
+       {:annotation=>{:errors=>[["has no arguments"]]}}]
+    )
   end
 end

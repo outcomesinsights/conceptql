@@ -10,6 +10,7 @@ module ConceptQL
       category 'Set Logic'
       default_query_columns
       validate_at_least_one_upstream
+      validate_no_arguments
 
       def types
         upstreams.map(&:types).flatten.uniq

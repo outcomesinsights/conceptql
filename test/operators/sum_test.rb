@@ -21,5 +21,14 @@ describe ConceptQL::Operators::Sum do
     ).annotate.must_equal(
       ["sum", {:annotation=>{:errors=>[["has no upstream"]]}}]
     )
+
+    query(
+      [:sum, 21, [:numeric, 1]]
+    ).annotate.must_equal(
+      ["sum",
+       ["numeric", 1, {:annotation=>{:person=>{:rows=>250, :n=>250}}}],
+       21,
+       {:annotation=>{:errors=>[["has arguments"]]}}]
+    )
   end
 end
