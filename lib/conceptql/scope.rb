@@ -20,11 +20,16 @@ module ConceptQL
       @recall_stack = []
       @annotation = {}
       @annotation[:errors] = @errors = {}
+      @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts= {}
     end
 
     def add_errors(key, errors)
       @errors[key] = errors 
+    end
+
+    def add_warnings(key, errors)
+      @warnings[key] = errors 
     end
 
     def add_counts(key, type, counts)

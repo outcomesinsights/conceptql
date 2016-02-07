@@ -175,6 +175,11 @@ module ConceptQL
           scope.add_errors(scope_key, errors)
         end
 
+        if defined?(@warnings) && !warnings.empty?
+          annotation[:warnings] = warnings
+          scope.add_warnings(scope_key, warnings)
+        end
+
         if res.last.is_a?(Hash)
           res.last.merge!(metadata)
         else
@@ -241,11 +246,12 @@ module ConceptQL
         options[:label]
       end
 
-      attr :errors
+      attr :errors, :warnings
 
       def valid?(db)
         return @errors.empty? if defined?(@errors)
         @errors = []
+        @warnings = []
         validate(db)
         errors.empty?
       end
@@ -518,6 +524,10 @@ module ConceptQL
 
       def add_error(*args)
         errors << args
+      end
+
+      def add_warning(*args)
+        warnings << args
       end
     end
   end
