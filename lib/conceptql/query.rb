@@ -49,7 +49,11 @@ module ConceptQL
     end
 
     def operator
-      @operator ||= nodifier.create(*statement)
+      @operator ||= if statement.is_a?(Array)
+        nodifier.create(*statement)
+      else
+        Operators::Invalid.new(nodifier, errors: ["invalid root operator"])
+      end
     end
 
     private
