@@ -38,7 +38,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       end
 
       def annotate(db)
-        if valid?
+        if valid?(db)
           original.annotate(db)
         else
           super
@@ -51,7 +51,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
 
       private
 
-      def validate
+      def validate(db)
         super
         if arguments.length == 1
           if scope.fetch_operator(source)

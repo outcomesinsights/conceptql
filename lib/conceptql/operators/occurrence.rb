@@ -64,7 +64,7 @@ occurrence, this operator returns nothing for that person
 
       private
 
-      def validate
+      def validate(db)
         super
         if self.class == Occurrence
           validate_one_argument

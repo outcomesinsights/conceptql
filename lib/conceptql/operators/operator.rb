@@ -157,7 +157,7 @@ module ConceptQL
         end
         res = [self.class.just_class_name.underscore, *annotate_values(db)] 
 
-        if upstreams_valid?
+        if upstreams_valid?(db)
           scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_type)
@@ -243,15 +243,15 @@ module ConceptQL
 
       attr :errors
 
-      def valid?
+      def valid?(db)
         return @errors.empty? if defined?(@errors)
         @errors = []
-        validate
+        validate(db)
         errors.empty?
       end
 
-      def upstreams_valid?
-        valid? && upstreams.all?(&:upstreams_valid?)
+      def upstreams_valid?(db)
+        valid?(db) && upstreams.all?{|u| u.upstreams_valid?(db)}
       end
 
       def scope
@@ -463,7 +463,7 @@ module ConceptQL
 
       # Validation Related
 
-      def validate
+      def validate(db)
         add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
