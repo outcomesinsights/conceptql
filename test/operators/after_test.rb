@@ -12,13 +12,21 @@ describe ConceptQL::Operators::After do
   it "should handle upstream errors when annotating" do
     query(
       [:after,
+       {:left=>"412",
+        :right=>:time_window}]
+    ).annotate.must_equal(
+      ["after", {:left=>"412", :right=>:time_window, :annotation=>{:errors=>[["wrong option format", "left"], ["wrong option format", "right"]]}}]
+    )
+
+    query(
+      [:after,
        {:right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}]}]
     ).annotate.must_equal(
       ["after",
        {:right=>["time_window",
                  ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
                  {:start=>"50y", :end=>"50y", :annotation=>{:person=>{:rows=>126, :n=>126}}}],
-        :annotation=>{:errors=>[["no left upstream"]]}}]
+        :annotation=>{:errors=>[["option not present", "left"]]}}]
     )
 
     query(
@@ -27,7 +35,7 @@ describe ConceptQL::Operators::After do
     ).annotate.must_equal(
       ["after",
        {:left=>["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-        :annotation=>{:errors=>[["no right upstream"]]}}]
+        :annotation=>{:errors=>[["option not present", "right"]]}}]
     )
 
     query(

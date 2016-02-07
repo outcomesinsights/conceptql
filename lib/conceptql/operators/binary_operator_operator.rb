@@ -8,6 +8,7 @@ module ConceptQL
       option :left, type: :upstream
       option :right, type: :upstream
       validate_no_arguments
+      validate_option Array, :left, :right
 
       def upstreams
         [left]
@@ -29,14 +30,8 @@ module ConceptQL
       end
 
       def create_upstreams
-        @left = to_op(options[:left]) if options[:left]
-        @right = to_op(options[:right])  if options[:right]
-      end
-
-      def validate
-        super
-        add_error("no left upstream") unless left
-        add_error("no right upstream") unless right
+        @left = to_op(options[:left]) if options[:left].is_a?(Array)
+        @right = to_op(options[:right])  if options[:right].is_a?(Array)
       end
     end
   end

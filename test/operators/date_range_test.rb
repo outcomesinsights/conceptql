@@ -33,5 +33,26 @@ describe ConceptQL::Operators::DateRange do
        "412",
        {:start=>"START", :end=>"END", :annotation=>{:errors=>[["has arguments"]]}}]
     )
+
+    query(
+      [:date_range, {:start=>1, :end=>2}]
+    ).annotate.must_equal(
+      ["date_range",
+       {:start=>1, :end=>2, :annotation=>{:errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
+    )
+
+    query(
+      [:date_range, {:end=>"END"}]
+    ).annotate.must_equal(
+      ["date_range",
+       {:end=>"END", :annotation=>{:errors=>[["option not present", "start"]]}}]
+    )
+
+    query(
+      [:date_range, {:start=>"START"}]
+    ).annotate.must_equal(
+      ["date_range",
+       {:start=>"START", :annotation=>{:errors=>[["option not present", "end"]]}}]
+    )
   end
 end

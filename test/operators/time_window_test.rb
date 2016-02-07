@@ -27,6 +27,30 @@ describe ConceptQL::Operators::TimeWindow do
     )
 
     query(
+      [:time_window, [:icd9, "412"], {:start=>2, :end=>2}]
+    ).annotate.must_equal(
+      ["time_window",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:start=>2, :end=>2, :annotation=>{:errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
+    )
+
+    query(
+      [:time_window, [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["time_window",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:errors=>[["option not present", "start"], ["option not present", "end"]]}}]
+    )
+
+    query(
+      [:time_window, [:icd9, "412"], {:start=>"-2b", :end=>"-2y"}]
+    ).annotate.must_equal(
+      ["time_window",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:start=>"-2b", :end=>"-2y", :annotation=>{:errors=>[["wrong option format", "start"]]}}]
+    )
+
+    query(
       [:time_window, 21, [:icd9, "412"], {:start=>"-2y", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",

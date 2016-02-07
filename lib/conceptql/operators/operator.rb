@@ -97,6 +97,7 @@ module ConceptQL
           one_argument
           at_least_one_argument
           at_most_one_argument
+          option
         END
 
         validation_meths.each do |type|
@@ -462,6 +463,7 @@ module ConceptQL
       # Validation Related
 
       def validate
+        add_error("invalid_label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
         end
@@ -499,6 +501,18 @@ module ConceptQL
 
       def validate_at_least_one_argument
         add_error("has no arguments") if @arguments.empty?
+      end
+
+      def validate_option(format, *opts)
+        opts.each do |opt|
+          if val = options[opt]
+            unless format === val
+              add_error("wrong option format", opt.to_s)
+            end
+          else
+            add_error("option not present", opt.to_s)
+          end
+        end
       end
 
       def add_error(*args)
