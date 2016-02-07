@@ -117,7 +117,8 @@ module ConceptQL
 
           # If operator has a label, replace it with a recall so all references
           # to it use the same code.
-          if operator.label
+          if operator.label && !operator.errors
+            operator.scope.add_operator(operator)
             operator = Operators::Recall.new(operator.nodifier, operator.label)
           end
 
@@ -131,10 +132,10 @@ module ConceptQL
         args.reject!{|arg| arg.nil? || arg == ''}
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operator) }
         @values = args
+
         scope.nest(self) do
           create_upstreams
         end
-        scope.add_operator(self) if label
       end
 
       def create_upstreams
@@ -253,11 +254,11 @@ module ConceptQL
         valid? && upstreams.all?(&:upstreams_valid?)
       end
 
-      private
-
       def scope
         nodifier.scope
       end
+
+      private
 
       def annotate_values(db)
         (upstreams.map { |op| op.annotate(db) } + arguments).push(options)
@@ -463,7 +464,7 @@ module ConceptQL
       # Validation Related
 
       def validate
-        add_error("invalid_label") if label && !label.is_a?(String)
+        add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
         end

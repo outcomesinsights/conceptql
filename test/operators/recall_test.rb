@@ -34,6 +34,17 @@ describe ConceptQL::Operators::Recall do
 
   it "should handle errors when annotating" do
     query(
+      [:except,
+       {left: ["icd9", "412", {"label": 1}],
+        right:[ "recall", "Heart Attack"]}]
+    ).annotate.must_equal(
+      ["except",
+       {:left=>["icd9", "412", {:label=>1, :annotation=>{:errors=>[["invalid label"]]}, :name=>"ICD-9 CM"}],
+        :right=>["recall", "Heart Attack", {:annotation=>{:errors=>[["no matching label"]]}}],
+        :annotation=>{}}]
+    )
+
+    query(
       [:union,
        ["icd9", "412", {"label": "Heart Attack"}],
        ["recall",
@@ -71,6 +82,17 @@ describe ConceptQL::Operators::Recall do
       ["union",
        ["recall", "HA2", {:annotation=>{:errors=>[["mutually referential recalls", "HA1"]]}}],
        ["recall", "HA1", {:annotation=>{:errors=>[["mutually referential recalls", "HA2"]]}}],
+       {:annotation=>{}}]
+    )
+
+    query(
+      [:union,
+       ["icd9", "412", {"label": "HA1"}],
+       ["icd9", "409.1", {"label": "HA1"}]]
+    ).annotate.must_equal(
+      ["union",
+       ["icd9", "412", {:label=>"HA1", :annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "409.1", {:label=>"HA1", :annotation=>{:errors=>[["duplicate label"]]}, :name=>"ICD-9 CM"}],
        {:annotation=>{}}]
     )
 
