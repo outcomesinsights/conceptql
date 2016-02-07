@@ -59,6 +59,16 @@ module ConceptQL
 
       private
 
+      def validate(db)
+        super
+        if @errors.empty?
+          missing_args = arguments - db[:vocabulary__concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>arguments).select_map(:concept_code)
+          unless missing_args.empty?
+            add_warning("invalid concept code", *missing_args)
+          end
+        end
+      end
+
       def table_name
         @table_name ||= make_table_name(table)
       end

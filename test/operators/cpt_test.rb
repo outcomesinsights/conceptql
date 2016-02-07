@@ -19,5 +19,11 @@ describe ConceptQL::Operators::Cpt do
        ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
        {:annotation=>{:errors=>[["has upstreams"], ["has no arguments"]]}, :name=>"CPT"}]
     )
+
+    query(
+      [:cpt, "99214", "XYS"]
+    ).annotate.must_equal(
+      ["cpt", "99214", "XYS", {:annotation=>{:procedure_occurrence=>{:rows=>1221, :n=>203}, :warnings=>[["invalid concept code", "XYS"]]}, :name=>"CPT"}]
+    )
   end
 end

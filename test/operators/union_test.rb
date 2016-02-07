@@ -146,10 +146,10 @@ describe ConceptQL::Operators::Union do
     )
 
     query(
-      [:union, [:icd9, "412", {:id=>1}], [:icd9, "401.9", {:id=>2}]]
+      [:union, [:icd9, "412", "XYS", {:id=>1}], [:icd9, "401.9", {:id=>2}]]
     ).scope_annotate.must_equal(
       {:errors=>{},
-       :warnings=>{},
+       :warnings=>{1=>[["invalid concept code", "XYS"]]},
        :counts=>{1=>{:condition_occurrence=>{:rows=>50, :n=>38}},
                  2=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
                  "union"=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}
