@@ -8,8 +8,6 @@ module ConceptQL
       desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming result set.'
       types :observation_period
       allows_one_upstream
-      validate_at_most_one_upstream
-      validate_no_arguments
 
       def my_type
         :observation_period

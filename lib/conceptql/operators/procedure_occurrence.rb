@@ -8,8 +8,6 @@ module ConceptQL
       desc 'Generates all procedure_occurrence records, or, if fed a stream, fetches all procedure_occurrence records for the people represented in the incoming result set.'
       types :procedure_occurrence
       allows_one_upstream
-      validate_at_most_one_upstream
-      validate_no_arguments
 
       def my_type
         :procedure_occurrence

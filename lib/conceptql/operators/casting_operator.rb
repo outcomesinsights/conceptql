@@ -24,6 +24,9 @@ module ConceptQL
     # rows in its table as results.
     class CastingOperator < Operator
       category 'Casting'
+      validate_at_most_one_upstream
+      validate_no_arguments
+
       def types
         [type]
       end
