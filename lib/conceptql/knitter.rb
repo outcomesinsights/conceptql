@@ -5,14 +5,15 @@ require_relative 'fake_annotater'
 
 module ConceptQL
   class Knitter
-    attr :file, :db
+    attr :file, :db, :options
     CONCEPTQL_CHUNK_START = /```ConceptQL/
     RESULT_KEYS = %i(person_id criterion_id criterion_type start_date end_date source_value)
 
-    def initialize(db, file)
+    def initialize(db, file, options = {})
       @file = Pathname.new(file)
       raise "File must end in .md.cql!" unless file =~ /\.md\.cql$/
       @db = db
+      @options = options.dup
     end
 
     def knit
@@ -164,9 +165,16 @@ module ConceptQL
     class Cache
       attr :db, :options, :file
 
-      def initialize(db, file)
+      def initialize(db, file, options = {})
         @db = db
         @file = file
+        @options = options.nil? ? {} : options.dup
+        remove_cache if @options[:ignore]
+      end
+
+      def remove_cache
+        cache_dir.rmtree
+        @cache_dir = nil
       end
 
       def cache_file_path(str)
@@ -204,7 +212,7 @@ module ConceptQL
     end
 
     def cache
-      @cache ||= Cache.new(db.db, file)
+      @cache ||= Cache.new(db.db, file, options[:cache_options])
     end
   end
 end

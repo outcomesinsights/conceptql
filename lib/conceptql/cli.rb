@@ -79,8 +79,13 @@ module ConceptQL
     end
 
     desc 'knit', 'Processes ConceptQL fenced code segments and produces a Markdown file'
+    option :ignore_cache, type: :boolean
     def knit(file)
-      ConceptQL::Knitter.new(ConceptQL::Database.new(db), file).knit
+      opts = {}
+      if options[:ignore_cache]
+        opts[:cache_options] = { ignore: true }
+      end
+      ConceptQL::Knitter.new(ConceptQL::Database.new(db), file, opts).knit
     end
 
     private
