@@ -109,15 +109,22 @@ module ConceptQL
       end
 
       def table
-        results = query(statement).query.limit(10).all rescue nil
-        if results
+        results = nil
+        begin
+          results = query(statement).query.limit(10).all
+        rescue
+          puts $!.message
+          puts $!.backtrace.join("\n")
+        end
+
+        if results.nil?
+          "```No Results.  Statement is experimental.```"
+        else
           if results.empty?
             "```No Results found.```"
           else
             resultify(results)
           end
-        else
-          "```No Results.  Statement is experimental.```"
         end
       end
 
