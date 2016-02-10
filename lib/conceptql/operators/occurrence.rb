@@ -54,7 +54,8 @@ occurrence, this operator returns nothing for that person
           .with(:occurrences,
             stream.evaluate(db)
               .from_self
-              .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) })
+              .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) },
+              :recursive=>true)
           .where(rn: occurrence.abs)
       end
 
