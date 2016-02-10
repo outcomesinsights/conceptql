@@ -7,7 +7,7 @@ describe ConceptQL::Operators::Count do
     ).must_equal("drug_exposure"=>[1])
 
     criteria_ids(
-      [:count, [:icd9_procedure, "0.13"], [:numeric, 1, [:ndc, "12745010902"]]]
+      [:count, [:icd9_procedure, "00.13"], [:numeric, 1, [:ndc, "12745010902"]]]
     ).must_equal("drug_exposure"=>[1], "procedure_occurrence"=>[29154])
 
     criteria_ids(
