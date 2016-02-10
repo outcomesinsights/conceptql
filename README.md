@@ -4,10 +4,6 @@ ConceptQL (pronounced concept-Q-L) is a high-level language that allows research
 
 This gem interprets the ConceptQL language and translates it into SQL queries compatible with OMOP CDM-structured data.  The ConceptQL "language" is a set of nested hashes and arrays representing search criteria and some set operations and temporal operations to glue those criteria together.
 
-## Under Active Development
-
-The ConceptQL language is under active development.  If you don't see any activity in the master branch, check the [develop branch](https://github.com/outcomesinsights/conceptql/tree/develop) to see the latest changes to the language.  I try to keep master nice and stable.
-
 ## Further Reading
 
 If you're interested in reading up on ConceptQL, a rough draft of the specifications document is [available in markdown format](https://github.com/outcomesinsights/conceptql_spec).
