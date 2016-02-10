@@ -133,3 +133,5 @@ Or, use the [conceptql-dev-box](https://github.com/outcomesinsights/conceptql-de
     - Many thanks for allowing me to release a portion of my work as Open Source Software!
 - [OMOP](http://omop.org)/[OHDSI](http://www.ohdsi.org/)
     - Thank you for providing a great [Common Data Model](http://omop.org/CDM) and fantastic set of standardized [Vocabularies](http://omop.org/Vocabularies) upon which ConceptQL rests.
+- [Jeremy Evans](http://code.jeremyevans.net/)
+    - Thank you for the great contributions, ideas, and commits.
