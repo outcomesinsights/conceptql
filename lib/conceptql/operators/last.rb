@@ -15,6 +15,8 @@ module ConceptQL
     # If we ask for the last occurrence of something and a person has no
     # occurrences, this operator returns nothing for that person
     class Last < Occurrence
+      register __FILE__, :omopv4
+
       desc 'Only passes through the row with the most recent start_date per person.  If more than one row qualifies, result is arbitrarily chosen.'
 
       def occurrence

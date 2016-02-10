@@ -22,6 +22,8 @@ module ConceptQL
     # If we ask for the second occurrence of something and a person has only one
     # occurrence, this operator returns nothing for that person
     class Occurrence < Operator
+      register __FILE__, :omopv4
+
       preferred_name 'Nth Occurrence'
       desc <<-EOF
 Groups all results by person, then orders by start_date, then finds the nth occurrence.
@@ -40,7 +42,12 @@ occurrence, this operator returns nothing for that person
       EOF
       argument :occurrence, type: :integer
       allows_one_upstream
+      validate_at_least_one_upstream
       category %w(Temporal Occurrence)
+
+      def query_cols
+        SELECTED_COLUMNS + [:rn]
+      end
 
       def query(db)
         db[:occurrences]
@@ -56,13 +63,23 @@ occurrence, this operator returns nothing for that person
       end
 
       private
+
+      def validate(db)
+        super
+        if self.class == Occurrence
+          validate_one_argument
+        else
+          validate_no_arguments
+        end
+      end
+
       def asc_or_desc
         occurrence < 0 ? :desc : :asc
       end
 
       def ordered_columns
         ordered_columns = [Sequel.send(asc_or_desc, :start_date)]
-        ordered_columns += [:criterion_type, :criterion_id]
+        ordered_columns += [:criterion_id]
       end
     end
   end

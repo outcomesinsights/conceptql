@@ -1,50 +1,62 @@
-require 'psych'
+require 'json'
 require 'forwardable'
-require_relative 'behaviors/preppable'
-require_relative 'tree'
+require_relative 'scope'
+require_relative 'nodifier'
 
 module ConceptQL
   class Query
     extend Forwardable
-    def_delegators :prepped_query, :all, :count, :execute, :order
+    def_delegators :all, :count, :execute, :order
 
     attr :statement
-    def initialize(db, statement, tree = Tree.new)
+    def initialize(db, statement, opts={})
       @db = db
-      @db.extend_datasets(ConceptQL::Behaviors::Preppable)
       @statement = statement
-      @tree = tree
+      opts = opts.dup
+      opts[:algorithm_fetcher] ||= proc do |alg|
+        statement, description = db[:concepts].where(concept_id: alg).get([:statement, :label])
+        statement = JSON.parse(statement) if statement.is_a?(String)
+        [statement, description]
+      end
+      @nodifier = opts[:nodifier] || Nodifier.new(opts)
     end
 
     def query
-      build_query(db)
+      nodifier.scope.with_ctes(operator.evaluate(db), db)
     end
 
     def sql
-      (tree.scope.sql(db) << operator.sql(db)).join(";\n\n") + ';'
+      operator.sql(db)
+    end
+
+    def annotate
+      operator.annotate(db)
+    end
+    
+    def scope_annotate
+      annotate
+      nodifier.scope.annotation
+    end
+
+    def optimized
+      n = dup
+      n.instance_variable_set(:@operator, operator.optimized)
+      n
     end
 
     def types
-      tree.root(self).types
+      operator.types
     end
 
     def operator
-      @operator ||= tree.root(self)
+      @operator ||= if statement.is_a?(Array)
+        nodifier.create(*statement)
+      else
+        Operators::Invalid.new(nodifier, errors: ["invalid root operator"])
+      end
     end
 
     private
-    attr :yaml, :tree, :db
-
-    def build_query(db)
-      operator.evaluate(db).tap { |q| q.prep_proc = prep_proc }
-    end
-
-    def prep_proc
-      @prep_proc = Proc.new { puts 'PREPPING'; tree.scope.prep(db) }
-    end
-
-    def prepped_query
-      query
-    end
+    attr :db, :nodifier
   end
 end

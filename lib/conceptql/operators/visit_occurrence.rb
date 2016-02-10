@@ -3,6 +3,8 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class VisitOccurrence < CastingOperator
+      register __FILE__, :omopv4
+
       desc 'Returns all visits in the database, or if given a upstream, converts all results to the set of visit_occurrences related to those results.'
       allows_one_upstream
       types :visit_occurrence

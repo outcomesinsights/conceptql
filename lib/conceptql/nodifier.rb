@@ -1,36 +1,40 @@
-require 'facets/hash/deep_rekey'
-require 'facets/pathname/chdir'
-require 'facets/string/modulize'
+require_relative 'operators/operator'
 
 module ConceptQL
   class Nodifier
-    attr_reader :operators
+    attr :scope, :data_model, :algorithm_fetcher
 
-    def initialize
-      @operators = {}
-      dir = Pathname.new(__FILE__).dirname()
-      dir.chdir do
-        Pathname.glob("operators/*.rb").each do |file|
-          require_relative file
-          operator = file.basename('.*').to_s.to_sym
-          klass = Object.const_get("conceptQL/operators/#{operator}".modulize)
-          @operators[operator] = klass
-        end
-      end
+    def initialize(scope, opts={})
+      @scope = opts[:scope] || Scope.new
+      @data_model = opts[:data_model] || :omopv4
+      @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
+        nil
+      end)
     end
 
-    def create(scope, operator, *values)
-      operator = operator.to_sym
-      if operators[operator].nil?
-        raise "Can't find operator for '#{operator}' in #{operators.keys.sort}"
+    def create(operator, *values)
+      if operator.to_s == 'algorithm'
+        statement, desc = algorithm_fetcher.call(values.first)
+        if statement
+          create(*statement)
+        else
+          Operators::Invalid.new(operator, errors: ["invalid algorithm", values.first])
+        end
+      elsif klass = operators[operator.to_s]
+        klass.new(self, *values)
+      else
+        Operators::Invalid.new(self, errors: ["invalid operator", operator])
       end
-      operator = operators[operator].new(*values)
-      operator.scope = scope
-      operator
     end
 
     def to_metadata
       Hash[operators.map { |k, v| [k, v.to_metadata]}.select { |k, v| v[:desc] }]
+    end
+
+    private
+
+    def operators
+      @operators ||= Operators.operators[@data_model]
     end
   end
 end

@@ -23,7 +23,6 @@ module ConceptQL
     end
 
     def parse(str)
-      ConceptQL.logger.debug(str)
       return [] if str.nil? || str.empty?
       return [[lookup['d'], str.to_i]] if str.match(/^[-+]?\d+$/)
       str.downcase.scan(/([-+]?\d*[dmy])/).map do |adjustment|

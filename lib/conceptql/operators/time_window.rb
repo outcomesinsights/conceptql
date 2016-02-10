@@ -20,11 +20,17 @@ module ConceptQL
     # pass '', '0', or nil as that argument.  E.g.:
     # start: 'd', end: '' # Only adjust start_date by positive 1 day and leave end_date uneffected
     class TimeWindow < Operator
+      register __FILE__, :omopv4
+
       desc 'Adjusts the start_date and end_date columns to create a new window of time for each result.'
       option :start, type: :string
       option :end, type: :string
       allows_one_upstream
+      validate_one_upstream
+      validate_no_arguments
+      validate_option /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dmy])+/])}\z/, :start, :end
       category %(Temporal Manipulation)
+      default_query_columns
 
       def query(db)
         db.extension :date_arithmetic
@@ -32,6 +38,7 @@ module ConceptQL
       end
 
       private
+
       def date_columns(query, type = nil)
         [adjusted_start_date, adjusted_end_date]
       end

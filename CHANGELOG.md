@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+- Nothing.
+
+### Deprecated
+- Nothing.
+
+### Removed
+- Nothing.
+
+### Fixed
+- Fixed date casting and other issues for Impala compatibility.
+
+
 ## 0.2.0 - 2015-12-11
 
 ### Added

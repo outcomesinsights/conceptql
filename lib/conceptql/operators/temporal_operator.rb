@@ -5,11 +5,11 @@ module ConceptQL
     # Base class for all temporal operators
     #
     # Subclasses must implement the where_clause method which should probably return
-    # a proc that can be executed as a Sequel "virtual row" e.g.
-    # Proc.new { l.end_date < r.start_date }
+    # a Sequel expression to use for filtering.
     class TemporalOperator < BinaryOperatorOperator
       reset_categories
       category %w(Temporal Relative)
+      default_query_columns
 
       def query(db)
         db.from(db.from(left_stream(db))
@@ -23,11 +23,11 @@ module ConceptQL
       end
 
       def left_stream(db)
-        Sequel.expr(left.evaluate(db)).as(:l)
+        Sequel.expr(left.evaluate(db).from_self).as(:l)
       end
 
       def right_stream(db)
-        Sequel.expr(right.evaluate(db)).as(:r)
+        Sequel.expr(right.evaluate(db).from_self).as(:r)
       end
     end
   end

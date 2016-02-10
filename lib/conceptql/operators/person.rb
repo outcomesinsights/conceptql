@@ -3,6 +3,8 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class Person < CastingOperator
+      register __FILE__, :omopv4
+
       desc 'Returns all people in the database, or if given a upstream, converts all results to the set of patients contained in those results.'
       allows_one_upstream
       types :person

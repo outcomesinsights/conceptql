@@ -3,9 +3,14 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Intersect < PassThru
+      register __FILE__, :omopv4
+
       desc 'Passes thru any result row that appears in all incoming result sets.'
       allows_many_upstreams
       category 'Set Logic'
+      default_query_columns
+      validate_at_least_one_upstream
+      validate_no_arguments
 
       def types
         upstreams.map(&:types).flatten.uniq

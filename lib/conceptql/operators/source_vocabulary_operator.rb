@@ -28,18 +28,46 @@ module ConceptQL
     class SourceVocabularyOperator < Operator
       category 'Source Vocabulary'
       category 'Code Lists'
+      validate_no_upstreams
+      validate_at_least_one_argument
 
       def query(db)
         db.from(table_name)
-          .join(:vocabulary__source_to_concept_map___scm, scm__target_concept_id: table_concept_column)
-          .where(Sequel.expr(scm__source_code: values, scm__source_vocabulary_id: vocabulary_id).&(Sequel.expr(scm__source_code: table_source_column)))
+          .join(:vocabulary__source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
+          .where(conditions)
+      end
+
+      def query_cols
+        table_columns(table_name, :source_to_concept_map)
       end
 
       def type
         table
       end
 
+      def unionable?(other)
+        other.is_a?(self.class)
+      end
+
+      def union(other)
+        dup_values(values + other.values)
+      end
+
+      def conditions
+        [[:scm__source_code, values], [:scm__source_vocabulary_id, vocabulary_id]]
+      end
+
       private
+
+      def validate(db)
+        super
+        if @errors.empty?
+          missing_args = arguments - db[:vocabulary__concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>arguments).select_map(:concept_code)
+          unless missing_args.empty?
+            add_warning("invalid concept code", *missing_args)
+          end
+        end
+      end
 
       def table_name
         @table_name ||= make_table_name(table)

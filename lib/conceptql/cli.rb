@@ -1,9 +1,11 @@
+$: << "lib"
+
 require 'thor'
 require 'sequelizer'
-require 'psych'
 require 'json'
 require 'pp'
 require_relative 'query'
+require_relative 'knitter'
 
 module ConceptQL
   class CLI < Thor
@@ -38,14 +40,21 @@ module ConceptQL
     def run_statement(statement_file)
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
       puts q.sql
-      puts q.statement.to_yaml
+      puts JSON.pretty_generate(q.statement)
       pp q.all
+    end
+
+    desc "annotate_statement", "Reads in a statement and annotates it"
+    def annotate_statement(statement_file)
+      q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
+      pp q.annotate
     end
 
     desc 'show_graph statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
     option :watch_file
     def show_graph(file)
       graph_it(criteria_from_file(file))
+      system('open /tmp/graph.pdf')
     end
 
     desc 'show_and_tell_file statement_file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph, then executes the statement against the DB'
@@ -57,27 +66,26 @@ module ConceptQL
 
     desc 'fake_graph file', 'Reads the ConceptQL statement from the file and shows the contents as a ConceptQL graph'
     def fake_graph(file)
-      require_relative 'fake_grapher'
-      ConceptQL::FakeGrapher.new.graph_it(criteria_from_file(file), '/tmp/graph')
+      require_relative 'fake_annotater'
+      annotated = ConceptQL::FakeAnnotater.new(criteria_from_file(file)).annotate
+      pp annotated
+      ConceptQL::AnnotateGrapher.new.graph_it(annotated, '/tmp/graph.pdf')
       system('open /tmp/graph.pdf')
     end
 
     desc 'metadata', 'Generates the metadata.js file for the JAM'
     def metadata
-      File.write('/tmp/metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
+      File.write('metadata.js', "var metadata = #{ConceptQL::Nodifier.new.to_metadata.to_json};")
     end
 
-    desc 'convert', 'Converts from hash-based syntax to list-based syntax'
-    def convert(file)
-      require 'conceptql/converter'
-      require 'json'
-      begin
-        puts JSON.pretty_generate(ConceptQL::Converter.new.convert(criteria_from_file(file)))
-      rescue
-        puts "Couldn't convert #{file}"
-        puts $!.message
-        puts $!.backtrace.join("\n")
+    desc 'knit', 'Processes ConceptQL fenced code segments and produces a Markdown file'
+    option :ignore_cache, type: :boolean
+    def knit(file)
+      opts = {}
+      if options[:ignore_cache]
+        opts[:cache_options] = { ignore: true }
       end
+      ConceptQL::Knitter.new(ConceptQL::Database.new(db), file, opts).knit
     end
 
     private
@@ -93,7 +101,7 @@ module ConceptQL
     desc 'show_db_graph conceptql_id', 'Shows a graph for the conceptql statement represented by conceptql_id in the db specified by db_url'
     def show_db_graph(conceptql_id)
       result = fetch_conceptql(conceptql_id, options)
-      graph_it(result[:statement].to_hash, db, result[:label])
+      graph_it(result[:statement], db, result[:label])
     end
 
     def fetch_conceptql(conceptql_id)
@@ -105,10 +113,9 @@ module ConceptQL
     def show_and_tell(statement, options, title = nil)
       my_db = db(options)
       q = ConceptQL::Query.new(my_db, statement)
-      puts 'YAML'
-      puts q.statement.to_yaml
+      statement = q.annotate
       puts 'JSON'
-      puts JSON.pretty_generate(q.statement)
+      puts JSON.pretty_generate(statement)
       graph_it(statement, title)
       STDIN.gets
       puts q.sql
@@ -123,20 +130,9 @@ module ConceptQL
     end
 
     def graph_it(statement, title = nil)
-      require_relative 'graph'
-      require_relative 'tree'
-      conn = db(options)
-      ConceptQL::Graph.new(statement,
-                           dangler: true,
-                           title: title,
-                           db: conn
-                          ).graph_it('/tmp/graph')
-      system('open /tmp/graph.pdf')
-      if options[:watch_file]
-        require_relative 'debugger'
-        debugger = ConceptQL::Debugger.new(statement, db: conn, watch_ids: File.readlines(options[:watch_file]).map(&:to_i))
-        debugger.capture_results('/tmp/debug.xlsx')
-      end
+      my_db = db(options)
+      q = ConceptQL::Query.new(my_db, statement).annotate
+      ConceptQL::AnnotateGrapher.new.graph_it(q, '/tmp/graph.pdf')
     end
 
     def criteria_from_file(file)

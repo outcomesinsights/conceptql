@@ -24,6 +24,9 @@ module ConceptQL
     # rows in its table as results.
     class CastingOperator < Operator
       category 'Casting'
+      validate_at_most_one_upstream
+      validate_no_arguments
+
       def types
         [type]
       end
@@ -34,6 +37,10 @@ module ConceptQL
 
       def castables
         (i_point_at + these_point_at_me)
+      end
+
+      def query_cols
+        table_columns(make_table_name(my_type))
       end
 
       def query(db)

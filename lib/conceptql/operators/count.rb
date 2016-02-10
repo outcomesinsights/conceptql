@@ -3,13 +3,20 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class Count < PassThru
+      register __FILE__, :omopv4
+
       desc 'Counts the number of results the exactly match across all columns.'
       allows_one_upstream
+      validate_one_upstream
+      validate_no_arguments
+
+      def query_cols
+        SELECTED_COLUMNS - [:value_as_number] + [:value_as_number]
+      end
 
       def query(db)
         db.from(unioned(db))
-          .group(*COLUMNS)
-          .select(*(COLUMNS - [:value_as_number]))
+          .select_group(*(COLUMNS - [:value_as_number]))
           .select_append{count(1).as(:value_as_number)}
           .from_self
       end

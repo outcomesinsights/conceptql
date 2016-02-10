@@ -12,6 +12,8 @@ module ConceptQL
     # - Either a number value or a symbol representing a column name
     # - An optional stream
     class Numeric < PassThru
+      register __FILE__, :omopv4
+
       desc <<-EOF
 Represents a operator that will either:
 - create a value_as_number value for every person in the database
@@ -25,6 +27,12 @@ Accepts two params:
       EOF
       argument :value, type: :float
       allows_one_upstream
+      validate_at_most_one_upstream
+      validate_one_argument
+
+      def query_cols
+        SELECTED_COLUMNS - [:value_as_number] + [:value_as_number]
+      end
 
       def query(db)
         stream.nil? ? as_criterion(db) : with_kids(db)
@@ -43,7 +51,7 @@ Accepts two params:
       end
 
       def as_criterion(db)
-        db.from(select_it(db.from(:person), :person))
+        db.from(select_it(db.from(:person).clone(:force_columns=>table_columns(:person)), :person))
           .select(*(COLUMNS - [:value_as_number]))
           .select_append(Sequel.lit('?', arguments.first).cast(Float).as(:value_as_number))
           .from_self

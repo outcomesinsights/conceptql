@@ -6,6 +6,7 @@
 .config
 .yardoc
 .idea
+.env
 Gemfile.lock
 InstalledFiles
 _yardoc
@@ -21,3 +22,4 @@ test/tmp
 test/version_tmp
 tmp
 yamls/
+doc/.?????????*

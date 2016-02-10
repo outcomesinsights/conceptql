@@ -7,39 +7,32 @@ module ConceptQL
     class BinaryOperatorOperator < Operator
       option :left, type: :upstream
       option :right, type: :upstream
+      validate_no_arguments
+      validate_option Array, :left, :right
 
       def upstreams
         [left]
-      end
-
-      def graph_it(g, db)
-        left.graph_it(g, db)
-        right.graph_it(g, db)
-        cluster_name = "cluster_#{operator_name}"
-        me = g.send(cluster_name) do |sub|
-          sub[rank: 'same', label: display_name, color: 'black']
-          sub.send("#{cluster_name}_left").send('[]', shape: 'point', color: type_color(types))
-          sub.send("#{cluster_name}_right").send('[]', shape: 'point')
-        end
-        left.link_to(g, me.send("#{cluster_name}_left"), db)
-        right.link_to(g, me.send("#{cluster_name}_right"), db)
-        @__graph_operator = me.send("#{cluster_name}_left")
       end
 
       def display_name
         self.class.name.split('::').last.snakecase.titlecase
       end
 
+      attr :left, :right
+
       private
-      def left
-        @left ||= options[:left]
+
+      def annotate_values(db)
+        h = {}
+        h[:left] = left.annotate(db) if left
+        h[:right] = right.annotate(db) if right
+        [options.merge(h), *arguments]
       end
 
-      def right
-        @right ||= options[:right]
+      def create_upstreams
+        @left = to_op(options[:left]) if options[:left].is_a?(Array)
+        @right = to_op(options[:right])  if options[:right].is_a?(Array)
       end
     end
   end
 end
-
-

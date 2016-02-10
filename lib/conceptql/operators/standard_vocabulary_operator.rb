@@ -21,16 +21,34 @@ module ConceptQL
     class StandardVocabularyOperator < Operator
       category 'Standard Vocabulary'
       category 'Code Lists'
+      validate_no_upstreams
+      validate_at_least_one_argument
+
       def query(db)
         db.from(table_name)
           .join(:vocabulary__concept___c, c__concept_id: table_concept_column)
           .where(c__concept_code: values, c__vocabulary_id: vocabulary_id)
       end
 
+      def query_cols
+        table_columns(table_name, :concept)
+      end
+
       def type
         table
       end
+
       private
+
+      def validate(db)
+        super
+        if @errors.empty?
+          missing_args = arguments - db[:vocabulary__concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>arguments).select_map(:concept_code)
+          unless missing_args.empty?
+            add_warning("invalid concept code", *missing_args)
+          end
+        end
+      end
 
       def table_name
         @table_name ||= make_table_name(table)
