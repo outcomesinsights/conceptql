@@ -12,13 +12,14 @@ module ConceptQL
   class Scope
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :extra_ctes
 
     def initialize
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
       @annotation = {}
+      @extra_ctes = []
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts= {}
@@ -35,6 +36,10 @@ module ConceptQL
     def add_counts(key, type, counts)
       c = @counts[key] ||= {}
       c[type] = counts
+    end
+
+    def add_extra_cte(*args)
+      @extra_ctes << args
     end
 
     def nest(op)
@@ -127,6 +132,9 @@ module ConceptQL
 
       ctes.each do |label, operator|
         query = query.with(label, operator.evaluate(db))
+      end
+      extra_ctes.each do |label, ds|
+        query = query.with(label, ds)
       end
 
       query

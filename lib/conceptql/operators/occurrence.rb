@@ -50,12 +50,11 @@ occurrence, this operator returns nothing for that person
       end
 
       def query(db)
-        db[:occurrences]
-          .with(:occurrences,
+        scope.add_extra_cte(:occurrences,
             stream.evaluate(db)
               .from_self
-              .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) },
-              :recursive=>true)
+              .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) })
+        db[:occurrences]
           .where(rn: occurrence.abs)
       end
 
