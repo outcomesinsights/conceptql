@@ -448,8 +448,6 @@ module ConceptQL
           Sequel.function(:to_date, date, 'YYYY-MM-DD')
         when :mssql
           Sequel.lit('CONVERT(DATETIME, ?)', date)
-        when :impala
-          Sequel.cast(Sequel.cast(date Sequel.function(:concat_ws, '-', *strings), DateTime), DateTime)
         else
           Sequel.cast(date, Date)
         end
