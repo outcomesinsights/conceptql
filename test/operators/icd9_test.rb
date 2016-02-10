@@ -11,7 +11,7 @@ describe ConceptQL::Operators::Icd9 do
     query(
       [:icd9, 'XYS']
     ).annotate.must_equal(
-      ["icd9", "XYS", {:annotation=>{:condition_occurrence=>{:rows=>0, :n=>0}, :warnings=>[["invalid concept code", "XYS"]]}, :name=>"ICD-9 CM"}]
+      ["icd9", "XYS", {:annotation=>{:condition_occurrence=>{:rows=>0, :n=>0}, :warnings=>[["invalid source code", "XYS"]]}, :name=>"ICD-9 CM"}]
     )
   end
 end

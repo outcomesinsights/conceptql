@@ -15,7 +15,7 @@ describe ConceptQL::Operators::Union do
     ).must_equal("condition_occurrence"=>1176)
 
     criteria_counts(
-      [:union, 
+      [:union,
         [:union, [:icd9, "412"], [:icd10, 'Z56.1']],
         [:icd9, "401.9"]]
     ).must_equal("condition_occurrence"=>1176)
@@ -48,7 +48,7 @@ describe ConceptQL::Operators::Union do
 
     criteria_counts(
       query(
-        [:union, 
+        [:union,
           [:union, [:icd9, "412"], [:icd10, 'Z56.1']],
           [:icd9, "401.9"]]
       ).optimized
@@ -85,7 +85,7 @@ describe ConceptQL::Operators::Union do
         {:annotation=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
          :name=>"ICD-9 CM"}],
        {:annotation=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}]
-    )    
+    )
 
     query(
       [:union,
@@ -149,7 +149,7 @@ describe ConceptQL::Operators::Union do
       [:union, [:icd9, "412", "XYS", {:id=>1}], [:icd9, "401.9", {:id=>2}]]
     ).scope_annotate.must_equal(
       {:errors=>{},
-       :warnings=>{1=>[["invalid concept code", "XYS"]]},
+       :warnings=>{1=>[["invalid source code", "XYS"]]},
        :counts=>{1=>{:condition_occurrence=>{:rows=>50, :n=>38}},
                  2=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
                  "union"=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}
