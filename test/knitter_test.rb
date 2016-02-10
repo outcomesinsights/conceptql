@@ -9,7 +9,8 @@ describe ConceptQL::Knitter do
 
   def knit(example)
     ConceptQL::Knitter.new(CDB, "test/knitter/#{example}.md.cql").knit
-    File.read("test/knitter/#{example}.md")
+    lines = File.readlines("test/knitter/#{example}.md")
+    lines.reject{|l| l =~ /\A\| \d+ \|/}.join
   end
 
   def silence

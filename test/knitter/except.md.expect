@@ -9,15 +9,5 @@ Before
 
 | person_id | criterion_id | criterion_type | start_date | end_date | source_value |
 | --------- | ------------ | -------------- | ---------- | -------- | ------------ |
-| 173 | 20037 | condition_occurrence | 2008-09-23 | 2008-09-23 | 412 |
-| 180 | 21006 | condition_occurrence | 2008-01-07 | 2008-01-07 | 412 |
-| 168 | 19736 | condition_occurrence | 2009-01-20 | 2009-01-20 | 412 |
-| 183 | 21619 | condition_occurrence | 2010-12-26 | 2010-12-26 | 412 |
-| 212 | 25417 | condition_occurrence | 2008-11-16 | 2008-11-20 | 412 |
-| 160 | 18555 | condition_occurrence | 2008-12-24 | 2008-12-25 | 412 |
-| 91 | 10865 | condition_occurrence | 2009-11-08 | 2009-11-08 | 412 |
-| 207 | 24721 | condition_occurrence | 2008-02-17 | 2008-02-17 | 412 |
-| 37 | 4359 | condition_occurrence | 2010-02-12 | 2010-02-12 | 412 |
-| 212 | 25309 | condition_occurrence | 2009-10-31 | 2009-10-31 | 412 |
 
 After
