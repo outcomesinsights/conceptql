@@ -10,9 +10,11 @@ module ConceptQL
       types :person
       category "Standard Vocabulary"
       query_columns :person
+      validate_no_upstreams
+      validate_at_least_one_argument
 
       def query(db)
-        gender_concept_ids = values.map do |value|
+        gender_concept_ids = arguments.map do |value|
           case value.to_s
           when /^m/i
             8507

@@ -7,6 +7,8 @@ module ConceptQL
     class BinaryOperatorOperator < Operator
       option :left, type: :upstream
       option :right, type: :upstream
+      validate_no_arguments
+      validate_option Array, :left, :right
 
       def upstreams
         [left]
@@ -21,15 +23,16 @@ module ConceptQL
       private
 
       def annotate_values(db)
-        [options.merge(left: left.annotate(db), right: right.annotate(db))] + arguments
+        h = {}
+        h[:left] = left.annotate(db) if left
+        h[:right] = right.annotate(db) if right
+        [options.merge(h), *arguments]
       end
 
       def create_upstreams
-        @left = to_op(options[:left])
-        @right = to_op(options[:right])
+        @left = to_op(options[:left]) if options[:left].is_a?(Array)
+        @right = to_op(options[:right])  if options[:right].is_a?(Array)
       end
     end
   end
 end
-
-

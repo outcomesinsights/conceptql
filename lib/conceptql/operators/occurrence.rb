@@ -42,6 +42,7 @@ occurrence, this operator returns nothing for that person
       EOF
       argument :occurrence, type: :integer
       allows_one_upstream
+      validate_at_least_one_upstream
       category %w(Temporal Occurrence)
 
       def query_cols
@@ -62,6 +63,16 @@ occurrence, this operator returns nothing for that person
       end
 
       private
+
+      def validate(db)
+        super
+        if self.class == Occurrence
+          validate_one_argument
+        else
+          validate_no_arguments
+        end
+      end
+
       def asc_or_desc
         occurrence < 0 ? :desc : :asc
       end

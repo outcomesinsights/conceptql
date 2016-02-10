@@ -10,6 +10,8 @@ Sums value_as_number across all results that match on all but start_date, end_da
 For start_date and end_date the min and max of each respectively is returned.'
       EOF
       default_query_columns
+      validate_at_least_one_upstream
+      validate_no_arguments
 
       def query(db)
         db.from(unioned(db))

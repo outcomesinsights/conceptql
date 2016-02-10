@@ -47,5 +47,31 @@ describe ConceptQL::Operators::Complement do
        [:complement, [:cpt, "99214"]]]
     ).must_equal("condition_occurrence"=>32630, "procedure_occurrence"=>33878)
   end
+
+  it "should handle upstream errors in annotations" do
+    query(
+      [:complement]
+    ).annotate.must_equal(
+      ["complement", {:annotation=>{:errors=>[["has no upstream"]]}}]
+    )
+
+    query(
+      [:complement, [:icd9, "412"], [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["complement",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+    )
+
+    query(
+      [:complement, "412", [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["complement",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       "412",
+       {:annotation=>{:errors=>[["has arguments"]]}}]
+    )
+  end
 end
 

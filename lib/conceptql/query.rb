@@ -32,6 +32,11 @@ module ConceptQL
     def annotate
       operator.annotate(db)
     end
+    
+    def scope_annotate
+      annotate
+      nodifier.scope.annotation
+    end
 
     def optimized
       n = dup
@@ -44,7 +49,11 @@ module ConceptQL
     end
 
     def operator
-      @operator ||= nodifier.create(*statement)
+      @operator ||= if statement.is_a?(Array)
+        nodifier.create(*statement)
+      else
+        Operators::Invalid.new(nodifier, errors: ["invalid root operator"])
+      end
     end
 
     private

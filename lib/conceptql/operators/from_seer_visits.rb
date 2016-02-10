@@ -5,6 +5,7 @@ module ConceptQL
     class FromSeerVisits < Operator
       register __FILE__, :omopv4
       query_columns :observation
+      validate_one_upstream
 
       def type
         :observation

@@ -65,45 +65,77 @@ module ConceptQL
 
       option :label, type: :string
 
-      def self.register(file, *data_models)
-        data_models.each do |dm|
-          OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
-        end
-      end
+      @validations = []
 
-      def self.query_columns(*tables)
-        define_method(:query_cols) do
-          table_columns(*tables)
-        end
-      end
+      class << self
+        attr :validations
 
-      def self.default_query_columns
-        define_method(:query_cols) do
-          SELECTED_COLUMNS
-        end
-      end
-
-      def self.new(*)
-        operator = super
-
-        # If operator has a label, replace it with a recall so all references
-        # to it use the same code.
-        if operator.label
-          operator = Operators::Recall.new(operator.nodifier, operator.label, original: operator)
+        def register(file, *data_models)
+          data_models.each do |dm|
+            OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
+          end
         end
 
-        operator
+        def query_columns(*tables)
+          define_method(:query_cols) do
+            table_columns(*tables)
+          end
+        end
+
+        def default_query_columns
+          define_method(:query_cols) do
+            SELECTED_COLUMNS
+          end
+        end
+
+        validation_meths = (<<-END).split.map(&:to_sym)
+          no_upstreams
+          one_upstream
+          at_least_one_upstream
+          at_most_one_upstream
+          no_arguments
+          one_argument
+          at_least_one_argument
+          at_most_one_argument
+          option
+        END
+
+        validation_meths.each do |type|
+          meth = :"validate_#{type}"
+          define_method(meth) do |*args|
+            validations << [meth, *args]
+          end
+        end
+
+        def inherited(subclass)
+          super
+          subclass.instance_variable_set(:@validations, validations.dup)
+        end
+
+        def new(*)
+          operator = super
+
+          # If operator has a label, replace it with a recall so all references
+          # to it use the same code.
+          if operator.label && !operator.errors
+            operator.scope.add_operator(operator)
+            operator = Operators::Recall.new(operator.nodifier, operator.label)
+          end
+
+          operator
+        end
       end
 
       def initialize(nodifier, *args)
         @nodifier = nodifier
         @options = args.extract_options!.deep_rekey
+        args.reject!{|arg| arg.nil? || arg == ''}
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operator) }
         @values = args
+
         scope.nest(self) do
           create_upstreams
         end
-        scope.add_operator(self) if label
       end
 
       def create_upstreams
@@ -115,33 +147,46 @@ module ConceptQL
       end
 
       def annotate(db)
-        return original.annotate(db) if respond_to?(:original) && original
-        res = [self.class.just_class_name.underscore] + annotate_values(db)
+        return @annotation if defined?(@annotation)
 
-        metadata = {:annotation=>{}}
+        scope_key = options[:id]||self.class.just_class_name.underscore
+        annotation = {}
+        metadata = {:annotation=>annotation}
         if name = self.class.preferred_name
           metadata[:name] = name
         end
+        res = [self.class.just_class_name.underscore, *annotate_values(db)] 
 
-        annotation = metadata[:annotation]
-        scope.with_ctes(evaluate(db), db)
-          .from_self
-          .select_group(:criterion_type)
-          .select_append{count{}.*.as(:rows)}
-          .select_append{count(:person_id).distinct.as(:n)}
-          .each do |h|
-            annotation[h.delete(:criterion_type).to_sym] = h
+        if upstreams_valid?(db)
+          scope.with_ctes(evaluate(db), db)
+            .from_self
+            .select_group(:criterion_type)
+            .select_append{count{}.*.as(:rows)}
+            .select_append{count(:person_id).distinct.as(:n)}
+            .each do |h|
+              annotation[h.delete(:criterion_type).to_sym] = h
+          end
+          types.each do |type|
+            counts = annotation[type] ||= {:rows=>0, :n=>0}
+            scope.add_counts(scope_key, type, counts)
+          end
+        elsif !errors.empty?
+          annotation[:errors] = errors
+          scope.add_errors(scope_key, errors)
         end
-        types.each do |type|
-          annotation[type] ||= {:rows=>0, :n=>0}
+
+        if defined?(@warnings) && !warnings.empty?
+          annotation[:warnings] = warnings
+          scope.add_warnings(scope_key, warnings)
         end
+
         if res.last.is_a?(Hash)
           res.last.merge!(metadata)
         else
           res << metadata
         end
 
-        res
+        @annotation = res
       end
 
       def dup_values(args)
@@ -201,11 +246,25 @@ module ConceptQL
         options[:label]
       end
 
-      private
+      attr :errors, :warnings
+
+      def valid?(db)
+        return @errors.empty? if defined?(@errors)
+        @errors = []
+        @warnings = []
+        validate(db)
+        errors.empty?
+      end
+
+      def upstreams_valid?(db)
+        valid?(db) && upstreams.all?{|u| u.upstreams_valid?(db)}
+      end
 
       def scope
         nodifier.scope
       end
+
+      private
 
       def annotate_values(db)
         (upstreams.map { |op| op.annotate(db) } + arguments).push(options)
@@ -376,14 +435,14 @@ module ConceptQL
         strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
         concatted_strings = Sequel.join(strings_with_dashes)
 
-	date = concatted_strings
-	if query.db.database_type == :impala
+	      date = concatted_strings
+	      if query.db.database_type == :impala
           date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
         end
         cast_date(query.db, date)
       end
 
-def  cast_date(db, date)
+      def  cast_date(db, date)
         case db.database_type
         when :oracle
           Sequel.function(:to_date, date, 'YYYY-MM-DD')
@@ -394,7 +453,7 @@ def  cast_date(db, date)
         else
           Sequel.cast(date, Date)
         end
-end
+      end
 
       def determine_types
         if upstreams.empty?
@@ -406,6 +465,69 @@ end
         else
           upstreams.map(&:types).flatten.uniq
         end
+      end
+
+      # Validation Related
+
+      def validate(db)
+        add_error("invalid label") if label && !label.is_a?(String)
+        self.class.validations.each do |args|
+          send(*args)
+        end
+      end
+
+      def validate_no_upstreams
+        add_error("has upstreams") unless @upstreams.empty?
+      end
+
+      def validate_one_upstream
+        validate_at_least_one_upstream
+        validate_at_most_one_upstream
+      end
+
+      def validate_at_most_one_upstream
+        add_error("has multiple upstreams") if @upstreams.length > 1
+      end
+
+      def validate_at_least_one_upstream
+        add_error("has no upstream") if @upstreams.empty?
+      end
+
+      def validate_no_arguments
+        add_error("has arguments") unless @arguments.empty?
+      end
+
+      def validate_one_argument
+        validate_at_least_one_argument
+        validate_at_most_one_argument
+      end
+
+      def validate_at_most_one_argument
+        add_error("has multiple arguments") if @arguments.length > 1
+      end
+
+      def validate_at_least_one_argument
+        add_error("has no arguments") if @arguments.empty?
+      end
+
+      def validate_option(format, *opts)
+        opts.each do |opt|
+          if val = options[opt]
+            unless format === val
+              add_error("wrong option format", opt.to_s)
+            end
+          else
+            add_error("option not present", opt.to_s)
+          end
+        end
+      end
+
+      def add_error(*args)
+        errors << args
+      end
+
+      def add_warning(*args)
+        warnings << args
       end
     end
   end

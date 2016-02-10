@@ -17,5 +17,25 @@ describe ConceptQL::Operators::ProcedureOccurrence do
          :right=>[:date_range, {:start=>"2008-03-14", :end=>"2008-03-20"}]}]]
     ).must_equal("procedure_occurrence"=>592)
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:procedure_occurrence, [:icd9, "412"], [:gender, "Male"]]
+    ).annotate.must_equal(
+      ["procedure_occurrence",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
+       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+    )
+
+    query(
+      [:procedure_occurrence, 21, [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["procedure_occurrence",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       21,
+       {:annotation=>{:errors=>[["has arguments"]]}}]
+    )
+  end
 end
 

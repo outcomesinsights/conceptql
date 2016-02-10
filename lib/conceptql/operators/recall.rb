@@ -18,6 +18,8 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       EOF
       argument :name, type: :string
       category 'Variable Assignment'
+      validate_no_upstreams
+      validate_one_argument
 
       def query(db)
         scope.from(db, source)
@@ -35,8 +37,33 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         arguments.first
       end
 
+      def annotate(db)
+        if valid?(db)
+          original.annotate(db)
+        else
+          super
+        end
+      end
+
       def original
-        options[:original]
+        nodifier.scope.fetch_operator(source)
+      end
+
+      private
+
+      def validate(db)
+        super
+        if arguments.length == 1
+          if scope.fetch_operator(source)
+            scope.recall_dependencies[source].each do |d|
+              if scope.recall_dependencies[d].include?(source)
+                add_error("mutually referential recalls", d)
+              end
+            end
+          else
+            add_error("no matching label")
+          end
+        end
       end
     end
   end

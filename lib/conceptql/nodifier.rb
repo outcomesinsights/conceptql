@@ -15,13 +15,15 @@ module ConceptQL
     def create(operator, *values)
       if operator.to_s == 'algorithm'
         statement, desc = algorithm_fetcher.call(values.first)
-        raise "Can't find algorithm for '#{values.first}'" unless statement
-        create(*statement)
-      else
-        unless klass = operators[operator.to_s]
-          raise "Can't find operator for '#{operator}' in #{operators.keys.sort}"
+        if statement
+          create(*statement)
+        else
+          Operators::Invalid.new(operator, errors: ["invalid algorithm", values.first])
         end
+      elsif klass = operators[operator.to_s]
         klass.new(self, *values)
+      else
+        Operators::Invalid.new(self, errors: ["invalid operator", operator])
       end
     end
 

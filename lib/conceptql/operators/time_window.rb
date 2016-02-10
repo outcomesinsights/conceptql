@@ -26,6 +26,9 @@ module ConceptQL
       option :start, type: :string
       option :end, type: :string
       allows_one_upstream
+      validate_one_upstream
+      validate_no_arguments
+      validate_option /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dmy])+/])}\z/, :start, :end
       category %(Temporal Manipulation)
       default_query_columns
 
@@ -35,6 +38,7 @@ module ConceptQL
       end
 
       private
+
       def date_columns(query, type = nil)
         [adjusted_start_date, adjusted_end_date]
       end

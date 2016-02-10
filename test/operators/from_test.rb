@@ -14,4 +14,23 @@ describe ConceptQL::Operators::From do
       [:from, 'condition_occurrence']
     ).count.must_equal(34044)
   end
+
+  it "should handle errors when annotating" do
+    query(
+      [:from, [:icd9, "412"]]
+    ).annotate.must_equal(
+      ["from",
+       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:errors=>[["has upstreams"], ["has no arguments"]]}}]
+    )
+
+    query(
+      [:from, 'person', 'observation_period']
+    ).annotate.must_equal(
+      ["from",
+       'person',
+       'observation_period',
+       {:annotation=>{:errors=>[["has multiple arguments"]]}}]
+    )
+  end
 end

@@ -12,21 +12,64 @@ module ConceptQL
   class Scope
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation
 
     def initialize
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
+      @annotation = {}
+      @annotation[:errors] = @errors = {}
+      @annotation[:warnings] = @warnings = {}
+      @annotation[:counts] = @counts= {}
+    end
+
+    def add_errors(key, errors)
+      @errors[key] = errors 
+    end
+
+    def add_warnings(key, errors)
+      @warnings[key] = errors 
+    end
+
+    def add_counts(key, type, counts)
+      c = @counts[key] ||= {}
+      c[type] = counts
     end
 
     def nest(op)
       return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
-      begin
-        recall_dependencies[label] ||= []
-        if last = recall_stack.last
-          recall_dependencies[last] << label
+
+      unless label.is_a?(String)
+        op.instance_eval do
+          @errors = []
+          add_error("invalid label")
         end
+        return
+      end
+
+      recall_dependencies[label] ||= []
+
+      if recall_stack.include?(label)
+        op.instance_eval do
+          @errors = []
+          add_error("nested recall")
+        end
+        return
+      end
+
+      if known_operators.has_key?(label) && !op.is_a?(Operators::Recall)
+        op.instance_eval do
+          @errors = []
+          add_error("duplicate label")
+        end
+      end
+
+      if last = recall_stack.last
+        recall_dependencies[last] << label
+      end
+
+      begin
         recall_stack.push(label)
         yield
       ensure
@@ -89,10 +132,8 @@ module ConceptQL
       query
     end
 
-    private
-
     def fetch_operator(label)
-      known_operators[label] || raise("No operator with label: '#{label}'")
+      known_operators[label]
     end
   end
 end
