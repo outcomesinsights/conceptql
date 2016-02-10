@@ -17,7 +17,14 @@ module ConceptQL
             .select_all(:l)
           db.from(query)
         else
-          left.evaluate(db).except(right.evaluate(db))
+          lquery = left.evaluate(db)
+          rquery = right.evaluate(db)
+
+          # Set columns so that impala's EXCEPT emulation doesn't use a query to determine them
+          lquery.instance_variable_set(:@columns, SELECTED_COLUMNS)
+          rquery.instance_variable_set(:@columns, SELECTED_COLUMNS)
+
+          lquery.except(rquery)
         end
       end
 
