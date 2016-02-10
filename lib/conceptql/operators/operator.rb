@@ -8,7 +8,7 @@ module ConceptQL
   module Operators
     OPERATORS = {:omopv4=>{}}.freeze
 
-    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_type, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value]
+    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_type, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
     TABLE_COLUMNS = {
       :care_site=>[:care_site_id, :location_id, :organization_id, :place_of_service_concept_id, :care_site_source_value, :place_of_service_source_value],
@@ -39,7 +39,7 @@ module ConceptQL
       :source_to_concept_map=>[:source_code, :source_vocabulary_id, :source_code_description, :target_concept_id, :target_vocabulary_id, :mapping_type, :primary_map, :valid_start_date, :valid_end_date, :invalid_reason],
       :visit_occurrence=>[:visit_occurrence_id, :person_id, :visit_start_date, :visit_end_date, :place_of_service_concept_id, :care_site_id, :place_of_service_source_value],
       :vocabulary=>[:vocabulary_id, :vocabulary_name],
-    }
+    }.freeze.each_value(&:freeze)
 
     def self.operators
       OPERATORS
