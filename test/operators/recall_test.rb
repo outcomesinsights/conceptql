@@ -1,6 +1,24 @@
 require_relative '../helper'
 
 describe ConceptQL::Operators::Recall do
+  it "should raise error if attmping executing invalid recall" do
+    proc do
+      criteria_ids(
+      ["after",
+        {:left=>["during",
+                 {:left=>["occurrence", 4, ["icd9", "203.0x", {"label"=>"Meyloma Dx"}]],
+                  :right=>["time_window", ["first", ["recall", "Meyloma Dx"]], {"start"=>"0", "end"=>"90d"}]}],
+         :right=>["union",
+                  ["during",
+                   {:left=>["time_window", ["recall", "Qualifying Meyloma Dx"], {"start"=>"-90d", "end"=>"0", "label"=>"Meyloma 90-day Lookback"}],
+                    :right=>["cpt", "38220", "38221", "85102", "85095", "3155F", "85097", "88237", "88271", "88275", "88291", "88305", {"label"=>"Bone Marrow"}]}],
+                  ["occurrence", 2, ["during",
+                                     {:left=>["cpt", "84156", "84166", "86335", "84155", "84165", "86334", "83883", "81264", "82784", "82785", "82787", "82040", "82232", "77074", "77075", "83615", {"label"=>"Other Tests"}],
+                                      :right=>["recall", "Meyloma 90-day Lookback"]}]]]}]
+      )
+    end.must_raise
+  end
+
   it "should produce correct results" do
     criteria_ids(
       [:union,
@@ -122,6 +140,48 @@ describe ConceptQL::Operators::Recall do
       [:recall, "foo", "bar"]
     ).annotate.must_equal(
       ["recall", "foo", "bar", {:annotation=>{:errors=>[["has multiple arguments"]]}}]
+    )
+
+    query(
+      ["after",
+        {:left=>["during",
+                 {:left=>["occurrence", 4, ["icd9", "203.0x", {"label"=>"Meyloma Dx"}]],
+                  :right=>["time_window", ["first", ["recall", "Meyloma Dx"]], {"start"=>"0", "end"=>"90d"}]}],
+         :right=>["union",
+                  ["during",
+                   {:left=>["time_window", ["recall", "Qualifying Meyloma Dx"], {"start"=>"-90d", "end"=>"0", "label"=>"Meyloma 90-day Lookback"}],
+                    :right=>["cpt", "38220", "38221", "85102", "85095", "3155F", "85097", "88237", "88271", "88275", "88291", "88305", {"label"=>"Bone Marrow"}]}],
+                  ["occurrence", 2, ["during",
+                                     {:left=>["cpt", "84156", "84166", "86335", "84155", "84165", "86334", "83883", "81264", "82784", "82785", "82787", "82040", "82232", "77074", "77075", "83615", {"label"=>"Other Tests"}],
+                                      :right=>["recall", "Meyloma 90-day Lookback"]}]]]}]
+    ).annotate.must_equal(
+      ["after",
+       {:left=>["during",
+                {:left=>["occurrence", ["icd9", "203.0x", {:label=>"Meyloma Dx", :annotation=>{:warnings=>[["invalid source code", "203.0x"]]}, :name=>"ICD-9 CM"}], 4, {:annotation=>{}, :name=>"Nth Occurrence"}],
+                 :right=>["time_window",
+                          ["first",
+                           ["icd9", "203.0x", {:label=>"Meyloma Dx", :annotation=>{:warnings=>[["invalid source code", "203.0x"]]}, :name=>"ICD-9 CM"}],
+                           {:annotation=>{}}],
+                          {:start=>"0", :end=>"90d", :annotation=>{:errors=>[["wrong option format", "start"]]}}],
+                 :annotation=>{}}],
+        :right=>["union",
+                 ["during",
+                  {:left=>["time_window",
+                           ["recall", "Qualifying Meyloma Dx", {:annotation=>{:errors=>[["no matching label"]]}}],
+                           {:start=>"-90d", :end=>"0", :label=>"Meyloma 90-day Lookback", :annotation=>{:errors=>[["wrong option format", "end"]]}}],
+                   :right=>["cpt", "38220", "38221", "85102", "85095", "3155F", "85097", "88237", "88271", "88275", "88291", "88305", {:label=>"Bone Marrow", :annotation=>{}, :name=>"CPT"}], :annotation=>{}}],
+                 ["occurrence",
+                  ["during",
+                   {:left=>["cpt", "84156", "84166", "86335", "84155", "84165", "86334", "83883", "81264", "82784", "82785", "82787", "82040", "82232", "77074", "77075", "83615",
+                           {:label=>"Other Tests", :annotation=>{}, :name=>"CPT"}],
+                    :right=>["time_window",
+                             ["recall", "Qualifying Meyloma Dx", {:annotation=>{:errors=>[["no matching label"]]}}],
+                             {:start=>"-90d", :end=>"0", :label=>"Meyloma 90-day Lookback", :annotation=>{:errors=>[["wrong option format", "end"]]}}],
+                    :annotation=>{}}],
+                  2,
+                  {:annotation=>{}, :name=>"Nth Occurrence"}],
+                 {:annotation=>{}}],
+        :annotation=>{}}]
     )
   end
 end
