@@ -12,16 +12,16 @@ describe ConceptQL::Operators::PlaceOfServiceCode do
       [:place_of_service_code, 21, [:icd9, "412"]]
     ).annotate.must_equal(
       ["place_of_service_code",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        21,
-       {:annotation=>{:errors=>[["has upstreams"]]}}]
+       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams"]]}}]
     )
 
     query(
       [:place_of_service_code]
     ).annotate.must_equal(
       ["place_of_service_code",
-       {:annotation=>{:errors=>[["has no arguments"]]}}]
+       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has no arguments"]]}}]
     )
   end
 end

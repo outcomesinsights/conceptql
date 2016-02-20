@@ -20,18 +20,18 @@ describe ConceptQL::Operators::ObservationPeriod do
       [:observation_period, [:icd9, '412'], [:gender, 'Male']]
     ).annotate.must_equal(
       ["observation_period",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
-       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
+       {:annotation=>{:counts=>{:observation_period=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
     )
 
     query(
       [:observation_period, 1, [:gender, 'Male']]
     ).annotate.must_equal(
       ["observation_period",
-       ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
+       ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
        1,
-       {:annotation=>{:errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:observation_period=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
     )
   end
 end

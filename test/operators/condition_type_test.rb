@@ -80,8 +80,8 @@ describe ConceptQL::Operators::ConditionType do
       [:condition_type, [:icd9, "412"]]
     ).annotate.must_equal(
       ["condition_type",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:errors=>[["has upstreams"], ["has no arguments"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams"], ["has no arguments"]]}}]
     )
   end
 end

@@ -35,7 +35,8 @@ module ConceptQL
       payer_plan_period: 'blue',
       drug_exposure: 'purple',
       observation: 'magenta',
-      misc: 'black'
+      misc: 'black',
+      invalid: 'gray'
     }
 
     def type_color(*types)
@@ -44,7 +45,7 @@ module ConceptQL
     end
 
     def types(op)
-      op.last[:annotation].keys
+      op.last[:annotation][:counts].keys
     end
 
     def link_to(g, from, from_node, to)
@@ -52,10 +53,10 @@ module ConceptQL
 
       opts = from.last[:annotation]
       types(from).each do |type|
-        next unless (type_opts = opts[type]).is_a?(Hash)
+        next unless (type_opts = opts[:counts][type]).is_a?(Hash)
         n = type_opts[:n]
         if n
-          edge_options[:label] = " rows=#{commatize(opts[type][:rows])} \n n=#{commatize(n)}"
+          edge_options[:label] = " rows=#{commatize(opts[:counts][type][:rows])} \n n=#{commatize(n)}"
           edge_options[:style] = 'dashed' if n.zero?
         end
         e = g.add_edges(from_node, to, edge_options)

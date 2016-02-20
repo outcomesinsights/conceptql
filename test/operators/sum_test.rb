@@ -19,16 +19,16 @@ describe ConceptQL::Operators::Sum do
     query(
       [:sum]
     ).annotate.must_equal(
-      ["sum", {:annotation=>{:errors=>[["has no upstream"]]}}]
+      ["sum", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},:errors=>[["has no upstream"]]}}]
     )
 
     query(
       [:sum, 21, [:numeric, 1]]
     ).annotate.must_equal(
       ["sum",
-       ["numeric", 1, {:annotation=>{:person=>{:rows=>250, :n=>250}}}],
+       ["numeric", 1, {:annotation=>{:counts=>{:person=>{:rows=>250, :n=>250}}}}],
        21,
-       {:annotation=>{:errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has arguments"]]}}]
     )
   end
 end

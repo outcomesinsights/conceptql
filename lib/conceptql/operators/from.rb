@@ -16,7 +16,8 @@ module ConceptQL
       end
 
       def types
-        values[1..99].compact
+        types = values[1..99].compact
+        types.empty? ? [:invalid] : types.map(&:to_sym)
       end
     end
   end

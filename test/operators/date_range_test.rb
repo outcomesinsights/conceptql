@@ -14,7 +14,8 @@ describe ConceptQL::Operators::DateRange do
   it "#annotate should work correctly" do
     query(
       [:date_range, {:start=>"2008-03-13", :end=>"2008-03-20"}]
-    ).annotate.must_equal(["date_range", {:start=>"2008-03-13", :end=>"2008-03-20", :annotation=>{:person=>{:rows=>250, :n=>250}}}])
+    ).annotate.must_equal(["date_range", {:start=>"2008-03-13", :end=>"2008-03-20",
+                                          :annotation=>{:counts=>{:person=>{:rows=>250, :n=>250}}}}])
   end
 
   it "should handle errors when annotating" do
@@ -22,8 +23,9 @@ describe ConceptQL::Operators::DateRange do
       [:date_range, [:icd9, "412"], {:start=>"START", :end=>"END"}]
     ).annotate.must_equal(
       ["date_range",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:start=>"START", :end=>"END", :annotation=>{:errors=>[["has upstreams"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:start=>"START", :end=>"END",
+        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams"]]}}]
     )
 
     query(
@@ -31,28 +33,32 @@ describe ConceptQL::Operators::DateRange do
     ).annotate.must_equal(
       ["date_range",
        "412",
-       {:start=>"START", :end=>"END", :annotation=>{:errors=>[["has arguments"]]}}]
+       {:start=>"START", :end=>"END",
+        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has arguments"]]}}]
     )
 
     query(
       [:date_range, {:start=>1, :end=>2}]
     ).annotate.must_equal(
       ["date_range",
-       {:start=>1, :end=>2, :annotation=>{:errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
+       {:start=>1, :end=>2,
+        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
     )
 
     query(
       [:date_range, {:end=>"END"}]
     ).annotate.must_equal(
       ["date_range",
-       {:end=>"END", :annotation=>{:errors=>[["option not present", "start"]]}}]
+       {:end=>"END",
+        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["option not present", "start"]]}}]
     )
 
     query(
       [:date_range, {:start=>"START"}]
     ).annotate.must_equal(
       ["date_range",
-       {:start=>"START", :annotation=>{:errors=>[["option not present", "end"]]}}]
+       {:start=>"START",
+        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["option not present", "end"]]}}]
     )
   end
 end

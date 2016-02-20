@@ -52,25 +52,25 @@ describe ConceptQL::Operators::Complement do
     query(
       [:complement]
     ).annotate.must_equal(
-      ["complement", {:annotation=>{:errors=>[["has no upstream"]]}}]
+      ["complement", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"]]}}]
     )
 
     query(
       [:complement, [:icd9, "412"], [:icd9, "412"]]
     ).annotate.must_equal(
       ["complement",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has multiple upstreams"]]}}]
     )
 
     query(
       [:complement, "412", [:icd9, "412"]]
     ).annotate.must_equal(
       ["complement",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        "412",
-       {:annotation=>{:errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has arguments"]]}}]
     )
   end
 end
