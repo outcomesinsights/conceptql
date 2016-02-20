@@ -22,7 +22,7 @@ describe ConceptQL::Operators::DrugTypeConcept do
     )
 
     query(
-      [:drug_type_concept] 
+      [:drug_type_concept]
     ).annotate.must_equal(
       ["drug_type_concept", {:annotation=>{:errors=>[["has no arguments"]]}}]
     )

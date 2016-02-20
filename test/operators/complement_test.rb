@@ -23,7 +23,7 @@ describe ConceptQL::Operators::Complement do
        [:complement, [:icd9, "412"]],
        [:complement, [:condition_type, :inpatient_header]]]
     ).must_equal("condition_occurrence"=>32630)
-    
+
     criteria_counts(
       [:complement,
        [:union,
@@ -31,14 +31,14 @@ describe ConceptQL::Operators::Complement do
         [:condition_type, :inpatient_header],
         [:cpt, "99214"]]]
     ).must_equal("condition_occurrence"=>32630, "procedure_occurrence"=>33878)
-    
+
     criteria_counts(
       [:intersect,
        [:complement, [:icd9, "412"]],
        [:complement, [:condition_type, :inpatient_header]],
        [:complement, [:cpt, "99214"]]]
     ).must_equal("condition_occurrence"=>32630, "procedure_occurrence"=>33878)
-    
+
     criteria_counts(
       [:union,
        [:intersect,

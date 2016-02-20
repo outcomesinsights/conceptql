@@ -11,7 +11,7 @@ module ConceptQL
       default_query_columns
       validate_one_upstream
       validate_no_arguments
-      
+
       def query(db)
         upstream = upstreams.first
         upstream.types.map do |type|

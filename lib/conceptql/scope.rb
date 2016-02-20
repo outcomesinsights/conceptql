@@ -26,11 +26,11 @@ module ConceptQL
     end
 
     def add_errors(key, errors)
-      @errors[key] = errors 
+      @errors[key] = errors
     end
 
     def add_warnings(key, errors)
-      @warnings[key] = errors 
+      @warnings[key] = errors
     end
 
     def add_counts(key, type, counts)

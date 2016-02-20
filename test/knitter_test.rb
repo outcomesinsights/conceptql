@@ -17,7 +17,7 @@ describe ConceptQL::Knitter do
     ConceptQL::Knitter::ConceptQLChunk.send(:define_method, :puts){|*|}
     yield
   ensure
-    ConceptQL::Knitter::ConceptQLChunk.send(:undef_method, :puts) 
+    ConceptQL::Knitter::ConceptQLChunk.send(:undef_method, :puts)
   end
 
   it "returns values without ```ConceptQL as is" do

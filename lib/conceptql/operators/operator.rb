@@ -155,7 +155,7 @@ module ConceptQL
         if name = self.class.preferred_name
           metadata[:name] = name
         end
-        res = [self.class.just_class_name.underscore, *annotate_values(db)] 
+        res = [self.class.just_class_name.underscore, *annotate_values(db)]
 
         if upstreams_valid?(db)
           scope.with_ctes(evaluate(db), db)
