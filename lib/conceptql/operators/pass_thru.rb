@@ -6,7 +6,8 @@ module ConceptQL
       register __FILE__, :omopv4
 
       def types
-        upstreams.map(&:types).flatten.uniq
+        types = upstreams.map(&:types).flatten.uniq
+        types.empty? ? [:invalid] : types
       end
 
       def query_cols
