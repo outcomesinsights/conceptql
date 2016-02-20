@@ -20,6 +20,7 @@ module ConceptQL
       @recall_stack = []
       @annotation = {}
       @extra_ctes = []
+      @types_stack = []
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
@@ -105,9 +106,18 @@ module ConceptQL
     end
 
     def types(label)
-      fetch_operator(label).types
-    rescue
-      [:invalid]
+      if @types_stack.include?(label)
+        [:invalid]
+      else
+        @types_stack << label
+        types = if op = fetch_operator(label)
+          op.types
+        else
+          [:invalid]
+        end
+        @types_stack.pop
+        types
+      end
     end
 
     def sort_ctes(sorted, unsorted, deps)

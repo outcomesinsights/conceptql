@@ -71,7 +71,6 @@ describe ConceptQL::Operators::Recall do
       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}]
     )
 
-=begin
     query(
       [:union,
        [:union, ["recall", "Heart Attack"]],
@@ -103,11 +102,10 @@ describe ConceptQL::Operators::Recall do
        ["icd9", "409.1", {"label": "HA1"}]]
     ).annotate.must_equal(
       ["union",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}},:label=>"HA1"}, :name=>"ICD-9 CM"}],
-       ["icd9", "409.1", {:label=>"HA1",  :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["duplicate label"]]}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}},:label=>"HA1", :name=>"ICD-9 CM"}],
+       ["icd9", "409.1", {:label=>"HA1",  :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["duplicate label"]]}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}]
     )
-=end
 
     query(
       ["recall", "HA1"]
