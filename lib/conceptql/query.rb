@@ -26,7 +26,7 @@ module ConceptQL
     end
 
     def sql
-      operator.sql(db)
+      query.sql
     end
 
     def annotate
