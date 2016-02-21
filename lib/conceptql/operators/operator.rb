@@ -157,7 +157,7 @@ module ConceptQL
         end
         res = [self.class.just_class_name.underscore, *annotate_values(db)]
 
-        if upstreams_valid?(db)
+        if upstreams_valid?(db) && scope.valid?
           scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_type)
@@ -518,6 +518,10 @@ module ConceptQL
             add_error("option not present", opt.to_s)
           end
         end
+      end
+
+      def add_warnings?(db)
+        @errors.empty? && db.adapter_scheme != :mock
       end
 
       def add_error(*args)
