@@ -22,6 +22,10 @@ module ConceptQL
         end
         typed_queries = exprs.map do |type, queries|
           queries.inject do |q, query|
+            # Set columns so that impala's INTERSECT emulation doesn't use a query to determine them
+            q.instance_variable_set(:@columns, SELECTED_COLUMNS)
+            query.instance_variable_set(:@columns, SELECTED_COLUMNS)
+
             q.intersect(query)
           end
         end

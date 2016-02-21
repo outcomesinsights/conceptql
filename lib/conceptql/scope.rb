@@ -129,7 +129,17 @@ module ConceptQL
       sort_ctes(sorted, unsorted, new_deps)
     end
 
+    def valid?
+      recall_dependencies.each_value do |deps|
+        unless (deps - known_operators.keys).empty?
+          return false
+        end
+      end
+      true
+    end
+
     def with_ctes(query, db)
+      raise "recall operator use without matching label" unless valid?
       ctes = sort_ctes([], known_operators, recall_dependencies)
 
       ctes.each do |label, operator|
