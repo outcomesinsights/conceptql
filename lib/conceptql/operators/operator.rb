@@ -520,6 +520,10 @@ module ConceptQL
         end
       end
 
+      def add_warnings?(db)
+        @errors.empty? && db.adapter_scheme != :mock
+      end
+
       def add_error(*args)
         errors << args
       end

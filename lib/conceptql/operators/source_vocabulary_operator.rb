@@ -61,7 +61,7 @@ module ConceptQL
 
       def validate(db)
         super
-        if @errors.empty?
+        if add_warnings?(db)
           missing_args = arguments - db[:vocabulary__source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments).select_map(:source_code)
           unless missing_args.empty?
             add_warning("invalid source code", *missing_args)
