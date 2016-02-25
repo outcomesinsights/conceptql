@@ -23,49 +23,49 @@ describe ConceptQL::Operators::TimeWindow do
     query(
       [:time_window, {:start=>"-2y", :end=>"-2y"}]
     ).annotate.must_equal(
-      ["time_window", {:start=>"-2y", :end=>"-2y", :annotation=>{:errors=>[["has no upstream"]]}}]
+      ["time_window", {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"]]}}]
     )
 
     query(
       [:time_window, [:icd9, "412"], {:start=>2, :end=>2}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:start=>2, :end=>2, :annotation=>{:errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:start=>2, :end=>2, :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
     )
 
     query(
       [:time_window, [:icd9, "412"]]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:errors=>[["option not present", "start"], ["option not present", "end"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}},:errors=>[["option not present", "start"], ["option not present", "end"]]}}]
     )
 
     query(
       [:time_window, [:icd9, "412"], {:start=>"-2b", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:start=>"-2b", :end=>"-2y", :annotation=>{:errors=>[["wrong option format", "start"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:start=>"-2b", :end=>"-2y", :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["wrong option format", "start"]]}}]
     )
 
     query(
       [:time_window, 21, [:icd9, "412"], {:start=>"-2y", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        21,
-       {:start=>"-2y", :end=>"-2y", :annotation=>{:errors=>[["has arguments"]]}}]
+       {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
     )
 
     query(
       [:time_window, [:icd9, "412"], [:place_of_service_code, "21"], {:start=>"-2y", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       ["place_of_service_code", "21", {:annotation=>{:visit_occurrence=>{:rows=>170, :n=>92}}}],
-       {:start=>"-2y", :end=>"-2y", :annotation=>{:errors=>[["has multiple upstreams"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["place_of_service_code", "21", {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>170, :n=>92}}}}],
+       {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:visit_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:n=>0, :rows=>0}},:errors=>[["has multiple upstreams"]]}}]
     )
   end
 end

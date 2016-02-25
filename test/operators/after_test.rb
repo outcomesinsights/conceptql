@@ -15,7 +15,7 @@ describe ConceptQL::Operators::After do
        {:left=>"412",
         :right=>:time_window}]
     ).annotate.must_equal(
-      ["after", {:left=>"412", :right=>:time_window, :annotation=>{:errors=>[["wrong option format", "left"], ["wrong option format", "right"]]}}]
+      ["after", {:left=>"412", :right=>:time_window, :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},:errors=>[["wrong option format", "left"], ["wrong option format", "right"]]}}]
     )
 
     query(
@@ -24,9 +24,9 @@ describe ConceptQL::Operators::After do
     ).annotate.must_equal(
       ["after",
        {:right=>["time_window",
-                 ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
-                 {:start=>"50y", :end=>"50y", :annotation=>{:person=>{:rows=>126, :n=>126}}}],
-        :annotation=>{:errors=>[["option not present", "left"]]}}]
+                 ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
+                 {:start=>"50y", :end=>"50y", :annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
+        :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["option not present", "left"]]}}]
     )
 
     query(
@@ -34,8 +34,8 @@ describe ConceptQL::Operators::After do
        {:left=>[:icd9, "412"]}]
     ).annotate.must_equal(
       ["after",
-       {:left=>["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-        :annotation=>{:errors=>[["option not present", "right"]]}}]
+       {:left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+        :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["option not present", "right"]]}}]
     )
 
     query(
@@ -44,11 +44,12 @@ describe ConceptQL::Operators::After do
         :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}]}]
     ).annotate.must_equal(
       ["after",
-       {:left=>["union", {:annotation=>{:errors=>[["has no upstream"]]}}],
+       {:left=>["union", {
+        :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"]]}}],
         :right=>["time_window",
-                 ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
-                 {:start=>"50y", :end=>"50y", :annotation=>{:person=>{:rows=>126, :n=>126}}}],
-        :annotation=>{}}]
+                 ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
+                 { :annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}, :start=>"50y", :end=>"50y",}],
+        :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}}}]
     )
 
     query(
@@ -58,12 +59,13 @@ describe ConceptQL::Operators::After do
         :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}]}]
     ).annotate.must_equal(
       ["after",
-       {:left=>["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       {
+        :left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
         :right=>["time_window",
-                 ["gender", "Male",{:annotation=>{:person=>{:rows=>126, :n=>126}}}],
-                 {:start=>"50y", :end=>"50y", :annotation=>{:person=>{:rows=>126, :n=>126}}}]},
+                 ["gender", "Male",{:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
+                 {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}, :start=>"50y", :end=>"50y"}]},
        1,
-       {:annotation=>{:errors=>[["has arguments"]]}}]
+       { :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
     )
   end
 end

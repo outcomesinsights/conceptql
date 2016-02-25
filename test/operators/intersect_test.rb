@@ -23,9 +23,9 @@ describe ConceptQL::Operators::Intersect do
     query(
       [:intersect, [:icd9, "412"], [:condition_type, :inpatient_header]]
     ).annotate.must_equal(["intersect",
-      ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-      ["condition_type", :inpatient_header, {:annotation=>{:condition_occurrence=>{:rows=>1372, :n=>92}}}],
-      {:annotation=>{:condition_occurrence=>{:rows=>8, :n=>8}}}
+      ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+      ["condition_type", :inpatient_header, {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1372, :n=>92}}}}],
+      {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>8, :n=>8}}}}
     ])
   end
 
@@ -33,13 +33,13 @@ describe ConceptQL::Operators::Intersect do
     query(
       [:intersect]
     ).annotate.must_equal(
-      ["intersect", {:annotation=>{:errors=>[["has no upstream"]]}}]
+      ["intersect", {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"]]}}]
     )
 
     query(
       [:intersect, 1]
     ).annotate.must_equal(
-      ["intersect", 1, {:annotation=>{:errors=>[["has no upstream"], ["has arguments"]]}}]
+      ["intersect", 1, {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"], ["has arguments"]]}}]
     )
   end
 end

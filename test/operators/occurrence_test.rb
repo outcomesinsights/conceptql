@@ -11,7 +11,7 @@ describe ConceptQL::Operators::Occurrence do
     query(
       [:occurrence]
     ).annotate.must_equal(
-      ["occurrence", {:annotation=>{:errors=>[["has no upstream"], ["has no arguments"]]}, :name=>"Nth Occurrence"}]
+      ["occurrence", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},:errors=>[["has no upstream"], ["has no arguments"]]}, :name=>"Nth Occurrence"}]
     )
   end
 end

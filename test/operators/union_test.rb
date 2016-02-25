@@ -78,13 +78,13 @@ describe ConceptQL::Operators::Union do
       ["union",
        ["icd9",
         "412",
-        {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}},
+        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}},
          :name=>"ICD-9 CM"}],
        ["icd9",
         "401.9",
-        {:annotation=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
+        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1125, :n=>213}}},
          :name=>"ICD-9 CM"}],
-       {:annotation=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}]
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}]
     )
 
     query(
@@ -96,19 +96,17 @@ describe ConceptQL::Operators::Union do
        ["union",
         ["icd9",
          "412",
-         {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}},
+         {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}},
           :name=>"ICD-9 CM"}],
         ["icd9",
          "401.9",
-         {:annotation=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
+         {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1125, :n=>213}}},
           :name=>"ICD-9 CM"}],
-        {:annotation=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}],
+        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}],
        ["place_of_service_code",
         "21",
-        {:annotation=>{:visit_occurrence=>{:rows=>170, :n=>92}}}],
-       {:annotation=>
-         {:condition_occurrence=>{:rows=>1175, :n=>213},
-          :visit_occurrence=>{:rows=>170, :n=>92}}}]
+        {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>170, :n=>92}}}}],
+       {:annotation=> {:counts=>{:condition_occurrence=>{:rows=>1175, :n=>213}, :visit_occurrence=>{:rows=>170, :n=>92}}}}]
     )
   end
 
@@ -116,25 +114,25 @@ describe ConceptQL::Operators::Union do
     query(
       [:union]
     ).annotate.must_equal(
-      ["union", {:annotation=>{:errors=>[["has no upstream"]]}}]
+      ["union", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"]]}}]
     )
 
     query(
       [:union, "123"]
     ).annotate.must_equal(
-      ["union", "123", {:annotation=>{:errors=>[["has no upstream"], ["has arguments"]]}}]
+      ["union", "123", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments"]]}}]
     )
 
     query(
       [:union, [:foo, "123"]]
     ).annotate.must_equal(
-      ["union", ["invalid", {:annotation=>{:errors=>["invalid operator", :foo]}}], {:annotation=>{}}]
+      ["union", ["invalid", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>["invalid operator", :foo]}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}]
     )
 
     query(
       [:union, [:union, [:foo, "123"]]]
     ).annotate.must_equal(
-      ["union", ["union", ["invalid", {:annotation=>{:errors=>["invalid operator", :foo]}}], {:annotation=>{}}], {:annotation=>{}}]
+      ["union", ["union", ["invalid", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>["invalid operator", :foo]}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},}}]
     )
   end
 
@@ -142,7 +140,7 @@ describe ConceptQL::Operators::Union do
     query(
       [:union]
     ).scope_annotate.must_equal(
-      {:errors=>{"union"=>[["has no upstream"]]}, :warnings=>{}, :counts=>{}}
+      {:errors=>{"union"=>[["has no upstream"]]}, :warnings=>{}, :counts=>{"union"=>{:invalid=>{:rows=>0, :n=>0}}}}
     )
 
     query(

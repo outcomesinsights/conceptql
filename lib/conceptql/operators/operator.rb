@@ -151,6 +151,7 @@ module ConceptQL
 
         scope_key = options[:id]||self.class.just_class_name.underscore
         annotation = {}
+        counts = (annotation[:counts] ||= {})
         metadata = {:annotation=>annotation}
         if name = self.class.preferred_name
           metadata[:name] = name
@@ -164,15 +165,15 @@ module ConceptQL
             .select_append{count{}.*.as(:rows)}
             .select_append{count(:person_id).distinct.as(:n)}
             .each do |h|
-              annotation[h.delete(:criterion_type).to_sym] = h
-          end
-          types.each do |type|
-            counts = annotation[type] ||= {:rows=>0, :n=>0}
-            scope.add_counts(scope_key, type, counts)
+              counts[h.delete(:criterion_type).to_sym] = h
           end
         elsif !errors.empty?
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
+        end
+        types.each do |type|
+          cur_counts = counts[type] ||= {:rows=>0, :n=>0}
+          scope.add_counts(scope_key, type, cur_counts)
         end
 
         if defined?(@warnings) && !warnings.empty?
@@ -458,10 +459,11 @@ module ConceptQL
           if respond_to?(:type)
             [type]
           else
-            raise "Operator doesn't seem to specify any type"
+            [:invalid]
           end
         else
-          upstreams.map(&:types).flatten.uniq
+          types = upstreams.compact.map(&:types).flatten.uniq
+          types.empty? ? [:invalid] : types
         end
       end
 

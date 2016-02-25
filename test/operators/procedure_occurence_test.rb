@@ -23,18 +23,18 @@ describe ConceptQL::Operators::ProcedureOccurrence do
       [:procedure_occurrence, [:icd9, "412"], [:gender, "Male"]]
     ).annotate.must_equal(
       ["procedure_occurrence",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       ["gender", "Male", {:annotation=>{:person=>{:rows=>126, :n=>126}}}],
-       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
+       {:annotation=>{:counts=>{:procedure_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
     )
 
     query(
       [:procedure_occurrence, 21, [:icd9, "412"]]
     ).annotate.must_equal(
       ["procedure_occurrence",
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        21,
-       {:annotation=>{:errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:procedure_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
     )
   end
 end

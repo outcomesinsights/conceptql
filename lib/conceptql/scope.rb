@@ -22,7 +22,7 @@ module ConceptQL
       @extra_ctes = []
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
-      @annotation[:counts] = @counts= {}
+      @annotation[:counts] = @counts = {}
     end
 
     def add_errors(key, errors)
@@ -106,6 +106,8 @@ module ConceptQL
 
     def types(label)
       fetch_operator(label).types
+    rescue
+      [:invalid]
     end
 
     def sort_ctes(sorted, unsorted, deps)
@@ -120,8 +122,8 @@ module ConceptQL
       sorted += add
 
       new_deps = {}
-      deps.map do |label, deps|
-        new_deps[label] = deps - sorted.map(&:first)
+      deps.map do |label, dps|
+        new_deps[label] = dps - sorted.map(&:first)
       end
 
       sort_ctes(sorted, unsorted, new_deps)

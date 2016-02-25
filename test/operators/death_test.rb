@@ -16,9 +16,9 @@ describe ConceptQL::Operators::Death do
       [:death, [:person], [:icd9, "412"]]
     ).annotate.must_equal(
       ["death",
-       ["person", {:annotation=>{:person=>{:rows=>250, :n=>250}}}],
-       ["icd9", "412", {:annotation=>{:condition_occurrence=>{:rows=>50, :n=>38}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:errors=>[["has multiple upstreams"]]}}]
+       ["person", {:annotation=>{:counts=>{:person=>{:rows=>250, :n=>250}}}}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:counts=>{:death=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
     )
 
     query(
@@ -26,7 +26,7 @@ describe ConceptQL::Operators::Death do
     ).annotate.must_equal(
       ["death",
        "412",
-       {:annotation=>{:errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:death=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
     )
   end
 end
