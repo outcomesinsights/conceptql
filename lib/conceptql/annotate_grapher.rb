@@ -54,7 +54,7 @@ module ConceptQL
       edge_options = {}
 
       opts = from.last[:annotation]
-      types(from).tap { |t| puts [from.first, from[1], t].inspect}.each do |type|
+      types(from).each do |type|
         type_opts = opts[:counts][type] || {}
         #next unless (type_opts = (opts[:counts][type])).is_a?(Hash)
         n = type_opts[:n]
