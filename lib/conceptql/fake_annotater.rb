@@ -25,7 +25,6 @@ module ConceptQL
 
       # Visits
       visit_occurrence: :visit_occurrence,
-      place_of_service: :visit_occurrence,
       place_of_service_code: :visit_occurrence,
 
       # Person
@@ -87,8 +86,9 @@ module ConceptQL
             arr_or_hash.push(annotation: annotate_hash)
             annotate_hash
           end
+          annotate_hash[:counts] = {}
           types.each do |type|
-            annotate_hash[type] = {}
+            annotate_hash[:counts][type] = {}
           end
           save_types(arr_or_hash)
         else
@@ -107,7 +107,7 @@ module ConceptQL
       else
         arr.select { |e| e.is_a?(Array) }
       end
-      extract.map { |e| e.last[:annotation].keys }.flatten.compact.uniq
+      extract.map { |e| e.last[:annotation][:counts].keys }.flatten.compact.uniq
     end
 
     def fetch_types(label)

@@ -8,7 +8,7 @@ module ConceptQL
       end
 
       def validate(db)
-        @errors = options[:errors]
+        add_error(*options[:errors])
       end
     end
   end

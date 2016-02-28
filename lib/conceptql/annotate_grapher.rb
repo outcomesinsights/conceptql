@@ -41,19 +41,22 @@ module ConceptQL
 
     def type_color(*types)
       types.flatten!
-      types.length == 1 ? TYPE_COLORS[types.first] || 'black' : 'black'
+      types.length == 1 ? TYPE_COLORS[types.first] || 'gray' : 'black'
     end
 
     def types(op)
-      op.last[:annotation][:counts].keys
+      types = op.last[:annotation][:counts].keys
+      return [:invalid] if types.length == 0
+      types
     end
 
     def link_to(g, from, from_node, to)
       edge_options = {}
 
       opts = from.last[:annotation]
-      types(from).each do |type|
-        next unless (type_opts = opts[:counts][type]).is_a?(Hash)
+      types(from).tap { |t| puts [from.first, from[1], t].inspect}.each do |type|
+        type_opts = opts[:counts][type] || {}
+        #next unless (type_opts = (opts[:counts][type])).is_a?(Hash)
         n = type_opts[:n]
         if n
           edge_options[:label] = " rows=#{commatize(opts[:counts][type][:rows])} \n n=#{commatize(n)}"
