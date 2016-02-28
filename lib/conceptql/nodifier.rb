@@ -18,12 +18,12 @@ module ConceptQL
         if statement
           create(*statement)
         else
-          Operators::Invalid.new(operator, errors: ["invalid algorithm", values.first])
+          invalid_op(operator, values, "invalid algorithm", values.first)
         end
       elsif klass = operators[operator.to_s]
         klass.new(self, *values)
       else
-        Operators::Invalid.new(self, errors: ["invalid operator", operator])
+        invalid_op(self, values, "invalid operator", operator)
       end
     end
 
@@ -35,6 +35,12 @@ module ConceptQL
 
     def operators
       @operators ||= Operators.operators[@data_model]
+    end
+
+    def invalid_op(operator, values, *error_args)
+      options = values.extract_options!.merge(errors: error_args)
+      values << options
+      Operators::Invalid.new(operator, *values)
     end
   end
 end
