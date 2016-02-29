@@ -119,7 +119,7 @@ module ConceptQL
           # to it use the same code.
           if operator.label && !operator.errors
             operator.scope.add_operator(operator)
-            operator = Operators::Recall.new(operator.nodifier, operator.label)
+            operator = Operators::Recall.new(operator.nodifier, operator.label, replaced: true)
           end
 
           operator

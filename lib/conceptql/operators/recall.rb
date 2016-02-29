@@ -38,7 +38,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       end
 
       def annotate(db)
-        if valid?(db)
+        if valid?(db) && replaced?
           original.annotate(db)
         else
           super
@@ -64,6 +64,10 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
             add_error("no matching label")
           end
         end
+      end
+
+      def replaced?
+        options[:replaced]
       end
     end
   end
