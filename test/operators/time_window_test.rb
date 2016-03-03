@@ -35,14 +35,6 @@ describe ConceptQL::Operators::TimeWindow do
     )
 
     query(
-      [:time_window, [:icd9, "412"]]
-    ).annotate.must_equal(
-      ["time_window",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}},:errors=>[["option not present", "start"], ["option not present", "end"]]}}]
-    )
-
-    query(
       [:time_window, [:icd9, "412"], {:start=>"-2b", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",
