@@ -513,12 +513,10 @@ module ConceptQL
 
       def validate_option(format, *opts)
         opts.each do |opt|
-          if val = options[opt]
-            unless format === val
+          if options.has_key?(opt)
+            unless format === options[opt]
               add_error("wrong option format", opt.to_s)
             end
-          else
-            add_error("option not present", opt.to_s)
           end
         end
       end
