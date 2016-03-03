@@ -50,7 +50,7 @@ describe ConceptQL::Operators::DateRange do
     ).annotate.must_equal(
       ["date_range",
        {:end=>"END",
-        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["option not present", "start"]]}}]
+        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["required option not present", "start"]]}}]
     )
 
     query(
@@ -58,7 +58,7 @@ describe ConceptQL::Operators::DateRange do
     ).annotate.must_equal(
       ["date_range",
        {:start=>"START",
-        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["option not present", "end"]]}}]
+        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["required option not present", "end"]]}}]
     )
   end
 end

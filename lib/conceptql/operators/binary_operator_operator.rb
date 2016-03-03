@@ -9,6 +9,7 @@ module ConceptQL
       option :right, type: :upstream
       validate_no_arguments
       validate_option Array, :left, :right
+      validate_required_options :left, :right
 
       def upstreams
         [left]
