@@ -98,6 +98,7 @@ module ConceptQL
           at_least_one_argument
           at_most_one_argument
           option
+          required_options
         END
 
         validation_meths.each do |type|
@@ -518,6 +519,14 @@ module ConceptQL
             end
           else
             add_error("option not present", opt.to_s)
+          end
+        end
+      end
+
+      def validate_required_options(*opts)
+        opts.each do |opt|
+          unless options.has_key?(opt)
+            add_error("required option not present", opt.to_s)
           end
         end
       end
