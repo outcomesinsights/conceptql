@@ -11,6 +11,13 @@ module ConceptQL
       category %w(Temporal Relative)
       default_query_columns
 
+      option :within, type: :string
+      option :at_least, type: :string
+      option :occurrences, type: :integer
+
+      validate_option /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dmy])+/])}\z/, :within, :at_least
+      validate_option /\A\d+\Z/, :occurrences
+
       def query(db)
         db.from(db.from(left_stream(db))
                   .join(right_stream(db), l__person_id: :r__person_id)

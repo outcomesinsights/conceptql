@@ -26,7 +26,7 @@ describe ConceptQL::Operators::After do
        {:right=>["time_window",
                  ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
                  {:start=>"50y", :end=>"50y", :annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
-        :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["option not present", "left"]]}}]
+        :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["required option not present", "left"]]}}]
     )
 
     query(
@@ -35,7 +35,7 @@ describe ConceptQL::Operators::After do
     ).annotate.must_equal(
       ["after",
        {:left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-        :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["option not present", "right"]]}}]
+        :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["required option not present", "right"]]}}]
     )
 
     query(
@@ -66,6 +66,28 @@ describe ConceptQL::Operators::After do
                  {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}, :start=>"50y", :end=>"50y"}]},
        1,
        { :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
+    )
+
+    # Check that within, at_least, and occurrences are checked
+    query(
+      [:after,
+       {:left=>[:icd9, "412"],
+        :right=>[:icd9, "412"],
+        :within=> 'abc',
+        :at_least=> 'cba',
+        :occurrences=> 'bac'
+      }]
+    ).annotate.must_equal(
+      ["after", {
+        :left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+        :right=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+        :within=> 'abc',
+        :at_least=> 'cba',
+        :occurrences=> 'bac',
+        :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}},
+                      :errors=>[["wrong option format", "within"], ["wrong option format", "at_least"], ["wrong option format", "occurrences"]]
+        }
+      }]
     )
   end
 end
