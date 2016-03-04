@@ -4,7 +4,7 @@ module ConceptQL
   class Nodifier
     attr :scope, :data_model, :algorithm_fetcher
 
-    def initialize(scope, opts={})
+    def initialize(opts={})
       @scope = opts[:scope] || Scope.new
       @data_model = opts[:data_model] || :omopv4
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
