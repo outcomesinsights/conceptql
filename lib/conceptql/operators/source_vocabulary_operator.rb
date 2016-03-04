@@ -33,7 +33,7 @@ module ConceptQL
 
       def query(db)
         db.from(table_name)
-          .join(:vocabulary__source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
+          .join(:source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
           .where(conditions)
       end
 
@@ -62,7 +62,7 @@ module ConceptQL
       def validate(db)
         super
         if add_warnings?(db)
-          missing_args = arguments - db[:vocabulary__source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments).select_map(:source_code)
+          missing_args = arguments - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments).select_map(:source_code)
           unless missing_args.empty?
             add_warning("invalid source code", *missing_args)
           end

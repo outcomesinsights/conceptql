@@ -20,8 +20,8 @@ module ConceptQL
 
       def query(db)
         db.from(:person___p)
-          .join(:vocabulary__concept___vc, { vc__concept_id: :p__race_concept_id })
-          .where(Sequel.function(:lower, :vc__concept_name) => arguments.map(&:downcase))
+          .join(:concept___c, { c__concept_id: :p__race_concept_id })
+          .where(Sequel.function(:lower, :c__concept_name) => arguments.map(&:downcase))
       end
     end
   end

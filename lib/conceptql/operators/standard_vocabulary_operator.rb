@@ -26,7 +26,7 @@ module ConceptQL
 
       def query(db)
         db.from(table_name)
-          .join(:vocabulary__concept___c, c__concept_id: table_concept_column)
+          .join(:concept___c, c__concept_id: table_concept_column)
           .where(c__concept_code: values, c__vocabulary_id: vocabulary_id)
       end
 
@@ -43,7 +43,7 @@ module ConceptQL
       def validate(db)
         super
         if add_warnings?(db)
-          missing_args = arguments - db[:vocabulary__concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>arguments).select_map(:concept_code)
+          missing_args = arguments - db[:concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>arguments).select_map(:concept_code)
           unless missing_args.empty?
             add_warning("invalid concept code", *missing_args)
           end

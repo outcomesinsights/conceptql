@@ -22,9 +22,9 @@ module ConceptQL
 
       def query(db)
         db.from(:visit_occurrence___v)
-          .join(:vocabulary__concept___vc, { vc__concept_id: :v__place_of_service_concept_id })
-          .where(vc__concept_code: arguments.map(&:to_s))
-          .where(vc__vocabulary_id: 14)
+          .join(:concept___c, { c__concept_id: :v__place_of_service_concept_id })
+          .where(c__concept_code: arguments.map(&:to_s))
+          .where(c__vocabulary_id: 14)
       end
     end
   end
