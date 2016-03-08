@@ -15,7 +15,15 @@ describe ConceptQL::Operators::ConditionType do
     ).must_equal({})
 
     criteria_counts(
+      [:condition_type, 'inpatient_primary_or_first']
+    ).must_equal("condition_occurrence"=>170)
+
+    criteria_counts(
       [:condition_type, 'outpatient_primary']
+    ).must_equal("condition_occurrence"=>14762)
+
+    criteria_counts(
+      [:condition_type, 'primary']
     ).must_equal("condition_occurrence"=>14762)
 
     criteria_counts(

@@ -64,6 +64,7 @@ module ConceptQL
           hash[:primary] = %w(inpatient_detail inpatient_header outpatient_detail outpatient_header).map { |w| hash[w.to_sym].first }
           hash[:outpatient_primary] = %w(outpatient_detail outpatient_header).map { |w| hash[w.to_sym].first }
           hash[:inpatient_primary] = %w(inpatient_detail inpatient_header).map { |w| hash[w.to_sym].first }
+          hash[:inpatient_primary_or_first] = %w(inpatient_detail inpatient_header).map { |w| hash[w.to_sym][0..1]}.flatten
           hash[:inpatient] = hash[:inpatient_detail] + hash[:inpatient_header]
           hash[:outpatient] = hash[:outpatient_detail] + hash[:outpatient_header]
           hash[:condition_era] = hash[:condition_era_0_day_window] + hash[:condition_era_30_day_window]
