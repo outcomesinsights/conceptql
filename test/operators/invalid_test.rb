@@ -8,5 +8,16 @@ describe ConceptQL::Operators::Invalid do
       {:errors=>{1 =>[["invalid operator", :cpt1]]}, :warnings=>{}, :counts=>{1=>{:invalid=>{:n=>0,:rows=>0}}}}
     )
   end
+
+  it "should annotate left and right options if provided" do
+    query(
+      [:bad_op, {left: [:icd9, "412"], right: [:icd9, "410"]}]
+    ).annotate.must_equal(
+      ["bad_op", {
+        :left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+        :right=>["icd9", "410", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}, :name=>"ICD-9 CM"}],
+        :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", :bad_op]]}}]
+    )
+  end
 end
 

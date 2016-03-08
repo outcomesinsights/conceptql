@@ -147,6 +147,10 @@ module ConceptQL
         stmt.is_a?(Operator) ? stmt : nodifier.create(*stmt)
       end
 
+      def operator_name
+        self.class.just_class_name.underscore
+      end
+
       def annotate(db)
         return @annotation if defined?(@annotation)
 
@@ -157,7 +161,7 @@ module ConceptQL
         if name = self.class.preferred_name
           metadata[:name] = name
         end
-        res = [self.class.just_class_name.underscore, *annotate_values(db)]
+        res = [operator_name, *annotate_values(db)]
 
         if upstreams_valid?(db) && scope.valid?
           scope.with_ctes(evaluate(db), db)

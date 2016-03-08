@@ -126,13 +126,13 @@ describe ConceptQL::Operators::Union do
     query(
       [:union, [:foo, "123"]]
     ).annotate.must_equal(
-      ["union", ["invalid", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", :foo]]}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}]
+      ["union", ["foo", "123", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", :foo]]}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}]
     )
 
     query(
       [:union, [:union, [:foo, "123"]]]
     ).annotate.must_equal(
-      ["union", ["union", ["invalid", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", :foo]]}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},}}]
+      ["union", ["union", ["foo", "123", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", :foo]]}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}], {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},}}]
     )
   end
 
