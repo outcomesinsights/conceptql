@@ -39,7 +39,9 @@ module ConceptQL
     end
 
     def add_extra_cte(*args)
-      @extra_ctes << args
+      new_name = cte_name(args.shift)
+      @extra_ctes << [new_name, *args]
+      new_name
     end
 
     def nest(op)
@@ -136,6 +138,11 @@ module ConceptQL
         end
       end
       true
+    end
+
+    def cte_name(label)
+      @count ||= 0
+      (label.to_s + "_#{@count += 1}").to_sym
     end
 
     def with_ctes(query, db)

@@ -52,9 +52,9 @@ in an inpatient setting
       end
 
       def earliest(db, query)
-        scope.add_extra_cte(:earliest,
+        cte_name = scope.add_extra_cte(:earliest,
             query.select_append { |o| o.row_number(:over, partition: :person_id, order: [Sequel.asc(:start_date), :criterion_type, :criterion_id]){}.as(:rn) })
-        db[:earliest]
+        db[cte_name]
           .from_self
           .where(rn: 1)
       end

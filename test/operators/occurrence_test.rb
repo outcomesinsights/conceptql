@@ -14,4 +14,8 @@ describe ConceptQL::Operators::Occurrence do
       ["occurrence", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},:errors=>[["has no upstream"], ["has no arguments"]]}, :name=>"Nth Occurrence"}]
     )
   end
+
+  it "should have a unique name per CTE" do
+    criteria_counts([:union, [:first, [:icd9,  "412"] ], [:first, [:icd9,  "410"] ]])
+  end
 end
