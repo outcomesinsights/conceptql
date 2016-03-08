@@ -91,9 +91,11 @@ module ConceptQL
       def create_output
         output = []
         output << title unless title.empty?
-        output << ''
+        output << '' unless title.empty?
         output << "```JSON"
+        output << ''
         output << statement.to_json
+        output << ''
         output << "```"
         output << ''
         output << diagram_markup
