@@ -20,8 +20,10 @@ module ConceptQL
       drg: :procedure_occurrence,
       hcpcs: :procedure_occurrence,
       icd9_procedure: :procedure_occurrence,
-      procedure_cost: :procedure_cost,
       medcode_procedure: :procedure_occurrence,
+
+      # Procedure Cost
+      procedure_cost: :procedure_cost,
 
       # Visits
       visit_occurrence: :visit_occurrence,
