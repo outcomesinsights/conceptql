@@ -1,5 +1,6 @@
 require_relative 'operator'
 require_relative 'visit_occurrence'
+require_relative '../date_adjuster'
 
 module ConceptQL
   module Operators
@@ -16,9 +17,14 @@ in an inpatient setting
       validate_no_arguments
       category %w(Temporal Relative)
 
-      def types
-        [:visit_occurrence]
-      end
+      option :inpatient_length_of_stay, type: :number
+      option :inpatient_return_date, type: :string, options: ['Admit Date', 'Discharge Date'], default: 'Discharge Date'
+      option :outpatient_minimum_gap, type: :string
+      option :outpatient_maximum_gap, type: :string
+      option :outpatient_event_to_return, type: :string, options: ['Initial Event', 'Confirming Event'], default: 'Initial Event'
+
+      validate_required_options :outpatient_minimum_gap
+      validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 
       def query(db)
         ds = visit_query(db).clone(:force_columns=>table_columns(:visit_occurrence))
