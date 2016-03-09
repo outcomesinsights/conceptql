@@ -20,14 +20,17 @@ We are writing a tool that can read research algorithms defined in ConceptQL.  T
 For instance, using ConceptQL we can take a statement that looks like this:
 
 ```JSON
+
 ["icd9", "412"]
+
 ```
 
 And generate a diagram that looks like this:
 
-
 ```JSON
+
 ["icd9","412"]
+
 ```
 
 ![](conceptql/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)

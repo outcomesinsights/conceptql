@@ -20,7 +20,9 @@ We are writing a tool that can read research algorithms defined in ConceptQL.  T
 For instance, using ConceptQL we can take a statement that looks like this:
 
 ```JSON
+
 ["icd9", "412"]
+
 ```
 
 And generate a diagram that looks like this:

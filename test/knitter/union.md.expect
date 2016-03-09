@@ -1,8 +1,9 @@
 Before
 
-
 ```JSON
+
 ["union",["icd9","412"],["icd9","401.9"]]
+
 ```
 
 ![](union/0f8f8fa356167c916badecb6e1ac77d55b31a0ee53c6d48e9e548cf1a39c29c6.png)
