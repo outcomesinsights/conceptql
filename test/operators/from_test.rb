@@ -15,6 +15,12 @@ describe ConceptQL::Operators::From do
     ).count.must_equal(34044)
   end
 
+  it "should handle query_cols for non-CDM tables" do
+    query(
+      [:from, "other_table"]
+    ).operator.query_cols.must_equal(ConceptQL::Operators::SELECTED_COLUMNS)
+  end
+
   it "should handle errors when annotating" do
     query(
       [:from, [:icd9, "412"]]
