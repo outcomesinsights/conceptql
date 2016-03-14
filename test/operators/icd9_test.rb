@@ -14,4 +14,12 @@ describe ConceptQL::Operators::Icd9 do
       ["icd9", "XYS", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :warnings=>[["invalid source code", "XYS"]]}, :name=>"ICD-9 CM"}]
     )
   end
+
+  it "should remove and ignore empty or blank labels" do
+    query(
+      [:icd9, '412', {:label => '   '}]
+    ).annotate.must_equal(
+      ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}]
+    )
+  end
 end

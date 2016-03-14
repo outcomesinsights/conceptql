@@ -249,7 +249,10 @@ module ConceptQL
       end
 
       def label
-        options[:label]
+        @label ||= begin
+          options.delete(:label) if options[:label] && options[:label].to_s.strip.empty?
+          options[:label]
+        end
       end
 
       attr :errors, :warnings
