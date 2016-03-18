@@ -86,7 +86,8 @@ module Metadatable
     end
   end
 
-  def to_metadata
+  def to_metadata(opts = {})
+    warn_about_missing_metadata if opts[:warn]
     {
       preferred_name: @preferred_name || humanized_class_name,
       operation: just_class_name.snakecase,
@@ -97,6 +98,14 @@ module Metadatable
       desc: @desc,
       categories: @categories || []
     }
+  end
+
+  def warn_about_missing_metadata
+    missing = []
+    missing << :categories if (@categories || []).empty?
+    missing << :desc unless @desc
+    missing << :basic_type unless @basic_type
+    puts "#{just_class_name} is missing #{missing.join(", ")}" unless missing.empty?
   end
 end
 

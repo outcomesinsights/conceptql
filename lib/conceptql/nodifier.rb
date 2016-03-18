@@ -27,8 +27,8 @@ module ConceptQL
       end
     end
 
-    def to_metadata
-      Hash[operators.map { |k, v| [k, v.to_metadata]}.select { |k, v| v[:desc] }]
+    def to_metadata(opts = {})
+      Hash[operators.map { |k, v| [k, v.to_metadata(opts)]}.select { |k, v| v[:desc] }]
     end
 
     private
