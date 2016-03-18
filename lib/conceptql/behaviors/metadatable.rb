@@ -98,7 +98,8 @@ module Metadatable
       options: @options || {},
       predominant_domains: @domains || @predominant_domains || [],
       desc: @desc,
-      categories: @categories || []
+      categories: @categories || [],
+      basic_type: @basic_type
     }
   end
 
