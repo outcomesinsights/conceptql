@@ -39,6 +39,11 @@ module Metadatable
     end
   end
 
+  def basic_type(value = nil)
+    return @basic_type unless value
+    @basic_type = value
+  end
+
   def allows_many_upstreams
     @max_upstreams = 99
   end
