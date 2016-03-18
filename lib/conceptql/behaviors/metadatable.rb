@@ -78,6 +78,8 @@ module Metadatable
       upstream.category cat
     end
 
+    upstream.basic_type @basic_type
+
     case @max_upstreams
     when 1
       upstream.allows_one_upstream
