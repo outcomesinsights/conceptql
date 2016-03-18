@@ -21,6 +21,7 @@ module ConceptQL
     class StandardVocabularyOperator < Operator
       category 'Standard Vocabulary'
       category 'Code Lists'
+      basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
 

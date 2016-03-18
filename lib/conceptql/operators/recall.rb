@@ -18,6 +18,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       EOF
       argument :name, type: :string
       category 'Variable Assignment'
+      basic_type :selection
       validate_no_upstreams
       validate_one_argument
 

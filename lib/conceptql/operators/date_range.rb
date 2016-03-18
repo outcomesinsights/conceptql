@@ -14,6 +14,7 @@ module ConceptQL
       option :start, type: :string
       option :end, type: :string
       category %(Temporal Manipulation)
+      basic_type :selection
       validate_no_upstreams
       validate_no_arguments
       validate_option String, :start, :end

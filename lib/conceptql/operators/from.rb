@@ -4,6 +4,7 @@ module ConceptQL
   module Operators
     class From < Operator
       register __FILE__, :omopv4
+      basic_type :selection
       validate_no_upstreams
       validate_one_argument
 

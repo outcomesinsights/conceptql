@@ -41,6 +41,7 @@ If we ask for the second occurrence of something and a person has only one
 occurrence, this operator returns nothing for that person
       EOF
       argument :occurrence, type: :integer
+      basic_type :temporal
       allows_one_upstream
       validate_at_least_one_upstream
       category %w(Temporal Occurrence)

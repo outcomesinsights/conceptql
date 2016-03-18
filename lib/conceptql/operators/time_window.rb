@@ -30,6 +30,7 @@ module ConceptQL
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
       category %(Temporal Manipulation)
+      basic_type :temporal
       default_query_columns
 
       def query(db)

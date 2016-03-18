@@ -16,6 +16,7 @@ module ConceptQL
       domains :visit_occurrence
       category 'Code Lists'
       category 'Standard Vocabulary'
+      basic_type :selection
       query_columns :visit_occurrence, :concept
       validate_no_upstreams
       validate_at_least_one_argument

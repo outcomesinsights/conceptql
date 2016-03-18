@@ -16,6 +16,7 @@ in an inpatient setting
       validate_one_upstream
       validate_no_arguments
       category %w(Temporal Relative)
+      basic_type :temporal
 
       option :inpatient_length_of_stay, type: :number
       option :inpatient_return_date, type: :string, options: ['Admit Date', 'Discharge Date'], default: 'Discharge Date'

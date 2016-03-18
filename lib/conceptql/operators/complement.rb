@@ -8,6 +8,7 @@ module ConceptQL
       desc 'Splits up the incoming result set by domain and passes through all results for each domain that are NOT in the current set.'
       allows_one_upstream
       category 'Set Logic'
+      basic_type :temporal
       default_query_columns
       validate_one_upstream
       validate_no_arguments
