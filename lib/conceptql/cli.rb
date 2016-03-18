@@ -41,7 +41,7 @@ module ConceptQL
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
       puts q.sql
       puts JSON.pretty_generate(q.statement)
-      pp q.all
+      pp q.query.all
     end
 
     desc "annotate_statement", "Reads in a statement and annotates it"
