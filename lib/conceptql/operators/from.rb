@@ -15,9 +15,9 @@ module ConceptQL
         db.from(values.first)
       end
 
-      def types
-        types = values[1..99].compact
-        types.empty? ? [:invalid] : types.map(&:to_sym)
+      def domains
+        domains = values[1..99].compact
+        domains.empty? ? [:invalid] : domains.map(&:to_sym)
       end
     end
   end

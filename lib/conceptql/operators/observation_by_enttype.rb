@@ -7,7 +7,7 @@ module ConceptQL
 
       desc 'Searches the observation table for all observations with matching Enttype'
       argument :enttypes, type: :codelist, vocab_id: [206, 207]
-      predominant_types :observation
+      predominant_domains :observation
 
       def table
         :observation

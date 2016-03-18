@@ -36,15 +36,15 @@ class Minitest::Spec
   end
 
   def criteria_ids(statement)
-    hash_groups(statement, :criterion_type, :criterion_id)
+    hash_groups(statement, :criterion_domain, :criterion_id)
   end
 
   def numeric_values(statement)
-    hash_groups(statement, :criterion_type, :value_as_number)
+    hash_groups(statement, :criterion_domain, :value_as_number)
   end
 
   def criteria_counts(statement)
-    dataset(statement).from_self.group_and_count(:criterion_type).to_hash(:criterion_type, :count)
+    dataset(statement).from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)
   end
 
   def hash_groups(statement, key, value)

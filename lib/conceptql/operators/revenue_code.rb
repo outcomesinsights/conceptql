@@ -7,14 +7,14 @@ module ConceptQL
 
       desc 'Searches the procedure_occurrence table for all procedures that have an associated procedure_cost record with matching revenue codes'
       argument :revenue_codes, type: :codelist, vocab: 'Revenue Code'
-      predominant_types :procedure_occurrence
+      predominant_domains :procedure_occurrence
 
       def query(db)
         costs = super(db).select(:procedure_occurrence_id)
         db[:procedure_occurrence].where(procedure_occurrence_id: costs)
       end
 
-      def type
+      def domain
         :procedure_occurrence
       end
 

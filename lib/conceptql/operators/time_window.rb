@@ -39,7 +39,7 @@ module ConceptQL
 
       private
 
-      def date_columns(query, type = nil)
+      def date_columns(query, domain = nil)
         [adjusted_start_date, adjusted_end_date]
       end
 

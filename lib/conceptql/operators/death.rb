@@ -6,10 +6,10 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc 'Generates all death records, or, if fed a stream, fetches all death records for the people represented in the incoming result set.'
-      types :death
+      domains :death
       allows_one_upstream
 
-      def my_type
+      def my_domain
         :death
       end
 

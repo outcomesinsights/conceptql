@@ -8,7 +8,7 @@ module ConceptQL
       preferred_name 'HCPCS'
       desc 'Searches the procedure_occurrence table for all procedures with matching HCPCS codes'
       argument :hcpcs, type: :codelist, vocab: 'HCPCS'
-      predominant_types :procedure_occurrence
+      predominant_domains :procedure_occurrence
 
       def table
         :procedure_occurrence

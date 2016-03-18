@@ -41,7 +41,7 @@ module ConceptQL
         table_columns(table_name, :source_to_concept_map)
       end
 
-      def type
+      def domain
         table
       end
 

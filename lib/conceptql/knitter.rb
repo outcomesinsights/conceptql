@@ -7,7 +7,7 @@ module ConceptQL
   class Knitter
     attr :file, :db, :options
     CONCEPTQL_CHUNK_START = /```ConceptQL/
-    RESULT_KEYS = %i(person_id criterion_id criterion_type start_date end_date source_value)
+    RESULT_KEYS = %i(person_id criterion_id criterion_domain start_date end_date source_value)
 
     def initialize(db, file, options = {})
       @file = Pathname.new(file)

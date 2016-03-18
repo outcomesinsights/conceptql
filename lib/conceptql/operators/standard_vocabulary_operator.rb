@@ -34,7 +34,7 @@ module ConceptQL
         table_columns(table_name, :concept)
       end
 
-      def type
+      def domain
         table
       end
 

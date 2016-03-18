@@ -11,7 +11,7 @@ module ConceptQL
       validate_no_upstreams
       validate_at_least_one_argument
 
-      def type
+      def domain
         :drug_exposure
       end
 

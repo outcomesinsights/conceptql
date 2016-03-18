@@ -6,10 +6,10 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming result set.'
-      types :observation_period
+      domains :observation_period
       allows_one_upstream
 
-      def my_type
+      def my_domain
         :observation_period
       end
 
@@ -18,12 +18,12 @@ module ConceptQL
       end
 
       def these_point_at_me
-        # I could list ALL the types we use, but the default behavior of casting,
+        # I could list ALL the domains we use, but the default behavior of casting,
         # when there is no explicit casting defined, is to convert everything to
         # person IDs
         #
         # So by defining no known castable relationships in this operator, all
-        # types will be converted to person
+        # domains will be converted to person
         []
       end
     end

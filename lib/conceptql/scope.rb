@@ -7,7 +7,7 @@ module ConceptQL
   # somewhere else in the statement.
   #
   # Scope keeps track of all labeled operators and provides an
-  # API for Recall operators to fetch the results/types from
+  # API for Recall operators to fetch the results/domains from
   # labeled operators.
   class Scope
     attr_accessor :person_ids
@@ -33,9 +33,9 @@ module ConceptQL
       @warnings[key] = errors
     end
 
-    def add_counts(key, type, counts)
+    def add_counts(key, domain, counts)
       c = @counts[key] ||= {}
-      c[type] = counts
+      c[domain] = counts
     end
 
     def add_extra_cte(*args)
@@ -106,8 +106,8 @@ module ConceptQL
       ds
     end
 
-    def types(label)
-      fetch_operator(label).types
+    def domains(label)
+      fetch_operator(label).domains
     rescue
       [:invalid]
     end

@@ -7,7 +7,7 @@ module ConceptQL
 
       desc 'Searches the drug_exposure table for all conditions with matching Prodcodes'
       argument :prodcodes, type: :codelist, vocab_id: '203'
-      predominant_types :drug_exposure
+      predominant_domains :drug_exposure
 
       def table
         :drug_exposure

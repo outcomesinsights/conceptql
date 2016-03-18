@@ -16,11 +16,11 @@ module ConceptQL
         exprs = {}
         upstreams.each do |expression|
           evaled = expression.evaluate(db)
-          expression.types.each do |type|
-            (exprs[type] ||= []) << evaled
+          expression.domains.each do |domain|
+            (exprs[domain] ||= []) << evaled
           end
         end
-        typed_queries = exprs.map do |type, queries|
+        domained_queries = exprs.map do |domain, queries|
           queries.inject do |q, query|
             # Set columns so that impala's INTERSECT emulation doesn't use a query to determine them
             q.instance_variable_set(:@columns, SELECTED_COLUMNS)
@@ -30,7 +30,7 @@ module ConceptQL
           end
         end
 
-        typed_queries.inject do |q, query|
+        domained_queries.inject do |q, query|
           q.union(query, all: true)
         end
       end

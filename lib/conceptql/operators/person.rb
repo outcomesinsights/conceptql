@@ -7,9 +7,9 @@ module ConceptQL
 
       desc 'Returns all people in the database, or if given a upstream, converts all results to the set of patients contained in those results.'
       allows_one_upstream
-      types :person
+      domains :person
 
-      def my_type
+      def my_domain
         :person
       end
 
@@ -18,12 +18,12 @@ module ConceptQL
       end
 
       def these_point_at_me
-        # I could list ALL the types we use, but the default behavior of casting,
+        # I could list ALL the domains we use, but the default behavior of casting,
         # when there is no explicit casting defined, is to convert everything to
         # person IDs
         #
         # So by defining no known castable relationships in this operator, all
-        # types will be converted to person
+        # domains will be converted to person
         []
       end
     end

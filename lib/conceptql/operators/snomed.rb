@@ -9,7 +9,7 @@ module ConceptQL
       preferred_name 'SNOMED'
       desc 'Find all condition_occurrences by SNOMED codes'
       argument :snomeds, type: :codelist, vocab: 'SNOMED'
-      predominant_types :condition_occurrence
+      predominant_domains :condition_occurrence
 
       def table
         :condition_occurrence

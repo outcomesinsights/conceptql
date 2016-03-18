@@ -8,7 +8,7 @@ module ConceptQL
       preferred_name 'LOINC'
       desc 'Searches the observation table for all observations with matching LOINC codes'
       argument :loincs, type: :codelist, vocab: 'LOINC'
-      predominant_types :observation
+      predominant_domains :observation
 
       def table
         :observation

@@ -35,8 +35,8 @@ And generate a diagram that looks like this:
 
 ![](conceptql/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date | source_value |
-| --------- | ------------ | -------------- | ---------- | -------- | ------------ |
+| person_id | criterion_id | criterion_domain | start_date | end_date | source_value |
+| --------- | ------------ | ---------------- | ---------- | -------- | ------------ |
 
 And generate SQL that looks like this:
 

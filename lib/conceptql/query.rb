@@ -44,8 +44,8 @@ module ConceptQL
       n
     end
 
-    def types
-      operator.types
+    def domains
+      operator.domains
     end
 
     def operator

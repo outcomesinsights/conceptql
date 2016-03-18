@@ -20,18 +20,18 @@ module ConceptQL
       validate_required_options :start, :end
 
       def query_cols
-        table_columns(:person) + [:criterion_type, :criterion_id, :start_date, :end_date]
+        table_columns(:person) + [:criterion_domain, :criterion_id, :start_date, :end_date]
       end
 
       def query(db)
         db.from(:person)
-          .select_append(Sequel.cast_string('person').as(:criterion_type))
+          .select_append(Sequel.cast_string('person').as(:criterion_domain))
           .select_append(Sequel.expr(:person_id).as(:criterion_id))
           .select_append(Sequel.as(cast_date(db, start_date(db)), :start_date),
                          Sequel.as(cast_date(db, end_date(db)), :end_date)).from_self
       end
 
-      def types
+      def domains
         [:person]
       end
 

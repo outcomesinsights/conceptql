@@ -5,9 +5,9 @@ module ConceptQL
     class PassThru < Operator
       register __FILE__, :omopv4
 
-      def types
-        types = upstreams.map(&:types).flatten.uniq
-        types.empty? ? [:invalid] : types
+      def domains
+        domains = upstreams.map(&:domains).flatten.uniq
+        domains.empty? ? [:invalid] : domains
       end
 
       def query_cols

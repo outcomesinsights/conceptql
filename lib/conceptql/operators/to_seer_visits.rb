@@ -7,7 +7,7 @@ module ConceptQL
       validate_no_upstreams
       validate_no_arguments
 
-      def type
+      def domain
         :visit_occurrence
       end
 

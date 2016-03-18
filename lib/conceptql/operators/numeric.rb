@@ -38,7 +38,7 @@ Accepts two params:
         stream.nil? ? as_criterion(db) : with_kids(db)
       end
 
-      def types
+      def domains
         stream.nil? ? [:person] : super
       end
 

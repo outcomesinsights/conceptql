@@ -5,16 +5,16 @@ module ConceptQL
     # Parent class of all casting operators
     #
     # Subclasses must implement the following methods:
-    # - my_type
+    # - my_domain
     # - i_point_at
     # - these_point_at_me
     #
-    # i_point_at returns a list of types for which the operator's table of origin
+    # i_point_at returns a list of domains for which the operator's table of origin
     # has foreign_keys pointing to another table, e.g.:
     # procedure_occurrence has an FK to visit_occurrence, so we'd put
     # :visit_occurrence in the i_point_at array
     #
-    # these_point_at_me is a list of types for which that type's table
+    # these_point_at_me is a list of domains for which that domain's table
     # of origin has a FK  pointing to the current operator's
     # table of origin, e.g.:
     # procedure_cost has an FK to procedure_occurrence so we'd
@@ -27,12 +27,12 @@ module ConceptQL
       validate_at_most_one_upstream
       validate_no_arguments
 
-      def types
-        [type]
+      def domains
+        [domain]
       end
 
-      def type
-        my_type
+      def domain
+        my_domain
       end
 
       def castables
@@ -40,61 +40,61 @@ module ConceptQL
       end
 
       def query_cols
-        table_columns(make_table_name(my_type))
+        table_columns(make_table_name(my_domain))
       end
 
       def query(db)
-        return db.from(make_table_name(my_type)) if stream.nil?
+        return db.from(make_table_name(my_domain)) if stream.nil?
         base_query(db, stream.evaluate(db))
       end
 
       private
 
       def base_query(db, stream_query)
-        uncastable_types = stream.types - castables
-        to_me_types = stream.types & these_point_at_me
-        from_me_types = stream.types & i_point_at
+        uncastable_domains = stream.domains - castables
+        to_me_domains = stream.domains & these_point_at_me
+        from_me_domains = stream.domains & i_point_at
 
-        destination_table = make_table_name(my_type)
+        destination_table = make_table_name(my_domain)
         casting_query = db.from(destination_table)
         wheres = []
 
-        unless uncastable_types.empty?
+        unless uncastable_domains.empty?
           # We have a situation where one or more of the incoming streams
           # isn't castable so we'll just return all rows for
           # all people in each uncastable stream
           uncastable_person_ids = db.from(stream_query)
-            .where(criterion_type: uncastable_types.map(&:to_s))
+            .where(criterion_domain: uncastable_domains.map(&:to_s))
             .select_group(:person_id)
           wheres << Sequel.expr(person_id: uncastable_person_ids)
         end
 
-        destination_type_id = make_type_id(my_type)
+        destination_domain_id = make_domain_id(my_domain)
 
-        unless to_me_types.empty?
-          # For each castable type in the stream, setup a query that
-          # casts each type to a set of IDs, union those IDs and fetch
+        unless to_me_domains.empty?
+          # For each castable domain in the stream, setup a query that
+          # casts each domain to a set of IDs, union those IDs and fetch
           # them from the source table
-          castable_type_query = to_me_types.map do |source_type|
+          castable_domain_query = to_me_domains.map do |source_domain|
             source_ids = db.from(stream_query)
-              .where(criterion_type: source_type.to_s)
+              .where(criterion_domain: source_domain.to_s)
               .select_group(:criterion_id)
-            source_table = make_table_name(source_type)
-            source_type_id = make_type_id(source_type)
+            source_table = make_table_name(source_domain)
+            source_domain_id = make_domain_id(source_domain)
 
             db.from(source_table)
-              .where(source_type_id => source_ids)
-              .select(destination_type_id)
+              .where(source_domain_id => source_ids)
+              .select(destination_domain_id)
           end.inject do |union_query, q|
             union_query.union(q)
           end
-          wheres << Sequel.expr(destination_type_id => castable_type_query)
+          wheres << Sequel.expr(destination_domain_id => castable_domain_query)
         end
 
-        unless from_me_types.empty?
-          from_me_types.each do |from_me_type|
-            fk_type_id = make_type_id(from_me_type)
-            wheres << Sequel.expr(fk_type_id => db.from(stream_query).where(criterion_type: from_me_type.to_s).select_group(:criterion_id))
+        unless from_me_domains.empty?
+          from_me_domains.each do |from_me_domain|
+            fk_domain_id = make_domain_id(from_me_domain)
+            wheres << Sequel.expr(fk_domain_id => db.from(stream_query).where(criterion_domain: from_me_domain.to_s).select_group(:criterion_id))
           end
         end
 

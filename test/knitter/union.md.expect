@@ -8,7 +8,7 @@ Before
 
 ![](union/0f8f8fa356167c916badecb6e1ac77d55b31a0ee53c6d48e9e548cf1a39c29c6.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date | source_value |
-| --------- | ------------ | -------------- | ---------- | -------- | ------------ |
+| person_id | criterion_id | criterion_domain | start_date | end_date | source_value |
+| --------- | ------------ | ---------------- | ---------- | -------- | ------------ |
 
 After

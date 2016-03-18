@@ -8,7 +8,7 @@ Before
 
 ![](many/8359883e5cbbe12c401f10dcae82a370e7c28c3b2d6a820dd202f5d6ba8da824.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date | source_value |
-| --------- | ------------ | -------------- | ---------- | -------- | ------------ |
+| person_id | criterion_id | criterion_domain | start_date | end_date | source_value |
+| --------- | ------------ | ---------------- | ---------- | -------- | ------------ |
 
 After

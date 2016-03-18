@@ -13,7 +13,7 @@ module ConceptQL
 
       desc 'Finds all people that match the races'
       argument :races, type: :codelist, vocab: 'Race'
-      types :person
+      domains :person
       query_columns :person, :concept
       validate_no_upstreams
       validate_at_least_one_argument

@@ -8,7 +8,7 @@ module ConceptQL
       preferred_name 'NDC'
       desc 'Searches the drug_exposure table for all procedures with matching NDC codes'
       argument :ndcs, type: :codelist, vocab: 'NDC'
-      predominant_types :drug_exposure
+      predominant_domains :drug_exposure
 
       def table
         :drug_exposure

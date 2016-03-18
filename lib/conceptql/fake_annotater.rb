@@ -5,7 +5,7 @@ module ConceptQL
   class FakeAnnotater
     attr :statement
 
-    TYPES = {
+    DOMAINS = {
       # Conditions
       condition: :condition_occurrence,
       primary_diagnosis: :condition_occurrence,
@@ -75,11 +75,11 @@ module ConceptQL
       stmt.recurse(Array, Hash) do |arr_or_hash|
         if arr_or_hash.is_a?(Array)
           arr_or_hash.unshift(arr_or_hash.shift.to_sym)
-          types = TYPES[arr_or_hash.first.to_sym]
-          unless types
-            types = previous_types(arr_or_hash)
+          domains = DOMAINS[arr_or_hash.first.to_sym]
+          unless domains
+            domains = previous_domains(arr_or_hash)
           else
-            types = [types].flatten
+            domains = [domains].flatten
           end
           annotate_hash = if arr_or_hash.last.is_a?(Hash)
             arr_or_hash.last[:annotation] ||= {}
@@ -89,10 +89,10 @@ module ConceptQL
             annotate_hash
           end
           annotate_hash[:counts] = {}
-          types.each do |type|
-            annotate_hash[:counts][type] = {}
+          domains.each do |domain|
+            annotate_hash[:counts][domain] = {}
           end
-          save_types(arr_or_hash)
+          save_domains(arr_or_hash)
         else
           arr_or_hash.deep_rekey!
           arr_or_hash[:annotation] ||= {}
@@ -101,9 +101,9 @@ module ConceptQL
       end
     end
 
-    def previous_types(arr)
+    def previous_domains(arr)
       extract = if arr.first == :recall
-        [fetch_types(arr[1])].compact
+        [fetch_domains(arr[1])].compact
       elsif arr.last.is_a?(Hash) && arr.last[:left]
         [arr.last[:left]]
       else
@@ -112,18 +112,18 @@ module ConceptQL
       extract.map { |e| e.last[:annotation][:counts].keys }.flatten.compact.uniq
     end
 
-    def fetch_types(label)
-      recorded_types[label]
+    def fetch_domains(label)
+      recorded_domains[label]
     end
 
-    def save_types(op)
+    def save_domains(op)
       label = op.last[:label]
       return unless label
-      recorded_types[label] = op
+      recorded_domains[label] = op
     end
 
-    def recorded_types
-      @recorded_types ||= {}
+    def recorded_domains
+      @recorded_domains ||= {}
     end
   end
 end

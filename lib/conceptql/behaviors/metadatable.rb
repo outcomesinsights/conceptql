@@ -12,9 +12,9 @@ module Metadatable
     @desc = value
   end
 
-  def predominant_types(*values)
-    return @predominant_types if values.empty?
-    @predominant_types = values
+  def predominant_domains(*values)
+    return @predominant_domains if values.empty?
+    @predominant_domains = values
   end
 
   def argument(name, options = {})
@@ -27,14 +27,14 @@ module Metadatable
     @options[name] = options
   end
 
-  def types(*type_list)
-    @types = type_list
-    define_method(:types) do
-      type_list
+  def domains(*domain_list)
+    @domains = domain_list
+    define_method(:domains) do
+      domain_list
     end
-    if type_list.length == 1
-      define_method(:type) do
-        type_list.first
+    if domain_list.length == 1
+      define_method(:domain) do
+        domain_list.first
       end
     end
   end
@@ -88,7 +88,7 @@ module Metadatable
       max_upstreams: @max_upstreams || 0,
       arguments: @arguments || [],
       options: @options || {},
-      predominant_types: @types || @predominant_types || [],
+      predominant_domains: @domains || @predominant_domains || [],
       desc: @desc,
       categories: @categories || []
     }

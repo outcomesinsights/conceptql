@@ -6,10 +6,10 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc 'Generates all procedure_occurrence records, or, if fed a stream, fetches all procedure_occurrence records for the people represented in the incoming result set.'
-      types :procedure_occurrence
+      domains :procedure_occurrence
       allows_one_upstream
 
-      def my_type
+      def my_domain
         :procedure_occurrence
       end
 

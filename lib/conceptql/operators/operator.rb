@@ -8,7 +8,7 @@ module ConceptQL
   module Operators
     OPERATORS = {:omopv4=>{}}.freeze
 
-    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_type, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
+    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
     TABLE_COLUMNS = {
       :care_site=>[:care_site_id, :location_id, :organization_id, :place_of_service_concept_id, :care_site_source_value, :place_of_service_source_value],
@@ -51,7 +51,7 @@ module ConceptQL
       COLUMNS = [
         :person_id,
         :criterion_id,
-        :criterion_type,
+        :criterion_domain,
         :start_date,
         :end_date,
         :value_as_number,
@@ -166,19 +166,19 @@ module ConceptQL
         if upstreams_valid?(db) && scope.valid?
           scope.with_ctes(evaluate(db), db)
             .from_self
-            .select_group(:criterion_type)
+            .select_group(:criterion_domain)
             .select_append{count{}.*.as(:rows)}
             .select_append{count(:person_id).distinct.as(:n)}
             .each do |h|
-              counts[h.delete(:criterion_type).to_sym] = h
+              counts[h.delete(:criterion_domain).to_sym] = h
           end
         elsif !errors.empty?
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
         end
-        types.each do |type|
-          cur_counts = counts[type] ||= {:rows=>0, :n=>0}
-          scope.add_counts(scope_key, type, cur_counts)
+        domains.each do |domain|
+          cur_counts = counts[domain] ||= {:rows=>0, :n=>0}
+          scope.add_counts(scope_key, domain, cur_counts)
         end
 
         if defined?(@warnings) && !warnings.empty?
@@ -219,33 +219,33 @@ module ConceptQL
         false
       end
 
-      def select_it(query, specific_type = nil)
-        specific_type = type if specific_type.nil? && respond_to?(:type)
-        q = query.select(*columns(query, specific_type))
+      def select_it(query, specific_domain = nil)
+        specific_domain = domain if specific_domain.nil? && respond_to?(:domain)
+        q = query.select(*columns(query, specific_domain))
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
         end
         q
       end
 
-      def types
-        @types ||= determine_types
+      def domains
+        @domains ||= determine_domains
       end
 
       def stream
         @stream ||= upstreams.first
       end
 
-      def columns(query, local_type = nil)
-        criterion_type = :criterion_type
-        if local_type
-          criterion_type = Sequel.cast_string(local_type.to_s).as(:criterion_type)
+      def columns(query, local_domain = nil)
+        criterion_domain = :criterion_domain
+        if local_domain
+          criterion_domain = Sequel.cast_string(local_domain.to_s).as(:criterion_domain)
         end
         columns = [:person_id,
-                    type_id(local_type),
-                    criterion_type]
-        columns += date_columns(query, local_type)
-        columns += value_columns(query, local_type)
+                    domain_id(local_domain),
+                    criterion_domain]
+        columns += date_columns(query, local_domain)
+        columns += value_columns(query, local_domain)
       end
 
       def label
@@ -283,14 +283,14 @@ module ConceptQL
         :criterion_id
       end
 
-      def type_id(type = nil)
-        return :criterion_id if type.nil?
-        type = :person if type == :death
-        Sequel.expr(make_type_id(type)).as(:criterion_id)
+      def domain_id(domain = nil)
+        return :criterion_id if domain.nil?
+        domain = :person if domain == :death
+        Sequel.expr(make_domain_id(domain)).as(:criterion_id)
       end
 
-      def make_type_id(type)
-        (type.to_s + '_id').to_sym
+      def make_domain_id(domain)
+        (domain.to_s + '_id').to_sym
       end
 
       def make_table_name(table)
@@ -327,13 +327,13 @@ module ConceptQL
         tables.map{|t| table_cols(t)}.flatten
       end
 
-      def value_columns(query, type)
+      def value_columns(query, domain)
         [
           numeric_value(query),
           string_value(query),
           concept_id_value(query),
           units_source_value(query),
-          source_value(query, type)
+          source_value(query, domain)
         ]
       end
 
@@ -357,28 +357,28 @@ module ConceptQL
         Sequel.cast_string(nil).as(:units_source_value)
       end
 
-      def source_value(query, type)
+      def source_value(query, domain)
         return :source_value if query_columns(query).include?(:source_value)
-        Sequel.cast_string(source_value_column(query, type)).as(:source_value)
+        Sequel.cast_string(source_value_column(query, domain)).as(:source_value)
       end
 
-      def date_columns(query, type = nil)
+      def date_columns(query, domain = nil)
         return [:start_date, :end_date] if (query_columns(query).include?(:start_date) && query_columns(query).include?(:end_date))
-        return [:start_date, :end_date] unless type
+        return [:start_date, :end_date] unless domain
 
         date_klass = Date
         if query.db.database_type == :impala
           date_klass = DateTime
         end
 
-        sd = start_date_column(query, type)
+        sd = start_date_column(query, domain)
         sd = Sequel.cast(Sequel.expr(sd), date_klass).as(:start_date) unless sd == :start_date
-        ed = end_date_column(query, type)
-        ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, type)), date_klass).as(:end_date) unless ed == :end_date
+        ed = end_date_column(query, domain)
+        ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, domain)), date_klass).as(:end_date) unless ed == :end_date
         [sd, ed]
       end
 
-      def start_date_column(query, type)
+      def start_date_column(query, domain)
         {
           condition_occurrence: :condition_start_date,
           death: :death_date,
@@ -391,10 +391,10 @@ module ConceptQL
           observation: :observation_date,
           observation_period: :observation_period_start_date,
           visit_occurrence: :visit_start_date
-        }[type]
+        }[domain]
       end
 
-      def end_date_column(query, type)
+      def end_date_column(query, domain)
         {
           condition_occurrence: :condition_end_date,
           death: :death_date,
@@ -407,10 +407,10 @@ module ConceptQL
           observation: :observation_date,
           observation_period: :observation_period_end_date,
           visit_occurrence: :visit_end_date
-        }[type]
+        }[domain]
       end
 
-      def source_value_column(query, type)
+      def source_value_column(query, domain)
         {
           condition_occurrence: :condition_source_value,
           death: :cause_of_death_source_value,
@@ -423,7 +423,7 @@ module ConceptQL
           observation: :observation_source_value,
           observation_period: nil,
           visit_occurrence: :place_of_service_source_value
-        }[type]
+        }[domain]
       end
 
       def person_date_of_birth(query)
@@ -462,16 +462,16 @@ module ConceptQL
         end
       end
 
-      def determine_types
+      def determine_domains
         if upstreams.empty?
-          if respond_to?(:type)
-            [type]
+          if respond_to?(:domain)
+            [domain]
           else
             [:invalid]
           end
         else
-          types = upstreams.compact.map(&:types).flatten.uniq
-          types.empty? ? [:invalid] : types
+          domains = upstreams.compact.map(&:domains).flatten.uniq
+          domains.empty? ? [:invalid] : domains
         end
       end
 

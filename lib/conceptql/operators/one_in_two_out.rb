@@ -54,12 +54,12 @@ in an inpatient setting
 
       private
       def visit_query(db)
-        VisitOccurrence.new(nodifier, FakeOperator.new(nodifier, stream.evaluate(db).from_self, stream.types)).query(db)
+        VisitOccurrence.new(nodifier, FakeOperator.new(nodifier, stream.evaluate(db).from_self, stream.domains)).query(db)
       end
 
       def earliest(db, query)
         cte_name = scope.add_extra_cte(:earliest,
-            query.select_append { |o| o.row_number(:over, partition: :person_id, order: [Sequel.asc(:start_date), :criterion_type, :criterion_id]){}.as(:rn) })
+            query.select_append { |o| o.row_number(:over, partition: :person_id, order: [Sequel.asc(:start_date), :criterion_domain, :criterion_id]){}.as(:rn) })
         db[cte_name]
           .from_self
           .where(rn: 1)
@@ -68,11 +68,11 @@ in an inpatient setting
       class FakeOperator < Operator
         default_query_columns
 
-        attr :types
-        def initialize(nodifier, query, types)
+        attr :domains
+        def initialize(nodifier, query, domains)
           @nodifier = nodifier
           @query = query
-          @types = types
+          @domains = domains
           @options = {}
         end
 

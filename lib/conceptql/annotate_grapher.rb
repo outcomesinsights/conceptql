@@ -25,7 +25,7 @@ module ConceptQL
 
     private
 
-    TYPE_COLORS = {
+    DOMAIN_COLORS = {
       person: 'blue',
       visit_occurrence: 'orange',
       condition_occurrence: 'red',
@@ -39,31 +39,31 @@ module ConceptQL
       invalid: 'gray'
     }
 
-    def type_color(*types)
-      types.flatten!
-      types.length == 1 ? TYPE_COLORS[types.first] || 'gray' : 'black'
+    def domain_color(*domains)
+      domains.flatten!
+      domains.length == 1 ? DOMAIN_COLORS[domains.first] || 'gray' : 'black'
     end
 
-    def types(op)
-      types = op.last[:annotation][:counts].keys
-      return [:invalid] if types.length == 0
-      types
+    def domains(op)
+      domains = op.last[:annotation][:counts].keys
+      return [:invalid] if domains.length == 0
+      domains
     end
 
     def link_to(g, from, from_node, to)
       edge_options = {}
 
       opts = from.last[:annotation]
-      types(from).each do |type|
-        type_opts = opts[:counts][type] || {}
-        #next unless (type_opts = (opts[:counts][type])).is_a?(Hash)
-        n = type_opts[:n]
+      domains(from).each do |domain|
+        domain_opts = opts[:counts][domain] || {}
+        #next unless (domain_opts = (opts[:counts][domain])).is_a?(Hash)
+        n = domain_opts[:n]
         if n
-          edge_options[:label] = " rows=#{commatize(opts[:counts][type][:rows])} \n n=#{commatize(n)}"
+          edge_options[:label] = " rows=#{commatize(opts[:counts][domain][:rows])} \n n=#{commatize(n)}"
           edge_options[:style] = 'dashed' if n.zero?
         end
         e = g.add_edges(from_node, to, edge_options)
-        e[:color] = type_color(type)
+        e[:color] = domain_color(domain)
       end
     end
 
@@ -81,7 +81,7 @@ module ConceptQL
         right_node = traverse(g, right)
       else
         me = g.add_nodes(node_name)
-        me[:color] = type_color(*types(op))
+        me[:color] = domain_color(*domains(op))
       end
       label = opts[:name] || op_name.to_s.titlecase
       unless args.empty?
@@ -108,7 +108,7 @@ module ConceptQL
         cluster_name = "cluster_#{op_name}_#{@counter += 1}"
         me = g.send(cluster_name) do |sub|
           sub[rank: 'same', label: label, color: 'black']
-          sub.send("#{cluster_name}_left").send('[]', shape: 'point', color: type_color(*types(op)))
+          sub.send("#{cluster_name}_left").send('[]', shape: 'point', color: domain_color(*domains(op)))
           sub.send("#{cluster_name}_right").send('[]', shape: 'point')
         end
         link_to(g, left, left_node, me.send("#{cluster_name}_left"))

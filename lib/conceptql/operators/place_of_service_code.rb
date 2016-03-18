@@ -13,7 +13,7 @@ module ConceptQL
 
       desc 'Finds all visit_occurrences that match the Place of Service codes'
       argument :places_of_service, type: :codelist, vocab: 'Place of Service'
-      types :visit_occurrence
+      domains :visit_occurrence
       category 'Code Lists'
       category 'Standard Vocabulary'
       query_columns :visit_occurrence, :concept

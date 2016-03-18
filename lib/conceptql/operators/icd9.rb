@@ -8,7 +8,7 @@ module ConceptQL
       preferred_name 'ICD-9 CM'
       desc 'Searches the condition_occurrence table for the given set of ICD-9 codes.'
       argument :icd9s, type: :codelist, vocab: 'ICD9CM'
-      predominant_types :condition_occurrence
+      predominant_domains :condition_occurrence
 
       def vocabulary_id
         2

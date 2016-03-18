@@ -6,7 +6,7 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc 'Generates all visit_occurrence records, or, if fed a stream, fetches all visit_occurrence records for the people represented in the incoming result set.'
-      types :visit_occurrence
+      domains :visit_occurrence
       allows_one_upstream
       validate_at_most_one_upstream
       validate_no_arguments
@@ -20,7 +20,7 @@ module ConceptQL
         ds
       end
 
-      def types
+      def domains
         [:visit_occurrence]
       end
     end

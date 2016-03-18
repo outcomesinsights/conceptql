@@ -25,12 +25,12 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         scope.from(db, source)
       end
 
-      def columns(query, local_type)
+      def columns(query, local_domain)
         COLUMNS
       end
 
-      def types
-        scope.types(source)
+      def domains
+        scope.domains(source)
       end
 
       def source

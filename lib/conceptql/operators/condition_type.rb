@@ -15,12 +15,12 @@ module ConceptQL
       desc 'Searches for conditions that match the given set of Condition Types'
       argument :condition_types, type: :codelist, vocab: 'Condition Type'
       category %(Occurrence Type)
-      predominant_types :condition_occurrence
+      predominant_domains :condition_occurrence
       query_columns :condition_occurrence
       validate_no_upstreams
       validate_at_least_one_argument
 
-      def type
+      def domain
         :condition_occurrence
       end
 
