@@ -6,7 +6,6 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc 'Only passes through a result from the LHR if the person appears in the RHR.'
-      category 'Filter'
       default_query_columns
 
       def query(db)

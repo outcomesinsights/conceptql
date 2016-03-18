@@ -29,7 +29,7 @@ module ConceptQL
       validate_one_upstream
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
-      category %(Temporal Manipulation)
+      category "Modify Data"
       basic_type :temporal
       default_query_columns
 

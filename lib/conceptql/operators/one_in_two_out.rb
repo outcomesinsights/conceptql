@@ -15,7 +15,7 @@ in an inpatient setting
       allows_one_upstream
       validate_one_upstream
       validate_no_arguments
-      category %w(Temporal Relative)
+      category "Filter Single Stream"
       basic_type :temporal
 
       option :inpatient_length_of_stay, type: :number

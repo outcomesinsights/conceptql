@@ -14,6 +14,7 @@ module ConceptQL
       desc 'Finds all people that match the races'
       argument :races, type: :codelist, vocab: 'Race'
       domains :person
+      category "Select by Property"
       basic_type :selection
       query_columns :person, :concept
       validate_no_upstreams

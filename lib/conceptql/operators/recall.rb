@@ -17,7 +17,7 @@ Recalls a set of named results that were previously stored using the Define oper
 Must be surrounded by the same Let operator as surrounds the corresponding Define operator.
       EOF
       argument :name, type: :string
-      category 'Variable Assignment'
+      category "Get Related Data"
       basic_type :selection
       validate_no_upstreams
       validate_one_argument

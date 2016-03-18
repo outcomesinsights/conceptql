@@ -7,7 +7,7 @@ module ConceptQL
 
       desc 'Pools sets of incoming results into a single large set of results.'
       allows_many_upstreams
-      category 'Set Logic'
+      category "Combine Streams"
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments

@@ -8,6 +8,7 @@ module ConceptQL
       desc 'Given a set of concept IDs in RxNorm, returns that set of drug exposures'
       argument :concept_ids, type: :codelist, vocab: 'RxNorm'
       query_columns :drug_exposure
+      category "Select by Property"
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument

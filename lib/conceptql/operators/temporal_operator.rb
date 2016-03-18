@@ -8,7 +8,7 @@ module ConceptQL
     # a Sequel expression to use for filtering.
     class TemporalOperator < BinaryOperatorOperator
       reset_categories
-      category %w(Temporal Relative)
+      category "Filter by Comparing"
       default_query_columns
 
       option :within, type: :string

@@ -10,6 +10,7 @@ module ConceptQL
       validate_no_arguments
       validate_option Array, :left, :right
       validate_required_options :left, :right
+      category "Filter by Comparing"
       basic_type :filter
 
       def upstreams

@@ -8,8 +8,8 @@ module ConceptQL
       desc 'Returns all person records that match the selected gender.'
       argument :gender, type: :string, options: ['Male', 'Female']
       domains :person
+      category "Select by Property"
       basic_type :selection
-      category "Standard Vocabulary"
       query_columns :person
       validate_no_upstreams
       validate_at_least_one_argument

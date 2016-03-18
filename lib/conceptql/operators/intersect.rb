@@ -7,7 +7,7 @@ module ConceptQL
 
       desc 'Passes thru any result row that appears in all incoming result sets.'
       allows_many_upstreams
-      category 'Set Logic'
+      category "Combine Streams"
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments

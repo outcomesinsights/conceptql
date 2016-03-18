@@ -26,8 +26,7 @@ module ConceptQL
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for ICD-9, a value of 2 (for ICD-9-CM)
     class SourceVocabularyOperator < Operator
-      category 'Source Vocabulary'
-      category 'Code Lists'
+      category "Select by Clinical Codes"
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument

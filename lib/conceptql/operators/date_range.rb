@@ -13,7 +13,7 @@ module ConceptQL
       desc 'Used to represent a date literal.'
       option :start, type: :string
       option :end, type: :string
-      category %(Temporal Manipulation)
+      category "Select by Property"
       basic_type :selection
       validate_no_upstreams
       validate_no_arguments

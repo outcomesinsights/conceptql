@@ -28,7 +28,6 @@ If the RHS result's start_date is later than the LHS end_date, the LHS
 result is passed thru unaffected.
       EOF
       allows_one_upstream
-      category %(Temporal Manipulation)
 
       def query(db)
         grouped_right = db.from(right_stream(db)).select_group(:person_id).select_append(Sequel.as(Sequel.function(:min, :start_date), :start_date))
