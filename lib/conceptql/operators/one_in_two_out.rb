@@ -18,7 +18,7 @@ in an inpatient setting
       category "Filter Single Stream"
       basic_type :temporal
 
-      option :inpatient_length_of_stay, type: :number
+      option :inpatient_length_of_stay, type: :integer
       option :inpatient_return_date, type: :string, options: ['Admit Date', 'Discharge Date'], default: 'Discharge Date'
       option :outpatient_minimum_gap, type: :string
       option :outpatient_maximum_gap, type: :string
