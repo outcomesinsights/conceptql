@@ -89,10 +89,12 @@ module Metadatable
   end
 
   def to_metadata(opts = {})
+    derive_metadata_from_validations
     warn_about_missing_metadata if opts[:warn]
     {
       preferred_name: @preferred_name || humanized_class_name,
       operation: just_class_name.snakecase,
+      min_upstreams: @max_upstreams || 0,
       max_upstreams: @max_upstreams || 0,
       arguments: @arguments || [],
       options: @options || {},
@@ -109,6 +111,43 @@ module Metadatable
     missing << :desc unless @desc
     missing << :basic_type unless @basic_type
     puts "#{just_class_name} is missing #{missing.join(", ")}" unless missing.empty?
+  end
+
+  def derive_metadata_from_validations
+    instance_variable_get(:@validations).each do |meth, args|
+      meth = meth.to_s + "_to_metadata"
+      send(meth, args) if respond_to?(meth)
+    end
+  end
+
+  def validate_no_upstreams_to_metadata(*args)
+    @min_upstreams = 0
+    @max_upstreams = 0
+  end
+
+  def validate_one_upstream_to_metadata(*args)
+    @min_upstreams = 1
+    @max_upstreams = 1
+  end
+
+  def validate_at_least_one_upstream_to_metadata(*args)
+    @min_upstreams = 1
+    @max_upstreams = 99
+  end
+
+  def validate_at_most_one_upstream_to_metadata(*args)
+    @min_upstreams = 0
+    @max_upstreams = 1
+  end
+
+  def validate_no_arguments_to_metadata(*args)
+    @arguments = []
+  end
+
+  def validate_required_options_to_metadata(*args)
+    args.each do |opt_name|
+      @options[opt_name][:required] = true
+    end
   end
 end
 
