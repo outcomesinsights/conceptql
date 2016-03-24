@@ -45,6 +45,7 @@ occurrence, this operator returns nothing for that person
       basic_type :temporal
       allows_one_upstream
       validate_at_least_one_upstream
+      option :unique, type: :boolean
 
       def query_cols
         SELECTED_COLUMNS + [:rn]
@@ -52,7 +53,7 @@ occurrence, this operator returns nothing for that person
 
       def query(db)
         cte_name = scope.add_extra_cte(:occurrences,
-            stream.evaluate(db)
+            all_or_uniquified_results(db)
               .from_self
               .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) })
         db[cte_name]
@@ -81,6 +82,19 @@ occurrence, this operator returns nothing for that person
       def ordered_columns
         ordered_columns = [Sequel.send(asc_or_desc, :start_date)]
         ordered_columns += [:criterion_id]
+      end
+
+      def uniquify_partition_columns
+        SELECTED_COLUMNS - [:criterion_id, :start_date, :end_date]
+      end
+
+      def all_or_uniquified_results(db)
+        return stream.evaluate(db) unless options[:unique]
+        stream.evaluate(db)
+          .from_self
+          .select_append { |o| o.row_number(:over, partition: uniquify_partition_columns, order: ordered_columns){}.as(:unique_rn) }
+          .from_self
+          .where(unique_rn: 1)
       end
     end
   end
