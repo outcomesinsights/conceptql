@@ -7,7 +7,7 @@ describe ConceptQL::Operators::RevenueCode do
     ).must_equal({})
   end
 
-  it "should have the best procedure_domain" do
+  it "should have the correct domain" do
     query([:revenue_code, '100']).domains == [:procedure_occurrence]
   end
 end
