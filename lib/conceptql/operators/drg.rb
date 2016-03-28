@@ -5,6 +5,7 @@ module ConceptQL
     class Drg < StandardVocabularyOperator
       register __FILE__, :omopv4
 
+      preferred_name "DRG"
       desc 'Searches the procedure_occurrence table for all procedures that have an associated procedure_cost record with matching DRG codes'
       argument :drgs, type: :codelist, vocab: 'DRG'
       predominant_domains :procedure_occurrence
