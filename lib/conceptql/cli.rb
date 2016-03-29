@@ -77,6 +77,9 @@ module ConceptQL
     def metadata
       File.write('metadata.js', "var metadata = #{ConceptQL.metadata(warn: true).to_json};")
       File.write('metadata.json', ConceptQL.metadata.to_json)
+      if system("which", "json_pp", out: File::NULL, err: File::NULL)
+        system("cat metadata.json | json_pp", out: "metadata_pp.json")
+      end
     end
 
     desc 'knit', 'Processes ConceptQL fenced code segments and produces a Markdown file'
