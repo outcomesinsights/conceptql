@@ -88,10 +88,11 @@ module Metadatable
     end
   end
 
-  def to_metadata(opts = {})
+  def to_metadata(name, opts = {})
     derive_metadata_from_validations
     warn_about_missing_metadata if opts[:warn]
     {
+      name: name,
       preferred_name: @preferred_name || humanized_class_name,
       operation: just_class_name.snakecase,
       min_upstreams: @max_upstreams || 0,
