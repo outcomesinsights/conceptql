@@ -1,12 +1,27 @@
 # A Bit About Metadata
 
-Each operator in ConceptQL is listed in the metadata.json file.
+`ConceptQL.metadata` produces a hash containing all relevant metadata about ConceptQL, specifically which categories and operators are available in ConceptQL.
 
-The metadata is a hash where the key is the name of an operator and the hash is the metadata specific to that operator.
+The hash contains two keys: "categories" and "operators".
+
+## Metadata about Categories
+
+The value of the "categories" hash is an array of hashes representing each available category in ConceptQL.  Each hash has two key/value pairs:
+
+- name
+    - The category's name
+- priority
+    - The position the category should have if you were to list the categories in order
+
+## Metadata about Operators
+
+Each operator in ConceptQL is listed in the metadata.json file under the "operators" key.
+
+The operator metadata is a hash where the key is the name of an operator and the hash is the metadata specific to that operator.
 
 The metadata for each operator should be complete enough that a UI can understand all of the parameters and constraints specific to that operator and render it accordingly.  Essentially, the metadata should be complete enough that entirely new operators can appear in the metadata and the UI should be able to render that operator and its parameters without needing to change anything in the code for the UI.
 
-## Operator Metadata Outline
+### Operator Metadata Outline
 
 - min_upstreams
     - 0 or 1
@@ -45,15 +60,18 @@ The metadata for each operator should be complete enough that a UI can understan
 - basic_type
     - I don't know what this does but it seemed like information needed for Envy's JAM
 
-## Option Metadata Outline
+### Option Metadata Outline
 
 - type
     - Dictates what type of input the operator expects for this parameter
     - Can be one of the following types:
         - string
             - A string of text
-        - Integer
+        - integer
             - A whole number, positive or negative
+        - boolean
+            - Either true or false
+            - Can be respresented by a checkbox or similar, toggleable UI item
         - codelist
             - Eventually the UI should provide a sophisticated means of selecting codes from a specific terminology (specified by the vocab option)
             - For now, expect a comma delimited list of codes in a textarea
