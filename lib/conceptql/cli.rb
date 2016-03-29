@@ -75,7 +75,7 @@ module ConceptQL
 
     desc 'metadata', 'Generates the metadata.js file for the JAM'
     def metadata
-      File.write('metadata.js', "var metadata = #{ConceptQL.metadata(warn: true).to_json};")
+      File.write('metadata.js', "$metadata = #{ConceptQL.metadata(warn: true).to_json};")
       File.write('metadata.json', ConceptQL.metadata.to_json)
       if system("which", "json_pp", out: File::NULL, err: File::NULL)
         system("cat metadata.json | json_pp", out: "metadata_pp.json")
