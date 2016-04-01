@@ -153,6 +153,7 @@ module ConceptQL
           rescue
             puts $!.message
             puts $!.backtrace.join("\n")
+            p stmt
             annotated = FakeAnnotater.new(stmt).annotate
           end
           ConceptQL::AnnotateGrapher.new.graph_it(annotated, path_name, output_type: 'png')
