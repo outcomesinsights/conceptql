@@ -140,7 +140,10 @@ describe ConceptQL::Operators::Union do
     query(
       [:union]
     ).scope_annotate.must_equal(
-      {:errors=>{"union"=>[["has no upstream"]]}, :warnings=>{}, :counts=>{"union"=>{:invalid=>{:rows=>0, :n=>0}}}}
+      {:errors=>{"union"=>[["has no upstream"]]},
+       :warnings=>{},
+       :counts=>{"union"=>{:invalid=>{:rows=>0, :n=>0}}},
+       :operators=>["union"]}
     )
 
     query(
@@ -150,7 +153,9 @@ describe ConceptQL::Operators::Union do
        :warnings=>{1=>[["invalid source code", "XYS"]]},
        :counts=>{1=>{:condition_occurrence=>{:rows=>50, :n=>38}},
                  2=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
-                 "union"=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}
+                 "union"=>{:condition_occurrence=>{:rows=>1175, :n=>213}}},
+      :operators=>["icd9", "union"]
+      }
     )
   end
 end

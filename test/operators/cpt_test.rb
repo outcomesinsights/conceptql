@@ -26,4 +26,20 @@ describe ConceptQL::Operators::Cpt do
       ["cpt", "99214", "XYS", {:annotation=>{:counts=>{:procedure_occurrence=>{:rows=>1221, :n=>203}}, :warnings=>[["invalid concept code", "XYS"]]}, :name=>"CPT"}]
     )
   end
+
+  it "should show operators when annotating" do
+    query(
+      [:cpt, "99214"]
+    ).scope_annotate.must_equal({
+        :counts=>{
+          "cpt"=>{
+            :procedure_occurrence=>{:rows=>1221, :n=>203}
+          }
+        },
+        :operators=>["cpt"],
+        :errors=>{},
+        :warnings=>{}
+      }
+    )
+  end
 end

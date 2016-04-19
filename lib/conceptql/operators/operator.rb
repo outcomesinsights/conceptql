@@ -176,6 +176,7 @@ module ConceptQL
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
         end
+        scope.add_operators(self)
         domains.each do |domain|
           cur_counts = counts[domain] ||= {:rows=>0, :n=>0}
           scope.add_counts(scope_key, domain, cur_counts)

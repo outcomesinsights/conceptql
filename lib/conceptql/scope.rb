@@ -23,6 +23,7 @@ module ConceptQL
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
+      @annotation[:operators] = @operators = []
     end
 
     def add_errors(key, errors)
@@ -36,6 +37,12 @@ module ConceptQL
     def add_counts(key, domain, counts)
       c = @counts[key] ||= {}
       c[domain] = counts
+    end
+
+    def add_operators(operator)
+      @operators << operator.operator_name
+      @operators.compact!
+      @operators.uniq!
     end
 
     def add_extra_cte(*args)
