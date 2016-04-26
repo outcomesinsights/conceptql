@@ -1,5 +1,6 @@
 require 'facets/kernel/meta_def'
 require 'facets/string/snakecase'
+require 'facets/string/titlecase'
 
 module Metadatable
   def preferred_name(value = nil)
@@ -19,12 +20,18 @@ module Metadatable
 
   def argument(name, options = {})
     (@arguments ||= [])
-    @arguments << [name, options]
+    @arguments << [name, auto_label(name, options)]
   end
 
   def option(name, options = {})
     @options ||= {}
-    @options[name] = options
+    @options[name] = auto_label(name, options)
+  end
+
+  def auto_label(name, opts = {})
+    return opts if opts[:label]
+    return opts.merge(label: name.to_s.split('_').join(' ').titlecase) unless opts[:type] == :codelist
+    opts.merge(label: pref_name + " Codes")
   end
 
   def domains(*domain_list)
@@ -88,12 +95,16 @@ module Metadatable
     end
   end
 
+  def pref_name
+    @preferred_name || humanized_class_name
+  end
+
   def to_metadata(name, opts = {})
     derive_metadata_from_validations
     warn_about_missing_metadata if opts[:warn]
     {
       name: name,
-      preferred_name: @preferred_name || humanized_class_name,
+      preferred_name: pref_name,
       operation: just_class_name.snakecase,
       min_upstreams: @max_upstreams || 0,
       max_upstreams: @max_upstreams || 0,
