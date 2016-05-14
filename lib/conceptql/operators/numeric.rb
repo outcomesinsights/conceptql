@@ -15,11 +15,11 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc <<-EOF
-Represents a operator that will either:
-- create a value_as_number value for every person in the database
-- change the value_as_number value for every every result passed in
-  - either to a number
-  - or a value from a column in the origin row
+Represents an operator that will either:
+- Create a value_as_number value for every person in the database
+- Change the value_as_number value for every result passed in
+  - Either to a number
+  - Or a value from a column in the origin row
 
 Accepts two params:
 - Either a number value or a symbol representing a column name

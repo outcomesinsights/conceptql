@@ -22,7 +22,7 @@ module ConceptQL
     class TimeWindow < Operator
       register __FILE__, :omopv4
 
-      desc 'Adjusts the start_date and end_date columns to create a new window of time for each result.'
+      desc 'Adjusts the start_date and end_date to create a new window of time for each result.'
       option :start, type: :string
       option :end, type: :string
       allows_one_upstream

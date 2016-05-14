@@ -6,7 +6,6 @@ module ConceptQL
       register __FILE__, :omopv4
 
       preferred_name 'CPT'
-      desc 'Searches the procedure_occurrence table for all procedures with matching CPT codes'
       argument :cpts, type: :codelist, vocab: 'CPT4'
       predominant_domains :procedure_occurrence
 

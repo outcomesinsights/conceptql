@@ -5,7 +5,7 @@ module ConceptQL
     class Except < BinaryOperatorOperator
       register __FILE__, :omopv4
 
-      desc 'If a LHR result appears in the RHR result, it is removed from the output result set.'
+      desc 'If a result in the left hand results (LHR) appears in the right hand results (RHR), it is removed from the output result set.'
       default_query_columns
 
       def query(db)

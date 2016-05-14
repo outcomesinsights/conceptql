@@ -5,7 +5,6 @@ module ConceptQL
     class Prodcode < SourceVocabularyOperator
       register __FILE__, :omopv4
 
-      desc 'Searches the drug_exposure table for all conditions with matching Prodcodes'
       argument :prodcodes, type: :codelist, vocab_id: '203'
       predominant_domains :drug_exposure
 

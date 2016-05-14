@@ -6,8 +6,7 @@ module ConceptQL
       register __FILE__, :omopv4
 
       preferred_name "READ"
-      desc "Searches the condition_occurrence table for the given set of READ codes."
-      argument :read_codess, type: :codelist, vocab: "Read"
+      argument :read_codes, type: :codelist, vocab: "Read"
       predominant_domains :condition_occurrence
 
       def vocabulary_id

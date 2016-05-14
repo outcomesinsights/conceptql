@@ -8,9 +8,9 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc <<-EOF
-Represents a common pattern in research algorithms: searching for a condition
-that appears either two times in an outpatient setting with a 30-day gap or once
-in an inpatient setting
+Represents a common pattern in research algorithms: searching for an event
+that appears either once in an inpatient setting or
+twice in an outpatient setting with a 30-day gap.
       EOF
       allows_one_upstream
       validate_one_upstream
@@ -18,7 +18,7 @@ in an inpatient setting
       category "Filter Single Stream"
       basic_type :temporal
 
-      option :inpatient_length_of_stay, type: :integer, min: 0, default: 0, desc: 'Minimum length of inpatient stay reqiured for inpatient event to be valid'
+      option :inpatient_length_of_stay, type: :integer, min: 0, default: 0, desc: 'Minimum length of inpatient stay required for inpatient event to be valid'
       option :inpatient_return_date, type: :string, options: ['Admit Date', 'Discharge Date'], default: 'Discharge Date', desc: 'Which date to pass downstream in both the start_date and end_date fields'
       option :outpatient_minimum_gap, type: :string, default: '30d', desc: 'Minimum number of days between outpatient events for the event to be valid'
       option :outpatient_maximum_gap, type: :string, desc: 'Maximum number of days between outpatient events for the event to be valid'

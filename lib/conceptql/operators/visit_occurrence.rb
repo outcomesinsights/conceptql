@@ -5,7 +5,7 @@ module ConceptQL
     class VisitOccurrence < CastingOperator
       register __FILE__, :omopv4
 
-      desc 'Returns all visits in the database, or if given a upstream, converts all results to the set of visit_occurrences related to those results.'
+      desc 'Generates all visit_occurrence records, or, if fed a stream, fetches all visit_occurrence records for the people represented in the incoming result set.'
       allows_one_upstream
       domains :visit_occurrence
 

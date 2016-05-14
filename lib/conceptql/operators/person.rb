@@ -5,7 +5,7 @@ module ConceptQL
     class Person < CastingOperator
       register __FILE__, :omopv4
 
-      desc 'Returns all people in the database, or if given a upstream, converts all results to the set of patients contained in those results.'
+      desc 'Generates all person records, or, if fed a stream, fetches all person records for the people represented in the incoming result set.'
       allows_one_upstream
       domains :person
 

@@ -6,7 +6,6 @@ module ConceptQL
       register __FILE__, :omopv4
 
       preferred_name 'CPT/HCPCS'
-      desc 'Searches the procedure_occurrence table for all procedures with matching CPT/HCPCS codes'
       argument :codes, type: :codelist, vocab: ['CPT', 'HCPCS']
       predominant_domains :procedure_occurrence
 

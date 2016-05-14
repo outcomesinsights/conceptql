@@ -11,11 +11,11 @@ module ConceptQL
     class PlaceOfServiceCode < Operator
       register __FILE__, :omopv4
 
-      desc 'Finds all visit_occurrences that match the Place of Service codes'
       argument :places_of_service, type: :codelist, vocab: 'Place of Service'
       domains :visit_occurrence
       category "Select by Property"
       basic_type :selection
+
       query_columns :visit_occurrence, :concept
       validate_no_upstreams
       validate_at_least_one_argument

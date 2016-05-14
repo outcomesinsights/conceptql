@@ -3,6 +3,7 @@ module ConceptQL
     class Invalid < Operator
       register __FILE__, :omopv4
 
+      no_desc
       default_query_columns
 
       def initialize(*args)

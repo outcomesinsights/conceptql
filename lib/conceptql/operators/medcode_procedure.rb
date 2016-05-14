@@ -5,7 +5,6 @@ module ConceptQL
     class MedcodeProcedure < SourceVocabularyOperator
       register __FILE__, :omopv4
 
-      desc 'Searches the procedure_occurrence table for all procedures with matching Medcodes'
       argument :medcodes, type: :codelist, vocab: '204'
       predominant_domains :procedure_occurrence
 

@@ -11,7 +11,7 @@ module ConceptQL
     class Race < Operator
       register __FILE__, :omopv4
 
-      desc 'Finds all people that match the races'
+      desc 'Generates all person records that match the given set of Race codes.'
       argument :races, type: :codelist, vocab: 'Race'
       domains :person
       category "Select by Property"

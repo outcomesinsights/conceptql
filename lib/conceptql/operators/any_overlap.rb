@@ -5,7 +5,7 @@ module ConceptQL
     class AnyOverlap < TemporalOperator
       register __FILE__, :omopv4
 
-      desc 'If a result from the LHR overlaps in any way a result from the RHR it is passed along.'
+      desc 'If a result in the LHR overlaps in any way a result in the RHR, it is passed through.'
       def where_clause
         l_partly_in_r = Sequel.expr { r__start_date <= l__start_date }.&(Sequel.expr { l__start_date <= r__end_date })
         r_partly_in_l = Sequel.expr { l__start_date <= r__start_date }.&(Sequel.expr { r__start_date <= l__end_date })

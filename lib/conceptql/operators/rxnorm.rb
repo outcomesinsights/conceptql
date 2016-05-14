@@ -6,8 +6,8 @@ module ConceptQL
       register __FILE__, :omopv4
 
       preferred_name 'RxNorm'
-      desc 'Finds all drug_exposures by RxNorm codes'
       argument :rxnorms, type: :codelist, vocab: 'RxNorm'
+      predominant_domains :drug_exposure
 
       def table
         :drug_exposure

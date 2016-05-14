@@ -6,7 +6,6 @@ module ConceptQL
       register __FILE__, :omopv4
 
       preferred_name 'LOINC'
-      desc 'Searches the observation table for all observations with matching LOINC codes'
       argument :loincs, type: :codelist, vocab: 'LOINC'
       predominant_domains :observation
 

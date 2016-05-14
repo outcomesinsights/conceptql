@@ -5,7 +5,7 @@ module ConceptQL
     class DrugTypeConcept < Operator
       register __FILE__, :omopv4
 
-      desc 'Given a set of concept IDs in RxNorm, returns that set of drug exposures'
+      desc 'Returns all drug_exposures that match the given set of Drug Type concept IDs.'
       argument :concept_ids, type: :codelist, vocab: 'RxNorm'
       query_columns :drug_exposure
       category "Select by Property"

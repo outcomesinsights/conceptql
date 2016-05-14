@@ -4,6 +4,8 @@ module ConceptQL
   module Operators
     class FromSeerVisits < Operator
       register __FILE__, :omopv4
+
+      no_desc
       query_columns :observation
       validate_one_upstream
 

@@ -6,6 +6,7 @@ module ConceptQL
       register __FILE__, :omopv4
 
       basic_type :set
+      no_desc
 
       def domains
         domains = upstreams.map(&:domains).flatten.uniq

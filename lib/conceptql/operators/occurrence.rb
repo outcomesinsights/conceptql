@@ -25,21 +25,22 @@ module ConceptQL
       register __FILE__, :omopv4
 
       preferred_name 'Nth Occurrence'
+
       desc <<-EOF
-Groups all results by person, then orders by start_date, then finds the nth occurrence.
-nth occurrence can be positive or negative.
+Groups all results by person, then orders by start_date and finds the nth occurrence (can be positive or negative).
 1 => first
 2 => second
 ...
 -1 => last
 -2 => second-to-last
 
-If two rows have the same start_date, the order of their ranking
-is arbitrary
+If two results have the same start_date, their relative order
+is arbitrary.
 
 If we ask for the second occurrence of something and a person has only one
-occurrence, this operator returns nothing for that person
+occurrence, this operator returns nothing for that person.
       EOF
+
       argument :occurrence, type: :integer
       category "Filter Single Stream"
       basic_type :temporal

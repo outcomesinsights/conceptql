@@ -111,16 +111,20 @@ module Metadatable
       arguments: @arguments || [],
       options: @options || {},
       predominant_domains: @domains || @predominant_domains || [],
-      desc: @desc,
+      desc: get_desc,
       categories: @categories || [],
       basic_type: @basic_type
     }
   end
 
+  def get_desc
+    @desc ||= standard_description
+  end
+
   def warn_about_missing_metadata
     missing = []
     missing << :categories if (@categories || []).empty?
-    missing << :desc unless @desc
+    missing << :desc if get_desc.empty?
     missing << :basic_type unless @basic_type
     puts "#{just_class_name} is missing #{missing.join(", ")}" unless missing.empty?
   end
@@ -161,5 +165,16 @@ module Metadatable
       @options[opt_name][:required] = true
     end
   end
-end
 
+  def standard_description
+    table = (!@domains.nil? && @domains.first)
+    table ||= (!predominant_domains.nil? && predominant_domains.first)
+    raise "Can't create description for #{pref_name}" unless table
+
+    "Selects results from the #{table} table where #{table}'s source value matches the given #{pref_name} codes."
+  end
+
+  def no_desc
+    desc ''
+  end
+end

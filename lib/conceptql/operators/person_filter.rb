@@ -5,7 +5,7 @@ module ConceptQL
     class PersonFilter < BinaryOperatorOperator
       register __FILE__, :omopv4
 
-      desc 'Only passes through a result from the LHR if the person appears in the RHR.'
+      desc 'If a result in the left hand results (LHR) matches a person in the right hand results (RHR), it is passed through.'
       default_query_columns
 
       def query(db)

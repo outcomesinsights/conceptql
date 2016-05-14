@@ -6,11 +6,13 @@ module ConceptQL
       register __FILE__, :omopv4
 
       desc <<-EOF
-Any result in the LHR whose start_date is on or before and whose end_date is on or after a result from the RHR.
+If a result in the left hand results (LHR) has a start_date on or before and an end_date on or after a result in the right hand results (RHR), it is passed through.
 L--X-L
 R-----R
 L------Y--------L
-EOF
+
+      EOF
+
       def where_clause
         [Proc.new { l__start_date <= r__start_date}, Proc.new { r__end_date <= l__end_date }]
       end

@@ -12,7 +12,7 @@ module ConceptQL
     class ConditionType < Operator
       register __FILE__, :omopv4
 
-      desc 'Searches for conditions that match the given set of Condition Types'
+      desc 'Returns all conditions that match the given set of Condition Types.'
       argument :condition_types, type: :codelist, vocab: 'Condition Type'
       category "Select by Property"
       basic_type :selection
