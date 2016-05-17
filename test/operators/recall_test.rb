@@ -89,44 +89,6 @@ describe ConceptQL::Operators::Recall do
       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}]
     )
 
-=begin
-    query(
-      [:union,
-       [:union, ["recall", "Heart Attack"]],
-       {"label": "Heart Attack"}]
-    ).annotate.must_equal(
-      ["union",
-       ["union",
-        ["recall",
-         "Heart Attack",
-         {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["nested recall"]]}}],
-        {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}],
-       {:label=>"Heart Attack",
-        :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}]
-    )
-
-    query(
-      [:union,
-       [:union, ["recall", "HA1"], {"label": "HA2"}],
-       [:union, ["recall", "HA2"], {"label": "HA1"}]]
-    ).annotate.must_equal(
-      ["union",
-       ["recall", "HA2", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["mutually referential recalls", "HA1"]]}}],
-       ["recall", "HA1", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["mutually referential recalls", "HA2"]]}}],
-       {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}]
-    )
-    query(
-      [:union,
-       ["icd9", "412", {"label": "HA1"}],
-       ["icd9", "409.1", {"label": "HA1"}]]
-    ).annotate.must_equal(
-      ["union",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}},:label=>"HA1"}, :name=>"ICD-9 CM"}],
-       ["icd9", "409.1", {:label=>"HA1",  :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["duplicate label"]]}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}]
-    )
-=end
-
     query(
       ["recall", "HA1"]
     ).annotate.must_equal(
