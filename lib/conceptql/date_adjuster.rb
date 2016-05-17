@@ -4,16 +4,31 @@ module ConceptQL
   # Used to translate a string of terse date adjustments into a set of adjustments that are compatible with most RDBMSs
   class DateAdjuster
 
-    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dmy])+/])}\z/
+    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dmy])+/, /\s*/])}\z/
 
-    attr :str
-    def initialize(str)
-      @str = str
+    attr :str, :manipulator
+    def initialize(str, opts = {})
+      @str = str || ""
+      @manipulator = opts[:manipulator] || Sequel
     end
 
     # Returns an array of strings that represent date modifiers
     def adjustments
       @adjustments ||= parse(str)
+    end
+
+    def adjust(column)
+      return Sequel.expr(:end_date) if str.downcase == 'end'
+      return Sequel.expr(:start_date) if str.downcase == 'start'
+      return Sequel.cast(Date.parse(str).strftime('%Y-%m-%d'), Date) if str =~ /^\d{4}-\d{2}-\d{2}$/
+      adjusted_date = adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
+        if quantity > 0
+          manipulator.date_add(sql, units => quantity)
+        else
+          manipulator.date_sub(sql, units => quantity.abs)
+        end
+      end
+      Sequel.cast(adjusted_date, Date)
     end
 
     private

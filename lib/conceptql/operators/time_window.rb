@@ -52,26 +52,11 @@ module ConceptQL
         adjusted_date(:end, :end_date)
       end
 
-      def manipulator
-        @manipulator ||= options.fetch(:date_manipulator, Sequel)
-      end
-
       # NOTE: This produces PostgreSQL-specific date adjustment.  I'm not yet certain how to generalize this
       # or make different versions based on RDBMS
       def adjusted_date(option_arg, column)
-        arg = options[option_arg]
-        arg ||= ''
-        return ['end_date', column].join('___').to_sym if arg.downcase == 'end'
-        return ['start_date', column].join('___').to_sym if arg.downcase == 'start'
-        return Sequel.cast(Date.parse(arg).strftime('%Y-%m-%d'), Date).as(column) if arg =~ /^\d{4}-\d{2}-\d{2}$/
-        adjusted_date = DateAdjuster.new(arg).adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
-          if quantity > 0
-            manipulator.date_add(sql, units => quantity)
-          else
-            manipulator.date_sub(sql, units => quantity.abs)
-          end
-        end
-        Sequel.cast(adjusted_date, Date).as(column)
+        adjusted_date = DateAdjuster.new(options[option_arg], manipulator: options[:manipulator]).adjust(column)
+        adjusted_date.as(column)
       end
     end
   end
