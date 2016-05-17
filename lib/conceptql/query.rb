@@ -50,7 +50,11 @@ module ConceptQL
 
     def operator
       @operator ||= if statement.is_a?(Array)
-        nodifier.create(*statement)
+        if statement.first.is_a?(Array)
+          Operators::Invalid.new(nodifier, "invalid", errors: [["incomplete statement"]])
+        else
+          nodifier.create(*statement)
+        end
       else
         Operators::Invalid.new(nodifier, "invalid", errors: [["invalid root operator"]])
       end
