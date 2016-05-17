@@ -1,6 +1,7 @@
 require_relative 'operator'
 require_relative 'visit_occurrence'
 require_relative '../date_adjuster'
+require 'facets/kernel/blank'
 
 module ConceptQL
   module Operators
@@ -71,19 +72,19 @@ twice in an outpatient setting with a 30-day gap.
             .exclude(type_id: inpatient_type_ids(db))
         )
 
-        min_gap = options[:outpatient_minimum_gap] || 30
-        max_gap = options[:outpatient_maximum_gap] || 0
+        min_gap = options[:outpatient_minimum_gap] || "30d"
+        max_gap = options[:outpatient_maximum_gap]
 
         q = db[@outpat].from_self(alias: :o1)
               .join(db[@outpat].as(:o2), o1__person_id: :o2__person_id)
               .exclude(o1__criterion_id: :o2__criterion_id, o1__criterion_domain: :o2__criterion_domain)
 
-        if min_gap > 0
-          q = q.where { o2__start_date >= o1__start_date + min_gap }
+        if min_gap.present?
+          q = q.where { o2__start_date >= DateAdjuster.new(min_gap).adjust(:o1__start_date) }
         end
 
-        if max_gap > 0
-          q = q.where { o2__start_date <= o1__start_date + max_gap }
+        if max_gap.present?
+          q = q.where { o2__start_date <= DateAdjuster.new(max_gap).adjust(:o1__start_date) }
         end
 
         if options[:outpatient_event_to_return] != 'Initial Event'
