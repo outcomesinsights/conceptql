@@ -163,7 +163,7 @@ module ConceptQL
         end
         res = [operator_name, *annotate_values(db)]
 
-        if upstreams_valid?(db) && scope.valid?
+        if upstreams_valid?(db) && scope.valid? && db
           scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_domain)
@@ -538,7 +538,7 @@ module ConceptQL
       end
 
       def add_warnings?(db)
-        @errors.empty? && db.adapter_scheme != :mock
+        @errors.empty? && db && db.adapter_scheme != :mock
       end
 
       def add_error(*args)
