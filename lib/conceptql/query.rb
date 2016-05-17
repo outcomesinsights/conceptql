@@ -11,7 +11,7 @@ module ConceptQL
     attr :statement
     def initialize(db, statement, opts={})
       @db = db
-      @statement = statement
+      @statement = extract_statement(statement)
       opts = opts.dup
       opts[:algorithm_fetcher] ||= proc do |alg|
         statement, description = db[:concepts].where(concept_id: alg).get([:statement, :label])
@@ -62,5 +62,14 @@ module ConceptQL
 
     private
     attr :db, :nodifier
+
+
+    def extract_statement(stmt)
+      if stmt.is_a?(Array) && stmt.length == 1 && stmt.first.is_a?(Array)
+        stmt.first
+      else
+        stmt
+      end
+    end
   end
 end
