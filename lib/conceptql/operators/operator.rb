@@ -486,7 +486,7 @@ module ConceptQL
       end
 
       def validate_no_upstreams
-        add_error("has upstreams") unless @upstreams.empty?
+        add_error("has upstreams", @upstreams.inspect) unless @upstreams.empty?
       end
 
       def validate_one_upstream
@@ -495,7 +495,7 @@ module ConceptQL
       end
 
       def validate_at_most_one_upstream
-        add_error("has multiple upstreams") if @upstreams.length > 1
+        add_error("has multiple upstreams", @upstreams.inspect) if @upstreams.length > 1
       end
 
       def validate_at_least_one_upstream
@@ -503,7 +503,7 @@ module ConceptQL
       end
 
       def validate_no_arguments
-        add_error("has arguments") unless @arguments.empty?
+        add_error("has arguments", @arguments.inspect) unless @arguments.empty?
       end
 
       def validate_one_argument
