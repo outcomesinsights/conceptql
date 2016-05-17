@@ -129,7 +129,10 @@ module ConceptQL
 
       def initialize(nodifier, *args)
         @nodifier = nodifier
-        @options = args.extract_options!.deep_rekey
+        @options = {}
+        while args.last.is_a?(Hash)
+          @options = @options.merge(args.extract_options!.deep_rekey)
+        end
         args.reject!{|arg| arg.nil? || arg == ''}
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operator) }
         @values = args
