@@ -69,7 +69,7 @@ describe ConceptQL::Operators::Recall do
       ["except",
        {:left=>["icd9", "412", {label: 1,
         :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["invalid label"]]}, :name=>"ICD-9 CM"}],
-        :right=>["recall", "Heart Attack", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},:errors=>[["no matching label"]]}}],
+        :right=>["recall", "Heart Attack", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},:errors=>[["no matching label", "Heart Attack"]]}}],
         :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}]
     )
 
@@ -130,7 +130,7 @@ describe ConceptQL::Operators::Recall do
     query(
       ["recall", "HA1"]
     ).annotate.must_equal(
-      ["recall", "HA1", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["no matching label"]]}}]
+      ["recall", "HA1", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["no matching label", "HA1"]]}}]
     )
 
     query(
@@ -166,12 +166,12 @@ describe ConceptQL::Operators::Recall do
                          ["first",
                           ["recall", "Meyloma Dx", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}],
                           {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}],
-                         {:start=>"0", :end=>"90d", :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["wrong option format", "start"]]}}], :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}],
+                         {:start=>"0", :end=>"90d", :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}], :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}],
        :right=>["union",
                 ["during",
                  {:left=>["time_window",
-                          ["recall", "Qualifying Meyloma Dx", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["no matching label"]]}}],
-                          {:start=>"-90d", :end=>"0", :label=>"Meyloma 90-day Lookback", :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["wrong option format", "end"]]}}],
+                          ["recall", "Qualifying Meyloma Dx", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["no matching label", "Qualifying Meyloma Dx"]]}}],
+                          {:start=>"-90d", :end=>"0", :label=>"Meyloma 90-day Lookback", :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}],
                   :right=>["cpt", "38220", "38221", "85102", "85095", "3155F", "85097", "88237", "88271", "88275", "88291", "88305", {:label=>"Bone Marrow", :annotation=>{:counts=>{:procedure_occurrence=>{:rows=>0, :n=>0}}}, :name=>"CPT"}], :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}}}],
                 ["occurrence",
                  ["during", {:left=>["cpt", "84156", "84166", "86335", "84155", "84165", "86334", "83883", "81264", "82784", "82785", "82787", "82040", "82232", "77074", "77075", "83615", {:label=>"Other Tests", :annotation=>{:counts=>{:procedure_occurrence=>{:rows=>0, :n=>0}}}, :name=>"CPT"}],

@@ -62,7 +62,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
               end
             end
           else
-            add_error("no matching label")
+            add_error("no matching label", source)
           end
         end
       end
