@@ -30,7 +30,7 @@ module ConceptQL
     def sql
       sql = query.sql
       if formatter = find_executable('pg_format')
-        sql = Open3.capture2(formatter, stdin_data: sql)
+        sql, _ = Open3.capture2(formatter, stdin_data: sql)
       end
     ensure
       return sql
