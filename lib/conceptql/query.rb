@@ -1,4 +1,6 @@
 require 'json'
+require 'mkmf'
+require 'open3'
 require 'forwardable'
 require_relative 'scope'
 require_relative 'nodifier'
@@ -26,7 +28,12 @@ module ConceptQL
     end
 
     def sql
-      query.sql
+      sql = query.sql
+      if formatter = find_executable('pg_format')
+        sql = Open3.capture2(formatter, stdin_data: sql)
+      end
+    ensure
+      return sql
     end
 
     def annotate
