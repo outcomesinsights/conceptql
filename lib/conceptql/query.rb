@@ -4,6 +4,7 @@ require 'open3'
 require 'forwardable'
 require_relative 'scope'
 require_relative 'nodifier'
+require_relative 'sql_formatter'
 
 module ConceptQL
   class Query
@@ -28,12 +29,9 @@ module ConceptQL
     end
 
     def sql
-      sql = query.sql
-      if formatter = find_executable('pg_format')
-        sql, _ = Open3.capture2(formatter, stdin_data: sql)
-      end
-    ensure
-      return sql
+      SqlFormatter.new.format(query.sql)
+    rescue
+      return "SQL unavailable for this statement"
     end
 
     def annotate
@@ -63,7 +61,7 @@ module ConceptQL
           nodifier.create(*statement)
         end
       else
-        Operators::Invalid.new(nodifier, "invalid", errors: [["invalid root operator"]])
+        Operators::Invalid.new(nodifier, "invalid", errors: [["invalid root operator", statement.inspect]])
       end
     end
 
