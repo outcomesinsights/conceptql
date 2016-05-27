@@ -25,7 +25,6 @@ twice in an outpatient setting with a 30-day gap.
       option :outpatient_maximum_gap, type: :string, desc: 'Maximum number of days between outpatient events for the event to be valid'
       option :outpatient_event_to_return, type: :string, options: ['Initial Event', 'Confirming Event'], default: 'Initial Event', desc: 'Which event to pass downstream'
 
-      validate_required_options :outpatient_minimum_gap
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 
       default_query_columns
