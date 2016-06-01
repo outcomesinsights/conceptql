@@ -36,7 +36,7 @@ describe "complex combinations of operators" do
     criteria_ids(
       [:intersect,
        [:visit_occurrence, [:icd9, "412"]],
-       [:visit_occurrence, [:cpt, "99251"]]]
+       [:visit_occurrence, [:cpt, "99215"]]]
     ).must_equal("visit_occurrence"=>[11416])
 
     criteria_ids(

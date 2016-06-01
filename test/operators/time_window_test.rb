@@ -4,7 +4,7 @@ describe ConceptQL::Operators::TimeWindow do
   it "should produce correct results" do
     criteria_ids(
       [:time_window, [:icd9, "412"], {:start=>"-2y", :end=>"-2y"}]
-    ).must_equal("condition_occurrence"=>[1712, 1829, 4359, 5751, 6083, 6902, 7865, 8397, 8618, 9882, 10196, 10443, 10865, 13016, 13741, 15149, 17041, 17772, 17774, 18412, 18555, 19736, 20005, 20037, 21006, 21619, 21627, 22875, 22933, 24437, 24471, 24707, 24721, 24989, 25309, 25417, 25875, 25888, 26766, 27388, 28177, 28188, 30831, 31387, 31542, 31792, 31877, 32104, 32463, 32981])
+    ).must_equal("condition_occurrence"=>[2151, 2428, 3995, 4545, 4710, 5069, 5263, 5582, 8725, 10403, 10590, 11135, 11228, 11589, 11800, 13234, 13893, 14604, 14702, 14854, 14859, 17103, 17593, 23234, 23411, 24627, 25492, 26245, 27343, 37521, 38787, 50019, 50933, 52644, 52675, 53214, 53216, 53251, 53630, 53733, 53801, 55383, 56352, 56634, 56970, 57089, 57705, 58271, 58448, 58596, 58610, 58623, 59732, 59760, 59785])
 
     criteria_ids(
       [:time_window, [:place_of_service_code, "21"], {:start=>"", :end=>"start"}]
@@ -12,7 +12,7 @@ describe ConceptQL::Operators::TimeWindow do
 
     criteria_ids(
       [:time_window, [:icd9, "412"], {:start=>"-2m-2d", :end=>"3d1y"}]
-    ).must_equal("condition_occurrence"=>[1712, 1829, 4359, 5751, 6083, 6902, 7865, 8397, 8618, 9882, 10196, 10443, 10865, 13016, 13741, 15149, 17041, 17772, 17774, 18412, 18555, 19736, 20005, 20037, 21006, 21619, 21627, 22875, 22933, 24437, 24471, 24707, 24721, 24989, 25309, 25417, 25875, 25888, 26766, 27388, 28177, 28188, 30831, 31387, 31542, 31792, 31877, 32104, 32463, 32981])
+    ).must_equal("condition_occurrence"=>[2151, 2428, 3995, 4545, 4710, 5069, 5263, 5582, 8725, 10403, 10590, 11135, 11228, 11589, 11800, 13234, 13893, 14604, 14702, 14854, 14859, 17103, 17593, 23234, 23411, 24627, 25492, 26245, 27343, 37521, 38787, 50019, 50933, 52644, 52675, 53214, 53216, 53251, 53630, 53733, 53801, 55383, 56352, 56634, 56970, 57089, 57705, 58271, 58448, 58596, 58610, 58623, 59732, 59760, 59785])
 
     criteria_ids(
       [:time_window, [:place_of_service_code, "21"], {:start=>"end", :end=>"start"}]
@@ -30,7 +30,7 @@ describe ConceptQL::Operators::TimeWindow do
       [:time_window, [:icd9, "412"], {:start=>2, :end=>2}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        {:start=>2, :end=>2, :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
     )
 
@@ -38,7 +38,7 @@ describe ConceptQL::Operators::TimeWindow do
       [:time_window, [:icd9, "412"], {:start=>"-2b", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        {:start=>"-2b", :end=>"-2y", :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["wrong option format", "start"]]}}]
     )
 
@@ -46,7 +46,7 @@ describe ConceptQL::Operators::TimeWindow do
       [:time_window, 21, [:icd9, "412"], {:start=>"-2y", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        21,
        {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
     )
@@ -55,7 +55,7 @@ describe ConceptQL::Operators::TimeWindow do
       [:time_window, [:icd9, "412"], [:place_of_service_code, "21"], {:start=>"-2y", :end=>"-2y"}]
     ).annotate.must_equal(
       ["time_window",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        ["place_of_service_code", "21", {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>170, :n=>92}}}}],
        {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:visit_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:n=>0, :rows=>0}},:errors=>[["has multiple upstreams"]]}}]
     )

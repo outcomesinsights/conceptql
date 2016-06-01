@@ -4,27 +4,27 @@ describe ConceptQL::Operators::Union do
   it "should produce correct results" do
     criteria_counts(
       [:union, [:icd9, "412"], [:icd9, "401.9"]]
-    ).must_equal("condition_occurrence"=>1175)
+    ).must_equal("condition_occurrence"=>1778)
 
     criteria_counts(
       [:union, [:icd9, "412"], [:icd10, 'Z56.1']]
-    ).must_equal("condition_occurrence"=>51)
+    ).must_equal("condition_occurrence"=>55)
 
     criteria_counts(
       [:union, [:icd9, "412"], [:icd10, 'Z56.1'], [:icd9, "401.9"]]
-    ).must_equal("condition_occurrence"=>1176)
+    ).must_equal("condition_occurrence"=>1778)
 
     criteria_counts(
       [:union,
         [:union, [:icd9, "412"], [:icd10, 'Z56.1']],
         [:icd9, "401.9"]]
-    ).must_equal("condition_occurrence"=>1176)
+    ).must_equal("condition_occurrence"=>1778)
 
     criteria_counts(
       [:union,
        [:union, [:icd9, "412"], [:icd9, "401.9"]],
        [:place_of_service_code, "21"]]
-    ).must_equal("condition_occurrence"=>1175, "visit_occurrence"=>170)
+    ).must_equal("condition_occurrence"=>1778, "visit_occurrence"=>170)
   end
 
   it "optimize should produce correct results" do
@@ -32,19 +32,19 @@ describe ConceptQL::Operators::Union do
       query(
         [:union, [:icd9, "412"], [:icd9, "401.9"]]
       ).optimized
-    ).must_equal("condition_occurrence"=>1175)
+    ).must_equal("condition_occurrence"=>1778)
 
     criteria_counts(
       query(
         [:union, [:icd9, "412"], [:icd10, 'Z56.1']]
       ).optimized
-    ).must_equal("condition_occurrence"=>51)
+    ).must_equal("condition_occurrence"=>55)
 
     criteria_counts(
       query(
         [:union, [:icd9, "412"], [:icd10, 'Z56.1'], [:icd9, "401.9"]]
       ).optimized
-    ).must_equal("condition_occurrence"=>1176)
+    ).must_equal("condition_occurrence"=>1778)
 
     criteria_counts(
       query(
@@ -52,7 +52,7 @@ describe ConceptQL::Operators::Union do
           [:union, [:icd9, "412"], [:icd10, 'Z56.1']],
           [:icd9, "401.9"]]
       ).optimized
-    ).must_equal("condition_occurrence"=>1176)
+    ).must_equal("condition_occurrence"=>1778)
 
     criteria_counts(
       query(
@@ -60,7 +60,7 @@ describe ConceptQL::Operators::Union do
           [:union, [:icd9, "412"], [:icd9, "401.9"]],
           [:union, [:icd9, "412"], [:icd9, "401.9"]]]
       ).optimized
-    ).must_equal("condition_occurrence"=>1175)
+    ).must_equal("condition_occurrence"=>1778)
 
     criteria_counts(
       query(
@@ -68,7 +68,7 @@ describe ConceptQL::Operators::Union do
          [:union, [:icd9, "412"], [:icd9, "401.9"]],
          [:place_of_service_code, "21"]]
       ).optimized
-    ).must_equal("condition_occurrence"=>1175, "visit_occurrence"=>170)
+    ).must_equal("condition_occurrence"=>1778, "visit_occurrence"=>170)
   end
 
   it "annotate should produce correct results" do
@@ -78,13 +78,13 @@ describe ConceptQL::Operators::Union do
       ["union",
        ["icd9",
         "412",
-        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}},
+        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}},
          :name=>"ICD-9 CM"}],
        ["icd9",
         "401.9",
-        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1125, :n=>213}}},
+        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1723, :n=>217}}},
          :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}]
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1778, :n=>217}}}}]
     )
 
     query(
@@ -96,17 +96,17 @@ describe ConceptQL::Operators::Union do
        ["union",
         ["icd9",
          "412",
-         {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}},
+         {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}},
           :name=>"ICD-9 CM"}],
         ["icd9",
          "401.9",
-         {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1125, :n=>213}}},
+         {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1723, :n=>217}}},
           :name=>"ICD-9 CM"}],
-        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1175, :n=>213}}}}],
+        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1778, :n=>217}}}}],
        ["place_of_service_code",
         "21",
         {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>170, :n=>92}}}}],
-       {:annotation=> {:counts=>{:condition_occurrence=>{:rows=>1175, :n=>213}, :visit_occurrence=>{:rows=>170, :n=>92}}}}]
+       {:annotation=> {:counts=>{:condition_occurrence=>{:rows=>1778, :n=>217}, :visit_occurrence=>{:rows=>170, :n=>92}}}}]
     )
   end
 
@@ -151,11 +151,10 @@ describe ConceptQL::Operators::Union do
     ).scope_annotate.must_equal(
       {:errors=>{},
        :warnings=>{1=>[["invalid source code", "XYS"]]},
-       :counts=>{1=>{:condition_occurrence=>{:rows=>50, :n=>38}},
-                 2=>{:condition_occurrence=>{:rows=>1125, :n=>213}},
-                 "union"=>{:condition_occurrence=>{:rows=>1175, :n=>213}}},
-      :operators=>["icd9", "union"]
-      }
+       :operators=>["icd9", "union"],
+       :counts=>{1=>{:condition_occurrence=>{:rows=>55, :n=>42}},
+                 2=>{:condition_occurrence=>{:rows=>1723, :n=>217}},
+                 "union"=>{:condition_occurrence=>{:rows=>1778, :n=>217}}}}
     )
   end
 end

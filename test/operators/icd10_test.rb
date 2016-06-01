@@ -12,7 +12,7 @@ describe ConceptQL::Operators::Icd10 do
       [:icd10, [:icd9, "412"]]
     ).annotate.must_equal(
       ["icd10",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        {:annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams"], ["has no arguments"]]}, :name=>"ICD-10 CM"}]
     )
   end

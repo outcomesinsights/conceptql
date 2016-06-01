@@ -33,12 +33,11 @@ module ConceptQL
 
       def query(db)
         db.from(table_name)
-          .join(:source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
           .where(conditions)
       end
 
       def query_cols
-        table_columns(table_name, :source_to_concept_map)
+        table_columns(table_name)
       end
 
       def domain
@@ -54,10 +53,20 @@ module ConceptQL
       end
 
       def conditions
-        [[:scm__source_code, values], [:scm__source_vocabulary_id, vocabulary_id]]
+        conditions = { code_column => arguments }
+        conditions.merge!(vocabulary_id_column => vocabulary_id) if vocabulary_id_column
+        conditions
       end
 
       private
+
+      def code_column
+        table_source_value(table_name)
+      end
+
+      def vocabulary_id_column
+        table_vocabulary_id(table_name)
+      end
 
       def validate(db)
         super
@@ -71,14 +80,6 @@ module ConceptQL
 
       def table_name
         @table_name ||= make_table_name(table)
-      end
-
-      def table_concept_column
-        "tab__#{concept_column}".to_sym
-      end
-
-      def table_source_column
-        "tab__#{source_column}".to_sym
       end
     end
   end

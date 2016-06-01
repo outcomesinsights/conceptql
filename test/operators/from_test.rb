@@ -8,11 +8,11 @@ describe ConceptQL::Operators::From do
 
     dataset(
       [:from, 'observation_period']
-    ).count.must_equal(1)
+    ).count.must_equal(156)
 
     dataset(
       [:from, 'condition_occurrence']
-    ).count.must_equal(34044)
+    ).count.must_equal(59897)
   end
 
   it "should handle query_cols for non-CDM tables" do
@@ -26,7 +26,7 @@ describe ConceptQL::Operators::From do
       [:from, [:icd9, "412"]]
     ).annotate.must_equal(
       ["from",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams"], ["has no arguments"]]}}]
     )
 

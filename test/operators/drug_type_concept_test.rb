@@ -16,7 +16,7 @@ describe ConceptQL::Operators::DrugTypeConcept do
       [:drug_type_concept, 2, [:icd9, "412"]]
     ).annotate.must_equal(
       ["drug_type_concept",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        2,
        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams"]]}}]
     )

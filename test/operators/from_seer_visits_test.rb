@@ -31,11 +31,11 @@ describe ConceptQL::Operators::FromSeerVisits do
     ).annotate.must_equal(
       ["from_seer_visits",
        ["visit_occurrence",
-        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-        {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>50, :n=>38}}}}],
+        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
+        {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>55, :n=>42}}}}],
        ["visit_occurrence",
-        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-        {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>50, :n=>38}}}}],
+        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
+        {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>55, :n=>42}}}}],
        {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
     )
   end

@@ -26,8 +26,8 @@ module ConceptQL
         43
       end
 
-      def concept_column
-        :revenue_code_concept_id
+      def code_column
+        :revenue_code_source_value
       end
     end
   end

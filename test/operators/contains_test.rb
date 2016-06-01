@@ -6,7 +6,7 @@ describe ConceptQL::Operators::Contains do
       [:contains,
        {:left=>[:icd9, "412"],
         :right=>[:date_range, {:start=>"2008-03-15", :end=>"2008-03-20"}]}]
-    ).must_equal("condition_occurrence"=>[26766])
+    ).must_equal("condition_occurrence"=>[52675])
 
     criteria_ids(
       [:contains,

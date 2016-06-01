@@ -6,7 +6,7 @@ describe ConceptQL::Operators::Overlaps do
       [:overlaps,
        {:left=>[:icd9, "412"],
         :right=>[:date_range, {:start=>"2008-03-21", :end=>"2008-03-23"}]}]
-    ).must_equal("condition_occurrence"=>[26766])
+    ).must_equal("condition_occurrence"=>[52675])
 
     criteria_ids(
       [:overlaps,
@@ -18,7 +18,7 @@ describe ConceptQL::Operators::Overlaps do
       [:overlaps,
        {:left=>[:icd9, "412"],
         :right=>[:date_range, {:start=>"2008-03-22", :end=>"2008-03-24"}]}]
-    ).must_equal("condition_occurrence"=>[15149])
+    ).must_equal("condition_occurrence"=>[52644])
 
     criteria_ids(
       [:overlaps,
