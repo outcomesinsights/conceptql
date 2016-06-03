@@ -14,7 +14,7 @@ module ConceptQL
       end
 
       def query(db)
-        db.from(values.first)
+        db.from(values.first.to_sym)
       end
 
       def domains
