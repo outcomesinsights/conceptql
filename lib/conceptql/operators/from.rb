@@ -14,6 +14,7 @@ module ConceptQL
       end
 
       def query(db)
+        db.refresh(values.first.to_sym) if db.respond_to?(:refresh)
         db.from(values.first.to_sym)
       end
 
