@@ -41,8 +41,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def inpatient_events(db)
         q = db[marked_events(db)]
-              .where(type_id: inpatient_type_ids(db))
-              .or(type_id: 0)
+              .where(type_id: inpatient_type_ids(db).union(db.select(Sequel.as(0, :type_id))))
 
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].zero?
           q = q.where{ |o| Sequel.date_sub(o.end_date, o.start_date) > options[:inpatient_length_of_stay] }
