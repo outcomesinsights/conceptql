@@ -492,6 +492,10 @@ module ConceptQL
 
       # Validation Related
 
+      def upstream_operator_names
+        @upstreams.map(&:operator_name)
+      end
+
       def validate(db)
         add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
@@ -500,7 +504,7 @@ module ConceptQL
       end
 
       def validate_no_upstreams
-        add_error("has upstreams", @upstreams.inspect) unless @upstreams.empty?
+        add_error("has upstreams", upstream_operator_names) unless @upstreams.empty?
       end
 
       def validate_one_upstream
@@ -509,7 +513,7 @@ module ConceptQL
       end
 
       def validate_at_most_one_upstream
-        add_error("has multiple upstreams", @upstreams.inspect) if @upstreams.length > 1
+        add_error("has multiple upstreams", upstream_operator_names) if @upstreams.length > 1
       end
 
       def validate_at_least_one_upstream
