@@ -88,6 +88,10 @@ module ConceptQL
           end
         end
 
+        def uses_extra_ctes
+          define_method(:uses_extra_ctes?){true}
+        end
+
         validation_meths = (<<-END).split.map(&:to_sym)
           no_upstreams
           one_upstream
@@ -118,9 +122,12 @@ module ConceptQL
 
           # If operator has a label, replace it with a recall so all references
           # to it use the same code.
-          if operator.label && !operator.errors
+          if (label = operator.label) && !operator.errors
             operator.scope.add_operator(operator)
-            operator = Operators::Recall.new(operator.nodifier, operator.label, replaced: true)
+            if operator.uses_extra_ctes?
+              operator.scope.extra_cte_labels << label
+            end
+            operator = Operators::Recall.new(operator.nodifier, label, replaced: true)
           end
 
           operator
@@ -152,6 +159,10 @@ module ConceptQL
 
       def operator_name
         self.class.just_class_name.underscore
+      end
+
+      def uses_extra_ctes?
+        false
       end
 
       def annotate(db)

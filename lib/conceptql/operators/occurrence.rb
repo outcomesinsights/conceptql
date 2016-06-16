@@ -47,6 +47,7 @@ occurrence, this operator returns nothing for that person.
       allows_one_upstream
       validate_at_least_one_upstream
       option :unique, type: :boolean, label: 'Unique Source Values Only'
+      uses_extra_ctes
 
       def query_cols
         SELECTED_COLUMNS + [:rn]
