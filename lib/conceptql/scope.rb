@@ -12,7 +12,8 @@ module ConceptQL
   class Scope
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :extra_ctes
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation,
+         :extra_ctes, :extra_cte_labels
 
     def initialize
       @known_operators = {}
@@ -20,6 +21,7 @@ module ConceptQL
       @recall_stack = []
       @annotation = {}
       @extra_ctes = []
+      @extra_cte_labels = [] 
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
@@ -45,8 +47,8 @@ module ConceptQL
       @operators.uniq!
     end
 
-    def add_extra_cte(*args)
-      new_name = cte_name(args.shift)
+    def add_extra_cte(name, *args)
+      new_name = cte_name(name)
       @extra_ctes << [new_name, *args]
       new_name
     end
@@ -154,12 +156,29 @@ module ConceptQL
 
     def with_ctes(query, db)
       raise "recall operator use without matching label" unless valid?
-      ctes = sort_ctes([], known_operators, recall_dependencies)
 
-      ctes.each do |label, operator|
-        query = query.with(label, operator.evaluate(db))
+      # Handle case where operator with label uses ctes internally.
+      # Those CTEs need to come before any label usage that references
+      # them.
+      before_ops = {}
+      after_ops = {}
+      known_operators.each do |label, operator|
+        # Evaluate the operator early, as evaluating the operator is what sets
+        # up extra_ctes
+        (extra_cte_labels.include?(label) ? after_ops : before_ops)[label] = operator.evaluate(db)
       end
+
+      ctes = sort_ctes([], before_ops, recall_dependencies)
+      ctes.each do |label, ds|
+        query = query.with(label, ds)
+      end
+
       extra_ctes.each do |label, ds|
+        query = query.with(label, ds)
+      end
+
+      ctes = sort_ctes([], after_ops, recall_dependencies)
+      ctes.each do |label, ds|
         query = query.with(label, ds)
       end
 

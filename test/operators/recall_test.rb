@@ -1,7 +1,7 @@
 require_relative '../helper'
 
 describe ConceptQL::Operators::Recall do
-  it "should raise error if attmping executing invalid recall" do
+  it "should raise error if attempting to execute invalid recall" do
     proc do
       criteria_ids(
       ["after",
@@ -20,6 +20,15 @@ describe ConceptQL::Operators::Recall do
   end
 
   it "should produce correct results" do
+    criteria_ids(
+      [:union,
+        [:recall, 'label1'],
+        [:one_in_two_out,
+         [:icd9, '412'],
+         label: 'label1']
+      ]
+    ).must_equal("condition_occurrence"=>[1829, 6083, 8618, 9882, 15149, 17774, 18412, 20005, 21619, 24437, 24707, 25309, 25888, 26766, 28188, 31542, 31877])
+
     criteria_ids(
       [:union,
        ["icd9", "412", {"label": "Heart Attack"}],

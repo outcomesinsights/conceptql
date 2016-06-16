@@ -107,6 +107,10 @@ module ConceptQL
           end
         end
 
+        def uses_extra_ctes
+          define_method(:uses_extra_ctes?){true}
+        end
+
         validation_meths = (<<-END).split.map(&:to_sym)
           no_upstreams
           one_upstream
@@ -137,9 +141,12 @@ module ConceptQL
 
           # If operator has a label, replace it with a recall so all references
           # to it use the same code.
-          if operator.label && !operator.errors
+          if (label = operator.label) && !operator.errors
             operator.scope.add_operator(operator)
-            operator = Operators::Recall.new(operator.nodifier, operator.label, replaced: true)
+            if operator.uses_extra_ctes?
+              operator.scope.extra_cte_labels << label
+            end
+            operator = Operators::Recall.new(operator.nodifier, label, replaced: true)
           end
 
           operator
@@ -171,6 +178,10 @@ module ConceptQL
 
       def operator_name
         self.class.just_class_name.underscore
+      end
+
+      def uses_extra_ctes?
+        false
       end
 
       def annotate(db)
@@ -512,6 +523,10 @@ module ConceptQL
 
       # Validation Related
 
+      def upstream_operator_names
+        @upstreams.map(&:operator_name)
+      end
+
       def validate(db)
         add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
@@ -520,7 +535,7 @@ module ConceptQL
       end
 
       def validate_no_upstreams
-        add_error("has upstreams", @upstreams.inspect) unless @upstreams.empty?
+        add_error("has upstreams", upstream_operator_names) unless @upstreams.empty?
       end
 
       def validate_one_upstream
@@ -529,7 +544,7 @@ module ConceptQL
       end
 
       def validate_at_most_one_upstream
-        add_error("has multiple upstreams", @upstreams.inspect) if @upstreams.length > 1
+        add_error("has multiple upstreams", upstream_operator_names) if @upstreams.length > 1
       end
 
       def validate_at_least_one_upstream

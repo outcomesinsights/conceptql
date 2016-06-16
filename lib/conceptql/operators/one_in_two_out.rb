@@ -28,6 +28,7 @@ twice in an outpatient setting with a 30-day gap.
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 
       default_query_columns
+      uses_extra_ctes
 
       def query(db)
         db.extension :date_arithmetic
