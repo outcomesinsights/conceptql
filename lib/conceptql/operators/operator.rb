@@ -224,7 +224,9 @@ module ConceptQL
       end
 
       def select_it(query, specific_domain = nil)
-        specific_domain = domain if specific_domain.nil? && respond_to?(:domain)
+        if specific_domain.nil? && respond_to?(:domain) && TABLE_COLUMNS.keys.include?(domain)
+          specific_domain = domain
+        end
         q = query.select(*columns(query, specific_domain))
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self

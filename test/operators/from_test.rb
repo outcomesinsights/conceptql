@@ -2,9 +2,9 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::From do
   it "should produce correct results" do
-    dataset(
+    count(
       [:from, 'person']
-    ).count.must_equal(250)
+    ).must_equal(250)
 
     dataset(
       [:from, 'observation_period']
