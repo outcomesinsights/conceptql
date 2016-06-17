@@ -24,6 +24,7 @@ require 'logger'
 require 'pp'
 
 CDB = ConceptQL::Database.new(DB)
+DB.extension :error_sql
 
 class Minitest::Spec
   def query(statement)
@@ -33,6 +34,13 @@ class Minitest::Spec
   def dataset(statement)
     statement = query(statement) unless statement.is_a?(ConceptQL::Query)
     statement.query
+  end
+
+  def count(statement)
+    dataset(statement).count
+  rescue
+    puts $!.sql if $!.respond_to?(:sql)
+    raise
   end
 
   def criteria_ids(statement)
@@ -49,6 +57,9 @@ class Minitest::Spec
 
   def hash_groups(statement, key, value)
     dataset(statement).from_self.distinct.order(*value).to_hash_groups(key, value)
+  rescue
+    puts $!.sql if $!.respond_to?(:sql)
+    raise
   end
 
   def log

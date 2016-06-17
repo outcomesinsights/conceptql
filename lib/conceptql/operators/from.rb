@@ -22,6 +22,10 @@ module ConceptQL
         domains = values[1..99].compact
         domains.empty? ? [:invalid] : domains.map(&:to_sym)
       end
+
+      def domain
+        values.first.to_sym
+      end
     end
   end
 end

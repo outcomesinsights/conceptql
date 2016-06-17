@@ -28,20 +28,22 @@ twice in an outpatient setting with a 30-day gap.
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 
       default_query_columns
-      uses_extra_ctes
 
       def query(db)
         db.extension :date_arithmetic
-        faked_out = FakeOperator.new(nodifier,
-          inpatient_events(db).union(outpatient_events(db).from_self),
-          stream.domains)
+        faked_out = new_fake(nodifier,
+                             inpatient_events(db)
+                              .union(outpatient_events(db)
+                              .from_self),
+                            stream.domains)
         First.new(nodifier, faked_out).query(db)
       end
 
       private
 
       def inpatient_events(db)
-        q = db[marked_events(db)]
+        q = db[:in_out_events]
+              .with(:in_out_events, in_out_events(db))
               .where(type_id: inpatient_type_ids(db).union(db.select(Sequel.as(0, :type_id))))
 
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].zero?
@@ -66,17 +68,13 @@ twice in an outpatient setting with a 30-day gap.
       end
 
       def outpatient_events(db)
-        @outpat ||= scope.add_extra_cte(
-          :outpat_events,
-          db[marked_events(db)]
-            .exclude(type_id: inpatient_type_ids(db))
-        )
 
         min_gap = options[:outpatient_minimum_gap] || "30d"
         max_gap = options[:outpatient_maximum_gap]
 
-        q = db[@outpat].from_self(alias: :o1)
-              .join(db[@outpat].as(:o2), o1__person_id: :o2__person_id)
+        q = db[:outpat_events].from_self(alias: :o1)
+              .join(db[:outpat_events].as(:o2), o1__person_id: :o2__person_id)
+              .with(:outpat_events, outpat_events(db))
               .exclude(o1__criterion_id: :o2__criterion_id, o1__criterion_domain: :o2__criterion_domain)
 
         if min_gap.present?
@@ -93,11 +91,11 @@ twice in an outpatient setting with a 30-day gap.
           q = q.select_all(:o1)
         end
 
-        faked_out = FakeOperator.new(nodifier, q.from_self, stream.domains)
+        faked_out = new_fake(nodifier, q.from_self, stream.domains)
         First.new(nodifier, faked_out).query(db).select(*SELECTED_COLUMNS)
       end
 
-      def marked_events(db)
+      def in_out_events(db)
         # Just a heads up that I'm doing something sneaky in this line: I'm
         # asking the join to only happen if the criterion_domain of the row is
         # condition_occurrence
@@ -105,28 +103,33 @@ twice in an outpatient setting with a 30-day gap.
         # Under PostgreSQL, this seems to still return all rows on the left,
         # but seems to avoid joining against condtion_occurrence unless the
         # row itself is a condition_occurrence
-        @marked_events ||= scope.add_extra_cte(:in_out_events,
-            stream.evaluate(db)
-              .from_self(alias: :l)
-              .left_join(:condition_occurrence___c, { c__condition_occurrence_id: :l__criterion_id, l__criterion_domain: 'condition_occurrence' })
-              .select_all(:l)
-              .select_append(Sequel.function(:coalesce, :c__condition_type_concept_id, 0).as(:type_id))
-          )
+        stream.evaluate(db)
+          .from_self(alias: :l)
+          .left_join(:condition_occurrence___c, { c__condition_occurrence_id: :l__criterion_id, l__criterion_domain: 'condition_occurrence' })
+          .select_all(:l)
+          .select_append(Sequel.function(:coalesce, :c__condition_type_concept_id, 0).as(:type_id))
+      end
+
+      def outpat_events(db)
+        db[:in_out_events]
+          .with(:in_out_events, in_out_events(db))
+          .exclude(type_id: inpatient_type_ids(db))
+      end
+
+      def new_fake(nodifier, query, domains)
+        f = FakeOperator.new(nodifier)
+        f.domains = domains
+        f.q = query
+        f
       end
 
       class FakeOperator < Operator
         default_query_columns
 
-        attr :domains
-        def initialize(nodifier, query, domains)
-          @nodifier = nodifier
-          @query = query
-          @domains = domains
-          @options = {}
-        end
+        attr_accessor :domains, :q
 
         def query(db)
-          @query
+          @q
         end
       end
     end

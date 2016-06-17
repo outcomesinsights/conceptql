@@ -9,7 +9,7 @@ require_relative 'sql_formatter'
 module ConceptQL
   class Query
     extend Forwardable
-    def_delegators :all, :count, :execute, :order
+    def_delegators :query, :all, :count, :execute, :order
 
     attr :statement
     def initialize(db, statement, opts={})
