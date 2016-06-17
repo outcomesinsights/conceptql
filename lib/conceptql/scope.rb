@@ -12,16 +12,13 @@ module ConceptQL
   class Scope
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation,
-         :extra_ctes, :extra_cte_labels
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation
 
     def initialize
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
       @annotation = {}
-      @extra_ctes = []
-      @extra_cte_labels = [] 
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
@@ -45,12 +42,6 @@ module ConceptQL
       @operators << operator.operator_name
       @operators.compact!
       @operators.uniq!
-    end
-
-    def add_extra_cte(name, *args)
-      new_name = cte_name(name)
-      @extra_ctes << [new_name, *args]
-      new_name
     end
 
     def nest(op)
@@ -149,37 +140,13 @@ module ConceptQL
       true
     end
 
-    def cte_name(label)
-      @count ||= 0
-      (label.to_s + "_#{@count += 1}").to_sym
-    end
-
     def with_ctes(query, db)
       raise "recall operator use without matching label" unless valid?
+      query = query.from_self
 
-      # Handle case where operator with label uses ctes internally.
-      # Those CTEs need to come before any label usage that references
-      # them.
-      before_ops = {}
-      after_ops = {}
-      known_operators.each do |label, operator|
-        # Evaluate the operator early, as evaluating the operator is what sets
-        # up extra_ctes
-        (extra_cte_labels.include?(label) ? after_ops : before_ops)[label] = operator.evaluate(db)
-      end
-
-      ctes = sort_ctes([], before_ops, recall_dependencies)
-      ctes.each do |label, ds|
-        query = query.with(label, ds)
-      end
-
-      extra_ctes.each do |label, ds|
-        query = query.with(label, ds)
-      end
-
-      ctes = sort_ctes([], after_ops, recall_dependencies)
-      ctes.each do |label, ds|
-        query = query.with(label, ds)
+      ctes = sort_ctes([], known_operators, recall_dependencies)
+      ctes.each do |label, operator|
+        query = query.with(label, operator.evaluate(db))
       end
 
       query

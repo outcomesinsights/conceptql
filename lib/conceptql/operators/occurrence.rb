@@ -47,23 +47,25 @@ occurrence, this operator returns nothing for that person.
       allows_one_upstream
       validate_at_least_one_upstream
       option :unique, type: :boolean, label: 'Unique Source Values Only'
-      uses_extra_ctes
 
       def query_cols
         SELECTED_COLUMNS + [:rn]
       end
 
       def query(db)
-        cte_name = scope.add_extra_cte(:occurrences,
-            all_or_uniquified_results(db)
-              .from_self
-              .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) })
-        db[cte_name]
+        db[:occurrences]
+          .with(:occurrences, occurrences(db))
           .where(rn: occurrence.abs)
       end
 
       def occurrence
         @occurrence ||= arguments.first
+      end
+
+      def occurrences(db)
+        all_or_uniquified_results(db)
+          .from_self
+          .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) }
       end
 
       private
