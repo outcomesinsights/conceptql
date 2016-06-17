@@ -113,7 +113,7 @@ describe ConceptQL::Operators::Recall do
     query(
       [:recall, "foo", "bar"]
     ).annotate.must_equal(
-      ["recall", "foo", "bar", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has multiple arguments"]]}}]
+      ["recall", "foo", "bar", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has multiple arguments", ["foo", "bar"]]]}}]
     )
 
     query(

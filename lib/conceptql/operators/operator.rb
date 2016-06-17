@@ -530,7 +530,7 @@ module ConceptQL
       end
 
       def validate_at_most_one_argument
-        add_error("has multiple arguments") if @arguments.length > 1
+        add_error("has multiple arguments", @arguments) if @arguments.length > 1
       end
 
       def validate_at_least_one_argument
