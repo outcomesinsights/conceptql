@@ -18,7 +18,7 @@ describe ConceptQL::Operators::Person do
       ["person",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:person=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
+       {:annotation=>{:counts=>{:person=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams", ["icd9", "icd9"]]]}}]
     )
 
     query(
@@ -26,7 +26,7 @@ describe ConceptQL::Operators::Person do
     ).annotate.must_equal(
       ["person",
        "412",
-       {:annotation=>{:counts=>{:person=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:person=>{:n=>0, :rows=>0}}, :errors=>[["has arguments", ["412"]]]}}]
     )
   end
 end

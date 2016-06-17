@@ -48,7 +48,7 @@ describe ConceptQL::Operators::TimeWindow do
       ["time_window",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        21,
-       {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
+       {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments", [21]]]}}]
     )
 
     query(
@@ -57,7 +57,7 @@ describe ConceptQL::Operators::TimeWindow do
       ["time_window",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        ["place_of_service_code", "21", {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>170, :n=>92}}}}],
-       {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:visit_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:n=>0, :rows=>0}},:errors=>[["has multiple upstreams"]]}}]
+       {:start=>"-2y", :end=>"-2y", :annotation=>{:counts=>{:visit_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:n=>0, :rows=>0}},:errors=>[["has multiple upstreams", ["icd9", "place_of_service_code"]]]}}]
     )
   end
 end

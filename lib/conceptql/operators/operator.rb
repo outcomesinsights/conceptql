@@ -521,7 +521,7 @@ module ConceptQL
       end
 
       def validate_no_arguments
-        add_error("has arguments", @arguments.inspect) unless @arguments.empty?
+        add_error("has arguments", @arguments) unless @arguments.empty?
       end
 
       def validate_one_argument

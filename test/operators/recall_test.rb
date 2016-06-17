@@ -94,7 +94,7 @@ describe ConceptQL::Operators::Recall do
        ["recall",
         ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
         "Heart Attack",
-        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams"]]}}],
+        {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams", ["icd9"]]]}}],
       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}}}]
     )
 

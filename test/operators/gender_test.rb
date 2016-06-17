@@ -13,7 +13,7 @@ describe ConceptQL::Operators::Gender do
     ).annotate.must_equal(
       ["gender",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams"], ["has no arguments"]]}}]
+       {:annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams", ["icd9"]], ["has no arguments"]]}}]
     )
   end
 end

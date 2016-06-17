@@ -25,7 +25,7 @@ describe ConceptQL::Operators::First do
     query(
       [:first, 1]
     ).annotate.must_equal(
-      ["first", 1, {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments"]]}}]
+      ["first", 1, {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments", [1]]]}}]
     )
   end
 end

@@ -65,7 +65,7 @@ describe ConceptQL::Operators::After do
                  ["gender", "Male",{:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
                  {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}, :start=>"50y", :end=>"50y"}]},
        1,
-       { :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
+       { :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments", [1]]]}}]
     )
 
     # Check that within, at_least, and occurrences are checked
