@@ -11,8 +11,14 @@ Any result in the LHR with an end_date that occurs before the most recent start_
 All other results are discarded, including all results in the RHR.
       EOF
 
+      within_skip :before
+
       def right_stream(db)
         right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:max, :start_date).as(:start_date)).as(:r)
+      end
+
+      def within_column
+        :l__end_date
       end
 
       def where_clause

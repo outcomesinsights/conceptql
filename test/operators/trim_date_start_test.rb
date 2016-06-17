@@ -20,4 +20,13 @@ describe ConceptQL::Operators::TrimDateStart do
         :right=>[:date_range, {:start=>"2008-03-14", :end=>"2010-11-22"}]}]
     ).must_equal("condition_occurrence"=>[17774, 21619])
   end
+
+  it "should produce correct results when using :within option" do
+    criteria_ids(
+      [:trim_date_start,
+       {:left=>[:icd9, "412"],
+        :right=>[:date_range, {:start=>"2008-03-14", :end=>"2010-11-22"}],
+        :within=>'3d'}]
+    ).must_equal("condition_occurrence"=>[17774])
+  end
 end

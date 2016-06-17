@@ -14,6 +14,9 @@ R-----R
    R-----R
         L-----Y----L
       EOF
+
+      within_skip :after
+
       def right_stream(db)
         right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date)).as(:r)
       end
