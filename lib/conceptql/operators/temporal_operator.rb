@@ -17,7 +17,7 @@ module ConceptQL
       option :occurrences, type: :integer, desc: "Number of occurrences that must precede the event of interest, e.g. if you'd like the 4th event in a set of events, set occurrences to 3"
 
       validate_option DateAdjuster::VALID_INPUT, :within, :at_least
-      validate_option /\A\d+\Z/, :occurrences
+      validate_option /\A\d+\z/, :occurrences
 
       def self.within_skip(type)
         define_method(:"within_check_#{type}?"){false}
