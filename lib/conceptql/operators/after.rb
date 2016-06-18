@@ -21,6 +21,10 @@ R-----R
         right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date)).as(:r)
       end
 
+      def occurrences_column
+        :r__end_date
+      end
+
       def where_clause
         Proc.new { l__start_date > r__end_date }
       end

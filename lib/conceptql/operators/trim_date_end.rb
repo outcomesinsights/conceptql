@@ -45,7 +45,7 @@ is passed through unaffected.
                   .select(*new_columns)
                   .select_append(Sequel.as(Sequel.function(:least, :l__end_date, :r__start_date), :end_date))
 
-        ds = add_within_condition(ds)
+        ds = add_option_conditions(ds)
         ds.from_self
       end
 

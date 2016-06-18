@@ -18,6 +18,15 @@ describe ConceptQL::Operators::After do
     ).must_equal("condition_occurrence"=>[32104, 32981])
   end
 
+  it "should produce correct results when using :occurrences option" do
+    criteria_ids(
+      [:after,
+       {:left=>[:icd9, "412"],
+        :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}],
+        :occurrences=>1}]
+    ).must_equal("condition_occurrence"=>[17772, 21627, 24471, 24721, 25309, 25888, 28177, 32104])
+  end
+
   it "should handle upstream errors when annotating" do
     query(
       [:after,

@@ -46,11 +46,16 @@ is passed through unaffected.
                   .select(*new_columns)
                   .select_append(Sequel.as(Sequel.function(:greatest, :l__start_date, :r__end_date), :start_date))
 
-        ds = add_within_condition(ds)
+        ds = add_option_conditions(ds)
         ds.from_self
       end
 
       private
+
+      def occurrences_column
+        :r__end_date
+      end
+
       def new_columns
         (COLUMNS - [:start_date]).map { |col| "l__#{col}".to_sym }
       end

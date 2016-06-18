@@ -16,4 +16,10 @@ describe ConceptQL::Operators::Before do
       [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"], :within=>'30d'}]
     ).must_equal("condition_occurrence"=>[13741, 17774, 31542])
   end
+
+  it "should produce correct results when using :occurrences option" do
+    criteria_ids(
+      [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"], :occurrences=>1}]
+    ).must_equal("condition_occurrence"=>[1829, 17774, 20037, 24471, 24721, 25417, 25888, 28188, 31542])
+  end
 end
