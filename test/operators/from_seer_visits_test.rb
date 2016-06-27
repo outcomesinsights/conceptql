@@ -23,20 +23,107 @@ describe ConceptQL::Operators::FromSeerVisits do
     query(
       [:from_seer_visits]
     ).annotate.must_equal(
-      ["from_seer_visits", {:annotation=>{:counts=>{:observation=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"]]}}]
+      [
+        "from_seer_visits",
+        {
+          :annotation => {
+            :counts => {
+              :observation => {
+                :n => 0,
+                :rows => 0
+              }
+            },
+            :errors => [
+              [
+                "has no upstream"
+              ]
+            ]
+          }
+        }
+      ]
     )
 
     query(
       [:from_seer_visits, [:visit_occurrence, [:icd9, "412"]], [:visit_occurrence, [:icd9, "412"]]]
     ).annotate.must_equal(
-      ["from_seer_visits",
-       ["visit_occurrence",
-        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-        {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>50, :n=>38}}}}],
-       ["visit_occurrence",
-        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-        {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>50, :n=>38}}}}],
-       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams", ["visit_occurrence", "visit_occurrence"]]]}}]
+      [
+        "from_seer_visits",
+        [
+          "visit_occurrence",
+          [
+            "icd9",
+            "412",
+            {
+              :annotation => {
+                :counts => {
+                  :condition_occurrence => {
+                    :rows => 50,
+                    :n => 38
+                  }
+                }
+              },
+              :name => "ICD-9 CM"
+            }
+          ],
+          {
+            :annotation => {
+              :counts => {
+                :visit_occurrence => {
+                  :rows => 50,
+                  :n => 38
+                }
+              }
+            }
+          }
+        ],
+        [
+          "visit_occurrence",
+          [
+            "icd9",
+            "412",
+            {
+              :annotation => {
+                :counts => {
+                  :condition_occurrence => {
+                    :rows => 50,
+                    :n => 38
+                  }
+                }
+              },
+              :name => "ICD-9 CM"
+            }
+          ],
+          {
+            :annotation => {
+              :counts => {
+                :visit_occurrence => {
+                  :rows => 50,
+                  :n => 38
+                }
+              }
+            }
+          }
+        ],
+        {
+          :annotation => {
+            :counts => {
+              :visit_occurrence => {
+                :n => 0,
+                :rows => 0
+              }
+            },
+            :errors => [
+              [
+                "has multiple upstreams",
+                [
+                  "visit_occurrence",
+                  "visit_occurrence"
+                ]
+              ]
+            ]
+          }
+        }
+      ]
     )
   end
 end

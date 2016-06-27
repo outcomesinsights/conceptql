@@ -87,9 +87,45 @@ describe ConceptQL::Operators::ConditionType do
     query(
       [:condition_type, [:icd9, "412"]]
     ).annotate.must_equal(
-      ["condition_type",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams", ["icd9"]], ["has no arguments"]]}}]
+      [
+        "condition_type",
+        [
+          "icd9",
+          "412",
+          {
+            :annotation => {
+              :counts => {
+                :condition_occurrence => {
+                  :rows => 50,
+                  :n => 38
+                }
+              }
+            },
+            :name => "ICD-9 CM"
+          }
+        ],
+        {
+          :annotation => {
+            :counts => {
+              :condition_occurrence => {
+                :rows => 0,
+                :n => 0
+              }
+            },
+            :errors => [
+              [
+                "has upstreams",
+                [
+                  "icd9"
+                ]
+              ],
+              [
+                "has no arguments"
+              ]
+            ]
+          }
+        }
+      ]
     )
   end
 end
