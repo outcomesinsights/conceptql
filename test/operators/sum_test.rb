@@ -28,7 +28,7 @@ describe ConceptQL::Operators::Sum do
       ["sum",
        ["numeric", 1, {:annotation=>{:counts=>{:person=>{:rows=>250, :n=>250}}}}],
        21,
-       {:annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has arguments", [21]]]}}]
     )
   end
 end

@@ -25,7 +25,7 @@ describe ConceptQL::Operators::Count do
     query(
       [:count, 1]
     ).annotate.must_equal(
-      ["count", 1, {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments"]]}}]
+      ["count", 1, {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments", [1]]]}}]
     )
 
     query(
@@ -34,7 +34,7 @@ describe ConceptQL::Operators::Count do
       ["count",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        ["icd9", "401.9", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1125, :n=>213}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has multiple upstreams"]]}}]
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has multiple upstreams", ["icd9", "icd9"]]]}}]
     )
   end
 end

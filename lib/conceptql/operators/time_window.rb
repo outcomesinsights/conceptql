@@ -52,8 +52,6 @@ module ConceptQL
         adjusted_date(:end, :end_date)
       end
 
-      # NOTE: This produces PostgreSQL-specific date adjustment.  I'm not yet certain how to generalize this
-      # or make different versions based on RDBMS
       def adjusted_date(option_arg, column)
         adjusted_date = DateAdjuster.new(options[option_arg], manipulator: options[:manipulator]).adjust(column)
         adjusted_date.as(column)

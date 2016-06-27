@@ -36,7 +36,7 @@ describe ConceptQL::Operators::FromSeerVisits do
        ["visit_occurrence",
         ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
         {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>50, :n=>38}}}}],
-       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
+       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams", ["visit_occurrence", "visit_occurrence"]]]}}]
     )
   end
 end

@@ -22,7 +22,7 @@ describe ConceptQL::Operators::VisitOccurrence do
       ["visit_occurrence",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0,:rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
+       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0,:rows=>0}}, :errors=>[["has multiple upstreams", ["icd9", "icd9"]]]}}]
     )
 
     query(
@@ -31,7 +31,7 @@ describe ConceptQL::Operators::VisitOccurrence do
       ["visit_occurrence",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        21,
-       {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:visit_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has arguments", [21]]]}}]
     )
   end
 end

@@ -28,6 +28,7 @@ If the start_date of the result in the RHR is later than the end_date of the res
 is passed through unaffected.
       EOF
       allows_one_upstream
+      within_skip :before
 
       def query(db)
         grouped_right = db.from(right_stream(db)).select_group(:person_id).select_append(Sequel.as(Sequel.function(:min, :start_date), :start_date))
@@ -38,12 +39,18 @@ is passed through unaffected.
         # If the RHS's min start date is less than the LHS start date,
         # the entire LHS date range is truncated, which implies the row itself
         # is ineligible to pass thru
-        db.from(db.from(left_stream(db))
+        ds = db.from(left_stream(db))
                   .left_join(Sequel.as(grouped_right, :r), l__person_id: :r__person_id)
                   .where(where_criteria)
                   .select(*new_columns)
                   .select_append(Sequel.as(Sequel.function(:least, :l__end_date, :r__start_date), :end_date))
-               )
+
+        ds = add_option_conditions(ds)
+        ds.from_self
+      end
+
+      def within_column
+        :l__end_date
       end
 
       private

@@ -39,7 +39,7 @@ describe ConceptQL::Operators::Intersect do
     query(
       [:intersect, 1]
     ).annotate.must_equal(
-      ["intersect", 1, {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"], ["has arguments"]]}}]
+      ["intersect", 1, {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"], ["has arguments", [1]]]}}]
     )
   end
 end

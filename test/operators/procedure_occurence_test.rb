@@ -25,7 +25,7 @@ describe ConceptQL::Operators::ProcedureOccurrence do
       ["procedure_occurrence",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
-       {:annotation=>{:counts=>{:procedure_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams"]]}}]
+       {:annotation=>{:counts=>{:procedure_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams", ["icd9", "gender"]]]}}]
     )
 
     query(
@@ -34,7 +34,7 @@ describe ConceptQL::Operators::ProcedureOccurrence do
       ["procedure_occurrence",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        21,
-       {:annotation=>{:counts=>{:procedure_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
+       {:annotation=>{:counts=>{:procedure_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments", [21]]]}}]
     )
   end
 end

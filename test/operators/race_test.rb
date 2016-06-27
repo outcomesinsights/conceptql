@@ -14,7 +14,7 @@ describe ConceptQL::Operators::Race do
       ["race",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        "Black or African American",
-       {:annotation=>{:counts=>{:person=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams"]]}}]
+       {:annotation=>{:counts=>{:person=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams", ["icd9"]]]}}]
     )
 
     query(
