@@ -114,7 +114,10 @@ describe ConceptQL::Operators::ConditionType do
             },
             :errors => [
               [
-                "has upstreams"
+                "has upstreams",
+                [
+                  "icd9"
+                ]
               ],
               [
                 "has no arguments"

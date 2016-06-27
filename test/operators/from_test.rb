@@ -52,7 +52,10 @@ describe ConceptQL::Operators::From do
             },
             :errors => [
               [
-                "has upstreams"
+                "has upstreams",
+                [
+                  "icd9"
+                ]
               ],
               [
                 "has no arguments"
@@ -80,7 +83,11 @@ describe ConceptQL::Operators::From do
             },
             :errors => [
               [
-                "has multiple arguments"
+                "has multiple arguments",
+                [
+                  "person",
+                  "observation_period"
+                ]
               ]
             ]
           }

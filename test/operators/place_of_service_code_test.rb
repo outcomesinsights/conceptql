@@ -14,7 +14,7 @@ describe ConceptQL::Operators::PlaceOfServiceCode do
       ["place_of_service_code",
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        21,
-       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams"]]}}]
+       {:annotation=>{:counts=>{:visit_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams", ["icd9"]]]}}]
     )
 
     query(

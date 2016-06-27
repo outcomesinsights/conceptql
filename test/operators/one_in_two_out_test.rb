@@ -19,14 +19,14 @@ describe ConceptQL::Operators::OneInTwoOut do
       [:one_in_two_out, {:gap=>30, :blah=>true}]
     ).annotate.must_equal(
       ["one_in_two_out",{:gap=>30, :blah=>true,
-                         :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["required option not present", "outpatient_minimum_gap"]]}}]
+                         :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"]]}}]
     )
 
     query(
       [:one_in_two_out, 1, {:gap=>30, :blah=>true}]
     ).annotate.must_equal(
       ["one_in_two_out", 1, {:gap=>30, :blah=>true,
-                             :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments"], ["required option not present", "outpatient_minimum_gap"]]}}]
+                             :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments", [1]]]}}]
     )
 
     query(
@@ -36,7 +36,7 @@ describe ConceptQL::Operators::OneInTwoOut do
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
        {:gap=>30, :blah=>true,
-        :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has multiple upstreams"], ["required option not present", "outpatient_minimum_gap"]]}}]
+        :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has multiple upstreams", ["icd9", "icd9"]]]}}]
     )
   end
 end

@@ -38,7 +38,10 @@ describe ConceptQL::Operators::Icd10 do
             },
             :errors => [
               [
-                "has upstreams"
+                "has upstreams",
+                [
+                  "icd9"
+                ]
               ],
               [
                 "has no arguments"

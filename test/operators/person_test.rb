@@ -104,7 +104,11 @@ describe ConceptQL::Operators::Person do
             },
             :errors => [
               [
-                "has multiple upstreams"
+                "has multiple upstreams",
+                [
+                  "icd9",
+                  "icd9"
+                ]
               ]
             ]
           }
@@ -128,7 +132,10 @@ describe ConceptQL::Operators::Person do
             },
             :errors => [
               [
-                "has arguments"
+                "has arguments",
+                [
+                  "412"
+                ]
               ]
             ]
           }

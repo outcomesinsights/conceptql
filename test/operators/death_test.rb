@@ -55,7 +55,11 @@ describe ConceptQL::Operators::Death do
             },
             :errors => [
               [
-                "has multiple upstreams"
+                "has multiple upstreams",
+                [
+                  "person",
+                  "icd9"
+                ]
               ]
             ]
           }
@@ -79,7 +83,10 @@ describe ConceptQL::Operators::Death do
             },
             :errors => [
               [
-                "has arguments"
+                "has arguments",
+                [
+                  "412"
+                ]
               ]
             ]
           }

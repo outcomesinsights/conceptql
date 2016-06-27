@@ -32,7 +32,7 @@ describe ConceptQL::Operators::Invalid do
 
   it "should annotate left and right options if provided" do
     query(
-      [:bad_op, {left: [:icd9, "412"], right: [:icd9, "410"]}]
+      [:bad_op, {left: [:icd9, "412"], right: [:icd9, "ZZZZZZZ"]}]
     ).annotate.must_equal(
       [
         "bad_op",
@@ -54,7 +54,7 @@ describe ConceptQL::Operators::Invalid do
           ],
           :right => [
             "icd9",
-            "410",
+            "ZZZZZZZ",
             {
               :annotation => {
                 :counts => {
@@ -62,7 +62,13 @@ describe ConceptQL::Operators::Invalid do
                     :rows => 0,
                     :n => 0
                   }
-                }
+                },
+                :warnings => [
+                  [
+                    "invalid source code",
+                    "ZZZZZZZ"
+                  ]
+                ]
               },
               :name => "ICD-9 CM"
             }

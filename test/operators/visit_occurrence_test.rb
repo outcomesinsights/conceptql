@@ -121,7 +121,11 @@ describe ConceptQL::Operators::VisitOccurrence do
             },
             :errors => [
               [
-                "has multiple upstreams"
+                "has multiple upstreams",
+                [
+                  "icd9",
+                  "icd9"
+                ]
               ]
             ]
           }
@@ -160,7 +164,10 @@ describe ConceptQL::Operators::VisitOccurrence do
             },
             :errors => [
               [
-                "has arguments"
+                "has arguments",
+                [
+                  21
+                ]
               ]
             ]
           }

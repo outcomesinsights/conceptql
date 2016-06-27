@@ -58,7 +58,10 @@ describe ConceptQL::Operators::Count do
                 "has no upstream"
               ],
               [
-                "has arguments"
+                "has arguments",
+                [
+                  1
+                ]
               ]
             ]
           }
@@ -111,7 +114,11 @@ describe ConceptQL::Operators::Count do
             },
             :errors => [
               [
-                "has multiple upstreams"
+                "has multiple upstreams",
+                [
+                  "icd9",
+                  "icd9"
+                ]
               ]
             ]
           }

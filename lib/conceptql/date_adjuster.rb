@@ -17,11 +17,12 @@ module ConceptQL
       @adjustments ||= parse(str)
     end
 
-    def adjust(column)
+    def adjust(column, reverse=false)
       return Sequel.expr(:end_date) if str.downcase == 'end'
       return Sequel.expr(:start_date) if str.downcase == 'start'
       return Sequel.cast(Date.parse(str).strftime('%Y-%m-%d'), Date) if str =~ /^\d{4}-\d{2}-\d{2}$/
       adjusted_date = adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
+        quantity *= -1 if reverse
         if quantity > 0
           manipulator.date_add(sql, units => quantity)
         else

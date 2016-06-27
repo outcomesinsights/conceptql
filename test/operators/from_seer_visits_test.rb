@@ -114,7 +114,11 @@ describe ConceptQL::Operators::FromSeerVisits do
             },
             :errors => [
               [
-                "has multiple upstreams"
+                "has multiple upstreams",
+                [
+                  "visit_occurrence",
+                  "visit_occurrence"
+                ]
               ]
             ]
           }

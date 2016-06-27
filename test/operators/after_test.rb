@@ -9,6 +9,24 @@ describe ConceptQL::Operators::After do
     ).must_equal("condition_occurrence"=>[3995, 5069, 8725, 10403, 10590, 11228, 11589, 11800, 13893, 14702, 14854, 23411, 24627, 25492, 26245, 27343, 38787, 50019, 50933, 52644, 52675, 53214, 53216, 53630, 55383, 56970, 57705, 58596, 58610, 58623, 59732, 59785])
   end
 
+  it "should produce correct results when using :within option" do
+    criteria_ids(
+      [:after,
+       {:left=>[:icd9, "412"],
+        :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}],
+        :within=>"3000d"}]
+    ).must_equal("condition_occurrence"=>[32104, 32981])
+  end
+
+  it "should produce correct results when using :occurrences option" do
+    criteria_ids(
+      [:after,
+       {:left=>[:icd9, "412"],
+        :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}],
+        :occurrences=>1}]
+    ).must_equal("condition_occurrence"=>[17772, 21627, 24471, 24721, 25309, 25888, 28177, 32104])
+  end
+
   it "should handle upstream errors when annotating" do
     query(
       [:after,
@@ -65,7 +83,7 @@ describe ConceptQL::Operators::After do
                  ["gender", "Male",{:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
                  {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}, :start=>"50y", :end=>"50y"}]},
        1,
-       { :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments"]]}}]
+       { :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["has arguments", [1]]]}}]
     )
 
     # Check that within, at_least, and occurrences are checked

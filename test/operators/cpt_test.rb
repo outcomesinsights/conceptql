@@ -218,7 +218,10 @@ describe ConceptQL::Operators::Cpt do
             },
             :errors => [
               [
-                "has upstreams"
+                "has upstreams",
+                [
+                  "icd9"
+                ]
               ],
               [
                 "has no arguments"

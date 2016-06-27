@@ -169,7 +169,10 @@ describe ConceptQL::Operators::Gender do
             },
             :errors => [
               [
-                "has upstreams"
+                "has upstreams",
+                [
+                  "icd9"
+                ]
               ],
               [
                 "has no arguments"
