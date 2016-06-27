@@ -25,18 +25,67 @@ describe ConceptQL::Operators::From do
     query(
       [:from, [:icd9, "412"]]
     ).annotate.must_equal(
-      ["from",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams"], ["has no arguments"]]}}]
+      [
+        "from",
+        [
+          "icd9",
+          "412",
+          {
+            :annotation => {
+              :counts => {
+                :condition_occurrence => {
+                  :rows => 55,
+                  :n => 42
+                }
+              }
+            },
+            :name => "ICD-9 CM"
+          }
+        ],
+        {
+          :annotation => {
+            :counts => {
+              :invalid => {
+                :n => 0,
+                :rows => 0
+              }
+            },
+            :errors => [
+              [
+                "has upstreams"
+              ],
+              [
+                "has no arguments"
+              ]
+            ]
+          }
+        }
+      ]
     )
 
     query(
       [:from, 'person', 'observation_period']
     ).annotate.must_equal(
-      ["from",
-       'person',
-       'observation_period',
-       {:annotation=>{:counts=>{:observation_period=>{:n=>0, :rows=>0}}, :errors=>[["has multiple arguments"]]}}]
+      [
+        "from",
+        "person",
+        "observation_period",
+        {
+          :annotation => {
+            :counts => {
+              :observation_period => {
+                :n => 0,
+                :rows => 0
+              }
+            },
+            :errors => [
+              [
+                "has multiple arguments"
+              ]
+            ]
+          }
+        }
+      ]
     )
   end
 end

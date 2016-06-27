@@ -19,22 +19,104 @@ describe ConceptQL::Operators::Count do
     query(
       [:count]
     ).annotate.must_equal(
-      ["count", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"]]}}]
+      [
+        "count",
+        {
+          :annotation => {
+            :counts => {
+              :invalid => {
+                :rows => 0,
+                :n => 0
+              }
+            },
+            :errors => [
+              [
+                "has no upstream"
+              ]
+            ]
+          }
+        }
+      ]
     )
 
     query(
       [:count, 1]
     ).annotate.must_equal(
-      ["count", 1, {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["has no upstream"], ["has arguments"]]}}]
+      [
+        "count",
+        1,
+        {
+          :annotation => {
+            :counts => {
+              :invalid => {
+                :rows => 0,
+                :n => 0
+              }
+            },
+            :errors => [
+              [
+                "has no upstream"
+              ],
+              [
+                "has arguments"
+              ]
+            ]
+          }
+        }
+      ]
     )
 
     query(
       [:count, [:icd9, "412"], [:icd9, "401.9"]]
     ).annotate.must_equal(
-      ["count",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
-       ["icd9", "401.9", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1723, :n=>217}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has multiple upstreams"]]}}]
+      [
+        "count",
+        [
+          "icd9",
+          "412",
+          {
+            :annotation => {
+              :counts => {
+                :condition_occurrence => {
+                  :rows => 55,
+                  :n => 42
+                }
+              }
+            },
+            :name => "ICD-9 CM"
+          }
+        ],
+        [
+          "icd9",
+          "401.9",
+          {
+            :annotation => {
+              :counts => {
+                :condition_occurrence => {
+                  :rows => 1723,
+                  :n => 217
+                }
+              }
+            },
+            :name => "ICD-9 CM"
+          }
+        ],
+        {
+          :annotation => {
+            :counts => {
+              :condition_occurrence => {
+                :rows => 0,
+                :n => 0
+              }
+            },
+            :errors => [
+              [
+                "has multiple upstreams"
+              ]
+            ]
+          }
+        }
+      ]
     )
   end
 end
