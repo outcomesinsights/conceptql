@@ -82,6 +82,26 @@ module ConceptQL
       end
     end
 
+    desc 'selection_operators', 'Generates a TSV of all the selection operators'
+    def selection_operators
+      require 'csv'
+      CSV.open('selection_operators.tsv', 'w', col_sep: "\t") do |csv|
+        csv << ["name"]
+        ConceptQL.metadata[:operators].values.select { |v| v[:basic_type] == :selection }.map { |v| v[:preferred_name] }.each do |name|
+          csv << [name]
+        end
+      end
+
+      CSV.open('domains.tsv', 'w', col_sep: "\t") do |csv|
+        csv << ["name"]
+        ConceptQL::Operators::TABLE_COLUMNS.each do |domain, columns|
+          next unless columns.include?(:person_id)
+          next if domain.to_s =~ /era\Z/
+          csv << [domain]
+        end
+      end
+    end
+
     desc 'knit', 'Processes ConceptQL fenced code segments and produces a Markdown file'
     option :ignore_cache, type: :boolean
     def knit(file)
