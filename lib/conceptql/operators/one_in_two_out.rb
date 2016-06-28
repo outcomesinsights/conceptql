@@ -30,7 +30,6 @@ twice in an outpatient setting with a 30-day gap.
       default_query_columns
 
       def query(db)
-        db.extension :date_arithmetic
         faked_out = new_fake(nodifier,
                              inpatient_events(db)
                               .union(outpatient_events(db)

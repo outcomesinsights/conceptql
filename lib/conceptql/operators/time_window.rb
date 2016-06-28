@@ -34,7 +34,6 @@ module ConceptQL
       default_query_columns
 
       def query(db)
-        db.extension :date_arithmetic
         db.from(stream.evaluate(db))
       end
 

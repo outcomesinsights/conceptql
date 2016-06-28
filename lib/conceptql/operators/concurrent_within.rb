@@ -17,7 +17,6 @@ module ConceptQL
       default_query_columns
 
       def query(db)
-        db.extension :date_arithmetic
         datasets = upstreams.map do |stream|
           stream.evaluate(db)
         end 
