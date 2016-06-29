@@ -9,6 +9,7 @@ module ConceptQL
       desc 'Filters each upstream to only include rows where there are matching entries in each of the other upstreams.'
       option :start, type: :string
       option :end, type: :string
+      allows_many_upstreams
       validate_at_least_one_upstream
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
@@ -19,7 +20,7 @@ module ConceptQL
       def query(db)
         datasets = upstreams.map do |stream|
           stream.evaluate(db)
-        end 
+        end
 
         return datasets.first.from_self if datasets.length == 1
 
