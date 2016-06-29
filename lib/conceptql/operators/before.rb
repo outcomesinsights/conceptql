@@ -14,7 +14,11 @@ All other results are discarded, including all results in the RHR.
       within_skip :before
 
       def right_stream(db)
-        right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:max, :start_date).as(:start_date)).as(:r)
+        unless compare_all?
+          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:max, :start_date).as(:start_date)).as(:r)
+        else
+          right.evaluate(db).from_self.as(:r)
+        end
       end
 
       def within_column
@@ -23,6 +27,10 @@ All other results are discarded, including all results in the RHR.
 
       def where_clause
         Proc.new { l__end_date < r__start_date }
+      end
+
+      def compare_all?
+        !(options.keys & [:within, :at_least, :occurrences]).empty?
       end
     end
   end

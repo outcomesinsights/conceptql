@@ -18,7 +18,11 @@ R-----R
       within_skip :after
 
       def right_stream(db)
-        right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date)).as(:r)
+        unless compare_all?
+          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date)).as(:r)
+        else
+          right.evaluate(db).from_self.as(:r)
+        end
       end
 
       def occurrences_column
@@ -27,6 +31,10 @@ R-----R
 
       def where_clause
         Proc.new { l__start_date > r__end_date }
+      end
+
+      def compare_all?
+        !(options.keys & [:within, :at_least, :occurrences]).empty?
       end
     end
   end
