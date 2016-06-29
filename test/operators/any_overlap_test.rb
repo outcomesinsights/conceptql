@@ -24,6 +24,15 @@ describe ConceptQL::Operators::AnyOverlap do
     ).must_equal("condition_occurrence"=>[10443, 13741, 24989, 31877])
   end
 
+  it "should produce correct results when using :at_least option" do
+    criteria_ids(
+      [:any_overlap,
+       {:left=>[:icd9, "412"],
+        :right=>[:date_range, {:start=>"2010-01-01", :end=>"2010-12-31"}],
+        :at_least =>'-200d'}]
+    ).must_equal("condition_occurrence"=>[13741, 24989])
+  end
+
   it "should produce correct results when using :occurrences option" do
     criteria_ids(
       [:any_overlap,
