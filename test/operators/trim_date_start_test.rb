@@ -30,6 +30,15 @@ describe ConceptQL::Operators::TrimDateStart do
     ).must_equal("condition_occurrence"=>[17774])
   end
 
+  it "should produce correct results when using :at_least option" do
+    criteria_ids(
+      [:trim_date_start,
+       {:left=>[:icd9, "412"],
+        :right=>[:date_range, {:start=>"2008-03-14", :end=>"2010-11-22"}],
+        :at_least=>'30d'}]
+    ).must_equal("condition_occurrence"=>[21619])
+  end
+
   it "should produce correct results when using :occurrences option" do
     criteria_ids(
       [:trim_date_start,

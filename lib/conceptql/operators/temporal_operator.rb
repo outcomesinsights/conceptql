@@ -38,6 +38,10 @@ module ConceptQL
           ds = add_within_condition(ds, within)
         end
 
+        if at_least = options[:at_least]
+          ds = add_within_condition(ds, at_least, :exclude)
+        end
+
         if occurrences = options[:occurrences]
           ds = add_occurrences_condition(ds, occurrences)
         end
@@ -45,13 +49,13 @@ module ConceptQL
         ds
       end
 
-      def add_within_condition(ds, within)
+      def add_within_condition(ds, within, meth=:where)
         within = DateAdjuster.new(within)
         after = within.adjust(:r__start_date, true)
         before = within.adjust(:r__end_date)
         within_col = Sequel.expr(within_column)
-        ds = ds.where{within_col >= after} if within_check_after?
-        ds = ds.where{within_col <= before} if within_check_before?
+        ds = ds.send(meth){within_col >= after} if within_check_after?
+        ds = ds.send(meth){within_col <= before} if within_check_before?
         ds
       end
 
