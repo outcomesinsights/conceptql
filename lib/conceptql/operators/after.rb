@@ -26,7 +26,7 @@ R-----R
       end
 
       def occurrences_column
-        :r__end_date
+        :end_date
       end
 
       def where_clause

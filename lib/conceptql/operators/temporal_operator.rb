@@ -57,10 +57,11 @@ module ConceptQL
 
       def add_occurrences_condition(ds, occurrences)
         occurrences_col = occurrences_column
-        ds.select_append{row_number{}.over(:partition => :r__person_id, :order => occurrences_col).as(:occurrence)}
+        ds.distinct.from_self
+          .select_append{row_number{}.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
           .from_self
           .select(*query_columns(ds))
-          .where{occurrence > occurrences}
+          .where{occurrence > occurrences.to_i}
       end
 
       def within_column
@@ -68,7 +69,7 @@ module ConceptQL
       end
 
       def occurrences_column
-        :r__start_date
+        :start_date
       end
 
       def within_check_after?

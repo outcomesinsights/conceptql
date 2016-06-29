@@ -53,7 +53,7 @@ is passed through unaffected.
       private
 
       def occurrences_column
-        :r__end_date
+        :end_date
       end
 
       def new_columns
