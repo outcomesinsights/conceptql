@@ -43,8 +43,40 @@ class Minitest::Spec
     raise
   end
 
-  def criteria_ids(statement)
-    hash_groups(statement, :criterion_domain, :criterion_id)
+  def criteria_ids(testName, statement)
+    statement = load_statement(testName, statement)
+    results = hash_groups(statement, :criterion_domain, :criterion_id)
+    check_output(testName, results)
+    return results
+  end
+
+  # If no statement is passed, this function loads the statement from the specified test
+  # file. If a statement is passed, it is written to the file.
+  def load_statement(testName, statement=nil)
+    statementPath = "test/statements/" + testName
+    if statement
+      jsonStatement = JSON.generate(statement)
+      FileUtils.mkdir_p(File.dirname(statementPath))
+      File.open(statementPath, 'w') { |file| file.write(jsonStatement) }
+      return statement
+    else
+      File.open(statementPath, 'r') { |file| statement = file.read }
+      return JSON.parse(statement)
+    end
+  end
+
+  def check_output(testName, results)
+    actualOutput = JSON.generate(results)
+    expectedOutputPath = "test/results/" + ENV["DATA_MODEL"] + "/" + testName
+    if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
+      FileUtils.mkdir_p(File.dirname(expectedOutputPath))
+      File.open(expectedOutputPath, 'w') { |file| file.write(actualOutput) }
+    else
+      File.open(expectedOutputPath, 'r') do |file|
+        expectedOutput = file.read
+        actualOutput.must_equal(expectedOutput)
+      end
+    end
   end
 
   def numeric_values(statement)
