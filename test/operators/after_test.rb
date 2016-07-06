@@ -28,18 +28,18 @@ describe ConceptQL::Operators::After do
   end
 
   it "should handle upstream errors when annotating" do
-    query(
+    annotate("after/anno_1",
       [:after,
        {:left=>"412",
         :right=>:time_window}]
-    ).annotate.must_equal(
+    ).must_equal(
       ["after", {:left=>"412", :right=>:time_window, :annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}},:errors=>[["wrong option format", "left"], ["wrong option format", "right"]]}}]
     )
 
-    query(
+    annotate("after/anno_2",
       [:after,
        {:right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}]}]
-    ).annotate.must_equal(
+    ).must_equal(
       ["after",
        {:right=>["time_window",
                  ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
@@ -47,20 +47,20 @@ describe ConceptQL::Operators::After do
         :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["required option not present", "left"]]}}]
     )
 
-    query(
+    annotate("after/anno_3",
       [:after,
        {:left=>[:icd9, "412"]}]
-    ).annotate.must_equal(
+    ).must_equal(
       ["after",
        {:left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
         :annotation=>{:counts=>{:condition_occurrence=>{:n=>0, :rows=>0}}, :errors=>[["required option not present", "right"]]}}]
     )
 
-    query(
+    annotate("after/anno_4",
       [:after,
        {:left=>[:union],
         :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}]}]
-    ).annotate.must_equal(
+    ).must_equal(
       ["after",
        {:left=>["union", {
         :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has no upstream"]]}}],
@@ -70,12 +70,12 @@ describe ConceptQL::Operators::After do
         :annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}}}]
     )
 
-    query(
+    annotate("after/anno_5",
       [:after,
        1,
        {:left=>[:icd9, "412"],
         :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}]}]
-    ).annotate.must_equal(
+    ).must_equal(
       ["after",
        {
         :left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
@@ -87,7 +87,7 @@ describe ConceptQL::Operators::After do
     )
 
     # Check that within, at_least, and occurrences are checked
-    query(
+    annotate("after/anno_6",
       [:after,
        {:left=>[:icd9, "412"],
         :right=>[:icd9, "412"],
@@ -95,7 +95,7 @@ describe ConceptQL::Operators::After do
         :at_least=> 'cba',
         :occurrences=> 'bac'
       }]
-    ).annotate.must_equal(
+    ).must_equal(
       ["after", {
         :left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
         :right=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],

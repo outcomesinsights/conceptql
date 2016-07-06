@@ -27,6 +27,13 @@ CDB = ConceptQL::Database.new(DB)
 DB.extension :error_sql
 
 class Minitest::Spec
+  def annotate(testName, statement)
+    load_statement(testName, statement)
+    results = query(statement).annotate
+    check_output(testName, results)
+    return results
+  end
+
   def query(statement)
     CDB.query(statement)
   end
@@ -36,8 +43,11 @@ class Minitest::Spec
     statement.query
   end
 
-  def count(statement)
-    dataset(statement).count
+  def count(testName, statement)
+    oad_statement(testName, statement)
+    results = dataset(statement).count
+    check_output(testName, results)
+    return results
   rescue
     puts $!.sql if $!.respond_to?(:sql)
     raise
