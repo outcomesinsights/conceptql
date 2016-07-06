@@ -4,6 +4,7 @@ require 'thor'
 require 'sequelizer'
 require 'json'
 require 'pp'
+require 'csv'
 require_relative 'query'
 require_relative 'knitter'
 
@@ -110,6 +111,20 @@ module ConceptQL
         opts[:cache_options] = { ignore: true }
       end
       ConceptQL::Knitter.new(ConceptQL::Database.new(db), file, opts).knit
+    end
+
+    desc 'dumpit', 'Dumps out test data into CSVs'
+    def dumpit(path)
+      path = Pathname.new(path)
+      path.mkpath unless path.exist?
+      db.tables.each do |table|
+        puts "Dumping #{table}..."
+        ds = db[table]
+        rows = ds.select_map(ds.columns)
+        CSV.open(path + "#{table}.csv", "wb") do |csv|
+          rows.each { |row| csv << row }
+        end
+      end
     end
 
     private
