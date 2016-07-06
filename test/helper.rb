@@ -25,7 +25,7 @@ require 'minitest/autorun'
 require 'logger'
 require 'pp'
 
-CDB = ConceptQL::Database.new(DB)
+CDB = ConceptQL::Database.new(DB, :data_model=>ENV['DATA_MODEL'].to_sym)
 DB.extension :error_sql
 
 class Minitest::Spec
