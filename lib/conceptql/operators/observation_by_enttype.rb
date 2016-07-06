@@ -3,7 +3,7 @@ require_relative 'source_vocabulary_operator'
 module ConceptQL
   module Operators
     class ObservationByEnttype < SourceVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       argument :enttypes, type: :codelist, vocab_id: [206, 207]
       predominant_domains :observation

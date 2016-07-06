@@ -3,7 +3,7 @@ require_relative 'operator'
 module ConceptQL
   module Operators
     class Gender < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Returns all person records that match the selected gender.'
       argument :gender, type: :string, options: ['Male', 'Female']

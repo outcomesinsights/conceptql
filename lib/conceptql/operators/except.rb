@@ -3,7 +3,7 @@ require_relative 'binary_operator_operator'
 module ConceptQL
   module Operators
     class Except < BinaryOperatorOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'If a result in the left hand results (LHR) appears in the right hand results (RHR), it is removed from the output result set.'
       default_query_columns

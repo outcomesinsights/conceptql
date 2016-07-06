@@ -3,7 +3,7 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class From < Operator
-      register __FILE__, :omopv4
+      register __FILE__
       basic_type :selection
       no_desc
       validate_no_upstreams

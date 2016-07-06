@@ -3,7 +3,7 @@ require_relative 'source_vocabulary_operator'
 module ConceptQL
   module Operators
     class Ndc < SourceVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name 'NDC'
       argument :ndcs, type: :codelist, vocab: 'NDC'

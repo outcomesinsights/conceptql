@@ -3,7 +3,7 @@ require_relative 'operator'
 module ConceptQL
   module Operators
     class ToSeerVisits < Operator
-      register __FILE__, :omopv4
+      register __FILE__
       no_desc
       validate_no_upstreams
       validate_no_arguments

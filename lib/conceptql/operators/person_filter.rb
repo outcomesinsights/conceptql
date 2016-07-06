@@ -3,7 +3,7 @@ require_relative 'binary_operator_operator'
 module ConceptQL
   module Operators
     class PersonFilter < BinaryOperatorOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'If a result in the left hand results (LHR) matches a person in the right hand results (RHR), it is passed through.'
       default_query_columns

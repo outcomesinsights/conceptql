@@ -15,7 +15,7 @@ module ConceptQL
     # If we ask for the first occurrence of something and a person has no
     # occurrences, this operator returns nothing for that person
     class First < Occurrence
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Only passes through the result with the earliest start_date per person.  If more than one result qualifies, the result is arbitrarily chosen.'
 

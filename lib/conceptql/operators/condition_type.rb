@@ -10,7 +10,7 @@ module ConceptQL
     #
     # Multiple types can be specified at once
     class ConditionType < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Returns all conditions that match the given set of Condition Types.'
       argument :condition_types, type: :codelist, vocab: 'Condition Type'

@@ -3,7 +3,7 @@ require_relative 'source_vocabulary_operator'
 module ConceptQL
   module Operators
     class Prodcode < SourceVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       argument :prodcodes, type: :codelist, vocab_id: '203'
       predominant_domains :drug_exposure

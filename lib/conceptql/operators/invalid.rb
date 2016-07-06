@@ -1,7 +1,7 @@
 module ConceptQL
   module Operators
     class Invalid < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       no_desc
       default_query_columns

@@ -6,7 +6,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4=>{}}.freeze
+    OPERATORS = {:omopv4=>{}, :cdmv4_plus=>{}}.freeze
 
     SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
@@ -90,6 +90,7 @@ module ConceptQL
         attr :validations
 
         def register(file, *data_models)
+          data_models = OPERATORS.keys if data_models.empty?
           data_models.each do |dm|
             OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
           end

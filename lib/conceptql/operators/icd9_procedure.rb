@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Icd9Procedure < StandardVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name 'ICD-9 Proc'
       argument :icd9s, type: :codelist, vocab: 'ICD9Proc'

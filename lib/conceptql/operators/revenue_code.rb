@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class RevenueCode < StandardVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Searches the procedure_occurrence table for all procedures that have an associated procedure_cost record with matching revenue codes'
       argument :revenue_codes, type: :codelist, vocab: 'Revenue Code'

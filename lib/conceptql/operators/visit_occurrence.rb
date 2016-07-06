@@ -3,7 +3,7 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class VisitOccurrence < CastingOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Generates all visit_occurrence records, or, if fed a stream, fetches all visit_occurrence records for the people represented in the incoming result set.'
       allows_one_upstream
