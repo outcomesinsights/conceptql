@@ -1,7 +1,6 @@
 require 'sequelizer'
 
 DB = Object.new.extend(Sequelizer).db unless defined?(DB)
-DB.extension :date_arithmetic
 
 unless DB.table_exists?(:source_to_concept_map)
   $stderr.puts <<END
