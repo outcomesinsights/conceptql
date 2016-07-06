@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Loinc < StandardVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name 'LOINC'
       argument :loincs, type: :codelist, vocab: 'LOINC'

@@ -22,7 +22,7 @@ module ConceptQL
     # If we ask for the second occurrence of something and a person has only one
     # occurrence, this operator returns nothing for that person
     class Occurrence < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name 'Nth Occurrence'
 

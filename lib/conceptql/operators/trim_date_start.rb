@@ -13,7 +13,7 @@ module ConceptQL
     # If the RHS result's end_date is earlier than the LHS start_date, the LHS
     # result is passed thru unaffected.
     class TrimDateStart < TemporalOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc <<-EOF
 Trims the start_date of the left hand results (LHR) by the final
@@ -53,7 +53,7 @@ is passed through unaffected.
       private
 
       def occurrences_column
-        :r__end_date
+        :end_date
       end
 
       def new_columns

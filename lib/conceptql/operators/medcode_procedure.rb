@@ -3,7 +3,7 @@ require_relative 'source_vocabulary_operator'
 module ConceptQL
   module Operators
     class MedcodeProcedure < SourceVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       argument :medcodes, type: :codelist, vocab: '204'
       predominant_domains :procedure_occurrence

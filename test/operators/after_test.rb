@@ -18,13 +18,22 @@ describe ConceptQL::Operators::After do
     ).must_equal("condition_occurrence"=>[32104, 32981])
   end
 
+  it "should produce correct results when using :at_least option" do
+    criteria_ids(
+      [:after,
+       {:left=>[:icd9, "412"],
+        :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}],
+        :at_least=>"15000d"}]
+    ).must_equal("condition_occurrence"=>[24707, 24721, 26766])
+  end
+
   it "should produce correct results when using :occurrences option" do
     criteria_ids("after/crit_occurrences",
       [:after,
        {:left=>[:icd9, "412"],
         :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}],
         :occurrences=>1}]
-    ).must_equal("condition_occurrence"=>[17772, 21627, 24471, 24721, 25309, 25888, 28177, 32104])
+    ).must_equal("condition_occurrence"=>[17774, 21619, 24437, 24707, 25309, 25888, 28188, 31877])
   end
 
   it "should handle upstream errors when annotating" do

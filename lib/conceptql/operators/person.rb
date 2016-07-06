@@ -3,7 +3,7 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class Person < CastingOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Generates all person records, or, if fed a stream, fetches all person records for the people represented in the incoming result set.'
       allows_one_upstream

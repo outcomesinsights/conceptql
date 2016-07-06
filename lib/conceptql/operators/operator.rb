@@ -6,9 +6,29 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4=>{}}.freeze
+    OPERATORS = {:omopv4=>{}, :cdmv4_plus=>{}}.freeze
 
     SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
+
+    TABLE_VOCABULARY_ID_COLUMN = {
+      :condition_occurrence=> :condition_concept_vocabulary_id,
+      :death=> :cause_of_death_concept_vocabulary_id,
+      :drug_exposure=> :drug_concept_vocabulary_id,
+      :observation=> :observation_concept_vocabulary_id,
+      :procedure_occurrence=> :procedure_concept_vocabulary_id,
+      :provider=> :provider_concept_vocabulary_id,
+      :visit_occurrence=> :place_of_service_concept_vocabulary_id
+    }.freeze.each_value(&:freeze)
+
+    TABLE_SOURCE_VALUE_COLUMN = {
+      :condition_occurrence=> :condition_source_value,
+      :death=> :cause_of_death_source_value,
+      :drug_exposure=> :drug_source_value,
+      :observation=> :observation_source_value,
+      :procedure_occurrence=> :procedure_source_value,
+      :provider=> :provider_source_value,
+      :visit_occurrence=> :place_of_service_source_value
+    }.freeze.each_value(&:freeze)
 
     TABLE_COLUMNS = {
       :care_site=>[:care_site_id, :location_id, :organization_id, :place_of_service_concept_id, :care_site_source_value, :place_of_service_source_value],
@@ -35,7 +55,6 @@ module ConceptQL
       :procedure_occurrence=>[:procedure_occurrence_id, :person_id, :procedure_concept_id, :procedure_date, :procedure_type_concept_id, :associated_provider_id, :visit_occurrence_id, :relevant_condition_concept_id, :procedure_source_value],
       :provider=>[:provider_id, :npi, :dea, :specialty_concept_id, :care_site_id, :provider_source_value, :specialty_source_value],
       :relationship=>[:relationship_id, :relationship_name, :is_hierarchical, :defines_ancestry, :reverse_relationship],
-      :schema_info=>[:version],
       :source_to_concept_map=>[:source_code, :source_vocabulary_id, :source_code_description, :target_concept_id, :target_vocabulary_id, :mapping_type, :primary_map, :valid_start_date, :valid_end_date, :invalid_reason],
       :visit_occurrence=>[:visit_occurrence_id, :person_id, :visit_start_date, :visit_end_date, :place_of_service_concept_id, :care_site_id, :place_of_service_source_value],
       :vocabulary=>[:vocabulary_id, :vocabulary_name],
@@ -71,6 +90,7 @@ module ConceptQL
         attr :validations
 
         def register(file, *data_models)
+          data_models = OPERATORS.keys if data_models.empty?
           data_models.each do |dm|
             OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
           end
@@ -279,6 +299,14 @@ module ConceptQL
         nodifier.scope
       end
 
+      def data_model
+        nodifier.data_model
+      end
+
+      def database_type
+        nodifier.database_type
+      end
+
       private
 
       def annotate_values(db)
@@ -321,16 +349,41 @@ module ConceptQL
         cols
       end
 
-      def table_cols(table)
+      def cdmv4_plus?
+        data_model == :cdmv4_plus
+      end
+
+      def omopv4?
+        data_model == :omopv4
+      end
+
+      def table_to_sym(table)
         case table
         when Symbol
           table = Sequel.split_symbol(table)[1].to_sym
         end
-        TABLE_COLUMNS.fetch(table)
+        table
+      end
+
+      def table_cols(table)
+        table = table_to_sym(table)
+        cols = TABLE_COLUMNS.fetch(table)
+        if cdmv4_plus?
+          cols += Array(table_vocabulary_id(table))
+        end
+        cols
       end
 
       def table_columns(*tables)
         tables.map{|t| table_cols(t)}.flatten
+      end
+
+      def table_source_value(table)
+        TABLE_SOURCE_VALUE_COLUMN.fetch(table_to_sym(table))
+      end
+
+      def table_vocabulary_id(table)
+        TABLE_VOCABULARY_ID_COLUMN[table_to_sym(table)]
       end
 
       def value_columns(query, domain)

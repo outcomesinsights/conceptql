@@ -3,7 +3,7 @@ require_relative 'operator'
 module ConceptQL
   module Operators
     class DrugTypeConcept < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Returns all drug_exposures that match the given set of Drug Type concept IDs.'
       argument :concept_ids, type: :codelist, vocab: 'RxNorm'

@@ -2,11 +2,12 @@ require_relative 'operators/operator'
 
 module ConceptQL
   class Nodifier
-    attr :scope, :data_model, :algorithm_fetcher
+    attr :scope, :data_model, :database_type, :algorithm_fetcher
 
     def initialize(opts={})
       @scope = opts[:scope] || Scope.new
       @data_model = opts[:data_model] || :omopv4
+      @database_type = opts[:database_type]
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
         nil
       end)

@@ -3,7 +3,7 @@ require_relative 'temporal_operator'
 module ConceptQL
   module Operators
     class Contains < TemporalOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc <<-EOF
 If a result in the left hand results (LHR) has a start_date on or before and an end_date on or after a result in the right hand results (RHR), it is passed through.

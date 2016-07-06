@@ -6,7 +6,7 @@ require 'facets/kernel/blank'
 module ConceptQL
   module Operators
     class OneInTwoOut < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for an event
@@ -30,7 +30,6 @@ twice in an outpatient setting with a 30-day gap.
       default_query_columns
 
       def query(db)
-        db.extension :date_arithmetic
         faked_out = new_fake(nodifier,
                              inpatient_events(db)
                               .union(outpatient_events(db)

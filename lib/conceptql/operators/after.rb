@@ -3,7 +3,7 @@ require_relative 'temporal_operator'
 module ConceptQL
   module Operators
     class After < TemporalOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc <<-EOF
 Compares all results on a person-by-person basis between the left hand results (LHR) and the right hand results (RHR).
@@ -18,15 +18,23 @@ R-----R
       within_skip :after
 
       def right_stream(db)
-        right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date)).as(:r)
+        unless compare_all?
+          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date)).as(:r)
+        else
+          right.evaluate(db).from_self.as(:r)
+        end
       end
 
       def occurrences_column
-        :r__end_date
+        :end_date
       end
 
       def where_clause
         Proc.new { l__start_date > r__end_date }
+      end
+
+      def compare_all?
+        !(options.keys & [:within, :at_least, :occurrences]).empty?
       end
     end
   end

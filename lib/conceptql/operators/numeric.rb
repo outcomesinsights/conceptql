@@ -12,7 +12,7 @@ module ConceptQL
     # - Either a number value or a symbol representing a column name
     # - An optional stream
     class Numeric < PassThru
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc <<-EOF
 Represents an operator that will either:

@@ -14,12 +14,18 @@ describe ConceptQL::Operators::Before do
   it "should produce correct results when using :within option" do
     criteria_ids(
       [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"], :within=>'30d'}]
-    ).must_equal("condition_occurrence"=>[13741, 17774, 31542])
+    ).must_equal("condition_occurrence"=>[1829, 4359, 6902, 7865, 10443, 13741, 17774, 18555, 19736, 22933, 24721, 28177, 31542, 31792])
+  end
+
+  it "should produce correct results when using :at_least option" do
+    criteria_ids(
+      [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"], :at_least=>'900d'}]
+    ).must_equal("condition_occurrence"=>[21006, 24721])
   end
 
   it "should produce correct results when using :occurrences option" do
     criteria_ids(
       [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"], :occurrences=>1}]
-    ).must_equal("condition_occurrence"=>[1829, 17774, 20037, 24471, 24721, 25417, 25888, 28188, 31542])
+    ).must_equal("condition_occurrence"=>[1829, 17774, 20005, 24437, 24707, 25309, 25888, 28188, 31542])
   end
 end

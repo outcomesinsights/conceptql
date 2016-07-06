@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Rxnorm < StandardVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name 'RxNorm'
       argument :rxnorms, type: :codelist, vocab: 'RxNorm'
