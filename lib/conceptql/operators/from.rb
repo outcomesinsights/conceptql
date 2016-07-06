@@ -3,7 +3,7 @@ require_relative 'pass_thru'
 module ConceptQL
   module Operators
     class From < Operator
-      register __FILE__, :omopv4
+      register __FILE__
       basic_type :selection
       no_desc
       validate_no_upstreams
@@ -14,7 +14,9 @@ module ConceptQL
       end
 
       def query(db)
-        db.refresh(values.first.to_sym) if db.respond_to?(:refresh)
+        if database_type == :impala
+          db.refresh(values.first.to_sym) if db.respond_to?(:refresh)
+        end
         db.from(values.first.to_sym)
       end
 

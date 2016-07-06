@@ -6,7 +6,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4=>{}}.freeze
+    OPERATORS = {:omopv4=>{}, :cdmv4_plus=>{}}.freeze
 
     SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
@@ -90,6 +90,7 @@ module ConceptQL
         attr :validations
 
         def register(file, *data_models)
+          data_models = OPERATORS.keys if data_models.empty?
           data_models.each do |dm|
             OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
           end
@@ -298,6 +299,14 @@ module ConceptQL
         nodifier.scope
       end
 
+      def data_model
+        nodifier.data_model
+      end
+
+      def database_type
+        nodifier.database_type
+      end
+
       private
 
       def annotate_values(db)
@@ -340,6 +349,14 @@ module ConceptQL
         cols
       end
 
+      def cdmv4_plus?
+        data_model == :cdmv4_plus
+      end
+
+      def omopv4?
+        data_model == :omopv4
+      end
+
       def table_to_sym(table)
         case table
         when Symbol
@@ -349,7 +366,12 @@ module ConceptQL
       end
 
       def table_cols(table)
-        TABLE_COLUMNS.fetch(table_to_sym(table))
+        table = table_to_sym(table)
+        cols = TABLE_COLUMNS.fetch(table)
+        if cdmv4_plus?
+          cols += Array(table_vocabulary_id(table))
+        end
+        cols
       end
 
       def table_columns(*tables)

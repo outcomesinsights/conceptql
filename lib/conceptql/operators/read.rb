@@ -3,7 +3,7 @@ require_relative 'condition_occurrence_source_vocabulary_operator'
 module ConceptQL
   module Operators
     class Read < ConditionOccurrenceSourceVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name "READ"
       argument :read_codes, type: :codelist, vocab: "Read"

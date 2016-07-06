@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Snomed < StandardVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name 'SNOMED'
       argument :snomeds, type: :codelist, vocab: 'SNOMED'

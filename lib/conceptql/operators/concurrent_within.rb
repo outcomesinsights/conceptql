@@ -4,7 +4,7 @@ require_relative '../date_adjuster'
 module ConceptQL
   module Operators
     class ConcurrentWithin < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'Filters each upstream to only include rows where there are matching entries in each of the other upstreams.'
       option :start, type: :string

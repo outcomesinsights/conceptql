@@ -13,9 +13,6 @@ module ConceptQL
 
     attr :statement
     def initialize(db, statement, opts={})
-      if db
-        db.extension :date_arithmetic
-      end
       @db = db
       @statement = extract_statement(statement)
       opts = opts.dup

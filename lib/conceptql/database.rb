@@ -4,8 +4,10 @@ module ConceptQL
 
     def initialize(db, opts={})
       @db = db
+      db.extension :date_arithmetic
       @opts = opts.dup
       @opts[:data_model] ||= :omopv4
+      @opts[:db_type] ||= db.database_type
     end
 
     def query(statement, opts={})

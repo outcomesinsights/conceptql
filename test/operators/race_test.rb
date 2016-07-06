@@ -12,7 +12,7 @@ describe ConceptQL::Operators::Race do
       [:race, 'Black or African American', [:icd9, "412"]]
     ).annotate.must_equal(
       ["race",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        "Black or African American",
        {:annotation=>{:counts=>{:person=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams", ["icd9"]]]}}]
     )

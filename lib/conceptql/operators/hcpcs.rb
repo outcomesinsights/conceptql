@@ -3,7 +3,7 @@ require_relative 'standard_vocabulary_operator'
 module ConceptQL
   module Operators
     class Hcpcs < StandardVocabularyOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       preferred_name 'HCPCS'
       argument :hcpcs, type: :codelist, vocab: 'HCPCS'

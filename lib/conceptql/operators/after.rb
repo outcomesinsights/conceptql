@@ -3,7 +3,7 @@ require_relative 'temporal_operator'
 module ConceptQL
   module Operators
     class After < TemporalOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc <<-EOF
 Compares all results on a person-by-person basis between the left hand results (LHR) and the right hand results (RHR).

@@ -3,8 +3,8 @@ require_relative '../helper'
 describe ConceptQL::Operators::OneInTwoOut do
   it "should produce correct results" do
     criteria_ids(
-      [:one_in_two_out, [:icd9, "412"], {:gap=>30, :blah=>true}]
-    ).must_equal("visit_occurrence"=>[1789, 3422, 3705, 5069, 10344, 11589, 11800, 51306, 51336, 51337, 51366, 51380, 51382, 51423, 51440, 51843, 53228])
+      [:one_in_two_out, [:icd9, "412"], {:min_gap=>30, :blah=>true}]
+    ).must_equal("condition_occurrence"=>[1829, 6083, 8618, 9882, 15149, 17774, 18412, 20005, 21619, 24437, 24707, 25309, 25888, 26766, 28188, 31542, 31877])
   end
 
   it "should treat non-conditions as inpatient" do
@@ -33,8 +33,8 @@ describe ConceptQL::Operators::OneInTwoOut do
       [:one_in_two_out, [:icd9, "412"], [:icd9, "412"], {:gap=>30, :blah=>true}]
     ).annotate.must_equal(
       ["one_in_two_out",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        {:gap=>30, :blah=>true,
         :annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has multiple upstreams", ["icd9", "icd9"]]]}}]
     )

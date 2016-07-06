@@ -3,7 +3,7 @@ require_relative 'temporal_operator'
 module ConceptQL
   module Operators
     class AnyOverlap < TemporalOperator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc 'If a result in the LHR overlaps in any way a result in the RHR, it is passed through.'
       def where_clause

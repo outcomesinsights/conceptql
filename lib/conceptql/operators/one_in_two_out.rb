@@ -6,7 +6,7 @@ require 'facets/kernel/blank'
 module ConceptQL
   module Operators
     class OneInTwoOut < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for an event

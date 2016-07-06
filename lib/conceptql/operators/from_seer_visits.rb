@@ -3,7 +3,7 @@ require_relative 'operator'
 module ConceptQL
   module Operators
     class FromSeerVisits < Operator
-      register __FILE__, :omopv4
+      register __FILE__
 
       no_desc
       query_columns :observation

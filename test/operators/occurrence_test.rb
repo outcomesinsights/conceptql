@@ -4,7 +4,7 @@ describe ConceptQL::Operators::Occurrence do
   it "should produce correct results" do
     criteria_ids(
       [:occurrence, 2, [:icd9, "412"]]
-    ).must_equal("condition_occurrence"=>[4710, 10403, 10590, 11228, 13893, 14604, 17593, 27343, 50933, 53630, 53733, 56970, 58610])
+    ).must_equal("condition_occurrence"=>[1829, 10196, 17774, 20005, 21619, 24437, 24707, 25309, 25888, 28188, 31542, 31877])
 
     criteria_ids(
       [:occurrence, 2, [:icd9, "412"], {:unique=>true}]
@@ -12,7 +12,7 @@ describe ConceptQL::Operators::Occurrence do
 
     criteria_ids(
       [:occurrence, -1, [:icd9, "412"], {:unique=>true}]
-    ).must_equal("condition_occurrence"=>[2151, 2428, 4545, 4710, 5263, 5582, 8725, 10403, 10590, 11135, 11228, 13234, 13893, 14604, 17103, 17593, 23234, 23411, 25492, 27343, 37521, 38787, 50019, 52644, 52675, 53214, 53216, 53251, 53630, 53733, 55383, 56352, 56970, 57089, 57705, 58271, 58596, 58610, 58623, 59732, 59760, 59785])
+    ).must_equal("condition_occurrence"=>[1829, 4359, 5751, 6083, 6902, 7865, 8397, 8618, 10196, 10443, 10865, 13016, 13741, 15149, 17041, 17774, 18412, 18555, 19736, 20005, 21006, 21619, 22875, 22933, 24437, 24707, 24989, 25309, 25888, 26766, 27388, 28188, 30831, 31542, 31792, 31877, 32463, 32981])
   end
 
   it "should handle errors when annotating" do
