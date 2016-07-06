@@ -1,9 +1,8 @@
 require 'sequelizer'
 
 DB = Object.new.extend(Sequelizer).db unless defined?(DB)
-DB.extension :date_arithmetic
 
-unless DB.table_exists?(:source_to_concept_map)
+unless DB.table_exists?(:source_to_concept_map) && ENV['DATA_MODEL'] == 'omopv4'
   $stderr.puts <<END
 The source_to_concept_map table doesn't exist in this database,
 so it appears this doesn't include the necessary OMOP vocabulary

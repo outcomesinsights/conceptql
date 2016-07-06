@@ -242,7 +242,7 @@ tables = [
 ]
 
 tables.each do |t|
-  data = CSV.parse(File.binread("test/data/#{t}.csv"))
+  data = CSV.parse(File.binread("test/data/#{ENV['DATA_MODEL']}/#{t}.csv"))
   next if data.empty?
   ds = DB[t]
 
