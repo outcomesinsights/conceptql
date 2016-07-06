@@ -299,6 +299,14 @@ module ConceptQL
         nodifier.scope
       end
 
+      def data_model
+        nodifier.data_model
+      end
+
+      def database_type
+        nodifier.database_type
+      end
+
       private
 
       def annotate_values(db)
@@ -341,6 +349,14 @@ module ConceptQL
         cols
       end
 
+      def cdmv4_plus?
+        data_model == :cdmv4_plus
+      end
+
+      def omopv4?
+        data_model == :omopv4
+      end
+
       def table_to_sym(table)
         case table
         when Symbol
@@ -350,7 +366,12 @@ module ConceptQL
       end
 
       def table_cols(table)
-        TABLE_COLUMNS.fetch(table_to_sym(table))
+        table = table_to_sym(table)
+        cols = TABLE_COLUMNS.fetch(table)
+        if cdmv4_plus?
+          cols += Array(table_vocabulary_id(table))
+        end
+        cols
       end
 
       def table_columns(*tables)

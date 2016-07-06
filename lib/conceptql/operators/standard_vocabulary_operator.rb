@@ -25,8 +25,12 @@ module ConceptQL
       validate_at_least_one_argument
 
       def query(db)
-        db.from(table_name)
+        ds = db.from(table_name)
           .where(conditions)
+        if omopv4?
+          ds = ds.join(:concept___c, c__concept_id: table_concept_column)
+        end
+        ds
       end
 
       def query_cols
@@ -38,9 +42,13 @@ module ConceptQL
       end
 
       def conditions
-        conditions = { code_column => arguments }
-        conditions.merge!(vocabulary_id_column => vocabulary_id) if vocabulary_id_column
-        conditions
+        if omopv4?
+          {c__concept_code: values, c__vocabulary_id: vocabulary_id}
+        else
+          conditions = { code_column => arguments }
+          conditions[vocabulary_id_column] = vocabulary_id if vocabulary_id_column
+          conditions
+        end
       end
 
       private
@@ -65,6 +73,10 @@ module ConceptQL
 
       def table_name
         @table_name ||= make_table_name(table)
+      end
+
+      def table_concept_column
+        "tab__#{concept_column}".to_sym
       end
     end
   end

@@ -26,6 +26,10 @@ module ConceptQL
         40
       end
 
+      def concept_column
+        :disease_class_concept_id
+      end
+
       def code_column
         :disease_class_source_value
       end
