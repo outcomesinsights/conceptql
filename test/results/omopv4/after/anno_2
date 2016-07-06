@@ -1,0 +1,1 @@
+["after",{"right":["time_window",["gender","Male",{"annotation":{"counts":{"person":{"rows":126,"n":126}}}}],{"start":"50y","end":"50y","annotation":{"counts":{"person":{"rows":126,"n":126}}}}],"annotation":{"counts":{"invalid":{"rows":0,"n":0}},"errors":[["required option not present","left"]]}}]
