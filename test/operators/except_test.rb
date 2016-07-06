@@ -2,16 +2,16 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::Except do
   it "should produce correct results" do
-    criteria_ids(
+    criteria_ids("except/crit_412_inpatient",
       [:except,
        {:left=>[:icd9, "412"], :right=>[:condition_type, :inpatient_header]}]
     ).must_equal("condition_occurrence"=>[1712, 1829, 4359, 5751, 6902, 7865, 8397, 10196, 10443, 10865, 13016, 13741, 17041, 17772, 17774, 18555, 19736, 20037, 21006, 21619, 21627, 22875, 22933, 24437, 24471, 24707, 24721, 24989, 25309, 25417, 25875, 25888, 27388, 28177, 28188, 30831, 31387, 31542, 31792, 32104, 32463, 32981])
 
-    criteria_ids(
+    criteria_ids("except/crit_412_cpt",
       [:except, {:left=>[:icd9, "412"], :right=>[:cpt, "99214"]}]
     ).must_equal("condition_occurrence"=>[1712, 1829, 4359, 5751, 6083, 6902, 7865, 8397, 8618, 9882, 10196, 10443, 10865, 13016, 13741, 15149, 17041, 17772, 17774, 18412, 18555, 19736, 20005, 20037, 21006, 21619, 21627, 22875, 22933, 24437, 24471, 24707, 24721, 24989, 25309, 25417, 25875, 25888, 26766, 27388, 28177, 28188, 30831, 31387, 31542, 31792, 31877, 32104, 32463, 32981])
 
-    criteria_counts(
+    criteria_counts("except/crit_complex",
       [:except,
        {:left=>[:union, [:icd9, "412"], [:gender, "Male"], [:cpt, "99214"]],
         :right=>[:union, [:condition_type, :inpatient_header], [:race, "White"]]}]
@@ -19,23 +19,14 @@ describe ConceptQL::Operators::Except do
   end
 
   it "annotate should work correctly" do
-    query(
+    annotate("except/anno_1",
       [:except,
        {:left=>[:icd9, "412"], :right=>[:condition_type, :inpatient_header]}]
-    ).annotate.must_equal(["except",
-      {:left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       :right=>["condition_type", :inpatient_header, {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1372, :n=>92}}}}],
-       :annotation=>{:counts=>{:condition_occurrence=>{:rows=>42, :n=>33}}}}
-    ])
+    )
 
-    query(
+    annotate("except/anno_2",
       [:except,
        {:left=>[:icd9, "412"], :right=>[:condition_type, :inpatient_header], :foo=>true}]
-    ).annotate.must_equal(["except",
-      {:left=>["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       :right=>["condition_type", :inpatient_header, {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>1372, :n=>92}}}}],
-       :foo=>true,
-       :annotation=>{:counts=>{:condition_occurrence=>{:rows=>42, :n=>33}}}}
-    ])
+    )
   end
 end

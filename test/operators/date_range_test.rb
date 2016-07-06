@@ -2,63 +2,40 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::DateRange do
   it "should produce correct results" do
-    criteria_counts(
+    criteria_counts("date_range/crit_1",
       [:date_range, {:start=>"2008-03-13", :end=>"2008-03-20"}]
-    ).must_equal("person"=>250)
+    )
 
-    criteria_counts(
+    criteria_counts("date_range/crit_2",
       [:date_range, {:start=>"START", :end=>"END"}]
-    ).must_equal("person"=>250)
+    )
   end
 
   it "#annotate should work correctly" do
-    query(
+    annotate("date_range/anno_1",
       [:date_range, {:start=>"2008-03-13", :end=>"2008-03-20"}]
-    ).annotate.must_equal(["date_range", {:start=>"2008-03-13", :end=>"2008-03-20",
-                                          :annotation=>{:counts=>{:person=>{:rows=>250, :n=>250}}}}])
+    )
   end
 
   it "should handle errors when annotating" do
-    query(
+    annotate("date_range/anno_no_upstreams",
       [:date_range, [:icd9, "412"], {:start=>"START", :end=>"END"}]
-    ).annotate.must_equal(
-      ["date_range",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       {:start=>"START", :end=>"END",
-        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams", ["icd9"]]]}}]
     )
 
-    query(
+    annotate("date_range/anno_extra_argument",
       [:date_range, "412", {:start=>"START", :end=>"END"}]
-    ).annotate.must_equal(
-      ["date_range",
-       "412",
-       {:start=>"START", :end=>"END",
-        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has arguments", ["412"]]]}}]
     )
 
-    query(
+    annotate("date_range/anno_invalid_argument",
       [:date_range, {:start=>1, :end=>2}]
-    ).annotate.must_equal(
-      ["date_range",
-       {:start=>1, :end=>2,
-        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["wrong option format", "start"], ["wrong option format", "end"]]}}]
     )
 
-    query(
+    annotate("date_range/anno_missing_argument1",
       [:date_range, {:end=>"END"}]
-    ).annotate.must_equal(
-      ["date_range",
-       {:end=>"END",
-        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["required option not present", "start"]]}}]
     )
 
-    query(
+    annotate("date_range/anno_missing_argument2",
       [:date_range, {:start=>"START"}]
-    ).annotate.must_equal(
-      ["date_range",
-       {:start=>"START",
-        :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["required option not present", "end"]]}}]
     )
   end
 end
