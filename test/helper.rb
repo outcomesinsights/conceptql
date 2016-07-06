@@ -15,6 +15,8 @@ if ENV['COVERAGE']
   end
 end
 
+ENV['DATA_MODEL'] ||= 'omopv4'
+
 $: << "lib"
 require 'conceptql'
 require 'minitest/spec'
