@@ -1,0 +1,1 @@
+["trim_date_start",{"left":["icd9","412"],"right":["date_range",{"start":"2008-03-14","end":"2010-12-01"}]}]

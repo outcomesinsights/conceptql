@@ -2,9 +2,9 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::Rxnorm do
   it "should produce correct results" do
-    criteria_ids(
+    criteria_ids("rxnorm/crit_1",
       [:rxnorm, '672568']
-    ).must_equal("drug_exposure"=>[2])
+    )
   end
 end
 

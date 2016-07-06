@@ -1,0 +1,1 @@
+["except",{"left":["icd9","412",{"label":1,"annotation":{"counts":{"condition_occurrence":{"rows":0,"n":0}},"errors":[["invalid label"]]},"name":"ICD-9 CM"}],"right":["recall","Heart Attack",{"annotation":{"counts":{"invalid":{"rows":0,"n":0}},"errors":[["no matching label","Heart Attack"]]}}],"annotation":{"counts":{"condition_occurrence":{"rows":0,"n":0}}}}]
