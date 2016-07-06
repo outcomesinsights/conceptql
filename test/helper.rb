@@ -67,29 +67,24 @@ class Minitest::Spec
   # If no statement is passed, this function loads the statement from the specified test
   # file. If a statement is passed, it is written to the file.
   def load_statement(test_name, statement=nil)
-    statementPath = "test/statements/#{test_name}"
+    path = "test/statements/#{test_name}"
     if statement
-      jsonStatement = JSON.generate(statement)
-      FileUtils.mkdir_p(File.dirname(statementPath))
-      File.open(statementPath, 'w') { |file| file.write(jsonStatement) }
-      return statement
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, JSON.generate(statement))
+      statement
     else
-      File.open(statementPath, 'r') { |file| statement = file.read }
-      return JSON.parse(statement)
+      JSON.parse(File.read(path))
     end
   end
 
   def check_output(test_name, results)
-    actualOutput = JSON.generate(results)
-    expectedOutputPath = "test/results/#{ENV["DATA_MODEL"]}/#{test_name}"
+    json = JSON.generate(results)
+    path = "test/results/#{ENV["DATA_MODEL"]}/#{test_name}"
     if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
-      FileUtils.mkdir_p(File.dirname(expectedOutputPath))
-      File.open(expectedOutputPath, 'w') { |file| file.write(actualOutput) }
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, json)
     else
-      File.open(expectedOutputPath, 'r') do |file|
-        expectedOutput = file.read
-        actualOutput.must_equal(expectedOutput)
-      end
+      File.read(path).must_equal(json)
     end
     results
   end
