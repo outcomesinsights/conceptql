@@ -6,7 +6,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4=>{}, :cdmv4_plus=>{}}.freeze
+    OPERATORS = {:omopv4=>{}, :omopv4_plus=>{}}.freeze
 
     SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
@@ -349,8 +349,8 @@ module ConceptQL
         cols
       end
 
-      def cdmv4_plus?
-        data_model == :cdmv4_plus
+      def omopv4_plus?
+        data_model == :omopv4_plus
       end
 
       def omopv4?
@@ -368,7 +368,7 @@ module ConceptQL
       def table_cols(table)
         table = table_to_sym(table)
         cols = TABLE_COLUMNS.fetch(table)
-        if cdmv4_plus?
+        if omopv4_plus?
           cols += Array(table_vocabulary_id(table))
         end
         cols
