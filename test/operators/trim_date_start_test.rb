@@ -6,7 +6,7 @@ describe ConceptQL::Operators::TrimDateStart do
       [:trim_date_start,
        {:left=>[:icd9, "412"],
         :right=>[:date_range, {:start=>"2008-03-14", :end=>"2010-12-01"}]}]
-    ).must_equal("condition_occurrence"=>[11228])
+    ).must_equal("condition_occurrence"=>[21619])
 
     criteria_ids(
       [:trim_date_start,
@@ -18,7 +18,7 @@ describe ConceptQL::Operators::TrimDateStart do
       [:trim_date_start,
        {:left=>[:icd9, "412"],
         :right=>[:date_range, {:start=>"2008-03-14", :end=>"2010-11-22"}]}]
-    ).must_equal("condition_occurrence"=>[10590, 11228])
+    ).must_equal("condition_occurrence"=>[17774, 21619])
   end
 
   it "should produce correct results when using :within option" do

@@ -23,7 +23,7 @@ describe ConceptQL::Operators::DateRange do
       [:date_range, [:icd9, "412"], {:start=>"START", :end=>"END"}]
     ).annotate.must_equal(
       ["date_range",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>55, :n=>42}}}, :name=>"ICD-9 CM"}],
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
        {:start=>"START", :end=>"END",
         :annotation=>{:counts=>{:person=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams", ["icd9"]]]}}]
     )

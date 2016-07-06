@@ -8,11 +8,11 @@ describe ConceptQL::Operators::From do
 
     dataset(
       [:from, 'observation_period']
-    ).count.must_equal(156)
+    ).count.must_equal(1)
 
     dataset(
       [:from, 'condition_occurrence']
-    ).count.must_equal(59897)
+    ).count.must_equal(34044)
   end
 
   it "should handle query_cols for non-CDM tables" do
@@ -25,74 +25,18 @@ describe ConceptQL::Operators::From do
     query(
       [:from, [:icd9, "412"]]
     ).annotate.must_equal(
-      [
-        "from",
-        [
-          "icd9",
-          "412",
-          {
-            :annotation => {
-              :counts => {
-                :condition_occurrence => {
-                  :rows => 55,
-                  :n => 42
-                }
-              }
-            },
-            :name => "ICD-9 CM"
-          }
-        ],
-        {
-          :annotation => {
-            :counts => {
-              :invalid => {
-                :n => 0,
-                :rows => 0
-              }
-            },
-            :errors => [
-              [
-                "has upstreams",
-                [
-                  "icd9"
-                ]
-              ],
-              [
-                "has no arguments"
-              ]
-            ]
-          }
-        }
-      ]
+      ["from",
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams", ["icd9"]], ["has no arguments"]]}}]
     )
 
     query(
       [:from, 'person', 'observation_period']
     ).annotate.must_equal(
-      [
-        "from",
-        "person",
-        "observation_period",
-        {
-          :annotation => {
-            :counts => {
-              :observation_period => {
-                :n => 0,
-                :rows => 0
-              }
-            },
-            :errors => [
-              [
-                "has multiple arguments",
-                [
-                  "person",
-                  "observation_period"
-                ]
-              ]
-            ]
-          }
-        }
-      ]
+      ["from",
+       'person',
+       'observation_period',
+       {:annotation=>{:counts=>{:observation_period=>{:n=>0, :rows=>0}}, :errors=>[["has multiple arguments", ["person", "observation_period"]]]}}]
     )
   end
 end

@@ -4,17 +4,17 @@ describe ConceptQL::Operators::Before do
   it "should produce correct results" do
     criteria_ids(
       [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"]}]
-    ).must_equal("condition_occurrence"=>[2151, 2428, 3995, 4545, 4710, 5069, 5582, 8725, 10403, 10590, 11135, 11589, 11800, 13234, 13893, 14604, 14702, 14854, 14859, 17103, 17593, 23234, 23411, 24627, 25492, 26245, 27343, 37521, 38787, 52644, 52675, 53214, 53216, 53251, 53733, 53801, 55383, 56352, 56634, 56970, 57089, 57705, 58271, 58448, 58596, 58610, 58623, 59732, 59760, 59785])
+    ).must_equal("condition_occurrence"=>[1712, 1829, 4359, 5751, 6083, 6902, 7865, 8618, 9882, 10443, 10865, 13016, 13741, 15149, 17041, 17772, 17774, 18412, 18555, 19736, 20005, 20037, 21006, 21627, 22875, 22933, 24437, 24471, 24707, 24721, 25309, 25417, 25875, 25888, 26766, 27388, 28177, 28188, 30831, 31387, 31542, 31792, 32104, 32981])
 
     criteria_ids(
       [:before, {:left=>[:icd9, "412"], :right=>[:first, [:icd9, "401.9"]]}]
-    ).must_equal("condition_occurrence"=>[8725, 11589, 37521, 58271])
+    ).must_equal("condition_occurrence"=>[5751, 21006, 24721])
   end
 
   it "should produce correct results when using :within option" do
     criteria_ids(
       [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"], :within=>'30d'}]
-    ).must_equal("condition_occurrence"=>[13741, 17774, 31542])
+    ).must_equal("condition_occurrence"=>[1829, 4359, 6902, 7865, 10443, 13741, 17774, 18555, 19736, 22933, 24721, 28177, 31542, 31792])
   end
 
   it "should produce correct results when using :at_least option" do
@@ -26,6 +26,6 @@ describe ConceptQL::Operators::Before do
   it "should produce correct results when using :occurrences option" do
     criteria_ids(
       [:before, {:left=>[:icd9, "412"], :right=>[:icd9, "401.9"], :occurrences=>1}]
-    ).must_equal("condition_occurrence"=>[1829, 17774, 20037, 24471, 24721, 25417, 25888, 28188, 31542])
+    ).must_equal("condition_occurrence"=>[1829, 17774, 20005, 24437, 24707, 25309, 25888, 28188, 31542])
   end
 end

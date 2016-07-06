@@ -4,11 +4,11 @@ describe ConceptQL::Operators::ConditionType do
   it "should produce correct results" do
     criteria_counts(
       [:condition_type, 'inpatient']
-    ).must_equal("condition_occurrence"=>1542)
+    ).must_equal("condition_occurrence"=>1372)
 
     criteria_counts(
       [:condition_type, 'outpatient']
-    ).must_equal("condition_occurrence"=>6083)
+    ).must_equal("condition_occurrence"=>32672)
 
     criteria_counts(
       [:condition_type, 'inpatient_primary']
@@ -87,45 +87,9 @@ describe ConceptQL::Operators::ConditionType do
     query(
       [:condition_type, [:icd9, "412"]]
     ).annotate.must_equal(
-      [
-        "condition_type",
-        [
-          "icd9",
-          "412",
-          {
-            :annotation => {
-              :counts => {
-                :condition_occurrence => {
-                  :rows => 55,
-                  :n => 42
-                }
-              }
-            },
-            :name => "ICD-9 CM"
-          }
-        ],
-        {
-          :annotation => {
-            :counts => {
-              :condition_occurrence => {
-                :rows => 0,
-                :n => 0
-              }
-            },
-            :errors => [
-              [
-                "has upstreams",
-                [
-                  "icd9"
-                ]
-              ],
-              [
-                "has no arguments"
-              ]
-            ]
-          }
-        }
-      ]
+      ["condition_type",
+       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
+       {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>0, :n=>0}}, :errors=>[["has upstreams", ["icd9"]], ["has no arguments"]]}}]
     )
   end
 end
