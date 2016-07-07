@@ -1,0 +1,22 @@
+[
+  "death",
+  "412",
+  {
+    "annotation": {
+      "counts": {
+        "death": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has arguments",
+          [
+            "412"
+          ]
+        ]
+      ]
+    }
+  }
+]

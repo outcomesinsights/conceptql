@@ -1,0 +1,24 @@
+[
+  "date_range",
+  "412",
+  {
+    "start": "START",
+    "end": "END",
+    "annotation": {
+      "counts": {
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has arguments",
+          [
+            "412"
+          ]
+        ]
+      ]
+    }
+  }
+]

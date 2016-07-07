@@ -1,0 +1,37 @@
+[
+  "complement",
+  [
+    "icd9",
+    "412",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 39,
+            "n": 28
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  "412",
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has arguments",
+          [
+            "412"
+          ]
+        ]
+      ]
+    }
+  }
+]

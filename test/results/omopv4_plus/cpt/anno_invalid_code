@@ -1,0 +1,22 @@
+[
+  "cpt",
+  "99214",
+  "XYS",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "warnings": [
+        [
+          "invalid concept code",
+          "XYS"
+        ]
+      ]
+    },
+    "name": "CPT"
+  }
+]

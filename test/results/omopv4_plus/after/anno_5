@@ -1,0 +1,68 @@
+[
+  "after",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 39,
+              "n": 28
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "right": [
+      "time_window",
+      [
+        "gender",
+        "Male",
+        {
+          "annotation": {
+            "counts": {
+              "person": {
+                "rows": 110,
+                "n": 110
+              }
+            }
+          }
+        }
+      ],
+      {
+        "start": "50y",
+        "end": "50y",
+        "annotation": {
+          "counts": {
+            "person": {
+              "rows": 110,
+              "n": 110
+            }
+          }
+        }
+      }
+    ]
+  },
+  1,
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has arguments",
+          [
+            1
+          ]
+        ]
+      ]
+    }
+  }
+]
