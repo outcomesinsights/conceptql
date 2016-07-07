@@ -70,7 +70,7 @@ class Minitest::Spec
     path = "test/statements/#{test_name}"
     if statement
       FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, JSON.generate(statement))
+      File.write(path, JSON.pretty_generate(statement))
       statement
     else
       JSON.parse(File.read(path))

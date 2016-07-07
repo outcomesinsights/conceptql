@@ -1,1 +1,7 @@
-["date_range",{"start":1,"end":2}]
+[
+  "date_range",
+  {
+    "start": 1,
+    "end": 2
+  }
+]

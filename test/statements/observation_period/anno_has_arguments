@@ -1,1 +1,8 @@
-["observation_period",1,["gender","Male"]]
+[
+  "observation_period",
+  1,
+  [
+    "gender",
+    "Male"
+  ]
+]

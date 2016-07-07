@@ -1,1 +1,17 @@
-["trim_date_end",{"left":["icd9","412"],"right":["date_range",{"start":"2008-02-17","end":"2010-12-01"}],"occurrences":0}]
+[
+  "trim_date_end",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "date_range",
+      {
+        "start": "2008-02-17",
+        "end": "2010-12-01"
+      }
+    ],
+    "occurrences": 0
+  }
+]

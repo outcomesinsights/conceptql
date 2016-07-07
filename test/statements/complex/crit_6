@@ -1,1 +1,20 @@
-["during",{"left":["cpt","99214"],"right":["time_window",["icd9","412"],{"start":"-30d","end":"30d"}]}]
+[
+  "during",
+  {
+    "left": [
+      "cpt",
+      "99214"
+    ],
+    "right": [
+      "time_window",
+      [
+        "icd9",
+        "412"
+      ],
+      {
+        "start": "-30d",
+        "end": "30d"
+      }
+    ]
+  }
+]

@@ -1,1 +1,5 @@
-["condition_type","inpatient","outpatient_detail"]
+[
+  "condition_type",
+  "inpatient",
+  "outpatient_detail"
+]

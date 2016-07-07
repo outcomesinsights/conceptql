@@ -1,1 +1,43 @@
-["during",{"left":["except",{"left":["icd9","584"],"right":["after",{"left":["icd9","584"],"right":["icd9","V45.1","V56.0","V56.31","V56.32","V56.8"]}]}],"right":["time_window",["icd9_procedure","39.95","54.98"],{"start":"0","end":"60d"}]}]
+[
+  "during",
+  {
+    "left": [
+      "except",
+      {
+        "left": [
+          "icd9",
+          "584"
+        ],
+        "right": [
+          "after",
+          {
+            "left": [
+              "icd9",
+              "584"
+            ],
+            "right": [
+              "icd9",
+              "V45.1",
+              "V56.0",
+              "V56.31",
+              "V56.32",
+              "V56.8"
+            ]
+          }
+        ]
+      }
+    ],
+    "right": [
+      "time_window",
+      [
+        "icd9_procedure",
+        "39.95",
+        "54.98"
+      ],
+      {
+        "start": "0",
+        "end": "60d"
+      }
+    ]
+  }
+]

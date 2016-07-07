@@ -1,1 +1,14 @@
-["before",{"left":["icd9","412"],"right":["icd9","401.9"],"at_least":"900d"}]
+[
+  "before",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "icd9",
+      "401.9"
+    ],
+    "at_least": "900d"
+  }
+]

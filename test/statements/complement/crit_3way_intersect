@@ -1,1 +1,24 @@
-["intersect",["complement",["icd9","412"]],["complement",["condition_type","inpatient_header"]],["complement",["cpt","99214"]]]
+[
+  "intersect",
+  [
+    "complement",
+    [
+      "icd9",
+      "412"
+    ]
+  ],
+  [
+    "complement",
+    [
+      "condition_type",
+      "inpatient_header"
+    ]
+  ],
+  [
+    "complement",
+    [
+      "cpt",
+      "99214"
+    ]
+  ]
+]

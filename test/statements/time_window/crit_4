@@ -1,1 +1,11 @@
-["time_window",["place_of_service_code","21"],{"start":"end","end":"start"}]
+[
+  "time_window",
+  [
+    "place_of_service_code",
+    "21"
+  ],
+  {
+    "start": "end",
+    "end": "start"
+  }
+]

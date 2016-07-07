@@ -1,1 +1,7 @@
-["observation_period",["icd9","412"]]
+[
+  "observation_period",
+  [
+    "icd9",
+    "412"
+  ]
+]

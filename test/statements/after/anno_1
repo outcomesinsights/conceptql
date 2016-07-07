@@ -1,1 +1,7 @@
-["after",{"left":"412","right":"time_window"}]
+[
+  "after",
+  {
+    "left": "412",
+    "right": "time_window"
+  }
+]

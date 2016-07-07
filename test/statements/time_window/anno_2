@@ -1,1 +1,11 @@
-["time_window",["icd9","412"],{"start":2,"end":2}]
+[
+  "time_window",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "start": 2,
+    "end": 2
+  }
+]
