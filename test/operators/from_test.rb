@@ -2,15 +2,15 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::From do
   it "should produce correct results" do
-    count("from/count_person",
+    criteria_counts("from/count_person",
       [:from, 'person']
     )
 
-    count("from/count_observation_period",
+    criteria_counts("from/count_observation_period",
       [:from, 'observation_period']
     )
 
-    count("from/count_condition_occurrence",
+    criteria_counts("from/count_condition_occurrence",
       [:from, 'condition_occurrence']
     )
   end

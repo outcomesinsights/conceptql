@@ -11,7 +11,7 @@ describe ConceptQL::Operators::Except do
       [:except, {:left=>[:icd9, "412"], :right=>[:cpt, "99214"]}]
     )
 
-    criteria_counts("except/crit_complex",
+    criteria_counts("except/count_complex",
       [:except,
        {:left=>[:union, [:icd9, "412"], [:gender, "Male"], [:cpt, "99214"]],
         :right=>[:union, [:condition_type, :inpatient_header], [:race, "White"]]}]

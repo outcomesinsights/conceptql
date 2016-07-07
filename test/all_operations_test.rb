@@ -17,6 +17,8 @@ describe ConceptQL::Operators do
         annotate(f)
       when "count"
         criteria_counts(f)
+      when "optcc"
+        optimized_criteria_counts(f)
       when "scanno"
         scope_annotate(f)
       when "domains"

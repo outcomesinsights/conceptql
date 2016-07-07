@@ -16,10 +16,14 @@ describe ConceptQL::Operators::Occurrence do
   end
 
   it "should handle errors when annotating" do
-    annotate("occurrence/anno_no_upstream", [:occurrence])
+    annotate("occurrence/anno_no_upstream",
+      [:occurrence]
+    )
   end
 
   it "should have a unique name per CTE" do
-    criteria_counts("occurrence/cc_412_410", [:union, [:first, [:icd9,  "412"] ], [:first, [:icd9,  "410"] ]])
+    criteria_counts("occurrence/count_412_410",
+      [:union, [:first, [:icd9,  "412"] ], [:first, [:icd9,  "410"] ]]
+    )
   end
 end

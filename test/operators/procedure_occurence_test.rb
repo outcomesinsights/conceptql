@@ -2,15 +2,15 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::ProcedureOccurrence do
   it "should produce correct results" do
-    criteria_counts("procedure_occurrence/crit_icd9",
+    criteria_counts("procedure_occurrence/count_icd9",
       [:procedure_occurrence, [:icd9, "412"]]
     )
 
-    criteria_counts("procedure_occurrence/crit_gender",
+    criteria_counts("procedure_occurrence/count_gender",
       [:procedure_occurrence, [:gender, "Male"]]
     )
 
-    criteria_counts("procedure_occurrence/crit_started_by",
+    criteria_counts("procedure_occurrence/count_started_by",
       [:procedure_occurrence,
        [:started_by,
         {:left=>[:icd9, "412"],

@@ -2,25 +2,25 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::Union do
   it "should produce correct results" do
-    criteria_counts("union/cc_1",
+    criteria_counts("union/count_1",
       [:union, [:icd9, "412"], [:icd9, "401.9"]]
     )
 
-    criteria_counts("union/cc_2",
+    criteria_counts("union/count_2",
       [:union, [:icd9, "412"], [:icd10, 'Z56.1']]
     )
 
-    criteria_counts("union/cc_3",
+    criteria_counts("union/count_3",
       [:union, [:icd9, "412"], [:icd10, 'Z56.1'], [:icd9, "401.9"]]
     )
 
-    criteria_counts("union/cc_4",
+    criteria_counts("union/count_4",
       [:union,
         [:union, [:icd9, "412"], [:icd10, 'Z56.1']],
         [:icd9, "401.9"]]
     )
 
-    criteria_counts("union/cc_5",
+    criteria_counts("union/count_5",
       [:union,
        [:union, [:icd9, "412"], [:icd9, "401.9"]],
        [:place_of_service_code, "21"]]

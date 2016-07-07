@@ -6,7 +6,7 @@ describe ConceptQL::Operators::Person do
       [:person, [:icd9, "412"]]
     )
 
-    criteria_counts("person/crit_2",
+    criteria_counts("person/count_2",
       [:person]
     )
   end

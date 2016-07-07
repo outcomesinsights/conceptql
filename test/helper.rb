@@ -53,13 +53,6 @@ class Minitest::Spec
     statement.query
   end
 
-  def count(test_name, statement=nil)
-    load_check(test_name, statement){|statement| dataset(statement).count}
-  rescue
-    puts $!.sql if $!.respond_to?(:sql)
-    raise
-  end
-
   def criteria_ids(test_name, statement=nil)
     load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :criterion_id)}
   end

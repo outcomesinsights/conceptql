@@ -2,11 +2,11 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::Cpt do
   it "should produce correct results" do
-    criteria_counts("cpt/crit_1",
+    criteria_counts("cpt/count_1",
       [:cpt, "99214"]
     )
 
-    criteria_ids("cpt/crit_2",
+    criteria_ids("cpt/crit_1",
       [:cpt, "99215"]
     )
   end
