@@ -16,11 +16,11 @@ describe ConceptQL::Operators::First do
   end
 
   it "should handle errors when annotating" do
-    annotate("first/crit_no_upstream",
+    annotate("first/anno_no_upstream",
       [:first]
     )
 
-    annotate("first/crit_argument",
+    annotate("first/anno_argument",
       [:first, 1]
     )
   end
