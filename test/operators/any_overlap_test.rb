@@ -8,7 +8,7 @@ describe ConceptQL::Operators::AnyOverlap do
         :right=>[:date_range, {:start=>"2010-01-01", :end=>"2010-12-31"}]}]
     )
 
-    criteria_ids("any_overlap/crit_basic1",
+    criteria_ids("any_overlap/crit_basic2",
       [:any_overlap,
        {:left=>[:date_range, {:start=>"2010-01-01", :end=>"2010-12-31"}],
         :right=>[:icd9, "412"]}]

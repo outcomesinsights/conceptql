@@ -78,7 +78,7 @@ describe ConceptQL::Operators::ConditionType do
       [:condition_type, 'inpatient_header_5']
     )
 
-    criteria_counts("condition_type/count_outpatient_detail",
+    criteria_counts("condition_type/count_inpatient_outpatient_detail",
       [:condition_type, 'inpatient', 'outpatient_detail']
     )
   end
