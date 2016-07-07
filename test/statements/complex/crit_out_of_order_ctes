@@ -1,0 +1,1 @@
+["during",{"left":["one_in_two_out",["icd9","428.0","428.9",{"label":"Unspecific HF Dx"}]],"right":["time_window",["one_in_two_out",["icd9","428.1","428.20","428.21","428.22","428.23","428.40","428.41","428.42","428.43"]],{"start":"-365d","end":"-1d","label":"Year look back period"}]}]

@@ -2,41 +2,26 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::From do
   it "should produce correct results" do
-    count(
+    count("from/count_person",
       [:from, 'person']
-    ).must_equal(250)
+    )
 
-    dataset(
+    count("from/count_observation_period",
       [:from, 'observation_period']
-    ).count.must_equal(1)
+    )
 
-    dataset(
+    count("from/count_condition_occurrence",
       [:from, 'condition_occurrence']
-    ).count.must_equal(34044)
-  end
-
-  it "should handle query_cols for non-CDM tables" do
-    query(
-      [:from, "other_table"]
-    ).operator.query_cols.must_equal(ConceptQL::Operators::SELECTED_COLUMNS)
+    )
   end
 
   it "should handle errors when annotating" do
-    query(
+    annotate("from/anno_has_upstreams",
       [:from, [:icd9, "412"]]
-    ).annotate.must_equal(
-      ["from",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       {:annotation=>{:counts=>{:invalid=>{:n=>0, :rows=>0}}, :errors=>[["has upstreams", ["icd9"]], ["has no arguments"]]}}]
     )
 
-    query(
+    annotate("from/anno_multiple_arguments",
       [:from, 'person', 'observation_period']
-    ).annotate.must_equal(
-      ["from",
-       'person',
-       'observation_period',
-       {:annotation=>{:counts=>{:observation_period=>{:n=>0, :rows=>0}}, :errors=>[["has multiple arguments", ["person", "observation_period"]]]}}]
     )
   end
 end

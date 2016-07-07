@@ -2,36 +2,26 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::ObservationPeriod do
   it "should produce correct results" do
-    criteria_ids(
+    criteria_ids("observation_period/crit_icd9",
       [:observation_period, [:icd9, '412']]
-    ).must_equal("observation_period"=>[1])
+    )
 
-    criteria_ids(
+    criteria_ids("observation_period/crit_male",
       [:observation_period, [:gender, 'Male']]
-    ).must_equal("observation_period"=>[1])
+    )
 
-    criteria_ids(
+    criteria_ids("observation_period/crit_female",
       [:observation_period, [:gender, 'Female']]
-    ).must_equal({})
+    )
   end
 
   it "should handle errors when annotating" do
-    query(
+    annotate("observation_period/anno_multiple_upstreams",
       [:observation_period, [:icd9, '412'], [:gender, 'Male']]
-    ).annotate.must_equal(
-      ["observation_period",
-       ["icd9", "412", {:annotation=>{:counts=>{:condition_occurrence=>{:rows=>50, :n=>38}}}, :name=>"ICD-9 CM"}],
-       ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
-       {:annotation=>{:counts=>{:observation_period=>{:n=>0, :rows=>0}}, :errors=>[["has multiple upstreams", ["icd9", "gender"]]]}}]
     )
 
-    query(
+    annotate("observation_period/anno_has_arguments",
       [:observation_period, 1, [:gender, 'Male']]
-    ).annotate.must_equal(
-      ["observation_period",
-       ["gender", "Male", {:annotation=>{:counts=>{:person=>{:rows=>126, :n=>126}}}}],
-       1,
-       {:annotation=>{:counts=>{:observation_period=>{:n=>0, :rows=>0}}, :errors=>[["has arguments", [1]]]}}]
     )
   end
 end

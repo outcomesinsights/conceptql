@@ -2,13 +2,13 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::RevenueCode do
   it "should produce correct results" do
-    criteria_ids(
+    criteria_ids("revenue_code/crit_1",
       [:revenue_code, '100']
-    ).must_equal({})
+    )
   end
 
   it "should have the correct domain" do
-    query([:revenue_code, '100']).domains == [:procedure_occurrence]
+    domains("revenue_code/domains_1", [:revenue_code, '100'])
   end
 end
 

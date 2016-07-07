@@ -46,15 +46,24 @@ Accepts two params:
       def with_kids(db)
         db.from(stream.evaluate(db))
           .select(*(COLUMNS - [:value_as_number]))
-          .select_append(Sequel.lit('?', arguments.first).cast(Float).as(:value_as_number))
+          .select_append(first_argument.cast(Float).as(:value_as_number))
           .from_self
       end
 
       def as_criterion(db)
         db.from(select_it(db.from(:person).clone(:force_columns=>table_columns(:person)), :person))
           .select(*(COLUMNS - [:value_as_number]))
-          .select_append(Sequel.lit('?', arguments.first).cast(Float).as(:value_as_number))
+          .select_append(first_argument.cast(Float).as(:value_as_number))
           .from_self
+      end
+
+      def first_argument
+        case arguments.first 
+        when String
+          Sequel.identifier(arguments.first)
+        else
+          Sequel.expr(arguments.first)
+        end
       end
     end
   end

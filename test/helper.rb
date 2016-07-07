@@ -1,3 +1,5 @@
+ENV['DATA_MODEL'] ||= 'omopv4'
+
 require_relative 'db'
 
 if ENV['COVERAGE']
@@ -15,8 +17,6 @@ if ENV['COVERAGE']
   end
 end
 
-ENV['DATA_MODEL'] ||= 'omopv4'
-
 $: << "lib"
 require 'conceptql'
 require 'minitest/spec'
@@ -24,11 +24,26 @@ require 'minitest/autorun'
 
 require 'logger'
 require 'pp'
+require 'fileutils'
 
 CDB = ConceptQL::Database.new(DB, :data_model=>ENV['DATA_MODEL'].to_sym)
 DB.extension :error_sql
 
+#ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"] = '1'
+
 class Minitest::Spec
+  def annotate(test_name, statement=nil)
+    load_check(test_name, statement){|statement| query(statement).annotate}
+  end
+
+  def scope_annotate(test_name, statement=nil)
+    load_check(test_name, statement){|statement| query(statement).scope_annotate}
+  end
+
+  def domains(test_name, statement=nil)
+    load_check(test_name, statement){|statement| query(statement).domains}
+  end
+
   def query(statement)
     CDB.query(statement)
   end
@@ -38,23 +53,52 @@ class Minitest::Spec
     statement.query
   end
 
-  def count(statement)
-    dataset(statement).count
+  def count(test_name, statement=nil)
+    load_check(test_name, statement){|statement| dataset(statement).count}
   rescue
     puts $!.sql if $!.respond_to?(:sql)
     raise
   end
 
-  def criteria_ids(statement)
-    hash_groups(statement, :criterion_domain, :criterion_id)
+  def criteria_ids(test_name, statement=nil)
+    load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :criterion_id)}
   end
 
-  def numeric_values(statement)
-    hash_groups(statement, :criterion_domain, :value_as_number)
+  # If no statement is passed, this function loads the statement from the specified test
+  # file. If a statement is passed, it is written to the file.
+  def load_statement(test_name, statement)
+    path = "test/statements/#{test_name}"
+    if statement
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, JSON.generate(statement))
+      statement
+    else
+      JSON.parse(File.read(path))
+    end
   end
 
-  def criteria_counts(statement)
-    dataset(statement).from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)
+  def check_output(test_name, results)
+    json = JSON.generate(results)
+    path = "test/results/#{ENV["DATA_MODEL"]}/#{test_name}"
+    if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, json)
+    else
+      File.read(path).must_equal(json)
+    end
+    results
+  end
+
+  def numeric_values(test_name, statement=nil)
+    load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :value_as_number)}
+  end
+
+  def criteria_counts(test_name, statement=nil)
+    load_check(test_name, statement){|statement| query(statement).query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
+  end
+
+  def optimized_criteria_counts(test_name, statement=nil)
+    load_check(test_name, statement){|statement| query(statement).optimized.query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
   end
 
   def hash_groups(statement, key, value)
@@ -62,6 +106,10 @@ class Minitest::Spec
   rescue
     puts $!.sql if $!.respond_to?(:sql)
     raise
+  end
+
+  def load_check(test_name, statement)
+    check_output(test_name, yield(load_statement(test_name, statement)))
   end
 
   def log
