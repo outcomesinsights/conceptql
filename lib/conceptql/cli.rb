@@ -117,12 +117,17 @@ module ConceptQL
     def dumpit(path)
       path = Pathname.new(path)
       path.mkpath unless path.exist?
+      headers_path = path + 'headers'
+      headers_path.mkpath unless headers_path.exist?
       db.tables.each do |table|
         puts "Dumping #{table}..."
         ds = db[table]
         rows = ds.select_map(ds.columns)
         CSV.open(path + "#{table}.csv", "wb") do |csv|
           rows.each { |row| csv << row }
+        end
+        CSV.open(headers_path + "#{table}.csv", "wb") do |csv|
+          csv << ds.columns
         end
       end
     end
