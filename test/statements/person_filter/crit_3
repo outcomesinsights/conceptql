@@ -2,12 +2,12 @@
   "person_filter",
   {
     "left": [
-      "gender",
-      "Male"
+      "icd9",
+      "412"
     ],
     "right": [
-      "death",
-      true
+      "gender",
+      "Male"
     ]
   }
 ]
