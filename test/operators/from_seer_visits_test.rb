@@ -24,7 +24,7 @@ describe ConceptQL::Operators::FromSeerVisits do
       [:from_seer_visits]
     )
 
-    annotate("from_seer_visits/multiple_upstreams",
+    annotate("from_seer_visits/anno_multiple_upstreams",
       [:from_seer_visits, [:visit_occurrence, [:icd9, "412"]], [:visit_occurrence, [:icd9, "412"]]]
     )
   end

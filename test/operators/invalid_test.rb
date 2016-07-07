@@ -2,7 +2,7 @@ require_relative '../helper'
 
 describe ConceptQL::Operators::Invalid do
   it "should show up in scope errors correctly" do
-    scope_annotate("invalid/scope_annotate_1",
+    scope_annotate("invalid/scanno_1",
       [:cpt1, '123', { id: 1 }]
     )
   end

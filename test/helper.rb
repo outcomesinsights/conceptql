@@ -32,15 +32,15 @@ DB.extension :error_sql
 #ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"] = '1'
 
 class Minitest::Spec
-  def annotate(test_name, statement)
+  def annotate(test_name, statement=nil)
     load_check(test_name, statement){|statement| query(statement).annotate}
   end
 
-  def scope_annotate(test_name, statement)
+  def scope_annotate(test_name, statement=nil)
     load_check(test_name, statement){|statement| query(statement).scope_annotate}
   end
 
-  def domains(test_name, statement)
+  def domains(test_name, statement=nil)
     load_check(test_name, statement){|statement| query(statement).domains}
   end
 
@@ -53,20 +53,20 @@ class Minitest::Spec
     statement.query
   end
 
-  def count(test_name, statement)
+  def count(test_name, statement=nil)
     load_check(test_name, statement){|statement| dataset(statement).count}
   rescue
     puts $!.sql if $!.respond_to?(:sql)
     raise
   end
 
-  def criteria_ids(test_name, statement)
+  def criteria_ids(test_name, statement=nil)
     load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :criterion_id)}
   end
 
   # If no statement is passed, this function loads the statement from the specified test
   # file. If a statement is passed, it is written to the file.
-  def load_statement(test_name, statement=nil)
+  def load_statement(test_name, statement)
     path = "test/statements/#{test_name}"
     if statement
       FileUtils.mkdir_p(File.dirname(path))
@@ -89,15 +89,15 @@ class Minitest::Spec
     results
   end
 
-  def numeric_values(test_name, statement)
+  def numeric_values(test_name, statement=nil)
     load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :value_as_number)}
   end
 
-  def criteria_counts(test_name, statement)
+  def criteria_counts(test_name, statement=nil)
     load_check(test_name, statement){|statement| query(statement).query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
   end
 
-  def optimized_criteria_counts(test_name, statement)
+  def optimized_criteria_counts(test_name, statement=nil)
     load_check(test_name, statement){|statement| query(statement).optimized.query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
   end
 
