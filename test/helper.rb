@@ -84,7 +84,7 @@ class Minitest::Spec
       FileUtils.mkdir_p(File.dirname(path))
       File.write(path, json)
     else
-      File.read(path).must_equal(json)
+      json.must_equal(File.read(path))
     end
     results
   end
