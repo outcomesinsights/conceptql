@@ -19,7 +19,7 @@ describe ConceptQL::Operators::After do
   end
 
   it "should produce correct results when using :at_least option" do
-    criteria_ids(
+    criteria_ids("after/crit_at_least",
       [:after,
        {:left=>[:icd9, "412"],
         :right=>[:time_window, [:gender, "Male"], {:start=>"50y", :end=>"50y"}],

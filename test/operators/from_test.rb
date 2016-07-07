@@ -15,13 +15,6 @@ describe ConceptQL::Operators::From do
     )
   end
 
-  it "should handle query_cols for non-CDM tables" do
-    # TODO
-    query(
-      [:from, "other_table"]
-    ).operator.query_cols.must_equal(ConceptQL::Operators::SELECTED_COLUMNS)
-  end
-
   it "should handle errors when annotating" do
     annotate("from/anno_has_upstreams",
       [:from, [:icd9, "412"]]

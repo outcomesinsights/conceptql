@@ -68,13 +68,13 @@ class Minitest::Spec
   # file. If a statement is passed, it is written to the file.
   def load_statement(test_name, statement=nil)
     path = "test/statements/#{test_name}"
-    if statement
-      FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, JSON.generate(statement))
-      statement
-    else
-      JSON.parse(File.read(path))
-    end
+    # if statement
+    #   FileUtils.mkdir_p(File.dirname(path))
+    #   File.write(path, JSON.generate(statement))
+    #   statement
+    # else
+    JSON.parse(File.read(path))
+    # end
   end
 
   def check_output(test_name, results)

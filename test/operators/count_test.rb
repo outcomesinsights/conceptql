@@ -10,10 +10,9 @@ describe ConceptQL::Operators::Count do
       [:count, [:icd9_procedure, "00.13"], [:numeric, 1, [:ndc, "12745010902"]]]
     ).must_equal("drug_exposure"=>[1], "procedure_occurrence"=>[29154])
 
-    # TODO this is more complex
     criteria_ids("count/crit_person",
       [:count, [:numeric, 1]]
-    )["person"].inject(:+).must_equal(35929)
+    )
   end
 
   it "should handle errors when annotating" do
