@@ -71,13 +71,13 @@ class Minitest::Spec
   end
 
   def check_output(test_name, results)
-    json = JSON.pretty_generate(results)
     path = "test/results/#{ENV["DATA_MODEL"]}/#{test_name}"
     if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
+      json = JSON.pretty_generate(results)
       FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, json)
+      File.write(path, JSON.pretty_generate(results))
     else
-      json.must_equal(File.read(path))
+      JSON.parse(results.to_json).must_equal(JSON.parse(File.read(path)))
     end
     results
   end
