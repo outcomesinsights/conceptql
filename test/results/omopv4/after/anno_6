@@ -1,1 +1,60 @@
-["after",{"left":["icd9","412",{"annotation":{"counts":{"condition_occurrence":{"rows":50,"n":38}}},"name":"ICD-9 CM"}],"right":["icd9","412",{"annotation":{"counts":{"condition_occurrence":{"rows":50,"n":38}}},"name":"ICD-9 CM"}],"within":"abc","at_least":"cba","occurrences":"bac","annotation":{"counts":{"condition_occurrence":{"rows":0,"n":0}},"errors":[["wrong option format","within"],["wrong option format","at_least"],["wrong option format","occurrences"]]}}]
+[
+  "after",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 50,
+              "n": 38
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "right": [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 50,
+              "n": 38
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "within": "abc",
+    "at_least": "cba",
+    "occurrences": "bac",
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "wrong option format",
+          "within"
+        ],
+        [
+          "wrong option format",
+          "at_least"
+        ],
+        [
+          "wrong option format",
+          "occurrences"
+        ]
+      ]
+    }
+  }
+]

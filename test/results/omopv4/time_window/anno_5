@@ -1,1 +1,57 @@
-["time_window",["icd9","412",{"annotation":{"counts":{"condition_occurrence":{"rows":50,"n":38}}},"name":"ICD-9 CM"}],["place_of_service_code","21",{"annotation":{"counts":{"visit_occurrence":{"rows":170,"n":92}}}}],{"start":"-2y","end":"-2y","annotation":{"counts":{"condition_occurrence":{"rows":0,"n":0},"visit_occurrence":{"rows":0,"n":0}},"errors":[["has multiple upstreams",["icd9","place_of_service_code"]]]}}]
+[
+  "time_window",
+  [
+    "icd9",
+    "412",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 50,
+            "n": 38
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  [
+    "place_of_service_code",
+    "21",
+    {
+      "annotation": {
+        "counts": {
+          "visit_occurrence": {
+            "rows": 170,
+            "n": 92
+          }
+        }
+      }
+    }
+  ],
+  {
+    "start": "-2y",
+    "end": "-2y",
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        },
+        "visit_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has multiple upstreams",
+          [
+            "icd9",
+            "place_of_service_code"
+          ]
+        ]
+      ]
+    }
+  }
+]

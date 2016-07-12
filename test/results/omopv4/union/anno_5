@@ -1,1 +1,33 @@
-["union",["foo","123",{"annotation":{"counts":{"invalid":{"rows":0,"n":0}},"errors":[["invalid operator","foo"]]}}],{"annotation":{"counts":{"invalid":{"rows":0,"n":0}}}}]
+[
+  "union",
+  [
+    "foo",
+    "123",
+    {
+      "annotation": {
+        "counts": {
+          "invalid": {
+            "rows": 0,
+            "n": 0
+          }
+        },
+        "errors": [
+          [
+            "invalid operator",
+            "foo"
+          ]
+        ]
+      }
+    }
+  ],
+  {
+    "annotation": {
+      "counts": {
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    }
+  }
+]

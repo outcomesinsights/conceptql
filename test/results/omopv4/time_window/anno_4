@@ -1,1 +1,39 @@
-["time_window",["icd9","412",{"annotation":{"counts":{"condition_occurrence":{"rows":50,"n":38}}},"name":"ICD-9 CM"}],21,{"start":"-2y","end":"-2y","annotation":{"counts":{"condition_occurrence":{"rows":0,"n":0}},"errors":[["has arguments",[21]]]}}]
+[
+  "time_window",
+  [
+    "icd9",
+    "412",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 50,
+            "n": 38
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  21,
+  {
+    "start": "-2y",
+    "end": "-2y",
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has arguments",
+          [
+            21
+          ]
+        ]
+      ]
+    }
+  }
+]

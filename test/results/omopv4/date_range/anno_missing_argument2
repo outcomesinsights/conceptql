@@ -1,1 +1,20 @@
-["date_range",{"start":"START","annotation":{"counts":{"person":{"rows":0,"n":0}},"errors":[["required option not present","end"]]}}]
+[
+  "date_range",
+  {
+    "start": "START",
+    "annotation": {
+      "counts": {
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "required option not present",
+          "end"
+        ]
+      ]
+    }
+  }
+]

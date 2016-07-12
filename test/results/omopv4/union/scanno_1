@@ -1,1 +1,22 @@
-{"errors":{"union":[["has no upstream"]]},"warnings":{},"counts":{"union":{"invalid":{"rows":0,"n":0}}},"operators":["union"]}
+{
+  "errors": {
+    "union": [
+      [
+        "has no upstream"
+      ]
+    ]
+  },
+  "warnings": {
+  },
+  "counts": {
+    "union": {
+      "invalid": {
+        "rows": 0,
+        "n": 0
+      }
+    }
+  },
+  "operators": [
+    "union"
+  ]
+}
