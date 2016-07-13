@@ -9,6 +9,8 @@ module ConceptQL
       argument :drgs, type: :codelist, vocab: 'DRG'
       predominant_domains :procedure_occurrence
 
+      codes_should_match(/^\d{3}$/)
+
       def query(db)
         costs = super(db).select(:procedure_occurrence_id)
         db[:procedure_occurrence].where(procedure_occurrence_id: costs)

@@ -1,7 +1,8 @@
 [
-  "cpt",
-  "99214",
-  "XYS",
+  "icd10_pcs",
+  "Z561123",
+  "561123",
+  "AA561123",
   {
     "annotation": {
       "counts": {
@@ -13,10 +14,15 @@
       "warnings": [
         [
           "improperly formatted code",
-          "XYS"
+          "561123",
+          "AA561123"
+        ],
+        [
+          "unknown concept code",
+          "Z561123"
         ]
       ]
     },
-    "name": "CPT"
+    "name": "ICD-10 PCS"
   }
 ]

@@ -1,6 +1,7 @@
 [
-  "read",
-  "XYS",
+  "icd10",
+  "Z56.1",
+  "Z561.1",
   {
     "annotation": {
       "counts": {
@@ -11,11 +12,11 @@
       },
       "warnings": [
         [
-          "unknown source code",
-          "XYS"
+          "improperly formatted code",
+          "Z561.1"
         ]
       ]
     },
-    "name": "READ"
+    "name": "ICD-10 CM"
   }
 ]

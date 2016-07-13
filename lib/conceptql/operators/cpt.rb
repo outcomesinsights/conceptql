@@ -9,6 +9,8 @@ module ConceptQL
       argument :cpts, type: :codelist, vocab: 'CPT4'
       predominant_domains :procedure_occurrence
 
+      codes_should_match(/^\w{5}$/)
+
       def table
         :procedure_occurrence
       end

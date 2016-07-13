@@ -87,7 +87,7 @@ module ConceptQL
       @validations = []
 
       class << self
-        attr :validations
+        attr :validations, :codes_regexp
 
         def register(file, *data_models)
           data_models = OPERATORS.keys if data_models.empty?
@@ -119,6 +119,7 @@ module ConceptQL
           at_most_one_argument
           option
           required_options
+          codes_match
         END
 
         validation_meths.each do |type|
@@ -128,9 +129,15 @@ module ConceptQL
           end
         end
 
+        def codes_should_match(format)
+          @codes_regexp = format
+          validate_codes_match
+        end
+
         def inherited(subclass)
           super
           subclass.instance_variable_set(:@validations, validations.dup)
+          subclass.instance_variable_set(:@codes_regexp, codes_regexp.dup) if codes_regexp
         end
 
         def new(*)
@@ -596,6 +603,19 @@ module ConceptQL
           unless options.has_key?(opt)
             add_error("required option not present", opt.to_s)
           end
+        end
+      end
+
+      def bad_arguments
+        return [] unless self.class.codes_regexp
+        @bad_arguments ||= arguments.reject do |arg|
+          self.class.codes_regexp === arg
+        end
+      end
+
+      def validate_codes_match
+        unless bad_arguments.empty?
+          add_warning("improperly formatted code", *bad_arguments)
         end
       end
 

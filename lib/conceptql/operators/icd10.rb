@@ -9,6 +9,8 @@ module ConceptQL
       argument :icd10s, type: :codelist, vocab: 'ICD10CM'
       predominant_domains :condition_occurrence
 
+      codes_should_match(/^[A-Z][0-9][A-Z0-9](\.[A-Z0-9]{1,4})?$/i)
+
       def vocabulary_id
         34
       end

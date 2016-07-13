@@ -20,7 +20,7 @@
                 },
                 "warnings": [
                   [
-                    "invalid source code",
+                    "improperly formatted code",
                     "203.0x"
                   ]
                 ]
@@ -158,7 +158,7 @@
                 },
                 "warnings": [
                   [
-                    "invalid concept code",
+                    "unknown concept code",
                     "38220",
                     "38221",
                     "85102",
@@ -220,7 +220,7 @@
                   },
                   "warnings": [
                     [
-                      "invalid concept code",
+                      "unknown concept code",
                       "84156",
                       "84166",
                       "86335",

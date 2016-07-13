@@ -29,7 +29,7 @@
           },
           "warnings": [
             [
-              "invalid source code",
+              "improperly formatted code",
               "ZZZZZZZ"
             ]
           ]

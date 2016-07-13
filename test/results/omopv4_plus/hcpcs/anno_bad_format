@@ -1,22 +1,24 @@
 [
-  "cpt",
-  "99214",
-  "XYS",
+  "hcpcs",
+  "A0382",
+  "A03821",
+  "3821",
   {
     "annotation": {
       "counts": {
         "procedure_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": 3,
+          "n": 3
         }
       },
       "warnings": [
         [
           "improperly formatted code",
-          "XYS"
+          "A03821",
+          "3821"
         ]
       ]
     },
-    "name": "CPT"
+    "name": "HCPCS"
   }
 ]
