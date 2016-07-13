@@ -1,1 +1,22 @@
-["cpt","99214","XYS",{"annotation":{"counts":{"procedure_occurrence":{"rows":1221,"n":203}},"warnings":[["invalid concept code","XYS"]]},"name":"CPT"}]
+[
+  "cpt",
+  "99214",
+  "XYS",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 1221,
+          "n": 203
+        }
+      },
+      "warnings": [
+        [
+          "invalid concept code",
+          "XYS"
+        ]
+      ]
+    },
+    "name": "CPT"
+  }
+]

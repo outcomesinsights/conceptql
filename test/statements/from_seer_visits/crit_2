@@ -1,1 +1,11 @@
-["from_seer_visits","Doctor",["visit_occurrence",["icd9","412"]]]
+[
+  "from_seer_visits",
+  "Doctor",
+  [
+    "visit_occurrence",
+    [
+      "icd9",
+      "412"
+    ]
+  ]
+]

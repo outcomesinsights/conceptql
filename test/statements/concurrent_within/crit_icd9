@@ -1,1 +1,11 @@
-["concurrent_within",["icd9","412"],{"start":"-2y","end":"-2y"}]
+[
+  "concurrent_within",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "start": "-2y",
+    "end": "-2y"
+  }
+]

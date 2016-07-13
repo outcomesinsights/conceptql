@@ -1,1 +1,13 @@
-["bad_op",{"left":["icd9","412"],"right":["icd9","ZZZZZZZ"]}]
+[
+  "bad_op",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "icd9",
+      "ZZZZZZZ"
+    ]
+  }
+]

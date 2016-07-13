@@ -53,13 +53,6 @@ class Minitest::Spec
     statement.query
   end
 
-  def count(test_name, statement=nil)
-    load_check(test_name, statement){|statement| dataset(statement).count}
-  rescue
-    puts $!.sql if $!.respond_to?(:sql)
-    raise
-  end
-
   def criteria_ids(test_name, statement=nil)
     load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :criterion_id)}
   end
@@ -70,7 +63,7 @@ class Minitest::Spec
     path = "test/statements/#{test_name}"
     if statement
       FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, JSON.generate(statement))
+      File.write(path, JSON.pretty_generate(statement))
       statement
     else
       JSON.parse(File.read(path))
@@ -78,15 +71,26 @@ class Minitest::Spec
   end
 
   def check_output(test_name, results)
-    json = JSON.generate(results)
     path = "test/results/#{ENV["DATA_MODEL"]}/#{test_name}"
+
     if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
-      FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, json)
-    else
-      File.read(path).must_equal(json)
+      save_results(path, results)
     end
+
+    expected = begin
+      File.read(path)
+    rescue Errno::ENOENT
+      save_results(path, [])
+      "[]"
+    end
+
+    JSON.parse(results.to_json).must_equal(JSON.parse(expected))
     results
+  end
+
+  def save_results(path, results)
+    FileUtils.mkdir_p(File.dirname(path))
+    File.write(path, JSON.pretty_generate(results))
   end
 
   def numeric_values(test_name, statement=nil)

@@ -1,0 +1,36 @@
+{
+  "errors": {
+  },
+  "warnings": {
+    "1": [
+      [
+        "improperly formatted code",
+        "XYS"
+      ]
+    ]
+  },
+  "counts": {
+    "1": {
+      "condition_occurrence": {
+        "rows": 39,
+        "n": 28
+      }
+    },
+    "2": {
+      "condition_occurrence": {
+        "rows": 1409,
+        "n": 182
+      }
+    },
+    "union": {
+      "condition_occurrence": {
+        "rows": 1448,
+        "n": 183
+      }
+    }
+  },
+  "operators": [
+    "icd9",
+    "union"
+  ]
+}

@@ -1,0 +1,31 @@
+[
+  "except",
+  {
+    "left": [
+      "union",
+      [
+        "icd9",
+        "412"
+      ],
+      [
+        "gender",
+        "Male"
+      ],
+      [
+        "cpt",
+        "99214"
+      ]
+    ],
+    "right": [
+      "union",
+      [
+        "condition_type",
+        "inpatient_header"
+      ],
+      [
+        "race",
+        "White"
+      ]
+    ]
+  }
+]

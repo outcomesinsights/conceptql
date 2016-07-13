@@ -1,1 +1,11 @@
-["one_in_two_out",["icd9","412"],{"min_gap":30,"blah":true}]
+[
+  "one_in_two_out",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "min_gap": 30,
+    "blah": true
+  }
+]

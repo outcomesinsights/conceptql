@@ -9,6 +9,8 @@ module ConceptQL
       argument :icd9s, type: :codelist, vocab: 'ICD9Proc'
       predominant_domains :procedure_occurrence
 
+      codes_should_match(/^\d{2}(.\d{1,2})?$/i)
+
       def table
         :procedure_occurrence
       end

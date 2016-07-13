@@ -1,1 +1,19 @@
-["after",{"left":["union"],"right":["time_window",["gender","Male"],{"start":"50y","end":"50y"}]}]
+[
+  "after",
+  {
+    "left": [
+      "union"
+    ],
+    "right": [
+      "time_window",
+      [
+        "gender",
+        "Male"
+      ],
+      {
+        "start": "50y",
+        "end": "50y"
+      }
+    ]
+  }
+]

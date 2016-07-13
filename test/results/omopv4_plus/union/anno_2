@@ -1,0 +1,74 @@
+[
+  "union",
+  [
+    "union",
+    [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 39,
+              "n": 28
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    [
+      "icd9",
+      "401.9",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 1409,
+              "n": 182
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 1448,
+            "n": 183
+          }
+        }
+      }
+    }
+  ],
+  [
+    "place_of_service_code",
+    "21",
+    {
+      "annotation": {
+        "counts": {
+          "visit_occurrence": {
+            "rows": 0,
+            "n": 0
+          }
+        }
+      }
+    }
+  ],
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 1448,
+          "n": 183
+        },
+        "visit_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    }
+  }
+]

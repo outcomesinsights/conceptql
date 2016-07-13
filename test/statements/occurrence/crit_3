@@ -1,1 +1,11 @@
-["occurrence",-1,["icd9","412"],{"unique":true}]
+[
+  "occurrence",
+  -1,
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "unique": true
+  }
+]

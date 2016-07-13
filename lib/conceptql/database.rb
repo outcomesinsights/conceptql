@@ -5,6 +5,7 @@ module ConceptQL
     def initialize(db, opts={})
       @db = db
       db.extension :date_arithmetic
+      db.extension :error_sql
       @opts = opts.dup
       @opts[:data_model] ||= :omopv4
       @opts[:db_type] ||= db.database_type

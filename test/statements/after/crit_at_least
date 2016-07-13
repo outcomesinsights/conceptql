@@ -1,1 +1,21 @@
-["after",{"left":["icd9","412"],"right":["time_window",["gender","Male"],{"start":"50y","end":"50y"}],"at_least":"15000d"}]
+[
+  "after",
+  {
+    "left": [
+      "icd9",
+      "412"
+    ],
+    "right": [
+      "time_window",
+      [
+        "gender",
+        "Male"
+      ],
+      {
+        "start": "50y",
+        "end": "50y"
+      }
+    ],
+    "at_least": "15000d"
+  }
+]

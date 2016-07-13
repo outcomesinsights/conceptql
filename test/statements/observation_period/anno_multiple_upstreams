@@ -1,1 +1,11 @@
-["observation_period",["icd9","412"],["gender","Male"]]
+[
+  "observation_period",
+  [
+    "icd9",
+    "412"
+  ],
+  [
+    "gender",
+    "Male"
+  ]
+]

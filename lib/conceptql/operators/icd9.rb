@@ -9,6 +9,8 @@ module ConceptQL
       argument :icd9s, type: :codelist, vocab: 'ICD9CM'
       predominant_domains :condition_occurrence
 
+      codes_should_match(/^(V\d{2}(\.\d{1,2})?|\d{3}(\.\d{1,2})?|E\d{3}(\.\d)?)$/i)
+
       def vocabulary_id
         2
       end

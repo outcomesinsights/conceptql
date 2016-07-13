@@ -1,0 +1,17 @@
+{
+  "errors": {
+  },
+  "warnings": {
+  },
+  "counts": {
+    "cpt": {
+      "procedure_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    }
+  },
+  "operators": [
+    "cpt"
+  ]
+}

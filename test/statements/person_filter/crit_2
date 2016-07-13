@@ -1,1 +1,13 @@
-["person_filter",{"left":["union",["icd9","412"],["cpt","99214"]],"right":["gender","Male"]}]
+[
+  "person_filter",
+  {
+    "left": [
+      "gender",
+      "Male"
+    ],
+    "right": [
+      "death",
+      true
+    ]
+  }
+]

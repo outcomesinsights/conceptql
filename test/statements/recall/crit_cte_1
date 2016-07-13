@@ -1,1 +1,17 @@
-["first",["union",["recall","Codes"],["icd9","412",{"label":"Codes"}]]]
+[
+  "first",
+  [
+    "union",
+    [
+      "recall",
+      "Codes"
+    ],
+    [
+      "icd9",
+      "412",
+      {
+        "label": "Codes"
+      }
+    ]
+  ]
+]

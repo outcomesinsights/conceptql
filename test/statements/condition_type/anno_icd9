@@ -1,1 +1,7 @@
-["condition_type",["icd9","412"]]
+[
+  "condition_type",
+  [
+    "icd9",
+    "412"
+  ]
+]

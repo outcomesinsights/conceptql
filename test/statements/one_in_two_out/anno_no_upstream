@@ -1,1 +1,7 @@
-["one_in_two_out",{"gap":30,"blah":true}]
+[
+  "one_in_two_out",
+  {
+    "gap": 30,
+    "blah": true
+  }
+]
