@@ -72,14 +72,25 @@ class Minitest::Spec
 
   def check_output(test_name, results)
     path = "test/results/#{ENV["DATA_MODEL"]}/#{test_name}"
+
     if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
-      json = JSON.pretty_generate(results)
-      FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, JSON.pretty_generate(results))
-    else
-      JSON.parse(results.to_json).must_equal(JSON.parse(File.read(path)))
+      save_results(path, results)
     end
+
+    expected = begin
+      File.read(path)
+    rescue Errno::ENOENT
+      save_results(path, [])
+      "[]"
+    end
+
+    JSON.parse(results.to_json).must_equal(JSON.parse(expected))
     results
+  end
+
+  def save_results(path, results)
+    FileUtils.mkdir_p(File.dirname(path))
+    File.write(path, JSON.pretty_generate(results))
   end
 
   def numeric_values(test_name, statement=nil)
