@@ -1,7 +1,7 @@
 module ConceptQL
   class SqlFormatter
     def format(sql)
-      if command?('pg_formatter')
+      if command?(formatter)
         sql, _ = Open3.capture2(formatter, stdin_data: sql)
         return sql
       end
@@ -13,6 +13,10 @@ module ConceptQL
     def command?(name)
       `which #{name}`
       $?.success?
+    end
+
+    def formatter
+      'pg_format'
     end
   end
 end
