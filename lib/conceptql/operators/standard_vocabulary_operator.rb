@@ -1,4 +1,4 @@
-require_relative 'operator'
+require_relative 'vocabulary_operator'
 
 module ConceptQL
   module Operators
@@ -6,7 +6,7 @@ module ConceptQL
     #
     # If that seems confusing, then think of CPT or SNOMED criteria.  That type of criterion takes a set of values that live in the OMOP concept table.
     #
-    # My coworker came up with a nice, gneralized query that checks for matching concept_ids and matching source_code values.  This class encapsulates that query.
+    # My coworker came up with a nice, generalized query that checks for matching concept_ids and matching source_code values.  This class encapsulates that query.
     #
     # Subclasses must provide the following methods:
     # * table
@@ -18,11 +18,7 @@ module ConceptQL
     # * vocabulary_id
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for CPT, a value of 4 (for CPT-4)
-    class StandardVocabularyOperator < Operator
-      category "Select by Clinical Codes"
-      basic_type :selection
-      validate_no_upstreams
-      validate_at_least_one_argument
+    class StandardVocabularyOperator < VocabularyOperator
 
       def query(db)
         ds = db.from(table_name)
@@ -37,10 +33,6 @@ module ConceptQL
         table_columns(table_name, :concept)
       end
 
-      def domain
-        table
-      end
-
       def conditions
         if omopv4?
           {c__concept_code: values, c__vocabulary_id: vocabulary_id}
@@ -51,15 +43,11 @@ module ConceptQL
         end
       end
 
+      def describe_code(db, code)
+        db[:concept].filter(:vocabulary_id => vocabulary_id).filter(:concept_code => code).map(:concept_name)[0]
+      end
+
       private
-
-      def code_column
-        table_source_value(table_name)
-      end
-
-      def vocabulary_id_column
-        table_vocabulary_id(table_name)
-      end
 
       def validate(db)
         super
@@ -69,14 +57,6 @@ module ConceptQL
             add_warning("invalid concept code", *missing_args)
           end
         end
-      end
-
-      def table_name
-        @table_name ||= make_table_name(table)
-      end
-
-      def table_concept_column
-        "tab__#{concept_column}".to_sym
       end
     end
   end

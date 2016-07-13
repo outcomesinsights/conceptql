@@ -219,6 +219,13 @@ module ConceptQL
         @annotation = res
       end
 
+      def code_list(db)
+        code_lists = @upstreams.map do | upstream_op |
+          upstream_op.code_list(db)
+        end
+        code_lists.flatten(1)
+      end
+
       def dup_values(args)
         self.class.new(nodifier, *args)
       end

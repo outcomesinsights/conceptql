@@ -1,4 +1,4 @@
-require_relative 'operator'
+require_relative 'vocabulary_operator'
 
 module ConceptQL
   module Operators
@@ -25,15 +25,10 @@ module ConceptQL
     # * vocabulary_id
     #   * The vocabulary ID of the source vocabulary for the criterion
     #   * e.g. for ICD-9, a value of 2 (for ICD-9-CM)
-    class SourceVocabularyOperator < Operator
-      category "Select by Clinical Codes"
-      basic_type :selection
-      validate_no_upstreams
-      validate_at_least_one_argument
+    class SourceVocabularyOperator < VocabularyOperator
 
       def query(db)
-        ds = db.from(table_name)
-          .where(conditions)
+        ds = db.from(table_name).where(conditions)
         if omopv4?
           ds = ds.join(:source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
         end
@@ -46,10 +41,6 @@ module ConceptQL
         else
           table_columns(table_name)
         end
-      end
-
-      def domain
-        table
       end
 
       def unionable?(other)
@@ -70,15 +61,11 @@ module ConceptQL
         end
       end
 
+      def describe_code(db, code)
+        db[:source_to_concept_map].filter(:source_vocabulary_id => vocabulary_id).filter(:source_code => code).map(:source_code_description)[0]
+      end
+
       private
-
-      def code_column
-        table_source_value(table_name)
-      end
-
-      def vocabulary_id_column
-        table_vocabulary_id(table_name)
-      end
 
       def validate(db)
         super
@@ -88,14 +75,6 @@ module ConceptQL
             add_warning("invalid source code", *missing_args)
           end
         end
-      end
-
-      def table_name
-        @table_name ||= make_table_name(table)
-      end
-
-      def table_concept_column
-        "tab__#{concept_column}".to_sym
       end
 
       def table_source_column
