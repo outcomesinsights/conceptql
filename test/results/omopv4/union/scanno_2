@@ -1,1 +1,36 @@
-{"errors":{},"warnings":{"1":[["invalid source code","XYS"]]},"counts":{"1":{"condition_occurrence":{"rows":50,"n":38}},"2":{"condition_occurrence":{"rows":1125,"n":213}},"union":{"condition_occurrence":{"rows":1175,"n":213}}},"operators":["icd9","union"]}
+{
+  "errors": {
+  },
+  "warnings": {
+    "1": [
+      [
+        "invalid source code",
+        "XYS"
+      ]
+    ]
+  },
+  "counts": {
+    "1": {
+      "condition_occurrence": {
+        "rows": 50,
+        "n": 38
+      }
+    },
+    "2": {
+      "condition_occurrence": {
+        "rows": 1125,
+        "n": 213
+      }
+    },
+    "union": {
+      "condition_occurrence": {
+        "rows": 1175,
+        "n": 213
+      }
+    }
+  },
+  "operators": [
+    "icd9",
+    "union"
+  ]
+}

@@ -1,1 +1,17 @@
-{"errors":{},"warnings":{},"counts":{"cpt":{"procedure_occurrence":{"rows":1221,"n":203}}},"operators":["cpt"]}
+{
+  "errors": {
+  },
+  "warnings": {
+  },
+  "counts": {
+    "cpt": {
+      "procedure_occurrence": {
+        "rows": 1221,
+        "n": 203
+      }
+    }
+  },
+  "operators": [
+    "cpt"
+  ]
+}

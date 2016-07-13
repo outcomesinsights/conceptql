@@ -1,1 +1,43 @@
-["except",{"left":["icd9","412",{"annotation":{"counts":{"condition_occurrence":{"rows":50,"n":38}}},"name":"ICD-9 CM"}],"right":["condition_type","inpatient_header",{"annotation":{"counts":{"condition_occurrence":{"rows":1372,"n":92}}}}],"foo":true,"annotation":{"counts":{"condition_occurrence":{"rows":42,"n":33}}}}]
+[
+  "except",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 50,
+              "n": 38
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "right": [
+      "condition_type",
+      "inpatient_header",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 1372,
+              "n": 92
+            }
+          }
+        }
+      }
+    ],
+    "foo": true,
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 42,
+          "n": 33
+        }
+      }
+    }
+  }
+]
