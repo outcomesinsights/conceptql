@@ -66,7 +66,6 @@ module ConceptQL
     end
 
     def code_list(db)
-      puts "Query.code_list #{operator}";
       operator.code_list(db)
     end      
 
