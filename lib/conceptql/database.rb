@@ -1,4 +1,4 @@
-require 'facets/core/hash/revalue'
+require 'facets/hash/revalue'
 
 module ConceptQL
   class Database
