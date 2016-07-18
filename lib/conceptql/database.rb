@@ -8,7 +8,7 @@ module ConceptQL
       @db = db
       db.extension :date_arithmetic
       db.extension :error_sql
-      @opts = opts.revalue { |v| v.to_sym }
+      @opts = opts.revalue { |v| v ? v.to_sym : v }
       @opts[:data_model] ||= :omopv4
       @opts[:db_type] ||= db.database_type
     end
