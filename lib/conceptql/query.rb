@@ -1,5 +1,4 @@
 require 'json'
-require 'mkmf'
 require 'open3'
 require 'forwardable'
 require_relative 'scope'
@@ -67,7 +66,7 @@ module ConceptQL
 
     def code_list(db)
       operator.code_list(db)
-    end      
+    end
 
     private
     attr :db, :nodifier
