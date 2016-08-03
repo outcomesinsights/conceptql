@@ -1,5 +1,4 @@
 require 'json'
-require 'mkmf'
 require 'open3'
 require 'forwardable'
 require_relative 'scope'
@@ -66,13 +65,11 @@ module ConceptQL
     end
 
     def code_list(db)
-      puts "Query.code_list #{operator}";
       operator.code_list(db).uniq
-    end      
+    end
 
     private
     attr :db, :nodifier
-
 
     def extract_statement(stmt)
       if stmt.is_a?(Array) && stmt.length == 1 && stmt.first.is_a?(Array)

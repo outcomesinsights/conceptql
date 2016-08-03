@@ -14,9 +14,6 @@ module ConceptQL
       end
 
       def query(db)
-        if database_type == :impala
-          db.refresh(values.first.to_sym) if db.respond_to?(:refresh)
-        end
         db.from(values.first.to_sym)
       end
 

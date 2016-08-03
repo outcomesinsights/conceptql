@@ -1,14 +1,20 @@
+require 'facets/hash/revalue'
+
 module ConceptQL
   class Database
     attr :db
 
     def initialize(db, opts={})
       @db = db
-      db.extension :date_arithmetic
-      db.extension :error_sql
-      @opts = opts.dup
+      db_type = :impala
+      if db
+        db.extension :date_arithmetic
+        db.extension :error_sql
+        db_type = db.database_type
+      end
+      @opts = opts.revalue { |v| v ? v.to_sym : v }
       @opts[:data_model] ||= :omopv4
-      @opts[:db_type] ||= db.database_type
+      @opts[:db_type] ||= db_type
     end
 
     def query(statement, opts={})

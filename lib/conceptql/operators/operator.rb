@@ -11,13 +11,13 @@ module ConceptQL
     SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
     TABLE_VOCABULARY_ID_COLUMN = {
-      :condition_occurrence=> :condition_concept_vocabulary_id,
-      :death=> :cause_of_death_concept_vocabulary_id,
-      :drug_exposure=> :drug_concept_vocabulary_id,
-      :observation=> :observation_concept_vocabulary_id,
-      :procedure_occurrence=> :procedure_concept_vocabulary_id,
-      :provider=> :provider_concept_vocabulary_id,
-      :visit_occurrence=> :place_of_service_concept_vocabulary_id
+      :condition_occurrence=> :condition_source_vocabulary_id,
+      :death=> :cause_of_death_source_vocabulary_id,
+      :drug_exposure=> :drug_source_vocabulary_id,
+      :observation=> :observation_source_vocabulary_id,
+      :procedure_occurrence=> :procedure_source_vocabulary_id,
+      :provider=> :specialty_source_vocabulary_id,
+      :visit_occurrence=> :place_of_service_source_vocabulary_id
     }.freeze.each_value(&:freeze)
 
     TABLE_SOURCE_VALUE_COLUMN = {
