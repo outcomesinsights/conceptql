@@ -67,7 +67,7 @@ module ConceptQL
 
     def code_list(db)
       puts "Query.code_list #{operator}";
-      operator.code_list(db)
+      operator.code_list(db).uniq
     end      
 
     private

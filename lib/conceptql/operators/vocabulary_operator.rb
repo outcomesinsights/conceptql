@@ -19,7 +19,7 @@ module ConceptQL
 
       def code_list(db)
         [self.arguments.map do | code |
-          ConceptCode.new(self.class.name.split('::').last, code, self.describe_code(db, code))
+          ConceptCode.new(self.class.name.split('::').last, code, describe_code(db, code))
         end]
       end
 
