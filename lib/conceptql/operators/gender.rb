@@ -10,7 +10,6 @@ module ConceptQL
       domains :person
       category "Select by Property"
       basic_type :selection
-      query_columns :person
       validate_no_upstreams
       validate_at_least_one_argument
 
@@ -26,8 +25,20 @@ module ConceptQL
           end
         end
 
-        db.from(:person)
+        db.from(table)
           .where(gender_concept_id: gender_concept_ids)
+      end
+
+      def query_cols
+        table_columns(table)
+      end
+
+      def table
+        if oi_cdm?
+          :patients
+        else
+          :person
+        end
       end
     end
   end

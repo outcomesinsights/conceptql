@@ -21,6 +21,7 @@ module ConceptQL
     class StandardVocabularyOperator < VocabularyOperator
 
       def query(db)
+        return vocab_op.query(db) if oi_cdm?
         ds = db.from(table_name)
           .where(conditions)
         if omopv4?
@@ -30,7 +31,11 @@ module ConceptQL
       end
 
       def query_cols
-        table_columns(table_name, :concept)
+        if oi_cdm?
+          vocab_op.query_cols
+        else
+          table_columns(table_name, :concept)
+        end
       end
 
       def conditions
@@ -43,8 +48,13 @@ module ConceptQL
         end
       end
 
-      def describe_code(db, code)
-        db[:concept].filter(:vocabulary_id => vocabulary_id).filter(:concept_code => code).map(:concept_name)[0]
+      def describe_codes(db, codes)
+        p data_model
+        if oi_cdm?
+          vocab_op.describe_codes(db, codes)
+        else
+          db[:concept].filter(:vocabulary_id => vocabulary_id).filter(:concept_code => codes).select_map([:concept_code, :concept_name])
+        end
       end
 
       private
@@ -52,11 +62,17 @@ module ConceptQL
       def validate(db)
         super
         if add_warnings?(db)
-          args = arguments
-          args -= bad_arguments
-          missing_args = args - db[:concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>args).select_map(:concept_code)
-          unless missing_args.empty?
-            add_warning("unknown concept code", *missing_args)
+          if oi_cdm?
+            vocab_op.validate(db)
+            @warnings += vocab_op.warnings
+            return
+          else
+            args = arguments
+            args -= bad_arguments
+            missing_args = args - db[:concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>args).select_map(:concept_code)
+            unless missing_args.empty?
+              add_warning("unknown concept code", *missing_args)
+            end
           end
         end
       end

@@ -1,4 +1,6 @@
 require_relative 'vocabulary_operator'
+require_relative 'vocabulary'
+
 
 module ConceptQL
   module Operators
@@ -28,6 +30,7 @@ module ConceptQL
     class SourceVocabularyOperator < VocabularyOperator
 
       def query(db)
+        return vocab_op.query(db) if oi_cdm?
         ds = db.from(table_name).where(conditions)
         if omopv4?
           ds = ds.join(:source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
@@ -38,6 +41,8 @@ module ConceptQL
       def query_cols
         if omopv4?
           table_columns(table_name, :source_to_concept_map)
+        elsif oi_cdm?
+          vocab_op.query_cols
         else
           table_columns(table_name)
         end
@@ -61,8 +66,12 @@ module ConceptQL
         end
       end
 
-      def describe_code(db, code)
-        db[:source_to_concept_map].filter(:source_vocabulary_id => vocabulary_id).filter(:source_code => code).map(:source_code_description)[0]
+      def describe_codes(db, codes)
+        if oi_cdm?
+          vocab_op.describe_codes(db, codes)
+        else
+          db[:source_to_concept_map].filter(:source_vocabulary_id => vocabulary_id).filter(:source_code => codes).select_map([:source_code, :source_code_description])
+        end
       end
 
       private
@@ -70,11 +79,17 @@ module ConceptQL
       def validate(db)
         super
         if add_warnings?(db)
-          args = arguments
-          args -= bad_arguments
-          missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>args).select_map(:source_code)
-          unless missing_args.empty?
-            add_warning("unknown source code", *missing_args)
+          if oi_cdm?
+            vocab_op.validate(db)
+            @warnings += vocab_op.warnings
+            return
+          else
+            args = arguments
+            args -= bad_arguments
+            missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>args).select_map(:source_code)
+            unless missing_args.empty?
+              add_warning("unknown source code", *missing_args)
+            end
           end
         end
       end

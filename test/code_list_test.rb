@@ -3,11 +3,11 @@ require_relative 'db'
 require_relative '../lib/conceptql/query'
 require_relative '../lib/conceptql/database'
 
-describe ConceptQL::Operators do 
+describe ConceptQL::Operators do
 
-  dbConnection = ConceptQL::Database.new(DB)
+  dbConnection = ConceptQL::Database.new(DB, :data_model=>ENV['DATA_MODEL'].to_sym)
 
-  it "should list codes and descriptions" do 
+  it "should list codes and descriptions" do
     query = dbConnection.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
     query.code_list(DB).must_equal(
         [

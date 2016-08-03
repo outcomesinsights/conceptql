@@ -10,8 +10,12 @@ module ConceptQL
       predominant_domains :procedure_occurrence
 
       def query(db)
-        costs = super(db).select(:procedure_occurrence_id)
-        db[:procedure_occurrence].where(procedure_occurrence_id: costs)
+        if oi_cdm?
+          vocab_op.query(db)
+        else
+          costs = super(db).select(:procedure_occurrence_id)
+          db[:procedure_occurrence].where(procedure_occurrence_id: costs)
+        end
       end
 
       def domain
@@ -19,7 +23,11 @@ module ConceptQL
       end
 
       def table
-        :procedure_cost
+        if oi_cdm?
+          vocab_op.table
+        else
+          :procedure_cost
+        end
       end
 
       def vocabulary_id

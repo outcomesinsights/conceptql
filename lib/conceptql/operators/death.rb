@@ -13,6 +13,14 @@ module ConceptQL
         :death
       end
 
+      def source_table
+        if oi_cdm?
+          :deaths
+        else
+          :death
+        end
+      end
+
       def i_point_at
         [ :person ]
       end

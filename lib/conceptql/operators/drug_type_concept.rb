@@ -6,7 +6,7 @@ module ConceptQL
       register __FILE__
 
       desc 'Returns all drug_exposures that match the given set of Drug Type concept IDs.'
-      argument :concept_ids, type: :codelist, vocab: 'RxNorm'
+      argument :concept_ids, type: :codelist, vocab: 'Drug Type'
       query_columns :drug_exposure
       category "Select by Property"
       basic_type :selection

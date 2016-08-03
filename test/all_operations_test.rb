@@ -1,10 +1,17 @@
 require_relative './helper'
 
+reggy = nil
+if ENV['STATEMENT']
+  reggy = /^#{ENV['STATEMENT']}/
+end
+
 describe ConceptQL::Operators do
 
   Dir['./test/statements/**/*'].each do |f|
     next if File.directory? f
     f.slice! './test/statements/'
+    next unless reggy.nil? || reggy.match(f)
+
     basename = File.basename(f)
 
     it "should produce correct results for #{f}" do

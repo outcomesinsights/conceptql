@@ -41,12 +41,16 @@ module ConceptQL
       end
 
       def query_cols
-        table_columns(make_table_name(my_domain))
+        table_columns(make_table_name(table))
       end
 
       def query(db)
-        return db.from(make_table_name(my_domain)) if stream.nil?
+        return db.from(make_table_name(source_table)) if stream.nil?
         base_query(db, stream.evaluate(db))
+      end
+
+      def table
+        source_table
       end
 
       private
@@ -56,7 +60,7 @@ module ConceptQL
         to_me_domains = stream.domains & these_point_at_me
         from_me_domains = stream.domains & i_point_at
 
-        destination_table = make_table_name(my_domain)
+        destination_table = make_table_name(source_table)
         casting_query = db.from(destination_table)
         wheres = []
 
@@ -70,7 +74,7 @@ module ConceptQL
           wheres << Sequel.expr(person_id: uncastable_person_ids)
         end
 
-        destination_domain_id = make_domain_id(my_domain)
+        destination_domain_id = make_table_id(source_table)
 
         unless to_me_domains.empty?
           # For each castable domain in the stream, setup a query that
@@ -80,8 +84,8 @@ module ConceptQL
             source_ids = db.from(stream_query)
               .where(criterion_domain: source_domain.to_s)
               .select_group(:criterion_id)
-            source_table = make_table_name(source_domain)
-            source_domain_id = make_domain_id(source_domain)
+            source_table = make_table_name(source_table)
+            source_domain_id = make_table_id(source_table)
 
             db.from(source_table)
               .where(source_domain_id => source_ids)
@@ -94,7 +98,7 @@ module ConceptQL
 
         unless from_me_domains.empty?
           from_me_domains.each do |from_me_domain|
-            fk_domain_id = make_domain_id(from_me_domain)
+            fk_domain_id = make_table_id(from_me_domain)
             wheres << Sequel.expr(fk_domain_id => db.from(stream_query).where(criterion_domain: from_me_domain.to_s).select_group(:criterion_id))
           end
         end

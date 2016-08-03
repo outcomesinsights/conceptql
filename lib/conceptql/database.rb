@@ -13,7 +13,7 @@ module ConceptQL
         db_type = db.database_type
       end
       @opts = opts.revalue { |v| v ? v.to_sym : v }
-      @opts[:data_model] ||= :omopv4
+      @opts[:data_model] ||= :oi_cdm
       @opts[:db_type] ||= db_type
     end
 

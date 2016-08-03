@@ -2,25 +2,49 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-  	class VocabularyOperator < Operator
+    class VocabularyOperator < Operator
       category "Select by Clinical Codes"
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
       ConceptCode = Struct.new(:vocabulary, :code, :description) do
-      	def to_s
+        def to_s
           "#{vocabulary} #{code}: #{description}"
         end
       end
 
+      def query_cols
+        tables(:clinical_codes)
+      end
+
       def domain
-        table
+        if oi_cdm?
+          vocab_op.domain
+        else
+          table
+        end
       end
 
       def code_list(db)
-        [self.arguments.map do | code |
-          ConceptCode.new(self.class.name.split('::').last, code, self.describe_code(db, code))
-        end]
+        describe_codes(db, arguments).map do |code, desc|
+          ConceptCode.new(self.class.perferred_name, code, desc)
+        end
+      end
+
+      def tables
+        if oi_cdm?
+          vocab_op.tables
+        else
+          domains
+        end
+      end
+
+      def source_table
+        if oi_cdm?
+          vocab_op.table
+        else
+          table
+        end
       end
 
       private
@@ -40,6 +64,10 @@ module ConceptQL
       def table_concept_column
         "tab__#{concept_column}".to_sym
       end
-  	end
+
+      def vocab_op
+        @vocab_op ||= Vocabulary.new(nodifier, *values, vocabulary: vocabulary_id)
+      end
+    end
   end
 end

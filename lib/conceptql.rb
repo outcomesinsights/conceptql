@@ -24,4 +24,12 @@ module ConceptQL
       { name: name, priority: priority }
     end
   end
+
+  def self.root
+    (Pathname.new(__dir__) + "..").expand_path
+  end
+
+  def self.schemas
+    root + 'schemas'
+  end
 end

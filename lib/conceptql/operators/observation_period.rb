@@ -13,6 +13,14 @@ module ConceptQL
         :observation_period
       end
 
+      def source_table
+        if oi_cdm?
+          :information_periods
+        else
+          :observation_period
+        end
+      end
+
       def i_point_at
         []
       end

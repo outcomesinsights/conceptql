@@ -16,14 +16,38 @@ module ConceptQL
       domains :person
       category "Select by Property"
       basic_type :selection
-      query_columns :person, :concept
       validate_no_upstreams
       validate_at_least_one_argument
 
+      def query_cols
+        table_columns(table)
+      end
+
+      def table
+        source_table
+      end
+
+      def source_table
+        if oi_cdm?
+          :patients
+        else
+          :person
+        end
+      end
+
       def query(db)
-        db.from(:person___p)
-          .join(:concept___c, { c__concept_id: :p__race_concept_id })
-          .where(Sequel.function(:lower, :c__concept_name) => arguments.map(&:downcase))
+        concept_ids = if oi_cdm?
+          db[:concepts]
+            .where(Sequel.function(:lower, :concept_text) => arguments.map(&:downcase))
+            .select(:id)
+        else
+          db[:concept]
+            .where(Sequel.function(:lower, :concept_name) => arguments.map(&:downcase))
+            .select(:concept_id)
+        end
+
+        db.from(source_table)
+          .where(race_concept_id: concept_ids)
       end
     end
   end

@@ -30,6 +30,8 @@ module ConceptQL
     def sql
       SqlFormatter.new.format(query.sql)
     rescue
+      puts $!.message
+      puts $!.backtrace.join("\n")
       return "SQL unavailable for this statement"
     end
 

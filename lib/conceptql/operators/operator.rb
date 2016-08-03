@@ -6,59 +6,9 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4=>{}, :omopv4_plus=>{}}.freeze
+    OPERATORS = {:omopv4=>{}, :omopv4_plus=>{}, :oi_cdm=>{}}.freeze
 
-    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
-
-    TABLE_VOCABULARY_ID_COLUMN = {
-      :condition_occurrence=> :condition_source_vocabulary_id,
-      :death=> :cause_of_death_source_vocabulary_id,
-      :drug_exposure=> :drug_source_vocabulary_id,
-      :observation=> :observation_source_vocabulary_id,
-      :procedure_occurrence=> :procedure_source_vocabulary_id,
-      :provider=> :specialty_source_vocabulary_id,
-      :visit_occurrence=> :place_of_service_source_vocabulary_id
-    }.freeze.each_value(&:freeze)
-
-    TABLE_SOURCE_VALUE_COLUMN = {
-      :condition_occurrence=> :condition_source_value,
-      :death=> :cause_of_death_source_value,
-      :drug_exposure=> :drug_source_value,
-      :observation=> :observation_source_value,
-      :procedure_occurrence=> :procedure_source_value,
-      :provider=> :provider_source_value,
-      :visit_occurrence=> :place_of_service_source_value
-    }.freeze.each_value(&:freeze)
-
-    TABLE_COLUMNS = {
-      :care_site=>[:care_site_id, :location_id, :organization_id, :place_of_service_concept_id, :care_site_source_value, :place_of_service_source_value],
-      :cohort=>[:cohort_id, :cohort_concept_id, :cohort_start_date, :cohort_end_date, :subject_id, :stop_reason],
-      :concept=>[:concept_id, :concept_name, :concept_level, :concept_class, :vocabulary_id, :concept_code, :valid_start_date, :valid_end_date, :invalid_reason],
-      :concept_ancestor=>[:ancestor_concept_id, :descendant_concept_id, :min_levels_of_separation, :max_levels_of_separation],
-      :concept_relationship=>[:concept_id_1, :concept_id_2, :relationship_id, :valid_start_date, :valid_end_date, :invalid_reason],
-      :concept_synonym=>[:concept_synonym_id, :concept_id, :concept_synonym_name],
-      :condition_era=>[:condition_era_id, :person_id, :condition_concept_id, :condition_era_start_date, :condition_era_end_date, :condition_type_concept_id, :condition_occurrence_count],
-      :condition_occurrence=>[:condition_occurrence_id, :person_id, :condition_concept_id, :condition_start_date, :condition_end_date, :condition_type_concept_id, :stop_reason, :associated_provider_id, :visit_occurrence_id, :condition_source_value],
-      :death=>[:person_id, :death_date, :death_type_concept_id, :cause_of_death_concept_id, :cause_of_death_source_value],
-      :drug_approval=>[:ingredient_concept_id, :approval_date, :approved_by],
-      :drug_cost=>[:drug_cost_id, :drug_exposure_id, :paid_copay, :paid_coinsurance, :paid_toward_deductible, :paid_by_payer, :paid_by_coordination_benefits, :total_out_of_pocket, :total_paid, :ingredient_cost, :dispensing_fee, :average_wholesale_price, :payer_plan_period_id],
-      :drug_era=>[:drug_era_id, :person_id, :drug_concept_id, :drug_era_start_date, :drug_era_end_date, :drug_type_concept_id, :drug_exposure_count],
-      :drug_exposure=>[:drug_exposure_id, :person_id, :drug_concept_id, :drug_exposure_start_date, :drug_exposure_end_date, :drug_type_concept_id, :stop_reason, :refills, :quantity, :days_supply, :sig, :prescribing_provider_id, :visit_occurrence_id, :relevant_condition_concept_id, :drug_source_value],
-      :drug_strength=>[:drug_concept_id, :ingredient_concept_id, :amount_value, :amount_unit, :concentration_value, :concentration_enum_unit, :concentration_denom_unit, :valid_start_date, :valid_end_date, :invalid_reason],
-      :location=>[:location_id, :address_1, :address_2, :city, :state, :zip, :county, :location_source_value],
-      :observation=>[:observation_id, :person_id, :observation_concept_id, :observation_date, :observation_time, :value_as_number, :value_as_string, :value_as_concept_id, :unit_concept_id, :range_low, :range_high, :observation_type_concept_id, :associated_provider_id, :visit_occurrence_id, :relevant_condition_concept_id, :observation_source_value, :units_source_value],
-      :observation_period=>[:observation_period_id, :person_id, :observation_period_start_date, :observation_period_end_date, :prev_ds_period_end_date],
-      :organization=>[:organization_id, :place_of_service_concept_id, :location_id, :organization_source_value, :place_of_service_source_value],
-      :payer_plan_period=>[:payer_plan_period_id, :person_id, :payer_plan_period_start_date, :payer_plan_period_end_date, :payer_source_value, :plan_source_value, :family_source_value, :prev_ds_period_end_date],
-      :person=>[:person_id, :gender_concept_id, :year_of_birth, :month_of_birth, :day_of_birth, :race_concept_id, :ethnicity_concept_id, :location_id, :provider_id, :care_site_id, :person_source_value, :gender_source_value, :race_source_value, :ethnicity_source_value],
-      :procedure_cost=>[:procedure_cost_id, :procedure_occurrence_id, :paid_copay, :paid_coinsurance, :paid_toward_deductible, :paid_by_payer, :paid_by_coordination_benefits, :total_out_of_pocket, :total_paid, :disease_class_concept_id, :revenue_code_concept_id, :payer_plan_period_id, :disease_class_source_value, :revenue_code_source_value],
-      :procedure_occurrence=>[:procedure_occurrence_id, :person_id, :procedure_concept_id, :procedure_date, :procedure_type_concept_id, :associated_provider_id, :visit_occurrence_id, :relevant_condition_concept_id, :procedure_source_value],
-      :provider=>[:provider_id, :npi, :dea, :specialty_concept_id, :care_site_id, :provider_source_value, :specialty_source_value],
-      :relationship=>[:relationship_id, :relationship_name, :is_hierarchical, :defines_ancestry, :reverse_relationship],
-      :source_to_concept_map=>[:source_code, :source_vocabulary_id, :source_code_description, :target_concept_id, :target_vocabulary_id, :mapping_type, :primary_map, :valid_start_date, :valid_end_date, :invalid_reason],
-      :visit_occurrence=>[:visit_occurrence_id, :person_id, :visit_start_date, :visit_end_date, :place_of_service_concept_id, :care_site_id, :place_of_service_source_value],
-      :vocabulary=>[:vocabulary_id, :vocabulary_name],
-    }.freeze.each_value(&:freeze)
+    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_table, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
     def self.operators
       OPERATORS
@@ -70,6 +20,7 @@ module ConceptQL
       COLUMNS = [
         :person_id,
         :criterion_id,
+        :criterion_table,
         :criterion_domain,
         :start_date,
         :end_date,
@@ -257,11 +208,14 @@ module ConceptQL
         false
       end
 
-      def select_it(query, specific_domain = nil)
-        if specific_domain.nil? && respond_to?(:domain) && TABLE_COLUMNS.keys.include?(domain)
-          specific_domain = domain
+      def select_it(query, specific_table = nil)
+        if specific_table.nil? && respond_to?(:source_table) && schema.keys.include?(source_table)
+          specific_table = table
         end
-        q = query.select(*columns(query, specific_domain))
+        if specific_table.nil? && respond_to?(:table) && schema.keys.include?(table)
+          specific_table = table
+        end
+        q = query.select(*columns(query, specific_table))
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
         end
@@ -272,20 +226,32 @@ module ConceptQL
         @domains ||= determine_domains
       end
 
+      def tables
+        @tables ||= determine_tables
+      end
+
       def stream
         @stream ||= upstreams.first
       end
 
-      def columns(query, local_domain = nil)
+      def columns(query, local_table = nil)
+        criterion_table = :criterion_table
         criterion_domain = :criterion_domain
-        if local_domain
-          criterion_domain = Sequel.cast_string(local_domain.to_s).as(:criterion_domain)
+        if local_table
+          criterion_table = Sequel.cast_string(local_table.to_s).as(:criterion_table)
+          if oi_cdm?
+            criterion_domain = Sequel.cast_string(domains.first.to_s).as(:criterion_domain)
+          else
+            criterion_domain = Sequel.cast_string(local_table.to_s).as(:criterion_domain)
+          end
         end
-        columns = [:person_id,
-                    domain_id(local_domain),
-                    criterion_domain]
-        columns += date_columns(query, local_domain)
-        columns += value_columns(query, local_domain)
+        columns = [person_id_column(query),
+                    table_id(local_table),
+                    criterion_table,
+                    criterion_domain,
+                  ]
+        columns += date_columns(query, local_table)
+        columns += value_columns(query, local_table)
       end
 
       def label
@@ -299,8 +265,6 @@ module ConceptQL
 
       def valid?(db)
         return @errors.empty? if defined?(@errors)
-        @errors = []
-        @warnings = []
         validate(db)
         errors.empty?
       end
@@ -328,17 +292,22 @@ module ConceptQL
       end
 
       def criterion_id
-        :criterion_id
+        return :criterion_id unless oi_cdm?
+        Sequel.expr(:id).as(:criterion_id)
       end
 
-      def domain_id(domain = nil)
-        return :criterion_id if domain.nil?
-        domain = :person if domain == :death
-        Sequel.expr(make_domain_id(domain)).as(:criterion_id)
+      def table_id(table = nil)
+        return :criterion_id if table.nil?
+        table = :person if table == :death && !oi_cdm?
+        Sequel.expr(make_table_id(table)).as(:criterion_id)
       end
 
-      def make_domain_id(domain)
-        (domain.to_s + '_id').to_sym
+      def make_table_id(table)
+        if oi_cdm?
+          :id
+        else
+          (table.to_s + '_id').to_sym
+        end
       end
 
       def make_table_name(table)
@@ -371,6 +340,10 @@ module ConceptQL
         data_model == :omopv4
       end
 
+      def oi_cdm?
+        data_model == :oi_cdm
+      end
+
       def table_to_sym(table)
         case table
         when Symbol
@@ -381,10 +354,7 @@ module ConceptQL
 
       def table_cols(table)
         table = table_to_sym(table)
-        cols = TABLE_COLUMNS.fetch(table)
-        if omopv4_plus?
-          cols += Array(table_vocabulary_id(table))
-        end
+        cols = schema.fetch(table).keys
         cols
       end
 
@@ -393,20 +363,33 @@ module ConceptQL
       end
 
       def table_source_value(table)
-        TABLE_SOURCE_VALUE_COLUMN.fetch(table_to_sym(table))
+        source_value_columns.fetch(table_to_sym(table))
       end
 
       def table_vocabulary_id(table)
-        TABLE_VOCABULARY_ID_COLUMN[table_to_sym(table)]
+        table_vocabulary_ids[table_to_sym(table)]
       end
 
-      def value_columns(query, domain)
+      def schema
+        @schema ||= Psych.load_file(ConceptQL.schemas + "#{data_model}.yml")
+      end
+
+      def person_id_column(query, table = nil)
+        if oi_cdm?
+          return Sequel.expr(:patient_id).as(:person_id) if query_columns(query).include?(:patient_id)
+          return Sequel.expr(:id).as(:person_id) if query_columns(query).include?(:birth_date)
+        end
+
+        :person_id
+      end
+
+      def value_columns(query, table)
         [
           numeric_value(query),
           string_value(query),
           concept_id_value(query),
           units_source_value(query),
-          source_value(query, domain)
+          source_value(query, table)
         ]
       end
 
@@ -430,73 +413,94 @@ module ConceptQL
         Sequel.cast_string(nil).as(:units_source_value)
       end
 
-      def source_value(query, domain)
+      def source_value(query, table)
         return :source_value if query_columns(query).include?(:source_value)
-        Sequel.cast_string(source_value_column(query, domain)).as(:source_value)
+        Sequel.cast_string(source_value_column(query, table)).as(:source_value)
       end
 
-      def date_columns(query, domain = nil)
+      def date_columns(query, table = nil)
         return [:start_date, :end_date] if (query_columns(query).include?(:start_date) && query_columns(query).include?(:end_date))
-        return [:start_date, :end_date] unless domain
+        return [:start_date, :end_date] unless table
 
         date_klass = Date
         if query.db.database_type == :impala
           date_klass = DateTime
         end
 
-        sd = start_date_column(query, domain)
+        sd = start_date_column(query, table)
         sd = Sequel.cast(Sequel.expr(sd), date_klass).as(:start_date) unless sd == :start_date
-        ed = end_date_column(query, domain)
-        ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, domain)), date_klass).as(:end_date) unless ed == :end_date
+        ed = end_date_column(query, table)
+        ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table)), date_klass).as(:end_date) unless ed == :end_date
         [sd, ed]
       end
 
+      def assign_column_to_table
+        schema.each_with_object({}) do |(table, column_info), cols|
+          column = yield table, column_info.keys.map(&:to_s)
+          cols[table] = column ? column.to_sym : nil
+        end
+      end
+
+      def start_date_columns
+        @start_date_columns ||= assign_column_to_table do |table, columns|
+          column = columns.select { |k| k =~ /start_date$/ }.first
+          column ||= columns.select { |k| k =~ /date$/ }.first
+        end
+      end
+
+      def end_date_columns
+        @end_date_columns ||= assign_column_to_table do |table, columns|
+          column = columns.select { |k| k =~ /end_date$/ }.first
+          column ||= columns.select { |k| k =~ /date$/ }.first
+        end
+      end
+
       def start_date_column(query, domain)
-        {
-          condition_occurrence: :condition_start_date,
-          death: :death_date,
-          drug_exposure: :drug_exposure_start_date,
-          drug_cost: nil,
-          payer_plan_period: :payer_plan_period_start_date,
-          person: person_date_of_birth(query),
-          procedure_occurrence: :procedure_date,
-          procedure_cost: nil,
-          observation: :observation_date,
-          observation_period: :observation_period_start_date,
-          visit_occurrence: :visit_start_date
-        }[domain]
+        if oi_cdm?
+          start_date_columns[domain]
+        else
+          start_date_columns.merge(person: person_date_of_birth(query))[domain]
+        end
       end
 
       def end_date_column(query, domain)
-        {
-          condition_occurrence: :condition_end_date,
-          death: :death_date,
-          drug_exposure: :drug_exposure_end_date,
-          drug_cost: nil,
-          payer_plan_period: :payer_plan_period_end_date,
-          person: person_date_of_birth(query),
-          procedure_occurrence: :procedure_date,
-          procedure_cost: nil,
-          observation: :observation_date,
-          observation_period: :observation_period_end_date,
-          visit_occurrence: :visit_end_date
-        }[domain]
+        if oi_cdm?
+          end_date_columns[domain]
+        else
+          end_date_columns.merge(person: person_date_of_birth(query))[domain]
+        end
       end
 
-      def source_value_column(query, domain)
-        {
-          condition_occurrence: :condition_source_value,
-          death: :cause_of_death_source_value,
-          drug_exposure: :drug_source_value,
-          drug_cost: nil,
-          payer_plan_period: :payer_plan_period_source_value,
-          person: :person_source_value,
-          procedure_occurrence: :procedure_source_value,
-          procedure_cost: nil,
-          observation: :observation_source_value,
-          observation_period: nil,
-          visit_occurrence: :place_of_service_source_value
-        }[domain]
+      def source_value_columns
+        @source_value_columns ||= assign_column_to_table do |table, columns|
+          reggy = /#{table.to_s.split("_").first}_source_value$/
+          column = columns.select { |k| k =~ reggy }.first
+          column ||= columns.select { |k| k =~ /source_value$/ }.first
+        end
+      end
+
+      def table_vocabulary_ids
+        @table_vocabulary_ids = assign_column_to_table do |table, columns|
+          reggy = /#{table.to_s.split("_").first}_source_vocabulary_id/
+          column = columns.select { |k| k =~ reggy }.first
+          column ||= columns.select { |k| k =~ /_source_vocabulary_id/ }.first
+        end
+      end
+
+      def id_columns
+        @id_columns ||= assign_column_to_table do |table, columns|
+          reggy = /#{table.to_s}_id/
+          columns.select { |k| k =~ reggy }.first
+        end
+      end
+
+      def id_column(table)
+        return :id if oi_cdm?
+        id_columns[table]
+      end
+
+      def source_value_column(query, table)
+        source_value_columns[table]
       end
 
       def person_date_of_birth(query)
@@ -535,6 +539,19 @@ module ConceptQL
         end
       end
 
+      def determine_tables
+        if upstreams.empty?
+          if respond_to?(:table)
+            [table]
+          else
+            [:invalid]
+          end
+        else
+          tables = upstreams.compact.map(&:tables).flatten.uniq
+          tables.empty? ? [:invalid] : tables
+        end
+      end
+
       def determine_domains
         if upstreams.empty?
           if respond_to?(:domain)
@@ -555,6 +572,8 @@ module ConceptQL
       end
 
       def validate(db)
+        @errors = [] unless defined?(@errors)
+        @warnings = [] unless defined?(@warnings)
         add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
@@ -599,7 +618,7 @@ module ConceptQL
         opts.each do |opt|
           if options.has_key?(opt)
             unless format === options[opt]
-              add_error("wrong option format", opt.to_s)
+              add_error("wrong option format", opt.to_s, options[opt])
             end
           end
         end

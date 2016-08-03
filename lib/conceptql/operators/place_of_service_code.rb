@@ -12,19 +12,49 @@ module ConceptQL
       register __FILE__
 
       argument :places_of_service, type: :codelist, vocab: 'Place of Service'
-      domains :visit_occurrence
       category "Select by Property"
       basic_type :selection
+      predominant_domains :visit_occurrence
 
-      query_columns :visit_occurrence, :concept
       validate_no_upstreams
       validate_at_least_one_argument
 
+      def query_cols
+        table_columns(*tables)
+      end
+
+      def domains
+        if oi_cdm?
+          [:condition_occurrence]
+        else
+          [:visit_occurrence]
+        end
+      end
+
+      def table
+        if oi_cdm?
+          :clinical_codes
+        else
+          :visit_occurrence
+        end
+      end
+
       def query(db)
-        db.from(:visit_occurrence___v)
-          .join(:concept___c, { c__concept_id: :v__place_of_service_concept_id })
-          .where(c__concept_code: arguments.map(&:to_s))
-          .where(c__vocabulary_id: 14)
+        if oi_cdm?
+          pos_concepts = db.from(:concepts)
+                            .where(vocabulary_id: ['Visit', 'Place of Service'], concept_code: arguments.map(&:to_s))
+                            .select(:id)
+          contexts = db.from(:contexts)
+                       .where(pos_concept_id: pos_concepts)
+                       .select(:id)
+          db.from(:clinical_codes)
+            .where(context_id: contexts)
+        else
+          db.from(:visit_occurrence___v)
+            .join(:concept___c, { c__concept_id: :v__place_of_service_concept_id })
+            .where(c__concept_code: arguments.map(&:to_s))
+            .where(c__vocabulary_id: 14)
+        end
       end
     end
   end

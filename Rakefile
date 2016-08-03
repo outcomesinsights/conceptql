@@ -25,6 +25,11 @@ task :test_omopv4_plus do
   run_spec.call(:omopv4_plus)
 end
 
+desc "Run tests with oi_cdm data model"
+task :test_oi_cdm do
+  run_spec.call(:oi_cdm)
+end
+
 desc "Run tests with omopv4 data model with coverage"
 task :test_cov do
   ENV['COVERAGE'] = '1'
