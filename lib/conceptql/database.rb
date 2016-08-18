@@ -10,11 +10,11 @@ module ConceptQL
       if db
         db.extension :date_arithmetic
         db.extension :error_sql
-        db_type = db.database_type
+        db_type = db.database_type.to_sym
       end
       @opts = opts.revalue { |v| v ? v.to_sym : v }
       @opts[:data_model] ||= :omopv4
-      @opts[:db_type] ||= db_type
+      @opts[:database_type] ||= db_type
     end
 
     def query(statement, opts={})
