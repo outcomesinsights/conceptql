@@ -22,7 +22,7 @@ module ConceptQL
 
       def query(db)
         ds = db.from(table_name)
-          .where(conditions)
+          .where(conditions(db))
         if omopv4?
           ds = ds.join(:concept___c, c__concept_id: table_concept_column)
         end
@@ -33,11 +33,11 @@ module ConceptQL
         table_columns(table_name, :concept)
       end
 
-      def conditions
+      def conditions(db)
         if omopv4?
-          {c__concept_code: values, c__vocabulary_id: vocabulary_id}
+          {c__concept_code: values_fix(db), c__vocabulary_id: vocabulary_id}
         else
-          conditions = { code_column => arguments }
+          conditions = { code_column => values_fix(db) }
           conditions[vocabulary_id_column] = vocabulary_id if vocabulary_id_column
           conditions
         end

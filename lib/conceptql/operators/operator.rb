@@ -371,6 +371,10 @@ module ConceptQL
         data_model == :omopv4
       end
 
+      def impala?
+        database_type.to_sym == :impala
+      end
+
       def table_to_sym(table)
         case table
         when Symbol
@@ -636,6 +640,22 @@ module ConceptQL
 
       def add_warning(*args)
         warnings << args
+      end
+
+      def needs_values_cte?
+        impala? && values.length > 5000
+      end
+
+      def values_fix(db)
+        return values unless needs_values_cte?
+        vals = values.dup
+        first_val = Sequel.expr(vals.shift).as(:val)
+        vals.unshift(first_val)
+        vals = vals.map { |v| [v] }
+        vals_cte = db.values(vals)
+        db[:vals]
+          .with(:vals, vals_cte)
+          .select(:val)
       end
     end
   end
