@@ -613,16 +613,16 @@ module ConceptQL
         end
       end
 
-      def bad_arguments
+      def bad_values
         return [] unless self.class.codes_regexp
-        @bad_arguments ||= arguments.reject do |arg|
+        @bad_values ||= values.reject do |arg|
           self.class.codes_regexp === arg
         end
       end
 
       def validate_codes_match
-        unless bad_arguments.empty?
-          add_warning("improperly formatted code", *bad_arguments)
+        unless bad_values.empty?
+          add_warning("improperly formatted code", *bad_values)
         end
       end
 

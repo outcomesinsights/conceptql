@@ -52,8 +52,8 @@ module ConceptQL
       def validate(db)
         super
         if add_warnings?(db)
-          args = arguments
-          args -= bad_arguments
+          args = values.dup
+          args -= bad_values
           missing_args = args - db[:concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>args).select_map(:concept_code)
           unless missing_args.empty?
             add_warning("unknown concept code", *missing_args)
