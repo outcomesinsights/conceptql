@@ -11,7 +11,7 @@
       },
       "warnings": [
         [
-          "invalid source code",
+          "unknown source code",
           "XYS"
         ]
       ]
