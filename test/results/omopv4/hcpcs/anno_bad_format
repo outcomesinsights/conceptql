@@ -1,0 +1,24 @@
+[
+  "hcpcs",
+  "A0382",
+  "A03821",
+  "3821",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 5,
+          "n": 3
+        }
+      },
+      "warnings": [
+        [
+          "improperly formatted code",
+          "A03821",
+          "3821"
+        ]
+      ]
+    },
+    "name": "HCPCS"
+  }
+]
