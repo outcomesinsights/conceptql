@@ -53,9 +53,9 @@ module ConceptQL
 
       def conditions(db)
         if omopv4?
-          [[:scm__source_code, values_fix(db)], [:scm__source_vocabulary_id, vocabulary_id]]
+          [[:scm__source_code, arguments_fix(db)], [:scm__source_vocabulary_id, vocabulary_id]]
         else
-          conditions = { code_column => values_fix(db) }
+          conditions = { code_column => arguments_fix(db) }
           conditions[vocabulary_id_column] = vocabulary_id if vocabulary_id_column
           conditions
         end
@@ -70,8 +70,8 @@ module ConceptQL
       def validate(db)
         super
         if add_warnings?(db)
-          args = values.dup
-          args -= bad_values
+          args = arguments.dup
+          args -= bad_arguments
           missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>args).select_map(:source_code)
           unless missing_args.empty?
             add_warning("unknown source code", *missing_args)

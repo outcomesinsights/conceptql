@@ -617,16 +617,16 @@ module ConceptQL
         end
       end
 
-      def bad_values
+      def bad_arguments
         return [] unless self.class.codes_regexp
-        @bad_values ||= values.reject do |arg|
+        @bad_arguments ||= arguments.reject do |arg|
           self.class.codes_regexp === arg
         end
       end
 
       def validate_codes_match
-        unless bad_values.empty?
-          add_warning("improperly formatted code", *bad_values)
+        unless bad_arguments.empty?
+          add_warning("improperly formatted code", *bad_arguments)
         end
       end
 
@@ -642,20 +642,20 @@ module ConceptQL
         warnings << args
       end
 
-      def needs_values_cte?
-        impala? && values.length > 5000
+      def needs_arguments_cte?
+        impala? && arguments.length > 5000
       end
 
-      def values_fix(db)
-        return values unless needs_values_cte?
-        vals = values.dup
-        first_val = Sequel.expr(vals.shift).as(:val)
-        vals.unshift(first_val)
-        vals = vals.map { |v| [v] }
-        vals_cte = db.values(vals)
-        db[:vals]
-          .with(:vals, vals_cte)
-          .select(:val)
+      def arguments_fix(db)
+        return arguments unless needs_arguments_cte?
+        args = arguments.dup
+        first_arg = Sequel.expr(args.shift).as(:arg)
+        args.unshift(first_arg)
+        args = args.map { |v| [v] }
+        args_cte = db.arguments(args)
+        db[:args]
+          .with(:args, args_cte)
+          .select(:arg)
       end
     end
   end
