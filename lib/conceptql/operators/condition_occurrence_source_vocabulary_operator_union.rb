@@ -19,8 +19,8 @@ module ConceptQL
         end
       end
 
-      def conditions
-        Sequel.|(*values.map(&:conditions))
+      def conditions(db)
+        Sequel.|(*values.map { |v| v.conditions(db) })
       end
     end
   end
