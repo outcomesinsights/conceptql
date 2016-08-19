@@ -291,7 +291,7 @@ module ConceptQL
       def label
         @label ||= begin
           options.delete(:label) if options[:label] && options[:label].to_s.strip.empty?
-          options[:label]
+          options[:label].respond_to?(:strip) ? options[:label].strip : options[:label]
         end
       end
 
