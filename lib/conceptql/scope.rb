@@ -57,7 +57,7 @@ module ConceptQL
 
       recall_dependencies[label] ||= []
 
-      if recall_stack.include?(label)
+      if nested_recall?(label)
         op.instance_eval do
           @errors = []
           add_error("nested recall")
@@ -65,7 +65,7 @@ module ConceptQL
         return
       end
 
-      if known_operators.has_key?(label) && !op.is_a?(Operators::Recall)
+      if duplicate_label?(label) && !op.is_a?(Operators::Recall)
         op.instance_eval do
           @errors = []
           add_error("duplicate label")
@@ -86,6 +86,14 @@ module ConceptQL
 
     def add_operator(operator)
       known_operators[operator.label] = operator
+    end
+
+    def duplicate_label?(label)
+      known_operators.keys.map(&:downcase).include?(label.downcase)
+    end
+
+    def nested_recall?(label)
+      recall_stack.map(&:downcase).include?(label.downcase)
     end
 
     def from(db, label)
