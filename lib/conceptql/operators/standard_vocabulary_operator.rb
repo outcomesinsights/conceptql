@@ -54,7 +54,7 @@ module ConceptQL
         if add_warnings?(db)
           args = arguments.dup
           args -= bad_arguments
-          missing_args = args - db[:concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>args).select_map(:concept_code)
+          missing_args = args - db[:concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>arguments_fix(db, args)).select_map(:concept_code)
           unless missing_args.empty?
             add_warning("unknown concept code", *missing_args)
           end
