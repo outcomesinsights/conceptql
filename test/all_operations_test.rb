@@ -1,9 +1,15 @@
 require_relative './helper'
 
+file_regexps = nil
+if !ARGV.empty?
+  file_regexps = ARGV.map { |f| /#{f}/ }
+end
+
 describe ConceptQL::Operators do
 
   Dir['./test/statements/**/*'].each do |f|
     next if File.directory? f
+    next unless file_regexps.nil? || file_regexps.any? { |r| f =~ r }
     f.slice! './test/statements/'
     basename = File.basename(f)
 
