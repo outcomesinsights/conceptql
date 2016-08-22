@@ -13,12 +13,3 @@ END
   exit 1
 end
 
-if DB.opts[:database] && DB.opts[:database] !~ /test/
-  $stderr.puts <<END
-The test database name doesn't include the substring "test".
-Exiting now to avoid potential modification of non-test database.
-Please rename your test database to include the substring "test".
-END
-  exit 1
-end
-

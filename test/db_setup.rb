@@ -1,6 +1,15 @@
 require_relative 'db'
 require 'csv'
 
+if DB.opts[:database] && DB.opts[:database] !~ /test/
+  $stderr.puts <<END
+The test database name doesn't include the substring "test".
+Exiting now to avoid potential modification of non-test database.
+Please rename your test database to include the substring "test".
+END
+  exit 1
+end
+
 puts "Creating tables"
 
 DB.create_table?(:care_site, :ignore_index_errors=>true) do
