@@ -72,7 +72,7 @@ module ConceptQL
         if add_warnings?(db)
           args = arguments.dup
           args -= bad_arguments
-          missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>args).select_map(:source_code)
+          missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments_fix(db, args)).select_map(:source_code)
           unless missing_args.empty?
             add_warning("unknown source code", *missing_args)
           end

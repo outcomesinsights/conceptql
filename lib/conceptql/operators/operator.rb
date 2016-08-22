@@ -642,17 +642,18 @@ module ConceptQL
         warnings << args
       end
 
-      def needs_arguments_cte?
+      def needs_arguments_cte?(args)
         impala? && arguments.length > 5000
       end
 
-      def arguments_fix(db)
-        return arguments unless needs_arguments_cte?
-        args = arguments.dup
+      def arguments_fix(db, args = nil)
+        args ||= arguments
+        return args unless needs_arguments_cte?(args)
+        args = args.dup
         first_arg = Sequel.expr(args.shift).as(:arg)
         args.unshift(first_arg)
         args = args.map { |v| [v] }
-        args_cte = db.arguments(args)
+        args_cte = db.values(args)
         db[:args]
           .with(:args, args_cte)
           .select(:arg)
