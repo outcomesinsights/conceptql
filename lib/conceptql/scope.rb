@@ -152,12 +152,15 @@ module ConceptQL
       raise "recall operator use without matching label" unless valid?
       query = query.from_self
 
-      ctes = sort_ctes([], known_operators, recall_dependencies)
       ctes.each do |label, operator|
-        query = query.with(label, operator.evaluate(db))
+        query = query.with(label, operator.evaluated_query(db))
       end
 
       query
+    end
+
+    def ctes
+      @ctes ||= sort_ctes([], known_operators, recall_dependencies)
     end
 
     def fetch_operator(label)
