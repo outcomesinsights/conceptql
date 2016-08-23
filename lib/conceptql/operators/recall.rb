@@ -23,7 +23,8 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       validate_one_argument
 
       def query(db)
-        scope.from(db, source)
+        #@query ||= scope.from(db, source)
+        @query ||= original.evaluate(db)
       end
 
       def columns(query, local_domain)
@@ -31,7 +32,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       end
 
       def domains
-        scope.domains(source)
+        @domains ||= scope.domains(source)
       end
 
       def source
@@ -39,7 +40,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       end
 
       def annotate(db)
-        if valid?(db) && replaced?
+        @annotate ||= if valid?(db) && replaced?
           original.annotate(db)
         else
           super

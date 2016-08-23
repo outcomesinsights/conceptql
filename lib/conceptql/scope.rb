@@ -1,3 +1,4 @@
+require_relative 'node_sorter'
 module ConceptQL
   # Scope coordinates the creation of any common table expressions that might
   # be used when a Recall operator is present in the statement.
@@ -18,6 +19,7 @@ module ConceptQL
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
+      @all_ops = []
       @annotation = {}
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
@@ -38,13 +40,26 @@ module ConceptQL
       c[domain] = counts
     end
 
+    def ordered_nodes
+      @ordered_nodes ||= NodeSorter.new(@all_ops).list
+    end
+
     def add_operators(operator)
+      @all_ops << operator
       @operators << operator.operator_name
       @operators.compact!
       @operators.uniq!
     end
 
+    def with_temps(operator, db)
+      ordered_nodes.each do |node|
+        node.evaluate(db)
+      end
+      operator.evaluate(db)
+    end
+
     def nest(op)
+      @all_ops << op
       return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
 
       unless label.is_a?(String)

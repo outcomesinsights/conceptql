@@ -24,7 +24,7 @@ module ConceptQL
     end
 
     def query
-      nodifier.scope.with_ctes(operator.evaluate(db), db)
+      nodifier.scope.with_temps(operator, db)
     end
 
     def sql
@@ -34,6 +34,7 @@ module ConceptQL
     end
 
     def annotate
+      nodifier.scope.with_temps(operator, db)
       operator.annotate(db)
     end
 

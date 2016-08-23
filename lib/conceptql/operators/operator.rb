@@ -194,7 +194,7 @@ module ConceptQL
         res = [operator_name, *annotate_values(db)]
 
         if upstreams_valid?(db) && scope.valid? && db
-          scope.with_ctes(evaluate(db), db)
+          evaluate(db)
             .from_self
             .select_group(:criterion_domain)
             .select_append{count{}.*.as(:rows)}
@@ -241,12 +241,18 @@ module ConceptQL
         "<##{self.class} upstreams=[#{upstreams.map(&:inspect).join(', ')}] arguments=[#{arguments.map(&:inspect).join(', ')}]>"
       end
 
+      def evaluated_query(db)
+        #puts "Evaluating query #{self.inspect}"
+        @evaluated_query ||= select_it(query(db))
+      end
+
       def evaluate(db)
-        select_it(query(db))
+        #puts "Evaluating #{self.inspect}"
+        @evaluate ||= tempest(db, evaluated_query(db))
       end
 
       def sql(db)
-        evaluate(db).sql
+        evaluated_query(db).sql
       end
 
       def optimized
@@ -319,6 +325,10 @@ module ConceptQL
 
       def database_type
         nodifier.database_type
+      end
+
+      def all_upstreams
+        upstreams
       end
 
       private
@@ -657,6 +667,22 @@ module ConceptQL
         db[:args]
           .with(:args, args_cte)
           .select(:arg)
+      end
+
+      def tempest(db, query)
+        db.create_table?(temp_name, as: query, temp: true)
+        db.compute_stats(temp_name) if db.respond_to?(:compute_stats) && !ENV['SKIP_COMPUTE'].nil?
+        db.from(temp_name)
+      end
+
+      def temp_name
+        @temp_name ||= begin
+          name = "t" + Time.now.strftime("%Y%m%d%H%M%S") + Zlib.adler32(scope.object_id.to_s + self.to_s).to_s(36)
+          if impala?
+            name = [ENV['SCRATCH_DB'], name.to_s].join("__")
+          end
+          name.to_sym
+        end
       end
     end
   end

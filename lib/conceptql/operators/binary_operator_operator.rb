@@ -31,6 +31,10 @@ module ConceptQL
 
       attr :left, :right
 
+      def all_upstreams
+        [left, right]
+      end
+
       private
 
       def annotate_values(db)
