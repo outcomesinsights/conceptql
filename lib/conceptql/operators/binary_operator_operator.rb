@@ -33,10 +33,10 @@ module ConceptQL
 
       private
 
-      def annotate_values(db)
+      def annotate_values(db, opts = {})
         h = {}
-        h[:left] = left.annotate(db) if left
-        h[:right] = right.annotate(db) if right
+        h[:left] = left.annotate(db, opts) if left
+        h[:right] = right.annotate(db, opts) if right
         [options.merge(h), *arguments]
       end
 

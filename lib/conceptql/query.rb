@@ -33,12 +33,13 @@ module ConceptQL
       return "SQL unavailable for this statement"
     end
 
-    def annotate
-      operator.annotate(db)
+    def annotate(opts = {})
+      nodifier.scope.with_temps(operator, db) unless opts[:skip_count]
+      operator.annotate(db, opts)
     end
 
-    def scope_annotate
-      annotate
+    def scope_annotate(opts = {})
+      annotate(opts)
       nodifier.scope.annotation
     end
 

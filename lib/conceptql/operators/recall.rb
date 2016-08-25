@@ -38,9 +38,9 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         arguments.first
       end
 
-      def annotate(db)
-        if valid?(db) && replaced?
-          original.annotate(db)
+      def annotate(db, opts = {})
+        @annotate ||= if valid?(db) && replaced?
+          original.annotate(db, opts)
         else
           super
         end
