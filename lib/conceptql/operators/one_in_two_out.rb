@@ -33,7 +33,7 @@ twice in an outpatient setting with a 30-day gap.
         faked_out = new_fake(nodifier,
                              inpatient_events(db)
                               .union(outpatient_events(db)
-                              .from_self),
+                                .from_self, all: true),
                             stream.domains)
         First.new(nodifier, faked_out).query(db)
       end
@@ -43,7 +43,7 @@ twice in an outpatient setting with a 30-day gap.
       def inpatient_events(db)
         q = db[:in_out_events]
               .with(:in_out_events, in_out_events(db))
-              .where(type_id: inpatient_type_ids(db).union(db.select(Sequel.as(0, :type_id))))
+              .where(type_id: inpatient_type_ids(db).union(db.select(Sequel.as(0, :type_id)), all: true))
 
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
           q = q.where{ |o| Sequel.date_sub(o.end_date, o.start_date) > options[:inpatient_length_of_stay] }

@@ -87,7 +87,7 @@ module ConceptQL
               .where(source_domain_id => source_ids)
               .select(destination_domain_id)
           end.inject do |union_query, q|
-            union_query.union(q)
+            union_query.union(q, all: true)
           end
           wheres << Sequel.expr(destination_domain_id => castable_domain_query)
         end
