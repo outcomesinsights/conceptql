@@ -41,7 +41,7 @@ module ConceptQL
           exprs.length.times do |i|
             exp = exprs[i]
             if exprs[i].unionable?(expression)
-              exprs[i] = exp.union(expression)
+              exprs[i] = exp.union(expression, all: true)
               add = false
               break
             end
