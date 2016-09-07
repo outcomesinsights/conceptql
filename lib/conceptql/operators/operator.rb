@@ -181,7 +181,7 @@ module ConceptQL
         self.class.just_class_name.underscore
       end
 
-      def annotate(db)
+      def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
         scope_key = options[:id]||self.class.just_class_name.underscore
@@ -191,9 +191,9 @@ module ConceptQL
         if name = self.class.preferred_name
           metadata[:name] = name
         end
-        res = [operator_name, *annotate_values(db)]
+        res = [operator_name, *annotate_values(db, opts)]
 
-        if upstreams_valid?(db) && scope.valid? && db
+        if upstreams_valid?(db) && scope.valid? && db && !opts[:skip_count]
           evaluate(db)
             .from_self
             .select_group(:criterion_domain)
@@ -333,8 +333,8 @@ module ConceptQL
 
       private
 
-      def annotate_values(db)
-        (upstreams.map { |op| op.annotate(db) } + arguments).push(options)
+      def annotate_values(db, opts)
+        (upstreams.map { |op| op.annotate(db, opts) } + arguments).push(options)
       end
 
       def criterion_id
