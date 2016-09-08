@@ -24,7 +24,7 @@ module ConceptQL
     end
 
     def query
-      nodifier.scope.with_temps(operator, db)
+      nodifier.scope.with_ctes(operator, db)
     end
 
     def sql
@@ -34,7 +34,6 @@ module ConceptQL
     end
 
     def annotate(opts = {})
-      nodifier.scope.with_temps(operator, db) unless opts[:skip_count]
       operator.annotate(db, opts)
     end
 
