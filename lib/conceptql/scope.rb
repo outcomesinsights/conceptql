@@ -153,7 +153,7 @@ module ConceptQL
       query = query.from_self
 
       ctes.each do |label, operator|
-        query = query.with(label, operator.evaluated_query(db))
+        query = query.with(label, operator.evaluate(db))
       end
 
       query
