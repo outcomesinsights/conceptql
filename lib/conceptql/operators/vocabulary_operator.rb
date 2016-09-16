@@ -2,13 +2,13 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-  	class VocabularyOperator < Operator
+    class VocabularyOperator < Operator
       category "Select by Clinical Codes"
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
       ConceptCode = Struct.new(:vocabulary, :code, :description) do
-      	def to_s
+        def to_s
           "#{vocabulary} #{code}: #{description}"
         end
       end
@@ -40,6 +40,6 @@ module ConceptQL
       def table_concept_column
         "tab__#{concept_column}".to_sym
       end
-  	end
+    end
   end
 end

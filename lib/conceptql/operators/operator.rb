@@ -521,8 +521,8 @@ module ConceptQL
         strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
         concatted_strings = Sequel.join(strings_with_dashes)
 
-	      date = concatted_strings
-	      if query.db.database_type == :impala
+        date = concatted_strings
+        if query.db.database_type == :impala
           date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
         end
         cast_date(query.db, date)
