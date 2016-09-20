@@ -36,7 +36,7 @@ module ConceptQL
     end
 
     def annotate(opts = {})
-      nodifier.scope.with_temps(operator, db) unless opts[:skip_count]
+      nodifier.scope.with_ctes(operator, db) unless opts[:skip_db]
       operator.annotate(db, opts)
     end
 
