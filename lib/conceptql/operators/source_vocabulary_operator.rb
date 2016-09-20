@@ -67,9 +67,9 @@ module ConceptQL
 
       private
 
-      def validate(db)
+      def validate(db, opts = {})
         super
-        if add_warnings?(db)
+        if add_warnings?(db, opts)
           args = arguments.dup
           args -= bad_arguments
           missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments_fix(db, args)).select_map(:source_code)

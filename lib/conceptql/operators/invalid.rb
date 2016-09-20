@@ -27,7 +27,7 @@ module ConceptQL
         super
       end
 
-      def validate(db)
+      def validate(db, opts = {})
         add_error(*@errors)
       end
     end

@@ -70,7 +70,7 @@ occurrence, this operator returns nothing for that person.
 
       private
 
-      def validate(db)
+      def validate(db, opts = {})
         super
         if self.class == Occurrence
           validate_one_argument

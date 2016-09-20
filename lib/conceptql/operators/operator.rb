@@ -193,7 +193,7 @@ module ConceptQL
         end
         res = [operator_name, *annotate_values(db, opts)]
 
-        if upstreams_valid?(db) && scope.valid? && db && !opts[:skip_count]
+        if upstreams_valid?(db, opts) && scope.valid? && db && !opts[:skip_db]
           evaluate(db)
             .from_self
             .select_group(:criterion_domain)
@@ -201,7 +201,7 @@ module ConceptQL
             .select_append{count(:person_id).distinct.as(:n)}
             .each do |h|
               counts[h.delete(:criterion_domain).to_sym] = h
-          end
+            end
         elsif !errors.empty?
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
@@ -297,16 +297,16 @@ module ConceptQL
 
       attr :errors, :warnings
 
-      def valid?(db)
+      def valid?(db, opts = {})
         return @errors.empty? if defined?(@errors)
         @errors = []
         @warnings = []
-        validate(db)
+        validate(db, opts)
         errors.empty?
       end
 
-      def upstreams_valid?(db)
-        valid?(db) && upstreams.all?{|u| u.upstreams_valid?(db)}
+      def upstreams_valid?(db, opts = {})
+          valid?(db, opts) && upstreams.all?{|u| u.upstreams_valid?(db, opts)}
       end
 
       def scope
@@ -558,7 +558,7 @@ module ConceptQL
         @upstreams.map(&:operator_name)
       end
 
-      def validate(db)
+      def validate(db, opts = {})
         add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
@@ -630,8 +630,8 @@ module ConceptQL
         end
       end
 
-      def add_warnings?(db)
-        @errors.empty? && db && db.adapter_scheme != :mock
+      def add_warnings?(db, opts = {})
+        @errors.empty? && db && db.adapter_scheme != :mock && !opts[:skip_db]
       end
 
       def add_error(*args)

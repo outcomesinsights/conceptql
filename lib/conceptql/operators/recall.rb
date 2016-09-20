@@ -52,7 +52,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
 
       private
 
-      def validate(db)
+      def validate(db, opts = {})
         super
         if arguments.length == 1
           if scope.fetch_operator(source)
