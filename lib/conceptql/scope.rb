@@ -151,7 +151,7 @@ module ConceptQL
     def with_ctes(query, db)
       raise "recall operator use without matching label" unless valid?
 
-      db.run("SET MEM_LIMIT=#{ENV['IMPALA_MEM_LIMIT']}") if ENV['IMPALA_MEM_LIMIT']
+      db.run("SET MEM_LIMIT=#{ENV['IMPALA_MEM_LIMIT']}") if ENV['IMPALA_MEM_LIMIT'] rescue nil
       query = query.from_self
 
       ctes.each do |label, operator|
