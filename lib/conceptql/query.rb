@@ -11,7 +11,7 @@ module ConceptQL
     def_delegators :query, :all, :count, :execute, :order, :profile
     def_delegators :db, :profile_for
 
-    attr :statement, :db
+    attr :statement
     def initialize(db, statement, opts={})
       @db = db
       @statement = extract_statement(statement)
