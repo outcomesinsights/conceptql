@@ -194,7 +194,7 @@ module ConceptQL
         res = [operator_name, *annotate_values(db, opts)]
 
         if upstreams_valid?(db, opts) && scope.valid? && db && !opts[:skip_db]
-          evaluate(db)
+          scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_domain)
             .select_append{count{}.*.as(:rows)}
