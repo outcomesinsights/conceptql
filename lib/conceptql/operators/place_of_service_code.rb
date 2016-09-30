@@ -22,7 +22,7 @@ module ConceptQL
 
       def query(db)
         db.from(:visit_occurrence___v)
-          .join(:concept___c, { c__concept_id: :v__visit_source_concept_id })
+          .join(:concept___c, { c__concept_id: Sequel.cast(:v__visit_source_concept_id, :bigint) })
           .where(c__concept_code: arguments.map(&:to_s))
           .where(c__vocabulary_id: 14)
       end
