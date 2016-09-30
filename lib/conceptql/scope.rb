@@ -12,13 +12,14 @@ module ConceptQL
   class Scope
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts
 
-    def initialize
+    def initialize(opts = {})
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
       @annotation = {}
+      @opts = opts.dup
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
@@ -151,7 +152,7 @@ module ConceptQL
     def with_ctes(query, db)
       raise "recall operator use without matching label" unless valid?
 
-      db.run("SET MEM_LIMIT=#{ENV['IMPALA_MEM_LIMIT']}") if ENV['IMPALA_MEM_LIMIT'] rescue nil
+      db.run("SET MEM_LIMIT=#{mem_limit}") if mem_limit rescue nil
       query = query.from_self
 
       ctes.each do |label, operator|
@@ -167,6 +168,10 @@ module ConceptQL
 
     def fetch_operator(label)
       known_operators[label]
+    end
+
+    def mem_limit
+      opts[:impala_mem_limit] || ENV['IMPALA_MEM_LIMIT']
     end
   end
 end
