@@ -2,7 +2,7 @@ require 'facets/hash/revalue'
 
 module ConceptQL
   class Database
-    attr :db
+    attr :db, :opts
 
     def initialize(db, opts={})
       @db = db
@@ -15,6 +15,7 @@ module ConceptQL
       @opts = opts.revalue { |v| v ? v.to_sym : v }
       @opts[:data_model] ||= :omopv4
       @opts[:database_type] ||= db_type
+      @opts[:impala_mem_limit] ||= ENV['IMPALA_MEM_LIMIT'] if ENV['IMPALA_MEM_LIMIT']
     end
 
     def query(statement, opts={})

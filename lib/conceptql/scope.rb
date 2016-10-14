@@ -171,7 +171,7 @@ module ConceptQL
     end
 
     def mem_limit
-      opts[:impala_mem_limit] || ENV['IMPALA_MEM_LIMIT']
+      opts[:impala_mem_limit]
     end
   end
 end
