@@ -10,7 +10,6 @@ module ConceptQL
       if db
         db.extension :date_arithmetic
         db.extension :error_sql
-        db.quote_identifiers = true
         db_type = db.database_type.to_sym
       end
       @opts = opts.revalue { |v| v ? v.to_sym : v }
