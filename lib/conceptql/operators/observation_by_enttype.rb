@@ -7,6 +7,10 @@ module ConceptQL
 
       argument :enttypes, type: :codelist, vocab_id: [206, 207]
       predominant_domains :observation
+      require_column :value_as_number
+      require_column :value_as_string
+      require_column :value_as_concept_id
+      require_column :units_source_value
 
       def table
         :observation

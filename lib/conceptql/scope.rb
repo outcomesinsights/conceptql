@@ -10,9 +10,18 @@ module ConceptQL
   # API for Recall operators to fetch the results/domains from
   # labeled operators.
   class Scope
+    DEFAULT_COLUMNS = [
+      :person_id,
+      :criterion_id,
+      :criterion_domain,
+      :start_date,
+      :end_date,
+      :source_value
+    ].freeze
+
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
 
     def initialize(opts = {})
       @known_operators = {}
@@ -24,6 +33,7 @@ module ConceptQL
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
       @annotation[:operators] = @operators = []
+      @query_columns = DEFAULT_COLUMNS
     end
 
     def add_errors(key, errors)
@@ -45,7 +55,12 @@ module ConceptQL
       @operators.uniq!
     end
 
+    def add_required_columns(op)
+      @query_columns |= op.required_columns if op.required_columns
+    end
+
     def nest(op)
+      add_required_columns(op)
       return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
 
       unless label.is_a?(String)

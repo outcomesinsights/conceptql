@@ -27,7 +27,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       end
 
       def columns(query, local_domain)
-        COLUMNS
+        dynamic_columns
       end
 
       def domains

@@ -55,7 +55,7 @@ is passed through unaffected.
 
       private
       def new_columns
-        (COLUMNS - [:end_date]).map { |col| "l__#{col}".to_sym }
+        (dynamic_columns - [:end_date]).map { |col| "l__#{col}".to_sym }
       end
     end
   end

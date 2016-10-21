@@ -49,7 +49,7 @@ occurrence, this operator returns nothing for that person.
       option :unique, type: :boolean, label: 'Unique Source Values Only'
 
       def query_cols
-        SELECTED_COLUMNS + [:rn]
+        dynamic_columns + [:rn]
       end
 
       def query(db)
@@ -89,7 +89,7 @@ occurrence, this operator returns nothing for that person.
       end
 
       def uniquify_partition_columns
-        SELECTED_COLUMNS - [:criterion_id, :start_date, :end_date]
+        dynamic_columns - [:criterion_id, :start_date, :end_date]
       end
 
       def all_or_uniquified_results(db)

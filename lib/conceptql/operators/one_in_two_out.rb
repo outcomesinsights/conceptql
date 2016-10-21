@@ -55,7 +55,7 @@ twice in an outpatient setting with a 30-day gap.
           q = q.select(*(query_cols - [:start_date])).select_append(:end_date___start_date)
         end
 
-        q.select(*SELECTED_COLUMNS)
+        q.select(*dynamic_columns)
       end
 
       def inpatient_type_ids(db)
@@ -91,7 +91,7 @@ twice in an outpatient setting with a 30-day gap.
         end
 
         faked_out = new_fake(nodifier, q.from_self, stream.domains)
-        First.new(nodifier, faked_out).query(db).select(*SELECTED_COLUMNS)
+        First.new(nodifier, faked_out).query(db).select(*dynamic_columns)
       end
 
       def in_out_events(db)

@@ -29,9 +29,11 @@ Accepts two params:
       allows_one_upstream
       validate_at_most_one_upstream
       validate_one_argument
+      default_query_columns
+      require_column :value_as_number
 
       def query_cols
-        SELECTED_COLUMNS - [:value_as_number] + [:value_as_number]
+        dynamic_columns - [:value_as_number] + [:value_as_number]
       end
 
       def query(db)
@@ -45,20 +47,20 @@ Accepts two params:
       private
       def with_kids(db)
         db.from(stream.evaluate(db))
-          .select(*(COLUMNS - [:value_as_number]))
+          .select(*(dynamic_columns - [:value_as_number]))
           .select_append(first_argument.cast(Float).as(:value_as_number))
           .from_self
       end
 
       def as_criterion(db)
         db.from(select_it(db.from(:person).clone(:force_columns=>table_columns(:person)), :person))
-          .select(*(COLUMNS - [:value_as_number]))
+          .select(*(dynamic_columns - [:value_as_number]))
           .select_append(first_argument.cast(Float).as(:value_as_number))
           .from_self
       end
 
       def first_argument
-        case arguments.first 
+        case arguments.first
         when String
           Sequel.identifier(arguments.first)
         else

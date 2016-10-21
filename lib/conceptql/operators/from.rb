@@ -8,7 +8,7 @@ module ConceptQL
       validate_one_argument
 
       def query_cols
-        table_columns(values.first.to_sym) rescue ConceptQL::Operators::SELECTED_COLUMNS
+        table_columns(values.first.to_sym) rescue dynamic_columns
       end
 
       def query(db)

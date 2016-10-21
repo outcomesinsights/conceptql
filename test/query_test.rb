@@ -12,7 +12,7 @@ describe ConceptQL::Query do
   it "should handle query_cols for non-CDM tables" do
     query(
       [:from, "other_table"]
-    ).operator.query_cols.must_equal(ConceptQL::Operators::SELECTED_COLUMNS)
+    ).operator.query_cols.must_equal(operator.dynamic_columns)
   end
 
   it "should raise error if attempting to execute invalid recall" do

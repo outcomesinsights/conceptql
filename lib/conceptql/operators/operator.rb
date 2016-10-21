@@ -8,8 +8,6 @@ module ConceptQL
   module Operators
     OPERATORS = {:omopv4=>{}, :omopv4_plus=>{}}.freeze
 
-    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
-
     TABLE_VOCABULARY_ID_COLUMN = {
       :condition_occurrence=> :condition_source_vocabulary_id,
       :death=> :cause_of_death_source_vocabulary_id,
@@ -67,18 +65,6 @@ module ConceptQL
     class Operator
       extend Forwardable
       extend Metadatable
-      COLUMNS = [
-        :person_id,
-        :criterion_id,
-        :criterion_domain,
-        :start_date,
-        :end_date,
-        :value_as_number,
-        :value_as_string,
-        :value_as_concept_id,
-        :units_source_value,
-        :source_value
-      ]
 
       attr :nodifier, :values, :options, :arguments, :upstreams
 
@@ -87,7 +73,7 @@ module ConceptQL
       @validations = []
 
       class << self
-        attr :validations, :codes_regexp
+        attr :validations, :codes_regexp, :required_columns
 
         def register(file, *data_models)
           data_models = OPERATORS.keys if data_models.empty?
@@ -104,8 +90,13 @@ module ConceptQL
 
         def default_query_columns
           define_method(:query_cols) do
-            SELECTED_COLUMNS
+            dynamic_columns
           end
+        end
+
+        def require_column(column)
+          @required_columns ||= []
+          @required_columns << column
         end
 
         validation_meths = (<<-END).split.map(&:to_sym)
@@ -179,6 +170,14 @@ module ConceptQL
 
       def operator_name
         self.class.just_class_name.underscore
+      end
+
+      def required_columns
+        self.class.required_columns
+      end
+
+      def dynamic_columns
+        scope.query_columns
       end
 
       def annotate(db, opts = {})
@@ -285,7 +284,8 @@ module ConceptQL
                     domain_id(local_domain),
                     criterion_domain]
         columns += date_columns(query, local_domain)
-        columns += value_columns(query, local_domain)
+        columns += source_value(query, domain)
+        columns += additional_columns(query, local_domain)
       end
 
       def label
@@ -404,14 +404,15 @@ module ConceptQL
         TABLE_VOCABULARY_ID_COLUMN[table_to_sym(table)]
       end
 
-      def value_columns(query, domain)
-        [
-          numeric_value(query),
-          string_value(query),
-          concept_id_value(query),
-          units_source_value(query),
-          source_value(query, domain)
-        ]
+      def additional_columns(query, domain)
+        {
+          value_as_number: Proc.new { numeric_value(query) },
+          value_as_string: Proc.new { string_value(query) },
+          value_as_concept_id: Proc.new { concept_id_value(query) },
+          units_source_value: Proc.new { units_source_value(query) },
+        }.each_with_object([]) do |(column, proc_obj), columns|
+          columns << proc_obj.call if dynamic_columns.include?(column)
+        end
       end
 
       def numeric_value(query)
