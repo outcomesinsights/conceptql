@@ -513,7 +513,17 @@ module ConceptQL
         }[domain]
       end
 
-      def provenance_type(query, domain)
+      def provenance_type_column(query, domain)
+        {
+          condition_occurrence: :condition_type_concept_id,
+          death: :death_type_concept_id,
+          drug_exposure: :drug_type_concept_id,
+          observation: :observation_type_concept_id,
+          procedure_occurrence: :procedure_type_concept_id
+        }[domain]
+      end
+
+      def provenance_type_column(query, domain)
         {
           condition_occurrence: :condition_type_concept_id,
           death: :death_type_concept_id,
