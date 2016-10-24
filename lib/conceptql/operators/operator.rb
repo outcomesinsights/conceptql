@@ -284,7 +284,7 @@ module ConceptQL
                     domain_id(local_domain),
                     criterion_domain]
         columns += date_columns(query, local_domain)
-        columns += source_value(query, domain)
+        columns += [ source_value(query, local_domain) ]
         columns += additional_columns(query, local_domain)
       end
 
@@ -410,6 +410,7 @@ module ConceptQL
           value_as_string: Proc.new { string_value(query) },
           value_as_concept_id: Proc.new { concept_id_value(query) },
           units_source_value: Proc.new { units_source_value(query) },
+          provenance_type: Proc.new { provenance_type(query, domain) }
         }.each_with_object([]) do |(column, proc_obj), columns|
           columns << proc_obj.call if dynamic_columns.include?(column)
         end
@@ -440,6 +441,11 @@ module ConceptQL
         Sequel.cast_string(source_value_column(query, domain)).as(:source_value)
       end
 
+      def provenance_type(query, domain)
+        return :provenance_type if query_columns(query).include?(:provenance_type)
+        Sequel.cast_string(provenance_type_column(query, domain)).as(:provenance_type)
+      end
+
       def date_columns(query, domain = nil)
         return [:start_date, :end_date] if (query_columns(query).include?(:start_date) && query_columns(query).include?(:end_date))
         return [:start_date, :end_date] unless domain
@@ -455,6 +461,9 @@ module ConceptQL
         ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, domain)), date_klass).as(:end_date) unless ed == :end_date
         [sd, ed]
       end
+
+      # TODO: Move these hashes into a configuration file
+      # THey are OMOP-specific bits of information and need to be abstracted away
 
       def start_date_column(query, domain)
         {
@@ -501,6 +510,16 @@ module ConceptQL
           observation: :observation_source_value,
           observation_period: nil,
           visit_occurrence: :place_of_service_source_value
+        }[domain]
+      end
+
+      def provenance_type(query, domain)
+        {
+          condition_occurrence: :condition_type_concept_id,
+          death: :death_type_concept_id,
+          drug_exposure: :drug_type_concept_id,
+          observation: :observation_type_concept_id,
+          procedure_occurrence: :procedure_type_concept_id
         }[domain]
       end
 
