@@ -1,0 +1,10 @@
+[
+  "provider_filter",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "specialties": "38004486"
+  }
+]

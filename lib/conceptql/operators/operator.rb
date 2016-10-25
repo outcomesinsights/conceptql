@@ -410,7 +410,8 @@ module ConceptQL
           value_as_string: Proc.new { string_value(query) },
           value_as_concept_id: Proc.new { concept_id_value(query) },
           units_source_value: Proc.new { units_source_value(query) },
-          provenance_type: Proc.new { provenance_type(query, domain) }
+          provenance_type: Proc.new { provenance_type(query, domain) },
+          provider_id: Proc.new { provider_id(query, domain) },
         }.each_with_object([]) do |(column, proc_obj), columns|
           columns << proc_obj.call if dynamic_columns.include?(column)
         end
@@ -444,6 +445,11 @@ module ConceptQL
       def provenance_type(query, domain)
         return :provenance_type if query_columns(query).include?(:provenance_type)
         Sequel.cast_string(provenance_type_column(query, domain)).as(:provenance_type)
+      end
+
+      def provider_id(query, domain)
+        return :provider_id if query_columns(query).include?(:provider_id)
+        Sequel.cast_numeric(provider_id_column(query, domain)).as(:provider_id)
       end
 
       def date_columns(query, domain = nil)
@@ -530,6 +536,18 @@ module ConceptQL
           drug_exposure: :drug_type_concept_id,
           observation: :observation_type_concept_id,
           procedure_occurrence: :procedure_type_concept_id
+        }[domain]
+      end
+
+      def provider_id_column(query, domain)
+        {
+          condition_occurrence: :associated_provider_id,
+          death: :death_type_concept_id,
+          drug_exposure: :prescribing_provider_id,
+          observation: :associated_provider_id,
+          person: :provider_id,
+          procedure_occurrence: :associated_provider_id,
+          provider: :provider_id
         }[domain]
       end
 
