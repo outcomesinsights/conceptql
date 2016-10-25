@@ -260,10 +260,13 @@ module ConceptQL
         if specific_domain.nil? && respond_to?(:domain) && TABLE_COLUMNS.keys.include?(domain)
           specific_domain = domain
         end
-        q = query.select(*columns(query, specific_domain))
+
+        q = setup_select(query, specific_domain)
+
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
         end
+
         q
       end
 
@@ -275,17 +278,23 @@ module ConceptQL
         @stream ||= upstreams.first
       end
 
-      def columns(query, local_domain = nil)
+      def setup_select(query, local_domain = nil)
         criterion_domain = :criterion_domain
+
         if local_domain
           criterion_domain = Sequel.cast_string(local_domain.to_s).as(:criterion_domain)
         end
+
+        query = modify_query(query, local_domain)
+
         columns = [:person_id,
                     domain_id(local_domain),
                     criterion_domain]
         columns += date_columns(query, local_domain)
         columns += [ source_value(query, local_domain) ]
         columns += additional_columns(query, local_domain)
+
+        query.select(*columns)
       end
 
       def label
@@ -412,6 +421,7 @@ module ConceptQL
           units_source_value: Proc.new { units_source_value(query) },
           provenance_type: Proc.new { provenance_type(query, domain) },
           provider_id: Proc.new { provider_id(query, domain) },
+          place_of_service_concept_id: Proc.new { place_of_service_concept_id(query, domain) }
         }.each_with_object([]) do |(column, proc_obj), columns|
           columns << proc_obj.call if dynamic_columns.include?(column)
         end
@@ -450,6 +460,11 @@ module ConceptQL
       def provider_id(query, domain)
         return :provider_id if query_columns(query).include?(:provider_id)
         Sequel.cast_numeric(provider_id_column(query, domain)).as(:provider_id)
+      end
+
+      def place_of_service_concept_id(query, domain)
+        return :place_of_service_condept_id if query_columns(query).include?(:place_of_service_condept_id)
+        Sequel.cast_numeric(place_of_service_concept_id_column(query, domain)).as(:place_of_service_concept_id)
       end
 
       def date_columns(query, domain = nil)
@@ -549,6 +564,34 @@ module ConceptQL
           procedure_occurrence: :associated_provider_id,
           provider: :provider_id
         }[domain]
+      end
+
+      def place_of_service_concept_id_column(query, domain)
+        return :place_of_service_concept_id if domain.nil? || table_cols(domain).include?(:visit_occurrence_id)
+        return nil
+      end
+
+      def modify_query(query, domain)
+        count = 0
+
+        {
+          place_of_service_concept_id: [:visit_occurrence, :visit_occurrence_id, :visit_source_concept_id]
+        }.each do |column, (table, join_id, source_column)|
+          next if domain.nil?
+          next if !dynamic_columns.include?(column) && query_cols.include?(join_id)
+
+          left_alias = "tab#{count+=1}".to_sym
+          right_alias = "tab#{count+=1}".to_sym
+
+          extra_table = query.db.from(table).select(Sequel.as((source_column || column), column), join_id)
+          ds = query.from_self(alias: left_alias)
+          query = ds.join(extra_table.as(right_alias),
+                      Sequel.qualify(left_alias, join_id) => Sequel.qualify(right_alias, join_id))
+                    .select_all(left_alias)
+                    .select_append(Sequel.qualify(right_alias, column).as(column))
+        end
+
+        query
       end
 
       def person_date_of_birth(query)
