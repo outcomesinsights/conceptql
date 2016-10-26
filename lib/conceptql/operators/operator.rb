@@ -279,13 +279,16 @@ module ConceptQL
       end
 
       def setup_select(query, local_domain = nil)
+        query = modify_query(query, local_domain)
+        query.select(*columns(query, local_domain))
+      end
+
+      def columns(query, local_domain)
         criterion_domain = :criterion_domain
 
         if local_domain
           criterion_domain = Sequel.cast_string(local_domain.to_s).as(:criterion_domain)
         end
-
-        query = modify_query(query, local_domain)
 
         columns = [:person_id,
                     domain_id(local_domain),
@@ -293,8 +296,6 @@ module ConceptQL
         columns += date_columns(query, local_domain)
         columns += [ source_value(query, local_domain) ]
         columns += additional_columns(query, local_domain)
-
-        query.select(*columns)
       end
 
       def label
@@ -414,37 +415,42 @@ module ConceptQL
       end
 
       def additional_columns(query, domain)
-        {
-          value_as_number: Proc.new { numeric_value(query) },
-          value_as_string: Proc.new { string_value(query) },
-          value_as_concept_id: Proc.new { concept_id_value(query) },
-          units_source_value: Proc.new { units_source_value(query) },
+        special_columns = {
           provenance_type: Proc.new { provenance_type(query, domain) },
           provider_id: Proc.new { provider_id(query, domain) },
           place_of_service_concept_id: Proc.new { place_of_service_concept_id(query, domain) }
-        }.each_with_object([]) do |(column, proc_obj), columns|
+        }
+
+        additional_cols = special_columns.each_with_object([]) do |(column, proc_obj), columns|
           columns << proc_obj.call if dynamic_columns.include?(column)
         end
-      end
 
-      def numeric_value(query)
-        return :value_as_number if query_columns(query).include?(:value_as_number)
-        Sequel.cast_numeric(nil, Float).as(:value_as_number)
-      end
+        types = {
+          value_as_number: Float,
+          value_as_string: String,
+          value_as_concept_id: :Bigint,
+          units_source_value: String,
+          visit_occurrence_id: :Bigint
+        }
 
-      def string_value(query)
-        return :value_as_string if query_columns(query).include?(:value_as_string)
-        Sequel.cast_string(nil).as(:value_as_string)
-      end
+        standard_columns = dynamic_columns - Scope::DEFAULT_COLUMNS
+        standard_columns -= special_columns.keys
 
-      def concept_id_value(query)
-        return :value_as_concept_id if query_columns(query).include?(:value_as_concept_id)
-        Sequel.cast_numeric(nil).as(:value_as_concept_id)
-      end
+        standard_columns.each do |column|
+          additional_cols << if query_columns(query).include?(column)
+            column
+          else
+            type = types.fetch(column)
+            case type
+            when String
+              Sequel.cast_string(nil).as(column)
+            else
+              Sequel.cast_numeric(nil, type).as(column)
+            end
+          end
+        end
 
-      def units_source_value(query)
-        return :units_source_value if query_columns(query).include?(:units_source_value)
-        Sequel.cast_string(nil).as(:units_source_value)
+        additional_cols
       end
 
       def source_value(query, domain)
