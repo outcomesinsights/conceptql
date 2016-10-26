@@ -584,7 +584,8 @@ module ConceptQL
           place_of_service_concept_id: [:visit_occurrence, :visit_occurrence_id, :visit_source_concept_id]
         }.each do |column, (table, join_id, source_column)|
           next if domain.nil?
-          next if !dynamic_columns.include?(column) && query_cols.include?(join_id)
+          next unless dynamic_columns.include?(column)
+          next if query_cols.include?(join_id)
 
           left_alias = "tab#{count+=1}".to_sym
           right_alias = "tab#{count+=1}".to_sym
