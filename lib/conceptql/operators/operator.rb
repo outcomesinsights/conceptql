@@ -585,17 +585,19 @@ module ConceptQL
         }.each do |column, (table, join_id, source_column)|
           next if domain.nil?
           next unless dynamic_columns.include?(column)
-          next if query_cols.include?(join_id)
+          next unless query_cols.include?(join_id)
 
           left_alias = "tab#{count+=1}".to_sym
           right_alias = "tab#{count+=1}".to_sym
 
-          extra_table = query.db.from(table).select(Sequel.as((source_column || column), column), join_id)
+          source_column ||= column
+
+          extra_table = query.db.from(table).select(Sequel.as(source_column, column), join_id)
           ds = query.from_self(alias: left_alias)
           query = ds.join(extra_table.as(right_alias),
                       Sequel.qualify(left_alias, join_id) => Sequel.qualify(right_alias, join_id))
                     .select_all(left_alias)
-                    .select_append(Sequel.qualify(right_alias, column).as(column))
+                    .select_append(Sequel.qualify(right_alias, source_column).as(column))
         end
 
         query
