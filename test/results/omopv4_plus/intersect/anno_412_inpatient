@@ -7,8 +7,8 @@
       "annotation": {
         "counts": {
           "condition_occurrence": {
-            "rows": 39,
-            "n": 28
+            "rows": 48,
+            "n": 37
           }
         }
       },
@@ -22,8 +22,8 @@
       "annotation": {
         "counts": {
           "condition_occurrence": {
-            "rows": 1001,
-            "n": 69
+            "rows": 1385,
+            "n": 84
           }
         }
       }
@@ -33,8 +33,8 @@
     "annotation": {
       "counts": {
         "condition_occurrence": {
-          "rows": 4,
-          "n": 4
+          "rows": 7,
+          "n": 7
         }
       }
     }

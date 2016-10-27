@@ -7,8 +7,8 @@
       "annotation": {
         "counts": {
           "condition_occurrence": {
-            "rows": 39,
-            "n": 28
+            "rows": 48,
+            "n": 37
           }
         }
       },
@@ -22,8 +22,8 @@
       "annotation": {
         "counts": {
           "person": {
-            "rows": 110,
-            "n": 110
+            "rows": 124,
+            "n": 124
           }
         }
       }

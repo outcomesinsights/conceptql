@@ -1,4 +1,4 @@
-ENV['DATA_MODEL'] ||= 'omopv4'
+ENV['DATA_MODEL'] ||= 'omopv4_plus'
 
 require_relative 'db'
 
