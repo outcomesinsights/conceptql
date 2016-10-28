@@ -11,6 +11,8 @@ module ConceptQL
       require_column :value_as_string
       require_column :value_as_concept_id
       require_column :units_source_value
+      require_column :range_low
+      require_column :range_high
 
       def table
         :observation

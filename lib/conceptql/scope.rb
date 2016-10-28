@@ -28,6 +28,8 @@ module ConceptQL
       provenance_type: :Bigint,
       provider_id: :Bigint,
       place_of_service_concept_id: :Bigint,
+      range_low: :Float,
+      range_high: :Float,
     }.freeze
 
     COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
