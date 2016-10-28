@@ -4,24 +4,38 @@ module ConceptQL
       register __FILE__
       basic_type :selection
       no_desc
+      option :domains, type: Array
+      option :query_cols, type: Array
       validate_no_upstreams
       validate_one_argument
 
-      def query_cols
-        table_columns(values.first.to_sym) rescue dynamic_columns
-      end
-
       def query(db)
-        db.from(values.first.to_sym)
+        db.from(table)
       end
 
       def domains
-        domains = values[1..99].compact
-        domains.empty? ? [:invalid] : domains.map(&:to_sym)
+        domains = options[:domains]
+        if domains.nil? || domains.empty?
+          if TABLE_COLUMNS.has_key?(table)
+            [table]
+          else
+            [:invalid]
+          end
+        else
+          domains.map(&:to_sym)
+        end
       end
 
-      def domain
+      def table
         values.first.to_sym
+      end
+
+      def query_cols
+        cols = options[:query_cols]
+        if cols.nil? || cols.empty?
+          cols = table_columns(table) rescue dynamic_columns
+        end
+        cols#.tap { |o| puts "QUERY COLS"; p o }
       end
     end
   end

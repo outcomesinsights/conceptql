@@ -573,7 +573,8 @@ module ConceptQL
       end
 
       def place_of_service_concept_id_column(query, domain)
-        return :place_of_service_concept_id if domain.nil? || table_cols(domain).include?(:visit_occurrence_id)
+        return nil if domain.nil?
+        return :place_of_service_concept_id if table_cols(domain).include?(:visit_occurrence_id)
         return nil
       end
 
