@@ -10,14 +10,27 @@ module ConceptQL
   # API for Recall operators to fetch the results/domains from
   # labeled operators.
   class Scope
-    DEFAULT_COLUMNS = [
-      :person_id,
-      :criterion_id,
-      :criterion_domain,
-      :start_date,
-      :end_date,
-      :source_value
-    ].freeze
+    DEFAULT_COLUMNS = {
+      person_id: :Bigint,
+      criterion_id: :Bigint,
+      criterion_domain: :String,
+      start_date: :Date,
+      end_date: :Date,
+      source_value: :String
+    }.freeze
+
+    ADDITIONAL_COLUMNS = {
+      value_as_number: :Float,
+      value_as_string: :String,
+      value_as_concept_id: :Bigint,
+      units_source_value: :String,
+      visit_occurrence_id: :Bigint,
+      provenance_type: :Bigint,
+      provider_id: :Bigint,
+      place_of_service_concept_id: :Bigint,
+    }.freeze
+
+    COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
 
     attr_accessor :person_ids
 
@@ -33,7 +46,7 @@ module ConceptQL
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
       @annotation[:operators] = @operators = []
-      @query_columns = DEFAULT_COLUMNS
+      @query_columns = DEFAULT_COLUMNS.keys
     end
 
     def add_errors(key, errors)
