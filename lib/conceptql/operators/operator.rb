@@ -287,7 +287,7 @@ module ConceptQL
         criterion_domain = :criterion_domain
 
         if local_domain
-          criterion_domain = Sequel.cast_string(local_domain.to_s).as(:criterion_domain)
+          criterion_domain = cast_column(:criterion_domain, local_domain.to_s)
         end
 
         columns = [:person_id,
@@ -329,6 +329,20 @@ module ConceptQL
 
       def database_type
         nodifier.database_type
+      end
+
+      def cast_column(column, value = nil)
+        type = Scope::COLUMN_TYPES.fetch(column)
+        case type
+        when String, :String
+          Sequel.cast_string(value).as(column)
+        when Date, :Date
+          Sequel.cast(value, type).as(column)
+        when Float, :Bigint, :Float
+          Sequel.cast_numeric(value, type).as(column)
+        else
+          raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
+        end
       end
 
       private
@@ -425,28 +439,14 @@ module ConceptQL
           columns << proc_obj.call if dynamic_columns.include?(column)
         end
 
-        types = {
-          value_as_number: Float,
-          value_as_string: String,
-          value_as_concept_id: :Bigint,
-          units_source_value: String,
-          visit_occurrence_id: :Bigint
-        }
-
-        standard_columns = dynamic_columns - Scope::DEFAULT_COLUMNS
+        standard_columns = dynamic_columns - Scope::DEFAULT_COLUMNS.keys
         standard_columns -= special_columns.keys
 
         standard_columns.each do |column|
           additional_cols << if query_columns(query).include?(column)
             column
           else
-            type = types.fetch(column)
-            case type
-            when String
-              Sequel.cast_string(nil).as(column)
-            else
-              Sequel.cast_numeric(nil, type).as(column)
-            end
+            cast_column(column)
           end
         end
 
@@ -455,22 +455,22 @@ module ConceptQL
 
       def source_value(query, domain)
         return :source_value if query_columns(query).include?(:source_value)
-        Sequel.cast_string(source_value_column(query, domain)).as(:source_value)
+        cast_column(:source_value, source_value_column(query, domain))
       end
 
       def provenance_type(query, domain)
         return :provenance_type if query_columns(query).include?(:provenance_type)
-        Sequel.cast_string(provenance_type_column(query, domain)).as(:provenance_type)
+        cast_column(:provenance_type, provenance_type_column(query, domain))
       end
 
       def provider_id(query, domain)
         return :provider_id if query_columns(query).include?(:provider_id)
-        Sequel.cast_numeric(provider_id_column(query, domain)).as(:provider_id)
+        cast_column(:provider_id, provider_id_column(query, domain))
       end
 
       def place_of_service_concept_id(query, domain)
-        return :place_of_service_condept_id if query_columns(query).include?(:place_of_service_condept_id)
-        Sequel.cast_numeric(place_of_service_concept_id_column(query, domain)).as(:place_of_service_concept_id)
+        return :place_of_service_concept_id if query_columns(query).include?(:place_of_service_concept_id)
+        cast_column(:place_of_service_concept_id, place_of_service_concept_id_column(query, domain))
       end
 
       def date_columns(query, domain = nil)
