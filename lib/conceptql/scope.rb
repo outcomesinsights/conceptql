@@ -182,7 +182,6 @@ module ConceptQL
     def with_ctes(query, db)
       raise "recall operator use without matching label" unless valid?
 
-      db.run("SET MEM_LIMIT=#{mem_limit}") if mem_limit rescue nil
       query = query.from_self
 
       ctes.each do |label, operator|
@@ -198,10 +197,6 @@ module ConceptQL
 
     def fetch_operator(label)
       known_operators[label]
-    end
-
-    def mem_limit
-      opts[:impala_mem_limit]
     end
   end
 end

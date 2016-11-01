@@ -15,7 +15,13 @@ module ConceptQL
       @opts = opts.revalue { |v| v ? v.to_sym : v }
       @opts[:data_model] ||= :omopv4
       @opts[:database_type] ||= db_type
-      @opts[:impala_mem_limit] ||= ENV['IMPALA_MEM_LIMIT'] if ENV['IMPALA_MEM_LIMIT']
+      if db_type == :impala
+        opts = { runtime_filter_mode: "OFF" }
+        if mem_limit = ENV['IMPALA_MEM_LIMIT']
+          opts.merge!(mem_limit: mem_limit)
+        end
+        db.set(opts)
+      end
     end
 
     def query(statement, opts={})
