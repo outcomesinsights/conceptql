@@ -1,4 +1,5 @@
 require_relative 'query_modifier'
+require 'facets/kernel/try'
 
 module ConceptQL
   module QueryModifiers
@@ -11,7 +12,7 @@ module ConceptQL
       end
 
       def modified_query
-        return query unless op.domain == :drug_exposure
+        return query unless domain == :drug_exposure
         query.from_self(alias: :de)
           .left_join(micro_table.as(:mt), mt__drug_concept_id: :de__drug_concept_id)
           .select_all(:de)
@@ -22,6 +23,10 @@ module ConceptQL
       end
 
       private
+
+      def domain
+        op.try(:domain) rescue nil
+      end
 
       def micro_table
         # TODO: Does drug_strength only have RXNORM concept_ids?
