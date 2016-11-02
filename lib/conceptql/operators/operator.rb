@@ -64,7 +64,7 @@ module ConceptQL
 
     class Operator
       extend Forwardable
-      extend Metadatable
+      extend ConceptQL::Metadatable
 
       attr :nodifier, :values, :options, :arguments, :upstreams
 
