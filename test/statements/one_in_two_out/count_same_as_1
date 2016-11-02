@@ -1,0 +1,11 @@
+[
+  "one_in_two_out",
+  [
+    "icd9",
+    "412"
+  ],
+  {
+    "inpatient_length_of_stay": "0",
+    "outpatient_event_to_return": "Confirming Event"
+  }
+]
