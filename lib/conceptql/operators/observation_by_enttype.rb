@@ -1,4 +1,5 @@
 require_relative 'source_vocabulary_operator'
+require_relative '../behaviors/labish'
 
 module ConceptQL
   module Operators
@@ -7,12 +8,7 @@ module ConceptQL
 
       argument :enttypes, type: :codelist, vocab_id: [206, 207]
       predominant_domains :observation
-      require_column :value_as_number
-      require_column :value_as_string
-      require_column :value_as_concept_id
-      require_column :units_source_value
-      require_column :range_low
-      require_column :range_high
+      include ConceptQL::Labish
 
       def table
         :observation
