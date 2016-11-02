@@ -44,6 +44,10 @@ class Minitest::Spec
     load_check(test_name, statement){|statement| query(statement).domains}
   end
 
+  def results(test_name, statement=nil)
+    load_check(test_name, statement){|stmt| query(stmt).all}
+  end
+
   def query(statement)
     CDB.query(statement)
   end

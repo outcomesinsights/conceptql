@@ -1,4 +1,5 @@
 require_relative 'source_vocabulary_operator'
+require_relative '../behaviors/drugish'
 
 module ConceptQL
   module Operators
@@ -7,6 +8,7 @@ module ConceptQL
 
       argument :prodcodes, type: :codelist, vocab_id: '203'
       predominant_domains :drug_exposure
+      include ConceptQL::Drugish
 
       def table
         :drug_exposure

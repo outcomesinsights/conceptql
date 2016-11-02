@@ -3,6 +3,8 @@ require_relative '../behaviors/metadatable'
 require 'facets/array/extract_options'
 require 'facets/hash/deep_rekey'
 require 'forwardable'
+require_relative '../query_modifiers/pos_query_modifier'
+require_relative '../query_modifiers/drug_query_modifier'
 
 module ConceptQL
   module Operators
@@ -56,6 +58,9 @@ module ConceptQL
       :source_to_concept_map=>[:source_code, :source_vocabulary_id, :source_code_description, :target_concept_id, :target_vocabulary_id, :mapping_type, :primary_map, :valid_start_date, :valid_end_date, :invalid_reason],
       :visit_occurrence=>[:visit_occurrence_id, :person_id, :visit_start_date, :visit_end_date, :place_of_service_concept_id, :care_site_id, :place_of_service_source_value],
       :vocabulary=>[:vocabulary_id, :vocabulary_name],
+
+      # Modifier Tables
+      :drug_appendix=>[:drug_name, :drug_amount, :drug_amount_units]
     }.freeze.each_value(&:freeze)
 
     def self.operators
@@ -579,26 +584,16 @@ module ConceptQL
       end
 
       def modify_query(query, domain)
-        count = 0
-
         {
-          place_of_service_concept_id: [:visit_occurrence, :visit_occurrence_id, :visit_source_concept_id]
-        }.each do |column, (table, join_id, source_column)|
+          place_of_service_concept_id: ConceptQL::QueryModifiers::PoSQueryModifier,
+          drug_name: ConceptQL::QueryModifiers::DrugQueryModifier
+        }.each do |column, klass|
+          #p [domain, column, table, join_id, source_column]
+          #p dynamic_columns
+          #p query_cols
           next if domain.nil?
           next unless dynamic_columns.include?(column)
-          next unless query_cols.include?(join_id)
-
-          left_alias = "tab#{count+=1}".to_sym
-          right_alias = "tab#{count+=1}".to_sym
-
-          source_column ||= column
-
-          extra_table = query.db.from(table).select(Sequel.as(source_column, column), join_id)
-          ds = query.from_self(alias: left_alias)
-          query = ds.join(extra_table.as(right_alias),
-                      Sequel.qualify(left_alias, join_id) => Sequel.qualify(right_alias, join_id))
-                    .select_all(left_alias)
-                    .select_append(Sequel.qualify(right_alias, source_column).as(column))
+          query = klass.new(query, self).modified_query
         end
 
         query

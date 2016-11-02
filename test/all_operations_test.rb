@@ -35,6 +35,8 @@ describe ConceptQL::Operators do
         optimized_criteria_counts(f)
       when "num"
         numeric_values(f)
+      when "results"
+        results(f)
       else
         raise "Invalid operation test prefix: #{test_type}"
       end
