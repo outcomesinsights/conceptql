@@ -32,7 +32,9 @@ module ConceptQL
       range_high: :Float,
       drug_name: :String,
       drug_amount: :Float,
-      drug_amount_units: :String
+      drug_amount_units: :String,
+      days_supply: :Float,
+      quantity: :Bigint
     }.freeze
 
     COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze

@@ -8,7 +8,9 @@
     "source_value": "00247227330",
     "drug_name": "clopidogrel 75 MG Oral Tablet",
     "drug_amount": "0.75E2",
-    "drug_amount_units": "mg"
+    "drug_amount_units": "mg",
+    "quantity": 30.0,
+    "days_supply": 30
   },
   {
     "person_id": 95,
@@ -19,7 +21,9 @@
     "source_value": "00247227330",
     "drug_name": "clopidogrel 75 MG Oral Tablet",
     "drug_amount": "0.75E2",
-    "drug_amount_units": "mg"
+    "drug_amount_units": "mg",
+    "quantity": 90.0,
+    "days_supply": 30
   },
   {
     "person_id": 82,
@@ -30,6 +34,8 @@
     "source_value": "00247227330",
     "drug_name": "clopidogrel 75 MG Oral Tablet",
     "drug_amount": "0.75E2",
-    "drug_amount_units": "mg"
+    "drug_amount_units": "mg",
+    "quantity": 30.0,
+    "days_supply": 30
   }
 ]
