@@ -27,7 +27,7 @@ module ConceptQL
       end
 
       def table
-        values.first.to_sym
+        values.first.to_sym rescue nil
       end
 
       def query_cols
@@ -35,7 +35,7 @@ module ConceptQL
         if cols.nil? || cols.empty?
           cols = table_columns(table) rescue dynamic_columns
         end
-        cols#.tap { |o| puts "QUERY COLS"; p o }
+        cols
       end
     end
   end
