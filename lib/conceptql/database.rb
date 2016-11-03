@@ -16,11 +16,11 @@ module ConceptQL
       @opts[:data_model] ||= :omopv4
       @opts[:database_type] ||= db_type
       if db_type == :impala
-        opts = { runtime_filter_mode: "OFF" }
-        if mem_limit = ENV['IMPALA_MEM_LIMIT']
-          opts.merge!(mem_limit: mem_limit)
+        db_opts = { runtime_filter_mode: "OFF" }
+        if mem_limit = (@opts[:impala_mem_limit] || ENV['IMPALA_MEM_LIMIT'])
+          db_opts.merge!(mem_limit: mem_limit)
         end
-        db.set(opts)
+        db.set(db_opts)
       end
     end
 
