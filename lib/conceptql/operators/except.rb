@@ -23,6 +23,9 @@ module ConceptQL
           lquery.instance_variable_set(:@columns, query_cols)
           rquery.instance_variable_set(:@columns, query_cols)
 
+          if impala?
+            lquery = lquery.except_strategy(:not_exists, :person_id, :criterion_id, :criterion_domain)
+          end
           lquery.except(rquery)
         end
       end
