@@ -152,7 +152,7 @@ DB.create_table?(:observation, :ignore_index_errors=>true) do
   Bignum :visit_occurrence_id
   Bignum :relevant_condition_concept_id
   String :observation_source_value, :size=>50
-  String :units_source_value, :size=>50
+  String :unit_source_value, :size=>50
 end
 
 DB.create_table?(:observation_period, :ignore_index_errors=>true) do

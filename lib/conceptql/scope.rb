@@ -23,7 +23,7 @@ module ConceptQL
       value_as_number: :Float,
       value_as_string: :String,
       value_as_concept_id: :Bigint,
-      units_source_value: :String,
+      unit_source_value: :String,
       visit_occurrence_id: :Bigint,
       provenance_type: :Bigint,
       provider_id: :Bigint,
