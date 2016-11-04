@@ -8,7 +8,7 @@ module ConceptQL
       register __FILE__
 
       desc "Filters incoming events to only those that match the associated providers."
-      option :specialties, type: :codelist, vocab: "Specialty"
+      option :specialties, type: :string
       category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream
