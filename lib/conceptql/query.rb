@@ -62,7 +62,7 @@ module ConceptQL
     end
 
     def domains
-      operator.domains
+      operator.domains(db)
     end
 
     def operator

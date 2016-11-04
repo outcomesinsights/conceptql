@@ -13,16 +13,16 @@ module ConceptQL
         db.from(table)
       end
 
-      def domains
-        domains = options[:domains]
-        if domains.nil? || domains.empty?
+      def domains(db)
+        doms = options[:domains]
+        if doms.nil? || doms.empty?
           if TABLE_COLUMNS.has_key?(table)
             [table]
           else
             [:invalid]
           end
         else
-          domains.map(&:to_sym)
+          doms.map(&:to_sym)
         end
       end
 

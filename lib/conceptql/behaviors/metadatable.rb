@@ -37,7 +37,7 @@ module ConceptQL
 
     def domains(*domain_list)
       @domains = domain_list
-      define_method(:domains) do
+      define_method(:domains) do |db|
         domain_list
       end
       if domain_list.length == 1

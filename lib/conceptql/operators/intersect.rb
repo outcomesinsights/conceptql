@@ -16,7 +16,7 @@ module ConceptQL
         exprs = {}
         upstreams.each do |expression|
           evaled = expression.evaluate(db)
-          expression.domains.each do |domain|
+          expression.domains(db).each do |domain|
             (exprs[domain] ||= []) << evaled
           end
         end

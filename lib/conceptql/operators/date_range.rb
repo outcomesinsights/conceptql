@@ -32,7 +32,7 @@ module ConceptQL
                          Sequel.as(cast_date(db, end_date(db)), :end_date)).from_self
       end
 
-      def domains
+      def domains(db)
         [:person]
       end
 

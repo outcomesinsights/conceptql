@@ -150,8 +150,8 @@ module ConceptQL
       ds
     end
 
-    def domains(label)
-      fetch_operator(label).domains
+    def domains(label, db)
+      fetch_operator(label).domains(db)
     rescue
       [:invalid]
     end

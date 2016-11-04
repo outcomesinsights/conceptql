@@ -27,8 +27,8 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         scope.from(db, source)
       end
 
-      def domains
-        scope.domains(source)
+      def domains(db)
+        scope.domains(source, db)
       end
 
       def source

@@ -211,7 +211,7 @@ module ConceptQL
           scope.add_errors(scope_key, errors)
         end
         scope.add_operators(self)
-        domains.each do |domain|
+        domains(db).each do |domain|
           cur_counts = counts[domain] ||= {:rows=>0, :n=>0}
           scope.add_counts(scope_key, domain, cur_counts)
         end
@@ -275,8 +275,8 @@ module ConceptQL
         q
       end
 
-      def domains
-        @domains ||= determine_domains
+      def domains(db)
+        @domains ||= determine_domains(db)
       end
 
       def stream
@@ -624,7 +624,7 @@ module ConceptQL
         cast_date(query.db, date)
       end
 
-      def  cast_date(db, date)
+      def cast_date(db, date)
         case db.database_type
         when :oracle
           Sequel.function(:to_date, date, 'YYYY-MM-DD')
@@ -635,7 +635,7 @@ module ConceptQL
         end
       end
 
-      def determine_domains
+      def determine_domains(db)
         if upstreams.empty?
           if respond_to?(:domain)
             [domain]
@@ -643,8 +643,8 @@ module ConceptQL
             [:invalid]
           end
         else
-          domains = upstreams.compact.map(&:domains).flatten.uniq
-          domains.empty? ? [:invalid] : domains
+          doms = upstreams.compact.flat_map { |up| up.domains(db) }.uniq
+          doms.empty? ? [:invalid] : doms
         end
       end
 
