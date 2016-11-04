@@ -8,24 +8,35 @@ module ConceptQL
       @db = db
       db_type = :impala
       if db
-        db.extension :date_arithmetic
-        db.extension :error_sql
+        extensions.each do |extension|
+          db.extension extension
+        end
         db_type = db.database_type.to_sym
       end
+
       @opts = opts.revalue { |v| v ? v.to_sym : v }
       @opts[:data_model] ||= :omopv4
       @opts[:database_type] ||= db_type
-      if db_type == :impala
-        db_opts = { runtime_filter_mode: "OFF" }
-        if mem_limit = (@opts[:impala_mem_limit] || ENV['IMPALA_MEM_LIMIT'])
-          db_opts.merge!(mem_limit: mem_limit)
-        end
-        db.set(db_opts)
-      end
+      db.set(db_opts)
     end
 
     def query(statement, opts={})
       Query.new(db, statement, @opts.merge(opts))
+    end
+
+    def db_opts
+      db_opts = {}
+      if opts[:database_type] == :impala
+        db_opts.merge!(runtime_filter_mode: "OFF")
+        if mem_limit = (opts[:impala_mem_limit] || ENV['IMPALA_MEM_LIMIT'])
+          db_opts.merge!(mem_limit: mem_limit)
+        end
+      end
+      db_opts
+    end
+
+    def extensions
+      [:date_arithmetic, :error_sql]
     end
   end
 end
