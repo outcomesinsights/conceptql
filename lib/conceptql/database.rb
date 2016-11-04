@@ -17,7 +17,7 @@ module ConceptQL
       @opts = opts.revalue { |v| v ? v.to_sym : v }
       @opts[:data_model] ||= :omopv4
       @opts[:database_type] ||= db_type
-      db.set(db_opts)
+      db.set(db_opts) if db.respond_to?(:set)
     end
 
     def query(statement, opts={})
