@@ -23,7 +23,7 @@ Filters incoming events to those matching the indicated provenance. Enter the
 numeric concept id(s) for the provenance, or the corresponding text label(s)
 (e.g., "inpatient", "outpatient", "carrier", etc.). Separate entries with commas."
       EOF
-      argument :provenance_types, label: 'Provenance Types', type: :string
+      argument :provenance_types, label: 'Provenance Types', type: :codelist
       category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream
