@@ -15,7 +15,7 @@
       "name": "ICD-9 CM"
     }
   ],
-  "inpatient_header",
+  "inpatient_header, inpatient_header",
   {
     "annotation": {
       "counts": {

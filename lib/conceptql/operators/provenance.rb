@@ -38,9 +38,9 @@ numeric concept id(s) for the provenance, or the corresponding text label(s)
 
     private
       def provenance_concept_ids
-        arguments.map do |arg|
+        arguments.map(&:to_s).flat_map { |w| w.split(/\s*,\s*/) }.uniq.flat_map do |arg|
           to_concept_id(arg.to_s)
-        end.flatten
+        end
       end
     end
   end
