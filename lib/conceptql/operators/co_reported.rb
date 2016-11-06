@@ -21,7 +21,9 @@ module ConceptQL
 
       def visit_occurrence_ids_in_common(db)
         @visit_occurrence_ids_in_common ||= upstream_queries(db).map { |q| q.select(:visit_occurrence_id) }.inject do |q, query|
-          q.join(query, [:visit_occurrence_id])
+          q.from_self(alias: :tab1)
+            .join(query.as(:tab2), tab1__visit_occurrence_id: :tab2__visit_occurrence_id)
+            .select(:tab1__visit_occurrence_id___visit_occurrence_id)
         end
       end
 
