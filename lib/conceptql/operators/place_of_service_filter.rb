@@ -15,7 +15,11 @@ module ConceptQL
     class PlaceOfServiceFilter < Operator
       register __FILE__
 
-      desc "Filters incoming events to only those that match the provenances."
+      desc <<-EOF
+Filters records to include only those that match one or more of the Medicare Place Of Service values.
+
+Common values include 21 (inpatient hospital), 23 (emergency room), and 11 (office).
+      EOF
       argument :places_of_service, type: :codelist, vocab: 'Place of Service'
       category "Filter Single Stream"
       basic_type :temporal
