@@ -19,9 +19,10 @@ module ConceptQL
       include ConceptQL::Provenanceable
 
       desc <<-EOF
-Filters incoming events to those matching the indicated provenance. Enter the
-numeric concept id(s) for the provenance, or the corresponding text label(s)
-(e.g., "inpatient", "outpatient", "carrier", etc.). Separate entries with commas."
+Filters incoming events to those with the indicated provenance.
+
+Enter numeric concept id(s), or the corresponding text label(s)
+(e.g., "inpatient", "outpatient", "carrier").
       EOF
       argument :provenance_types, label: 'Provenance Types', type: :codelist
       category "Filter Single Stream"
