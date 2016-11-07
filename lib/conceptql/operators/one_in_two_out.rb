@@ -81,22 +81,29 @@ twice in an outpatient setting with a 30-day gap.
 
         max_gap = options[:outpatient_maximum_gap]
 
-        q = outpatient_events.from_self(alias: :o1)
-              .join(outpatient_events.as(:o2), o1__person_id: :o2__person_id)
-              .exclude(o1__criterion_id: :o2__criterion_id)
+        q = outpatient_events.from_self(alias: :initial)
+              .join(outpatient_events.as(:confirm), initial__person_id: :confirm__person_id)
+              .exclude(initial__criterion_id: :confirm__criterion_id)
+
+        # In order to avoid many more comparisons of initial to confirm events, we now
+        # filter the join by having only confirm events that come on or after initial events
+        #
+        # This ensures that initial events represent initial events and confirm events
+        # represent confirming events
+        q = q.exclude{confirm__start_date < initial__start_date}
 
         if min_gap.present?
-          q = q.where { o2__start_date >= DateAdjuster.new(min_gap).adjust(:o1__start_date) }
+          q = q.where { confirm__start_date >= DateAdjuster.new(min_gap).adjust(:initial__start_date) }
         end
 
         if max_gap.present?
-          q = q.where { o2__start_date <= DateAdjuster.new(max_gap).adjust(:o1__start_date) }
+          q = q.where { confirm__start_date <= DateAdjuster.new(max_gap).adjust(:initial__start_date) }
         end
 
         if options[:outpatient_event_to_return] != 'Initial Event'
-          q = q.select_all(:o2)
+          q = q.select_all(:confirm)
         else
-          q = q.select_all(:o1)
+          q = q.select_all(:initial)
         end
 
         q.from_self
