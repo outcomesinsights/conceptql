@@ -1,5 +1,6 @@
 require_relative 'operator'
 require_relative '../behaviors/provenanceable'
+require 'facets/kernel/present'
 
 module ConceptQL
   module Operators
@@ -22,7 +23,7 @@ module ConceptQL
 Filters incoming events to those with the indicated provenance.
 
 Enter numeric concept id(s), or the corresponding text label(s)
-(e.g., "inpatient", "outpatient", "carrier").
+(e.g., "inpatient", "outpatient", "carrier_claim").
       EOF
       argument :provenance_types, label: 'Provenance Types', type: :codelist
       category "Filter Single Stream"
@@ -38,10 +39,25 @@ Enter numeric concept id(s), or the corresponding text label(s)
       end
 
     private
-      def provenance_concept_ids
-        arguments.map(&:to_s).flat_map { |w| w.split(/\s*,\s*/) }.uniq.flat_map do |arg|
-          to_concept_id(arg.to_s)
+
+      def validate(db, opts = {})
+        super
+        bad_keywords = all_args.select { |arg| arg.to_i.zero? }
+                        .reject { |arg| concept_ids.keys.include?(arg.to_sym) }
+
+        if bad_keywords.present?
+          add_error("unrecognized keywords", *bad_keywords)
         end
+      end
+
+      def provenance_concept_ids
+        all_args.flat_map do |arg|
+          to_concept_id(arg)
+        end
+      end
+
+      def all_args
+        arguments.map(&:to_s).flat_map { |w| w.split(/\s*,\s*/) }.uniq
       end
     end
   end
