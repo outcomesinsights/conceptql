@@ -7,7 +7,7 @@ module ConceptQL
     class ProviderFilter < Operator
       register __FILE__
 
-      desc "Filters incoming events to only those that match the associated providers."
+      desc "Filters incoming events to only those that match the associated providers based on provider specialty concept_ids."
       option :specialties, type: :string
       category "Filter Single Stream"
       basic_type :temporal
