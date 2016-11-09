@@ -2,11 +2,26 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.3.0] - 2016-11-08
+### Added
+- New operators
+    - PlaceOfServiceFilter
+    - Provenance
+    - ProviderFilter
+    - CoReported
+- Support for :impala_mem_limit option
+- Initial support for dynamic columns
+- Additional columns for observation domains and drug domains
+- Support for :within, :occurrences, :at_least
+
 ### Changed
 - Format of this [CHANGELOG](http://keepachangelog.com/en/0.3.0/)
+- Read searches Condition, Procedure, Drug, Observation
+- Rewrote OneInTwoOut to produce faster queries
+- Except operator uses different strategy under Impala
 
 ### Fixed
 - Fixed date casting and other issues for Impala compatibility.
+- Fixed ConditionType to accept concept_ids
 
 ## [0.2.0] - 2015-12-11
 ### Added
