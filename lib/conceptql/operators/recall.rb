@@ -47,6 +47,10 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         nodifier.scope.fetch_operator(source)
       end
 
+      def code_list(db)
+        original.code_list(db)
+      end
+
       private
 
       def validate(db, opts = {})

@@ -22,11 +22,7 @@ module ConceptQL
       end
 
       def code_list(db)
-        puts "BinaryOperatorOperator.code_list #{self.inspect}"
-        code_lists = [left, right].map do | upstream_op |
-          upstream_op.code_list(db)
-        end
-        code_lists.flatten(1)
+        left.code_list(db) + right.code_list(db)
       end
 
       attr :left, :right

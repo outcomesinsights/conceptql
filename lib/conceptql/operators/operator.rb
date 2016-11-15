@@ -231,9 +231,7 @@ module ConceptQL
       end
 
       def code_list(db)
-        code_lists = @upstreams.map do | upstream_op |
-          upstream_op.code_list(db)
-        end
+        code_lists = upstreams.map { |upstream_op| upstream_op.code_list(db) }
         code_lists.flatten(1)
       end
 

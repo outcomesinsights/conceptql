@@ -78,12 +78,11 @@ module ConceptQL
     end
 
     def code_list(db)
-      operator.code_list(db)
+      operator.code_list(db).uniq
     end
 
     private
     attr :db, :nodifier
-
 
     def extract_statement(stmt)
       if stmt.is_a?(Array) && stmt.length == 1 && stmt.first.is_a?(Array)
