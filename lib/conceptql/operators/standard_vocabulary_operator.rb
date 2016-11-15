@@ -43,6 +43,8 @@ module ConceptQL
         end
       end
 
+      # This method is intended to look up the description for this code from the database.
+      # It does not currently work because the way descriptions are stored changed.
       def describe_code(db, code)
         db[:concept].filter(:vocabulary_id => vocabulary_id).filter(:concept_code => code).map(:concept_name)[0]
       end
