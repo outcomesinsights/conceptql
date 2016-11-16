@@ -27,7 +27,10 @@ module ConceptQL
     def db_opts
       db_opts = {}
       if opts[:database_type] == :impala
-        db_opts.merge!(runtime_filter_mode: "OFF")
+        p ENV
+        if runtime_filter_mode = (opts[:impala_runtime_filter_mode] || ENV['IMPALA_RUNTIME_FILTER_MODE'])
+          db_opts.merge!(runtime_filter_mode: runtime_filter_mode)
+        end
         if mem_limit = (opts[:impala_mem_limit] || ENV['IMPALA_MEM_LIMIT'])
           db_opts.merge!(mem_limit: mem_limit)
         end
