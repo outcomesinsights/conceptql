@@ -16,6 +16,10 @@ module ConceptQL
         db[:procedure_occurrence].where(procedure_occurrence_id: costs)
       end
 
+      def query_cols
+        table_columns(:procedure_occurrence, :concept)
+      end
+
       def domain
         :procedure_occurrence
       end
