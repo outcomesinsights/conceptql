@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+- Support REQUEST_POOL option for Impala (#89)
+
+### Fixed
+- Bug with PlaceOfServiceFilter and other procedure_cost-based operators (#84)
+
+### Changed
+- Set RUNTIME_FILTER_MODE only if asked
+
 ## [0.3.0] - 2016-11-08
 ### Added
 - New operators

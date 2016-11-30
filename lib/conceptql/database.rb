@@ -26,17 +26,19 @@ module ConceptQL
     end
 
     def db_opts
-      opt_regexp = /^#{opts[:database_type]}_db_opt_/i
+      db_opts = {}
+      if opts[:database_type] == :impala
+        if request_pool = (opts[:impala_db_opt_request_pool] || ENV['IMPALA_DB_OPT_REQUEST_POOL'])
+          db_opts.merge!(request_pool: request_pool)
+        end
 
-      env_hash = ENV.to_hash.rekey { |k| k.to_s.downcase }
-      opts_hash = opts.rekey { |k| k.to_s.downcase }
-      all_opts = env_hash.merge(opts_hash)
+        if runtime_filter_mode = (opts[:impala_runtime_filter_mode] || ENV['IMPALA_RUNTIME_FILTER_MODE'])
+          db_opts.merge!(runtime_filter_mode: runtime_filter_mode)
+        end
 
-      matching_opts = all_opts.select { |k, _| k.match(opt_regexp) }
-
-      matching_opts.each_with_object({}) do |(k,v), h|
-        new_key = k.sub(opt_regexp, '')
-        h[new_key] = v
+        if mem_limit = (opts[:impala_mem_limit] || ENV['IMPALA_MEM_LIMIT'])
+          db_opts.merge!(mem_limit: mem_limit)
+        end
       end
     end
 
