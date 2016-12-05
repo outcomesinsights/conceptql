@@ -40,6 +40,7 @@ module ConceptQL
           db_opts.merge!(mem_limit: mem_limit)
         end
       end
+      db_opts
     end
 
     def extensions
