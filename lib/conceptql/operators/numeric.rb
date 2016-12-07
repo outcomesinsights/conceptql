@@ -33,7 +33,7 @@ Accepts two params:
       require_column :value_as_number
 
       def query_cols
-        dynamic_columns - [:value_as_number] + [:value_as_number]
+        (stream.nil? ? table_cols(:person) : dynamic_columns - [:value_as_number]) + [:value_as_number]
       end
 
       def query(db)
@@ -53,7 +53,7 @@ Accepts two params:
       end
 
       def as_criterion(db)
-        db.from(select_it(db.from(:person).clone(:force_columns=>table_columns(:person)), :person))
+        db.from(select_it(db.from(:person).clone(force_columns: table_columns(:person)), :person))
           .select(*(dynamic_columns - [:value_as_number]))
           .select_append(first_argument.cast(Float).as(:value_as_number))
           .from_self

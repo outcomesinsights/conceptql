@@ -1,0 +1,48 @@
+[
+  "union",
+  [
+    "one_in_two_out",
+    [
+      "icd9",
+      "412"
+    ]
+  ],
+  [
+    "ndc",
+    "0000001"
+  ],
+  [
+    "place_of_service_filter",
+    [
+      "icd9",
+      "412"
+    ],
+    "21"
+  ],
+  [
+    "numeric",
+    1
+  ],
+  [
+    "co_reported",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "cpt_or_hcpcs",
+      "99213"
+    ]
+  ],
+  [
+    "provider_filter",
+    [
+      "icd9",
+      "412"
+    ],
+    {
+      "specialties": "12345"
+    }
+  ]
+]
+

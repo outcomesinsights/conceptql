@@ -106,7 +106,7 @@ twice in an outpatient setting with a 30-day gap.
           q = q.select_all(:initial)
         end
 
-        q.from_self
+        q.from_self.select(*dynamic_columns).from_self
       end
 
       def all_valid_events

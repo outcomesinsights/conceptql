@@ -1,0 +1,26 @@
+[
+  "union",
+  [
+    "co_reported",
+    [
+      "icd9",
+      "412"
+    ],
+    [
+      "cpt_or_hcpcs",
+      "99213"
+    ]
+  ],
+  [
+    "place_of_service_filter",
+    [
+      "icd9",
+      "412"
+    ],
+    21
+  ],
+  [
+    "numeric",
+    1
+  ]
+]
