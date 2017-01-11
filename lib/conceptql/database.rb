@@ -38,7 +38,6 @@ module ConceptQL
         new_key = k.sub(opt_regexp, '')
         h[new_key] = v
       end
-      db_opts
     end
 
     def extensions
