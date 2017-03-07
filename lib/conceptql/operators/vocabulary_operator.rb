@@ -1,4 +1,5 @@
 require_relative 'operator'
+require_relative '../code_list_item'
 
 module ConceptQL
   module Operators
@@ -7,19 +8,14 @@ module ConceptQL
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
-      ConceptCode = Struct.new(:vocabulary, :code, :description) do
-        def to_s
-          "#{vocabulary} #{code}: #{description}"
-        end
-      end
 
       def domain
         table
       end
 
       def code_list(db)
-        [self.arguments.map do | code |
-          ConceptCode.new(self.class.preferred_name, code, describe_code(db, code))
+        [arguments.map do |code|
+          CodeListItem.new(self.class.preferred_name, code, describe_code(db, code))
         end]
       end
 
