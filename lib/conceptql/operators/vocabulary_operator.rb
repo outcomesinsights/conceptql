@@ -1,4 +1,5 @@
 require_relative 'operator'
+require_relative '../code_list_item'
 
 module ConceptQL
   module Operators
@@ -7,19 +8,22 @@ module ConceptQL
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
-      ConceptCode = Struct.new(:vocabulary, :code, :description) do
-        def to_s
-          "#{vocabulary} #{code}: #{description}"
-        end
-      end
 
       def domain
         table
       end
 
+      # This is the only method that actually populates the code_list
+      #
+      # For each code, we create a CodeListItem
+      #
+      # If code_list is passed nil for db, the description will
+      # be left nil since there is no database to use to lookup descriptions
       def code_list(db)
-        [self.arguments.map do | code |
-          ConceptCode.new(self.class.name.split('::').last, code, describe_code(db, code))
+        [arguments.map do |code|
+            c = CodeListItem.new(self.class.preferred_name, code, nil)
+            c.description = describe_code(db, code) if db
+            c
         end]
       end
 
