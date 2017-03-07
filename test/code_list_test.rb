@@ -18,4 +18,10 @@ describe ConceptQL::Operators do
             ]
         ])
   end
+
+  it "should handle nil for a DB" do
+    db = ConceptQL::Database.new(DB)
+    query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
+    query.code_list(nil).map { |arr| arr.map(&:to_s) }.must_equal([["CPT 99214"], ["ICD-9 CM 250.00", "ICD-9 CM 250.02"]])
+  end
 end

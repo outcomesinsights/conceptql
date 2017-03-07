@@ -1,6 +1,8 @@
 CodeListItem = Struct.new(:vocabulary, :code, :description) do
   def to_s
-    "#{vocabulary} #{code}: #{description}"
+    output = "#{vocabulary} #{code}"
+    output << ": #{description}" if description
+    output
   end
 end
 
