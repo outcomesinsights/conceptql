@@ -23,4 +23,12 @@ describe ConceptQL::Operators do
       "ICD-9 CM 250.02"
     ])
   end
+
+  it "should handle nil for preferred name" do
+    db = ConceptQL::Database.new(DB)
+    query = db.query(["revenue_code", "0100"])
+    query.code_list(nil).map(&:to_s).must_equal([
+      "Revenue Code 0100"
+    ])
+  end
 end

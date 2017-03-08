@@ -21,7 +21,7 @@ module ConceptQL
       # be left nil since there is no database to use to lookup descriptions
       def code_list(db)
         arguments.map do |code|
-          c = CodeListItem.new(self.class.preferred_name, code, nil)
+          c = CodeListItem.new(self.class.pref_name, code, nil)
           c.description = describe_code(db, code) if db
           c
         end
