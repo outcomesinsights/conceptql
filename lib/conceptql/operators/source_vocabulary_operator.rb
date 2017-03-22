@@ -74,7 +74,12 @@ module ConceptQL
         if add_warnings?(db, opts)
           args = arguments.dup
           args -= bad_arguments
-          missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments_fix(db, args)).select_map(:source_code)
+          missing_args = []
+
+          unless no_db?(db, opts)
+            missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments_fix(db, args)).select_map(:source_code)
+          end
+
           unless missing_args.empty?
             add_warning("unknown source code", *missing_args)
           end
@@ -83,6 +88,10 @@ module ConceptQL
 
       def table_source_column
         "tab__#{source_column}".to_sym
+      end
+
+      def table_is_missing?(db)
+        !db.table_exists?(:source_to_concept_map)
       end
     end
   end

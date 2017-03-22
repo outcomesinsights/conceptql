@@ -724,7 +724,7 @@ module ConceptQL
       end
 
       def add_warnings?(db, opts = {})
-        @errors.empty? && db && db.adapter_scheme != :mock && !opts[:skip_db]
+        @errors.empty? && !no_db?(db, opts)
       end
 
       def add_error(*args)
@@ -753,7 +753,21 @@ module ConceptQL
       end
 
       def include_counts?(db, opts)
-        db && !opts[:skip_db] && !opts[:skip_counts]
+        !(no_db?(db, opts) || opts[:skip_counts])
+      end
+
+      def skip_db?(opts)
+        opts[:skip_db]
+      end
+
+      def no_db?(db, opts = {})
+        no_db = db.nil? || db.adapter_scheme == :mock || skip_db?(opts)
+        no_db ||= table_is_missing?(db)
+        no_db
+      end
+
+      def table_is_missing?(db)
+        false
       end
     end
   end

@@ -31,4 +31,15 @@ describe ConceptQL::Operators do
       "Revenue Code 0100"
     ])
   end
+
+  it "should return codes even if database search_path is bad" do
+    seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
+    db = ConceptQL::Database.new(seq_db)
+    query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
+    query.code_list(seq_db).map(&:to_s).must_equal([
+      "CPT 99214",
+      "ICD-9 CM 250.00",
+      "ICD-9 CM 250.02"
+    ])
+  end
 end

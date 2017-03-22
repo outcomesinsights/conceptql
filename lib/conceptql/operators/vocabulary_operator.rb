@@ -22,7 +22,7 @@ module ConceptQL
       def code_list(db)
         arguments.map do |code|
           c = CodeListItem.new(self.class.pref_name, code, nil)
-          c.description = describe_code(db, code) if db
+          c.description = describe_code(db, code) unless no_db?(db)
           c
         end
       end
