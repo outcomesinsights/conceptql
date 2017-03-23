@@ -41,7 +41,7 @@ is passed through unaffected.
         # the entire LHS date range is truncated, which implies the row itself
         # is ineligible to pass thru
         ds = db.from(left_stream(db))
-                  .join(Sequel.as(grouped_right, :r), l__person_id: :r__person_id)
+                  .left_join(Sequel.as(grouped_right, :r), l__person_id: :r__person_id)
                   .where(where_criteria)
                   .select(*new_columns)
                   .select_append(Sequel.as(Sequel.function(:greatest, :l__start_date, :r__end_date), :start_date))
