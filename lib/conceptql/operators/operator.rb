@@ -347,6 +347,18 @@ module ConceptQL
         end
       end
 
+      def omopv4_plus?
+        data_model == :omopv4_plus
+      end
+
+      def omopv4?
+        data_model == :omopv4
+      end
+
+      def impala?
+        database_type.to_sym == :impala
+      end
+
       private
 
       def annotate_values(db, opts)
@@ -387,18 +399,6 @@ module ConceptQL
         end
 
         cols
-      end
-
-      def omopv4_plus?
-        data_model == :omopv4_plus
-      end
-
-      def omopv4?
-        data_model == :omopv4
-      end
-
-      def impala?
-        database_type.to_sym == :impala
       end
 
       def table_to_sym(table)
