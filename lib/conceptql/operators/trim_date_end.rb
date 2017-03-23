@@ -18,7 +18,7 @@ module ConceptQL
       desc <<-EOF
 Trims the end_date of the left hand results (LHR) by the earliest
 start_date (per person) in the right hand results (RHR)
-If the RHR contain a start_date that comes before the start_date in the LHR
+If the RHR contains a start_date that comes before the start_date in the LHR
 that result in the LHR is completely discarded.
 
 If there is no result in the RHR for a result in the LHR, the result in the LHR is passed
