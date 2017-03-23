@@ -15,15 +15,24 @@
       "name": "ICD-9 CM"
     }
   ],
-  "inpatient_header, inpatient_header",
+  "carrier, garbage",
+  "other",
   {
     "annotation": {
       "counts": {
         "condition_occurrence": {
-          "rows": 8,
-          "n": 8
+          "rows": 0,
+          "n": 0
         }
-      }
+      },
+      "errors": [
+        [
+          "unrecognized keywords",
+          "carrier",
+          "garbage",
+          "other"
+        ]
+      ]
     }
   }
 ]

@@ -22,9 +22,16 @@ module ConceptQL
 
       def query(db)
         db.from(:visit_occurrence___v)
-          .join(:concept___c, { c__concept_id: Sequel.cast(:v__visit_source_concept_id, :bigint) })
+          .join(:concept___c, { c__concept_id: pos_concept_column  })
           .where(c__concept_code: arguments.map(&:to_s))
           .where(c__vocabulary_id: 14)
+      end
+
+      private
+
+      def pos_concept_column
+        return Sequel.cast(:v__visit_source_concept_id, :bigint) unless omopv4?
+        Sequel.cast(:v__place_of_service_concept_id, :bigint)
       end
     end
   end
