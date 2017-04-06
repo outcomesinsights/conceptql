@@ -1,4 +1,5 @@
 require_relative 'operator'
+require 'date'
 
 module ConceptQL
   module Operators
@@ -10,14 +11,16 @@ module ConceptQL
     class DateRange < Operator
       register __FILE__
 
-      desc 'Used to represent a date literal.'
+      DATE_FORMAT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/])}\z/
+
+      desc "Used to represent a date literal.  Dates must be in the format YYYY-MM-DD"
       option :start, type: :string
       option :end, type: :string
       category "Select by Property"
       basic_type :selection
       validate_no_upstreams
       validate_no_arguments
-      validate_option String, :start, :end
+      validate_option DATE_FORMAT, :start, :end
       validate_required_options :start, :end
 
       def query_cols
