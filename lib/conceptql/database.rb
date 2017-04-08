@@ -36,8 +36,12 @@ module ConceptQL
 
       matching_opts.each_with_object({}) do |(k,v), h|
         new_key = k.sub(opt_regexp, '')
-        h[new_key] = v
+        h[new_key] = prep_value(k, v)
       end
+    end
+
+    def prep_value(k, v)
+      v =~ /\W/ ? %Q|"#{v}"| : v
     end
 
     def extensions
