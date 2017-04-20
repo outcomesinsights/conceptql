@@ -22,6 +22,7 @@ module ConceptQL
     end
 
     def query(statement, opts={})
+      NullQuery.new if statement.nil? || statement.empty?
       Query.new(db, statement, @opts.merge(opts))
     end
 
