@@ -10,7 +10,7 @@ module ConceptQL
 
       def query(db)
         db.from(left.evaluate(db))
-          .where(person_id: right.evaluate(db).select_group(:person_id))
+          .where(person_id: right.evaluate(db).from_self.select_group(:person_id))
       end
     end
   end
