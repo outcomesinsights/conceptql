@@ -21,10 +21,10 @@ module ConceptQL
       validate_at_least_one_argument
 
       def query_cols
-        table_columns(*tables)
+        dm.table_columns(*tables)
       end
 
-      def domains
+      def domains(db)
         if oi_cdm?
           [:condition_occurrence]
         else
