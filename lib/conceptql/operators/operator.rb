@@ -147,16 +147,14 @@ module ConceptQL
         res = [operator_name, *annotate_values(db, opts)]
 
         puts "TESTING #{self}"
-        if upstreams_valid?(db, opts).tap {|u| p u } && scope.valid?.tap{|v| p v} && include_counts?(db, opts).tap { |c| p c}
+        if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
         puts "SUCCESS #{self}"
           scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_domain)
             .select_append{Sequel.function(:count, 1).as(:rows)}
             .select_append{count(:person_id).distinct.as(:n)}
-            .tap { |o| p o}
             .each do |h|
-            p h
               counts[h.delete(:criterion_domain).to_sym] = h
             end
         elsif !errors.empty?
