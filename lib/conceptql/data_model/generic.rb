@@ -35,6 +35,10 @@ module ConceptQL
         (table.to_s + '_id').to_sym
       end
 
+      def person_id
+        :person_id
+      end
+
       def person_id_column(query)
         :person_id
       end

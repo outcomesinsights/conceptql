@@ -19,7 +19,7 @@ module ConceptQL
       end
 
       def person_id
-        Sequel.expr(:id).as(:person_id)
+        :patient_id
       end
 
       def person_table
