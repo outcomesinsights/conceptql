@@ -102,7 +102,7 @@ module ConceptQL
       end
 
       def table_is_missing?(db)
-        !db.table_exists?(:source_to_concept_map)
+        dm.table_is_missing?(db)
       end
     end
   end

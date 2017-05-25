@@ -1,8 +1,15 @@
 require "conceptql/version"
 require "conceptql/logger"
+require "conceptql/paths"
 require "conceptql/query"
 require "conceptql/null_query"
 require "conceptql/database"
+require "conceptql/data_model"
+require_relative "conceptql/query_modifiers/gdm/pos_query_modifier"
+require_relative "conceptql/query_modifiers/gdm/drug_query_modifier"
+require_relative "conceptql/query_modifiers/generic/pos_query_modifier"
+require_relative "conceptql/query_modifiers/generic/drug_query_modifier"
+
 
 module ConceptQL
   def self.metadata(opts = {})
@@ -24,13 +31,5 @@ module ConceptQL
     ].map.with_index do |name, priority|
       { name: name, priority: priority }
     end
-  end
-
-  def self.root
-    (Pathname.new(__dir__) + "..").expand_path
-  end
-
-  def self.schemas
-    root + 'schemas'
   end
 end

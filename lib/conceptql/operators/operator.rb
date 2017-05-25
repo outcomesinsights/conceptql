@@ -3,8 +3,6 @@ require_relative '../behaviors/metadatable'
 require 'facets/array/extract_options'
 require 'facets/hash/deep_rekey'
 require 'forwardable'
-require_relative '../query_modifiers/pos_query_modifier'
-require_relative '../query_modifiers/drug_query_modifier'
 
 module ConceptQL
   module Operators
@@ -38,7 +36,7 @@ module ConceptQL
 
         def query_columns(*tables)
           define_method(:query_cols) do
-            table_columns(*tables)
+            dm.table_columns(*tables)
           end
         end
 
@@ -135,6 +133,7 @@ module ConceptQL
       end
 
       def annotate(db, opts = {})
+        puts "ANNOTATE #{self}"
         return @annotation if defined?(@annotation)
 
         scope_key = options[:id]||self.class.just_class_name.underscore
@@ -144,15 +143,20 @@ module ConceptQL
         if name = self.class.preferred_name
           metadata[:name] = name
         end
+        puts "ANNOTATING #{self}"
         res = [operator_name, *annotate_values(db, opts)]
 
-        if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
+        puts "TESTING #{self}"
+        if upstreams_valid?(db, opts).tap {|u| p u } && scope.valid?.tap{|v| p v} && include_counts?(db, opts).tap { |c| p c}
+        puts "SUCCESS #{self}"
           scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_domain)
-            .select_append{count{}.*.as(:rows)}
+            .select_append{Sequel.function(:count, 1).as(:rows)}
             .select_append{count(:person_id).distinct.as(:n)}
+            .tap { |o| p o}
             .each do |h|
+            p h
               counts[h.delete(:criterion_domain).to_sym] = h
             end
         elsif !errors.empty?
@@ -208,13 +212,8 @@ module ConceptQL
       end
 
       def select_it(query, db, specific_table = nil)
-        if specific_table.nil? && respond_to?(:source_table) && schema.keys.include?(source_table)
-          specific_table = table
-        end
-
-        if specific_table.nil? && respond_to?(:table) && schema.keys.include?(table)
-          specific_table = table
-        end
+        specific_table ||= dm.determine_table(:source_table)
+        specific_table ||= dm.determine_table(:table)
 
         q = setup_select(query, db, specific_table)
 
@@ -254,14 +253,14 @@ module ConceptQL
           end
         end
 
-        columns = [person_id_column(query),
-                    table_id(local_table),
-                    criterion_table,
-                    criterion_domain,
-                  ]
-        columns += date_columns(query, local_table)
+        columns = [dm.person_id_column(query),
+                   dm.table_id(local_table),
+                   criterion_table,
+                   criterion_domain]
+        columns += dm.date_columns(query, local_table)
         columns += [ source_value(query, local_table) ]
         columns += additional_columns(query, local_table)
+        columns
       end
 
       def label
@@ -327,29 +326,14 @@ module ConceptQL
         database_type.to_sym == :impala
       end
 
+      def dm
+        @dm ||= DataModel.for(self, nodifier)
+      end
+
       private
 
       def annotate_values(db, opts)
         (upstreams.map { |op| op.annotate(db, opts) } + arguments).push(options)
-      end
-
-      def criterion_id
-        return :criterion_id unless oi_cdm?
-        Sequel.expr(:id).as(:criterion_id)
-      end
-
-      def table_id(table = nil)
-        return :criterion_id if table.nil?
-        table = :person if table == :death && !oi_cdm?
-        Sequel.expr(make_table_id(table)).as(:criterion_id)
-      end
-
-      def make_table_id(table)
-        if oi_cdm?
-          :id
-        else
-          (table.to_s + '_id').to_sym
-        end
       end
 
       def make_table_name(table)
@@ -361,63 +345,14 @@ module ConceptQL
       end
 
       def query_columns(query)
-        unless cols = query.opts[:force_columns]
-          cols = query_cols
-        end
-
-        if ENV['CONCEPTQL_CHECK_COLUMNS']
-          if cols.sort != query.columns.sort
-            raise "columns don't match:\nclass: #{self.class}\nexpected: #{cols}\nactual: #{query.columns}\nvalues: #{values}\nSQL: #{query.sql}"
-          end
-        end
-
-        cols
+        dm.query_columns(query)
       end
 
-      def table_to_sym(table)
-        case table
-        when Symbol
-          table = Sequel.split_symbol(table)[1].to_sym
-        end
-        table
-      end
-
-      def table_cols(table)
-        table = table_to_sym(table)
-        cols = schema.fetch(table).keys
-        cols
-      end
-
-      def table_columns(*tables)
-        tables.map{|t| table_cols(t)}.flatten
-      end
-
-      def table_source_value(table)
-        source_value_columns.fetch(table_to_sym(table))
-      end
-
-      def table_vocabulary_id(table)
-        table_vocabulary_ids[table_to_sym(table)]
-      end
-
-      def schema
-        @schema ||= Psych.load_file(ConceptQL.schemas + "#{data_model}.yml")
-      end
-
-      def person_id_column(query, table = nil)
-        if oi_cdm?
-          return Sequel.expr(:patient_id).as(:person_id) if query_columns(query).include?(:patient_id)
-          return Sequel.expr(:id).as(:person_id) if query_columns(query).include?(:birth_date)
-        end
-
-        :person_id
-      end
-
-      def additional_columns(query, domain)
+      def additional_columns(query, table)
         special_columns = {
-          provenance_type: Proc.new { provenance_type(query, domain) },
-          provider_id: Proc.new { provider_id(query, domain) },
-          place_of_service_concept_id: Proc.new { place_of_service_concept_id(query, domain) }
+          provenance_type: Proc.new { provenance_type(query, table) },
+          provider_id: Proc.new { provider_id(query, table) },
+          place_of_service_concept_id: Proc.new { dm.place_of_service_concept_id(query, table) }
         }
 
         additional_cols = special_columns.each_with_object([]) do |(column, proc_obj), columns|
@@ -438,178 +373,35 @@ module ConceptQL
         additional_cols
       end
 
-      def source_value(query, domain)
+      def source_value(query, table)
         return :source_value if query_columns(query).include?(:source_value)
-        cast_column(:source_value, source_value_column(query, domain))
+        cast_column(:source_value, dm.source_value_column(query, table))
       end
 
-      def provenance_type(query, domain)
+      def provenance_type(query, table)
         return :provenance_type if query_columns(query).include?(:provenance_type)
-        cast_column(:provenance_type, provenance_type_column(query, domain))
+        cast_column(:provenance_type, dm.provenance_type_column(query, table))
       end
 
-      def provider_id(query, domain)
+      def provider_id(query, table)
         return :provider_id if query_columns(query).include?(:provider_id)
-        cast_column(:provider_id, provider_id_column(query, domain))
+        cast_column(:provider_id, dm.provider_id_column(query, table))
       end
 
-      def place_of_service_concept_id(query, domain)
-        return :place_of_service_concept_id if query_columns(query).include?(:place_of_service_concept_id)
-        cast_column(:place_of_service_concept_id, place_of_service_concept_id_column(query, domain))
-      end
-
-      def date_columns(query, table = nil)
-        return [:start_date, :end_date] if (query_columns(query).include?(:start_date) && query_columns(query).include?(:end_date))
-        return [:start_date, :end_date] unless table
-
-        date_klass = Date
-        if query.db.database_type == :impala
-          date_klass = DateTime
-        end
-
-        sd = start_date_column(query, table)
-        sd = Sequel.cast(Sequel.expr(sd), date_klass).as(:start_date) unless sd == :start_date
-        ed = end_date_column(query, table)
-        ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table)), date_klass).as(:end_date) unless ed == :end_date
-        [sd, ed]
-      end
-
-      def assign_column_to_table
-        schema.each_with_object({}) do |(table, column_info), cols|
-          column = yield table, column_info.keys.map(&:to_s)
-          cols[table] = column ? column.to_sym : nil
-        end
-      end
-
-      def start_date_columns
-        @start_date_columns ||= assign_column_to_table do |table, columns|
-          column = columns.select { |k| k =~ /start_date$/ }.first
-          column ||= columns.select { |k| k =~ /date$/ }.first
-        end
-      end
-
-      def end_date_columns
-        @end_date_columns ||= assign_column_to_table do |table, columns|
-          column = columns.select { |k| k =~ /end_date$/ }.first
-          column ||= columns.select { |k| k =~ /date$/ }.first
-        end
-      end
-
-      def start_date_column(query, domain)
-        if oi_cdm?
-          start_date_columns[domain]
-        else
-          start_date_columns.merge(person: person_date_of_birth(query))[domain]
-        end
-      end
-
-      def end_date_column(query, domain)
-        if oi_cdm?
-          end_date_columns[domain]
-        else
-          end_date_columns.merge(person: person_date_of_birth(query))[domain]
-        end
-      end
-
-      def source_value_columns
-        @source_value_columns ||= assign_column_to_table do |table, columns|
-          reggy = /#{table.to_s.split("_").first}_source_value$/
-          column = columns.select { |k| k =~ reggy }.first
-          column ||= columns.select { |k| k =~ /source_value$/ }.first
-        end
-      end
-
-      def table_vocabulary_ids
-        @table_vocabulary_ids = assign_column_to_table do |table, columns|
-          reggy = /#{table.to_s.split("_").first}_source_vocabulary_id/
-          column = columns.select { |k| k =~ reggy }.first
-          column ||= columns.select { |k| k =~ /_source_vocabulary_id/ }.first
-        end
-      end
-
-      def id_columns
-        @id_columns ||= assign_column_to_table do |table, columns|
-          reggy = /#{table.to_s}_id/
-          columns.select { |k| k =~ reggy }.first
-        end
-      end
-
-      def id_column(table)
-        return :id if oi_cdm?
-        id_columns[table]
-      end
-
-      def source_value_column(query, table)
-        source_value_columns[table]
-      end
-
-      def provenance_type_column(query, domain)
+      def modify_query(query, table)
         {
-          condition_occurrence: :condition_type_concept_id,
-          death: :death_type_concept_id,
-          drug_exposure: :drug_type_concept_id,
-          observation: :observation_type_concept_id,
-          procedure_occurrence: :procedure_type_concept_id
-        }[domain]
-      end
-
-      def provider_id_column(query, domain)
-        {
-          condition_occurrence: :associated_provider_id,
-          death: :death_type_concept_id,
-          drug_exposure: :prescribing_provider_id,
-          observation: :associated_provider_id,
-          person: :provider_id,
-          procedure_occurrence: :associated_provider_id,
-          provider: :provider_id
-        }[domain]
-      end
-
-      def place_of_service_concept_id_column(query, domain)
-        return nil if domain.nil?
-        return :place_of_service_concept_id if table_cols(domain).include?(:visit_occurrence_id)
-        return nil
-      end
-
-      def modify_query(query, domain)
-        {
-          place_of_service_concept_id: ConceptQL::QueryModifiers::PoSQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::DrugQueryModifier
+          place_of_service_concept_id: dm.query_modifier_for(:place_of_service_concept_id),
+          drug_name: dm.query_modifier_for(:drug_name)
         }.each do |column, klass|
-          #p [domain, column, table, join_id, source_column]
+          #p [table, column, table, join_id, source_column]
           #p dynamic_columns
           #p query_cols
-          next if domain.nil?
+          next if table.nil?
           next unless dynamic_columns.include?(column)
           query = klass.new(query, self).modified_query
         end
 
         query
-      end
-
-      def person_date_of_birth(query)
-        assemble_date(query, :year_of_birth, :month_of_birth, :day_of_birth)
-      end
-
-      def assemble_date(query, *symbols)
-        strings = symbols.map do |symbol|
-          sub = '2000'
-          col = Sequel.cast_string(symbol)
-          if symbol != :year_of_birth
-            sub = '01'
-            col = Sequel.function(:lpad, col, 2, '0')
-          end
-          Sequel.function(:coalesce, col, Sequel.expr(sub))
-        end
-
-        strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
-        concatted_strings = Sequel.join(strings_with_dashes)
-
-        date = concatted_strings
-        if query.db.database_type == :impala
-          date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
-        end
-        cast_date(query.db, date)
       end
 
       def cast_date(db, date)

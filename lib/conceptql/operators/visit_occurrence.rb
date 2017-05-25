@@ -27,6 +27,14 @@ module ConceptQL
           procedure_occurrence
         ]
       end
+
+      def source_table
+        if oi_cdm?
+          :contexts
+        else
+          :visit_occurrence
+        end
+      end
     end
   end
 end

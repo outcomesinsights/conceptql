@@ -37,10 +37,17 @@ Common values include 21 (inpatient hospital), 23 (emergency room), and 11 (offi
     private
 
       def place_of_service_concept_ids(db)
-        db.from(:concept)
-          .where(concept_code: arguments.map(&:to_s))
-          .where(vocabulary_id: 14)
-          .select(:concept_id)
+        if oi_cdm?
+          db.from(:concepts)
+            .where(vocabulary_id: "Place of Service")
+            .where(concept_code: arguments.map(&:to_s))
+            .select(:id)
+        else
+          db.from(:concept)
+            .where(concept_code: arguments.map(&:to_s))
+            .where(vocabulary_id: 14)
+            .select(:concept_id)
+        end
       end
     end
   end

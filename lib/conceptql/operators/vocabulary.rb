@@ -36,7 +36,7 @@ module ConceptQL
 
         ds = ds.where(where_clause(db))
         if oi_cdm?
-          ds = ds.select_append(Sequel.cast_string(domain).as(:criterion_domain))
+          ds = ds.select_append(Sequel.cast_string(domain.to_s).as(:criterion_domain))
         end
         ds
       end
@@ -63,16 +63,16 @@ module ConceptQL
 
       def query_cols
         if oi_cdm?
-          table_columns(:clinical_codes)
+          dm.table_columns(:clinical_codes)
         else
-          table_columns(domain)
+          dm.table_columns(domain)
         end
       end
 
-      def validate(db)
+      def validate(db, opts = {})
         super
-        if add_warnings?(db)
-          args = arguments
+        if add_warnings?(db, opts)
+          args = arguments.dup
           args -= bad_arguments
           missing_args = args - db[:concepts].where(vocabulary_id: vocabulary_id(db), concept_code: args).select_map(:concept_code)
           unless missing_args.empty?
