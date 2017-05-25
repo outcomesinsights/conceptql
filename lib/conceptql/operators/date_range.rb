@@ -24,14 +24,14 @@ module ConceptQL
       validate_required_options :start, :end
 
       def query_cols
-        table_columns(source_table) + [:criterion_table, :criterion_domain, :criterion_id, :start_date, :end_date]
+        dm.table_columns(source_table) + [:criterion_table, :criterion_domain, :criterion_id, :start_date, :end_date]
       end
 
       def query(db)
         db.from(source_table)
           .select_append(Sequel.cast_string(source_table.to_s).as(:criterion_table))
           .select_append(Sequel.cast_string('person').as(:criterion_domain))
-          .select_append(Sequel.expr(id_column(source_table)).as(:criterion_id))
+          .select_append(Sequel.expr(dm.id_column(source_table)).as(:criterion_id))
           .select_append(Sequel.as(cast_date(db, start_date(db)), :start_date),
                          Sequel.as(cast_date(db, end_date(db)), :end_date)).from_self
       end
@@ -67,19 +67,15 @@ module ConceptQL
       end
 
       def period_table
-        if oi_cdm?
-          :information_periods
-        else
-          :observation_period
-        end
+        dm.period_table
       end
 
       def period_start_date(db)
-        start_date_column(db, period_table)
+        dm.start_date_column(db, period_table)
       end
 
       def period_end_date(db)
-        end_date_column(db, period_table)
+        dm.end_date_column(db, period_table)
       end
     end
   end
