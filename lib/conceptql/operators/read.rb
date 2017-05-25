@@ -11,9 +11,16 @@ module ConceptQL
       argument :read_codes, type: :codelist, vocab: "Read"
       basic_type :selection
       category "Select by Clinical Codes"
-      default_query_columns
 
       def query(db)
+        oi_cdm? ? oi_cdm(db) : omopv4(db)
+      end
+
+      def oi_cdm(db)
+        vocab_op.query(db)
+      end
+
+      def omopv4(db)
         ops = codes_by_domain(db).map do |domain, codes|
           klasses[domain].new(self.nodifier, *codes)
         end
@@ -24,7 +31,15 @@ module ConceptQL
       end
 
       def domains(db)
-        codes_by_domain(db).keys
+        oi_cdm? ? vocab_op.domains(db) : codes_by_domain(db).keys
+      end
+
+      def table
+        vocab_op.table
+      end
+
+      def query_cols
+        vocab_op.query_cols
       end
 
       private
@@ -143,6 +158,10 @@ module ConceptQL
         def concept_column
           :drug_concept_id
         end
+      end
+
+      def vocab_op
+        @vocab_op ||= Vocabulary.new(nodifier, *values, vocabulary: "Read")
       end
     end
   end
