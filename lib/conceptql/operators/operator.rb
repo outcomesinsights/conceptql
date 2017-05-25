@@ -3,6 +3,8 @@ require_relative '../behaviors/metadatable'
 require 'facets/array/extract_options'
 require 'facets/hash/deep_rekey'
 require 'forwardable'
+require_relative '../query_modifiers/pos_query_modifier'
+require_relative '../query_modifiers/drug_query_modifier'
 
 module ConceptQL
   module Operators
@@ -16,20 +18,7 @@ module ConceptQL
 
     class Operator
       extend Forwardable
-      extend Metadatable
-      COLUMNS = [
-        :person_id,
-        :criterion_id,
-        :criterion_table,
-        :criterion_domain,
-        :start_date,
-        :end_date,
-        :value_as_number,
-        :value_as_string,
-        :value_as_concept_id,
-        :units_source_value,
-        :source_value
-      ]
+      extend ConceptQL::Metadatable
 
       attr :nodifier, :values, :options, :arguments, :upstreams
 
@@ -38,7 +27,7 @@ module ConceptQL
       @validations = []
 
       class << self
-        attr :validations, :codes_regexp
+        attr :validations, :codes_regexp, :required_columns
 
         def register(file, *data_models)
           data_models = OPERATORS.keys if data_models.empty?
@@ -55,8 +44,13 @@ module ConceptQL
 
         def default_query_columns
           define_method(:query_cols) do
-            SELECTED_COLUMNS
+            dynamic_columns
           end
+        end
+
+        def require_column(column)
+          @required_columns ||= []
+          @required_columns << column
         end
 
         validation_meths = (<<-END).split.map(&:to_sym)
@@ -132,7 +126,15 @@ module ConceptQL
         self.class.just_class_name.underscore
       end
 
-      def annotate(db)
+      def required_columns
+        self.class.required_columns
+      end
+
+      def dynamic_columns
+        scope.query_columns
+      end
+
+      def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
         scope_key = options[:id]||self.class.just_class_name.underscore
@@ -142,9 +144,9 @@ module ConceptQL
         if name = self.class.preferred_name
           metadata[:name] = name
         end
-        res = [operator_name, *annotate_values(db)]
+        res = [operator_name, *annotate_values(db, opts)]
 
-        if upstreams_valid?(db) && scope.valid? && db
+        if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
           scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_domain)
@@ -152,13 +154,13 @@ module ConceptQL
             .select_append{count(:person_id).distinct.as(:n)}
             .each do |h|
               counts[h.delete(:criterion_domain).to_sym] = h
-          end
+            end
         elsif !errors.empty?
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
         end
         scope.add_operators(self)
-        domains.each do |domain|
+        domains(db).each do |domain|
           cur_counts = counts[domain] ||= {:rows=>0, :n=>0}
           scope.add_counts(scope_key, domain, cur_counts)
         end
@@ -178,10 +180,7 @@ module ConceptQL
       end
 
       def code_list(db)
-        code_lists = @upstreams.map do | upstream_op |
-          upstream_op.code_list(db)
-        end
-        code_lists.flatten(1)
+        upstreams.flat_map { |upstream_op| upstream_op.code_list(db) }
       end
 
       def dup_values(args)
@@ -193,7 +192,7 @@ module ConceptQL
       end
 
       def evaluate(db)
-        select_it(query(db))
+        select_it(query(db), db)
       end
 
       def sql(db)
@@ -208,22 +207,26 @@ module ConceptQL
         false
       end
 
-      def select_it(query, specific_table = nil)
+      def select_it(query, db, specific_table = nil)
         if specific_table.nil? && respond_to?(:source_table) && schema.keys.include?(source_table)
           specific_table = table
         end
+
         if specific_table.nil? && respond_to?(:table) && schema.keys.include?(table)
           specific_table = table
         end
-        q = query.select(*columns(query, specific_table))
+
+        q = setup_select(query, db, specific_table)
+
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
         end
+
         q
       end
 
-      def domains
-        @domains ||= determine_domains
+      def domains(db)
+        @domains ||= determine_domains(db)
       end
 
       def tables
@@ -234,43 +237,52 @@ module ConceptQL
         @stream ||= upstreams.first
       end
 
-      def columns(query, local_table = nil)
+      def setup_select(query, db, local_table = nil)
+        query = modify_query(query, local_table)
+        query.select(*columns(query, db, local_table))
+      end
+
+      def columns(query, db, local_table = nil)
         criterion_table = :criterion_table
         criterion_domain = :criterion_domain
         if local_table
           criterion_table = Sequel.cast_string(local_table.to_s).as(:criterion_table)
           if oi_cdm?
-            criterion_domain = Sequel.cast_string(domains.first.to_s).as(:criterion_domain)
+            criterion_domain = Sequel.cast_string(domains(db).first.to_s).as(:criterion_domain)
           else
             criterion_domain = Sequel.cast_string(local_table.to_s).as(:criterion_domain)
           end
         end
+
         columns = [person_id_column(query),
                     table_id(local_table),
                     criterion_table,
                     criterion_domain,
                   ]
         columns += date_columns(query, local_table)
-        columns += value_columns(query, local_table)
+        columns += [ source_value(query, local_table) ]
+        columns += additional_columns(query, local_table)
       end
 
       def label
         @label ||= begin
           options.delete(:label) if options[:label] && options[:label].to_s.strip.empty?
-          options[:label]
+          options[:label].respond_to?(:strip) ? options[:label].strip : options[:label]
         end
       end
 
       attr :errors, :warnings
 
-      def valid?(db)
+      def valid?(db, opts = {})
         return @errors.empty? if defined?(@errors)
-        validate(db)
+        @errors = []
+        @warnings = []
+        validate(db, opts)
         errors.empty?
       end
 
-      def upstreams_valid?(db)
-        valid?(db) && upstreams.all?{|u| u.upstreams_valid?(db)}
+      def upstreams_valid?(db, opts = {})
+          valid?(db, opts) && upstreams.all?{|u| u.upstreams_valid?(db, opts)}
       end
 
       def scope
@@ -285,10 +297,40 @@ module ConceptQL
         nodifier.database_type
       end
 
+      def cast_column(column, value = nil)
+        type = Scope::COLUMN_TYPES.fetch(column)
+        case type
+        when String, :String
+          Sequel.cast_string(value).as(column)
+        when Date, :Date
+          Sequel.cast(value, type).as(column)
+        when Float, :Bigint, :Float
+          Sequel.cast_numeric(value, type).as(column)
+        else
+          raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
+        end
+      end
+
+      def omopv4_plus?
+        data_model == :omopv4_plus
+      end
+
+      def omopv4?
+        data_model == :omopv4
+      end
+
+      def oi_cdm?
+        data_model == :oi_cdm
+      end
+
+      def impala?
+        database_type.to_sym == :impala
+      end
+
       private
 
-      def annotate_values(db)
-        (upstreams.map { |op| op.annotate(db) } + arguments).push(options)
+      def annotate_values(db, opts)
+        (upstreams.map { |op| op.annotate(db, opts) } + arguments).push(options)
       end
 
       def criterion_id
@@ -332,18 +374,6 @@ module ConceptQL
         cols
       end
 
-      def omopv4_plus?
-        data_model == :omopv4_plus
-      end
-
-      def omopv4?
-        data_model == :omopv4
-      end
-
-      def oi_cdm?
-        data_model == :oi_cdm
-      end
-
       def table_to_sym(table)
         case table
         when Symbol
@@ -383,39 +413,49 @@ module ConceptQL
         :person_id
       end
 
-      def value_columns(query, table)
-        [
-          numeric_value(query),
-          string_value(query),
-          concept_id_value(query),
-          units_source_value(query),
-          source_value(query, table)
-        ]
+      def additional_columns(query, domain)
+        special_columns = {
+          provenance_type: Proc.new { provenance_type(query, domain) },
+          provider_id: Proc.new { provider_id(query, domain) },
+          place_of_service_concept_id: Proc.new { place_of_service_concept_id(query, domain) }
+        }
+
+        additional_cols = special_columns.each_with_object([]) do |(column, proc_obj), columns|
+          columns << proc_obj.call if dynamic_columns.include?(column)
+        end
+
+        standard_columns = dynamic_columns - Scope::DEFAULT_COLUMNS.keys
+        standard_columns -= special_columns.keys
+
+        standard_columns.each do |column|
+          additional_cols << if query_columns(query).include?(column)
+            column
+          else
+            cast_column(column)
+          end
+        end
+
+        additional_cols
       end
 
-      def numeric_value(query)
-        return :value_as_number if query_columns(query).include?(:value_as_number)
-        Sequel.cast_numeric(nil, Float).as(:value_as_number)
-      end
-
-      def string_value(query)
-        return :value_as_string if query_columns(query).include?(:value_as_string)
-        Sequel.cast_string(nil).as(:value_as_string)
-      end
-
-      def concept_id_value(query)
-        return :value_as_concept_id if query_columns(query).include?(:value_as_concept_id)
-        Sequel.cast_numeric(nil).as(:value_as_concept_id)
-      end
-
-      def units_source_value(query)
-        return :units_source_value if query_columns(query).include?(:units_source_value)
-        Sequel.cast_string(nil).as(:units_source_value)
-      end
-
-      def source_value(query, table)
+      def source_value(query, domain)
         return :source_value if query_columns(query).include?(:source_value)
-        Sequel.cast_string(source_value_column(query, table)).as(:source_value)
+        cast_column(:source_value, source_value_column(query, domain))
+      end
+
+      def provenance_type(query, domain)
+        return :provenance_type if query_columns(query).include?(:provenance_type)
+        cast_column(:provenance_type, provenance_type_column(query, domain))
+      end
+
+      def provider_id(query, domain)
+        return :provider_id if query_columns(query).include?(:provider_id)
+        cast_column(:provider_id, provider_id_column(query, domain))
+      end
+
+      def place_of_service_concept_id(query, domain)
+        return :place_of_service_concept_id if query_columns(query).include?(:place_of_service_concept_id)
+        cast_column(:place_of_service_concept_id, place_of_service_concept_id_column(query, domain))
       end
 
       def date_columns(query, table = nil)
@@ -503,6 +543,50 @@ module ConceptQL
         source_value_columns[table]
       end
 
+      def provenance_type_column(query, domain)
+        {
+          condition_occurrence: :condition_type_concept_id,
+          death: :death_type_concept_id,
+          drug_exposure: :drug_type_concept_id,
+          observation: :observation_type_concept_id,
+          procedure_occurrence: :procedure_type_concept_id
+        }[domain]
+      end
+
+      def provider_id_column(query, domain)
+        {
+          condition_occurrence: :associated_provider_id,
+          death: :death_type_concept_id,
+          drug_exposure: :prescribing_provider_id,
+          observation: :associated_provider_id,
+          person: :provider_id,
+          procedure_occurrence: :associated_provider_id,
+          provider: :provider_id
+        }[domain]
+      end
+
+      def place_of_service_concept_id_column(query, domain)
+        return nil if domain.nil?
+        return :place_of_service_concept_id if table_cols(domain).include?(:visit_occurrence_id)
+        return nil
+      end
+
+      def modify_query(query, domain)
+        {
+          place_of_service_concept_id: ConceptQL::QueryModifiers::PoSQueryModifier,
+          drug_name: ConceptQL::QueryModifiers::DrugQueryModifier
+        }.each do |column, klass|
+          #p [domain, column, table, join_id, source_column]
+          #p dynamic_columns
+          #p query_cols
+          next if domain.nil?
+          next unless dynamic_columns.include?(column)
+          query = klass.new(query, self).modified_query
+        end
+
+        query
+      end
+
       def person_date_of_birth(query)
         assemble_date(query, :year_of_birth, :month_of_birth, :day_of_birth)
       end
@@ -521,14 +605,14 @@ module ConceptQL
         strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
         concatted_strings = Sequel.join(strings_with_dashes)
 
-	      date = concatted_strings
-	      if query.db.database_type == :impala
+        date = concatted_strings
+        if query.db.database_type == :impala
           date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
         end
         cast_date(query.db, date)
       end
 
-      def  cast_date(db, date)
+      def cast_date(db, date)
         case db.database_type
         when :oracle
           Sequel.function(:to_date, date, 'YYYY-MM-DD')
@@ -552,7 +636,7 @@ module ConceptQL
         end
       end
 
-      def determine_domains
+      def determine_domains(db)
         if upstreams.empty?
           if respond_to?(:domain)
             [domain]
@@ -560,8 +644,8 @@ module ConceptQL
             [:invalid]
           end
         else
-          domains = upstreams.compact.map(&:domains).flatten.uniq
-          domains.empty? ? [:invalid] : domains
+          doms = upstreams.compact.flat_map { |up| up.domains(db) }.uniq
+          doms.empty? ? [:invalid] : doms
         end
       end
 
@@ -571,9 +655,10 @@ module ConceptQL
         @upstreams.map(&:operator_name)
       end
 
-      def validate(db)
+      def validate(db, opts = {})
         @errors = [] unless defined?(@errors)
         @warnings = [] unless defined?(@warnings)
+
         add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
@@ -645,8 +730,8 @@ module ConceptQL
         end
       end
 
-      def add_warnings?(db)
-        @errors.empty? && db && db.adapter_scheme != :mock
+      def add_warnings?(db, opts = {})
+        @errors.empty? && !no_db?(db, opts)
       end
 
       def add_error(*args)
@@ -655,6 +740,41 @@ module ConceptQL
 
       def add_warning(*args)
         warnings << args
+      end
+
+      def needs_arguments_cte?(args)
+        impala? && arguments.length > 5000
+      end
+
+      def arguments_fix(db, args = nil)
+        args ||= arguments
+        return args unless needs_arguments_cte?(args)
+        args = args.dup
+        first_arg = Sequel.expr(args.shift).as(:arg)
+        args.unshift(first_arg)
+        args = args.map { |v| [v] }
+        args_cte = db.values(args)
+        db[:args]
+          .with(:args, args_cte)
+          .select(:arg)
+      end
+
+      def include_counts?(db, opts)
+        !(no_db?(db, opts) || opts[:skip_counts])
+      end
+
+      def skip_db?(opts)
+        opts[:skip_db]
+      end
+
+      def no_db?(db, opts = {})
+        no_db = db.nil? || db.adapter_scheme == :mock || skip_db?(opts)
+        no_db ||= table_is_missing?(db)
+        no_db
+      end
+
+      def table_is_missing?(db)
+        false
       end
     end
   end

@@ -12,7 +12,7 @@
       },
       "warnings": [
         [
-          "invalid concept code",
+          "improperly formatted code",
           "XYS"
         ]
       ]

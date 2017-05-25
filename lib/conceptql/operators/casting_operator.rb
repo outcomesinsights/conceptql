@@ -28,7 +28,7 @@ module ConceptQL
       validate_at_most_one_upstream
       validate_no_arguments
 
-      def domains
+      def domains(db)
         [domain]
       end
 
@@ -56,9 +56,9 @@ module ConceptQL
       private
 
       def base_query(db, stream_query)
-        uncastable_domains = stream.domains - castables
-        to_me_domains = stream.domains & these_point_at_me
-        from_me_domains = stream.domains & i_point_at
+        uncastable_domains = stream.domains(db) - castables
+        to_me_domains = stream.domains(db) & these_point_at_me
+        from_me_domains = stream.domains(db) & i_point_at
 
         destination_table = make_table_name(source_table)
         casting_query = db.from(destination_table)
@@ -91,7 +91,7 @@ module ConceptQL
               .where(source_domain_id => source_ids)
               .select(destination_domain_id)
           end.inject do |union_query, q|
-            union_query.union(q)
+            union_query.union(q, all: true)
           end
           wheres << Sequel.expr(destination_domain_id => castable_domain_query)
         end

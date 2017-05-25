@@ -1,29 +1,41 @@
-require_relative 'pass_thru'
-
 module ConceptQL
   module Operators
     class From < Operator
       register __FILE__
       basic_type :selection
       no_desc
+      option :domains, type: Array
+      option :query_cols, type: Array
       validate_no_upstreams
       validate_one_argument
 
-      def query_cols
-        table_columns(values.first.to_sym) rescue ConceptQL::Operators::SELECTED_COLUMNS
-      end
-
       def query(db)
-        db.from(values.first.to_sym)
+        db.from(table)
       end
 
-      def domains
-        domains = values[1..99].compact
-        domains.empty? ? [:invalid] : domains.map(&:to_sym)
+      def domains(db)
+        doms = options[:domains]
+        if doms.nil? || doms.empty?
+          if TABLE_COLUMNS.has_key?(table)
+            [table]
+          else
+            [:invalid]
+          end
+        else
+          doms.map(&:to_sym)
+        end
       end
 
-      def domain
-        values.first.to_sym
+      def table
+        values.first.to_sym rescue nil
+      end
+
+      def query_cols
+        cols = options[:query_cols]
+        if cols.nil? || cols.empty?
+          cols = table_columns(table) rescue dynamic_columns
+        end
+        cols
       end
     end
   end

@@ -1,0 +1,9 @@
+[
+  "one_in_two_out",
+  [
+    "icd9",
+    "244.9"
+  ], {
+    "outpatient_event_to_return": "Initial Event"
+  }
+]

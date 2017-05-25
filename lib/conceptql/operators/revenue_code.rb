@@ -18,6 +18,10 @@ module ConceptQL
         end
       end
 
+      def query_cols
+        table_columns(:procedure_occurrence, :concept)
+      end
+
       def domain
         :procedure_occurrence
       end

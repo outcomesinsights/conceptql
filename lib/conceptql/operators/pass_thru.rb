@@ -8,9 +8,9 @@ module ConceptQL
       basic_type :set
       no_desc
 
-      def domains
-        domains = upstreams.map(&:domains).flatten.uniq
-        domains.empty? ? [:invalid] : domains
+      def domains(db)
+        doms = upstreams.compact.flat_map { |up| up.domains(db) }.uniq
+        doms.empty? ? [:invalid] : doms
       end
 
       def query_cols

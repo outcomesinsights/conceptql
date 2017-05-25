@@ -1,0 +1,47 @@
+[
+  "co_reported",
+  [
+    "icd9",
+    "004.3",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 1,
+            "n": 1
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  [
+    "cpt_or_hcpcs",
+    "69210",
+    {
+      "annotation": {
+        "counts": {
+          "procedure_occurrence": {
+            "rows": 18,
+            "n": 14
+          }
+        }
+      },
+      "name": "CPT/HCPCS"
+    }
+  ],
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 1,
+          "n": 1
+        },
+        "procedure_occurrence": {
+          "rows": 1,
+          "n": 1
+        }
+      }
+    }
+  }
+]

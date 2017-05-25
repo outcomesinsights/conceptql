@@ -38,6 +38,7 @@ module ConceptQL
       end
 
       def to_concept_id(ctype)
+        return ctype.to_i unless ctype.to_i.zero?
         ctype = ctype.to_s.downcase
         position = nil
         if ctype =~ /(\d|_primary)$/ && ctype.count('_') > 1

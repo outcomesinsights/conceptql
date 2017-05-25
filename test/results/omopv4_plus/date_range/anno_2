@@ -1,0 +1,25 @@
+[
+  "date_range",
+  {
+    "start": "03/13/2008",
+    "end": "03/13/2008",
+    "annotation": {
+      "counts": {
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "wrong option format",
+          "start"
+        ],
+        [
+          "wrong option format",
+          "end"
+        ]
+      ]
+    }
+  }
+]

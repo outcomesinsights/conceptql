@@ -10,19 +10,51 @@ module ConceptQL
   # API for Recall operators to fetch the results/domains from
   # labeled operators.
   class Scope
+    DEFAULT_COLUMNS = {
+      person_id: :Bigint,
+      criterion_id: :Bigint,
+      criterion_table: :String,
+      criterion_domain: :String,
+      start_date: :Date,
+      end_date: :Date,
+      source_value: :String
+    }.freeze
+
+    ADDITIONAL_COLUMNS = {
+      value_as_number: :Float,
+      value_as_string: :String,
+      value_as_concept_id: :Bigint,
+      unit_source_value: :String,
+      visit_occurrence_id: :Bigint,
+      provenance_type: :Bigint,
+      provider_id: :Bigint,
+      place_of_service_concept_id: :Bigint,
+      range_low: :Float,
+      range_high: :Float,
+      drug_name: :String,
+      drug_amount: :Float,
+      drug_amount_units: :String,
+      days_supply: :Float,
+      quantity: :Bigint
+    }.freeze
+
+    COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
+
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
 
-    def initialize
+    def initialize(opts = {})
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
       @annotation = {}
+      @opts = opts.dup
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
       @annotation[:operators] = @operators = []
+      @query_columns = DEFAULT_COLUMNS.keys
     end
 
     def add_errors(key, errors)
@@ -44,7 +76,12 @@ module ConceptQL
       @operators.uniq!
     end
 
+    def add_required_columns(op)
+      @query_columns |= op.required_columns if op.required_columns
+    end
+
     def nest(op)
+      add_required_columns(op)
       return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
 
       unless label.is_a?(String)
@@ -57,7 +94,7 @@ module ConceptQL
 
       recall_dependencies[label] ||= []
 
-      if recall_stack.include?(label)
+      if nested_recall?(label)
         op.instance_eval do
           @errors = []
           add_error("nested recall")
@@ -65,7 +102,7 @@ module ConceptQL
         return
       end
 
-      if known_operators.has_key?(label) && !op.is_a?(Operators::Recall)
+      if duplicate_label?(label) && !op.is_a?(Operators::Recall)
         op.instance_eval do
           @errors = []
           add_error("duplicate label")
@@ -88,6 +125,14 @@ module ConceptQL
       known_operators[operator.label] = operator
     end
 
+    def duplicate_label?(label)
+      known_operators.keys.map(&:downcase).include?(label.downcase)
+    end
+
+    def nested_recall?(label)
+      recall_stack.map(&:downcase).include?(label.downcase)
+    end
+
     def from(db, label)
       ds = db.from(label)
 
@@ -106,8 +151,8 @@ module ConceptQL
       ds
     end
 
-    def domains(label)
-      fetch_operator(label).domains
+    def domains(label, db)
+      fetch_operator(label).domains(db)
     rescue
       [:invalid]
     end
@@ -142,14 +187,18 @@ module ConceptQL
 
     def with_ctes(query, db)
       raise "recall operator use without matching label" unless valid?
+
       query = query.from_self
 
-      ctes = sort_ctes([], known_operators, recall_dependencies)
       ctes.each do |label, operator|
         query = query.with(label, operator.evaluate(db))
       end
 
       query
+    end
+
+    def ctes
+      @ctes ||= sort_ctes([], known_operators, recall_dependencies)
     end
 
     def fetch_operator(label)

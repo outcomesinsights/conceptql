@@ -22,21 +22,17 @@ module ConceptQL
       end
 
       def code_list(db)
-        puts "BinaryOperatorOperator.code_list #{self.inspect}"
-        code_lists = [left, right].map do | upstream_op |
-          upstream_op.code_list(db)
-        end
-        code_lists.flatten(1)
+        left.code_list(db) + right.code_list(db)
       end
 
       attr :left, :right
 
       private
 
-      def annotate_values(db)
+      def annotate_values(db, opts = {})
         h = {}
-        h[:left] = left.annotate(db) if left
-        h[:right] = right.annotate(db) if right
+        h[:left] = left.annotate(db, opts) if left
+        h[:right] = right.annotate(db, opts) if right
         [options.merge(h), *arguments]
       end
 

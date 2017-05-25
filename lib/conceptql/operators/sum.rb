@@ -12,10 +12,11 @@ For start_date and end_date the min and max of each respectively is returned.'
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments
+      require_column :value_as_number
 
       def query(db)
         db.from(unioned(db))
-          .select_group(*(COLUMNS - [:start_date, :end_date, :criterion_id, :value_as_number]))
+          .select_group(*(dynamic_columns - [:start_date, :end_date, :criterion_id, :value_as_number]))
           .select_append(Sequel.lit('?', 0).as(:criterion_id))
           .select_append{ min(start_date).as(:start_date) }
           .select_append{ max(end_date).as(:end_date) }

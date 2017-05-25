@@ -9,8 +9,8 @@
         "annotation": {
           "counts": {
             "condition_occurrence": {
-              "rows": 39,
-              "n": 28
+              "rows": 48,
+              "n": 37
             }
           }
         },
@@ -24,8 +24,8 @@
         "annotation": {
           "counts": {
             "condition_occurrence": {
-              "rows": 1409,
-              "n": 182
+              "rows": 1556,
+              "n": 190
             }
           }
         },
@@ -36,8 +36,8 @@
       "annotation": {
         "counts": {
           "condition_occurrence": {
-            "rows": 1448,
-            "n": 183
+            "rows": 1604,
+            "n": 190
           }
         }
       }
@@ -50,8 +50,8 @@
       "annotation": {
         "counts": {
           "visit_occurrence": {
-            "rows": 0,
-            "n": 0
+            "rows": 153,
+            "n": 84
           }
         }
       }
@@ -61,12 +61,12 @@
     "annotation": {
       "counts": {
         "condition_occurrence": {
-          "rows": 1448,
-          "n": 183
+          "rows": 1604,
+          "n": 190
         },
         "visit_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": 153,
+          "n": 84
         }
       }
     }

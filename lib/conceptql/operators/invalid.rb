@@ -19,15 +19,15 @@ module ConceptQL
         raise "Invalid#query called.  #{errors}"
       end
 
-      def annotate(db)
+      def annotate(db, opts = {})
         if options[:left] || options[:right]
-          options[:left] = to_op(options[:left]).annotate(db) if options[:left]
-          options[:right] = to_op(options[:right]).annotate(db) if options[:right]
+          options[:left] = to_op(options[:left]).annotate(db, opts) if options[:left]
+          options[:right] = to_op(options[:right]).annotate(db, opts) if options[:right]
         end
         super
       end
 
-      def validate(db)
+      def validate(db, opts = {})
         super
         add_error(*@errors)
       end

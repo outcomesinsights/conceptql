@@ -1,12 +1,15 @@
 require_relative 'operator'
 require_relative 'visit_occurrence'
 require_relative '../date_adjuster'
+require_relative '../behaviors/provenanceable'
 require 'facets/kernel/blank'
 
 module ConceptQL
   module Operators
     class OneInTwoOut < Operator
       register __FILE__
+
+      include ConceptQL::Provenanceable
 
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for an event
@@ -19,7 +22,7 @@ twice in an outpatient setting with a 30-day gap.
       category "Filter Single Stream"
       basic_type :temporal
 
-      option :inpatient_length_of_stay, type: :integer, min: 0, default: 0, desc: 'Minimum length of inpatient stay required for inpatient event to be valid', label: 'Inpatient Length of Stay (Days)'
+      option :inpatient_length_of_stay, type: :integer, min: 0, default: 0, desc: 'Minimum length of inpatient stay (in days) required for inpatient event to be valid', label: 'Inpatient Length of Stay (Days)'
       option :inpatient_return_date, type: :string, options: ['Admit Date', 'Discharge Date'], default: 'Discharge Date', desc: 'Which date to pass downstream in both the start_date and end_date fields'
       option :outpatient_minimum_gap, type: :string, default: '30d', desc: 'Minimum number of days between outpatient events for the event to be valid'
       option :outpatient_maximum_gap, type: :string, desc: 'Maximum number of days between outpatient events for the event to be valid'
@@ -29,107 +32,92 @@ twice in an outpatient setting with a 30-day gap.
 
       default_query_columns
 
+      require_column :provenance_type
+
+      attr_reader :db
+
       def query(db)
-        faked_out = new_fake(nodifier,
-                             inpatient_events(db)
-                              .union(outpatient_events(db)
-                              .from_self),
-                            stream.domains)
-        First.new(nodifier, faked_out).query(db)
+        @db = db
+        first_valid_event.from_self
       end
 
       private
 
-      def inpatient_events(db)
-        q = db[:in_out_events]
-              .with(:in_out_events, in_out_events(db))
-              .where(type_id: inpatient_type_ids(db).union(db.select(Sequel.as(0, :type_id))))
+      def condition_events
+        db[stream.evaluate(db)]
+          .where(criterion_domain: 'condition_occurrence')
+          .exclude(provenance_type: nil)
+          .from_self
+      end
 
-        unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].zero?
-          q = q.where{ |o| Sequel.date_sub(o.end_date, o.start_date) > options[:inpatient_length_of_stay] }
+      def all_inpatient_events
+        condition_events
+          .where(provenance_type: to_concept_id(:inpatient))
+          .from_self
+      end
+
+      def valid_inpatient_events
+        q = all_inpatient_events
+        unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
+          q = q.where{ |o| Sequel.date_sub(o.end_date, o.start_date) > options[:inpatient_length_of_stay].to_i }
         end
 
-        if options[:inpatient_return_date] == 'Admit Date'
-          q = q.select(*(query_cols - [:end_date])).select_append(:start_date___end_date)
-        else
+        if options[:inpatient_return_date] != 'Admit Date'
           q = q.select(*(query_cols - [:start_date])).select_append(:end_date___start_date)
         end
 
-        q.select(*SELECTED_COLUMNS)
+        q.from_self.select(*dynamic_columns).from_self
       end
 
-      def inpatient_type_ids(db)
-        db[:concept___c]
-          .join(:vocabulary___v, c__vocabulary_id: :v__vocabulary_id)
-          .grep(:v__vocabulary_name, '% type', case_insensitive: true)
-          .grep(:c__concept_name, '%inpatient%', case_insensitive: true)
-          .select(:c__concept_id)
+      def outpatient_events
+        condition_events
+          .where(provenance_type: to_concept_id(:claim) + to_concept_id(:outpatient))
+          .from_self
       end
 
-      def outpatient_events(db)
+      def valid_outpatient_events
 
         min_gap = options[:outpatient_minimum_gap] || "30d"
+
         max_gap = options[:outpatient_maximum_gap]
 
-        q = db[:outpat_events].from_self(alias: :o1)
-              .join(db[:outpat_events].as(:o2), o1__person_id: :o2__person_id)
-              .with(:outpat_events, outpat_events(db))
-              .exclude(o1__criterion_id: :o2__criterion_id, o1__criterion_domain: :o2__criterion_domain)
+        q = outpatient_events.from_self(alias: :initial)
+              .join(outpatient_events.as(:confirm), initial__person_id: :confirm__person_id)
+              .exclude(initial__criterion_id: :confirm__criterion_id)
+
+        # In order to avoid many more comparisons of initial to confirm events, we now
+        # filter the join by having only confirm events that come on or after initial events
+        #
+        # This ensures that initial events represent initial events and confirm events
+        # represent confirming events
+        q = q.exclude{confirm__start_date < initial__start_date}
 
         if min_gap.present?
-          q = q.where { o2__start_date >= DateAdjuster.new(min_gap).adjust(:o1__start_date) }
+          q = q.where { confirm__start_date >= DateAdjuster.new(min_gap).adjust(:initial__start_date) }
         end
 
         if max_gap.present?
-          q = q.where { o2__start_date <= DateAdjuster.new(max_gap).adjust(:o1__start_date) }
+          q = q.where { confirm__start_date <= DateAdjuster.new(max_gap).adjust(:initial__start_date) }
         end
 
         if options[:outpatient_event_to_return] != 'Initial Event'
-          q = q.select_all(:o2)
+          q = q.select_all(:confirm)
         else
-          q = q.select_all(:o1)
+          q = q.select_all(:initial)
         end
 
-        faked_out = new_fake(nodifier, q.from_self, stream.domains)
-        First.new(nodifier, faked_out).query(db).select(*SELECTED_COLUMNS)
+        q.from_self.select(*dynamic_columns).from_self
       end
 
-      def in_out_events(db)
-        # Just a heads up that I'm doing something sneaky in this line: I'm
-        # asking the join to only happen if the criterion_domain of the row is
-        # condition_occurrence
-        #
-        # Under PostgreSQL, this seems to still return all rows on the left,
-        # but seems to avoid joining against condtion_occurrence unless the
-        # row itself is a condition_occurrence
-        stream.evaluate(db)
-          .from_self(alias: :l)
-          .left_join(:condition_occurrence___c, { c__condition_occurrence_id: :l__criterion_id, l__criterion_domain: 'condition_occurrence' })
-          .select_all(:l)
-          .select_append(Sequel.function(:coalesce, :c__condition_type_concept_id, 0).as(:type_id))
+      def all_valid_events
+        valid_inpatient_events.union(valid_outpatient_events, all: true)
       end
 
-      def outpat_events(db)
-        db[:in_out_events]
-          .with(:in_out_events, in_out_events(db))
-          .exclude(type_id: inpatient_type_ids(db))
-      end
-
-      def new_fake(nodifier, query, domains)
-        f = FakeOperator.new(nodifier)
-        f.domains = domains
-        f.q = query
-        f
-      end
-
-      class FakeOperator < Operator
-        default_query_columns
-
-        attr_accessor :domains, :q
-
-        def query(db)
-          @q
-        end
+      def first_valid_event
+        all_valid_events
+          .select_append { |o| o.row_number(:over, partition: :person_id, order: [ :start_date, :criterion_id ]){}.as(:rn) }
+          .from_self
+          .where(rn: 1)
       end
     end
   end

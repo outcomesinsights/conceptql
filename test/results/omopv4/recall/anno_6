@@ -20,7 +20,7 @@
                 },
                 "warnings": [
                   [
-                    "invalid source code",
+                    "improperly formatted code",
                     "203.0x"
                   ]
                 ]

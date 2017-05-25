@@ -16,15 +16,15 @@ module ConceptQL
         exprs = {}
         upstreams.each do |expression|
           evaled = expression.evaluate(db)
-          expression.domains.each do |domain|
+          expression.domains(db).each do |domain|
             (exprs[domain] ||= []) << evaled
           end
         end
         domained_queries = exprs.map do |domain, queries|
           queries.inject do |q, query|
             # Set columns so that impala's INTERSECT emulation doesn't use a query to determine them
-            q.instance_variable_set(:@columns, SELECTED_COLUMNS)
-            query.instance_variable_set(:@columns, SELECTED_COLUMNS)
+            q.instance_variable_set(:@columns, query_cols)
+            query.instance_variable_set(:@columns, query_cols)
 
             q.intersect(query)
           end

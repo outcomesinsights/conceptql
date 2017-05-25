@@ -39,13 +39,9 @@ module ConceptQL
 
     desc 'run_statement statement_file', 'Reads the ConceptQL statement from the statement file and executes it against the DB'
     def run_statement(statement_file)
-      cdb = ConceptQL::Database.new(db(options))
-      q = cdb.query(criteria_from_file(statement_file))
+      q = cdb(options).query(criteria_from_file(statement_file))
       puts q.sql
-      $stdin.gets
       puts JSON.pretty_generate(q.statement)
-      pp q.query.count
-      $stdin.gets
       pp q.query.all
     end
 
@@ -194,6 +190,10 @@ module ConceptQL
 
     def filtered(results)
       results.each { |r| r.delete_if { |k,v| v.nil? } }
+    end
+
+    def cdb(options)
+      ConceptQL::Database.new(db(options))
     end
   end
 end

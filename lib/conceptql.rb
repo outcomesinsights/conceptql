@@ -1,6 +1,7 @@
 require "conceptql/version"
 require "conceptql/logger"
 require "conceptql/query"
+require "conceptql/null_query"
 require "conceptql/database"
 
 module ConceptQL

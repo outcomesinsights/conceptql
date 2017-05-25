@@ -21,26 +21,23 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
       basic_type :selection
       validate_no_upstreams
       validate_one_argument
+      default_query_columns
 
       def query(db)
         scope.from(db, source)
       end
 
-      def columns(query, local_domain)
-        COLUMNS
-      end
-
-      def domains
-        scope.domains(source)
+      def domains(db)
+        scope.domains(source, db)
       end
 
       def source
         arguments.first
       end
 
-      def annotate(db)
-        if valid?(db) && replaced?
-          original.annotate(db)
+      def annotate(db, opts = {})
+        @annotate ||= if valid?(db) && replaced?
+          original.annotate(db, opts)
         else
           super
         end
@@ -50,9 +47,13 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         nodifier.scope.fetch_operator(source)
       end
 
+      def code_list(db)
+        original.code_list(db)
+      end
+
       private
 
-      def validate(db)
+      def validate(db, opts = {})
         super
         if arguments.length == 1
           if scope.fetch_operator(source)

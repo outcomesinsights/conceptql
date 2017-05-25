@@ -1,7 +1,6 @@
 require_relative 'vocabulary_operator'
 require_relative 'vocabulary'
 
-
 module ConceptQL
   module Operators
     # A SourceVocabularyOperator is a superclass for a operator that represents a criterion whose column stores information associated with a source vocabulary.
@@ -31,7 +30,7 @@ module ConceptQL
 
       def query(db)
         return vocab_op.query(db) if oi_cdm?
-        ds = db.from(table_name).where(conditions)
+        ds = db.from(table_name).where(conditions(db))
         if omopv4?
           ds = ds.join(:source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
         end
@@ -56,11 +55,11 @@ module ConceptQL
         dup_values(values + other.values)
       end
 
-      def conditions
+      def conditions(db)
         if omopv4?
-          [[:scm__source_code, values], [:scm__source_vocabulary_id, vocabulary_id]]
+          [[:scm__source_code, arguments_fix(db)], [:scm__source_vocabulary_id, vocabulary_id]]
         else
-          conditions = { code_column => arguments }
+          conditions = { code_column => arguments_fix(db) }
           conditions[vocabulary_id_column] = vocabulary_id if vocabulary_id_column
           conditions
         end
@@ -76,17 +75,21 @@ module ConceptQL
 
       private
 
-      def validate(db)
+      def validate(db, opts = {})
         super
-        if add_warnings?(db)
+        if add_warnings?(db, opts)
           if oi_cdm?
-            vocab_op.validate(db)
+            vocab_op.validate(db, opts)
             @warnings += vocab_op.warnings
-            return
           else
-            args = arguments
+            args = arguments.dup
             args -= bad_arguments
-            missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>args).select_map(:source_code)
+            missing_args = []
+
+            unless no_db?(db, opts)
+              missing_args = args - db[:source_to_concept_map].where(:source_vocabulary_id=>vocabulary_id, :source_code=>arguments_fix(db, args)).select_map(:source_code)
+            end
+
             unless missing_args.empty?
               add_warning("unknown source code", *missing_args)
             end
@@ -96,6 +99,10 @@ module ConceptQL
 
       def table_source_column
         "tab__#{source_column}".to_sym
+      end
+
+      def table_is_missing?(db)
+        !db.table_exists?(:source_to_concept_map)
       end
     end
   end

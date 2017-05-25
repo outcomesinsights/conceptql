@@ -15,7 +15,7 @@ module ConceptQL
 
       def query(db)
         upstream = upstreams.first
-        upstream.domains.map do |domain|
+        upstream.domains(db).map do |domain|
           positive_query = db.from(upstream.evaluate(db))
             .select(:criterion_id)
             .exclude(:criterion_id => nil)

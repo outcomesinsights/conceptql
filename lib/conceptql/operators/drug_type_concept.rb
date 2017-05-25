@@ -1,4 +1,5 @@
 require_relative 'operator'
+require_relative '../behaviors/drugish'
 
 module ConceptQL
   module Operators
@@ -12,6 +13,7 @@ module ConceptQL
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
+      include ConceptQL::Drugish
 
       def domain
         :drug_exposure

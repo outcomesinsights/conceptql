@@ -18,7 +18,7 @@ module ConceptQL
       desc <<-EOF
 Trims the start_date of the left hand results (LHR) by the final
 end_date (per person) in the right hand results (RHR)
-If the RHR contain an end_date that comes after the end_date in the LHR
+If the RHR contains an end_date that comes after the end_date in the LHR
 that result in the LHR is completely discarded.
 
 If there is no result in the RHR for a result in the LHR, the result in the LHR is passed
@@ -41,7 +41,7 @@ is passed through unaffected.
         # the entire LHS date range is truncated, which implies the row itself
         # is ineligible to pass thru
         ds = db.from(left_stream(db))
-                  .join(Sequel.as(grouped_right, :r), l__person_id: :r__person_id)
+                  .left_join(Sequel.as(grouped_right, :r), l__person_id: :r__person_id)
                   .where(where_criteria)
                   .select(*new_columns)
                   .select_append(Sequel.as(Sequel.function(:greatest, :l__start_date, :r__end_date), :start_date))
@@ -57,7 +57,7 @@ is passed through unaffected.
       end
 
       def new_columns
-        (COLUMNS - [:start_date]).map { |col| "l__#{col}".to_sym }
+        (dynamic_columns - [:start_date]).map { |col| "l__#{col}".to_sym }
       end
     end
   end

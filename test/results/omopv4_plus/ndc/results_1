@@ -1,0 +1,41 @@
+[
+  {
+    "person_id": 139,
+    "criterion_id": 5300003,
+    "criterion_domain": "drug_exposure",
+    "start_date": "2008-09-09",
+    "end_date": "2008-09-09",
+    "source_value": "00247227330",
+    "drug_name": "clopidogrel 75 MG Oral Tablet",
+    "drug_amount": "0.75E2",
+    "drug_amount_units": "mg",
+    "quantity": 30.0,
+    "days_supply": 30
+  },
+  {
+    "person_id": 95,
+    "criterion_id": 270069,
+    "criterion_domain": "drug_exposure",
+    "start_date": "2008-01-20",
+    "end_date": "2008-01-20",
+    "source_value": "00247227330",
+    "drug_name": "clopidogrel 75 MG Oral Tablet",
+    "drug_amount": "0.75E2",
+    "drug_amount_units": "mg",
+    "quantity": 90.0,
+    "days_supply": 30
+  },
+  {
+    "person_id": 82,
+    "criterion_id": 106252,
+    "criterion_domain": "drug_exposure",
+    "start_date": "2008-01-10",
+    "end_date": "2008-01-10",
+    "source_value": "00247227330",
+    "drug_name": "clopidogrel 75 MG Oral Tablet",
+    "drug_amount": "0.75E2",
+    "drug_amount_units": "mg",
+    "quantity": 30.0,
+    "days_supply": 30
+  }
+]

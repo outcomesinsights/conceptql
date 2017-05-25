@@ -1,4 +1,4 @@
-ENV['DATA_MODEL'] ||= 'omopv4'
+ENV['DATA_MODEL'] ||= 'omopv4_plus'
 
 require_relative 'db'
 
@@ -33,19 +33,23 @@ DB.extension :error_sql
 
 class Minitest::Spec
   def annotate(test_name, statement=nil)
-    load_check(test_name, statement){|statement| query(statement).annotate}
+    load_check(test_name, statement){|stmt| query(stmt).annotate}
   end
 
   def scope_annotate(test_name, statement=nil)
-    load_check(test_name, statement){|statement| query(statement).scope_annotate}
+    load_check(test_name, statement){|stmt| query(stmt).scope_annotate}
   end
 
   def domains(test_name, statement=nil)
-    load_check(test_name, statement){|statement| query(statement).domains}
+    load_check(test_name, statement){|stmt| query(stmt).domains}
+  end
+
+  def results(test_name, statement=nil)
+    load_check(test_name, statement){|stmt| query(stmt).all}
   end
 
   def query(statement)
-    CDB.query(statement).tap { |s| puts s.sql }
+    CDB.query(statement)#.tap { |q| puts q.sql ; File.write("/tmp/blah.sql", q.sql)}
   end
 
   def dataset(statement)
@@ -54,7 +58,7 @@ class Minitest::Spec
   end
 
   def criteria_ids(test_name, statement=nil)
-    load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :criterion_id)}
+    load_check(test_name, statement){|stmt| hash_groups(stmt, :criterion_domain, :criterion_id)}
   end
 
   # If no statement is passed, this function loads the statement from the specified test
@@ -94,15 +98,15 @@ class Minitest::Spec
   end
 
   def numeric_values(test_name, statement=nil)
-    load_check(test_name, statement){|statement| hash_groups(statement, :criterion_domain, :value_as_number)}
+    load_check(test_name, statement){|stmt| hash_groups(stmt, :criterion_domain, :value_as_number)}
   end
 
   def criteria_counts(test_name, statement=nil)
-    load_check(test_name, statement){|statement| query(statement).query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
+    load_check(test_name, statement){|stmt| query(stmt).query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
   end
 
   def optimized_criteria_counts(test_name, statement=nil)
-    load_check(test_name, statement){|statement| query(statement).optimized.query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
+    load_check(test_name, statement){|stmt| query(stmt).optimized.query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
   end
 
   def hash_groups(statement, key, value)

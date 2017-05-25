@@ -8,7 +8,8 @@ require_relative 'sql_formatter'
 module ConceptQL
   class Query
     extend Forwardable
-    def_delegators :query, :all, :count, :execute, :order
+    def_delegators :query, :all, :count, :execute, :order, :profile
+    def_delegators :db, :profile_for
 
     attr :statement
     def initialize(db, statement, opts={})
@@ -20,11 +21,21 @@ module ConceptQL
         statement = JSON.parse(statement) if statement.is_a?(String)
         [statement, description]
       end
-      @nodifier = opts[:nodifier] || Nodifier.new(opts)
+      @nodifier = opts[:nodifier] || Nodifier.new({ database_type: db.database_type}.merge(opts))
     end
 
     def query
       nodifier.scope.with_ctes(operator.evaluate(db), db)
+    end
+
+    def query_cols(opts = {})
+      cols = operator.dynamic_columns
+      if opts[:cast]
+        cols = query_cols.each_with_object({}) do |column, h|
+          h[column] = operator.cast_column(column)
+        end
+      end
+      cols
     end
 
     def sql
@@ -35,12 +46,12 @@ module ConceptQL
       return "SQL unavailable for this statement"
     end
 
-    def annotate
-      operator.annotate(db)
+    def annotate(opts = {})
+      operator.annotate(db, opts)
     end
 
-    def scope_annotate
-      annotate
+    def scope_annotate(opts = {})
+      annotate(opts)
       nodifier.scope.annotation
     end
 
@@ -51,7 +62,7 @@ module ConceptQL
     end
 
     def domains
-      operator.domains
+      operator.domains(db)
     end
 
     def operator
@@ -67,12 +78,11 @@ module ConceptQL
     end
 
     def code_list(db)
-      operator.code_list(db)
+      operator.code_list(db).uniq
     end
 
     private
     attr :db, :nodifier
-
 
     def extract_statement(stmt)
       if stmt.is_a?(Array) && stmt.length == 1 && stmt.first.is_a?(Array)
