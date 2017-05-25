@@ -133,7 +133,6 @@ module ConceptQL
       end
 
       def annotate(db, opts = {})
-        puts "ANNOTATE #{self}"
         return @annotation if defined?(@annotation)
 
         scope_key = options[:id]||self.class.just_class_name.underscore
@@ -143,12 +142,9 @@ module ConceptQL
         if name = self.class.preferred_name
           metadata[:name] = name
         end
-        puts "ANNOTATING #{self}"
         res = [operator_name, *annotate_values(db, opts)]
 
-        puts "TESTING #{self}"
         if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
-        puts "SUCCESS #{self}"
           scope.with_ctes(evaluate(db), db)
             .from_self
             .select_group(:criterion_domain)
