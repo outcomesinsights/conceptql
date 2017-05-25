@@ -26,6 +26,10 @@ module ConceptQL
         :patients
       end
 
+      def period_table
+        :information_periods
+      end
+
       def criterion_id
         Sequel.expr(:id).as(:criterion_id)
       end

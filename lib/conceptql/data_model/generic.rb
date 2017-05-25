@@ -136,6 +136,10 @@ module ConceptQL
         id_columns[table]
       end
 
+      def period_table
+        :observation_period
+      end
+
       def source_value_column(query, table)
         source_value_columns[table]
       end
