@@ -16,7 +16,7 @@ module ConceptQL
       def domains(db)
         doms = options[:domains]
         if doms.nil? || doms.empty?
-          if TABLE_COLUMNS.has_key?(table)
+          if dm.schema.has_key?(table)
             [table]
           else
             [:invalid]
