@@ -22,6 +22,10 @@ module ConceptQL
         Sequel.expr(:id).as(:person_id)
       end
 
+      def person_table
+        :patients
+      end
+
       def criterion_id
         Sequel.expr(:id).as(:criterion_id)
       end

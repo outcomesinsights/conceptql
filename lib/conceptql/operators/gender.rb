@@ -30,15 +30,11 @@ module ConceptQL
       end
 
       def query_cols
-        table_columns(table)
+        dm.table_columns(table)
       end
 
       def table
-        if oi_cdm?
-          :patients
-        else
-          :person
-        end
+        dm.person_table
       end
     end
   end

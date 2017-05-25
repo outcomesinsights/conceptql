@@ -27,6 +27,10 @@ module ConceptQL
         table = :person if table == :death
       end
 
+      def person_table
+        :person
+      end
+
       def make_table_id(table)
         (table.to_s + '_id').to_sym
       end
@@ -63,7 +67,7 @@ module ConceptQL
       end
 
       def determine_table(table_method)
-        return nil unless operator.respond_to?(:source_table)
+        return nil unless operator.respond_to?(table_method)
         table = operator.send(table_method)
         return table if schema.keys.include?(table)
       end
