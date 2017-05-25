@@ -41,7 +41,7 @@ module ConceptQL
       end
 
       def query_cols
-        table_columns(make_table_name(table))
+        dm.table_columns(make_table_name(table))
       end
 
       def query(db)
@@ -71,10 +71,10 @@ module ConceptQL
           uncastable_person_ids = db.from(stream_query)
             .where(criterion_domain: uncastable_domains.map(&:to_s))
             .select_group(:person_id)
-          wheres << Sequel.expr(person_id: uncastable_person_ids)
+          wheres << Sequel.expr(dm.person_id => uncastable_person_ids)
         end
 
-        destination_domain_id = make_table_id(source_table)
+        destination_domain_id = dm.make_table_id(source_table)
 
         unless to_me_domains.empty?
           # For each castable domain in the stream, setup a query that
@@ -85,7 +85,7 @@ module ConceptQL
               .where(criterion_domain: source_domain.to_s)
               .select_group(:criterion_id)
             source_table = make_table_name(source_table)
-            source_domain_id = make_table_id(source_table)
+            source_domain_id = dm.make_table_id(source_table)
 
             db.from(source_table)
               .where(source_domain_id => source_ids)
