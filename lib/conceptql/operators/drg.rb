@@ -12,6 +12,11 @@ module ConceptQL
       codes_should_match(/^\d{3}$/)
 
       def query(db)
+        return super if oi_cdm?
+        omopv4_plus_query(db)
+      end
+
+      def omopv4_plus_query(db)
         costs = super(db).select(:procedure_occurrence_id)
         db[:procedure_occurrence].where(procedure_occurrence_id: costs)
       end
