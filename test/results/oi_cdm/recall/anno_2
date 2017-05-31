@@ -1,0 +1,78 @@
+[
+  "union",
+  [
+    "icd9",
+    "412",
+    {
+      "label": "Heart Attack",
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 81,
+            "n": 30
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  [
+    "recall",
+    [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 81,
+              "n": 30
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "Heart Attack",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 0,
+            "n": 0
+          }
+        },
+        "errors": [
+          [
+            "has upstreams",
+            [
+              "icd9"
+            ]
+          ],
+          [
+            "has upstreams",
+            [
+              "icd9"
+            ]
+          ],
+          [
+            "has upstreams",
+            [
+              "icd9"
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    }
+  }
+]

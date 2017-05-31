@@ -1,0 +1,30 @@
+[
+  "icd10_pcs",
+  "Z561123",
+  "561123",
+  "AA561123",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "warnings": [
+        [
+          "improperly formatted code",
+          "561123",
+          "AA561123"
+        ],
+        [
+          "unknown source code",
+          "Z561123",
+          "561123",
+          "AA561123"
+        ]
+      ]
+    },
+    "name": "ICD-10 PCS"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  "cpt",
+  "99214",
+  "XYS",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 2961,
+          "n": 179
+        }
+      },
+      "warnings": [
+        [
+          "improperly formatted code",
+          "XYS"
+        ],
+        [
+          "unknown source code",
+          "XYS"
+        ]
+      ]
+    },
+    "name": "CPT"
+  }
+]

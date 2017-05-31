@@ -1,0 +1,282 @@
+[
+  "after",
+  {
+    "left": [
+      "during",
+      {
+        "left": [
+          "occurrence",
+          [
+            "icd9",
+            "203.0x",
+            {
+              "label": "Meyloma Dx",
+              "annotation": {
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 0,
+                    "n": 0
+                  }
+                },
+                "warnings": [
+                  [
+                    "improperly formatted code",
+                    "203.0x"
+                  ],
+                  [
+                    "unknown source code",
+                    "203.0x"
+                  ]
+                ]
+              },
+              "name": "ICD-9 CM"
+            }
+          ],
+          4,
+          {
+            "annotation": {
+              "counts": {
+                "condition_occurrence": {
+                  "rows": 0,
+                  "n": 0
+                }
+              }
+            },
+            "name": "Nth Occurrence"
+          }
+        ],
+        "right": [
+          "time_window",
+          [
+            "first",
+            [
+              "recall",
+              "Meyloma Dx",
+              {
+                "annotation": {
+                  "counts": {
+                    "condition_occurrence": {
+                      "rows": 0,
+                      "n": 0
+                    }
+                  }
+                }
+              }
+            ],
+            {
+              "annotation": {
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 0,
+                    "n": 0
+                  }
+                }
+              }
+            }
+          ],
+          {
+            "start": "0",
+            "end": "90d",
+            "annotation": {
+              "counts": {
+                "condition_occurrence": {
+                  "rows": 0,
+                  "n": 0
+                }
+              }
+            }
+          }
+        ],
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 0,
+              "n": 0
+            }
+          }
+        }
+      }
+    ],
+    "right": [
+      "union",
+      [
+        "during",
+        {
+          "left": [
+            "time_window",
+            [
+              "recall",
+              "Qualifying Meyloma Dx",
+              {
+                "annotation": {
+                  "counts": {
+                    "invalid": {
+                      "rows": 0,
+                      "n": 0
+                    }
+                  },
+                  "errors": [
+                    [
+                      "no matching label",
+                      "Qualifying Meyloma Dx"
+                    ],
+                    [
+                      "no matching label",
+                      "Qualifying Meyloma Dx"
+                    ],
+                    [
+                      "no matching label",
+                      "Qualifying Meyloma Dx"
+                    ]
+                  ]
+                }
+              }
+            ],
+            {
+              "start": "-90d",
+              "end": "0",
+              "label": "Meyloma 90-day Lookback",
+              "annotation": {
+                "counts": {
+                  "invalid": {
+                    "rows": 0,
+                    "n": 0
+                  }
+                }
+              }
+            }
+          ],
+          "right": [
+            "cpt",
+            "38220",
+            "38221",
+            "85102",
+            "85095",
+            "3155F",
+            "85097",
+            "88237",
+            "88271",
+            "88275",
+            "88291",
+            "88305",
+            {
+              "label": "Bone Marrow",
+              "annotation": {
+                "counts": {
+                  "procedure_occurrence": {
+                    "rows": 0,
+                    "n": 0
+                  }
+                }
+              },
+              "name": "CPT"
+            }
+          ],
+          "annotation": {
+            "counts": {
+              "invalid": {
+                "rows": 0,
+                "n": 0
+              }
+            }
+          }
+        }
+      ],
+      [
+        "occurrence",
+        [
+          "during",
+          {
+            "left": [
+              "cpt",
+              "84156",
+              "84166",
+              "86335",
+              "84155",
+              "84165",
+              "86334",
+              "83883",
+              "81264",
+              "82784",
+              "82785",
+              "82787",
+              "82040",
+              "82232",
+              "77074",
+              "77075",
+              "83615",
+              {
+                "label": "Other Tests",
+                "annotation": {
+                  "counts": {
+                    "procedure_occurrence": {
+                      "rows": 0,
+                      "n": 0
+                    }
+                  }
+                },
+                "name": "CPT"
+              }
+            ],
+            "right": [
+              "recall",
+              "Meyloma 90-day Lookback",
+              {
+                "annotation": {
+                  "counts": {
+                    "invalid": {
+                      "rows": 0,
+                      "n": 0
+                    }
+                  }
+                }
+              }
+            ],
+            "annotation": {
+              "counts": {
+                "procedure_occurrence": {
+                  "rows": 0,
+                  "n": 0
+                }
+              }
+            }
+          }
+        ],
+        2,
+        {
+          "annotation": {
+            "counts": {
+              "procedure_occurrence": {
+                "rows": 0,
+                "n": 0
+              }
+            }
+          },
+          "name": "Nth Occurrence"
+        }
+      ],
+      {
+        "annotation": {
+          "counts": {
+            "invalid": {
+              "rows": 0,
+              "n": 0
+            },
+            "procedure_occurrence": {
+              "rows": 0,
+              "n": 0
+            }
+          }
+        }
+      }
+    ],
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,40 @@
+[
+  "sum",
+  [
+    "numeric",
+    1,
+    {
+      "annotation": {
+        "counts": {
+          "patients": {
+            "rows": 250,
+            "n": 250
+          },
+          "person": {
+            "rows": 0,
+            "n": 0
+          }
+        }
+      }
+    }
+  ],
+  21,
+  {
+    "annotation": {
+      "counts": {
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has arguments",
+          [
+            21
+          ]
+        ]
+      ]
+    }
+  }
+]

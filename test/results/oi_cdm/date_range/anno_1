@@ -1,0 +1,19 @@
+[
+  "date_range",
+  {
+    "start": "2008-03-13",
+    "end": "2008-03-20",
+    "annotation": {
+      "counts": {
+        "patients": {
+          "rows": 250,
+          "n": 250
+        },
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,116 @@
+{
+  "errors": {
+  },
+  "warnings": {
+    "hcpcs": [
+      [
+        "unknown source code",
+        "72220"
+      ]
+    ]
+  },
+  "counts": {
+    "icd9": {
+      "condition_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "visit_occurrence": {
+      "visit_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "place_of_service_code": {
+      "condition_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "intersect": {
+      "visit_occurrence": {
+        "rows": 0,
+        "n": 0
+      },
+      "condition_occurrence": {
+        "rows": 0,
+        "n": 0
+      },
+      "person": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "hcpcs": {
+      "procedure_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "complement": {
+      "condition_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "union": {
+      "visit_occurrence": {
+        "rows": 586,
+        "n": 34
+      },
+      "condition_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "recall": {
+      "condition_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "gender": {
+      "person": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "race": {
+      "person": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "time_window": {
+      "person": {
+        "rows": 0,
+        "n": 0
+      }
+    },
+    "during": {
+      "visit_occurrence": {
+        "rows": 0,
+        "n": 0
+      },
+      "condition_occurrence": {
+        "rows": 0,
+        "n": 0
+      }
+    }
+  },
+  "operators": [
+    "icd9",
+    "visit_occurrence",
+    "place_of_service_code",
+    "intersect",
+    "hcpcs",
+    "complement",
+    "union",
+    "recall",
+    "gender",
+    "race",
+    "time_window",
+    "during"
+  ]
+}

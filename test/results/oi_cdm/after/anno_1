@@ -1,0 +1,27 @@
+[
+  "after",
+  {
+    "left": "412",
+    "right": "time_window",
+    "annotation": {
+      "counts": {
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "wrong option format",
+          "left",
+          "412"
+        ],
+        [
+          "wrong option format",
+          "right",
+          "time_window"
+        ]
+      ]
+    }
+  }
+]

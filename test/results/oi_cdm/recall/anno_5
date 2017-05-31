@@ -1,0 +1,31 @@
+[
+  "recall",
+  "foo",
+  "bar",
+  {
+    "annotation": {
+      "counts": {
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "has multiple arguments",
+          [
+            "foo",
+            "bar"
+          ]
+        ],
+        [
+          "has multiple arguments",
+          [
+            "foo",
+            "bar"
+          ]
+        ]
+      ]
+    }
+  }
+]

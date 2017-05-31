@@ -1,0 +1,34 @@
+[
+  "place_of_service_filter",
+  [
+    "revenue_code",
+    "280",
+    {
+      "annotation": {
+        "counts": {
+          "procedure_occurrence": {
+            "rows": 0,
+            "n": 0
+          }
+        },
+        "warnings": [
+          [
+            "unknown source code",
+            "280"
+          ]
+        ]
+      }
+    }
+  ],
+  "21",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    }
+  }
+]

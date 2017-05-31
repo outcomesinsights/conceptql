@@ -1,0 +1,15 @@
+[
+  "read",
+  "XYS",
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    },
+    "name": "READ"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  "except",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 81,
+              "n": 30
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "right": [
+      "condition_type",
+      "inpatient_header",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 0,
+              "n": 0
+            }
+          }
+        }
+      }
+    ],
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 81,
+          "n": 30
+        }
+      }
+    }
+  }
+]

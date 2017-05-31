@@ -1,0 +1,65 @@
+[
+  "bad_op",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 81,
+              "n": 30
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "right": [
+      "icd9",
+      "ZZZZZZZ",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 0,
+              "n": 0
+            }
+          },
+          "warnings": [
+            [
+              "improperly formatted code",
+              "ZZZZZZZ"
+            ],
+            [
+              "unknown source code",
+              "ZZZZZZZ"
+            ]
+          ]
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "annotation": {
+      "counts": {
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "invalid operator",
+          "bad_op"
+        ],
+        [
+          [
+            "invalid operator",
+            "bad_op"
+          ]
+        ]
+      ]
+    }
+  }
+]

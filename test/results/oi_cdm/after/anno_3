@@ -1,0 +1,34 @@
+[
+  "after",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 81,
+              "n": 30
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [
+        [
+          "required option not present",
+          "right"
+        ]
+      ]
+    }
+  }
+]

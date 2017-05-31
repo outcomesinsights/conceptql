@@ -1,0 +1,29 @@
+[
+  "provider_filter",
+  [
+    "icd9",
+    "412",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 10,
+            "n": 3
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  {
+    "specialties": "38004486",
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    }
+  }
+]
