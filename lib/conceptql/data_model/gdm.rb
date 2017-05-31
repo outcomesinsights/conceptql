@@ -87,7 +87,7 @@ module ConceptQL
 =end
 
       def data_model
-        :oi_cdm
+        :gdm
       end
 
       def start_date_column(query, domain)

@@ -28,7 +28,7 @@ module ConceptQL
       end
 
       def source_table
-        if oi_cdm?
+        if gdm?
           :patients
         else
           :person
@@ -36,7 +36,7 @@ module ConceptQL
       end
 
       def query(db)
-        concept_ids = if oi_cdm?
+        concept_ids = if gdm?
           db[:concepts]
             .where(Sequel.function(:lower, :concept_text) => arguments.map(&:downcase))
             .select(:id)

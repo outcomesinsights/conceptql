@@ -25,7 +25,7 @@ module ConceptQL
       end
 
       def domains(db)
-        if oi_cdm?
+        if gdm?
           [:condition_occurrence]
         else
           [:visit_occurrence]
@@ -33,7 +33,7 @@ module ConceptQL
       end
 
       def table
-        if oi_cdm?
+        if gdm?
           :clinical_codes
         else
           :visit_occurrence
@@ -41,7 +41,7 @@ module ConceptQL
       end
 
       def query(db)
-        if oi_cdm?
+        if gdm?
           pos_concepts = db.from(:concepts)
                             .where(vocabulary_id: ['Visit', 'Place of Service'], concept_code: arguments.map(&:to_s))
                             .select(:id)

@@ -18,7 +18,7 @@ module ConceptQL
       end
 
       def domain
-        if oi_cdm?
+        if gdm?
           vocab_op.domain
         else
           table
@@ -32,7 +32,7 @@ module ConceptQL
       end
 
       def tables
-        if oi_cdm?
+        if gdm?
           vocab_op.tables
         else
           domains
@@ -40,7 +40,7 @@ module ConceptQL
       end
 
       def source_table
-        if oi_cdm?
+        if gdm?
           vocab_op.table
         else
           table

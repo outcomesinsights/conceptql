@@ -13,10 +13,10 @@ module ConceptQL
       category "Select by Clinical Codes"
 
       def query(db)
-        oi_cdm? ? oi_cdm(db) : omopv4(db)
+        gdm? ? gdm(db) : omopv4(db)
       end
 
-      def oi_cdm(db)
+      def gdm(db)
         vocab_op.query(db)
       end
 
@@ -31,7 +31,7 @@ module ConceptQL
       end
 
       def domains(db)
-        oi_cdm? ? vocab_op.domains(db) : codes_by_domain(db).keys
+        gdm? ? vocab_op.domains(db) : codes_by_domain(db).keys
       end
 
       def table

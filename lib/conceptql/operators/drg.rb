@@ -12,7 +12,7 @@ module ConceptQL
       codes_should_match(/^\d{3}$/)
 
       def query(db)
-        return super if oi_cdm?
+        return super if gdm?
         omopv4_plus_query(db)
       end
 

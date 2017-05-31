@@ -6,7 +6,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4=>{}, :omopv4_plus=>{}, :oi_cdm=>{}}.freeze
+    OPERATORS = {:omopv4=>{}, :omopv4_plus=>{}, :gdm=>{}}.freeze
 
     SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_table, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
@@ -252,7 +252,7 @@ module ConceptQL
         criterion_domain = :criterion_domain
         if local_table
           criterion_table = Sequel.cast_string(local_table.to_s).as(:criterion_table)
-          if oi_cdm?
+          if gdm?
             criterion_domain = Sequel.cast_string(domains(db).first.to_s).as(:criterion_domain)
           else
             criterion_domain = Sequel.cast_string(local_table.to_s).as(:criterion_domain)
@@ -321,8 +321,8 @@ module ConceptQL
         data_model == :omopv4
       end
 
-      def oi_cdm?
-        data_model == :oi_cdm
+      def gdm?
+        data_model == :gdm
       end
 
       def impala?

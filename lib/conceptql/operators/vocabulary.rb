@@ -28,21 +28,21 @@ module ConceptQL
       validate_at_least_one_argument
 
       def query(db)
-        ds = if oi_cdm?
+        ds = if gdm?
                db[:clinical_codes]
              else
                db[:condition_occurrence]
              end
 
         ds = ds.where(where_clause(db))
-        if oi_cdm?
+        if gdm?
           ds = ds.select_append(Sequel.cast_string(domain.to_s).as(:criterion_domain))
         end
         ds
       end
 
       def where_clause(db)
-        if oi_cdm?
+        if gdm?
           concept_ids = db[:concepts].where(vocabulary_id: vocabulary_id(db), concept_code: values.flatten).select(:id)
           { clinical_code_concept_id: concept_ids }
         else
@@ -62,7 +62,7 @@ module ConceptQL
       end
 
       def query_cols
-        if oi_cdm?
+        if gdm?
           dm.table_columns(:clinical_codes)
         else
           dm.table_columns(domain)
@@ -93,7 +93,7 @@ module ConceptQL
 
       def translated_vocabulary_id(db)
         v_id = options[:vocabulary]
-        if oi_cdm?
+        if gdm?
           return v_id if v_id.is_a?(String)
           return translate_to_new(db, v_id)
         else

@@ -21,7 +21,7 @@ module ConceptQL
     class StandardVocabularyOperator < VocabularyOperator
 
       def query(db)
-        return vocab_op.query(db) if oi_cdm?
+        return vocab_op.query(db) if gdm?
         ds = db.from(table_name)
           .where(conditions(db))
         if omopv4?
@@ -31,7 +31,7 @@ module ConceptQL
       end
 
       def query_cols
-        if oi_cdm?
+        if gdm?
           vocab_op.query_cols
         else
           table_columns(table_name, :concept)
@@ -50,7 +50,7 @@ module ConceptQL
 
       def describe_codes(db, codes)
         p data_model
-        if oi_cdm?
+        if gdm?
           vocab_op.describe_codes(db, codes)
         else
           db[:concept].filter(:vocabulary_id => vocabulary_id).filter(:concept_code => codes).select_map([:concept_code, :concept_name])
@@ -62,7 +62,7 @@ module ConceptQL
       def validate(db, opts = {})
         super
         if add_warnings?(db, opts)
-          if oi_cdm?
+          if gdm?
             vocab_op.validate(db)
             @warnings += vocab_op.warnings
           else

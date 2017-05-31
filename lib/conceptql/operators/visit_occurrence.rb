@@ -29,7 +29,7 @@ module ConceptQL
       end
 
       def source_table
-        if oi_cdm?
+        if gdm?
           :contexts
         else
           :visit_occurrence

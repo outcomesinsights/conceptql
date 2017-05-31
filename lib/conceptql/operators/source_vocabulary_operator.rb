@@ -29,7 +29,7 @@ module ConceptQL
     class SourceVocabularyOperator < VocabularyOperator
 
       def query(db)
-        return vocab_op.query(db) if oi_cdm?
+        return vocab_op.query(db) if gdm?
         ds = db.from(table_name).where(conditions(db))
         if omopv4?
           ds = ds.join(:source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
@@ -40,7 +40,7 @@ module ConceptQL
       def query_cols
         if omopv4?
           table_columns(table_name, :source_to_concept_map)
-        elsif oi_cdm?
+        elsif gdm?
           vocab_op.query_cols
         else
           table_columns(table_name)
@@ -66,7 +66,7 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        if oi_cdm?
+        if gdm?
           vocab_op.describe_codes(db, codes)
         else
           db[:source_to_concept_map].filter(:source_vocabulary_id => vocabulary_id).filter(:source_code => codes).select_map([:source_code, :source_code_description])
@@ -78,7 +78,7 @@ module ConceptQL
       def validate(db, opts = {})
         super
         if add_warnings?(db, opts)
-          if oi_cdm?
+          if gdm?
             vocab_op.validate(db, opts)
             @warnings += vocab_op.warnings
           else
