@@ -5,21 +5,37 @@ module ConceptQL
   module QueryModifiers
     module Gdm
       class DrugQueryModifier < QueryModifier
-        attr :db
 
-        def initialize(*args)
-          super
-          @db = query.db
+        def self.provided_columns
+          [
+            :drug_name,
+            :drug_amount,
+            :drug_amount_units,
+            :drug_quantity,
+            :drug_days_supply
+          ]
+        end
+
+        def self.has_required_columns?(cols)
+          needed = [:drug_exposure_detail_id].sort
+          found = needed & cols
+          p needed, found
+          needed == found
         end
 
         def modified_query
-          return query unless domain == :drug_exposure
-          query.from_self(alias: :de)
-            .left_join(micro_table.as(:mt), mt__drug_concept_id: :de__drug_concept_id)
-            .select_all(:de)
-            .select_append(:mt__amount_value___drug_amount)
-            .select_append(:mt__amount_unit___drug_amount_units)
-            .select_append(:mt__drug_name___drug_name)
+          return query unless dm.table_cols(source_table).tap { |o| p o }.include?(:drug_exposure_detail_id)
+          #TODO: Determine what actual columns to include for drug exposures under
+          query.from_self(alias: :cc)
+            .left_join(:drug_exposure_details___de, cc__drug_exposure_detail_id: :de__id)
+            .left_join(:concepts___dose_con, de__dose_unit_concept_id: :dose_con__id)
+            .left_join(:concepts___ing_con, cc__clinical_code_concept_id: :ing_con__id)
+            .select_all(:cc)
+            .select_append(:de__dose_value___drug_amount)
+            .select_append(:dose_con__concept_text___drug_amount_units)
+            .select_append(:ing_con__concept_text___drug_name)
+            .select_append(:de__days_supply___drug_days_supply)
+            .select_append(:de__refills___drug_quantity)
             .from_self
         end
 
@@ -27,19 +43,6 @@ module ConceptQL
 
         def domain
           op.try(:domain) rescue nil
-        end
-
-        def micro_table
-          # TODO: Does drug_strength only have RXNORM concept_ids?
-          # TODO: What is vocabulary for units?  Can we shrink concept table to just that vocab before joining?
-          db.from(:drug_strength___ds)
-            .join(:concept___dc, ds__drug_concept_id: :dc__concept_id)
-            .select(
-              :ds__drug_concept_id___drug_concept_id,
-              :ds__amount_value___amount_value,
-              :ds__amount_unit___amount_unit,
-              :dc__concept_name___drug_name,
-            )
         end
       end
     end

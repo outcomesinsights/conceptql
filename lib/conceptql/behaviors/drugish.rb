@@ -4,9 +4,8 @@ module ConceptQL
       base.require_column(:drug_name)
       base.require_column(:drug_amount)
       base.require_column(:drug_amount_units)
-      base.require_column(:quantity)
-      base.require_column(:days_supply)
-      base.query_columns(:drug_exposure, :drug_appendix)
+      base.require_column(:drug_quantity)
+      base.require_column(:drug_days_supply)
     end
   end
 end
