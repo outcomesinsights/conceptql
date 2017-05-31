@@ -7,6 +7,8 @@ require "conceptql/database"
 require "conceptql/data_model"
 require_relative "conceptql/query_modifiers/gdm/pos_query_modifier"
 require_relative "conceptql/query_modifiers/gdm/drug_query_modifier"
+require_relative "conceptql/query_modifiers/gdm/provider_query_modifier"
+require_relative "conceptql/query_modifiers/generic/provider_query_modifier"
 require_relative "conceptql/query_modifiers/generic/pos_query_modifier"
 require_relative "conceptql/query_modifiers/generic/drug_query_modifier"
 

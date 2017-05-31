@@ -14,11 +14,7 @@ module ConceptQL
       end
 
       def source_table
-        if oi_cdm?
-          :deaths
-        else
-          :death
-        end
+        dm.table_by_domain(:death)
       end
 
       def i_point_at

@@ -190,7 +190,7 @@ module ConceptQL
       end
 
       def evaluate(db)
-        select_it(query(db), db)
+        select_it(query(db))
       end
 
       def sql(db)
@@ -205,11 +205,13 @@ module ConceptQL
         false
       end
 
-      def select_it(query, db, specific_table = nil)
+      def select_it(query, specific_table = nil)
         specific_table ||= dm.determine_table(:source_table)
         specific_table ||= dm.determine_table(:table)
+        specific_table ||= dm.determine_table(:domain)
 
-        q = setup_select(query, db, specific_table)
+        dom = try(:domain) rescue nil
+        q = dm.selectify(query, table: specific_table, criterion_domain: dom)
 
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
@@ -230,12 +232,22 @@ module ConceptQL
         @stream ||= upstreams.first
       end
 
-      def setup_select(query, db, local_table = nil)
-        query = modify_query(query, local_table)
-        query.select(*columns(query, db, local_table))
+      def setup_select(query, table = nil)
+        query = modify_query(query, table)
+        query.select(*columns(table))
       end
 
-      def columns(query, db, local_table = nil)
+      def columns(table = nil)
+        #p table
+        return dm.columns(table: table)
+
+        cols = unless table
+          dynamic_columns
+        else
+          dm.columns_for_table(table, dynamic_columns)
+        end
+        return cols
+
         criterion_table = :criterion_table
         criterion_domain = :criterion_domain
         if local_table
@@ -267,9 +279,6 @@ module ConceptQL
       attr :errors, :warnings
 
       def valid?(db, opts = {})
-        return @errors.empty? if defined?(@errors)
-        @errors = []
-        @warnings = []
         validate(db, opts)
         errors.empty?
       end

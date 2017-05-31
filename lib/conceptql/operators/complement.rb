@@ -13,6 +13,8 @@ module ConceptQL
       validate_one_upstream
       validate_no_arguments
 
+      # TODO: This is going to fail under GDM
+      # The problem is that most domains live in clinical_codes, so we'll end up
       def query(db)
         upstream = upstreams.first
         upstream.domains(db).map do |domain|
@@ -20,9 +22,9 @@ module ConceptQL
             .select(:criterion_id)
             .exclude(:criterion_id => nil)
             .where(:criterion_domain => domain.to_s)
-          query = db.from(make_table_name(domain))
-            .exclude(make_domain_id(domain) => positive_query)
-          db.from(select_it(query.clone(:force_columns=>table_columns(make_table_name(domain))), domain))
+          query = db.from(dm.table_by_domain(domain))
+            .exclude(dm.pk_by_domain(domain) => positive_query)
+          db.from(dm.selectify(query, domain: domain))
         end.inject do |union_query, q|
           union_query.union(q, all: true)
         end

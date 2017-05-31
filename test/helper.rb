@@ -49,7 +49,7 @@ class Minitest::Spec
   end
 
   def query(statement)
-    CDB.query(statement).tap { |q| puts q.sql ; File.write("/tmp/blah.sql", q.sql)}
+    CDB.query(statement).tap { |q| puts q.sql }
   end
 
   def dataset(statement)
@@ -71,7 +71,7 @@ class Minitest::Spec
       statement
     else
       JSON.parse(File.read(path))
-    end.tap { |s| p s }
+    end
   end
 
   def check_output(test_name, results)
@@ -118,6 +118,9 @@ class Minitest::Spec
 
   def load_check(test_name, statement)
     check_output(test_name, yield(load_statement(test_name, statement)))
+  rescue
+    puts $!.sql if $!.respond_to?(:sql)
+    raise
   end
 
   def log

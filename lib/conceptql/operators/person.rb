@@ -13,11 +13,7 @@ module ConceptQL
       end
 
       def source_table
-        if oi_cdm?
-          :patients
-        else
-          :person
-        end
+        dm.table_by_domain(my_domain)
       end
 
       def i_point_at

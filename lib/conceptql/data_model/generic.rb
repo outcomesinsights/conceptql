@@ -1,7 +1,7 @@
 module ConceptQL
   module DataModel
     class Generic
-      SCHEMAS = Dir.glob((ConceptQL.schemas + "*.yml").tap{|o|p o}).tap {|o| p o}.each_with_object({}) do |schema_file, schemas|
+      SCHEMAS = Dir.glob((ConceptQL.schemas + "*.yml").tap{|o|p o}).each_with_object({}) do |schema_file, schemas|
         schemas[File.basename(schema_file, ".*").to_sym] = Psych.load_file(schema_file)
       end
 
@@ -14,7 +14,8 @@ module ConceptQL
       def query_modifier_for(column)
         {
           place_of_service_concept_id: ConceptQL::QueryModifiers::Generic::PosQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::Generic::DrugQueryModifier
+          drug_name: ConceptQL::QueryModifiers::Generic::DrugQueryModifier,
+          provider_id: ConceptQL::QueryModifiers::Generic::ProviderQueryModifier
         }[column]
       end
 
@@ -35,6 +36,14 @@ module ConceptQL
         (table.to_s + '_id').to_sym
       end
 
+      def make_fk_id(table)
+        make_table_id(table)
+      end
+
+      def convert_table(table)
+        table
+      end
+
       def person_id
         :person_id
       end
@@ -51,6 +60,116 @@ module ConceptQL
         :omopv4_plus
       end
 
+      def pk_by_domain(domain)
+        "#{domain}_id"
+      end
+
+      def fk_by_domain(domain)
+        "#{domain}_id"
+      end
+
+      def query_columns
+        @query_columns ||= Hash[operator.scope.query_columns.zip(operator.scope.query_columns)]
+      end
+
+      def columns(opts = {})
+        col_keys = query_columns.keys
+        col_keys -= opts[:except] || []
+        col_keys &= opts[:only] if opts[:only]
+
+        table = get_table(opts)
+
+        cols_hash = if table.nil?
+                      query_columns
+                    else
+                      columns_in_table(table, opts).merge(modifier_columns(table)).merge(nullified_columns(table))
+                    end
+        cols_hash.merge!(replace(opts[:replace]))
+        cols_hash.values_at(*col_keys)
+      end
+
+      def modifier_columns(table)
+        return {} if table.nil?
+        remainder = query_columns.keys - columns_in_table(table).keys
+        Hash[remainder.zip(remainder)]
+      end
+
+      def nullified_columns(table)
+        return {} if table.nil?
+        remainder = query_columns.keys - columns_in_table(table).keys - applicable_query_modifiers(table).flat_map(&:provided_columns)
+        Hash[remainder.map { |r| [r, process(r, nil)] }]
+      end
+
+      def selectify(query, opts ={})
+        modify_query(query, get_table(opts)).select(*columns(opts)).from_self
+      end
+
+      def get_table(opts)
+        opts[:table] || table_by_domain(opts[:domain])
+      end
+
+      def modify_query(query, table)
+        return query if table.nil?
+
+        applicable_query_modifiers(table).each do |klass|
+          query = klass.new(query, operator, table, self).modified_query
+        end
+
+        query
+      end
+
+      def applicable_query_modifiers(table)
+        query_modifiers.values_at(*query_columns.keys).compact.select { |klass| klass.has_required_columns?(table_cols(table)) }
+      end
+
+      def query_modifiers
+        {
+          place_of_service_concept_id: query_modifier_for(:place_of_service_concept_id),
+          provider_id: query_modifier_for(:provider_id),
+          drug_name: query_modifier_for(:drug_name)
+        }
+      end
+
+      def columns_in_table(table, opts = {})
+        start_date, end_date = *date_columns(nil, table)
+        {
+          person_id: person_id_column(table),
+          criterion_id: Sequel.identifier(make_table_id(table)).as(:criterion_id),
+          criterion_table: Sequel.cast_string(table.to_s).as(:criterion_table),
+          criterion_domain: Sequel.cast_string((opts[:criterion_domain] || table).to_s).as(:criterion_domain),
+          start_date: start_date,
+          end_date: end_date,
+          source_value: Sequel.cast_string(source_value_column(table)).as(:source_value),
+        }
+      end
+
+      def replace(replace_hash)
+        return {} unless replace_hash
+        replace_hash.each_with_object({}) do |(column, value), h|
+          h[column] = process(column, value)
+        end
+      end
+
+      def process(column, value = nil)
+        type = Scope::COLUMN_TYPES.fetch(column)
+        new_column = case type
+        when String, :String
+          Sequel.cast_string(value)
+        when Date, :Date
+          Sequel.cast(value, type)
+        when Float, :Bigint, :Float
+          Sequel.cast_numeric(value, type)
+        else
+          raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
+        end
+        new_column.as(column)
+      end
+
+      def cast_date(date)
+        Sequel.cast(date, Date)
+      end
+
+=begin
       def query_columns(query)
         unless cols = query.opts[:force_columns]
           cols = operator.query_cols
@@ -64,15 +183,16 @@ module ConceptQL
 
         cols
       end
+=end
 
       def place_of_service_concept_id(query, domain)
-        return :place_of_service_concept_id if query_columns(query).include?(:place_of_service_concept_id)
+        #return :place_of_service_concept_id if query_columns(query).include?(:place_of_service_concept_id)
         place_of_service_concept_id_column(query, domain)
       end
 
       def determine_table(table_method)
         return nil unless operator.respond_to?(table_method)
-        table = operator.send(table_method)
+        table = table_by_domain(operator.send(table_method))
         return table if schema.keys.include?(table)
       end
 
@@ -98,19 +218,11 @@ module ConceptQL
       end
 
       def start_date_column(query, domain)
-        if oi_cdm?
-          start_date_columns[domain]
-        else
-          start_date_columns.merge(person: person_date_of_birth(query))[domain]
-        end
+        start_date_columns.merge(person: person_date_of_birth(query))[domain]
       end
 
       def end_date_column(query, domain)
-        if oi_cdm?
-          end_date_columns[domain]
-        else
-          end_date_columns.merge(person: person_date_of_birth(query))[domain]
-        end
+        end_date_columns.merge(person: person_date_of_birth(query))[domain]
       end
 
       def source_value_columns
@@ -140,11 +252,29 @@ module ConceptQL
         id_columns[table]
       end
 
+      def type_concept_id_columns
+        @type_concept_id_columns ||= assign_column_to_table do |table, columns|
+          columns.select { |c| c =~ /_type_concept_id$/ }.first
+        end
+      end
+
+      def type_concept_id_column(domain)
+        type_concept_id_columns[table_by_domain(domain)]
+      end
+
+      def table_by_domain(domain)
+        domain
+      end
+
+      def condition_table
+        :condition_occurrence
+      end
+
       def period_table
         :observation_period
       end
 
-      def source_value_column(query, table)
+      def source_value_column(table)
         source_value_columns[table]
       end
 
@@ -206,13 +336,13 @@ module ConceptQL
       end
 
       def date_columns(query, table = nil)
-        return [:start_date, :end_date] if (query_columns(query).include?(:start_date) && query_columns(query).include?(:end_date))
-        return [:start_date, :end_date] unless table
+        #return [:start_date, :end_date] if (query_columns(query).include?(:start_date) && query_columns(query).include?(:end_date))
+        #return [:start_date, :end_date] unless table
 
         date_klass = Date
-        if query.db.database_type == :impala
-          date_klass = DateTime
-        end
+        #if query.db.database_type == :impala
+        #  date_klass = DateTime
+        #end
 
         sd = start_date_column(query, table)
         sd = Sequel.cast(Sequel.expr(sd), date_klass).as(:start_date) unless sd == :start_date

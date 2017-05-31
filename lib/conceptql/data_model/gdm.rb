@@ -10,6 +10,7 @@ module ConceptQL
       def query_modifier_for(column)
         {
           place_of_service_concept_id: ConceptQL::QueryModifiers::Gdm::PoSQueryModifier,
+          provider_id: ConceptQL::QueryModifiers::Gdm::ProviderQueryModifier,
           drug_name: ConceptQL::QueryModifiers::Gdm::DrugQueryModifier
         }[column]
       end
@@ -18,7 +19,8 @@ module ConceptQL
         :id
       end
 
-      def person_id
+      def person_id(table = nil)
+        return :id if table == :patients
         :patient_id
       end
 
@@ -43,11 +45,46 @@ module ConceptQL
         :id
       end
 
+      def fk_by_domain(domain)
+        table = table_by_domain(domain)
+        (table.to_s.gsub(/_id/, "").chomp("s") + "_id").to_sym
+      end
+
+      def pk_by_domain(domain)
+        :id
+      end
+
+      def table_by_domain(table)
+        return nil unless table
+        case table
+        when :person, :patients
+          :patients
+        when :death, :deaths
+          :deaths
+        when :observation_period, :information_periods
+          :information_periods
+        when :provider, :practitioners
+          :practitioners
+        else
+          :clinical_codes
+        end
+      end
+
+      def person_id_column(table)
+        col = if table.to_sym == :patients
+          :id
+        else
+          :patient_id
+        end
+        Sequel.identifier(col).as(:person_id)
+      end
+=begin
       def person_id_column(query)
         return Sequel.expr(:patient_id).as(:person_id) if query_columns(query).include?(:patient_id)
         return Sequel.expr(:id).as(:person_id) if query_columns(query).include?(:birth_date)
         :person_id
       end
+=end
 
       def data_model
         :oi_cdm

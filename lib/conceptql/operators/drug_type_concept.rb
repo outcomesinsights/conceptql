@@ -20,8 +20,8 @@ module ConceptQL
       end
 
       def query(db)
-        db.from(:drug_exposure)
-          .where(drug_type_concept_id: arguments)
+        db.from(dm.table_by_domain(domain))
+          .where(dm.type_concept_id_column(dm.table_by_domain(domain)) => arguments)
       end
     end
   end

@@ -26,8 +26,8 @@ module ConceptQL
       end
 
       def query(db)
-        db.from(:condition_occurrence)
-          .where(condition_type_concept_id: condition_occurrence_type_concept_ids)
+        db.from(dm.table_by_domain(domain))
+          .where(dm.type_concept_id_column(dm.table_by_domain(domain)) => condition_occurrence_type_concept_ids)
       end
 
     private

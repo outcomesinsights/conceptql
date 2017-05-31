@@ -29,12 +29,8 @@ module ConceptQL
           .where(gender_concept_id: gender_concept_ids)
       end
 
-      def query_cols
-        dm.table_columns(table)
-      end
-
       def table
-        dm.person_table
+        dm.table_by_domain(:person)
       end
     end
   end

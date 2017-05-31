@@ -14,7 +14,7 @@ module ConceptQL
       end
 
       def source_table
-        dm.period_table
+        dm.table_by_domain(:observation_period)
       end
 
       def i_point_at

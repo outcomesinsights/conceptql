@@ -40,17 +40,17 @@ module ConceptQL
         (i_point_at + these_point_at_me)
       end
 
-      def query_cols
-        dm.table_columns(make_table_name(table))
-      end
-
       def query(db)
-        return db.from(make_table_name(source_table)) if stream.nil?
+        return db.from(table) if stream.nil?
         base_query(db, stream.evaluate(db))
       end
 
       def table
-        source_table
+        dm.table_by_domain(my_domain)
+      end
+
+      def make_table_name(domain)
+        super(dm.table_by_domain(domain))
       end
 
       private
@@ -60,7 +60,7 @@ module ConceptQL
         to_me_domains = stream.domains(db) & these_point_at_me
         from_me_domains = stream.domains(db) & i_point_at
 
-        destination_table = make_table_name(source_table)
+        destination_table = make_table_name(my_domain)
         casting_query = db.from(destination_table)
         wheres = []
 
@@ -71,10 +71,10 @@ module ConceptQL
           uncastable_person_ids = db.from(stream_query)
             .where(criterion_domain: uncastable_domains.map(&:to_s))
             .select_group(:person_id)
-          wheres << Sequel.expr(dm.person_id => uncastable_person_ids)
+          wheres << Sequel.expr(dm.person_id(table) => uncastable_person_ids)
         end
 
-        destination_domain_id = dm.make_table_id(source_table)
+        destination_domain_id = dm.make_table_id(my_domain)
 
         unless to_me_domains.empty?
           # For each castable domain in the stream, setup a query that
@@ -84,8 +84,8 @@ module ConceptQL
             source_ids = db.from(stream_query)
               .where(criterion_domain: source_domain.to_s)
               .select_group(:criterion_id)
-            source_table = make_table_name(source_table)
-            source_domain_id = dm.make_table_id(source_table)
+            source_table = make_table_name(source_domain)
+            source_domain_id = dm.make_fk_id(source_domain)
 
             db.from(source_table)
               .where(source_domain_id => source_ids)
@@ -98,7 +98,7 @@ module ConceptQL
 
         unless from_me_domains.empty?
           from_me_domains.each do |from_me_domain|
-            fk_domain_id = make_table_id(from_me_domain)
+            fk_domain_id = dm.fk_by_domain(from_me_domain)
             wheres << Sequel.expr(fk_domain_id => db.from(stream_query).where(criterion_domain: from_me_domain.to_s).select_group(:criterion_id))
           end
         end

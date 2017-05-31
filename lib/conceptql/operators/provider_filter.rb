@@ -17,6 +17,7 @@ module ConceptQL
       require_column :provider_id
       default_query_columns
 
+      # TODO: Use specialty field in contexts_practitioners
       def query(db)
         db.from(stream.evaluate(db))
           .where(provider_id: matching_provider_ids(db))
@@ -25,9 +26,9 @@ module ConceptQL
     private
       def matching_provider_ids(db)
         specialty_concept_ids = options[:specialties].split(/\s*,\s*/).map(&:to_i)
-        db.from(:provider)
+        db.from(dm.table_by_domain(:provider))
           .where(specialty_concept_id: specialty_concept_ids)
-          .select(:provider_id)
+          .select(dm.pk_by_domain(:provider))
       end
     end
   end

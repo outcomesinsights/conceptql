@@ -64,7 +64,7 @@ module ConceptQL
         ds.distinct.from_self
           .select_append{row_number{}.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
           .from_self
-          .select(*query_columns(ds))
+          .select(*dm.columns)
           .where{occurrence > occurrences.to_i}
       end
 

@@ -23,17 +23,14 @@ module ConceptQL
       validate_option DATE_FORMAT, :start, :end
       validate_required_options :start, :end
 
-      def query_cols
-        dm.table_columns(source_table) + [:criterion_table, :criterion_domain, :criterion_id, :start_date, :end_date]
-      end
-
       def query(db)
+        replace = {
+          start_date:  start_date(db),
+          end_date:  end_date(db)
+        }
         db.from(source_table)
-          .select_append(Sequel.cast_string(source_table.to_s).as(:criterion_table))
-          .select_append(Sequel.cast_string('person').as(:criterion_domain))
-          .select_append(Sequel.expr(dm.id_column(source_table)).as(:criterion_id))
-          .select_append(Sequel.as(cast_date(db, start_date(db)), :start_date),
-                         Sequel.as(cast_date(db, end_date(db)), :end_date)).from_self
+          .select(*dm.columns(table: source_table, replace: replace))
+          .from_self
       end
 
       def domains(db)
@@ -43,11 +40,7 @@ module ConceptQL
       private
 
       def source_table
-        if oi_cdm?
-          :patients
-        else
-          :person
-        end
+        dm.table_by_domain(:person)
       end
 
       def start_date(db)
