@@ -25,7 +25,7 @@ module ConceptQL
         end
 
         def modified_query
-          return query unless dm.table_cols(source_table).tap { |o| p o }.include?(join_id).tap { |tf| puts "#{op}'s #{source_table} has #{join_id}? #{tf}" }
+          return query unless dm.table_cols(source_table).include?(join_id)
           left_alias = "tab1".to_sym
           right_alias = "tab2".to_sym
 

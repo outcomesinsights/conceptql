@@ -9,9 +9,6 @@ module ConceptQL
         end
 
         def self.has_required_columns?(cols)
-          puts "*"*80
-          p cols
-          puts "*"*80
           needed = [:practitioner_id, :context_id].sort
           found = needed & cols
           !found.empty?

@@ -49,7 +49,7 @@ class Minitest::Spec
   end
 
   def query(statement)
-    CDB.query(statement).tap { |q| puts q.sql }
+    CDB.query(statement)
   end
 
   def dataset(statement)
