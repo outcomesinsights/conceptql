@@ -10,7 +10,7 @@ module ConceptQL
       validate_one_argument
 
       def query(db)
-        db.from(table)
+        db.from(table_name)
       end
 
       def domains(db)
@@ -26,7 +26,7 @@ module ConceptQL
         end
       end
 
-      def table
+      def table_name
         values.first.to_sym rescue nil
       end
 
