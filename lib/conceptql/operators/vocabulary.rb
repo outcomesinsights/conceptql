@@ -20,7 +20,7 @@ module ConceptQL
       end
 
       desc 'Returns all records that match the given codes for the given vocabulary'
-      option :vocabulary, type: :string, options: get_vocabularies
+      option :vocabulary, type: :string, options: proc { get_vocabularies }
       argument :codes, type: :codelist
       basic_type :selection
       query_columns :clinical_codes

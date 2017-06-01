@@ -110,7 +110,7 @@ module ConceptQL
         min_upstreams: @max_upstreams || 0,
         max_upstreams: @max_upstreams || 0,
         arguments: @arguments || [],
-        options: @options || {},
+        options: process_options(@options),
         predominant_domains: @domains || @predominant_domains || [],
         desc: get_desc,
         categories: @categories || [],
@@ -120,6 +120,16 @@ module ConceptQL
 
     def get_desc
       @desc ||= standard_description
+    end
+
+    def process_options(options)
+      return {} if options.nil? || options.empty?
+      options.each_with_object({}) do |(k, v), h|
+        if v && v.respond_to?(:[]) && v[:options].respond_to?(:call)
+          v[:options] = v[:options].call
+        end
+        h[k] = v
+      end
     end
 
     def warn_about_missing_metadata
