@@ -1,5 +1,6 @@
-require 'sequelizer'
-require_relative 'operator'
+require "sequelizer"
+require_relative "operator"
+require "csv"
 
 module ConceptQL
   module Operators
@@ -8,9 +9,24 @@ module ConceptQL
       register __FILE__
 
       class << self
+        def setup_vocabulary_operator
+          return unless vocabs_file.exist?
+          category "Select by Clinical Codes"
+          vocabularies.values.sort_by(&:downcase)
+        end
+
+        def vocabularies
+          CSV.foreach(vocabs_file, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
+            h[row[:omopv4_vocabulary_id]] = row[:id]
+          end
+        end
+
+        def vocabs_file
+          ConceptQL.config_dir + "vocabularies.csv"
+        end
+
         def get_vocabularies
           vocabs = db[:concepts].select_group(:vocabulary_id).select_order_map(:vocabulary_id)
-          category "Select by Clinical Codes"
           vocabs
         rescue
           puts $!.message
@@ -20,7 +36,7 @@ module ConceptQL
       end
 
       desc 'Returns all records that match the given codes for the given vocabulary'
-      option :vocabulary, type: :string, options: proc { get_vocabularies }
+      option :vocabulary, type: :string, options: setup_vocabulary_operator, required: true
       argument :codes, type: :codelist
       basic_type :selection
       query_columns :clinical_codes
@@ -28,11 +44,7 @@ module ConceptQL
       validate_at_least_one_argument
 
       def query(db)
-        ds = if gdm?
-               db[:clinical_codes]
-             else
-               db[:condition_occurrence]
-             end
+        ds = db[dm.table_by_domain(:condition_occurrence)]
 
         ds = ds.where(where_clause(db))
         if gdm?
@@ -47,7 +59,7 @@ module ConceptQL
           { clinical_code_concept_id: concept_ids }
         else
           {
-            condition_source_vocabulary_id: vocabulary_id,
+            condition_source_vocabulary_id: vocabulary_id(db),
             condition_source_value: values
           }
         end
@@ -74,7 +86,12 @@ module ConceptQL
         if add_warnings?(db, opts)
           args = arguments.dup
           args -= bad_arguments
-          missing_args = args - db[:concepts].where(vocabulary_id: vocabulary_id(db), concept_code: args).select_map(:concept_code)
+          missing_args = []
+
+          unless no_db?(db, opts)
+            missing_args = args - db[:concepts].where(vocabulary_id: vocabulary_id(db), concept_code: args).select_map(:concept_code) rescue []
+          end
+
           unless missing_args.empty?
             add_warning("unknown source code", *missing_args)
           end
@@ -103,11 +120,11 @@ module ConceptQL
       end
 
       def translate_to_new(db, v_id)
-        db[:vocabularies].where(omopv4_vocabulary_id: v_id).select_map(:id)
+        self.class.vocabularies[v_id.to_s]
       end
 
       def translate_to_old(db, v_id)
-        db[:vocabularies].where(id: v_id).select_map(:omopv4_vocabulary_id)
+        db[:vocabularies].where(id: v_id).select_map(:omopv4_vocabulary_id).first
       end
 
       def domain_map(v_id)
@@ -125,7 +142,6 @@ module ConceptQL
         else
           :condition_occurrence
         end
-
       end
     end
   end
