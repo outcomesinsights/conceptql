@@ -3,7 +3,7 @@ module ConceptQL
     (Pathname.new(__dir__) + ".." + "..").expand_path
   end
 
-  def self.schemas
+  def self.schemas_dir
     root + 'schemas'
   end
 end

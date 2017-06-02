@@ -1,7 +1,7 @@
 module ConceptQL
   module DataModel
     class Generic
-      SCHEMAS = Dir.glob((ConceptQL.schemas + "*.yml").tap{|o|p o}).each_with_object({}) do |schema_file, schemas|
+      SCHEMAS = Dir.glob(ConceptQL.schemas_dir + "*.yml").each_with_object({}) do |schema_file, schemas|
         schemas[File.basename(schema_file, ".*").to_sym] = Psych.load_file(schema_file)
       end
 
