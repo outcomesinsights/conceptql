@@ -3,7 +3,7 @@ require 'open3'
 require 'forwardable'
 require_relative 'scope'
 require_relative 'nodifier'
-require_relative 'sql_formatter'
+require_relative 'sql_formatters'
 
 module ConceptQL
   class Query
@@ -39,7 +39,7 @@ module ConceptQL
     end
 
     def sql
-      SqlFormatter.new.format(query.sql)
+      format(query.sql)
     rescue
       puts $!.message
       puts $!.backtrace.join("\n")
@@ -90,6 +90,10 @@ module ConceptQL
       else
         stmt
       end
+    end
+
+    def format(sql)
+      SqlFormatters.formatters.map(&:new).detect(&:available?).format(sql)
     end
   end
 end
