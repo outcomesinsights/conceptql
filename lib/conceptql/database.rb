@@ -16,7 +16,7 @@ module ConceptQL
       end
 
       @opts = opts.revalue { |v| v ? v.to_sym : v }.symbolize_keys
-      @opts[:data_model] ||= :omopv4
+      @opts[:data_model] ||= (ENV["CONCEPTQL_DATA_MODEL"] || :omopv4).to_sym
       @opts[:database_type] ||= db_type
       db.set(db_opts) if db.respond_to?(:set)
     end
