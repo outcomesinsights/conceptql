@@ -6,4 +6,8 @@ module ConceptQL
   def self.schemas_dir
     root + 'schemas'
   end
+
+  def self.config_dir
+    root + 'config'
+  end
 end

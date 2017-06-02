@@ -16,11 +16,11 @@ module ConceptQL
     end
 
     def concept_ids
-      @concept_ids ||= Psych.load_file(config_dir + 'provenance.yml')
+      @concept_ids ||= Psych.load_file(provenance_yaml_file)
     end
 
-    def config_dir
-      Pathname.new(__FILE__).dirname + '..' + '..' + '..' + 'config'
+    def provenance_yaml_file
+      ConceptQL.config_dir + "provenance.yml"
     end
 
     def needs_adjustment?(ctype)
