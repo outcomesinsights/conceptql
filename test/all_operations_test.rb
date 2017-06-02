@@ -1,4 +1,4 @@
-require_relative './helper'
+require_relative "./db_helper"
 
 file_regexps = nil
 if !ARGV.empty?

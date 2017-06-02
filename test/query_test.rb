@@ -1,4 +1,4 @@
-require_relative 'helper'
+require_relative 'db_helper'
 
 describe ConceptQL::Query do
   it "should handle errors in the root operator" do
