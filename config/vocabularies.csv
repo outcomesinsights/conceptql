@@ -1,5 +1,5 @@
 id,omopv4_vocabulary_id,vocabulary_full_name,vocabulary_short_name,hidden
-SNOMED,1,SNOMED-CT,SNOMED-CT,
+SNOMED,1,SNOMED-CT,SNOMED-CT,Y
 ICD9CM,2,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS)",ICD-9 CM,Y
 ICD9Proc,3,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 3 (NCHS)",ICD-9 Proc,Y
 CPT4,4,Current Procedural Terminology version 4 (AMA),CPT,Y
