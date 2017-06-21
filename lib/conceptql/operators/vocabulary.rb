@@ -40,7 +40,6 @@ module ConceptQL
         # This method will be called once for each vocabulary we register
         # for this operator
         def to_metadata(name, opts = {})
-          puts "called for #{name}"
           h = super
           vocab = assigned_vocabularies[name]
           h[:preferred_name] = vocab[:vocabulary_short_name] || vocab[:id]

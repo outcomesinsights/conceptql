@@ -5,7 +5,7 @@ require_relative "sql_formatters/pg_format"
 module ConceptQL
   module SqlFormatters
     class None
-      def availabe?
+      def available?
         true
       end
 
