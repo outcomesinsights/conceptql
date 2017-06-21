@@ -407,17 +407,6 @@ module ConceptQL
         query
       end
 
-      def cast_date(db, date)
-        case db.database_type
-        when :oracle
-          Sequel.function(:to_date, date, 'YYYY-MM-DD')
-        when :mssql
-          Sequel.lit('CONVERT(DATETIME, ?)', date)
-        else
-          Sequel.cast(date, Date)
-        end
-      end
-
       def determine_tables
         if upstreams.empty?
           if respond_to?(:table)

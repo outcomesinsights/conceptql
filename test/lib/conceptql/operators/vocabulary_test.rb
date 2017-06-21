@@ -3,6 +3,6 @@ require "conceptql"
 
 describe ConceptQL::Operators::Vocabulary do
   it "should populate known vocabularies from file" do
-    ConceptQL::Operators::Vocabulary.to_metadata(:name)[:options][:vocabulary][:options].wont_be_empty
+    ConceptQL::Operators.operators[:omopv4_plus]["ADMSRCE"].must_equal ConceptQL::Operators::Vocabulary
   end
 end

@@ -6,8 +6,9 @@ module ConceptQL
 
     VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dmy]?)+/, /\s*/])}\z/
 
-    attr :str, :manipulator
-    def initialize(str, opts = {})
+    attr :op, :str, :manipulator
+    def initialize(op, str, opts = {})
+      @op = op
       @str = str || ""
       @manipulator = opts[:manipulator] || Sequel
     end
@@ -20,7 +21,7 @@ module ConceptQL
     def adjust(column, reverse=false)
       return Sequel.expr(:end_date) if str.downcase == 'end'
       return Sequel.expr(:start_date) if str.downcase == 'start'
-      return Sequel.cast(Date.parse(str).strftime('%Y-%m-%d'), Date) if str =~ /^\d{4}-\d{2}-\d{2}$/
+      return op.rdbms.cast_date(op.nodifier, Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
       adjusted_date = adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
         quantity *= -1 if reverse
         if quantity > 0
@@ -29,10 +30,11 @@ module ConceptQL
           manipulator.date_sub(sql, units => quantity.abs)
         end
       end
-      Sequel.cast(adjusted_date, Date)
+      op.rdbms.cast_date(adjusted_date)
     end
 
     private
+
     def lookup
       {
         'y' => :years,

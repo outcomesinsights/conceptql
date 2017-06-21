@@ -52,7 +52,7 @@ module ConceptQL
       end
 
       def adjusted_date(option_arg, column)
-        adjusted_date = DateAdjuster.new(options[option_arg], manipulator: options[:manipulator]).adjust(column)
+        adjusted_date = DateAdjuster.new(self, options[option_arg], manipulator: options[:manipulator]).adjust(column)
         adjusted_date.as(column)
       end
     end

@@ -50,7 +50,7 @@ module ConceptQL
       end
 
       def add_within_condition(ds, within, meth=:where)
-        within = DateAdjuster.new(within)
+        within = DateAdjuster.new(self, within)
         after = within.adjust(:r__start_date, true)
         before = within.adjust(:r__end_date)
         within_col = Sequel.expr(within_column)

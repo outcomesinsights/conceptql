@@ -317,22 +317,14 @@ module ConceptQL
         if query.db.database_type == :impala
           date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
         end
-        operator.cast_date(query.db, date)
+        rdbms.cast_date(date)
       end
 
       def date_columns(query, table = nil)
-        #return [:start_date, :end_date] if (query_columns(query).include?(:start_date) && query_columns(query).include?(:end_date))
-        #return [:start_date, :end_date] unless table
-
-        date_klass = Date
-        #if query.db.database_type == :impala
-        #  date_klass = DateTime
-        #end
-
         sd = start_date_column(query, table)
-        sd = Sequel.cast(Sequel.expr(sd), date_klass).as(:start_date) unless sd == :start_date
+        sd = rdbms.cast_date(Sequel.expr(sd)).as(:start_date) unless sd == :start_date
         ed = end_date_column(query, table)
-        ed = Sequel.cast(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table)), date_klass).as(:end_date) unless ed == :end_date
+        ed = rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table))).as(:end_date) unless ed == :end_date
         [sd, ed]
       end
 

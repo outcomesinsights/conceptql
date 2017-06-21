@@ -24,8 +24,8 @@ module ConceptQL
 
         return datasets.first.from_self if datasets.length == 1
 
-        adjusted_start_date = DateAdjuster.new(options[:start]).adjust(:l__start_date, true)
-        adjusted_end_date = DateAdjuster.new(options[:end]).adjust(:l__end_date)
+        adjusted_start_date = DateAdjuster.new(self, options[:start]).adjust(:l__start_date, true)
+        adjusted_end_date = DateAdjuster.new(self, options[:end]).adjust(:l__end_date)
 
         datasets = datasets.map do |ds|
           matching = ds.from_self(:alias=>:l)
