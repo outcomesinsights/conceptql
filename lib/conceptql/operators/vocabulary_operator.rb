@@ -7,6 +7,7 @@ module ConceptQL
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
+
       ConceptCode = Struct.new(:vocabulary, :code, :description) do
         def to_s
           "#{vocabulary} #{code}: #{description}"
@@ -50,11 +51,11 @@ module ConceptQL
       private
 
       def code_column
-        table_source_value(table_name)
+        dm.table_source_value(table_name)
       end
 
       def vocabulary_id_column
-        table_vocabulary_id(table_name)
+        dm.table_vocabulary_id(table_name)
       end
 
       def table_name

@@ -6,40 +6,55 @@ module ConceptQL
   module Operators
     class Vocabulary < Operator
       extend Sequelizer
-      register __FILE__
 
       class << self
-        def setup_vocabulary_operator
-          return unless vocabs_file.exist?
-          category "Select by Clinical Codes"
-          vocabularies.values.sort_by(&:downcase)
-        end
-
-        def vocabularies
-          CSV.foreach(vocabs_file, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
+        def v4_vocab_to_v5_vocab
+          each_vocab.each_with_object({}) do |row, h|
             h[row[:omopv4_vocabulary_id]] = row[:id]
           end
+        end
+
+        def assigned_vocabularies
+          each_vocab.each_with_object({}) do |row, h|
+            h[row[:id]] = row.to_hash
+          end.select { |k, vocab| vocab[:hidden].nil? }
+        end
+
+        def register_many
+          assigned_vocabularies.each do |name, vocab|
+            register(name)
+          end
+        end
+
+        def each_vocab
+          CSV.foreach(vocabs_file, headers: true, header_converters: :symbol)
         end
 
         def vocabs_file
           ConceptQL.config_dir + "vocabularies.csv"
         end
 
-        def get_vocabularies
-          vocabs = db[:concepts].select_group(:vocabulary_id).select_order_map(:vocabulary_id)
-          vocabs
-        rescue
-          puts $!.message
-          puts $!.backtrace.join("\n")
-          puts "Failed to load voabularies for Vocabulary Operator"
+        # This will override the to_metadata method and return the preferred name
+        # based on the name listed in the file.
+        #
+        # This method will be called once for each vocabulary we register
+        # for this operator
+        def to_metadata(name, opts = {})
+          puts "called for #{name}"
+          h = super
+          vocab = assigned_vocabularies[name]
+          h[:preferred_name] = vocab[:vocabulary_short_name] || vocab[:id]
+          h
         end
       end
 
+      register_many
+
       desc 'Returns all records that match the given codes for the given vocabulary'
-      option :vocabulary, type: :string, options: setup_vocabulary_operator, required: true
       argument :codes, type: :codelist
       basic_type :selection
       query_columns :clinical_codes
+      category "Select by Clinical Codes"
       validate_no_upstreams
       validate_at_least_one_argument
 
@@ -120,7 +135,7 @@ module ConceptQL
       end
 
       def translate_to_new(db, v_id)
-        self.class.vocabularies[v_id.to_s]
+        self.class.v4_vocab_to_v5_vocab[v_id.to_s]
       end
 
       def translate_to_old(db, v_id)
