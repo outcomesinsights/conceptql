@@ -17,9 +17,9 @@ module ConceptQL
 
       def query_modifier_for(column)
         {
-          place_of_service_concept_id: ConceptQL::QueryModifiers::Generic::PosQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::Generic::DrugQueryModifier,
-          provider_id: ConceptQL::QueryModifiers::Generic::ProviderQueryModifier
+          place_of_service_concept_id: ConceptQL::QueryModifiers::Generic::PoSQueryModifier,
+          provider_id: ConceptQL::QueryModifiers::Generic::ProviderQueryModifier,
+          drug_name: ConceptQL::QueryModifiers::Generic::DrugQueryModifier
         }[column]
       end
 
@@ -314,7 +314,7 @@ module ConceptQL
         concatted_strings = Sequel.join(strings_with_dashes)
 
         date = concatted_strings
-        if query.db.database_type == :impala
+        if nodifier.database_type == :impala
           date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
         end
         rdbms.cast_date(date)
