@@ -5,6 +5,7 @@ require 'sequelizer'
 require 'json'
 require 'pp'
 require 'csv'
+require 'conceptql'
 require_relative 'query'
 require_relative 'knitter'
 
