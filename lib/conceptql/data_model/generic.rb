@@ -11,6 +11,10 @@ module ConceptQL
         @nodifier = nodifier
       end
 
+      def rdbms
+        @rdbms ||= ConceptQL::Rdbms.generate(nodifier.database_type)
+      end
+
       def query_modifier_for(column)
         {
           place_of_service_concept_id: ConceptQL::QueryModifiers::Generic::PosQueryModifier,
@@ -97,7 +101,7 @@ module ConceptQL
       def nullified_columns(table)
         return {} if table.nil?
         remainder = query_columns.keys - columns_in_table(table).keys - applicable_query_modifiers(table).flat_map(&:provided_columns)
-        Hash[remainder.map { |r| [r, process(r, nil)] }]
+        Hash[remainder.map { |r| [r, rdbms.process(r, nil)] }]
       end
 
       def selectify(query, opts ={})
@@ -146,27 +150,8 @@ module ConceptQL
       def replace(replace_hash)
         return {} unless replace_hash
         replace_hash.each_with_object({}) do |(column, value), h|
-          h[column] = process(column, value)
+          h[column] = rdbms.process(column, value)
         end
-      end
-
-      def process(column, value = nil)
-        type = Scope::COLUMN_TYPES.fetch(column)
-        new_column = case type
-        when String, :String
-          Sequel.cast_string(value)
-        when Date, :Date
-          Sequel.cast(value, type)
-        when Float, :Bigint, :Float
-          Sequel.cast_numeric(value, type)
-        else
-          raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
-        end
-        new_column.as(column)
-      end
-
-      def cast_date(date)
-        Sequel.cast(date, Date)
       end
 
 =begin

@@ -1,5 +1,7 @@
 require_relative "data_model/generic"
 require_relative "data_model/gdm"
+require_relative "rdbms"
+
 module ConceptQL
   module DataModel
     def self.for(operator, nodifier)
