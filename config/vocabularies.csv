@@ -1,76 +1,76 @@
-id,omopv4_vocabulary_id,vocabulary_name
-SNOMED,1,SNOMED-CT
-ICD9CM,2,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS)"
-ICD9Proc,3,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 3 (NCHS)"
-CPT4,4,Current Procedural Terminology version 4 (AMA)
-HCPCS,5,Healthcare Common Procedure Coding System (CMS)
-LOINC,6,Logical Observation Identifiers Names and Codes (Regenstrief Institute)
-RxNorm,8,RxNorm (NLM)
-NDC,9,National Drug Code (FDA and manufacturers)
-UCUM,11,Unified Code for Units of Measure (Regenstrief Institute)
-Gender,12,OMOP Gender
-Race,13,Race and Ethnicity Code Set (USBC)
-Place of Service,14,Place of Service Codes for Professional Claims (CMS)
-Visit,24,OMOP Visit
-Drug Type,36,OMOP Drug Exposure Type
-Condition Type,37,OMOP Condition Occurrence Type
-Procedure Type,38,OMOP Procedure Occurrence Type
-Observation Type,39,OMOP Observation Type
-DRG,40,Diagnosis-related group (CMS)
-Revenue Code,43,UB04/CMS1450 Revenue Codes (CMS)
-Ethnicity,44,OMOP Ethnicity
-Death Type,45,OMOP Death Type
-NUCC,47,National Uniform Claim Committee Health Care Provider Taxonomy Code Set (NUCC)
-Specialty,48,Medicare provider/supplier specialty codes (CMS)
-OPCS4,55,OPCS Classification of Interventions and Procedures version 4 (NHS)
-Note Type,58,OMOP Note Type
-Domain,59,OMOP Domain
-Obs Period Type,61,OMOP Observation Period Type
-Visit Type,62,OMOP Visit Type
-Device Type,63,OMOP Device Type
-Meas Type,64,OMOP Measurement Type
-Currency,65,International Currency Symbol (ISO 4217)
-Relationship,66,OMOP Relationship
-Vocabulary,67,OMOP Vocabulary
-Concept Class,68,OMOP Concept Class
-ADMSRCE,1000000,ADMSRCE
-ADMTYPE,1000001,ADMTYPE
-BETOS,1000002,BETOS
-CS_Schema,1000003,CS_Schema
-Clinical Code Type,1000004,Clinical Code Type
-DURATION_UNIT,1000005,DURATION_UNIT
-HCFASPEC,1000006,HCFASPEC
-HCFATYPE,1000007,HCFATYPE
-ICD03_Morphology,1000008,ICD03_Morphology
-ICD03_Topography,1000009,ICD03_Topography
-OI_FILE_TYPE,1000010,OI_FILE_TYPE
-OI_INFORMATION_TYPE,1000011,OI_INFORMATION_TYPE
-OI_PROV,1000012,OI_PROV
-PLCSRVC,1000013,PLCSRVC
-PROVIDER_FACILITY_TYPE,1000014,PROVIDER_FACILITY_TYPE
-SEER_ADJAJC6M,1000015,SEER_ADJAJC6M
-SEER_ADJAJC6N,1000016,SEER_ADJAJC6N
-SEER_ADJAJC6T,1000017,SEER_ADJAJC6T
-SEER_BEH,1000018,SEER_BEH
-SEER_CENSUS_POV_IND,1000019,SEER_CENSUS_POV_IND
-SEER_DAJCC7,1000020,SEER_DAJCC7
-SEER_DAJCCSTG,1000021,SEER_DAJCCSTG
-SEER_DXCONF,1000022,SEER_DXCONF
-SEER_GRADE,1000023,SEER_GRADE
-SEER_LAT,1000024,SEER_LAT
-SEER_MARST,1000025,SEER_MARST
-SEER_MSEX,1000026,SEER_MSEX
-SEER_NHIADE,1000027,SEER_NHIADE
-SEER_NOSRG,1000028,SEER_NOSRG
-SEER_RAD,1000029,SEER_RAD
-SEER_RADSURG,1000030,SEER_RADSURG
-SEER_SEQ,1000031,SEER_SEQ
-SEER_SITERWHO,1000032,SEER_SITERWHO
-SEER_SRACE,1000033,SEER_SRACE
-SEER_SRC,1000034,SEER_SRC
-SEER_SXPRIF,1000035,SEER_SXPRIF
-SEER_SXSITF,1000036,SEER_SXSITF
-SEER_TYPEFU,1000037,SEER_TYPEFU
-SEER_URBRUR,1000038,SEER_URBRUR
-STUS_CD,1000039,STUS_CD
-TYPESRVC,1000040,TYPESRVC
+id,omopv4_vocabulary_id,vocabulary_full_name,vocabulary_short_name,hidden
+SNOMED,1,SNOMED-CT,SNOMED-CT,
+ICD9CM,2,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS)",ICD-9 CM,Y
+ICD9Proc,3,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 3 (NCHS)",ICD-9 Proc,Y
+CPT4,4,Current Procedural Terminology version 4 (AMA),CPT,Y
+HCPCS,5,Healthcare Common Procedure Coding System (CMS),,Y
+LOINC,6,Logical Observation Identifiers Names and Codes (Regenstrief Institute),,Y
+RxNorm,8,RxNorm (NLM),,Y
+NDC,9,National Drug Code (FDA and manufacturers),,Y
+UCUM,11,Unified Code for Units of Measure (Regenstrief Institute),,Y
+Gender,12,OMOP Gender,,Y
+Race,13,Race and Ethnicity Code Set (USBC),,Y
+Place of Service,14,Place of Service Codes for Professional Claims (CMS),,Y
+Visit,24,OMOP Visit,,Y
+Drug Type,36,OMOP Drug Exposure Type,,Y
+Condition Type,37,OMOP Condition Occurrence Type,,Y
+Procedure Type,38,OMOP Procedure Occurrence Type,,Y
+Observation Type,39,OMOP Observation Type,,Y
+DRG,40,Diagnosis-related group (CMS),,Y
+Revenue Code,43,UB04/CMS1450 Revenue Codes (CMS),,Y
+Ethnicity,44,OMOP Ethnicity,,Y
+Death Type,45,OMOP Death Type,,Y
+NUCC,47,National Uniform Claim Committee Health Care Provider Taxonomy Code Set (NUCC),,Y
+Specialty,48,Medicare provider/supplier specialty codes (CMS),,Y
+OPCS4,55,OPCS Classification of Interventions and Procedures version 4 (NHS),,Y
+Note Type,58,OMOP Note Type,,Y
+Domain,59,OMOP Domain,,Y
+Obs Period Type,61,OMOP Observation Period Type,,Y
+Visit Type,62,OMOP Visit Type,,Y
+Device Type,63,OMOP Device Type,,Y
+Meas Type,64,OMOP Measurement Type,,Y
+Currency,65,International Currency Symbol (ISO 4217),,Y
+Relationship,66,OMOP Relationship,,Y
+Vocabulary,67,OMOP Vocabulary,,Y
+Concept Class,68,OMOP Concept Class,,Y
+ADMSRCE,1000000,ADMSRCE,,
+ADMTYPE,1000001,ADMTYPE,,
+BETOS,1000002,BETOS,,
+CS_Schema,1000003,CS_Schema,,
+Clinical Code Type,1000004,Clinical Code Type,,
+DURATION_UNIT,1000005,DURATION_UNIT,,
+HCFASPEC,1000006,HCFASPEC,,
+HCFATYPE,1000007,HCFATYPE,,
+ICD03_Morphology,1000008,ICD03_Morphology,,
+ICD03_Topography,1000009,ICD03_Topography,,
+OI_FILE_TYPE,1000010,OI_FILE_TYPE,,
+OI_INFORMATION_TYPE,1000011,OI_INFORMATION_TYPE,,
+OI_PROV,1000012,OI_PROV,,
+PLCSRVC,1000013,PLCSRVC,,
+PROVIDER_FACILITY_TYPE,1000014,PROVIDER_FACILITY_TYPE,,
+SEER_ADJAJC6M,1000015,SEER_ADJAJC6M,,
+SEER_ADJAJC6N,1000016,SEER_ADJAJC6N,,
+SEER_ADJAJC6T,1000017,SEER_ADJAJC6T,,
+SEER_BEH,1000018,SEER_BEH,,
+SEER_CENSUS_POV_IND,1000019,SEER_CENSUS_POV_IND,,
+SEER_DAJCC7,1000020,SEER_DAJCC7,,
+SEER_DAJCCSTG,1000021,SEER_DAJCCSTG,,
+SEER_DXCONF,1000022,SEER_DXCONF,,
+SEER_GRADE,1000023,SEER_GRADE,,
+SEER_LAT,1000024,SEER_LAT,,
+SEER_MARST,1000025,SEER_MARST,,
+SEER_MSEX,1000026,SEER_MSEX,,
+SEER_NHIADE,1000027,SEER_NHIADE,,
+SEER_NOSRG,1000028,SEER_NOSRG,,
+SEER_RAD,1000029,SEER_RAD,,
+SEER_RADSURG,1000030,SEER_RADSURG,,
+SEER_SEQ,1000031,SEER_SEQ,,
+SEER_SITERWHO,1000032,SEER_SITERWHO,,
+SEER_SRACE,1000033,SEER_SRACE,,
+SEER_SRC,1000034,SEER_SRC,,
+SEER_SXPRIF,1000035,SEER_SXPRIF,,
+SEER_SXSITF,1000036,SEER_SXSITF,,
+SEER_TYPEFU,1000037,SEER_TYPEFU,,
+SEER_URBRUR,1000038,SEER_URBRUR,,
+STUS_CD,1000039,STUS_CD,,
+TYPESRVC,1000040,TYPESRVC,,
