@@ -6,7 +6,7 @@ module ConceptQL
   module DataModel
     def self.for(operator, nodifier)
       case nodifier.data_model
-      when :gdm, :gdm
+      when :gdm
         Gdm.new(operator, nodifier)
       else
         puts "No DataModel defined for #{nodifier.data_model.inspect}, falling back to Generic"
