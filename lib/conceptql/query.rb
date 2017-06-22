@@ -38,8 +38,12 @@ module ConceptQL
       cols
     end
 
+    def formatted_sql
+      format(sql)
+    end
+
     def sql
-      format(query.sql)
+      query.sql
     rescue
       puts $!.message
       puts $!.backtrace.join("\n")

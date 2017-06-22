@@ -14,6 +14,12 @@ module ConceptQL
           end
         end
 
+        def v5_vocab_to_v4_vocab
+          each_vocab.each_with_object({}) do |row, h|
+            h[row[:id]] = row[:omopv4_vocabulary_id]
+          end
+        end
+
         def assigned_vocabularies
           each_vocab.each_with_object({}) do |row, h|
             h[row[:id]] = row.to_hash
@@ -32,6 +38,10 @@ module ConceptQL
 
         def vocabs_file
           ConceptQL.config_dir + "vocabularies.csv"
+        end
+
+        def from_old_vocab(nodifier, old_vocab_id, *values)
+          new(nodifier, v4_vocab_to_v5_vocab[old_vocab_id.to_s], *values)
         end
 
         # This will override the to_metadata method and return the preferred name
@@ -80,7 +90,7 @@ module ConceptQL
       end
 
       def domain
-        domain_map(options[:vocabulary])
+        domain_map(op_name)
       end
 
       def table
@@ -123,22 +133,12 @@ module ConceptQL
       end
 
       def translated_vocabulary_id(db)
-        v_id = options[:vocabulary]
-        if gdm?
-          return v_id if v_id.is_a?(String)
-          return translate_to_new(db, v_id)
-        else
-          return v_id unless v_id.is_a?(String)
-          return translate_to_old(db, v_id)
-        end
+        return op_name if gdm?
+        return translate_to_old(op_name)
       end
 
-      def translate_to_new(db, v_id)
-        self.class.v4_vocab_to_v5_vocab[v_id.to_s]
-      end
-
-      def translate_to_old(db, v_id)
-        db[:vocabularies].where(id: v_id).select_map(:omopv4_vocabulary_id).first
+      def translate_to_old(v_id)
+        self.class.v5_vocab_to_v4_vocab[v_id.to_s]
       end
 
       def domain_map(v_id)

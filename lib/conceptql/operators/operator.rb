@@ -18,7 +18,7 @@ module ConceptQL
       extend Forwardable
       extend ConceptQL::Metadatable
 
-      attr :nodifier, :values, :options, :arguments, :upstreams
+      attr :nodifier, :values, :options, :arguments, :upstreams, :op_name
 
       option :label, type: :string
 
@@ -97,8 +97,13 @@ module ConceptQL
         end
       end
 
-      def initialize(nodifier, *args)
+      def initialize(nodifier, op_name, *args)
         @nodifier = nodifier
+
+        # Under what name was this operator instantiated?
+        # For operators like "vocabulary", this tells the instance which
+        # vocabulary operator to impersonate
+        @op_name = op_name
         @options = {}
         while args.last.is_a?(Hash)
           @options = @options.merge(args.extract_options!.deep_rekey)

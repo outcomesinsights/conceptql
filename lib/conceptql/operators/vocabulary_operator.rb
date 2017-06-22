@@ -67,7 +67,7 @@ module ConceptQL
       end
 
       def vocab_op
-        @vocab_op ||= Vocabulary.new(nodifier, *values, vocabulary: vocabulary_id)
+        @vocab_op ||= Vocabulary.from_old_vocab(nodifier, vocabulary_id, *values)
       end
     end
   end

@@ -22,7 +22,7 @@ module ConceptQL
           invalid_op(operator, values, "invalid algorithm", values.first)
         end
       elsif klass = operators[operator.to_s]
-        klass.new(self, *values)
+        klass.new(self, operator.to_s, *values)
       else
         invalid_op(operator, values, "invalid operator", operator)
       end
