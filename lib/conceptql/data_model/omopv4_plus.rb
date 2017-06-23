@@ -1,6 +1,6 @@
 module ConceptQL
   module DataModel
-    class Generic
+    class Omopv4Plus
       SCHEMAS = Dir.glob(ConceptQL.schemas_dir + "*.yml").each_with_object({}) do |schema_file, schemas|
         schemas[File.basename(schema_file, ".*").to_sym] = Psych.load_file(schema_file)
       end
@@ -17,9 +17,9 @@ module ConceptQL
 
       def query_modifier_for(column)
         {
-          place_of_service_concept_id: ConceptQL::QueryModifiers::Generic::PoSQueryModifier,
-          provider_id: ConceptQL::QueryModifiers::Generic::ProviderQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::Generic::DrugQueryModifier
+          place_of_service_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,
+          provider_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
+          drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier
         }[column]
       end
 

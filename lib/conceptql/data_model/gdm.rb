@@ -1,8 +1,8 @@
-require_relative "generic"
+require_relative "omopv4_plus"
 
 module ConceptQL
   module DataModel
-    class Gdm < Generic
+    class Gdm < Omopv4Plus
       def person_table
         :patients
       end

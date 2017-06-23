@@ -1,4 +1,4 @@
-require_relative "data_model/generic"
+require_relative "data_model/omopv4_plus"
 require_relative "data_model/gdm"
 require_relative "rdbms"
 
@@ -8,10 +8,10 @@ module ConceptQL
       case nodifier.data_model
       when :gdm
         Gdm.new(operator, nodifier)
+      when :omopv4_plus
+        Omopv4Plus.new(operator, nodifier)
       else
-        # TODO: create explicit class for OMOPv4
-        puts "No DataModel defined for #{nodifier.data_model.inspect}, falling back to Generic"
-        Generic.new(operator, nodifier)
+        raise "No DataModel defined for #{nodifier.data_model.inspect}"
       end
     end
   end

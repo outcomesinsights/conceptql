@@ -3,7 +3,7 @@ require 'facets/kernel/try'
 
 module ConceptQL
   module QueryModifiers
-    module Generic
+    module Omopv4Plus
       class DrugQueryModifier < QueryModifier
         attr :db
 

@@ -2,7 +2,7 @@ require_relative '../query_modifier'
 
 module ConceptQL
   module QueryModifiers
-    module Generic
+    module Omopv4Plus
       class ProviderQueryModifier < QueryModifier
         def self.provided_columns
           [:provider_id]

@@ -2,7 +2,7 @@ require_relative '../query_modifier'
 
 module ConceptQL
   module QueryModifiers
-    module Generic
+    module Omopv4Plus
       class PoSQueryModifier < QueryModifier
         attr :join_id, :table, :source_column, :column
 
