@@ -1,7 +1,5 @@
 require 'zlib'
 require_relative '../behaviors/metadatable'
-require 'facets/array/extract_options'
-require 'facets/hash/deep_rekey'
 require 'forwardable'
 
 module ConceptQL
@@ -106,7 +104,7 @@ module ConceptQL
         @op_name = op_name
         @options = {}
         while args.last.is_a?(Hash)
-          @options = @options.merge(args.extract_options!.deep_rekey)
+          @options = @options.merge(ConceptQL::Utils.rekey(args.pop))
         end
         args.reject!{|arg| arg.nil? || arg == ''}
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operator) }
@@ -126,7 +124,7 @@ module ConceptQL
       end
 
       def operator_name
-        self.class.just_class_name.underscore
+        ConceptQL::Utils.snakecase(self.class.just_class_name)
       end
 
       def required_columns
@@ -140,7 +138,7 @@ module ConceptQL
       def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
-        scope_key = options[:id]||self.class.just_class_name.underscore
+        scope_key = options[:id] || operator_name
         annotation = {}
         counts = (annotation[:counts] ||= {})
         metadata = {:annotation=>annotation}

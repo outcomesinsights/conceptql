@@ -1,7 +1,3 @@
-require 'facets/kernel/meta_def'
-require 'facets/string/snakecase'
-require 'facets/string/titlecase'
-
 module ConceptQL
   module Metadatable
     def preferred_name(value = nil)
@@ -31,7 +27,7 @@ module ConceptQL
 
     def auto_label(name, opts = {})
       return opts if opts[:label]
-      return opts.merge(label: name.to_s.split('_').join(' ').titlecase) unless opts[:type] == :codelist
+      return opts.merge(label: name.to_s.split('_').map(&:capitalize).join(' ')) unless opts[:type] == :codelist
       opts.merge(label: pref_name + " Codes")
     end
 
@@ -106,7 +102,7 @@ module ConceptQL
       {
         name: name,
         preferred_name: pref_name,
-        operation: just_class_name.snakecase,
+        operation: ConceptQL::Utils.snakecase(just_class_name),
         min_upstreams: @max_upstreams || 0,
         max_upstreams: @max_upstreams || 0,
         arguments: @arguments || [],

@@ -2,7 +2,6 @@ require_relative 'operator'
 require_relative 'visit_occurrence'
 require_relative '../date_adjuster'
 require_relative '../behaviors/provenanceable'
-require 'facets/kernel/blank'
 
 module ConceptQL
   module Operators
@@ -92,11 +91,11 @@ twice in an outpatient setting with a 30-day gap.
         # represent confirming events
         q = q.exclude{confirm__start_date < initial__start_date}
 
-        if min_gap.present?
+        if ConceptQL::Utils.present?(min_gap)
           q = q.where { confirm__start_date >= DateAdjuster.new(self, min_gap).adjust(:initial__start_date) }
         end
 
-        if max_gap.present?
+        if ConceptQL::Utils.present?(max_gap)
           q = q.where { confirm__start_date <= DateAdjuster.new(self, max_gap).adjust(:initial__start_date) }
         end
 

@@ -1,6 +1,5 @@
 require_relative 'operator'
 require_relative '../behaviors/provenanceable'
-require 'facets/kernel/present'
 
 module ConceptQL
   module Operators
@@ -45,7 +44,7 @@ Enter numeric concept id(s), or the corresponding text label(s)
         bad_keywords = all_args.select { |arg| arg.to_i.zero? }
                         .reject { |arg| concept_ids.keys.include?(arg.to_sym) }
 
-        if bad_keywords.present?
+        if ConceptQL::Utils.present?(bad_keywords)
           add_error("unrecognized keywords", *bad_keywords)
         end
       end

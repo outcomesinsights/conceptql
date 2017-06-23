@@ -1,5 +1,4 @@
 require_relative 'operator'
-require 'facets/string/titlecase'
 
 module ConceptQL
   module Operators
@@ -15,10 +14,6 @@ module ConceptQL
 
       def upstreams
         [left]
-      end
-
-      def display_name
-        self.class.name.split('::').last.snakecase.titlecase
       end
 
       def code_list(db)

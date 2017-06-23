@@ -1,5 +1,4 @@
 require_relative '../query_modifier'
-require 'facets/kernel/try'
 
 module ConceptQL
   module QueryModifiers
@@ -42,7 +41,7 @@ module ConceptQL
         private
 
         def domain
-          op.try(:domain) rescue nil
+          op.domain rescue nil
         end
       end
     end
