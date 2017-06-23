@@ -5,7 +5,7 @@ module ConceptQL
     attr :scope, :data_model, :database_type, :algorithm_fetcher
 
     def initialize(opts={})
-      @scope = opts[:scope] || Scope.new(opts)
+      @scope = opts[:scope] || Scope.new(opts.delete(:scope_opts) || {})
       @data_model = opts[:data_model] || :omopv4
       @database_type = opts[:database_type] || :impala
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|

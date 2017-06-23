@@ -1,6 +1,7 @@
 require "conceptql/version"
 require "conceptql/logger"
 require "conceptql/paths"
+require "conceptql/behaviors/windowable"
 require "conceptql/query"
 require "conceptql/null_query"
 require "conceptql/database"

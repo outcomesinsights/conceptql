@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Vocabulary < Operator
       extend Sequelizer
+      include ConceptQL::Behaviors::Windowable
 
       class << self
         def v4_vocab_to_v5_vocab

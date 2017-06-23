@@ -3,6 +3,8 @@ require_relative 'operator'
 module ConceptQL
   module Operators
     class VocabularyOperator < Operator
+      include ConceptQL::Behaviors::Windowable
+
       category "Select by Clinical Codes"
       basic_type :selection
       validate_no_upstreams

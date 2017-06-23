@@ -338,6 +338,10 @@ module ConceptQL
         @dm ||= DataModel.for(self, nodifier)
       end
 
+      def rdbms
+        dm.rdbms
+      end
+
       private
 
       def annotate_values(db, opts)
