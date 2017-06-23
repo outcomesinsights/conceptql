@@ -228,7 +228,6 @@ module ConceptQL
       end
 
       def windowfy(op, query)
-        puts "normy"
         query
       end
     end
