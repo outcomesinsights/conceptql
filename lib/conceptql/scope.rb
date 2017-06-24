@@ -42,14 +42,13 @@ module ConceptQL
 
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns, :nodifier
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
 
     def initialize(opts = {})
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
       @annotation = {}
-      @nodifier = nodifier
       @opts = opts.dup
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}

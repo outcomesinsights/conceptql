@@ -28,8 +28,8 @@ module ConceptQL
       end
 
       def table_id(table = nil)
+        return :person_id if table.to_sym == :death
         return :criterion_id if table.nil?
-        table = :person if table == :death
       end
 
       def person_table
@@ -48,8 +48,13 @@ module ConceptQL
         table
       end
 
-      def person_id
-        :person_id
+      def person_id(table = nil)
+        case table.to_sym
+        when :procedure_cost, :drug_cost
+          nil
+        else
+          :person_id
+        end
       end
 
       def person_id_column(query)
@@ -65,11 +70,20 @@ module ConceptQL
       end
 
       def pk_by_domain(domain)
-        "#{domain}_id"
+        case domain.to_sym
+        when :death
+          :person_id
+        when :procedure_cost
+          :procedure_occurrence_id
+        when :drug_cost
+          :drug_exposure_id
+        else
+          "#{domain}_id".to_sym
+        end
       end
 
       def fk_by_domain(domain)
-        "#{domain}_id"
+        "#{domain}_id".to_sym
       end
 
       def query_columns
@@ -137,8 +151,8 @@ module ConceptQL
       def columns_in_table(table, opts = {})
         start_date, end_date = *date_columns(nil, table)
         {
-          person_id: person_id_column(table),
-          criterion_id: Sequel.identifier(make_table_id(table)).as(:criterion_id),
+          person_id: Sequel.expr(person_id(table)).as(:person_id),
+          criterion_id: Sequel.identifier(pk_by_domain(table)).as(:criterion_id),
           criterion_table: Sequel.cast_string(table.to_s).as(:criterion_table),
           criterion_domain: Sequel.cast_string((opts[:criterion_domain] || table).to_s).as(:criterion_domain),
           start_date: start_date,

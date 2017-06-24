@@ -94,8 +94,10 @@ occurrence, this operator returns nothing for that person.
 
       def all_or_uniquified_results(db)
         return stream.evaluate(db) unless options[:unique]
-        stream.evaluate(db)
+        uniquify = stream.evaluate(db)
           .from_self
+        db[:uniqued]
+          .with(:uniqued, uniquify)
           .select_append { |o| o.row_number(:over, partition: uniquify_partition_columns, order: ordered_columns){}.as(:unique_rn) }
           .from_self
           .where(unique_rn: 1)

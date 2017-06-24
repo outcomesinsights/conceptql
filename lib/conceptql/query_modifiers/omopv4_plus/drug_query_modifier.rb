@@ -6,13 +6,27 @@ module ConceptQL
       class DrugQueryModifier < QueryModifier
         attr :db
 
+        def self.provided_columns
+          [
+            :drug_name,
+            :drug_amount,
+            :drug_amount_units,
+          ]
+        end
+
+        def self.has_required_columns?(cols)
+          needed = [:drug_concept_id].sort
+          found = needed & cols
+          needed == found
+        end
+
         def initialize(*args)
           super
           @db = query.db
         end
 
         def modified_query
-          return query unless domain == :drug_exposure
+          return query unless dm.table_cols(source_table).include?(:drug_concept_id)
           query.from_self(alias: :de)
             .left_join(micro_table.as(:mt), mt__drug_concept_id: :de__drug_concept_id)
             .select_all(:de)
@@ -23,10 +37,6 @@ module ConceptQL
         end
 
         private
-
-        def domain
-          op.domain rescue nil
-        end
 
         def micro_table
           # TODO: Does drug_strength only have RXNORM concept_ids?

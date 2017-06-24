@@ -13,24 +13,16 @@ module ConceptQL
         if gdm?
           vocab_op.query(db)
         else
-          costs = super(db).select(:procedure_occurrence_id)
+          costs = CostOp.new(nodifier, "revenue", *arguments).evaluate(db).select(:criterion_id)
           db[:procedure_occurrence].where(procedure_occurrence_id: costs)
         end
-      end
-
-      def query_cols
-        table_columns(:procedure_occurrence, :concept)
-      end
-
-      def domain
-        :procedure_occurrence
       end
 
       def table
         if gdm?
           vocab_op.table
         else
-          :procedure_cost
+          :procedure_occurrence
         end
       end
 
@@ -38,12 +30,22 @@ module ConceptQL
         43
       end
 
-      def concept_column
-        :revenue_code_concept_id
-      end
+      class CostOp < StandardVocabularyOperator
+        def table
+          :procedure_cost
+        end
 
-      def code_column
-        :revenue_code_source_value
+        def vocabulary_id
+          43
+        end
+
+        def concept_column
+          :revenue_code_concept_id
+        end
+
+        def code_column
+          :revenue_code_source_value
+        end
       end
     end
   end

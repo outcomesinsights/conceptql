@@ -92,11 +92,11 @@ twice in an outpatient setting with a 30-day gap.
         q = q.exclude{confirm__start_date < initial__start_date}
 
         if ConceptQL::Utils.present?(min_gap)
-          q = q.where { confirm__start_date >= DateAdjuster.new(self, min_gap).adjust(:initial__start_date) }
+          q = q.where(Sequel.expr(:confirm__start_date) >= DateAdjuster.new(self, min_gap).adjust(:initial__start_date))
         end
 
         if ConceptQL::Utils.present?(max_gap)
-          q = q.where { confirm__start_date <= DateAdjuster.new(self, max_gap).adjust(:initial__start_date) }
+          q = q.where(Sequel.expr(:confirm__start_date) <= DateAdjuster.new(self, max_gap).adjust(:initial__start_date))
         end
 
         if options[:outpatient_event_to_return] != 'Initial Event'

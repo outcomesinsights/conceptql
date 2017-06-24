@@ -6,6 +6,16 @@ module ConceptQL
       class PoSQueryModifier < QueryModifier
         attr :join_id, :table, :source_column, :column
 
+        def self.provided_columns
+          [:place_of_service_concept_id]
+        end
+
+        def self.has_required_columns?(cols)
+          needed = [:place_of_service_concept_id].sort
+          found = needed & cols
+          needed == found
+        end
+
         def initialize(*args)
           super
           @column = :place_of_service_concept_id
@@ -15,7 +25,7 @@ module ConceptQL
         end
 
         def modified_query
-          return query unless op.query_cols.include?(join_id)
+          return query unless dm.table_cols(source_table).include?(join_id)
           left_alias = "tab1".to_sym
           right_alias = "tab2".to_sym
 

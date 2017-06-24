@@ -39,7 +39,9 @@ module ConceptQL
     end
 
     def invalid_op(operator, values, *error_args)
-      options = values.extract_options!.merge(errors: [error_args])
+      options = values.pop if values.last.is_a?(Hash)
+      options ||= {}
+      options = options.merge(errors: [error_args])
       values << options
       Operators::Invalid.new(self, operator, *values)
     end
