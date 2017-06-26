@@ -41,8 +41,8 @@ module ConceptQL
         def micro_table
           # TODO: Does drug_strength only have RXNORM concept_ids?
           # TODO: What is vocabulary for units?  Can we shrink concept table to just that vocab before joining?
-          db.from(:drug_strength___ds)
-            .join(:concept___dc, ds__drug_concept_id: :dc__concept_id)
+          db.from(:concept___dc)
+            .left_join(:drug_strength___ds, ds__drug_concept_id: :dc__concept_id)
             .select(
               :ds__drug_concept_id___drug_concept_id,
               :ds__amount_value___amount_value,
