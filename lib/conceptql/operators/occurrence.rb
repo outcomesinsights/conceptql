@@ -89,7 +89,9 @@ occurrence, this operator returns nothing for that person.
       end
 
       def uniquify_partition_columns
-        dynamic_columns - [:criterion_id, :start_date, :end_date]
+        cols = dynamic_columns
+        cols -= [:criterion_id, :start_date, :end_date, :criterion_domain, :criterion_table]
+        cols += [rdbms.partition_fix(:criterion_domain), rdbms.partition_fix(:criterion_table)]
       end
 
       def all_or_uniquified_results(db)

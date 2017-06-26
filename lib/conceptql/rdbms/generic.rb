@@ -19,6 +19,17 @@ module ConceptQL
       def cast_date(date)
         Sequel.cast(date, Date)
       end
+
+      # Impala is teh dumb in that it won't allow columns with constants to
+      # be part of the partition of a window function.
+      #
+      # Meanwhile, the rest of the civilized RDBMS world is fine with it
+      #
+      # So, by default, return the name of the column and in the Impala adapter
+      # we'll return something funky to trick Impala into allowing a constant
+      def partition_fix(column)
+        column
+      end
     end
   end
 end
