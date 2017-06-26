@@ -4,18 +4,13 @@ module ConceptQL
   # Used to translate a string of terse date adjustments into a set of adjustments that are compatible with most RDBMSs
   class DateAdjuster
 
-    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dmy]?)+/, /\s*/])}\z/
+    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dwmy]?)+/, /\s*/])}\z/
 
     attr :op, :str, :manipulator
     def initialize(op, str, opts = {})
       @op = op
       @str = str || ""
       @manipulator = opts[:manipulator] || Sequel
-    end
-
-    # Returns an array of strings that represent date modifiers
-    def adjustments
-      @adjustments ||= parse(str)
     end
 
     def adjust(column, reverse=false)
@@ -35,10 +30,16 @@ module ConceptQL
 
     private
 
+    # Returns an array of strings that represent date modifiers
+    def adjustments
+      @adjustments ||= parse(str)
+    end
+
     def lookup
       {
         'y' => :years,
         'm' => :months,
+        'w' => :weeks,
         'd' => :days
       }
     end
@@ -46,7 +47,7 @@ module ConceptQL
     def parse(str)
       return [] if str.nil? || str.empty?
       return [[lookup['d'], str.to_i]] if str.match(/^[-+]?\d+$/)
-      str.downcase.scan(/([-+]?\d*[dmy])/).map do |adjustment|
+      str.downcase.scan(/([-+]?\d*[dwmy])/).map do |adjustment|
         adjustment = adjustment.first
         quantity = 1
         if adjustment.match(/\d/)
