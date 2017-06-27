@@ -15,7 +15,7 @@ module ConceptQL
       # Symbolize all keys and values
       @opts = Hash[opts.map { |k,v| [k.to_sym, v ? v.to_sym : v]}]
 
-      @opts[:data_model] ||= (ENV["CONCEPTQL_DATA_MODEL"] || :omopv4).to_sym
+      @opts[:data_model] ||= (ENV["CONCEPTQL_DATA_MODEL"] || :omopv4_plus).to_sym
       @opts[:database_type] ||= db_type
     end
 
