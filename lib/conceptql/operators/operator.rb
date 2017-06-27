@@ -4,7 +4,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4=>{}, :omopv4_plus=>{}, :gdm=>{}}.freeze
+    OPERATORS = {:omopv4_plus=>{}, :gdm=>{}}.freeze
 
     SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_table, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
 
@@ -213,7 +213,7 @@ module ConceptQL
         specific_table ||= dm.determine_table(:table)
         specific_table ||= dm.determine_table(:domain)
 
-        dom = try(:domain) rescue nil
+        dom = domain rescue nil
         q = dm.selectify(query, table: specific_table, criterion_domain: dom)
 
         if scope && scope.person_ids && upstreams.empty?

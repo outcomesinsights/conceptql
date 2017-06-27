@@ -27,14 +27,22 @@ module ConceptQL
           end.select { |k, vocab| vocab[:hidden].nil? }
         end
 
+        def vocab_domain
+          each_vocab.each_with_object({}) do |row, h|
+            h[row[:id]] = row[:domain]
+          end
+        end
+
         def register_many
           assigned_vocabularies.each do |name, vocab|
-            register(name)
+            dms = [:gdm]
+            dms << :omopv4_plus if ConceptQL::Utils.present?(vocab[:domain])
+            register(name, *dms)
           end
         end
 
         def each_vocab
-          CSV.foreach(vocabs_file, headers: true, header_converters: :symbol)
+          @each_vocab ||= CSV.foreach(vocabs_file, headers: true, header_converters: :symbol)
         end
 
         def vocabs_file
@@ -69,7 +77,7 @@ module ConceptQL
       validate_at_least_one_argument
 
       def query(db)
-        ds = db[dm.table_by_domain(:condition_occurrence)]
+        ds = db[dm.table_by_domain(domain)]
 
         ds = ds.where(where_clause(db))
         if gdm?
@@ -80,12 +88,12 @@ module ConceptQL
 
       def where_clause(db)
         if gdm?
-          concept_ids = db[:concepts].where(vocabulary_id: vocabulary_id(db), concept_code: values.flatten).select(:id)
+          concept_ids = db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: values.flatten).select(:id)
           { clinical_code_concept_id: concept_ids }
         else
           {
-            condition_source_vocabulary_id: vocabulary_id(db),
-            condition_source_value: values
+            dm.table_vocabulary_id(domain) => vocabulary_id,
+            dm.source_value_column(domain) => values
           }
         end
       end
@@ -95,7 +103,7 @@ module ConceptQL
       end
 
       def table
-        :clinical_codes
+        :condition_occurrence
       end
 
       def query_cols
@@ -114,7 +122,7 @@ module ConceptQL
           missing_args = []
 
           unless no_db?(db, opts)
-            missing_args = args - db[:concepts].where(vocabulary_id: vocabulary_id(db), concept_code: args).select_map(:concept_code) rescue []
+            missing_args = args - db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: args).select_map(:concept_code) rescue []
           end
 
           unless missing_args.empty?
@@ -124,16 +132,16 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        db[:concepts].where(vocabulary_id: vocabulary_id(db), concept_code: codes).select_map([:concept_code, :concept_text])
+        db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: codes).select_map([:concept_code, :concept_text])
       end
 
       private
 
-      def vocabulary_id(db)
-        @vocabulary_id ||= translated_vocabulary_id(db)
+      def vocabulary_id
+        @vocabulary_id ||= translated_vocabulary_id
       end
 
-      def translated_vocabulary_id(db)
+      def translated_vocabulary_id
         return op_name if gdm?
         return translate_to_old(op_name)
       end
@@ -143,20 +151,7 @@ module ConceptQL
       end
 
       def domain_map(v_id)
-        case v_id
-        when 'ICD9CM', 'ICD10CM', 'SNOMED', 2, 70, 1
-          :condition_occurrence
-        when 'CPT', 'HCPCS', 'ICD10PCS', 'ICD9Proc', 4, 5, 35, 3
-          :procedure_occurrence
-        when 'NDC', 'RxNorm', 8, 9
-          :drug_exposure
-        when 'LOINC', 6
-          :observation
-        when Array
-          domain_map(v_id.first)
-        else
-          :condition_occurrence
-        end
+        (self.class.vocab_domain[v_id] || :condition_occurrence).to_sym
       end
     end
   end
