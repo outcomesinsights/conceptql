@@ -8,6 +8,7 @@ module ConceptQL
       desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming result set.'
       domains :observation_period
       allows_one_upstream
+      deprecated replaced_by: "information_periods"
 
       def my_domain
         :observation_period

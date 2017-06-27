@@ -110,12 +110,23 @@ module ConceptQL
         predominant_domains: @domains || @predominant_domains || [],
         desc: get_desc,
         categories: @categories || [],
-        basic_type: @basic_type
+        basic_type: @basic_type,
+        deprecated: @deprecated
       }
     end
 
     def get_desc
       @desc ||= standard_description
+    end
+
+    def deprecated(opts = {})
+      @deprecated = true
+      message = ["This operator will no longer be available in a future version of Jigsaw."]
+      message << "Please use #{Array(opts[:replaced_by]).join("/")} instead." if opts[:replaced_by]
+      define_method(:deprecation_warning) do |*args|
+        add_warning(message.join(" "))
+      end
+      validations << [:deprecation_warning, []]
     end
 
     def process_options(options)

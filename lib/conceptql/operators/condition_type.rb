@@ -20,6 +20,7 @@ module ConceptQL
       query_columns :condition_occurrence
       validate_no_upstreams
       validate_at_least_one_argument
+      deprecated replaced_by: "provenance"
 
       def domain
         :condition_occurrence
