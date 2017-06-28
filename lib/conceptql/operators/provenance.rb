@@ -21,8 +21,11 @@ module ConceptQL
       desc <<-EOF
 Filters incoming events to those with the indicated provenance.
 
-Enter numeric concept id(s), or the corresponding text label(s)
-(e.g., "inpatient", "outpatient", "carrier_claim").
+Enter numeric concept id(s), or the corresponding text label(s):
+- Inpatient: inpatient, inpatient_detail, inpatient_header, inpatient_primary, inpatient_primary_or_first
+- Outpatient: outpatient, outpatient_detail, outpatient_header, outpatient_primary, outpatient_primary_or_first
+- Carrier: carrier_claim, carrier_claim_detail, carrier_claim_header, carrier_claim_primary_or_first
+- Other: primary, primary_or_first, claim
       EOF
       argument :provenance_types, label: 'Provenance Types', type: :codelist
       category "Filter Single Stream"
