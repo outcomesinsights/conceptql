@@ -12,6 +12,8 @@ Gender,12,OMOP Gender,,person,Y
 Race,13,Race and Ethnicity Code Set (USBC),,person,Y
 Place of Service,14,Place of Service Codes for Professional Claims (CMS),,visit_occurrence,Y
 Visit,24,OMOP Visit,,visit_occurrence,Y
+ICD10,34,"International Classification of Diseases, Tenth Revision (WHO)",ICD-10 WHO,condition_occurrence,Y
+ICD10CM,70,"International Classification of Diseases, Tenth Revision, Clinical Modification (NCHS)",ICD-10 CM,condition_occurrence,Y
 Drug Type,36,OMOP Drug Exposure Type,,drug_exposure,Y
 Condition Type,37,OMOP Condition Occurrence Type,,condition_occurrence,Y
 Procedure Type,38,OMOP Procedure Occurrence Type,,procedure_occurrence,Y
