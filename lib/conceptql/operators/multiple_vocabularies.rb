@@ -30,7 +30,7 @@ module ConceptQL
         # for this operator
         def to_metadata(name, opts = {})
           h = super
-          op_info = multiple_vocabularies[name]
+          op_info = multiple_vocabularies[name].first
           h[:preferred_name] = op_info[:operator]
           h
         end
