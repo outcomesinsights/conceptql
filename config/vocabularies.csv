@@ -11,6 +11,7 @@ UCUM,11,Unified Code for Units of Measure (Regenstrief Institute),,,Y
 Gender,12,OMOP Gender,,person,Y
 Race,13,Race and Ethnicity Code Set (USBC),,person,Y
 Place of Service,14,Place of Service Codes for Professional Claims (CMS),,visit_occurrence,Y
+ATC,21,WHO Anatomic Therapeutic Chemical Classification,WHO ATC,drug_exposure,
 Visit,24,OMOP Visit,,visit_occurrence,Y
 ICD10,34,"International Classification of Diseases, Tenth Revision (WHO)",ICD-10 WHO,condition_occurrence,Y
 ICD10CM,70,"International Classification of Diseases, Tenth Revision, Clinical Modification (NCHS)",ICD-10 CM,condition_occurrence,Y
