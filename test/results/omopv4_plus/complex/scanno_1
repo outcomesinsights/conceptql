@@ -2,7 +2,30 @@
   "errors": {
   },
   "warnings": {
+    "place_of_service_code": [
+      [
+        "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
+      ],
+      [
+        "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
+      ],
+      [
+        "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
+      ]
+    ],
     "hcpcs": [
+      [
+        "unknown concept code",
+        "72220"
+      ],
+      [
+        "unknown concept code",
+        "72220"
+      ],
+      [
+        "unknown concept code",
+        "72220"
+      ],
       [
         "unknown concept code",
         "72220"
@@ -46,8 +69,8 @@
     },
     "complement": {
       "visit_occurrence": {
-        "rows": 46694,
-        "n": 223
+        "rows": 46433,
+        "n": 222
       }
     },
     "union": {
@@ -62,8 +85,8 @@
         "n": 0
       },
       "visit_occurrence": {
-        "rows": 46694,
-        "n": 223
+        "rows": 46433,
+        "n": 222
       }
     },
     "gender": {

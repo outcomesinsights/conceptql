@@ -68,13 +68,13 @@
   {
     "annotation": {
       "counts": {
-        "visit_occurrence": {
-          "rows": 153,
-          "n": 84
-        },
         "condition_occurrence": {
           "rows": 1596,
           "n": 189
+        },
+        "visit_occurrence": {
+          "rows": 153,
+          "n": 84
         }
       }
     }

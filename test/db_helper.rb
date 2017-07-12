@@ -79,11 +79,11 @@ class Minitest::Spec
   end
 
   def criteria_counts(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| query(stmt).query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
+    load_check(test_name, statement){|stmt| query(stmt).query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)}
   end
 
   def optimized_criteria_counts(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| query(stmt).optimized.query.from_self.group_and_count(:criterion_domain).to_hash(:criterion_domain, :count)}
+    load_check(test_name, statement){|stmt| query(stmt).optimized.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)}
   end
 
   def hash_groups(statement, key, value)
