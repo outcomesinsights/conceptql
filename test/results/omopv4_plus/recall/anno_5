@@ -17,6 +17,13 @@
             "foo",
             "bar"
           ]
+        ],
+        [
+          "has multiple arguments",
+          [
+            "foo",
+            "bar"
+          ]
         ]
       ]
     }

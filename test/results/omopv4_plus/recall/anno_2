@@ -48,6 +48,18 @@
             [
               "icd9"
             ]
+          ],
+          [
+            "has upstreams",
+            [
+              "icd9"
+            ]
+          ],
+          [
+            "has upstreams",
+            [
+              "icd9"
+            ]
           ]
         ]
       }

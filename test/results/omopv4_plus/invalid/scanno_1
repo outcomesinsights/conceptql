@@ -4,6 +4,12 @@
       [
         "invalid operator",
         "cpt1"
+      ],
+      [
+        [
+          "invalid operator",
+          "cpt1"
+        ]
       ]
     ]
   },
@@ -18,6 +24,6 @@
     }
   },
   "operators": [
-    "cpt1"
+    "123"
   ]
 }

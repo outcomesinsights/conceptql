@@ -1,5 +1,5 @@
 [
-  "bad_op",
+  "",
   {
     "left": [
       "icd9",
@@ -48,6 +48,12 @@
         [
           "invalid operator",
           "bad_op"
+        ],
+        [
+          [
+            "invalid operator",
+            "bad_op"
+          ]
         ]
       ]
     }

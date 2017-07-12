@@ -1,3 +1,15 @@
 [
-
+  "icd9",
+  "401.1",
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 1207,
+          "n": 173
+        }
+      }
+    },
+    "name": "ICD-9 CM"
+  }
 ]

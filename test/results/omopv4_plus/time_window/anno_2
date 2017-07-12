@@ -28,11 +28,13 @@
       "errors": [
         [
           "wrong option format",
-          "start"
+          "start",
+          2
         ],
         [
           "wrong option format",
-          "end"
+          "end",
+          2
         ]
       ]
     }

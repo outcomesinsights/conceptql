@@ -13,11 +13,13 @@
       "errors": [
         [
           "wrong option format",
-          "left"
+          "left",
+          "412"
         ],
         [
           "wrong option format",
-          "right"
+          "right",
+          "time_window"
         ]
       ]
     }

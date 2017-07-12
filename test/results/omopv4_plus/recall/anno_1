@@ -16,6 +16,12 @@
           "errors": [
             [
               "invalid label"
+            ],
+            [
+              "invalid label"
+            ],
+            [
+              "invalid label"
             ]
           ]
         },
@@ -34,6 +40,10 @@
             }
           },
           "errors": [
+            [
+              "no matching label",
+              "Heart Attack"
+            ],
             [
               "no matching label",
               "Heart Attack"

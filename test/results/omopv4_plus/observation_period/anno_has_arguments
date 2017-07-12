@@ -30,6 +30,11 @@
             1
           ]
         ]
+      ],
+      "warnings": [
+        [
+          "This operator will no longer be available in a future version of Jigsaw. Please use information_periods instead."
+        ]
       ]
     }
   }

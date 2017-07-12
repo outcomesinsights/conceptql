@@ -1,7 +1,6 @@
 [
   "union",
   [
-    "foo",
     "123",
     {
       "annotation": {
@@ -15,6 +14,24 @@
           [
             "invalid operator",
             "foo"
+          ],
+          [
+            [
+              "invalid operator",
+              "foo"
+            ]
+          ],
+          [
+            [
+              "invalid operator",
+              "foo"
+            ],
+            [
+              [
+                "invalid operator",
+                "foo"
+              ]
+            ]
           ]
         ]
       }

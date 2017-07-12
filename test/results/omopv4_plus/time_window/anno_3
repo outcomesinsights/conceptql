@@ -28,7 +28,8 @@
       "errors": [
         [
           "wrong option format",
-          "start"
+          "start",
+          "-2b"
         ]
       ]
     }

@@ -13,11 +13,13 @@
       "errors": [
         [
           "wrong option format",
-          "start"
+          "start",
+          1
         ],
         [
           "wrong option format",
-          "end"
+          "end",
+          2
         ]
       ]
     }

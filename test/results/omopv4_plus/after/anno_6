@@ -44,15 +44,18 @@
       "errors": [
         [
           "wrong option format",
-          "within"
+          "within",
+          "abc"
         ],
         [
           "wrong option format",
-          "at_least"
+          "at_least",
+          "cba"
         ],
         [
           "wrong option format",
-          "occurrences"
+          "occurrences",
+          "bac"
         ]
       ]
     }
