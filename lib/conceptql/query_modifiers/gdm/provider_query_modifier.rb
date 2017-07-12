@@ -17,14 +17,14 @@ module ConceptQL
         def modified_query
           p source_table
           if dm.table_cols(source_table).include?(:context_id)
-            query.from_self(alias: "c")
-              .join(:contexts_practitioners___cp, cp__context_id: :c__context_id)
+            query.from_self(alias: :c)
+              .join(Sequel[:contexts_practitioners].as(:cp), context_id: :context_id)
               .select_all(:c)
-              .select_append(:cp__practitioner_id___provider_id)
+              .select_append(Sequel[:cp][:practitioner_id].as(:provider_id))
           else
             query
               .select_all
-              .select_append(:practitioner_id___provider_id)
+              .select_append(Sequel[:practitioner_id].as(:provider_id))
           end.from_self
         end
 

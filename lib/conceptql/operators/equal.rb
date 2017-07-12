@@ -9,7 +9,7 @@ module ConceptQL
       require_column :value_as_number
 
       def where_clause
-        { r__value_as_number: :l__value_as_number }
+        { Sequel[:r][:value_as_number] => Sequel[:l][:value_as_number] }
       end
     end
   end

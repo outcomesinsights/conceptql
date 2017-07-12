@@ -11,12 +11,7 @@ R-------R
 L--N--L
       EOF
       def where_clause
-        [ { l__start_date: :r__start_date } ] + \
-        if inclusive?
-          [ Proc.new { l__end_date >= r__end_date } ]
-        else
-          [ Proc.new { l__end_date > r__end_date } ]
-        end
+        Sequel.&({Sequel[:l][:start_date] => Sequel[:r][:start_date]}, Sequel[:l][:end_date].send(inclusive? ? :>= : :>, Sequel[:r][:end_date])) 
       end
     end
   end

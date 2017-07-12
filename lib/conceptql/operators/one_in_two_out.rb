@@ -62,7 +62,7 @@ twice in an outpatient setting with a 30-day gap.
         end
 
         if options[:inpatient_return_date] != 'Admit Date'
-          q = q.select(*(query_cols - [:start_date])).select_append(:end_date___start_date)
+          q = q.select(*(query_cols - [:start_date])).select_append(Sequel[:end_date].as(:start_date))
         end
 
         q.from_self.select(*dynamic_columns).from_self
@@ -81,22 +81,22 @@ twice in an outpatient setting with a 30-day gap.
         max_gap = options[:outpatient_maximum_gap]
 
         q = outpatient_events.from_self(alias: :initial)
-              .join(outpatient_events.as(:confirm), initial__person_id: :confirm__person_id)
-              .exclude(initial__criterion_id: :confirm__criterion_id)
+              .join(outpatient_events.as(:confirm), person_id: :person_id)
+              .exclude(Sequel[:initial][:criterion_id] => Sequel[:confirm][:criterion_id])
 
         # In order to avoid many more comparisons of initial to confirm events, we now
         # filter the join by having only confirm events that come on or after initial events
         #
         # This ensures that initial events represent initial events and confirm events
         # represent confirming events
-        q = q.exclude{confirm__start_date < initial__start_date}
+        q = q.exclude{confirm[:start_date] < initial[:start_date]}
 
         if ConceptQL::Utils.present?(min_gap)
-          q = q.where(Sequel.expr(:confirm__start_date) >= DateAdjuster.new(self, min_gap).adjust(:initial__start_date))
+          q = q.where(Sequel.expr(Sequel[:confirm][:start_date]) >= DateAdjuster.new(self, min_gap).adjust(Sequel[:initial][:start_date]))
         end
 
         if ConceptQL::Utils.present?(max_gap)
-          q = q.where(Sequel.expr(:confirm__start_date) <= DateAdjuster.new(self, max_gap).adjust(:initial__start_date))
+          q = q.where(Sequel.expr(Sequel[:confirm][:start_date]) <= DateAdjuster.new(self, max_gap).adjust(Sequel[:initial][:start_date]))
         end
 
         if options[:outpatient_event_to_return] != 'Initial Event'
@@ -114,7 +114,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def first_valid_event
         all_valid_events
-          .select_append { |o| o.row_number(:over, partition: :person_id, order: [ :start_date, :criterion_id ]){}.as(:rn) }
+          .select_append { |o| o.row_number.function.over(partition: :person_id, order: [ :start_date, :criterion_id ]).as(:rn) }
           .from_self
           .where(rn: 1)
       end

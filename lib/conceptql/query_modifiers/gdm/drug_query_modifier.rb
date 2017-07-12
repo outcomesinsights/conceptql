@@ -26,15 +26,15 @@ module ConceptQL
           return query unless dm.table_cols(source_table).tap { |o| p o }.include?(:drug_exposure_detail_id)
           #TODO: Determine what actual columns to include for drug exposures under
           query.from_self(alias: :cc)
-            .left_join(:drug_exposure_details___de, cc__drug_exposure_detail_id: :de__id)
-            .left_join(:concepts___dose_con, de__dose_unit_concept_id: :dose_con__id)
-            .left_join(:concepts___ing_con, cc__clinical_code_concept_id: :ing_con__id)
+            .left_join(Sequel[:drug_exposure_details].as(:de), Sequel[:cc][:drug_exposure_detail_id] => Sequel[:de][:id])
+            .left_join(Sequel[:concepts].as(:dose_con), Sequel[:de][:dose_unit_concept_id] => Sequel[:dose_con][:id])
+            .left_join(Sequel[:concepts].as(:ing_con), Sequel[:cc][:clinical_code_concept_id] => Sequel[:ing_con][:id])
             .select_all(:cc)
-            .select_append(:de__dose_value___drug_amount)
-            .select_append(:dose_con__concept_text___drug_amount_units)
-            .select_append(:ing_con__concept_text___drug_name)
-            .select_append(:de__days_supply___drug_days_supply)
-            .select_append(:de__refills___drug_quantity)
+            .select_append(Sequel[:de][:dose_value].as(:drug_amount))
+            .select_append(Sequel[:dose_con][:concept_text].as(:drug_amount_units))
+            .select_append(Sequel[:ing_con][:concept_text].as(:drug_name))
+            .select_append(Sequel[:de][:days_supply].as(:drug_days_supply))
+            .select_append(Sequel[:de][:refills].as(:drug_quantity))
             .from_self
         end
 

@@ -65,7 +65,7 @@ occurrence, this operator returns nothing for that person.
       def occurrences(db)
         all_or_uniquified_results(db)
           .from_self
-          .select_append { |o| o.row_number(:over, partition: :person_id, order: ordered_columns){}.as(:rn) }
+          .select_append { |o| o.row_number.function.over(partition: :person_id, order: ordered_columns).as(:rn) }
       end
 
       private

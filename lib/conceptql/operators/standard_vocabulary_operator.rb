@@ -25,7 +25,7 @@ module ConceptQL
         ds = db.from(table_name)
           .where(conditions(db))
         if omopv4?
-          ds = ds.join(:concept___c, c__concept_id: table_concept_column)
+          ds = ds.join(Sequel[:concept].as(:c), concept_id: table_concept_column)
         end
         ds
       end
@@ -40,7 +40,7 @@ module ConceptQL
 
       def conditions(db)
         if omopv4?
-          {c__concept_code: arguments_fix(db), c__vocabulary_id: vocabulary_id}
+          {Sequel[:c][:concept_code] => arguments_fix(db), Sequel[:c][:vocabulary_id] => vocabulary_id}
         else
           conditions = { code_column => arguments_fix(db) }
           conditions[vocabulary_id_column] = vocabulary_id if vocabulary_id_column
