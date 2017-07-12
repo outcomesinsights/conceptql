@@ -35,7 +35,7 @@ module ConceptQL
     private
 
     def operators
-      @operators ||= Operators.operators[@data_model]
+      @operators ||= Operators.operators.fetch(@data_model)
     end
 
     def invalid_op(operator, values, *error_args)
