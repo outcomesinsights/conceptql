@@ -371,6 +371,13 @@ module ConceptQL
       def table_is_missing?(db)
         !(db.table_exists?(:concept) && db.table_exists?(:source_to_concept_map))
       end
+
+      # For now, we'll return only the ids we're given as I'm not sure
+      # we want to expand the search for concepts outside those specified
+      # for OMOPv4.5+
+      def related_concept_ids(db, *ids)
+        ids
+      end
     end
   end
 end

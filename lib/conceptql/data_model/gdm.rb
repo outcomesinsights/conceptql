@@ -106,6 +106,13 @@ module ConceptQL
         :context_id
       end
 
+      # The mappings table will tell us what other concepts have been directly
+      # mapped to the concepts passed in
+      def related_concept_ids(db, *ids)
+        other_ids = db[:mappings].where(concept_id_2: ids).where(relationship_id: "IS_A").select_map(:concept_id_1)
+        other_ids + ids
+      end
+
       def table_is_missing?(db)
         !db.table_exists?(:concepts)
       end
