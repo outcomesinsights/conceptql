@@ -347,7 +347,7 @@ module ConceptQL
       end
 
       def make_table_name(table)
-        Sequel.qualify(table, :tab)
+        Sequel.as(table, :tab)
       end
 
       def query_cols
