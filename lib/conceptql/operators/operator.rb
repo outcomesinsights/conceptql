@@ -447,6 +447,7 @@ module ConceptQL
       end
 
       def validate(db, opts = {})
+        return if @_validated
         @errors = [] unless defined?(@errors)
         @warnings = [] unless defined?(@warnings)
 
@@ -454,6 +455,7 @@ module ConceptQL
         self.class.validations.each do |args|
           send(*args)
         end
+        @_validated = true
       end
 
       def validate_no_upstreams

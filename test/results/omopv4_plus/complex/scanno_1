@@ -5,12 +5,6 @@
     "place_of_service_code": [
       [
         "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
-      ],
-      [
-        "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
-      ],
-      [
-        "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
       ]
     ],
     "hcpcs": [
