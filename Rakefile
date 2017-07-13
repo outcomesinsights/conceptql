@@ -1,4 +1,8 @@
-require "bundler/gem_tasks"
+begin
+  require "bundler/gem_tasks"
+rescue LoadError
+end
+
 ENV['DATA_MODEL'] ||= 'omopv4_plus'
 
 desc "Setup test database"
