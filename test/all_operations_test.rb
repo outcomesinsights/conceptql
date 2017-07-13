@@ -1,8 +1,9 @@
 require_relative "./db_helper"
 
 file_regexps = nil
-if !ARGV.empty?
-  file_regexps = ARGV.map { |f| /#{f}/ }
+argv = ARGV.reject { |f| f.start_with?('-') }
+if !argv.empty?
+  file_regexps = argv.map { |f| /#{f}/ }
 end
 
 describe ConceptQL::Operators do
