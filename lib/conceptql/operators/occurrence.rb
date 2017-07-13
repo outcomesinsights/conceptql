@@ -100,7 +100,7 @@ occurrence, this operator returns nothing for that person.
           .from_self
         db[:uniqued]
           .with(:uniqued, uniquify)
-          .select_append { |o| o.row_number(:over, partition: uniquify_partition_columns, order: ordered_columns){}.as(:unique_rn) }
+          .select_append { |o| o.row_number.function.over(partition: uniquify_partition_columns, order: ordered_columns).as(:unique_rn) }
           .from_self
           .where(unique_rn: 1)
       end

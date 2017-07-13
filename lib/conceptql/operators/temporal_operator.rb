@@ -62,7 +62,7 @@ module ConceptQL
       def add_occurrences_condition(ds, occurrences)
         occurrences_col = occurrences_column
         ds.distinct.from_self
-          .select_append{row_number{}.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
+          .select_append{row_number.function.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
           .from_self
           .select(*dm.columns)
           .where{occurrence > occurrences.to_i}
