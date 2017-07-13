@@ -14,23 +14,31 @@ module ConceptQL
       validate_at_least_one_argument
 
       def query(db)
-        gender_concept_ids = arguments.map do |value|
-          case value.to_s
+        clauses = arguments.map do |arg|
+          case arg.to_s
           when /^m/i
-            8507
+            Sequel.expr(gender_concept_id: male_ids(db))
           when /^f/i
-            8532
+            Sequel.expr(gender_concept_id: female_ids(db))
           else
-            value.to_i
+            Sequel.expr(gender_concept_id: nil) | Sequel.~(gender_concept_id: male_ids(db) + female_ids(db))
           end
         end
 
         db.from(table)
-          .where(gender_concept_id: gender_concept_ids)
+          .where(clauses.inject(&:|))
       end
 
       def table
         dm.table_by_domain(:person)
+      end
+
+      def male_ids(db)
+        dm.related_concept_ids(db, 8507)
+      end
+
+      def female_ids(db)
+        dm.related_concept_ids(db, 8532)
       end
     end
   end
