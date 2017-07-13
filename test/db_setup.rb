@@ -54,7 +54,7 @@ end
 DB.create_table?(:organization, :ignore_index_errors=>true) do
   Bignum :organization_id, :primary_key=>true
   Bignum :place_of_service_concept_id
-  foreign_key :location_id, :location, :type=>Bignum
+  foreign_key :location_id, :location, :type=>:Bignum
   String :organization_source_value, :size=>50, :null=>false
   String :place_of_service_source_value, :size=>50
 end
@@ -67,8 +67,8 @@ DB.create_table?(:person, :ignore_index_errors=>true) do
   Integer :day_of_birth
   Bignum :race_concept_id
   Bignum :ethnicity_concept_id
-  foreign_key :location_id, :location, :type=>Bignum
-  foreign_key :provider_id, :provider, :type=>Bignum
+  foreign_key :location_id, :location, :type=>:Bignum
+  foreign_key :provider_id, :provider, :type=>:Bignum
   Bignum :care_site_id
   String :person_source_value, :size=>50
   String :gender_source_value, :size=>50
@@ -78,7 +78,7 @@ end
 
 DB.create_table?(:condition_era, :ignore_index_errors=>true) do
   Bignum :condition_era_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Bignum :condition_concept_id, :null=>false
   Date :condition_era_start_date, :null=>false
   Date :condition_era_end_date, :null=>false
@@ -88,7 +88,7 @@ end
 
 DB.create_table?(:condition_occurrence, :ignore_index_errors=>true) do
   Bignum :condition_occurrence_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Bignum :condition_concept_id, :null=>false
   Date :condition_start_date, :null=>false
   Date :condition_end_date
@@ -100,7 +100,7 @@ DB.create_table?(:condition_occurrence, :ignore_index_errors=>true) do
 end
 
 DB.create_table?(:death, :ignore_index_errors=>true) do
-  foreign_key :person_id, :person, :type=>Bignum, :primary_key=>true
+  foreign_key :person_id, :person, :type=>:Bignum, :primary_key=>true
   Date :death_date, :null=>false
   Bignum :death_type_concept_id, :null=>false
   Bignum :cause_of_death_concept_id
@@ -109,7 +109,7 @@ end
 
 DB.create_table?(:drug_era, :ignore_index_errors=>true) do
   Bignum :drug_era_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Bignum :drug_concept_id, :null=>false
   Date :drug_era_start_date, :null=>false
   Date :drug_era_end_date, :null=>false
@@ -119,7 +119,7 @@ end
 
 DB.create_table?(:drug_exposure, :ignore_index_errors=>true) do
   Bignum :drug_exposure_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Bignum :drug_concept_id, :null=>false
   Date :drug_exposure_start_date, :null=>false
   Date :drug_exposure_end_date
@@ -137,7 +137,7 @@ end
 
 DB.create_table?(:observation, :ignore_index_errors=>true) do
   Bignum :observation_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Bignum :observation_concept_id, :null=>false
   Date :observation_date, :null=>false
   Date :observation_time
@@ -157,7 +157,7 @@ end
 
 DB.create_table?(:observation_period, :ignore_index_errors=>true) do
   Bignum :observation_period_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Date :observation_period_start_date, :null=>false
   Date :observation_period_end_date, :null=>false
   Date :prev_ds_period_end_date
@@ -165,7 +165,7 @@ end
 
 DB.create_table?(:payer_plan_period, :ignore_index_errors=>true) do
   Bignum :payer_plan_period_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Date :payer_plan_period_start_date, :null=>false
   Date :payer_plan_period_end_date, :null=>false
   String :payer_source_value, :size=>50
@@ -176,7 +176,7 @@ end
 
 DB.create_table?(:procedure_occurrence, :ignore_index_errors=>true) do
   Bignum :procedure_occurrence_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Bignum :procedure_concept_id, :null=>false
   Date :procedure_date, :null=>false
   Bignum :procedure_type_concept_id, :null=>false
@@ -188,7 +188,7 @@ end
 
 DB.create_table?(:visit_occurrence, :ignore_index_errors=>true) do
   Bignum :visit_occurrence_id, :primary_key=>true
-  foreign_key :person_id, :person, :type=>Bignum, :null=>false
+  foreign_key :person_id, :person, :type=>:Bignum, :null=>false
   Date :visit_start_date, :null=>false
   Date :visit_end_date, :null=>false
   Bignum :place_of_service_concept_id, :null=>false
@@ -198,7 +198,7 @@ end
 
 DB.create_table?(:drug_cost, :ignore_index_errors=>true) do
   Bignum :drug_cost_id, :primary_key=>true
-  foreign_key :drug_exposure_id, :drug_exposure, :type=>Bignum, :null=>false
+  foreign_key :drug_exposure_id, :drug_exposure, :type=>:Bignum, :null=>false
   Float :paid_copay
   Float :paid_coinsurance
   Float :paid_toward_deductible
@@ -214,7 +214,7 @@ end
 
 DB.create_table?(:procedure_cost, :ignore_index_errors=>true) do
   Bignum :procedure_cost_id, :primary_key=>true
-  foreign_key :procedure_occurrence_id, :procedure_occurrence, :type=>Bignum, :null=>false
+  foreign_key :procedure_occurrence_id, :procedure_occurrence, :type=>:Bignum, :null=>false
   Float :paid_copay
   Float :paid_coinsurance
   Float :paid_toward_deductible
