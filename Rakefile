@@ -1,5 +1,5 @@
 require "bundler/gem_tasks"
-ENV['DATA_MODEL'] ||= 'omopv4'
+ENV['DATA_MODEL'] ||= 'omopv4_plus'
 
 desc "Setup test database"
 task :test_db_setup do
