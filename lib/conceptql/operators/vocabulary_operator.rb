@@ -65,7 +65,7 @@ module ConceptQL
       end
 
       def table_concept_column
-        "tab__#{concept_column}".to_sym
+        Sequel.qualify(:tab, concept_column)
       end
 
       def vocab_op

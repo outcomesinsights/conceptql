@@ -32,7 +32,7 @@ module ConceptQL
         return vocab_op.query(db) if gdm?
         ds = db.from(table_name).where(conditions(db))
         if omopv4?
-          ds = ds.join(:source_to_concept_map___scm, [[:scm__target_concept_id, table_concept_column], [:scm__source_code, table_source_column]])
+          ds = ds.join(Sequel[:source_to_concept_map].as(:scm), [[Sequel[:scm][:target_concept_id], table_concept_column], [Sequel[:scm][:source_code], table_source_column]])
         end
         ds
       end
@@ -57,7 +57,7 @@ module ConceptQL
 
       def conditions(db)
         if omopv4?
-          [[:scm__source_code, arguments_fix(db)], [:scm__source_vocabulary_id, vocabulary_id]]
+          [[Sequel[:scm][:source_code], arguments_fix(db)], [Sequel[:scm][:source_vocabulary_id], vocabulary_id]]
         else
           conditions = { code_column => arguments_fix(db) }
           conditions[vocabulary_id_column] = vocabulary_id if vocabulary_id_column
@@ -98,7 +98,7 @@ module ConceptQL
       end
 
       def table_source_column
-        "tab__#{source_column}".to_sym
+        Sequel.qualify(:tab, source_column)
       end
 
       def table_is_missing?(db)

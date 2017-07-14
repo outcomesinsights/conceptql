@@ -52,18 +52,18 @@ module ConceptQL
           db.from(:clinical_codes)
             .where(context_id: contexts)
         else
-          db.from(:visit_occurrence___v)
-            .join(:concept___c, { c__concept_id: pos_concept_column  })
-            .where(c__concept_code: arguments.map(&:to_s))
-            .where(c__vocabulary_id: 14)
+          db.from(Sequel[:visit_occurrence].as(:v))
+            .join(Sequel[:concept].as(:c), concept_id: pos_concept_column)
+            .where(Sequel[:c][:concept_code] => arguments.map(&:to_s))
+            .where(Sequel[:c][:vocabulary_id] => 14)
         end
       end
 
       private
 
       def pos_concept_column
-        return Sequel.cast(:v__visit_source_concept_id, :bigint) unless omopv4?
-        Sequel.cast(:v__place_of_service_concept_id, :bigint)
+        return Sequel.cast(Sequel[:v][:visit_source_concept_id], :bigint) unless omopv4?
+        Sequel.cast(Sequel[:v][:place_of_service_concept_id], :bigint)
       end
     end
   end

@@ -33,29 +33,28 @@ is passed through unaffected.
       def query(db)
         grouped_right = db.from(right_stream(db)).select_group(:person_id).select_append(Sequel.as(Sequel.function(:min, :start_date), :start_date))
 
-        where_criteria = Sequel.expr { l__start_date <= r__start_date }
-        where_criteria = where_criteria.|(r__start_date: nil)
+        where_criteria = Sequel.expr { (l[:start_date] <= r[:start_date]) | {r[:start_date] => nil} }
 
         # If the RHS's min start date is less than the LHS start date,
         # the entire LHS date range is truncated, which implies the row itself
         # is ineligible to pass thru
         ds = db.from(left_stream(db))
-                  .left_join(Sequel.as(grouped_right, :r), l__person_id: :r__person_id)
+                  .left_join(Sequel.as(grouped_right, :r), person_id: :person_id)
                   .where(where_criteria)
                   .select(*new_columns)
-                  .select_append(Sequel.as(Sequel.function(:least, :l__end_date, :r__start_date), :end_date))
+                  .select_append(Sequel.as(Sequel.function(:least, Sequel[:l][:end_date], Sequel[:r][:start_date]), :end_date))
 
         ds = add_option_conditions(ds)
         ds.from_self
       end
 
       def within_column
-        :l__end_date
+        Sequel[:l][:end_date]
       end
 
       private
       def new_columns
-        (dynamic_columns - [:end_date]).map { |col| "l__#{col}".to_sym }
+        (dynamic_columns - [:end_date]).map { |col| Sequel[:l][col] }
       end
     end
   end

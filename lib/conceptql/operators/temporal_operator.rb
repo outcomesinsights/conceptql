@@ -25,7 +25,7 @@ module ConceptQL
 
       def query(db)
         ds = db.from(left_stream(db))
-               .join(right_stream(db), l__person_id: :r__person_id)
+               .join(right_stream(db), person_id: :person_id)
                .where(where_clause)
                .select_all(:l)
 
@@ -51,8 +51,8 @@ module ConceptQL
 
       def add_within_condition(ds, within, meth=:where)
         within = DateAdjuster.new(self, within)
-        after = within.adjust(:r__start_date, true)
-        before = within.adjust(:r__end_date)
+        after = within.adjust(Sequel[:r][:start_date], true)
+        before = within.adjust(Sequel[:r][:end_date])
         within_col = Sequel.expr(within_column)
         ds = ds.send(meth){within_col >= after} if within_check_after?
         ds = ds.send(meth){within_col <= before} if within_check_before?
@@ -62,14 +62,14 @@ module ConceptQL
       def add_occurrences_condition(ds, occurrences)
         occurrences_col = occurrences_column
         ds.distinct.from_self
-          .select_append{row_number{}.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
+          .select_append{row_number.function.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
           .from_self
           .select(*dm.columns)
           .where{occurrence > occurrences.to_i}
       end
 
       def within_column
-        :l__start_date
+        Sequel[:l][:start_date]
       end
 
       def occurrences_column

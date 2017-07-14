@@ -345,7 +345,13 @@ module ConceptQL
       def table_to_sym(table)
         case table
         when Symbol
-          table = Sequel.split_symbol(table)[1].to_sym
+          table = Sequel.split_symbol(table)[1].to_sym if Sequel.split_symbols?
+        when Sequel::SQL::AliasedExpression
+          table = table.expression
+        when Sequel::SQL::QualifiedIdentifier
+          table = table.column
+        when Sequel::SQL::Identifier
+          table = table.value
         end
         table
       end

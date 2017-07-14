@@ -14,7 +14,7 @@ L------Y--------L
       EOF
 
       def where_clause
-        [Proc.new { l__start_date <= r__start_date}, Proc.new { r__end_date <= l__end_date }]
+        Sequel.expr{ (l[:start_date] <= r[:start_date]) & (r[:end_date] <= l[:end_date]) }
       end
     end
   end

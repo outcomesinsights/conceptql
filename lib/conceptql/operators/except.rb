@@ -11,8 +11,8 @@ module ConceptQL
       def query(db)
         if ignore_dates?
           query = db.from(Sequel.as(left.evaluate(db), :l))
-            .left_join(Sequel.as(right.evaluate(db), :r), l__criterion_id: :r__criterion_id, l__criterion_domain: :r__criterion_domain)
-            .where(r__criterion_id: nil)
+            .left_join(Sequel.as(right.evaluate(db), :r), criterion_id: :criterion_id, criterion_domain: :criterion_domain)
+            .where(Sequel[:r][:criterion_id] => nil)
             .select_all(:l)
           db.from(query)
         else

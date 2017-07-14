@@ -41,9 +41,9 @@ module ConceptQL
 
       def contextify(db, stream)
         stream.evaluate(db).from_self(alias: :s)
-          .join(:clinical_codes___c, c__id: :s__criterion_id)
+          .join(Sequel[:clinical_codes].as(:c), id: :criterion_id)
           .select_all(:s)
-          .select_append(:c__context_id___context_id)
+          .select_append(Sequel[:c][:context_id].as(:context_id))
           .from_self
       end
 
@@ -52,8 +52,8 @@ module ConceptQL
       def visit_occurrence_ids_in_common(db)
         @visit_occurrence_ids_in_common ||= upstream_queries(db).map { |q| q.select(:visit_occurrence_id) }.inject do |q, query|
           q.from_self(alias: :tab1)
-            .join(query.as(:tab2), tab1__visit_occurrence_id: :tab2__visit_occurrence_id)
-            .select(:tab1__visit_occurrence_id___visit_occurrence_id)
+            .join(query.as(:tab2), visit_occurrence_id: :visit_occurrence_id)
+            .select(Sequel[:tab1][:visit_occurrence_id].as(:visit_occurrence_id))
         end
       end
 

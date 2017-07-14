@@ -22,11 +22,11 @@ All other results are discarded, including all results in the RHR.
       end
 
       def within_column
-        :l__end_date
+        Sequel[:l][:end_date]
       end
 
       def where_clause
-        Proc.new { l__end_date < r__start_date }
+        Sequel.expr { l[:end_date] < r[:start_date] }
       end
 
       def compare_all?

@@ -13,8 +13,8 @@ module ConceptQL
         rhs = rhs.from_self.select_group(:person_id, :criterion_id, :criterion_domain)
         query = db.from(Sequel.as(left.evaluate(db), :l))
         query = query
-          .left_join(Sequel.as(rhs, :r), l__person_id: :r__person_id, l__criterion_id: :r__criterion_id, l__criterion_domain: :r__criterion_domain)
-          .exclude(r__criterion_id: nil)
+          .left_join(Sequel.as(rhs, :r), person_id: :person_id, criterion_id: :criterion_id, criterion_domain: :criterion_domain)
+          .exclude(Sequel[:r][:criterion_id] => nil)
           .select_all(:l)
         db.from(query)
       end

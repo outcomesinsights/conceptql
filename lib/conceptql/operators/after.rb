@@ -30,7 +30,7 @@ R-----R
       end
 
       def where_clause
-        Proc.new { l__start_date > r__end_date }
+        Sequel.expr { l[:start_date] > r[:end_date] }
       end
 
       def compare_all?
