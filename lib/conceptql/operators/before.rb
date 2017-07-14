@@ -11,6 +11,7 @@ Any result in the LHR with an end_date that occurs before the most recent start_
 All other results are discarded, including all results in the RHR.
       EOF
 
+      allows_at_least_option
       within_skip :before
 
       def right_stream(db)

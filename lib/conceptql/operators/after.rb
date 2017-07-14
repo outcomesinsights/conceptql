@@ -15,6 +15,7 @@ R-----R
         L-----Y----L
       EOF
 
+      allows_at_least_option
       within_skip :after
 
       def right_stream(db)

@@ -13,11 +13,17 @@ module ConceptQL
       default_query_columns
 
       option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
-      option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
       option :occurrences, type: :integer, desc: "Number of occurrences that must precede the event of interest, e.g. if you'd like the 4th event in a set of events, set occurrences to 3"
 
       validate_option DateAdjuster::VALID_INPUT, :within, :at_least
       validate_option /\A\d+\z/, :occurrences
+
+      class << self
+        def allows_at_least_option
+          option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+          define_method(:"at_least_check?") { true }
+        end
+      end
 
       def self.within_skip(type)
         define_method(:"within_check_#{type}?"){false}
@@ -38,7 +44,7 @@ module ConceptQL
           ds = add_within_condition(ds, within)
         end
 
-        if at_least = options[:at_least]
+        if (at_least = options[:at_least]) && at_least_check?
           ds = add_within_condition(ds, at_least, :exclude)
         end
 
@@ -82,6 +88,10 @@ module ConceptQL
 
       def within_check_before?
         true
+      end
+
+      def at_least_check?
+        false
       end
 
       def inclusive?
