@@ -5,6 +5,8 @@ module ConceptQL
     class OverlappedBy < TemporalOperator
       register __FILE__
 
+      deprecated replaced_by: "any_overlap"
+
       desc <<-EOF
 Compares all results on a person-by-person basis between the left hand results (LHR) and the right hand results (RHR).
 Any result in the LHR with a start_date that occurs between the start_date and end_date of a result in the RHR is passed through.
