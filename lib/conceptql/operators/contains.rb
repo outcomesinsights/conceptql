@@ -16,6 +16,22 @@ L------Y--------L
       def where_clause
         Sequel.expr{ (l[:start_date] <= r[:start_date]) & (r[:end_date] <= l[:end_date]) }
       end
+
+      def within_column_start
+        Sequel[:r][:start_date]
+      end
+
+      def within_column_end
+        Sequel[:r][:end_date]
+      end
+
+      def within_after_column
+        Sequel[:l][:start_date]
+      end
+
+      def within_before_column
+        Sequel[:l][:end_date]
+      end
     end
   end
 end
