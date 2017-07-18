@@ -13,7 +13,7 @@ module ConceptQL
         if start_date && end_date
           return DateLiteral.new(start_date, end_date)
         elsif window_table
-          Table.new(window_table)
+          Table.new(window_table, opts[:adjust_window_start], opts[:adjust_window_end])
         else
           None.new
         end
