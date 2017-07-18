@@ -1,3 +1,5 @@
+require_relative "window"
+
 module ConceptQL
   # Scope coordinates the creation of any common table expressions that might
   # be used when a Recall operator is present in the statement.
@@ -207,58 +209,6 @@ module ConceptQL
 
     def window
       @window ||= Window.from(opts)
-    end
-
-    class Window
-      class << self
-        def from(opts)
-          start_date = opts[:start_date]
-          end_date = opts[:end_date]
-          window_table = opts[:window_table]
-
-          if start_date && end_date
-            return DateLiteralWindow.new(start_date, end_date)
-          elsif window_table
-            TableWindow.new(window_table)
-          else
-            new
-          end
-        end
-      end
-
-      def windowfy(op, query)
-        query
-      end
-    end
-
-    class DateLiteralWindow
-      attr :window_start, :window_end
-
-      def initialize(start_date, end_date)
-        @window_start = start_date
-        @window_end = end_date
-      end
-
-      def windowfy(op, query)
-        start_check = op.rdbms.cast_date(window_start) <= :start_date
-        end_check = Sequel.expr(:end_date) <= op.rdbms.cast_date(window_end)
-        query.from_self.where(start_check).where(end_check)
-      end
-    end
-
-    class TableWindow
-      attr :table_window
-
-      def initialize(table_window)
-        @table_window = table_window
-      end
-
-      def windowfy(op, query)
-        query.from_self(alias: :og)
-          .join(table_window, { person_id: :person_id }, table_alias: :tw)
-          .where(Sequel.qualify(:tw, :start_date) <= Sequel.qualify(:og, :start_date))
-          .where(Sequel.qualify(:og, :end_date) <= Sequel.qualify(:tw, :end_date))
-      end
     end
   end
 end
