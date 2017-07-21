@@ -34,7 +34,7 @@ module ConceptQL
       default_query_columns
 
       def query(db)
-        db.from(stream.evaluate(db))
+        dm.selectify(db.from(stream.evaluate(db)), replace: { start_date: adjusted_start_date, end_date: adjusted_end_date })
       end
 
       private
@@ -52,8 +52,7 @@ module ConceptQL
       end
 
       def adjusted_date(option_arg, column)
-        adjusted_date = DateAdjuster.new(self, options[option_arg], manipulator: options[:manipulator]).adjust(column)
-        adjusted_date.as(column)
+        DateAdjuster.new(self, options[option_arg], manipulator: options[:manipulator]).adjust(column)
       end
     end
   end
