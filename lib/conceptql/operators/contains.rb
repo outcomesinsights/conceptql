@@ -10,27 +10,15 @@ If a result in the left hand results (LHR) has a start_date on or before and an 
 L--X-L
 R-----R
 L------Y--------L
-
       EOF
 
-      def where_clause
-        Sequel.expr{ (l[:start_date] <= r[:start_date]) & (r[:end_date] <= l[:end_date]) }
+      def apply_where_clause(ds)
+        clause = (within_start <= r_start_date) & (r_end_date <= within_end)
+        ds.where(clause)
       end
 
-      def within_column_start
-        Sequel[:r][:start_date]
-      end
-
-      def within_column_end
-        Sequel[:r][:end_date]
-      end
-
-      def within_after_column
-        Sequel[:l][:start_date]
-      end
-
-      def within_before_column
-        Sequel[:l][:end_date]
+      def within_source_table
+        Sequel[:l]
       end
     end
   end

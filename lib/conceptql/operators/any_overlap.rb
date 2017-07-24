@@ -6,8 +6,9 @@ module ConceptQL
       register __FILE__
 
       desc 'If a result in the LHR overlaps in any way a result in the RHR, it is passed through.'
-      def where_clause
-        Sequel.expr { ((r[:start_date] <= l[:start_date]) & (l[:start_date] <= r[:end_date])) | ((l[:start_date] <= r[:start_date]) & (r[:start_date] <= l[:end_date])) }
+      def apply_where_clause(ds)
+        clause = ((within_start <= l_start_date) & (l_start_date <= within_end)) | ((l_start_date <= within_start) & (within_start <= l_end_date))
+        ds.where(clause)
       end
     end
   end

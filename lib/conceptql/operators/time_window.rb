@@ -31,17 +31,12 @@ module ConceptQL
       validate_option DateAdjuster::VALID_INPUT, :start, :end
       category "Modify Data"
       basic_type :temporal
-      default_query_columns
 
       def query(db)
         dm.selectify(db.from(stream.evaluate(db)), replace: { start_date: adjusted_start_date, end_date: adjusted_end_date })
       end
 
       private
-
-      def date_columns(query, domain = nil)
-        [adjusted_start_date, adjusted_end_date]
-      end
 
       def adjusted_start_date
         adjusted_date(:start, :start_date)

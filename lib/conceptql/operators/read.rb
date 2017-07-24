@@ -34,10 +34,6 @@ module ConceptQL
         gdm? ? vocab_op.domains(db) : codes_by_domain(db).keys
       end
 
-      def table
-        vocab_op.table
-      end
-
       def query_cols
         vocab_op.query_cols
       end

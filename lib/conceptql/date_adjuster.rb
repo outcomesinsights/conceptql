@@ -16,7 +16,7 @@ module ConceptQL
     def adjust(column, reverse=false)
       return Sequel.expr(:end_date) if str.downcase == 'end'
       return Sequel.expr(:start_date) if str.downcase == 'start'
-      return op.rdbms.cast_date(op.nodifier, Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
+      return op.rdbms.cast_date(Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
       adjusted_date = adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
         quantity *= -1 if reverse
         if quantity > 0

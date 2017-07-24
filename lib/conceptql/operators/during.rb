@@ -11,12 +11,9 @@ Any result in the LHR with a start_date and end_date that occur within the start
 All other results are discarded, including all results in the RHR.
       EOF
 
-      def where_clause
-        if inclusive?
-          Sequel.expr{ ((r[:start_date] <= l[:start_date]) & (l[:start_date] <= r[:end_date])) | ((r[:start_date] <= l[:end_date]) & (l[:end_date] <= r[:end_date])) }
-        else
-          Sequel.expr{ (r[:start_date] <= l[:start_date]) & (l[:end_date] <= r[:end_date]) }
-        end
+      def apply_where_clause(ds)
+        clause = (within_start <= l_start_date) & (l_end_date <= within_end)
+        ds.where(clause)
       end
     end
   end

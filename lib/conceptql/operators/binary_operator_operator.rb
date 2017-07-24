@@ -35,6 +35,14 @@ module ConceptQL
         @left = to_op(options[:left]) if options[:left].is_a?(Array)
         @right = to_op(options[:right])  if options[:right].is_a?(Array)
       end
+
+      def left_stream(db)
+        Sequel.expr(left.evaluate(db).from_self).as(:l)
+      end
+
+      def right_stream(db)
+        Sequel.expr(right.evaluate(db).from_self).as(:r)
+      end
     end
   end
 end

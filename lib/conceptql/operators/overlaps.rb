@@ -15,8 +15,9 @@ L---Y---L
       R-----R
         L---N---L
       EOF
-      def where_clause
-        Sequel.expr { (l[:start_date] <= r[:start_date]) & (r[:start_date] <= l[:end_date]) & (l[:end_date] <= r[:end_date]) }
+      def apply_where_clause(ds)
+        clause = (l_start_date <= within_start) & (within_start <= l_end_date) & (l_end_date <= within_end)
+        ds.where(clause)
       end
     end
   end

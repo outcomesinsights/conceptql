@@ -101,7 +101,7 @@ module ConceptQL
                       query_columns
                     else
                       columns_in_table(table, opts).merge(modifier_columns(table)).merge(nullified_columns(table))
-                    end
+                    end.dup
         cols_hash.merge!(replace(opts[:replace]))
         cols_hash.values_at(*col_keys)
       end
@@ -118,7 +118,7 @@ module ConceptQL
         Hash[remainder.map { |r| [r, rdbms.process(r, nil)] }]
       end
 
-      def selectify(query, opts ={})
+      def selectify(query, opts = {})
         modify_query(query, get_table(opts)).select(*columns(opts)).from_self
       end
 

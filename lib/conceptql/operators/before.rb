@@ -22,16 +22,27 @@ All other results are discarded, including all results in the RHR.
         end
       end
 
-      def within_column
-        Sequel[:l][:end_date]
-      end
+      def apply_where_clause(ds)
+        before_date = r_start_date
 
-      def where_clause
-        Sequel.expr { l[:end_date] < r[:start_date] }
+        if at_least_option
+          before_date = adjust_date(at_least_option, before_date, true)
+        end
+
+        before_clause = l_end_date <  before_date
+
+        ds = ds.where(before_clause)
+
+        if within_option
+          within_clause = l_end_date >= within_start
+          ds = ds.where(within_clause)
+        end
+
+        ds
       end
 
       def compare_all?
-        !(options.keys & [:within, :at_least, :occurrences]).empty?
+        !(options.keys & [:within]).empty?
       end
     end
   end

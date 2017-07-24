@@ -21,7 +21,6 @@ module ConceptQL
       class << self
         def allows_at_least_option
           option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
-          define_method(:"at_least_check?") { true }
         end
       end
 
@@ -32,41 +31,71 @@ module ConceptQL
       def query(db)
         ds = db.from(left_stream(db))
                .join(right_stream(db), person_id: :person_id)
-               .where(where_clause)
                .select_all(:l)
 
-        ds = add_option_conditions(ds)
+        ds = apply_where_clause(ds)
+
+        ds = add_occurrences_condition(ds, occurrences_option)
+
         ds.from_self
       end
 
-      def add_option_conditions(ds)
-        if within = options[:within]
-          ds = add_within_condition(ds, within)
-        end
-
-        if (at_least = options[:at_least]) && at_least_check?
-          ds = add_within_condition(ds, at_least, :exclude)
-        end
-
-        if occurrences = options[:occurrences]
-          ds = add_occurrences_condition(ds, occurrences)
-        end
-
-        ds
+      def r_start_date
+        return Sequel[:r][:start_date]
       end
 
-      def add_within_condition(ds, within, meth=:where)
-        within = DateAdjuster.new(self, within)
-        after = within.adjust(within_after_column, true)
-        before = within.adjust(within_before_column)
-        within_col_start = Sequel.expr(within_column_start)
-        within_col_end = Sequel.expr(within_column_end)
-        ds = ds.send(meth){ within_col_start >= after } if within_check_after?
-        ds = ds.send(meth){ within_col_end <= before } if within_check_before?
-        ds.distinct
+      def r_end_date
+        return Sequel[:r][:end_date]
+      end
+
+      def l_start_date
+        return Sequel[:l][:start_date]
+      end
+
+      def l_end_date
+        return Sequel[:l][:end_date]
+      end
+
+      def within_option
+        options[:within]
+      end
+
+      def at_least_option
+        options[:at_least]
+      end
+
+      def occurrences_option
+        options[:occurrences]
+      end
+
+      def within_source_table
+        Sequel[:r]
+      end
+
+      def within_start
+        within_start = within_source_table[:start_date]
+        if within_option
+          within_start = adjust_date(within_option, within_start, true)
+        end
+        within_start
+      end
+
+      def within_end
+        within_end = within_source_table[:end_date]
+        if within_option
+          within_end = adjust_date(within_option, within_end)
+        end
+        within_end
+      end
+
+      def adjust_date(adjustment, column, reverse = false)
+        adjuster = DateAdjuster.new(self, adjustment)
+        adjuster.adjust(column, reverse)
       end
 
       def add_occurrences_condition(ds, occurrences)
+        return ds if occurrences.nil?
+
         occurrences_col = occurrences_column
         ds.distinct.from_self
           .select_append{row_number.function.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
@@ -75,36 +104,8 @@ module ConceptQL
           .where{occurrence > occurrences.to_i}
       end
 
-      def within_column
-        Sequel[:l][:start_date]
-      end
-
-      def within_column_start
-        within_column
-      end
-
-      def within_column_end
-        within_column
-      end
-
-      def within_after_column
-        Sequel[:r][:start_date]
-      end
-
-      def within_before_column
-        Sequel[:r][:end_date]
-      end
-
       def occurrences_column
         :start_date
-      end
-
-      def within_check_after?
-        true
-      end
-
-      def within_check_before?
-        true
       end
 
       def at_least_check?
@@ -113,14 +114,6 @@ module ConceptQL
 
       def inclusive?
         options[:inclusive]
-      end
-
-      def left_stream(db)
-        Sequel.expr(left.evaluate(db).from_self).as(:l)
-      end
-
-      def right_stream(db)
-        Sequel.expr(right.evaluate(db).from_self).as(:r)
       end
     end
   end
