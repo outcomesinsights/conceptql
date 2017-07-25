@@ -287,7 +287,7 @@ module ConceptQL
       end
 
       def upstreams_valid?(db, opts = {})
-          valid?(db, opts) && upstreams.all?{|u| u.upstreams_valid?(db, opts)}
+        valid?(db, opts) && upstreams.all?{|u| u.upstreams_valid?(db, opts)}
       end
 
       def scope
@@ -455,6 +455,7 @@ module ConceptQL
         self.class.validations.each do |args|
           send(*args)
         end
+
         @_validated = true
       end
 

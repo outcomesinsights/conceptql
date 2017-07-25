@@ -18,7 +18,7 @@ module ConceptQL
       end
 
       def gdm(db)
-          contexteds = upstreams.map do |stream|
+        contexteds = upstreams.map do |stream|
           contextify(db, stream)
         end
 
