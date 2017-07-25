@@ -15,7 +15,6 @@ module ConceptQL
         end
 
         def modified_query
-          p source_table
           if dm.table_cols(source_table).include?(:context_id)
             query.from_self(alias: :c)
               .join(Sequel[:contexts_practitioners].as(:cp), context_id: :context_id)

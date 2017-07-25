@@ -49,7 +49,6 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        p data_model
         if gdm?
           vocab_op.describe_codes(db, codes)
         else

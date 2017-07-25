@@ -134,7 +134,6 @@ module ConceptQL
             add_warning("unknown source code", *missing_args)
           end
         end
-        p @warnings
       end
 
       def describe_codes(db, codes)

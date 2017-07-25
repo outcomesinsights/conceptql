@@ -18,12 +18,11 @@ module ConceptQL
         def self.has_required_columns?(cols)
           needed = [:drug_exposure_detail_id].sort
           found = needed & cols
-          p needed, found
           needed == found
         end
 
         def modified_query
-          return query unless dm.table_cols(source_table).tap { |o| p o }.include?(:drug_exposure_detail_id)
+          return query unless dm.table_cols(source_table).include?(:drug_exposure_detail_id)
           #TODO: Determine what actual columns to include for drug exposures under
           query.from_self(alias: :cc)
             .left_join(Sequel[:drug_exposure_details].as(:de), Sequel[:cc][:drug_exposure_detail_id] => Sequel[:de][:id])

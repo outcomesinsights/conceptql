@@ -24,7 +24,7 @@ module ConceptQL
       def command
         command = [program]
         command += arguments
-        command.compact.join(" ").tap { |c| p c }
+        command.compact.join(" ")
       end
     end
   end
