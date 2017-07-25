@@ -138,14 +138,14 @@ module ConceptQL
       def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
-        scope_key = options[:id] || operator_name
+        scope_key = options[:id] || op_name
         annotation = {}
         counts = (annotation[:counts] ||= {})
         metadata = {:annotation=>annotation}
-        if name = self.class.preferred_name
+        if name = preferred_name
           metadata[:name] = name
         end
-        res = [operator_name, *annotate_values(db, opts)]
+        res = [op_name, *annotate_values(db, opts)]
 
         if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
           scope.with_ctes(evaluate(db), db)
@@ -511,10 +511,14 @@ module ConceptQL
       end
 
       def bad_arguments
-        return [] unless self.class.codes_regexp
+        return [] unless code_regexp
         @bad_arguments ||= arguments.reject do |arg|
-          self.class.codes_regexp === arg
+          code_regexp === arg
         end
+      end
+
+      def code_regexp
+        self.class.codes_regexp
       end
 
       def validate_codes_match
@@ -568,6 +572,10 @@ module ConceptQL
 
       def table_is_missing?(db)
         false
+      end
+
+      def preferred_name
+        self.class.preferred_name
       end
     end
   end

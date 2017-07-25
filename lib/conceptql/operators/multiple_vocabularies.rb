@@ -55,9 +55,14 @@ module ConceptQL
         end
       end
 
+      def domains(db)
+        vocab_ops.map(&:domain).uniq
+      end
+
       def validate(db, opts = {})
         super
         vocab_ops.each { |vo| vo.validate(db, opts) }
+        @warnings += vocab_ops.map(&:warnings).inject(:+).uniq
       end
 
       def describe_codes(db, codes)
@@ -66,6 +71,10 @@ module ConceptQL
 
       def vocab_ops
         @vocab_ops ||= self.class.multiple_vocabularies[op_name].map { |op_info| op_info[:vocabulary_id] }.map { |vocab_id| Vocabulary.new(nodifier, vocab_id, *arguments) }
+      end
+
+      def preferred_name
+        self.class.multiple_vocabularies[op_name].first[:operator]
       end
     end
   end

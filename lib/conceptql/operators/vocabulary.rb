@@ -22,9 +22,7 @@ module ConceptQL
         end
 
         def assigned_vocabularies
-          each_vocab.each_with_object({}) do |row, h|
-            h[row[:id]] = row.to_hash
-          end.select { |k, vocab| vocab[:hidden].nil? }
+          @assigned_vocabularies ||= all_vocabs.select { |k, vocab| vocab[:hidden].nil? }
         end
 
         def vocab_domain
@@ -38,6 +36,12 @@ module ConceptQL
             dms = [:gdm]
             dms << :omopv4_plus if ConceptQL::Utils.present?(vocab[:domain])
             register(name, *dms)
+          end
+        end
+
+        def all_vocabs
+          @all_vocabs ||= each_vocab.each_with_object({}) do |row, h|
+            h[row[:id]] = row.to_hash
           end
         end
 
@@ -75,6 +79,7 @@ module ConceptQL
       category "Select by Clinical Codes"
       validate_no_upstreams
       validate_at_least_one_argument
+      validate_codes_match
 
       def query(db)
         ds = db[dm.table_by_domain(domain)]
@@ -103,7 +108,7 @@ module ConceptQL
       end
 
       def table
-        :condition_occurrence
+        domain_map(op_name)
       end
 
       def query_cols
@@ -129,6 +134,7 @@ module ConceptQL
             add_warning("unknown source code", *missing_args)
           end
         end
+        p @warnings
       end
 
       def describe_codes(db, codes)
@@ -136,6 +142,17 @@ module ConceptQL
       end
 
       private
+
+      # Defined so that bad_arguments can check for bad codes
+      def code_regexp
+        unless defined?(@code_regexp)
+          @code_regexp = nil
+          if reg_str = self.class.all_vocabs[op_name][:format_regexp]
+            @code_regexp = Regexp.new(reg_str, Regexp::IGNORECASE)
+          end
+        end
+        @code_regexp
+      end
 
       def vocabulary_id
         @vocabulary_id ||= translated_vocabulary_id

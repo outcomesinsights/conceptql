@@ -1,5 +1,5 @@
-operator,vocabulary_id
-ICD-10 Conditions,ICD10
-ICD-10 Conditions,ICD10CM
-CPT or HCPCS,CPT4
-CPT or HCPCS,HCPCS
+operator,vocabulary_id,domain
+ICD-10 Conditions,ICD10,condition_occurrence
+ICD-10 Conditions,ICD10CM,condition_occurrence
+CPT or HCPCS,CPT4,procedure_occurrence
+CPT or HCPCS,HCPCS,procedure_occurrence
