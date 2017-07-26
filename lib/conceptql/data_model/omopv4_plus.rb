@@ -115,7 +115,13 @@ module ConceptQL
 
       def nullified_columns(table, opts = {})
         return {} if table.nil? && opts[:query_columns].nil?
-        remainder = (query_columns.keys - (opts[:query_columns] ? opts[:query_columns].keys : columns_in_table(table).keys) - applicable_query_modifiers(table).flat_map(&:provided_columns))
+        remainder = query_columns.keys
+        if opts[:query_columns]
+          remainder -= opts[:query_columns].keys
+        else
+          remainder -= columns_in_table(table).keys
+          remainder -= applicable_query_modifiers(table).flat_map(&:provided_columns)
+        end
         Hash[remainder.map { |r| [r, rdbms.process(r, nil)] }]
       end
 
