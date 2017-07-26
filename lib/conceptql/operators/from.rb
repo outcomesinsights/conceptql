@@ -30,12 +30,8 @@ module ConceptQL
         values.first.to_sym rescue nil
       end
 
-      def query_cols
-        cols = options[:query_cols]
-        if cols.nil? || cols.empty?
-          cols = table_columns(table) rescue dynamic_columns
-        end
-        cols
+      def override_columns
+        Hash[options[:query_cols].map(&:to_sym).zip(options[:query_cols].map(&:to_sym))]
       end
     end
   end

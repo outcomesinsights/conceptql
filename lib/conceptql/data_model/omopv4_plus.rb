@@ -48,7 +48,7 @@ module ConceptQL
         table
       end
 
-      def person_id(table = nil)
+      def person_id(table)
         case table.to_sym
         when :procedure_cost, :drug_cost
           nil
@@ -91,30 +91,31 @@ module ConceptQL
       end
 
       def columns(opts = {})
-        col_keys = query_columns.keys
+        table = get_table(opts)
+
+        cols_hash = if table.nil? && opts[:query_columns].nil?
+                      query_columns
+                    else
+                      columns_in_table(table, opts).merge(modifier_columns(table, opts)).merge(nullified_columns(table, opts))
+                    end.dup
+
+        col_keys = cols_hash.keys
         col_keys -= opts[:except] || []
         col_keys &= opts[:only] if opts[:only]
 
-        table = get_table(opts)
-
-        cols_hash = if table.nil?
-                      query_columns
-                    else
-                      columns_in_table(table, opts).merge(modifier_columns(table)).merge(nullified_columns(table))
-                    end.dup
         cols_hash.merge!(replace(opts[:replace]))
         cols_hash.values_at(*col_keys)
       end
 
-      def modifier_columns(table)
-        return {} if table.nil?
-        remainder = query_columns.keys - columns_in_table(table).keys
+      def modifier_columns(table, opts = {})
+        return {} if table.nil? && opts[:query_columns].nil?
+        remainder = query_columns.keys - (opts[:query_columns] ? opts[:query_columns].keys : columns_in_table(table).keys)
         Hash[remainder.zip(remainder)]
       end
 
-      def nullified_columns(table)
-        return {} if table.nil?
-        remainder = query_columns.keys - columns_in_table(table).keys - applicable_query_modifiers(table).flat_map(&:provided_columns)
+      def nullified_columns(table, opts = {})
+        return {} if table.nil? && opts[:query_columns].nil?
+        remainder = (query_columns.keys - (opts[:query_columns] ? opts[:query_columns].keys : columns_in_table(table).keys) - applicable_query_modifiers(table).flat_map(&:provided_columns))
         Hash[remainder.map { |r| [r, rdbms.process(r, nil)] }]
       end
 
@@ -149,6 +150,7 @@ module ConceptQL
       end
 
       def columns_in_table(table, opts = {})
+        return opts[:query_columns] unless opts[:query_columns].nil?
         start_date, end_date = *date_columns(nil, table)
         {
           person_id: Sequel.expr(person_id(table)).as(:person_id),

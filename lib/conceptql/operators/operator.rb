@@ -214,13 +214,17 @@ module ConceptQL
         specific_table ||= dm.determine_table(:domain)
 
         dom = domain rescue nil
-        q = dm.selectify(query, table: specific_table, criterion_domain: dom)
+        q = dm.selectify(query, table: specific_table, criterion_domain: dom, query_columns: override_columns)
 
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
         end
 
         q
+      end
+
+      def override_columns
+        nil
       end
 
       def domains(db)
