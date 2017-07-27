@@ -14,7 +14,6 @@ module ConceptQL
     # result is passed thru unaffected.
     class TrimDateStart < TemporalOperator
       register __FILE__
-      category "Filter by Comparing"
 
       desc <<-EOF
 Trims the start_date of the left hand results (LHR) by the final
@@ -34,7 +33,7 @@ is passed through unaffected.
       def query(db)
         grouped_right = db.from(right_stream(db)).select_group(:person_id).select_append(Sequel.as(Sequel.function(:max, :end_date), :end_date))
 
-        where_criteria = (l_end_date >= within_end) | { within_end => nil }
+        where_criteria = (l_end_date >= within_end) | { r_end_date => nil }
 
         # If the RHS's min start date is less than the LHS start date,
         # the entire LHS date range is truncated, which implies the row itself
@@ -42,8 +41,9 @@ is passed through unaffected.
         ds = db.from(left_stream(db))
                   .left_join(Sequel.as(grouped_right, :r), person_id: :person_id)
                   .where(where_criteria)
-                  .select(*new_columns)
-                  .select_append(Sequel.as(Sequel.function(:greatest, Sequel[:l][:start_date], within_end), :start_date))
+
+        ds = dm.selectify(ds, qualifier: :l, replace: { start_date: Sequel.function(:greatest, l_start_date, within_end) })
+        ds = add_occurrences_condition(ds, occurrences_option)
 
         ds.from_self
       end

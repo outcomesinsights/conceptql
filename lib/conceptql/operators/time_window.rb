@@ -33,7 +33,7 @@ module ConceptQL
       basic_type :temporal
 
       def query(db)
-        dm.selectify(db.from(stream.evaluate(db)), replace: { start_date: adjusted_start_date, end_date: adjusted_end_date })
+        dm.selectify(db.from(stream.evaluate(db)).from_self, replace: { start_date: adjusted_start_date, end_date: adjusted_end_date })
       end
 
       private

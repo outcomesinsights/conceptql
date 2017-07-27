@@ -103,6 +103,10 @@ module ConceptQL
         col_keys -= opts[:except] || []
         col_keys &= opts[:only] if opts[:only]
 
+        if qualifier = opts[:qualifier]
+          cols_hash = Hash[cols_hash.map { |k, c| [k, Sequel.qualify(qualifier, c)] }]
+        end
+
         cols_hash.merge!(replace(opts[:replace]))
         cols_hash.values_at(*col_keys)
       end
