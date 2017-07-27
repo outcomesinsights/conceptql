@@ -580,7 +580,7 @@ module ConceptQL
       end
 
       def preferred_name
-        self.class.preferred_name
+        self.class.pref_name
       end
     end
   end

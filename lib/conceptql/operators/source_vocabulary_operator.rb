@@ -68,6 +68,8 @@ module ConceptQL
       def describe_codes(db, codes)
         if gdm?
           vocab_op.describe_codes(db, codes)
+        elsif no_db?(db)
+          codes.zip([])
         else
           db[:source_to_concept_map].filter(:source_vocabulary_id => vocabulary_id).filter(:source_code => codes).select_map([:source_code, :source_code_description])
         end
