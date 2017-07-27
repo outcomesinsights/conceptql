@@ -44,10 +44,10 @@ module ConceptQL
           db.from(Sequel[:concept].as(:dc))
             .left_join(Sequel[:drug_strength].as(:ds), drug_concept_id: :concept_id)
             .select(
-              Sequel[:ds][:drug_concept_id].as(:drug_concept_id),
+              Sequel[:dc][:concept_id].as(:drug_concept_id),
+              Sequel[:dc][:concept_name].as(:drug_name),
               Sequel[:ds][:amount_value].as(:amount_value),
               Sequel[:ds][:amount_unit].as(:amount_unit),
-              Sequel[:dc][:concept_name].as(:drug_name),
             )
         end
       end

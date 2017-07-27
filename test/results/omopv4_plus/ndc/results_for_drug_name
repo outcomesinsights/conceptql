@@ -1,0 +1,16 @@
+[
+  {
+    "person_id": 68,
+    "criterion_id": 1580136,
+    "criterion_table": "drug_exposure",
+    "criterion_domain": "drug_exposure",
+    "start_date": "2008-08-11",
+    "end_date": "2008-08-11",
+    "source_value": "00002021008",
+    "drug_name": "exenatide 0.25 MG/ML Injectable Solution [Byetta]",
+    "drug_amount": null,
+    "drug_amount_units": null,
+    "drug_quantity": null,
+    "drug_days_supply": null
+  }
+]
