@@ -38,7 +38,7 @@ describe ConceptQL::DateAdjuster do
       let(:str) { "6w" }
 
       it "should work with weeks" do
-        da.adjust(:start_date).interval.must_equal({weeks: 6})
+        da.adjust(:start_date).interval.must_equal({days: 42})
       end
     end
 

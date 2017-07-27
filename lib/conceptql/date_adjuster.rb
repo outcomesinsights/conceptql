@@ -18,6 +18,13 @@ module ConceptQL
       return Sequel.expr(:start_date) if str.downcase == 'start'
       return op.rdbms.cast_date(Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
       adjusted_date = adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
+        # Turns out weeks aren't supported in Sequel, so we'll just multiply
+        # the number of weeks by 7 and adjust the date by that number of days
+        if units == :weeks
+          units = :days
+          quantity *= 7
+        end
+
         quantity *= -1 if reverse
         if quantity > 0
           manipulator.date_add(sql, units => quantity)
