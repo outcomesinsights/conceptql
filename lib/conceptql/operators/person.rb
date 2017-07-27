@@ -7,6 +7,7 @@ module ConceptQL
 
       desc 'Generates all person records, or, if fed a stream, fetches all person records for the people represented in the incoming result set.'
       allows_one_upstream
+      domains :person
 
       def my_domain
         :person
