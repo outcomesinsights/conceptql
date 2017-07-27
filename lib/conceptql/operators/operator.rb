@@ -87,7 +87,6 @@ module ConceptQL
           # If operator has a label, replace it with a recall so all references
           # to it use the same code.
           if operator.label && !operator.errors
-            operator.scope.add_operator(operator)
             operator = Operators::Recall.new(operator.nodifier, "recall", operator.label, replaced: true)
           end
 
@@ -160,7 +159,6 @@ module ConceptQL
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
         end
-        scope.add_operators(self)
         domains(db).each do |domain|
           cur_counts = counts[domain] ||= {:rows=>0, :n=>0}
           scope.add_counts(scope_key, domain, cur_counts)

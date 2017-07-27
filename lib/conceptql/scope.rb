@@ -55,7 +55,6 @@ module ConceptQL
       @annotation[:errors] = @errors = {}
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
-      @annotation[:operators] = @operators = []
       @query_columns = DEFAULT_COLUMNS.keys
     end
 
@@ -70,12 +69,6 @@ module ConceptQL
     def add_counts(key, domain, counts)
       c = @counts[key] ||= {}
       c[domain] = counts
-    end
-
-    def add_operators(operator)
-      @operators << operator.operator_name
-      @operators.compact!
-      @operators.uniq!
     end
 
     def add_required_columns(op)
