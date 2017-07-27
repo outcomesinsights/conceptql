@@ -32,6 +32,7 @@ module ConceptQL
           h = super
           op_info = multiple_vocabularies[name].first
           h[:preferred_name] = op_info[:operator]
+          h[:predominant_domains] = multiple_vocabularies[name].map { |h| h[:domain] }.uniq.compact
           h
         end
       end

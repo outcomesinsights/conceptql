@@ -66,6 +66,7 @@ module ConceptQL
           h = super
           vocab = assigned_vocabularies[name]
           h[:preferred_name] = vocab[:vocabulary_short_name] || vocab[:id]
+          h[:predominant_domains] = [vocab[:domain]].flatten
           h
         end
       end
