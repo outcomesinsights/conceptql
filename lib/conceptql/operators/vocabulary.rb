@@ -122,7 +122,7 @@ module ConceptQL
 
       def validate(db, opts = {})
         super
-        if add_warnings?(db, opts)
+        if add_warnings?(db, opts) && !select_all?
           args = arguments.dup
           args -= bad_arguments
           missing_args = []
@@ -139,6 +139,10 @@ module ConceptQL
 
       def describe_codes(db, codes)
         db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: codes).select_map([:concept_code, :concept_text])
+      end
+
+      def select_all?
+        arguments.include?("*")
       end
 
       private

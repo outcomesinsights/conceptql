@@ -54,6 +54,10 @@ module ConceptQL
         end
       end
 
+      def select_all?
+        arguments.include?("*")
+      end
+
       private
 
       def code_column

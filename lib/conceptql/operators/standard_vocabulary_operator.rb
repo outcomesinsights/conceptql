@@ -40,9 +40,11 @@ module ConceptQL
 
       def conditions(db)
         if omopv4?
-          {Sequel[:c][:concept_code] => arguments_fix(db), Sequel[:c][:vocabulary_id] => vocabulary_id}
+          conds = { Sequel[:c][:vocabulary_id] => vocabulary_id }
+          conds[Sequel[:c][:concept_code]] = arguments_fix(db) unless select_all?
         else
-          conditions = { code_column => arguments_fix(db) }
+          conditions = {}
+          conditions[code_column] = arguments_fix(db) unless select_all?
           conditions[vocabulary_id_column] = vocabulary_id if vocabulary_id_column
           conditions
         end
@@ -51,6 +53,8 @@ module ConceptQL
       def describe_codes(db, codes)
         if gdm?
           vocab_op.describe_codes(db, codes)
+        elsif select_all?
+          [["*", "ALL CODES"]]
         elsif no_db?(db)
           codes.zip([])
         else
@@ -62,7 +66,7 @@ module ConceptQL
 
       def validate(db, opts = {})
         super
-        if add_warnings?(db, opts)
+        if add_warnings?(db, opts) && !select_all?
           if gdm?
             vocab_op.validate(db)
             @warnings += vocab_op.warnings

@@ -42,4 +42,14 @@ describe ConceptQL::Operators do
       "ICD-9 CM 250.02"
     ])
   end
+
+  it "should return asterisk when selecting all" do
+    seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
+    db = ConceptQL::Database.new(seq_db)
+    query = db.query(["union",["cpt","*"],["icd9", "250.00", "*"]])
+    query.code_list(seq_db).map(&:to_s).must_equal([
+      "CPT *: ALL CODES",
+      "ICD-9 CM *: ALL CODES"
+    ])
+  end
 end

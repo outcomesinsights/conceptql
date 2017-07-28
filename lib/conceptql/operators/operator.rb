@@ -515,6 +515,7 @@ module ConceptQL
 
       def bad_arguments
         return [] unless code_regexp
+        return [] if respond_to?(:select_all?) && select_all?
         @bad_arguments ||= arguments.reject do |arg|
           code_regexp === arg
         end
