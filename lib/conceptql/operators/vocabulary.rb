@@ -94,13 +94,14 @@ module ConceptQL
 
       def where_clause(db)
         if gdm?
-          concept_ids = db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: values.flatten).select(:id)
+          where_conds = {vocabulary_id: vocabulary_id}
+          where_conds[:concept_code] = arguments.flatten unless select_all?
+          concept_ids = db[:concepts].where(where_conds).select(:id)
           { clinical_code_concept_id: concept_ids }
         else
-          {
-            dm.table_vocabulary_id(domain) => vocabulary_id.to_i,
-            dm.source_value_column(domain) => values
-          }
+          conds = { dm.table_vocabulary_id(domain) => vocabulary_id.to_i }
+          conds[dm.source_value_column(domain)] = arguments unless select_all?
+          conds
         end
       end
 
@@ -138,6 +139,7 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
+        return [["*", "ALL CODES"]] if select_all?
         db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: codes).select_map([:concept_code, :concept_text])
       end
 
