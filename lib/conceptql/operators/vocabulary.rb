@@ -98,7 +98,7 @@ module ConceptQL
           { clinical_code_concept_id: concept_ids }
         else
           {
-            dm.table_vocabulary_id(domain) => vocabulary_id,
+            dm.table_vocabulary_id(domain) => vocabulary_id.to_i,
             dm.source_value_column(domain) => values
           }
         end
