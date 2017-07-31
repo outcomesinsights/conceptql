@@ -11,7 +11,8 @@ module ConceptQL
         {
           place_of_service_concept_id: ConceptQL::QueryModifiers::Gdm::PoSQueryModifier,
           provider_id: ConceptQL::QueryModifiers::Gdm::ProviderQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::Gdm::DrugQueryModifier
+          drug_name: ConceptQL::QueryModifiers::Gdm::DrugQueryModifier,
+          provenance_type: ConceptQL::QueryModifiers::Gdm::ProvenanceQueryModifier,
         }[column]
       end
 
@@ -115,6 +116,10 @@ module ConceptQL
 
       def table_is_missing?(db)
         !db.table_exists?(:concepts)
+      end
+
+      def provenance_type_column(query, domain)
+        :provenance_concept_id
       end
     end
   end
