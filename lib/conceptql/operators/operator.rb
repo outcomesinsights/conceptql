@@ -87,6 +87,7 @@ module ConceptQL
           # If operator has a label, replace it with a recall so all references
           # to it use the same code.
           if operator.label && !operator.errors
+            operator.scope.add_operator(operator)
             operator = Operators::Recall.new(operator.nodifier, "recall", operator.label, replaced: true)
           end
 
