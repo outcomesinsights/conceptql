@@ -167,7 +167,7 @@ module ConceptQL
 
         if defined?(@warnings) && !warnings.empty?
           annotation[:warnings] = warnings
-          scope.add_warnings(scope_key, warnings)
+          scope.add_warnings(scope_key, warnings.dup)
         end
 
         if res.last.is_a?(Hash)
