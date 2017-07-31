@@ -76,4 +76,20 @@ task :make_vocabs_csv, [:csv_path] do |t, args|
       csv << row
     end
   end
+
+desc "Dump a set of diagnostics"
+task :diagnostics do
+  require "sequelizer"
+  require "pp"
+  puts "*" * 80
+  puts "Environment"
+  pp ENV
+  puts "*" * 80
+  puts "Sequelizer"
+  system("bundle exec sequelizer config")
+  puts "*" * 80
+  puts "Database"
+  include Sequelizer
+  pp db
+  pp db.tables
 end
