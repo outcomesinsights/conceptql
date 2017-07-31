@@ -1,10 +1,10 @@
 require "sequelizer"
-require_relative "operator"
+require_relative "vocabulary_operator"
 require "csv"
 
 module ConceptQL
   module Operators
-    class Vocabulary < Operator
+    class Vocabulary < VocabularyOperator
       extend Sequelizer
       include ConceptQL::Behaviors::Windowable
 
@@ -75,11 +75,6 @@ module ConceptQL
 
       desc 'Returns all records that match the given codes for the given vocabulary'
       argument :codes, type: :codelist
-      basic_type :selection
-      query_columns :clinical_codes
-      category "Select by Clinical Codes"
-      validate_no_upstreams
-      validate_at_least_one_argument
       validate_codes_match
 
       def query(db)
@@ -129,7 +124,7 @@ module ConceptQL
           missing_args = []
 
           unless no_db?(db, opts)
-            missing_args = args - db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: args).select_map(:concept_code) rescue []
+            missing_args = args - dm.concepts_ds(db, vocabulary_id, args).select_map(:concept_code) rescue []
           end
 
           unless missing_args.empty?
@@ -140,20 +135,28 @@ module ConceptQL
 
       def describe_codes(db, codes)
         return [["*", "ALL CODES"]] if select_all?
-        db[:concepts].where(vocabulary_id: vocabulary_id, concept_code: codes).select_map([:concept_code, :concept_text])
+        dm.concepts_ds(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
       end
 
       def select_all?
         arguments.include?("*")
       end
 
+      def preferred_name
+        self.class.all_vocabs[op_name][:vocabulary_short_name] || vocab[:id]
+      end
+
       private
+
+      def vocab_entry
+        self.class.all_vocabs[op_name]
+      end
 
       # Defined so that bad_arguments can check for bad codes
       def code_regexp
         unless defined?(@code_regexp)
           @code_regexp = nil
-          if reg_str = self.class.all_vocabs[op_name][:format_regexp]
+          if reg_str = vocab_entry[:format_regexp]
             @code_regexp = Regexp.new(reg_str, Regexp::IGNORECASE)
           end
         end

@@ -52,4 +52,12 @@ describe ConceptQL::Operators do
       "ICD-9 CM *: ALL CODES"
     ])
   end
+
+  it "should return codes from vocabulary-based operators" do
+    db = ConceptQL::Database.new(DB)
+    query = db.query(["union", ["cpt_or_hcpcs","99214"], ["icd_10_conditions", "I10"], ["ATC", "*"]])
+    query.code_list(DB).map(&:to_s).must_equal([
+      "CPT or HCPCS 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes", "ICD-10 Conditions I10: Essential (primary) hypertension", "WHO ATC *: ALL CODES"
+    ])
+  end
 end

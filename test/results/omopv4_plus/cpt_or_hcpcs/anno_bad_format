@@ -17,6 +17,14 @@
           "improperly formatted code",
           "0382",
           "AA0382"
+        ],
+        [
+          "unknown source code",
+          "A0382"
+        ],
+        [
+          "unknown source code",
+          "99215"
         ]
       ]
     },

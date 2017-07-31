@@ -121,6 +121,13 @@ module ConceptQL
       def provenance_type_column(query, domain)
         :provenance_concept_id
       end
+
+      def concepts_ds(db, vocabulary_id, codes)
+        db[:concepts]
+          .where(vocabulary_id: vocabulary_id, concept_code: codes)
+          .select(Sequel[:concept_code].as(:concept_code), Sequel[:concept_text].as(:concept_text))
+          .from_self
+      end
     end
   end
 end

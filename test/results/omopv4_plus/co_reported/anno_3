@@ -25,7 +25,13 @@
             "rows": 14,
             "n": 10
           }
-        }
+        },
+        "warnings": [
+          [
+            "unknown source code",
+            "69210"
+          ]
+        ]
       },
       "name": "CPT or HCPCS"
     }

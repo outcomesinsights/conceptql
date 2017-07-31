@@ -398,6 +398,18 @@ module ConceptQL
       def related_concept_ids(db, *ids)
         ids
       end
+
+      def concepts_ds(db, vocabulary_id, codes)
+        standards = db[:concept]
+          .where(vocabulary_id: vocabulary_id, concept_code: codes)
+          .select(:vocabulary_id, :concept_code, Sequel[:concept_name].as(:concept_text))
+          .from_self
+        sources = db[:source_to_concept_map]
+          .where(source_vocabulary_id: vocabulary_id, source_code: codes)
+          .select(Sequel[:source_vocabulary_id].as(:vocabulary_id), Sequel[:source_code].as(:concept_code), Sequel[:source_code_description].as(:concept_text))
+          .from_self
+        standards.union(sources).distinct(:vocabulary_id, :concept_code)
+      end
     end
   end
 end

@@ -1,9 +1,9 @@
-require_relative "operator"
+require_relative "vocabulary_operator"
 require_relative "vocabulary"
 
 module ConceptQL
   module Operators
-    class MultipleVocabularies < Operator
+    class MultipleVocabularies < VocabularyOperator
       class << self
         def multiple_vocabularies
           @multiple_vocabularies ||= CSV.foreach(multiple_vocabulary_file, headers: true, header_converters: :symbol).each_with_object({}) { |row, h| (h[operator_symbol(row[:operator])] ||= []) << row.to_hash }
@@ -32,7 +32,7 @@ module ConceptQL
           h = super
           op_info = multiple_vocabularies[name].first
           h[:preferred_name] = op_info[:operator]
-          h[:predominant_domains] = multiple_vocabularies[name].map { |h| h[:domain] }.uniq.compact
+          h[:predominant_domains] = multiple_vocabularies[name].map { |mv| mv[:domain] }.uniq.compact
           h
         end
       end
@@ -60,6 +60,22 @@ module ConceptQL
         vocab_ops.map(&:domain).uniq
       end
 
+      def source_table
+        nil
+      end
+
+      def table
+        nil
+      end
+
+      def domain
+        nil
+      end
+
+      def tables
+        []
+      end
+
       def validate(db, opts = {})
         super
         vocab_ops.each { |vo| vo.validate(db, opts) }
@@ -67,7 +83,7 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        vocab_ops.map { |vo| vo.describe_codes(db, opts) }.inject(&:+)
+        vocab_ops.map { |vo| vo.describe_codes(db, codes) }.inject(&:+).uniq
       end
 
       def vocab_ops
