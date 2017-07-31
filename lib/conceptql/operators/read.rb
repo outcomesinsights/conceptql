@@ -1,5 +1,8 @@
 require 'sequel'
 require 'sequel/adapters/mock'
+require_relative "condition_occurrence_source_vocabulary_operator"
+require_relative "source_vocabulary_operator"
+require_relative "vocabulary"
 
 module ConceptQL
   module Operators
