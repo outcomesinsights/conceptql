@@ -12,7 +12,7 @@ describe ConceptQL::Operators do
                                      :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},
                                                "icd9"=>{:condition_occurrence=>{:rows=>0, :n=>0}},
                                                "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0},
-                                                         :condition_occurrence=>{:rows=>0, :n=>0}}}, :operators=>["cpt", "icd9", "union"]})
+                                                         :condition_occurrence=>{:rows=>0, :n=>0}}}})
   end
 
   describe "when tables aren't available" do
@@ -26,7 +26,7 @@ describe ConceptQL::Operators do
          :warnings=>{},
          :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},
                    "icd9"=>{:condition_occurrence=>{:rows=>0, :n=>0}},
-                   "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:rows=>0, :n=>0}}}, :operators=>["cpt", "icd9", "union"]}
+                   "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:rows=>0, :n=>0}}}}
       )
     end
 
@@ -39,7 +39,7 @@ describe ConceptQL::Operators do
          :warnings=>{"cpt"=>[["improperly formatted code", "0000"]], "icd9"=>[["improperly formatted code", "00.00"]]},
          :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},
                    "icd9"=>{:condition_occurrence=>{:rows=>0, :n=>0}},
-                   "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:rows=>0, :n=>0}}}, :operators=>["cpt", "icd9", "union"]}
+                   "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:rows=>0, :n=>0}}}}
       )
     end
   end
