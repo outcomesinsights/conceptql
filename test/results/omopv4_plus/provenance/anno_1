@@ -20,10 +20,11 @@
     "annotation": {
       "counts": {
         "condition_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": 7,
+          "n": 7
         }
       }
-    }
+    },
+    "name": "Provenance"
   }
 ]

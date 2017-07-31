@@ -13,6 +13,7 @@ require_relative "conceptql/query_modifiers/gdm/provider_query_modifier"
 require_relative "conceptql/query_modifiers/omopv4_plus/provider_query_modifier"
 require_relative "conceptql/query_modifiers/omopv4_plus/pos_query_modifier"
 require_relative "conceptql/query_modifiers/omopv4_plus/drug_query_modifier"
+require_relative "conceptql/query_modifiers/omopv4_plus/provenance_query_modifier"
 
 
 module ConceptQL

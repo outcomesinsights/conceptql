@@ -19,7 +19,8 @@ module ConceptQL
         {
           place_of_service_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,
           provider_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier
+          drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier,
+          provenance_type: ConceptQL::QueryModifiers::Omopv4Plus::ProvenanceQueryModifier,
         }[column]
       end
 
@@ -155,7 +156,8 @@ module ConceptQL
         {
           place_of_service_concept_id: query_modifier_for(:place_of_service_concept_id),
           provider_id: query_modifier_for(:provider_id),
-          drug_name: query_modifier_for(:drug_name)
+          drug_name: query_modifier_for(:drug_name),
+          provenance_type: query_modifier_for(:provenance_type)
         }
       end
 
