@@ -56,7 +56,8 @@
                       "n": 0
                     }
                   }
-                }
+                },
+                "name": "Recall"
               }
             ],
             {
@@ -67,7 +68,8 @@
                     "n": 0
                   }
                 }
-              }
+              },
+              "name": "First"
             }
           ],
           {
@@ -80,7 +82,8 @@
                   "n": 0
                 }
               }
-            }
+            },
+            "name": "Time Window"
           }
         ],
         "annotation": {
@@ -90,7 +93,8 @@
               "n": 0
             }
           }
-        }
+        },
+        "name": "During"
       }
     ],
     "right": [
@@ -125,7 +129,8 @@
                       "Qualifying Meyloma Dx"
                     ]
                   ]
-                }
+                },
+                "name": "Recall"
               }
             ],
             {
@@ -139,7 +144,8 @@
                     "n": 0
                   }
                 }
-              }
+              },
+              "name": "Time Window"
             }
           ],
           "right": [
@@ -175,7 +181,8 @@
                 "n": 0
               }
             }
-          }
+          },
+          "name": "During"
         }
       ],
       [
@@ -225,7 +232,8 @@
                       "n": 0
                     }
                   }
-                }
+                },
+                "name": "Recall"
               }
             ],
             "annotation": {
@@ -235,7 +243,8 @@
                   "n": 0
                 }
               }
-            }
+            },
+            "name": "During"
           }
         ],
         2,
@@ -263,7 +272,8 @@
               "n": 0
             }
           }
-        }
+        },
+        "name": "Union"
       }
     ],
     "annotation": {
@@ -273,6 +283,7 @@
           "n": 0
         }
       }
-    }
+    },
+    "name": "After"
   }
 ]

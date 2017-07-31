@@ -54,6 +54,7 @@
           "has no arguments"
         ]
       ]
-    }
+    },
+    "name": "Numeric"
   }
 ]

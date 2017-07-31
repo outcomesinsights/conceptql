@@ -107,19 +107,5 @@
         "n": 0
       }
     }
-  },
-  "operators": [
-    "icd9",
-    "visit_occurrence",
-    "place_of_service_code",
-    "intersect",
-    "hcpcs",
-    "complement",
-    "union",
-    "recall",
-    "gender",
-    "race",
-    "time_window",
-    "during"
-  ]
+  }
 }

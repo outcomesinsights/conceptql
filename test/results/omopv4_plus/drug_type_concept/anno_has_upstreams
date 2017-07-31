@@ -19,7 +19,7 @@
   {
     "annotation": {
       "counts": {
-        "condition_occurrence": {
+        "drug_exposure": {
           "rows": 0,
           "n": 0
         }
@@ -37,6 +37,7 @@
           "This operator will no longer be available in a future version of Jigsaw. Please use provenance instead."
         ]
       ]
-    }
+    },
+    "name": "Drug Type Concept"
   }
 ]

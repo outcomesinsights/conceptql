@@ -18,6 +18,7 @@
           "This operator will no longer be available in a future version of Jigsaw. Please use provenance instead."
         ]
       ]
-    }
+    },
+    "name": "Drug Type Concept"
   }
 ]

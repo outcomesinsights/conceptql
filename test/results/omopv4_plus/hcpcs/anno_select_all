@@ -1,3 +1,16 @@
 [
-
+  "hcpcs",
+  "*",
+  "99214",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 5864,
+          "n": 194
+        }
+      }
+    },
+    "name": "HCPCS"
+  }
 ]

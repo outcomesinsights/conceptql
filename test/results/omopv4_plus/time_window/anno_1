@@ -15,6 +15,7 @@
           "has no upstream"
         ]
       ]
-    }
+    },
+    "name": "Time Window"
   }
 ]

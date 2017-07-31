@@ -14,7 +14,8 @@
                 "n": 124
               }
             }
-          }
+          },
+          "name": "Gender"
         }
       ],
       {
@@ -27,7 +28,8 @@
               "n": 124
             }
           }
-        }
+        },
+        "name": "Time Window"
       }
     ],
     "annotation": {
@@ -43,6 +45,7 @@
           "left"
         ]
       ]
-    }
+    },
+    "name": "After"
   }
 ]
