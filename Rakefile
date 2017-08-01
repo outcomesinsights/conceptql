@@ -37,3 +37,43 @@ end
 
 desc "Run tests with omopv4 data model"
 task :default => :test_omopv4_plus
+
+desc "Ingests client's CSV file for custom vocabularies"
+task :make_vocabs_csv, [:csv_path] do |t, args|
+  require "conceptql"
+  require "csv"
+  require "open-uri"
+  known_vocabs = CSV.foreach(ConceptQL.vocabularies_file_path, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
+    h[row[:id].downcase] = row.to_hash
+  end
+  amgen_vocabs = open(args.csv_path) do |amgen_csv_file|
+    CSV.parse(amgen_csv_file.read, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
+      h[row[:vocabulary_short_name].downcase] = row.to_hash
+    end
+  end
+
+  new_from_amgen = amgen_vocabs.keys - known_vocabs.keys
+  new_from_amgen.each do |key|
+    amgen_vocab = amgen_vocabs[key]
+    new_vocab = {
+      id: amgen_vocab[:vocabulary_short_name],
+      omopv4_vocabulary_id: amgen_vocab[:vocabulary_id],
+      vocabulary_full_name: amgen_vocab[:vocabulary_long_name],
+      vocabulary_short_name: amgen_vocab[:vocabulary_short_name],
+      domain: amgen_vocab[:omop_table],
+      hidden: nil,
+      format_regexp: nil
+    }
+    known_vocabs[new_vocab[:id]] = new_vocab
+  end
+
+  p known_vocabs
+
+  headers = known_vocabs.first.last.keys
+  CSV.open(ConceptQL.vocabularies_file_path, "w") do |csv|
+    csv << headers
+    known_vocabs.sort_by { |k, v| v[:id] }.map { |k, v| v.values_at(*headers) }.each do |row|
+      csv << row
+    end
+  end
+end
