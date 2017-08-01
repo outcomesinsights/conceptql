@@ -176,6 +176,10 @@ module ConceptQL
       def domain_map(v_id)
         (self.class.vocab_domain[v_id] || :condition_occurrence).to_sym
       end
+
+      def table_is_missing?(db)
+        dm.table_is_missing?(db)
+      end
     end
   end
 end
