@@ -60,4 +60,12 @@ describe ConceptQL::Operators do
       "CPT or HCPCS 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes", "ICD-10 Conditions I10: Essential (primary) hypertension", "WHO ATC *: ALL CODES"
     ])
   end
+
+  it "should return codes from vocabulary-based operators even with no db" do
+    db = ConceptQL::Database.new(nil)
+    query = db.query(["union", ["cpt_or_hcpcs","99214"], ["icd_10_conditions", "I10"], ["ATC", "*"]])
+    query.code_list(nil).map(&:to_s).must_equal([
+      "CPT or HCPCS 99214", "ICD-10 Conditions I10", "WHO ATC *: ALL CODES"
+    ])
+  end
 end
