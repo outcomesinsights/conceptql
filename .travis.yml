@@ -1,12 +1,12 @@
 language: ruby
 rvm:
   - 2.2
-  - jruby
+  - 2.3
+  - 2.4
 sudo: false
 gemfile: .travis.gemfile
 env:
-  CONCEPTQL_DATA_MODEL=omopv4_plus
-  SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
+  - CONCEPTQL_DATA_MODEL=omopv4_plus SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
 addons:
   postgresql: "9.6"
 services:
