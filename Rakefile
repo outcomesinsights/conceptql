@@ -76,6 +76,7 @@ task :make_vocabs_csv, [:csv_path] do |t, args|
       csv << row
     end
   end
+end
 
 desc "Dump a set of diagnostics"
 task :diagnostics do
