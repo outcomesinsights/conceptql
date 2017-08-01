@@ -46,11 +46,7 @@ module ConceptQL
         end
 
         def each_vocab
-          @each_vocab ||= CSV.foreach(vocabs_file, headers: true, header_converters: :symbol)
-        end
-
-        def vocabs_file
-          ConceptQL.config_dir + "vocabularies.csv"
+          @each_vocab ||= CSV.foreach(ConceptQL.vocabularies_file_path, headers: true, header_converters: :symbol)
         end
 
         def from_old_vocab(nodifier, old_vocab_id, *values)

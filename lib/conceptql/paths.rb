@@ -1,13 +1,23 @@
 module ConceptQL
-  def self.root
-    (Pathname.new(__dir__) + ".." + "..").expand_path
-  end
+  class << self
+    def root
+      (Pathname.new(__dir__) + ".." + "..").expand_path
+    end
 
-  def self.schemas_dir
-    root + 'schemas'
-  end
+    def schemas_dir
+      root + 'schemas'
+    end
 
-  def self.config_dir
-    root + 'config'
+    def config_dir
+      root + 'config'
+    end
+
+    def vocabularies_file_path
+      ConceptQL.config_dir + "vocabularies.csv"
+    end
+
+    def multiple_vocabularies_file_path
+      ConceptQL.config_dir + "multiple_vocabularies.csv"
+    end
   end
 end
