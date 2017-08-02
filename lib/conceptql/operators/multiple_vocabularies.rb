@@ -6,7 +6,13 @@ module ConceptQL
     class MultipleVocabularies < VocabularyOperator
       class << self
         def multiple_vocabularies
-          @multiple_vocabularies ||= CSV.foreach(ConceptQL.multiple_vocabularies_file_path, headers: true, header_converters: :symbol).each_with_object({}) { |row, h| (h[operator_symbol(row[:operator])] ||= []) << row.to_hash }
+          @multiple_vocabularies ||= get_multiple_vocabularies
+        end
+
+        def get_multiple_vocabularies
+          [ConceptQL.multiple_vocabularies_file_path, ConceptQL.custom_multiple_vocabularies_file_path].select(&:exist?).map do |path|
+            CSV.foreach(path, headers: true, header_converters: :symbol).each_with_object({}) { |row, h| (h[operator_symbol(row[:operator])] ||= []) << row.to_hash }
+          end.inject(&:merge)
         end
 
         def register_many

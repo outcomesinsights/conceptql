@@ -25,4 +25,25 @@ describe ConceptQL::Operators::Vocabulary do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
     db.query(["ATC", "*"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"person_id\" AS \"person_id\", \"drug_exposure_id\" AS \"criterion_id\", CAST('drug_exposure' AS text) AS \"criterion_table\", CAST('drug_exposure' AS text) AS \"criterion_domain\", CAST(\"drug_exposure_start_date\" AS date) AS \"start_date\", CAST(coalesce(\"drug_exposure_end_date\", \"drug_exposure_start_date\") AS date) AS \"end_date\", CAST(\"drug_source_value\" AS text) AS \"source_value\" FROM \"drug_exposure\" WHERE (\"drug_source_vocabulary_id\" = 21)) AS \"t1\") AS \"t1\""
   end
+
+  it "should read operators from a custom file" do
+    assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
+      row[:id] == "test"
+    end)
+    Tempfile.create("blah.csv") do |f|
+      CSV(f) do |csv|
+        csv << %w(id omopv4_vocabulary_id vocabulary_full_name vocabulary_short_name domain hidden format_regexp)
+        csv << %w(test 0 test_full test_short test_domain) + [nil, nil]
+      end
+      f.rewind
+      ConceptQL.stub(:custom_vocabularies_file_path, Pathname.new(f.path)) do
+        refute_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
+          row[:id] == "test"
+        end)
+      end
+    end
+    assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
+      row[:id] == "test"
+    end)
+  end
 end

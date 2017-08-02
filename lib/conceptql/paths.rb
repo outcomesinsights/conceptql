@@ -19,5 +19,13 @@ module ConceptQL
     def multiple_vocabularies_file_path
       ConceptQL.config_dir + "multiple_vocabularies.csv"
     end
+
+    def custom_vocabularies_file_path
+      ConceptQL.config_dir + "vocabularies.custom.csv"
+    end
+
+    def custom_multiple_vocabularies_file_path
+      ConceptQL.config_dir + "multiple_vocabularies.custom.csv"
+    end
   end
 end
