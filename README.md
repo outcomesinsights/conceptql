@@ -1,4 +1,4 @@
-# ConceptQL
+# ConceptQL [![Build Status](https://travis-ci.org/outcomesinsights/conceptql.svg?branch=master)](https://travis-ci.org/outcomesinsights/conceptql)
 
 ConceptQL (pronounced concept-Q-L) is a high-level language that allows researchers to unambiguously define their research algorithms.
 
