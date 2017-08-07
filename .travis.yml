@@ -1,22 +1,23 @@
 language: ruby
 rvm:
-  - 2.2
-  - 2.3
-  - 2.4
+- 2.2
+- 2.3
+- 2.4
 sudo: false
-gemfile: .travis.gemfile
+gemfile: ".travis.gemfile"
 env:
-  - CONCEPTQL_DATA_MODEL=omopv4_plus SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
+- CONCEPTQL_DATA_MODEL=omopv4_plus SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
 addons:
-  postgresql: "9.6"
+  postgresql: '9.6'
 services:
-  - postgresql
+- postgresql
 before_install:
-  - gem install bundler
-  - psql -c 'create database synpuf_250_20160815;' -U postgres
-  - curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres -d synpuf_250_20160815 > /tmp/restore.log 2>&1
+- gem install bundler
+- psql -c 'create database synpuf_250_20160815;' -U postgres
+- curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres
+  -d synpuf_250_20160815 > /tmp/restore.log 2>&1
 before_script:
-  - bundle exec rake diagnostics
+- bundle exec rake diagnostics
 script: bundle exec ruby test/all.rb
 notifications:
   slack:
