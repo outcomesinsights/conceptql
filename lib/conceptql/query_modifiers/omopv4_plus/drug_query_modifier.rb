@@ -11,6 +11,8 @@ module ConceptQL
             :drug_name,
             :drug_amount,
             :drug_amount_units,
+            :drug_quantity,
+            :drug_days_supply
           ]
         end
 
@@ -30,6 +32,8 @@ module ConceptQL
           query.from_self(alias: :de)
             .left_join(micro_table.as(:mt), drug_concept_id: :drug_concept_id)
             .select_all(:de)
+            .select_append(Sequel[:de][:quantity].as(:drug_quantity))
+            .select_append(Sequel[:de][:days_supply].as(:drug_days_supply))
             .select_append(Sequel[:mt][:amount_value].as(:drug_amount))
             .select_append(Sequel[:mt][:amount_unit].as(:drug_amount_units))
             .select_append(Sequel[:mt][:drug_name].as(:drug_name))
