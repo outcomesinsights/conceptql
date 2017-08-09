@@ -10,7 +10,7 @@
     "drug_name": "exenatide 0.25 MG/ML Injectable Solution [Byetta]",
     "drug_amount": null,
     "drug_amount_units": null,
-    "drug_quantity": null,
-    "drug_days_supply": null
+    "drug_quantity": 90.0,
+    "drug_days_supply": 30
   }
 ]
