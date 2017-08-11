@@ -35,12 +35,12 @@ module ConceptQL
       op.rdbms.cast_date(adjusted_date)
     end
 
-    private
-
     # Returns an array of strings that represent date modifiers
     def adjustments
       @adjustments ||= parse(str)
     end
+
+    private
 
     def lookup
       {

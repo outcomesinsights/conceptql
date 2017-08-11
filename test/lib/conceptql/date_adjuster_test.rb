@@ -57,6 +57,30 @@ describe ConceptQL::DateAdjuster do
         da.adjust(:start_date).interval.must_equal({years: 6})
       end
     end
+
+    describe "with no digit" do
+      let(:str) { "dwmy" }
+
+      it "should pick out each interval" do
+        da.adjustments.must_equal([[:days, 1], [:weeks, 1], [:months, 1], [:years, 1]])
+      end
+    end
+
+    describe "with minuses and no digit" do
+      let(:str) { "-dw-my" }
+
+      it "should only subtract days and months" do
+        da.adjustments.must_equal([[:days, -1], [:weeks, 1], [:months, -1], [:years, 1]])
+      end
+    end
+
+    describe "with repeated characters" do
+      let(:str) { "ddd" }
+
+      it "should add 3 days" do
+        da.adjustments.must_equal([[:days, 1], [:days, 1], [:days, 1]])
+      end
+    end
   end
 end
 
