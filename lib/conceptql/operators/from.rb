@@ -31,7 +31,8 @@ module ConceptQL
       end
 
       def override_columns
-        Hash[options[:query_cols].map(&:to_sym).zip(options[:query_cols].map(&:to_sym))]
+        cols = (options[:query_cols] || dynamic_columns).map(&:to_sym)
+        Hash[cols.zip(cols)]
       end
     end
   end
