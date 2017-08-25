@@ -12,7 +12,7 @@ module ConceptQL
       codes_should_match(/^[A-Z][0-9][A-Z0-9](\.[A-Z0-9]{1,4})?$/i)
 
       def vocabulary_id
-        34
+        [34, 70]
       end
     end
   end
