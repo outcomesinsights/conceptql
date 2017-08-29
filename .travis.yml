@@ -9,10 +9,14 @@ env:
 - CONCEPTQL_DATA_MODEL=omopv4_plus SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
 addons:
   postgresql: '9.6'
+  apt:
+    packages:
+      - python-pip
 services:
 - postgresql
 before_install:
 - gem install bundler
+- pip install sqlparse
 - psql -c 'create database synpuf_250_20160815;' -U postgres
 - curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres
   -d synpuf_250_20160815 > /tmp/restore.log 2>&1
