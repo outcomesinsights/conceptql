@@ -100,6 +100,16 @@ class Minitest::Spec
     raise
   end
 
+  def json_fixture(name)
+    json_file = Pathname.new("test") + "fixtures" + "json" + (name.to_s + ".json")
+    JSON.parse(json_file.read)
+  end
+
+  def txt_fixture(name)
+    txt_file = Pathname.new("test") + "fixtures" + "txt" + (name.to_s + ".txt")
+    txt_file.read
+  end
+
   def log
     DB.loggers << Logger.new($stdout)
     yield

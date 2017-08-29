@@ -46,5 +46,16 @@ describe ConceptQL::Utils do
       assert ConceptQL::Utils.present?("1")
     end
   end
+
+  describe ".timed_capture" do
+    it "should timeout if process takes too long" do
+      assert_raises(Timeout::Error) { ConceptQL::Utils.timed_capture("sleep", "20", timeout: 1) }
+    end
+
+    it "should not timeout if process is fast enough" do
+      value = ConceptQL::Utils.timed_capture("echo", "-n", "hi", timeout: 1)
+      assert_equal "hi", value
+    end
+  end
 end
 

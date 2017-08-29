@@ -1,4 +1,4 @@
-require_relative 'db_helper'
+require_relative '../../db_helper'
 
 describe ConceptQL::Query do
   it "should handle errors in the root operator" do
@@ -31,6 +31,35 @@ describe ConceptQL::Query do
                                       :right=>["recall", "Meyloma 90-day Lookback"]}]]]}]
       )
     end.must_raise
+  end
+
+  describe "#formatted_sql" do
+    let :cdb do
+      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
+    end
+
+    it "should produce formatted SQL" do
+      expected = "SELECT *
+FROM
+  (SELECT *
+   FROM
+     (SELECT \"person_id\" AS \"person_id\",
+             \"condition_occurrence_id\" AS \"criterion_id\",
+             cast('condition_occurrence' AS text) AS \"criterion_table\",
+             cast('condition_occurrence' AS text) AS \"criterion_domain\",
+             cast(\"condition_start_date\" AS date) AS \"start_date\",
+             cast(coalesce(\"condition_end_date\", \"condition_start_date\") AS date) AS \"end_date\",
+             cast(\"condition_source_value\" AS text) AS \"source_value\"
+      FROM \"condition_occurrence\" AS \"tab\"
+      WHERE ((\"condition_source_value\" IN ('412'))
+             AND (\"condition_source_vocabulary_id\" = 2))) AS \"t1\") AS \"t1\""
+
+      cdb.query([:icd9, "412"]).formatted_sql.must_equal(expected)
+    end
+
+    it "should timeout after 10 seconds if can't parse" do
+      cdb.query(json_fixture(:sqlformat_killer)).formatted_sql.must_equal(txt_fixture(:sqlformat_killer_sql).chomp)
+    end
   end
 end
 

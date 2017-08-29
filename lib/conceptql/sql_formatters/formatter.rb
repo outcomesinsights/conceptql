@@ -6,7 +6,7 @@ module ConceptQL
       end
 
       def format(sql)
-        sql, _ = Open3.capture2(command, stdin_data: sql)
+        sql = ConceptQL::Utils.timed_capture(command, stdin_data: sql, timeout: 10)
         return sql
       rescue
         return sql
