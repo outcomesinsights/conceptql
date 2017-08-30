@@ -58,7 +58,7 @@ FROM
     end
 
     it "should timeout after 10 seconds if can't parse" do
-      cdb.query(json_fixture(:sqlformat_killer)).formatted_sql.must_equal(txt_fixture(:sqlformat_killer_sql).chomp)
+      cdb.query(json_fixture(:sqlformat_killer)).formatted_sql.chomp.must_equal(txt_fixture(:sqlformat_killer_sql).chomp)
     end
   end
 end
