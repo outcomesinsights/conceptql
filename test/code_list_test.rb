@@ -15,9 +15,9 @@ describe ConceptQL::Operators do
   end
 
   it "should handle nil for a DB" do
-    db = ConceptQL::Database.new(DB)
+    db = ConceptQL::Database.new(nil)
     query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
-    query.code_list(nil).map(&:to_s).must_equal([
+    query.code_list.map(&:to_s).must_equal([
       "CPT 99214",
       "ICD-9 CM 250.00",
       "ICD-9 CM 250.02"
@@ -25,9 +25,9 @@ describe ConceptQL::Operators do
   end
 
   it "should handle nil for preferred name" do
-    db = ConceptQL::Database.new(DB)
+    db = ConceptQL::Database.new(nil)
     query = db.query(["revenue_code", "0100"])
-    query.code_list(nil).map(&:to_s).must_equal([
+    query.code_list.map(&:to_s).must_equal([
       "Revenue Code 0100"
     ])
   end

@@ -81,7 +81,7 @@ module ConceptQL
       end
     end
 
-    def code_list(db)
+    def code_list(ignored_db = nil)
       operator.code_list(db).uniq
     end
 
