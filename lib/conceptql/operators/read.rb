@@ -60,8 +60,10 @@ module ConceptQL
         end
 
         leftovers = arguments - doms_and_codes.flat_map { |k, v| v }
-        doms_and_codes[:observation] ||= []
-        doms_and_codes[:observation] += leftovers
+        unless leftovers.empty?
+          doms_and_codes[:observation] ||= []
+          doms_and_codes[:observation] += leftovers
+        end
         doms_and_codes
       end
 
