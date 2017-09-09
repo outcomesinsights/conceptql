@@ -18,6 +18,7 @@ services:
 - postgresql
 before_install:
 - gem install bundler tping
+- pip install urllib3[secure]
 - pip install sqlparse
 - psql -c 'create database synpuf_250_20160815;' -U postgres
 - curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres
