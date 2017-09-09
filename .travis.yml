@@ -26,7 +26,7 @@ before_script:
 - bundle exec rake diagnostics
 script: bundle exec ruby test/all.rb
 after_success:
-- tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw_builder
+- tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw_builder pro
 notifications:
   slack:
     secure: YrvvLrIOgRIzqb01GbektA0YZXCieghuhaU3O4vBW/otrz26twb/0zeB/HHqKS3P2re0R127wGw6nAUAG9ieEHPYMKcpZZWzvnPrqQ/5ASbIZWX85fps0svFEeQTqRjK8TdHC/0ZJoy3P7i6wgBoWcs434aSR4K6KgisdWJATk0=
