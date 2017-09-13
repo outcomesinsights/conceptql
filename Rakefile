@@ -83,6 +83,9 @@ task :diagnostics do
   require "sequelizer"
   require "pp"
   puts "*" * 80
+  puts "Free Space"
+  pp `df -h`
+  puts "*" * 80
   puts "Environment"
   pp ENV
   puts "*" * 80
