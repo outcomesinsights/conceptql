@@ -21,10 +21,10 @@ before_install:
 - gem install bundler tping
 - sudo pip install pyOpenSSL cryptography idna certifi urllib3[secure] sqlparse
 - psql -c 'create database synpuf_250_20160815;' -U postgres
-- df -h
 - find /var/ramfs/postgresql/9.{2,3,4,5} -maxdepth 0 -print | sudo xargs rm -rf
-- df -h
 - curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres -d synpuf_250_20160815 > /tmp/restore.log 2>&1 || cat /tmp/restore.log
+- df -h
+- bash -c "echo 'data_directory = \'/etc/postgresql/9.6/main/\'' >> /etc/postgresql/9.6/main/postgresql.conf"
 - df -h
 before_script:
 - bundle exec rake diagnostics
