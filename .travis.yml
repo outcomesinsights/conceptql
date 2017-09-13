@@ -25,6 +25,7 @@ before_install:
 - curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres -d synpuf_250_20160815 > /tmp/restore.log 2>&1 || cat /tmp/restore.log
 - df -h
 - sudo bash -c "echo \"data_directory = '/etc/postgresql/9.6/main/'\" >> /etc/postgresql/9.6/main/postgresql.conf"
+- tail /etc/postgresql/9.6/main/postgresql.conf
 - sudo service postgresql restart 9.6
 - df -h
 before_script:
