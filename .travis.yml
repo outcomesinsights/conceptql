@@ -6,16 +6,19 @@ rvm:
 sudo: false
 gemfile: ".travis.gemfile"
 env:
-- CONCEPTQL_DATA_MODEL=omopv4_plus SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
+  global:
+  - CONCEPTQL_DATA_MODEL=omopv4_plus SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
+  - secure: krTfSi0Itzy6NbTg3Fe/H/uyI5mjG6tYjE6G5zSmkl4ftmiDZ8ziI8YEXl5tnOlQtCPJxHzCLFlzfxFle11g+8at8WA7Fc3zwC+LEIDGV7HLG2dev4K18vM7sAtbvbFseprJGQZb1jWf7rez6ie3cp0K4SeLzRl5HWMyCj/HG3A=
 addons:
   postgresql: '9.6'
   apt:
     packages:
-      - python-pip
+    - python-pip
 services:
 - postgresql
 before_install:
-- gem install bundler
+- gem install bundler tping
+- pip install urllib3[secure]
 - pip install sqlparse
 - psql -c 'create database synpuf_250_20160815;' -U postgres
 - curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres
@@ -23,6 +26,8 @@ before_install:
 before_script:
 - bundle exec rake diagnostics
 script: bundle exec ruby test/all.rb
+after_success:
+- tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw_builder pro
 notifications:
   slack:
     secure: YrvvLrIOgRIzqb01GbektA0YZXCieghuhaU3O4vBW/otrz26twb/0zeB/HHqKS3P2re0R127wGw6nAUAG9ieEHPYMKcpZZWzvnPrqQ/5ASbIZWX85fps0svFEeQTqRjK8TdHC/0ZJoy3P7i6wgBoWcs434aSR4K6KgisdWJATk0=
