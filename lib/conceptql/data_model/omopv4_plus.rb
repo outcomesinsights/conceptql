@@ -124,9 +124,11 @@ module ConceptQL
         if opts[:query_columns]
           remainder -= opts[:query_columns].keys
         else
+          remainder -= table_cols(table)
           remainder -= columns_in_table(table).keys
           remainder -= applicable_query_modifiers(table).flat_map(&:provided_columns)
         end
+
         Hash[remainder.map { |r| [r, rdbms.process(r, nil)] }]
       end
 
