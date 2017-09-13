@@ -18,6 +18,7 @@ services:
 - postgresql
 before_install:
 - gem install bundler tping
+- pip install pyOpenSSL cryptography idna certifi
 - pip install urllib3[secure]
 - pip install sqlparse
 - psql -c 'create database synpuf_250_20160815;' -U postgres
