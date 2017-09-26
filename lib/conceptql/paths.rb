@@ -27,5 +27,9 @@ module ConceptQL
     def custom_multiple_vocabularies_file_path
       ConceptQL.config_dir + "multiple_vocabularies.custom.csv"
     end
+
+    def race_file
+      ConceptQL.config_dir + "race.yml"
+    end
   end
 end

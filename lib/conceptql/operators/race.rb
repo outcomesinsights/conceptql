@@ -1,4 +1,5 @@
 require_relative 'operator'
+require "yaml"
 
 module ConceptQL
   module Operators
@@ -19,6 +20,10 @@ module ConceptQL
       validate_no_upstreams
       validate_at_least_one_argument
 
+      def race_descendents
+        @race_descendents ||= YAML.load_file(ConceptQL.race_file)
+      end
+
       def query_cols
         table_columns(table)
       end
@@ -36,18 +41,26 @@ module ConceptQL
       end
 
       def query(db)
+        words = arguments - actual_ids
+
         concept_ids = if gdm?
           db[:concepts]
-            .where(Sequel.function(:lower, :concept_text) => arguments.map(&:downcase))
+            .where(Sequel.function(:lower, :concept_text) => words.map(&:downcase))
             .select(:id)
         else
           db[:concept]
-            .where(Sequel.function(:lower, :concept_name) => arguments.map(&:downcase))
+            .where(Sequel.function(:lower, :concept_name) => words.map(&:downcase))
             .select(:concept_id)
         end
 
+        c_ids = (concept_ids.select_map(:concept_id) + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
+
         db.from(source_table)
-          .where(race_concept_id: concept_ids)
+          .where(race_concept_id: c_ids)
+      end
+
+      def actual_ids
+        @actual_ids ||= arguments.select { |i| i.to_s.match(/^\d+$/) }
       end
     end
   end
