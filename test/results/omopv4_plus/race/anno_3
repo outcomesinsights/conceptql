@@ -1,0 +1,15 @@
+[
+  "race",
+  "unknown",
+  {
+    "annotation": {
+      "counts": {
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    },
+    "name": "Race"
+  }
+]

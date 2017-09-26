@@ -55,8 +55,13 @@ module ConceptQL
 
         c_ids = (concept_ids.select_map(:concept_id) + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
 
-        db.from(source_table)
-          .where(race_concept_id: c_ids)
+        q = db.from(source_table)
+        if words.any? { |w| w.match(/unknown/i) }
+          c_ids << 0
+          q = q.where(race_concept_id: nil)
+        end
+
+        q.where(race_concept_id: c_ids)
       end
 
       def actual_ids
