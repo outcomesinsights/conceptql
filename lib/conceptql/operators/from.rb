@@ -30,6 +30,10 @@ module ConceptQL
         values.first.to_sym rescue nil
       end
 
+      def requried_columns
+        override_columns.keys
+      end
+
       def override_columns
         cols = (options[:query_cols] || dynamic_columns).map(&:to_sym)
         Hash[cols.zip(cols)]
