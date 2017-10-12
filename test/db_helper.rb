@@ -22,7 +22,7 @@ class Minitest::Spec
   end
 
   def results(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| query(stmt).all}
+    load_check(test_name, statement){|stmt| query(stmt).order(:person_id, :criterion_table, :criterion_id).all}
   end
 
   def query(statement)

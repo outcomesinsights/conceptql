@@ -9,6 +9,15 @@
     "source_value": "00013D2EFD8E45D1"
   },
   {
+    "person_id": 2,
+    "criterion_id": 2,
+    "criterion_table": "person",
+    "criterion_domain": "person",
+    "start_date": "1942-12-25",
+    "end_date": "1943-01-08",
+    "source_value": "00016F745862898F"
+  },
+  {
     "person_id": 3,
     "criterion_id": 3,
     "criterion_table": "person",
@@ -2230,14 +2239,5 @@
     "start_date": "1921-04-24",
     "end_date": "1921-05-08",
     "source_value": "00828768BBD4C862"
-  },
-  {
-    "person_id": 2,
-    "criterion_id": 2,
-    "criterion_table": "person",
-    "criterion_domain": "person",
-    "start_date": "1942-12-25",
-    "end_date": "1943-01-08",
-    "source_value": "00016F745862898F"
   }
 ]
