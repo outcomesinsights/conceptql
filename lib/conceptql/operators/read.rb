@@ -25,7 +25,7 @@ module ConceptQL
 
       def omopv4(db)
         ops = codes_by_domain(db).map do |domain, codes|
-          klasses[domain].new(self.nodifier, *codes)
+          klasses[domain].new(self.nodifier, "read_#{domain}", *codes)
         end
 
         streams = ops.map { |op| op.evaluate(db) }
