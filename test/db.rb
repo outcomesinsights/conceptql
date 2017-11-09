@@ -1,6 +1,7 @@
 require 'sequelizer'
 
 DB = Object.new.extend(Sequelizer).db unless defined?(DB)
+DB.run("use #{DB.opts[:database]}") if DB.opts[:adapter] =~ /(impala|hive)/
 
 
 if %w(omopv4 omopv4_plus).include?(ENV['DATA_MODEL']) && !DB.table_exists?(:source_to_concept_map)
