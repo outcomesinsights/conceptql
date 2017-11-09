@@ -16,7 +16,7 @@ module ConceptQL
       # safe bet that we can append the person_id to any constant, making it
       # no longer a constant, but still a viable column for partitioning
       def partition_fix(column)
-        Sequel.expr(column) + '_' + Sequel.cast_string(:person_id)
+        Sequel.expr(column).cast_string + '_' + Sequel.cast_string(:person_id)
       end
     end
   end
