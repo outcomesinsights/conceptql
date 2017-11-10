@@ -181,13 +181,99 @@ module ConceptQL
       true
     end
 
+    def recursive_extract_cte_expr(t, ctes)
+      case t
+      when Sequel::Dataset
+        recursive_extract_ctes(t, ctes)
+      when Sequel::SQL::AliasedExpression
+        if t.expression.is_a?(Sequel::Dataset)
+          Sequel.as(recursive_extract_ctes(t.expression, ctes), t.alias)
+        else
+          t
+        end
+      else
+        t
+      end
+    end
+
+    def recursive_extract_ctes(query, ctes)
+      #puts
+      #p [:rec, ctes, query.opts]
+
+      if from = query.opts[:from]
+        from = from.map{|t| recursive_extract_cte_expr(t, ctes)}
+        query = query.clone(:from=>from.map{|t| recursive_extract_cte_expr(t, ctes)})
+        #p [:rec_from, ctes.map(&:first), from]
+      end
+
+      if joins = query.opts[:join]
+        query = query.clone(:join=>joins.map{|jc| jc.class.new(jc.on, jc.join_type, recursive_extract_cte_expr(jc.table_expr, ctes))})
+        #p [:rec_join, ctes.map(&:first), joins]
+      end
+
+      if compounds = query.opts[:compounds]
+        query = query.clone(:compounds=>compounds.map{|t,ds,a| [t, recursive_extract_ctes(ds, ctes),a]})
+        #p [:rec_compounds, ctes.map(&:first), compounds]
+      end
+
+      if with = query.opts[:with]
+        ctes.concat(with.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
+        #p [:rec_with, ctes.map(&:first), with]
+        query = query.clone(:with=>nil) 
+      end
+
+
+      query
+    end
+
     def with_ctes(query, db)
+      #puts
+      #p [:with_ctes, query]
       raise "recall operator use without matching label" unless valid?
-
       query = query.from_self
+      temp_tables = ctes.map do |label, operator|
+        [label_cte_name(label), operator.evaluate(db)]
+      end
 
-      ctes.each do |label, operator|
-        query = query.with(label_cte_name(label), operator.evaluate(db))
+      if FORCE_TEMP_TABLES
+        query = recursive_extract_ctes(query, temp_tables).with_extend do
+          # Create temp tables for each CTE
+          #
+          # Need to override multiple methods if sequel_pg is in use, as in
+          # that case not every method calls each.  For other adapters or
+          # when sequel_pg is not in use, it is probably safe to override just each.
+          # There are other methods that may need to be overridden in order to handle
+          # all cases when sequel_pg is in use.
+          [:each, :to_hash_groups, :to_hash].each do |meth|
+            define_method(meth) do |*args, &block|
+              if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
+                begin
+                  temp_tables.each do |table_name, ds|
+                    #p [:create_table, table_name]
+                    db.create_table(table_name, as: ds)
+                  end
+
+                  clone(:conceptql_temp_tables_created=>true).send(meth, *args, &block)
+                ensure
+                  temp_tables.reverse_each do |table_name,_|
+                    #p [:drop_table, table_name]
+                    begin
+                      db.drop_table(table_name)
+                    rescue Sequel::DatabaseError
+                      warn("Unable to drop scratch table: #{literal(table_name)}")
+                    end
+                  end
+                end
+              else
+                super(*args, &block)
+              end
+            end
+          end
+        end
+      else
+        temp_tables.each do |table_name, ds|
+          query = query.with(table_name, ds)
+        end
       end
 
       query
