@@ -138,8 +138,10 @@ module ConceptQL
         # columns to still work, send the columns request to the
         # underlying operator.
         op = fetch_operator(label)
-        (class << ds; self; end).send(:define_method, :columns) do
-          (@main_op ||= op.evaluate(db)).columns
+        ds = ds.with_extend do
+          define_method(:columns) do
+            (@main_op ||= op.evaluate(db)).columns
+          end
         end
       end
 
