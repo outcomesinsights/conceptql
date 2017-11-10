@@ -50,6 +50,7 @@ module ConceptQL
       @known_operators = {}
       @recall_dependencies = {}
       @recall_stack = []
+      @label_cte_names = {}
       @annotation = {}
       @opts = opts.dup
       @annotation[:errors] = @errors = {}
@@ -129,7 +130,7 @@ module ConceptQL
     end
 
     def from(db, label)
-      ds = db.from(label)
+      ds = db.from(label_cte_name(label))
 
       if ENV['CONCEPTQL_CHECK_COLUMNS']
         # Work around requests for columns by operators.  These
@@ -186,10 +187,14 @@ module ConceptQL
       query = query.from_self
 
       ctes.each do |label, operator|
-        query = query.with(label, operator.evaluate(db))
+        query = query.with(label_cte_name(label), operator.evaluate(db))
       end
 
       query
+    end
+
+    def label_cte_name(label)
+      @label_cte_names[label] ||= ConceptQL.cte_name(label)
     end
 
     def ctes

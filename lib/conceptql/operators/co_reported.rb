@@ -30,13 +30,14 @@ module ConceptQL
           q.intersect(tab)
         end
 
+        name = cte_name(:shared_context_ids)
         shared_events = contexteds.map do |contexted|
-          contexted.where(context_id: db[:shared_context_ids])
+          contexted.where(context_id: db[name])
         end
 
         shared_events.inject do |q, shared_event|
           q.union(shared_event)
-        end.with(:shared_context_ids, shared_context_ids)
+        end.with(name, shared_context_ids)
       end
 
       def contextify(db, stream)
