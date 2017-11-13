@@ -135,6 +135,10 @@ module ConceptQL
         scope.query_columns
       end
 
+      def cte_name(name)
+        ConceptQL.cte_name(name)
+      end
+
       def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 

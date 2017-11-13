@@ -53,8 +53,9 @@ occurrence, this operator returns nothing for that person.
       end
 
       def query(db)
-        db[:occurrences]
-          .with(:occurrences, occurrences(db))
+        name = cte_name(:occurrences)
+        db[name]
+          .with(name, occurrences(db))
           .where(rn: occurrence.abs)
       end
 
@@ -98,8 +99,9 @@ occurrence, this operator returns nothing for that person.
         return stream.evaluate(db) unless options[:unique]
         uniquify = stream.evaluate(db)
           .from_self
-        db[:uniqued]
-          .with(:uniqued, uniquify)
+        name = cte_name(:uniqued)
+        db[name]
+          .with(name, uniquify)
           .select_append { |o| o.row_number.function.over(partition: uniquify_partition_columns, order: ordered_columns).as(:unique_rn) }
           .from_self
           .where(unique_rn: 1)
