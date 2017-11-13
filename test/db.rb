@@ -1,8 +1,18 @@
 require 'sequelizer'
 
 DB = Object.new.extend(Sequelizer).db unless defined?(DB)
-DB.run("use #{DB.opts[:database]}") if DB.opts[:adapter] =~ /(impala|hive)/
+if DB.database_type == :impala
+  # Make sure to issue USE statement for every new connection
+  ac = DB.pool.after_connect
+  DB.pool.after_connect = proc do |conn|
+    DB.send(:log_connection_execute, conn, "USE #{DB.opts[:database]}")
+    ac.call(conn) if ac
+  end
 
+  # Remove existing connnections, so that the next query will use a new connection
+  # that the USE statement has been executed on
+  DB.disconnect
+end
 
 if %w(omopv4 omopv4_plus).include?(ENV['DATA_MODEL']) && !DB.table_exists?(:source_to_concept_map)
   $stderr.puts <<END
