@@ -45,6 +45,12 @@ module ConceptQL
       pp q.query.all
     end
 
+    desc 'sql statement_file', 'Reads the ConceptQL statement from the statement file and prints the SQL out'
+    def sql(statement_file)
+      q = cdb(options).query(criteria_from_file(statement_file))
+      puts q.formatted_sql
+    end
+
     desc "annotate_statement", "Reads in a statement and annotates it"
     def annotate_statement(statement_file)
       q = ConceptQL::Query.new(db(options), criteria_from_file(statement_file))
