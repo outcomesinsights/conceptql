@@ -20,8 +20,8 @@ module ConceptQL
           rquery = right.evaluate(db)
 
           # Set columns so that impala's EXCEPT emulation doesn't use a query to determine them
-          lquery.instance_variable_set(:@columns, query_cols)
-          rquery.instance_variable_set(:@columns, query_cols)
+          lquery.send(:columns= , query_cols)
+          rquery.send(:columns= , query_cols)
 
           if impala?
             lquery = lquery.except_strategy(:not_exists, :person_id, :criterion_id, :criterion_domain)
