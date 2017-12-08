@@ -19,7 +19,7 @@ require_relative "conceptql/query_modifiers/omopv4_plus/provenance_query_modifie
 require 'securerandom'
 
 module ConceptQL
-  FORCE_TEMP_TABLES = !!ENV['CONCEPTQL_FORCE_TEMP_TABLES']
+  FORCE_TEMP_TABLES = ENV['CONCEPTQL_FORCE_TEMP_TABLES'] == "true"
   if FORCE_TEMP_TABLES
     SCRATCH_DATABASE = ENV['DOCKER_SCRATCH_DATABASE']
     unless SCRATCH_DATABASE && !SCRATCH_DATABASE.empty?
