@@ -27,7 +27,9 @@ module ConceptQL
       end
 
       def table_name
-        values.first.to_sym rescue nil
+        name = values.first
+        name = name.to_sym if name.respond_to?(:to_sym)
+        name
       end
 
       def requried_columns
