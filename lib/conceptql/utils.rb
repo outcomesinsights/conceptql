@@ -5,9 +5,19 @@ module ConceptQL
   module Utils
     class << self
       def rekey(h)
-        # Cheap and easy way to mimic Rails' Hash#symbolize_keys
-        # Thanks to: https://stackoverflow.com/a/26041090
-        JSON.parse(h.to_json, symbolize_names: true)
+        # Thanks to: https://stackoverflow.com/a/10721936
+        case h
+        when Hash
+          Hash[
+            h.map do |k, v|
+              [ k.respond_to?(:to_sym) ? k.to_sym : k, rekey(v) ]
+            end
+          ]
+        when Enumerable
+          h.map { |v| rekey(v) }
+        else
+          h
+        end
       end
 
       def blank?(thing)
