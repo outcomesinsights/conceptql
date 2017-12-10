@@ -32,7 +32,7 @@ before_install:
 - df -h
 before_script:
 - bundle exec rake diagnostics
-script: bundle exec ruby test/all.rb
+script: travis_wait bundle exec ruby test/all.rb
 after_success:
 - tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw_builder pro
 notifications:
