@@ -260,7 +260,7 @@ module ConceptQL
                   temp_tables.reverse_each do |table_name,_|
                     #p [:drop_table, table_name]
                     begin
-                      db.drop_table(table_name)
+                      db.drop_table?(table_name, cascade: true)
                     rescue Sequel::DatabaseError
                       warn("Unable to drop scratch table: #{literal(table_name)}")
                     end
