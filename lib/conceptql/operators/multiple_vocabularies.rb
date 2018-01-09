@@ -85,7 +85,7 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        vocab_ops.map { |vo| vo.describe_codes(db, codes) }.inject(&:+).uniq.sort
+        vocab_ops.map { |vo| vo.describe_codes(db, codes) }.inject(&:+).uniq
       end
 
       def vocab_ops

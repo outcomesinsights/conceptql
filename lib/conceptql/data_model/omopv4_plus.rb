@@ -410,7 +410,7 @@ module ConceptQL
           .where(source_vocabulary_id: vocabulary_id, source_code: codes)
           .select(Sequel[:source_vocabulary_id].as(:vocabulary_id), Sequel[:source_code].as(:concept_code), Sequel[:source_code_description].as(:concept_text))
           .from_self
-        standards.union(sources).distinct(:vocabulary_id, :concept_code)
+        standards.union(sources).order(:concept_code, :concept_text).from_self.distinct(:vocabulary_id, :concept_code)
       end
     end
   end
