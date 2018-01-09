@@ -5,8 +5,8 @@
     "412"
   ],
   [
-    "place_of_service_code",
-    "21"
+    "cpt_or_hcpcs",
+    "99214"
   ],
   {
     "start": "1d",

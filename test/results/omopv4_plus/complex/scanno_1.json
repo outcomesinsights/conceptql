@@ -2,21 +2,25 @@
   "errors": {
   },
   "warnings": {
-    "place_of_service_code": [
-      [
-        "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
-      ]
-    ],
     "hcpcs": [
       [
         "unknown concept code",
-        "72220"
+        "27230",
+        "27232",
+        "27235",
+        "27236",
+        "27238",
+        "27240",
+        "27244",
+        "27245",
+        "27246",
+        "27248"
       ]
     ]
   },
   "counts": {
-    "icd9": {
-      "condition_occurrence": {
+    "hcpcs": {
+      "procedure_occurrence": {
         "rows": 0,
         "n": 0
       }
@@ -25,50 +29,6 @@
       "visit_occurrence": {
         "rows": 0,
         "n": 0
-      }
-    },
-    "place_of_service_code": {
-      "visit_occurrence": {
-        "rows": 153,
-        "n": 84
-      }
-    },
-    "intersect": {
-      "visit_occurrence": {
-        "rows": 0,
-        "n": 0
-      },
-      "person": {
-        "rows": 17,
-        "n": 17
-      }
-    },
-    "hcpcs": {
-      "procedure_occurrence": {
-        "rows": 0,
-        "n": 0
-      }
-    },
-    "complement": {
-      "visit_occurrence": {
-        "rows": 46433,
-        "n": 222
-      }
-    },
-    "union": {
-      "visit_occurrence": {
-        "rows": 5,
-        "n": 3
-      }
-    },
-    "recall": {
-      "condition_occurrence": {
-        "rows": 0,
-        "n": 0
-      },
-      "visit_occurrence": {
-        "rows": 46433,
-        "n": 222
       }
     },
     "gender": {
@@ -81,6 +41,12 @@
       "person": {
         "rows": 28,
         "n": 28
+      }
+    },
+    "intersect": {
+      "person": {
+        "rows": 17,
+        "n": 17
       }
     },
     "time_window": {
