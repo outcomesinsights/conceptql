@@ -43,7 +43,7 @@ module ConceptQL
     end
 
     def sql
-      query.sql
+      nodifier.scope.with_ctes(operator.evaluate(db), db).sql
     rescue
       puts $!.message
       puts $!.backtrace.join("\n")

@@ -271,6 +271,14 @@ module ConceptQL
               end
             end
           end
+
+          define_method(:sql) do |*args, &block|
+            sql_statements = temp_tables.map do |table_name, ds|
+              db.send(:create_table_as_sql, table_name, ds.sql, {})
+            end
+            sql_statements << super(*args, &block)
+            sql_statements.join(";\n")
+          end
         end
       else
         temp_tables.each do |table_name, ds|
