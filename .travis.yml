@@ -45,5 +45,7 @@ notifications:
 jobs:
   include:
     - stage: Ping Jigsaw Builder
+      before_install: gem install tping
+      before_script: skip
       script: tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw_builder pro
 
