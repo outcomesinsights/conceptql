@@ -1,4 +1,6 @@
 require_relative "window"
+require "securerandom"
+
 
 module ConceptQL
   # Scope coordinates the creation of any common table expressions that might
@@ -57,6 +59,15 @@ module ConceptQL
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
+
+
+      @i = 0
+      @mutex = Mutex.new
+      @cte_name_next = lambda{@mutex.synchronize{@i+=1}}
+
+      if force_temp_tables? && ConceptQL::Utils.blank?(scratch_database)
+        raise ArgumentError, "You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable"
+      end
     end
 
     def add_errors(key, errors)
@@ -237,7 +248,7 @@ module ConceptQL
         [label_cte_name(label), operator.evaluate(db)]
       end
 
-      if opts[:force_temp_tables]
+      if force_temp_tables?
         query = recursive_extract_ctes(query, temp_tables).with_extend do
           # Create temp tables for each CTE
           #
@@ -290,7 +301,7 @@ module ConceptQL
     end
 
     def label_cte_name(label)
-      @label_cte_names[label] ||= ConceptQL.cte_name(label)
+      @label_cte_names[label] ||= cte_name(label)
     end
 
     def ctes
@@ -303,6 +314,24 @@ module ConceptQL
 
     def window
       @window ||= Window.from(opts)
+    end
+
+    def force_temp_tables?
+      opts[:force_temp_tables]
+    end
+
+    def scratch_database
+      opts[:scratch_database]
+    end
+
+    def cte_name(label)
+      name = Sequel.identifier("#{name}_#{$$}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
+
+      if scratch_database
+        name = name.qualify(scratch_database)
+      end
+
+      name
     end
   end
 end

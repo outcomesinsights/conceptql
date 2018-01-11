@@ -3,9 +3,9 @@ require_relative '../../db_helper'
 describe ConceptQL::Query do
   it "should handle errors in the root operator" do
     query(
-      :foo
+      [:foo]
     ).annotate.must_equal(
-      ["invalid", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid root operator", ":foo"]]}, :name=>"Invalid"}]
+      [:foo, {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", :foo]]}, :name=>"Invalid"}]
     )
   end
 

@@ -16,32 +16,7 @@ require_relative "conceptql/query_modifiers/omopv4_plus/pos_query_modifier"
 require_relative "conceptql/query_modifiers/omopv4_plus/drug_query_modifier"
 require_relative "conceptql/query_modifiers/omopv4_plus/provenance_query_modifier"
 
-require 'securerandom'
-
 module ConceptQL
-  FORCE_TEMP_TABLES = ENV['CONCEPTQL_FORCE_TEMP_TABLES'] == "true"
-  if FORCE_TEMP_TABLES
-    SCRATCH_DATABASE = ENV['DOCKER_SCRATCH_DATABASE']
-    unless SCRATCH_DATABASE && !SCRATCH_DATABASE.empty?
-      raise ArgumentError, "You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable"
-    end
-  else
-    SCRATCH_DATABASE = nil
-  end
-
-  i = 0
-  mutex = Mutex.new
-  CTE_NAME_NEXT = lambda{mutex.synchronize{i+=1}}
-  def self.cte_name(name)
-    name = Sequel.identifier("#{name}_#{$$}_#{CTE_NAME_NEXT.call}_#{SecureRandom.hex(16)}")
-
-    if SCRATCH_DATABASE
-      name = name.qualify(SCRATCH_DATABASE)
-    end
-
-    name
-  end
-
   def self.metadata(opts = {})
     {
       categories: categories,

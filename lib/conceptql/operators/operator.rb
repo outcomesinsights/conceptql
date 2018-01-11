@@ -136,7 +136,7 @@ module ConceptQL
       end
 
       def cte_name(name)
-        ConceptQL.cte_name(name)
+        scope.cte_name(name)
       end
 
       def annotate(db, opts = {})

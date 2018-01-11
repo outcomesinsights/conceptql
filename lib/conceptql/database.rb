@@ -17,6 +17,10 @@ module ConceptQL
 
       @opts[:data_model] ||= (ENV["CONCEPTQL_DATA_MODEL"] || :omopv4_plus).to_sym
       @opts[:database_type] ||= db_type
+      @opts[:scope_opts] = {
+        force_temp_tables: opts.fetch(:force_temp_tables, ENV["CONCEPTQL_FORCE_TEMP_TABLES"] == "true"),
+        scratch_database: opts.fetch(:scratch_database, ENV["DOCKER_SCRATCH_DATABASE"])
+      }.merge(opts[:scope_opts] || {})
     end
 
     def query(statement, opts={})
