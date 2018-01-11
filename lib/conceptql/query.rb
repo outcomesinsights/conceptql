@@ -89,7 +89,9 @@ module ConceptQL
     attr :db, :nodifier
 
     def extract_statement(stmt)
-      if stmt.is_a?(Array) && stmt.length == 1 && stmt.first.is_a?(Array)
+      if !stmt.is_a?(Array)
+        raise "Improper ConceptQL statement: Expected an Array, got a #{stmt.class}"
+      elsif stmt.length == 1 && stmt.first.is_a?(Array)
         stmt.first
       else
         stmt
