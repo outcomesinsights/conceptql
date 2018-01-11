@@ -221,7 +221,7 @@ module ConceptQL
       if with = query.opts[:with]
         ctes.concat(with.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
         #p [:rec_with, ctes.map(&:first), with]
-        query = query.clone(:with=>nil) 
+        query = query.clone(:with=>nil)
       end
 
 
@@ -237,7 +237,7 @@ module ConceptQL
         [label_cte_name(label), operator.evaluate(db)]
       end
 
-      if FORCE_TEMP_TABLES
+      if opts[:force_temp_tables]
         query = recursive_extract_ctes(query, temp_tables).with_extend do
           # Create temp tables for each CTE
           #
