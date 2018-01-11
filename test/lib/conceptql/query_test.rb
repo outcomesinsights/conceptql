@@ -35,7 +35,7 @@ describe ConceptQL::Query do
 
   describe "#formatted_sql" do
     let :cdb do
-      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
+      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: false)
     end
 
     it "should produce formatted SQL" do

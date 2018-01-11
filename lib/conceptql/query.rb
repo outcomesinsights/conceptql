@@ -39,15 +39,21 @@ module ConceptQL
     end
 
     def formatted_sql
-      format(sql)
+      sql_statements.map do |stmt|
+        format(stmt)
+      end.join(";\n")
     end
 
     def sql
-      nodifier.scope.with_ctes(operator.evaluate(db), db).sql
+      sql_statements.join(";\n")
+    end
+
+    def sql_statements
+      nodifier.scope.with_ctes(operator.evaluate(db), db).sql_statements
     rescue
       puts $!.message
       puts $!.backtrace.join("\n")
-      return "SQL unavailable for this statement"
+      return ["SQL unavailable for this statement"]
     end
 
     def annotate(opts = {})

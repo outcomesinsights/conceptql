@@ -283,17 +283,22 @@ module ConceptQL
             end
           end
 
-          define_method(:sql) do |*args, &block|
+          define_method(:sql_statements) do |*args, &block|
             sql_statements = temp_tables.map do |table_name, ds|
               db.send(:create_table_as_sql, table_name, ds.sql, {})
             end
-            sql_statements << super(*args, &block)
-            sql_statements.join(";\n")
+            sql_statements << sql(*args, &block)
           end
         end
       else
         temp_tables.each do |table_name, ds|
           query = query.with(table_name, ds)
+        end
+
+        query = query.with_extend do
+          define_method(:sql_statements) do |*args, &block|
+            [sql(*args, &block)]
+          end
         end
       end
 
