@@ -324,7 +324,7 @@ module ConceptQL
       opts[:scratch_database]
     end
 
-    def cte_name(label)
+    def cte_name(name)
       name = Sequel.identifier("#{name}_#{$$}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
 
       if scratch_database

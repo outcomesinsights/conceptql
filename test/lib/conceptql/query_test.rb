@@ -60,6 +60,26 @@ FROM
     it "should timeout after 10 seconds if can't parse" do
       cdb.query(json_fixture(:sqlformat_killer)).formatted_sql.wont_match(/  /)
     end
+
+    describe "with temp tables" do
+      let :cdb do
+        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: true)
+      end
+
+      it "should use CREATE TABLE statements" do
+        cdb.query([:icd9, "412", label: "l"]).formatted_sql.must_match(/CREATE TABLE/)
+      end
+    end
+
+    describe "without temp tables" do
+      let :cdb do
+        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: false)
+      end
+
+      it "should use WITH statements" do
+        cdb.query([:icd9, "412", label: "l"]).formatted_sql.must_match(/WITH/)
+      end
+    end
   end
 
   describe "#code_list" do
