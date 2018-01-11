@@ -63,7 +63,7 @@ FROM
 
     describe "with temp tables" do
       let :cdb do
-        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: true)
+        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: true, scratch_database: "scratch")
       end
 
       it "should use CREATE TABLE statements" do
