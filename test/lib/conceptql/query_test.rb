@@ -33,7 +33,7 @@ describe ConceptQL::Query do
     end.must_raise
   end
 
-  describe "#formatted_sql" do
+  describe "#sql(:formatted)" do
     let :cdb do
       ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: false)
     end
@@ -54,11 +54,11 @@ FROM
       WHERE ((\"condition_source_value\" IN ('412'))
              AND (\"condition_source_vocabulary_id\" = 2))) AS \"t1\") AS \"t1\""
 
-      cdb.query([:icd9, "412"]).formatted_sql.must_equal(expected)
+      cdb.query([:icd9, "412"]).sql(:formatted).must_equal(expected)
     end
 
     it "should timeout after 10 seconds if can't parse" do
-      cdb.query(json_fixture(:sqlformat_killer)).formatted_sql.wont_match(/  /)
+      cdb.query(json_fixture(:sqlformat_killer)).sql(:formatted).wont_match(/  /)
     end
 
     describe "with temp tables" do
@@ -67,7 +67,7 @@ FROM
       end
 
       it "should use CREATE TABLE statements" do
-        cdb.query([:icd9, "412", label: "l"]).formatted_sql.must_match(/CREATE TABLE/)
+        cdb.query([:icd9, "412", label: "l"]).sql(:formatted, :create_tables).must_match(/CREATE TABLE/)
       end
     end
 
@@ -77,7 +77,7 @@ FROM
       end
 
       it "should use WITH statements" do
-        cdb.query([:icd9, "412", label: "l"]).formatted_sql.must_match(/WITH/)
+        cdb.query([:icd9, "412", label: "l"]).sql(:formatted).must_match(/WITH/)
       end
     end
   end
