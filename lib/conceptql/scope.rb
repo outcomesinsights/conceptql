@@ -285,9 +285,9 @@ module ConceptQL
 
           define_method(:sql_statements) do |*args, &block|
             sql_statements = temp_tables.map do |table_name, ds|
-              db.send(:create_table_as_sql, table_name, ds.sql, {})
-            end
-            sql_statements << sql(*args, &block)
+              [table_name, ds.sql]
+            end.compact.push([:query, sql(*args, &block)])
+            Hash[sql_statements]
           end
         end
       else
@@ -297,7 +297,7 @@ module ConceptQL
 
         query = query.with_extend do
           define_method(:sql_statements) do |*args, &block|
-            [sql(*args, &block)]
+            { query: sql(*args, &block) }
           end
         end
       end

@@ -38,18 +38,26 @@ module ConceptQL
       cols
     end
 
-    def formatted_sql
-      sql_statements.map do |stmt|
-        format(stmt)
-      end.join(";\n")
+    def sql(*args)
+      sql_statements(*args).values.join(";\n")
     end
 
-    def sql
-      sql_statements.join(";\n")
-    end
+    def sql_statements(*args)
+      stmts = nodifier.scope.with_ctes(operator.evaluate(db), db).sql_statements
 
-    def sql_statements
-      nodifier.scope.with_ctes(operator.evaluate(db), db).sql_statements
+      if args.include?(:create_tables)
+        sql = stmts.delete(:query)
+        stmts = stmts.map do |name, sql|
+          [name, db.send(:create_table_as_sql, name, sql, {})]
+        end.push([:query, sql])
+      end
+
+      if args.include?(:formatted)
+        stmts = stmts.map do |name, sql|
+          [name, format(sql)]
+        end
+      end
+      Hash[stmts]
     rescue
       puts $!.message
       puts $!.backtrace.join("\n")
