@@ -235,7 +235,6 @@ module ConceptQL
         query = query.clone(:with=>nil)
       end
 
-
       query
     end
 
@@ -268,14 +267,7 @@ module ConceptQL
 
                   clone(:conceptql_temp_tables_created=>true).send(meth, *args, &block)
                 ensure
-                  temp_tables.reverse_each do |table_name,_|
-                    #p [:drop_table, table_name]
-                    begin
-                      db.drop_table?(table_name, cascade: true)
-                    rescue Sequel::DatabaseError
-                      warn("Unable to drop scratch table: #{literal(table_name)}")
-                    end
-                  end
+                  drop_temp_tables
                 end
               else
                 super(*args, &block)
@@ -289,6 +281,17 @@ module ConceptQL
             end.compact.push([:query, sql(*args, &block)])
             Hash[sql_statements]
           end
+
+          define_method(:drop_temp_tables) do
+            temp_tables.reverse_each do |table_name,_|
+              #p [:drop_table, table_name]
+              begin
+                db.drop_table?(table_name, cascade: true)
+              rescue Sequel::DatabaseError
+                warn("Unable to drop scratch table: #{literal(table_name)}")
+              end
+            end
+          end
         end
       else
         temp_tables.each do |table_name, ds|
@@ -298,6 +301,9 @@ module ConceptQL
         query = query.with_extend do
           define_method(:sql_statements) do |*args, &block|
             { query: sql(*args, &block) }
+          end
+
+          define_method(:drop_temp_tables) do
           end
         end
       end
@@ -332,7 +338,7 @@ module ConceptQL
     def cte_name(name)
       name = Sequel.identifier("#{name}_#{$$}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
 
-      if scratch_database
+      if force_temp_tables? && scratch_database
         name = name.qualify(scratch_database)
       end
 

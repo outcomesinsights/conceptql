@@ -43,7 +43,7 @@ module ConceptQL
     end
 
     def sql_statements(*args)
-      stmts = nodifier.scope.with_ctes(operator.evaluate(db), db).sql_statements
+      stmts = query.sql_statements
 
       if args.include?(:create_tables)
         sql = stmts.delete(:query)
@@ -97,6 +97,10 @@ module ConceptQL
 
     def code_list(ignored_db = nil)
       operator.code_list(db).uniq
+    end
+
+    def drop_temp_tables
+      query.drop_temp_tables
     end
 
     private
