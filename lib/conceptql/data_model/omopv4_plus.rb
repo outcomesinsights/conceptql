@@ -326,28 +326,7 @@ module ConceptQL
       end
 
       def person_date_of_birth(query)
-        assemble_date(query, :year_of_birth, :month_of_birth, :day_of_birth)
-      end
-
-      def assemble_date(query, *symbols)
-        strings = symbols.map do |symbol|
-          sub = '2000'
-          col = Sequel.cast_string(symbol)
-          if symbol != :year_of_birth
-            sub = '01'
-            col = Sequel.function(:lpad, col, 2, '0')
-          end
-          Sequel.function(:coalesce, col, Sequel.expr(sub))
-        end
-
-        strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
-        concatted_strings = Sequel.join(strings_with_dashes)
-
-        date = concatted_strings
-        if nodifier.database_type == :impala
-          date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
-        end
-        rdbms.cast_date(date)
+        rdbms.cast_date(ConceptQL::Utils.assemble_date(:year_of_birth, :month_of_birth, :day_of_birth, database_type: nodifier.database_type))
       end
 
       def date_columns(query, table = nil)

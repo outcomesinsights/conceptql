@@ -57,5 +57,22 @@ describe ConceptQL::Utils do
       assert_equal "hi", value
     end
   end
+
+  describe ".assemble_date" do
+    let(:db) { Sequel.mock }
+    it "should preface with table if provided" do
+      query = db[:tab].select(ConceptQL::Utils.assemble_date(:year, :month, :day, table: :tab).as(:new_col))
+      assert_equal(
+        "SELECT (coalesce(lpad(CAST(tab.year AS varchar(255)), 2, '0'), '01') || '-' || coalesce(lpad(CAST(tab.month AS varchar(255)), 2, '0'), '01') || '-' || coalesce(lpad(CAST(tab.day AS varchar(255)), 2, '0'), '01')) AS new_col FROM tab",
+        query.sql)
+    end
+
+    it "should modify behavior if impala is database_type" do
+      query = db[:tab].select(ConceptQL::Utils.assemble_date(:year, :month, :day, database_type: :impala).as(:new_col))
+      assert_equal(
+        "SELECT CAST(concat_ws('-', coalesce(lpad(CAST(year AS varchar(255)), 2, '0'), '01'), coalesce(lpad(CAST(month AS varchar(255)), 2, '0'), '01'), coalesce(lpad(CAST(day AS varchar(255)), 2, '0'), '01')) AS timestamp) AS new_col FROM tab",
+        query.sql)
+    end
+  end
 end
 

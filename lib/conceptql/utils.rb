@@ -41,8 +41,7 @@ module ConceptQL
       def timed_capture(*commands)
         # Heavily adapted from:
         # https://gist.github.com/lpar/1032297#gistcomment-1738285
-        opts = commands.pop if commands.last.is_a?(Hash)
-        opts ||= {}
+        opts = extract_opts!(commands)
         timeout = opts.fetch(:timeout)
 
         stdin, stdout, stderr, wait_thread = Open3.popen3(*commands)
@@ -74,6 +73,36 @@ module ConceptQL
         raise Timeout::Error if wait_thread[:timed_out]
 
         out
+      end
+
+      def extract_opts!(arr)
+        return {} unless arr.last.is_a?(Hash)
+        arr.pop
+      end
+
+      def assemble_date(*symbols)
+        opts = extract_opts!(symbols)
+        tab = opts[:table] ? Sequel[opts[:table].to_sym] : Sequel
+
+        strings = symbols.map do |symbol|
+          sub = '2000'
+          col = Sequel.cast_string(tab[symbol])
+          if symbol != :year_of_birth
+            sub = '01'
+            col = Sequel.function(:lpad, col, 2, '0')
+          end
+          Sequel.function(:coalesce, col, Sequel.expr(sub))
+        end
+
+        strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
+        concatted_strings = Sequel.join(strings_with_dashes)
+
+        date = concatted_strings
+        if opts[:database_type] == :impala
+          date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
+        end
+
+        date
       end
     end
   end
