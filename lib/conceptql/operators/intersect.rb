@@ -23,8 +23,8 @@ module ConceptQL
         domained_queries = exprs.map do |domain, queries|
           queries.inject do |q, query|
             # Set columns so that impala's INTERSECT emulation doesn't use a query to determine them
-            q.instance_variable_set(:@columns, query_cols)
-            query.instance_variable_set(:@columns, query_cols)
+            q.send("columns=", query_cols)
+            query.send("columns=", query_cols)
 
             q.intersect(query)
           end
