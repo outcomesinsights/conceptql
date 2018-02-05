@@ -128,7 +128,11 @@ module ConceptQL
       end
 
       def required_columns
-        self.class.required_columns
+        cols = self.class.required_columns || []
+        if options[:uuid]
+          cols |= [:uuid]
+        end
+        cols
       end
 
       def dynamic_columns
@@ -217,7 +221,7 @@ module ConceptQL
         specific_table ||= dm.determine_table(:domain)
 
         dom = domain rescue nil
-        q = dm.selectify(query, table: specific_table, criterion_domain: dom, query_columns: override_columns)
+        q = dm.selectify(query, table: specific_table, criterion_domain: dom, query_columns: override_columns, uuid: options[:uuid])
 
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
@@ -347,6 +351,10 @@ module ConceptQL
         dm.rdbms
       end
 
+      def query_cols
+        raise NotImplementedError, self
+      end
+
       private
 
       def annotate_values(db, opts)
@@ -355,10 +363,6 @@ module ConceptQL
 
       def make_table_name(table)
         Sequel.as(table, :tab)
-      end
-
-      def query_cols
-        raise NotImplementedError, self
       end
 
       def query_columns(query)

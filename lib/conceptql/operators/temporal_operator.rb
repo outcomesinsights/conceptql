@@ -29,9 +29,12 @@ module ConceptQL
       end
 
       def query(db)
+        right_stream = apply_selectors(right_stream_query(db), function: rhs_function)
         ds = db.from(left_stream(db))
-               .join(right_stream(db), person_id: :person_id)
-               .select_all(:l)
+                .join(right_stream, {person_id: :person_id}.merge(join_columns), {table_alias: :r})
+               .select(*dynamic_columns.map { |c| Sequel[:l][c].as(c) })
+
+        ds = apply_selectors(ds, qualifier: :r)
 
         ds = apply_where_clause(ds)
 
@@ -41,19 +44,19 @@ module ConceptQL
       end
 
       def r_start_date
-        return Sequel[:r][:start_date]
+        Sequel[:r][:start_date]
       end
 
       def r_end_date
-        return Sequel[:r][:end_date]
+        Sequel[:r][:end_date]
       end
 
       def l_start_date
-        return Sequel[:l][:start_date]
+        Sequel[:l][:start_date]
       end
 
       def l_end_date
-        return Sequel[:l][:end_date]
+        Sequel[:l][:end_date]
       end
 
       def within_option
@@ -104,6 +107,21 @@ module ConceptQL
           .where{occurrence > occurrences.to_i}
       end
 
+      def apply_selectors(ds, opts = {})
+        return ds unless include_rhs_columns || ConceptQL::Utils.present?(join_columns)
+        ds = ds.select_remove(*include_rhs_columns).select_append(*(rhs_columns(opts))) if include_rhs_columns
+        ds = ds.select_remove(*join_columns(opts).keys).select_append(*join_columns(opts).values) if ConceptQL::Utils.present?(join_columns)
+        ds
+      end
+
+      def rhs_columns(opts)
+        cols = include_rhs_columns
+        return cols if opts.empty?
+        cols = cols.map { |c| Sequel.function(opts[:function], c).as(c) } if opts[:function]
+        cols = cols.map { |c| Sequel[opts[:qualifier]][c].as(c) } if opts[:qualifier]
+        cols
+      end
+
       def occurrences_column
         :start_date
       end
@@ -114,6 +132,24 @@ module ConceptQL
 
       def inclusive?
         options[:inclusive]
+      end
+
+      def include_rhs_columns
+        options[:include_rhs_columns] ? options[:include_rhs_columns].map(&:to_sym) : nil
+      end
+
+      def rhs_function
+        nil
+      end
+
+      def join_columns(opts = {})
+        return {} unless join_columns_option
+        col_defs = join_columns_option.map(&:to_sym)
+        col_defs = col_defs.map { |c| Sequel[opts[:qualifier].to_sym][c].as(c) } if opts[:qualifier]
+        Hash[join_columns_option.zip(col_defs)]
+      end
+      def join_columns_option
+        options[:join_columns]
       end
     end
   end

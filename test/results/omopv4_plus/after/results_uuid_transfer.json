@@ -1,0 +1,1652 @@
+[
+  {
+    "person_id": 2,
+    "criterion_id": 1,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "2/8365057/condition_occurrence"
+  },
+  {
+    "person_id": 6,
+    "criterion_id": 4,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2009-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "6/8477416/condition_occurrence"
+  },
+  {
+    "person_id": 6,
+    "criterion_id": 4,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2009-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "6/7794004/condition_occurrence"
+  },
+  {
+    "person_id": 8,
+    "criterion_id": 5,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "8/8293854/condition_occurrence"
+  },
+  {
+    "person_id": 8,
+    "criterion_id": 5,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "8/15535375/condition_occurrence"
+  },
+  {
+    "person_id": 8,
+    "criterion_id": 5,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "8/5595335/condition_occurrence"
+  },
+  {
+    "person_id": 9,
+    "criterion_id": 6,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2009-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "9/14451011/condition_occurrence"
+  },
+  {
+    "person_id": 11,
+    "criterion_id": 7,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "11/9688787/condition_occurrence"
+  },
+  {
+    "person_id": 13,
+    "criterion_id": 8,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "13/4834105/condition_occurrence"
+  },
+  {
+    "person_id": 13,
+    "criterion_id": 8,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "13/5775923/condition_occurrence"
+  },
+  {
+    "person_id": 14,
+    "criterion_id": 9,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "14/8938303/condition_occurrence"
+  },
+  {
+    "person_id": 14,
+    "criterion_id": 9,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "14/21291053/condition_occurrence"
+  },
+  {
+    "person_id": 19,
+    "criterion_id": 12,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "19/7293464/condition_occurrence"
+  },
+  {
+    "person_id": 19,
+    "criterion_id": 12,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "19/5325899/condition_occurrence"
+  },
+  {
+    "person_id": 31,
+    "criterion_id": 15,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "31/6063923/condition_occurrence"
+  },
+  {
+    "person_id": 31,
+    "criterion_id": 15,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "31/9665002/condition_occurrence"
+  },
+  {
+    "person_id": 31,
+    "criterion_id": 15,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "31/16558836/condition_occurrence"
+  },
+  {
+    "person_id": 38,
+    "criterion_id": 19,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "38/7175009/condition_occurrence"
+  },
+  {
+    "person_id": 46,
+    "criterion_id": 23,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "46/6426635/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/12745738/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/13883139/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/19159405/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/18660999/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/5599471/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/18247897/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/17446345/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/7908811/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/16014873/condition_occurrence"
+  },
+  {
+    "person_id": 51,
+    "criterion_id": 28,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "51/14432933/condition_occurrence"
+  },
+  {
+    "person_id": 52,
+    "criterion_id": 29,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "52/14371179/condition_occurrence"
+  },
+  {
+    "person_id": 58,
+    "criterion_id": 31,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "58/9654567/condition_occurrence"
+  },
+  {
+    "person_id": 58,
+    "criterion_id": 31,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "58/8194002/condition_occurrence"
+  },
+  {
+    "person_id": 60,
+    "criterion_id": 32,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "60/14013395/condition_occurrence"
+  },
+  {
+    "person_id": 65,
+    "criterion_id": 34,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2009-12-31",
+    "source_value": null,
+    "uuid": "65/11169853/condition_occurrence"
+  },
+  {
+    "person_id": 68,
+    "criterion_id": 36,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "68/15874356/condition_occurrence"
+  },
+  {
+    "person_id": 68,
+    "criterion_id": 36,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "68/6830271/condition_occurrence"
+  },
+  {
+    "person_id": 68,
+    "criterion_id": 36,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "68/12415518/condition_occurrence"
+  },
+  {
+    "person_id": 72,
+    "criterion_id": 40,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "72/12900716/condition_occurrence"
+  },
+  {
+    "person_id": 72,
+    "criterion_id": 40,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "72/6898145/condition_occurrence"
+  },
+  {
+    "person_id": 72,
+    "criterion_id": 40,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "72/10809528/condition_occurrence"
+  },
+  {
+    "person_id": 73,
+    "criterion_id": 41,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "73/11286496/condition_occurrence"
+  },
+  {
+    "person_id": 73,
+    "criterion_id": 41,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "73/15393559/condition_occurrence"
+  },
+  {
+    "person_id": 73,
+    "criterion_id": 41,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "73/6964622/condition_occurrence"
+  },
+  {
+    "person_id": 73,
+    "criterion_id": 41,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "73/18523646/condition_occurrence"
+  },
+  {
+    "person_id": 73,
+    "criterion_id": 41,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "73/17136861/condition_occurrence"
+  },
+  {
+    "person_id": 73,
+    "criterion_id": 41,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "73/18021373/condition_occurrence"
+  },
+  {
+    "person_id": 76,
+    "criterion_id": 44,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "76/5212654/condition_occurrence"
+  },
+  {
+    "person_id": 77,
+    "criterion_id": 45,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "77/7102084/condition_occurrence"
+  },
+  {
+    "person_id": 77,
+    "criterion_id": 45,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "77/8821262/condition_occurrence"
+  },
+  {
+    "person_id": 83,
+    "criterion_id": 48,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "83/7004191/condition_occurrence"
+  },
+  {
+    "person_id": 83,
+    "criterion_id": 48,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "83/7854287/condition_occurrence"
+  },
+  {
+    "person_id": 85,
+    "criterion_id": 50,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "85/9549748/condition_occurrence"
+  },
+  {
+    "person_id": 85,
+    "criterion_id": 50,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "85/7091957/condition_occurrence"
+  },
+  {
+    "person_id": 86,
+    "criterion_id": 51,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "86/13885754/condition_occurrence"
+  },
+  {
+    "person_id": 86,
+    "criterion_id": 51,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "86/8147878/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/19385169/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/14988213/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/16486887/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/16934505/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/17907987/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/10333596/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/18455051/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/18787497/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/9202977/condition_occurrence"
+  },
+  {
+    "person_id": 90,
+    "criterion_id": 53,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "90/18997732/condition_occurrence"
+  },
+  {
+    "person_id": 92,
+    "criterion_id": 54,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "92/7449119/condition_occurrence"
+  },
+  {
+    "person_id": 92,
+    "criterion_id": 54,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "92/18447701/condition_occurrence"
+  },
+  {
+    "person_id": 92,
+    "criterion_id": 54,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "92/4780111/condition_occurrence"
+  },
+  {
+    "person_id": 92,
+    "criterion_id": 54,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "92/6484055/condition_occurrence"
+  },
+  {
+    "person_id": 92,
+    "criterion_id": 54,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "92/16913142/condition_occurrence"
+  },
+  {
+    "person_id": 92,
+    "criterion_id": 54,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "92/17896036/condition_occurrence"
+  },
+  {
+    "person_id": 95,
+    "criterion_id": 56,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "95/8755874/condition_occurrence"
+  },
+  {
+    "person_id": 95,
+    "criterion_id": 56,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "95/6873652/condition_occurrence"
+  },
+  {
+    "person_id": 98,
+    "criterion_id": 57,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "98/16333485/condition_occurrence"
+  },
+  {
+    "person_id": 99,
+    "criterion_id": 58,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "99/12294369/condition_occurrence"
+  },
+  {
+    "person_id": 99,
+    "criterion_id": 58,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "99/18321889/condition_occurrence"
+  },
+  {
+    "person_id": 99,
+    "criterion_id": 58,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "99/5216620/condition_occurrence"
+  },
+  {
+    "person_id": 101,
+    "criterion_id": 60,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "101/9695696/condition_occurrence"
+  },
+  {
+    "person_id": 104,
+    "criterion_id": 62,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "104/9087705/condition_occurrence"
+  },
+  {
+    "person_id": 104,
+    "criterion_id": 62,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "104/5465600/condition_occurrence"
+  },
+  {
+    "person_id": 104,
+    "criterion_id": 62,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "104/5516070/condition_occurrence"
+  },
+  {
+    "person_id": 114,
+    "criterion_id": 68,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "114/8743359/condition_occurrence"
+  },
+  {
+    "person_id": 114,
+    "criterion_id": 68,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "114/6239348/condition_occurrence"
+  },
+  {
+    "person_id": 114,
+    "criterion_id": 68,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "114/7517487/condition_occurrence"
+  },
+  {
+    "person_id": 120,
+    "criterion_id": 71,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "120/14765289/condition_occurrence"
+  },
+  {
+    "person_id": 120,
+    "criterion_id": 71,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "120/6251724/condition_occurrence"
+  },
+  {
+    "person_id": 124,
+    "criterion_id": 75,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "124/16537404/condition_occurrence"
+  },
+  {
+    "person_id": 124,
+    "criterion_id": 75,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "124/6135640/condition_occurrence"
+  },
+  {
+    "person_id": 124,
+    "criterion_id": 75,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "124/7130600/condition_occurrence"
+  },
+  {
+    "person_id": 127,
+    "criterion_id": 77,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "127/6462160/condition_occurrence"
+  },
+  {
+    "person_id": 127,
+    "criterion_id": 77,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "127/5555849/condition_occurrence"
+  },
+  {
+    "person_id": 130,
+    "criterion_id": 80,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "130/9859194/condition_occurrence"
+  },
+  {
+    "person_id": 131,
+    "criterion_id": 81,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "131/21916675/condition_occurrence"
+  },
+  {
+    "person_id": 131,
+    "criterion_id": 81,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "131/9855505/condition_occurrence"
+  },
+  {
+    "person_id": 131,
+    "criterion_id": 81,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "131/4999222/condition_occurrence"
+  },
+  {
+    "person_id": 136,
+    "criterion_id": 84,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "136/5909409/condition_occurrence"
+  },
+  {
+    "person_id": 136,
+    "criterion_id": 84,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "136/11561786/condition_occurrence"
+  },
+  {
+    "person_id": 136,
+    "criterion_id": 84,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "136/14680178/condition_occurrence"
+  },
+  {
+    "person_id": 137,
+    "criterion_id": 85,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "137/21354067/condition_occurrence"
+  },
+  {
+    "person_id": 141,
+    "criterion_id": 87,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "141/15874157/condition_occurrence"
+  },
+  {
+    "person_id": 141,
+    "criterion_id": 87,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "141/12415031/condition_occurrence"
+  },
+  {
+    "person_id": 142,
+    "criterion_id": 88,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "142/8807619/condition_occurrence"
+  },
+  {
+    "person_id": 142,
+    "criterion_id": 88,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "142/7772592/condition_occurrence"
+  },
+  {
+    "person_id": 145,
+    "criterion_id": 91,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "145/11238234/condition_occurrence"
+  },
+  {
+    "person_id": 145,
+    "criterion_id": 91,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "145/9295731/condition_occurrence"
+  },
+  {
+    "person_id": 146,
+    "criterion_id": 92,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "146/5772870/condition_occurrence"
+  },
+  {
+    "person_id": 146,
+    "criterion_id": 92,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "146/12962708/condition_occurrence"
+  },
+  {
+    "person_id": 149,
+    "criterion_id": 93,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "149/10756746/condition_occurrence"
+  },
+  {
+    "person_id": 149,
+    "criterion_id": 93,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "149/7252448/condition_occurrence"
+  },
+  {
+    "person_id": 150,
+    "criterion_id": 94,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "150/10457400/condition_occurrence"
+  },
+  {
+    "person_id": 159,
+    "criterion_id": 101,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "159/8705117/condition_occurrence"
+  },
+  {
+    "person_id": 161,
+    "criterion_id": 102,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "161/7698029/condition_occurrence"
+  },
+  {
+    "person_id": 163,
+    "criterion_id": 103,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "163/21283985/condition_occurrence"
+  },
+  {
+    "person_id": 169,
+    "criterion_id": 104,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "169/6828520/condition_occurrence"
+  },
+  {
+    "person_id": 169,
+    "criterion_id": 104,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "169/5935195/condition_occurrence"
+  },
+  {
+    "person_id": 169,
+    "criterion_id": 104,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "169/9751771/condition_occurrence"
+  },
+  {
+    "person_id": 187,
+    "criterion_id": 112,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "187/10426989/condition_occurrence"
+  },
+  {
+    "person_id": 187,
+    "criterion_id": 112,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "187/21721900/condition_occurrence"
+  },
+  {
+    "person_id": 187,
+    "criterion_id": 112,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "187/17602250/condition_occurrence"
+  },
+  {
+    "person_id": 188,
+    "criterion_id": 113,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "188/6486405/condition_occurrence"
+  },
+  {
+    "person_id": 190,
+    "criterion_id": 115,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2009-12-31",
+    "source_value": null,
+    "uuid": "190/19845799/condition_occurrence"
+  },
+  {
+    "person_id": 191,
+    "criterion_id": 116,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2009-12-31",
+    "source_value": null,
+    "uuid": "191/10931750/condition_occurrence"
+  },
+  {
+    "person_id": 195,
+    "criterion_id": 118,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "195/8736546/condition_occurrence"
+  },
+  {
+    "person_id": 195,
+    "criterion_id": 118,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "195/4822981/condition_occurrence"
+  },
+  {
+    "person_id": 195,
+    "criterion_id": 118,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "195/10250473/condition_occurrence"
+  },
+  {
+    "person_id": 195,
+    "criterion_id": 118,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "195/5722730/condition_occurrence"
+  },
+  {
+    "person_id": 196,
+    "criterion_id": 119,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "196/10347123/condition_occurrence"
+  },
+  {
+    "person_id": 196,
+    "criterion_id": 119,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "196/21869018/condition_occurrence"
+  },
+  {
+    "person_id": 197,
+    "criterion_id": 120,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "197/10328567/condition_occurrence"
+  },
+  {
+    "person_id": 197,
+    "criterion_id": 120,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "197/9938873/condition_occurrence"
+  },
+  {
+    "person_id": 199,
+    "criterion_id": 122,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "199/8807990/condition_occurrence"
+  },
+  {
+    "person_id": 207,
+    "criterion_id": 128,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "207/12109735/condition_occurrence"
+  },
+  {
+    "person_id": 207,
+    "criterion_id": 128,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "207/11890472/condition_occurrence"
+  },
+  {
+    "person_id": 207,
+    "criterion_id": 128,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "207/12554403/condition_occurrence"
+  },
+  {
+    "person_id": 208,
+    "criterion_id": 129,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "208/6637277/condition_occurrence"
+  },
+  {
+    "person_id": 210,
+    "criterion_id": 131,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "210/6150971/condition_occurrence"
+  },
+  {
+    "person_id": 212,
+    "criterion_id": 132,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "212/14440212/condition_occurrence"
+  },
+  {
+    "person_id": 213,
+    "criterion_id": 133,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "213/21245286/condition_occurrence"
+  },
+  {
+    "person_id": 213,
+    "criterion_id": 133,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "213/9678504/condition_occurrence"
+  },
+  {
+    "person_id": 214,
+    "criterion_id": 134,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "214/6073559/condition_occurrence"
+  },
+  {
+    "person_id": 214,
+    "criterion_id": 134,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "214/7156880/condition_occurrence"
+  },
+  {
+    "person_id": 214,
+    "criterion_id": 134,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "214/5208916/condition_occurrence"
+  },
+  {
+    "person_id": 216,
+    "criterion_id": 136,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "216/14963697/condition_occurrence"
+  },
+  {
+    "person_id": 216,
+    "criterion_id": 136,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "216/6538085/condition_occurrence"
+  },
+  {
+    "person_id": 216,
+    "criterion_id": 136,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "216/9360316/condition_occurrence"
+  },
+  {
+    "person_id": 216,
+    "criterion_id": 136,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "216/10276066/condition_occurrence"
+  },
+  {
+    "person_id": 216,
+    "criterion_id": 136,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "216/5070964/condition_occurrence"
+  },
+  {
+    "person_id": 219,
+    "criterion_id": 138,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "219/6621271/condition_occurrence"
+  },
+  {
+    "person_id": 222,
+    "criterion_id": 139,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "222/8949343/condition_occurrence"
+  },
+  {
+    "person_id": 222,
+    "criterion_id": 139,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "222/8306911/condition_occurrence"
+  },
+  {
+    "person_id": 225,
+    "criterion_id": 140,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "225/11706147/condition_occurrence"
+  },
+  {
+    "person_id": 228,
+    "criterion_id": 143,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "228/14661324/condition_occurrence"
+  },
+  {
+    "person_id": 234,
+    "criterion_id": 145,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "234/6119330/condition_occurrence"
+  },
+  {
+    "person_id": 234,
+    "criterion_id": 145,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "234/16320634/condition_occurrence"
+  },
+  {
+    "person_id": 234,
+    "criterion_id": 145,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "234/6672299/condition_occurrence"
+  },
+  {
+    "person_id": 238,
+    "criterion_id": 147,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "238/5649143/condition_occurrence"
+  },
+  {
+    "person_id": 243,
+    "criterion_id": 149,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "243/21041988/condition_occurrence"
+  },
+  {
+    "person_id": 243,
+    "criterion_id": 149,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "243/7349003/condition_occurrence"
+  },
+  {
+    "person_id": 243,
+    "criterion_id": 149,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "243/6946608/condition_occurrence"
+  },
+  {
+    "person_id": 248,
+    "criterion_id": 152,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "248/7661749/condition_occurrence"
+  },
+  {
+    "person_id": 248,
+    "criterion_id": 152,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "248/11704706/condition_occurrence"
+  },
+  {
+    "person_id": 248,
+    "criterion_id": 152,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "248/14011379/condition_occurrence"
+  },
+  {
+    "person_id": 249,
+    "criterion_id": 153,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "249/12223204/condition_occurrence"
+  },
+  {
+    "person_id": 249,
+    "criterion_id": 153,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "249/11927348/condition_occurrence"
+  },
+  {
+    "person_id": 249,
+    "criterion_id": 153,
+    "criterion_table": "observation_period",
+    "criterion_domain": "observation_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "uuid": "249/15792299/condition_occurrence"
+  }
+]

@@ -32,8 +32,12 @@ module ConceptQL
         name
       end
 
-      def requried_columns
+      def required_columns
         override_columns.keys
+      end
+
+      def query_cols
+        required_columns
       end
 
       def override_columns

@@ -1,4 +1,4 @@
-require_relative 'temporal_operator'
+require_relative 'trim_date'
 
 module ConceptQL
   module Operators
@@ -12,7 +12,7 @@ module ConceptQL
     #
     # If the RHS result's end_date is earlier than the LHS start_date, the LHS
     # result is passed thru unaffected.
-    class TrimDateStart < TemporalOperator
+    class TrimDateStart < TrimDate
       register __FILE__
 
       desc <<-EOF
@@ -30,29 +30,24 @@ is passed through unaffected.
 
       allows_one_upstream
 
-      def query(db)
-        grouped_right = db.from(right_stream(db)).select_group(:person_id).select_append(Sequel.as(Sequel.function(:max, :end_date), :end_date))
-
-        where_criteria = (l_end_date >= within_end) | { r_end_date => nil }
-
-        # If the RHS's min start date is less than the LHS start date,
-        # the entire LHS date range is truncated, which implies the row itself
-        # is ineligible to pass thru
-        ds = db.from(left_stream(db))
-                  .left_join(Sequel.as(grouped_right, :r), person_id: :person_id)
-                  .where(where_criteria)
-
-        ds = dm.selectify(ds, qualifier: :l, replace: { start_date: Sequel.function(:greatest, l_start_date, within_end) })
-        ds = add_occurrences_condition(ds, occurrences_option)
-
-        ds.from_self
-      end
-
       private
 
-      def new_columns
-        (dynamic_columns - [:start_date]).map { |col| Sequel[:l][col] }
+      def trim_date
+        :end_date
       end
+
+      def where_criteria
+        (l_end_date >= within_end) | { r_end_date => nil }
+      end
+
+      def replacement_columns
+        { start_date: Sequel.function(:greatest, l_start_date, within_end) }
+      end
+
+      def occurrence_number
+        -1
+      end
+
     end
   end
 end

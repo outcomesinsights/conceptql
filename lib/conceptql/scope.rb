@@ -39,7 +39,8 @@ module ConceptQL
       drug_amount: :Float,
       drug_amount_units: :String,
       drug_days_supply: :Float,
-      drug_quantity: :Bigint
+      drug_quantity: :Bigint,
+      uuid: :String
     }.freeze
 
     COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
@@ -84,7 +85,9 @@ module ConceptQL
     end
 
     def add_required_columns(op)
-      @query_columns |= op.required_columns if op.required_columns
+      if op.required_columns
+        @query_columns |= op.required_columns
+      end
     end
 
     def nest(op)

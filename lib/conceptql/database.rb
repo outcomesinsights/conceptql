@@ -29,7 +29,7 @@ module ConceptQL
     end
 
     def extensions
-      [:date_arithmetic, :error_sql]
+      [:date_arithmetic, :error_sql, :select_remove]
     end
   end
 end

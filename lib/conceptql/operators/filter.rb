@@ -10,13 +10,27 @@ module ConceptQL
 
       def query(db)
         rhs = right.evaluate(db)
-        rhs = rhs.from_self.select_group(:person_id, :criterion_id, :criterion_domain)
+        rhs = rhs.from_self.select_group(*columns)
         query = db.from(Sequel.as(left.evaluate(db), :l))
         query = query
-          .left_join(Sequel.as(rhs, :r), person_id: :person_id, criterion_id: :criterion_id, criterion_domain: :criterion_domain)
+          .left_join(Sequel.as(rhs, :r), join_columns)
           .exclude(Sequel[:r][:criterion_id] => nil)
           .select_all(:l)
         db.from(query)
+      end
+
+      def columns
+        @columns ||= determine_columns
+      end
+
+      def join_columns
+        Hash[columns.zip(columns)]
+      end
+
+      def determine_columns
+        columns = %w(person_id criterion_id criterion_domain)
+        columns += %w(start_date end_date) unless options[:ignore_dates]
+        columns.map(&:to_sym)
       end
     end
   end

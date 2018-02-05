@@ -18,11 +18,11 @@ R-----R
       allows_at_least_option
       within_skip :after
 
-      def right_stream(db)
-        unless compare_all?
-          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date)).as(:r)
+      def right_stream_query(db)
+        if compare_all?
+          right.evaluate(db).from_self
         else
-          right.evaluate(db).from_self.as(:r)
+          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date))
         end
       end
 
@@ -51,6 +51,10 @@ R-----R
 
       def occurrences_column
         :end_date
+      end
+
+      def rhs_function
+        compare_all? ? nil : :min
       end
     end
   end

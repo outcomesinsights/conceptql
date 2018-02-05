@@ -100,8 +100,16 @@ module ConceptQL
                       columns_in_table(table, opts).merge(modifier_columns(table, opts)).merge(nullified_columns(table, opts))
                     end.dup
 
+        except_keys = opts[:except] || []
+        if cols_hash.has_key?(:uuid)
+          if opts[:uuid]
+            except_keys << :uuid
+          elsif table
+            cols_hash.merge!(uuid: Sequel.cast(nil, String).as(:uuid))
+          end
+        end
         col_keys = cols_hash.keys
-        col_keys -= opts[:except] || []
+        col_keys -= except_keys
         col_keys &= opts[:only] if opts[:only]
 
         if qualifier = opts[:qualifier]
@@ -133,7 +141,11 @@ module ConceptQL
       end
 
       def selectify(query, opts = {})
-        modify_query(query, get_table(opts)).select(*columns(opts)).from_self
+        ds = modify_query(query, get_table(opts)).select(*columns(opts))
+        if opts[:uuid]
+          ds = ds.from_self.select_append(uuid.as(:uuid))
+        end
+        ds.from_self
       end
 
       def get_table(opts)
@@ -159,7 +171,7 @@ module ConceptQL
           place_of_service_concept_id: query_modifier_for(:place_of_service_concept_id),
           provider_id: query_modifier_for(:provider_id),
           drug_name: query_modifier_for(:drug_name),
-          provenance_type: query_modifier_for(:provenance_type)
+          provenance_type: query_modifier_for(:provenance_type),
         }
       end
 
@@ -390,6 +402,14 @@ module ConceptQL
           .select(Sequel[:source_vocabulary_id].as(:vocabulary_id), Sequel[:source_code].as(:concept_code), Sequel[:source_code_description].as(:concept_text))
           .from_self
         standards.union(sources).order(:concept_code, :concept_text).from_self.select_group(:vocabulary_id, :concept_code).select_append(Sequel.function(:min, :concept_text).as(:concept_text)).from_self
+      end
+
+      def uuid
+        items = %w(person_id criterion_id criterion_table).map do |column|
+          Sequel.cast_string(column.to_sym)
+        end
+        items = items.zip([Sequel.cast_string('/')] * (items.length - 1))
+        items.flatten.compact.inject(:+)
       end
     end
   end

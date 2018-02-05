@@ -14,11 +14,11 @@ All other results are discarded, including all results in the RHR.
       allows_at_least_option
       within_skip :before
 
-      def right_stream(db)
+      def right_stream_query(db)
         unless compare_all?
-          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:max, :start_date).as(:start_date)).as(:r)
+          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:max, :start_date).as(:start_date))
         else
-          right.evaluate(db).from_self.as(:r)
+          right.evaluate(db).from_self
         end
       end
 
@@ -43,6 +43,10 @@ All other results are discarded, including all results in the RHR.
 
       def compare_all?
         !(options.keys & [:within]).empty?
+      end
+
+      def rhs_function
+        compare_all? ? nil : :min
       end
     end
   end

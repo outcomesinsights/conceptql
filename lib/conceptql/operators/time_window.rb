@@ -1,4 +1,4 @@
-require_relative 'operator'
+require_relative 'pass_thru'
 require_relative '../date_adjuster'
 
 module ConceptQL
@@ -19,7 +19,7 @@ module ConceptQL
     # Both start and end arguments must be provided, but if you do not wish to adjust a date just
     # pass '', '0', or nil as that argument.  E.g.:
     # start: 'd', end: '' # Only adjust start_date by positive 1 day and leave end_date uneffected
-    class TimeWindow < Operator
+    class TimeWindow < PassThru
       register __FILE__
 
       desc 'Adjusts the start_date and end_date to create a new window of time for each result.'
