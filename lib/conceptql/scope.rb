@@ -285,15 +285,17 @@ module ConceptQL
             Hash[sql_statements]
           end
 
-          define_method(:drop_temp_tables) do
-            temp_tables.reverse_each do |table_name,_|
-              #p [:drop_table, table_name]
-              begin
-                db.drop_table?(table_name, cascade: true)
-              rescue Sequel::DatabaseError
-                warn("Unable to drop scratch table: #{literal(table_name)}")
-              end
+          define_method(:drop_temp_tables) do |opts|
+            opts ||= {}
+            table_names = temp_tables.reverse_each.map(&:first)
+            p table_names
+            begin
+              db.drop_table?(*table_names, opts.merge(cascade: true))
+            rescue Sequel::DatabaseError
+              puts "DARN"
+              warn("Unable to drop scratch table: #{literal(*table_names)}")
             end
+            p "Done"
           end
         end
       else
@@ -306,7 +308,7 @@ module ConceptQL
             { query: sql(*args, &block) }
           end
 
-          define_method(:drop_temp_tables) do
+          define_method(:drop_temp_tables) do |opts|
           end
         end
       end

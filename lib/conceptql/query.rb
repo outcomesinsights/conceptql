@@ -99,8 +99,8 @@ module ConceptQL
       operator.code_list(db).uniq
     end
 
-    def drop_temp_tables
-      query.drop_temp_tables
+    def drop_temp_tables(opts = {})
+      query.drop_temp_tables(opts)
     end
 
     private
