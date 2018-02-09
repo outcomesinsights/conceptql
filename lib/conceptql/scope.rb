@@ -292,7 +292,6 @@ module ConceptQL
             begin
               db.drop_table?(*table_names, opts.merge(cascade: true))
             rescue Sequel::DatabaseError
-              puts "DARN"
               warn("Unable to drop scratch table: #{literal(*table_names)}")
             end
             p "Done"
