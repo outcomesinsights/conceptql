@@ -13,7 +13,7 @@ module ConceptQL
       end
 
       # Symbolize all keys and values
-      @opts = Hash[opts.map { |k,v| [k.to_sym, v.respond_to?(:to_sym) ? v.to_sym : v]}]
+      @opts = ConceptQL::Utils.rekey(opts, rekey_values: true)
 
       @opts[:data_model] ||= (ENV["CONCEPTQL_DATA_MODEL"] || :omopv4_plus).to_sym
       @opts[:database_type] ||= db_type
@@ -25,6 +25,7 @@ module ConceptQL
 
     def query(statement, opts={})
       NullQuery.new if statement.nil? || statement.empty?
+      @opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
       Query.new(db, statement, @opts.merge(opts))
     end
 

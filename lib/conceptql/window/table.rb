@@ -16,6 +16,8 @@ module ConceptQL
           .join(table_window, { person_id: :person_id }, table_alias: :tw)
           .where(start_date <= Sequel.qualify(:og, :start_date))
           .where(Sequel.qualify(:og, :end_date) <= end_date)
+          .select_all(:og)
+          .from_self
       end
 
       def apply_adjustments(op, column, adjustment)
