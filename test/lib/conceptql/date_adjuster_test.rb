@@ -30,7 +30,7 @@ describe ConceptQL::DateAdjuster do
       let(:str) { "6d" }
 
       it "should work with days" do
-        da.adjust(:start_date).expression.interval.must_equal({days: 6})
+        da.adjust(:start_date).interval.must_equal({days: 6})
       end
     end
 
@@ -38,7 +38,7 @@ describe ConceptQL::DateAdjuster do
       let(:str) { "6w" }
 
       it "should work with weeks" do
-        da.adjust(:start_date).expression.interval.must_equal({days: 42})
+        da.adjust(:start_date).interval.must_equal({days: 42})
       end
     end
 
@@ -46,7 +46,7 @@ describe ConceptQL::DateAdjuster do
       let(:str) { "6m" }
 
       it "should work with months" do
-        da.adjust(:start_date).expression.interval.must_equal({months: 6})
+        da.adjust(:start_date).interval.must_equal({months: 6})
       end
     end
 
@@ -54,7 +54,7 @@ describe ConceptQL::DateAdjuster do
       let(:str) { "6y" }
 
       it "should work with years" do
-        da.adjust(:start_date).expression.interval.must_equal({years: 6})
+        da.adjust(:start_date).interval.must_equal({years: 6})
       end
     end
 
@@ -63,9 +63,8 @@ describe ConceptQL::DateAdjuster do
 
       it "should work" do
         adj = da.adjust(:end_date)
-        adj.alias.must_equal(:end_date)
-        adj.expression.expr.value.must_equal("start_date")
-        adj.expression.interval.must_equal(years: -6)
+        adj.expr.value.must_equal("start_date")
+        adj.interval.must_equal(years: -6)
       end
     end
 
@@ -74,9 +73,8 @@ describe ConceptQL::DateAdjuster do
 
       it "should work" do
         adj = da.adjust(:start_date)
-        adj.alias.must_equal(:start_date)
-        adj.expression.expr.value.must_equal("end_date")
-        adj.expression.interval.must_equal(years: 6)
+        adj.expr.value.must_equal("end_date")
+        adj.interval.must_equal(years: 6)
       end
     end
 
@@ -85,9 +83,8 @@ describe ConceptQL::DateAdjuster do
 
       it "should work" do
         adj = da.adjust(Sequel.qualify(:table, :start_date))
-        adj.alias.column.must_equal(:start_date)
-        adj.expression.expr.value.must_equal("end_date")
-        adj.expression.interval.must_equal(years: 6)
+        adj.expr.value.must_equal("end_date")
+        adj.interval.must_equal(years: 6)
       end
     end
 

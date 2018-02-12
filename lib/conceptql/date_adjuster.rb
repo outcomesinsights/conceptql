@@ -42,7 +42,7 @@ module ConceptQL
           manipulator.date_sub(sql, units => quantity.abs)
         end
       end
-      op.rdbms.cast_date(adjusted_date).as(column)
+      op.rdbms.cast_date(adjusted_date)
     end
 
     # Returns an array of strings that represent date modifiers
