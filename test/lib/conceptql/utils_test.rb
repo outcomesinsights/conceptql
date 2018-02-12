@@ -15,6 +15,20 @@ describe ConceptQL::Utils do
       }
       ConceptQL::Utils.rekey(h).must_equal expected
     end
+
+    it "should symbolize all values if option is set" do
+      h = {
+        "a" => {
+          "b" => [ "c", "d" => "e" ]
+        }
+      }
+      expected = {
+        :a => {
+          :b => [ :c, :d => :e ]
+        }
+      }
+      ConceptQL::Utils.rekey(h, rekey_values: true).must_equal expected
+    end
   end
 
   describe ".blank?" do

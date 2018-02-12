@@ -4,18 +4,20 @@ require "timeout"
 module ConceptQL
   module Utils
     class << self
-      def rekey(h)
+      def rekey(h, opts = {})
         # Thanks to: https://stackoverflow.com/a/10721936
         case h
         when Hash
           Hash[
             h.map do |k, v|
-              [ k.respond_to?(:to_sym) ? k.to_sym : k, rekey(v) ]
+              [ k.respond_to?(:to_sym) ? k.to_sym : k, rekey(v, opts) ]
             end
           ]
         when Enumerable
-          h.map { |v| rekey(v) }
+          h.map { |v| rekey(v, opts) }
         else
+          return h unless opts[:rekey_values]
+          return h.to_sym if h.respond_to?(:to_sym)
           h
         end
       end
