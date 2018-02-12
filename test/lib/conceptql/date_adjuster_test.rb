@@ -26,6 +26,14 @@ describe ConceptQL::DateAdjuster do
       Sequel.mock(host: :postgres)
     end
 
+    describe "with nothing" do
+      let(:str) { nil }
+
+      it "should work with nothing" do
+        da.adjust(:start_date).value.must_equal("start_date")
+      end
+    end
+
     describe "with days" do
       let(:str) { "6d" }
 

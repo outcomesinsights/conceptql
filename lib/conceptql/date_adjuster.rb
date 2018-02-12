@@ -18,8 +18,8 @@ module ConceptQL
       return Sequel.expr(:start_date) if str.downcase == 'start'
       return op.rdbms.cast_date(Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
       origin_column = column
-      if (chr = str.chars.first.upcase) =~ /S|E/
-        origin_column = if chr == "E"
+      if (chr = str.chars.first) =~ /S|E/i
+        origin_column = if chr.upcase == "E"
                           :end_date
                         else
                           :start_date
