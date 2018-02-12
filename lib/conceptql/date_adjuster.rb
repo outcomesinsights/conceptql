@@ -4,7 +4,7 @@ module ConceptQL
   # Used to translate a string of terse date adjustments into a set of adjustments that are compatible with most RDBMSs
   class DateAdjuster
 
-    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dwmy]?)+/, /\s*/])}\z/
+    VALID_INPUT = /\A(S|E)?#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /([-+]?\d+[dwmy]?)+/, /\s*/])}\z/
 
     attr :op, :str, :manipulator
     def initialize(op, str, opts = {})
@@ -17,7 +17,17 @@ module ConceptQL
       return Sequel.expr(:end_date) if str.downcase == 'end'
       return Sequel.expr(:start_date) if str.downcase == 'start'
       return op.rdbms.cast_date(Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
-      adjusted_date = adjustments.inject(Sequel.expr(column)) do |sql, (units, quantity)|
+      origin_column = column
+      if (chr = str.chars.first.upcase) =~ /S|E/
+        origin_column = if chr == "E"
+                          :end_date
+                        else
+                          :start_date
+                        end
+        str.sub!(chr, '')
+      end
+
+      adjusted_date = adjustments.inject(Sequel.expr(origin_column)) do |sql, (units, quantity)|
         # Turns out weeks aren't supported in Sequel, so we'll just multiply
         # the number of weeks by 7 and adjust the date by that number of days
         if units == :weeks
@@ -32,7 +42,7 @@ module ConceptQL
           manipulator.date_sub(sql, units => quantity.abs)
         end
       end
-      op.rdbms.cast_date(adjusted_date)
+      op.rdbms.cast_date(adjusted_date).as(column.to_sym)
     end
 
     # Returns an array of strings that represent date modifiers
