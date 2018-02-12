@@ -80,6 +80,17 @@ describe ConceptQL::DateAdjuster do
       end
     end
 
+    describe "with end_date specified as part of a QualifiedIdentifier adjustment" do
+      let(:str) { "E6y" }
+
+      it "should work" do
+        adj = da.adjust(Sequel.qualify(:table, :start_date))
+        adj.alias.column.must_equal(:start_date)
+        adj.expression.expr.value.must_equal("end_date")
+        adj.expression.interval.must_equal(years: 6)
+      end
+    end
+
     describe "with no digit" do
       let(:str) { "dwmy" }
 
