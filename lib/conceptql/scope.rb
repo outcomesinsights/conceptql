@@ -61,7 +61,6 @@ module ConceptQL
       @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
 
-
       @i = 0
       @mutex = Mutex.new
       @cte_name_next = lambda{@mutex.synchronize{@i+=1}}
