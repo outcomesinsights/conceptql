@@ -24,6 +24,9 @@ module ConceptQL
                         else
                           :start_date
                         end
+        if column.respond_to?(:qualify)
+          origin_column = Sequel.qualify(column.table, origin_column)
+        end
         str.sub!(chr, '')
       end
 

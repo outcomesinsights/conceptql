@@ -91,7 +91,8 @@ describe ConceptQL::DateAdjuster do
 
       it "should work" do
         adj = da.adjust(Sequel.qualify(:table, :start_date))
-        adj.expr.value.must_equal("end_date")
+        adj.expr.table.must_equal(:table)
+        adj.expr.column.must_equal(:end_date)
         adj.interval.must_equal(years: 6)
       end
     end
