@@ -176,7 +176,9 @@ module ConceptQL
       end
 
       def translate_to_old(v_id)
-        self.class.v5_vocab_to_v4_vocab[v_id.to_s]
+        v = self.class.v5_vocab_to_v4_vocab[v_id.to_s]
+        return v.to_i if v
+        v
       end
 
       def domain_map(v_id)
