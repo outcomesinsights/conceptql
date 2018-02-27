@@ -11,9 +11,9 @@ ENV INSTALL_PATH /home/app
 WORKDIR $INSTALL_PATH
 COPY . ./
 
-RUN grep -iv "\(pg\|sequel-impala\)" Gemfile > Gemfile.temp
+RUN grep -iv "\(pg\|sequel_impala\)" Gemfile > Gemfile.temp
 RUN echo 'gem "pg"' >> Gemfile.temp
-RUN echo 'gem "sequel-impala", github: "outcomesinsights/sequel-impala", branch: "master"' >> Gemfile.temp
+RUN echo 'gem "sequel_impala", github: "outcomesinsights/sequel_impala", branch: "master"' >> Gemfile.temp
 RUN mv Gemfile.temp Gemfile
 
 RUN gem install bundler
