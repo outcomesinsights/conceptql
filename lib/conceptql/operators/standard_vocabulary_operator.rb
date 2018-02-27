@@ -51,15 +51,7 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        if gdm?
-          vocab_op.describe_codes(db, codes)
-        elsif select_all?
-          [["*", "ALL CODES"]]
-        elsif no_db?(db)
-          codes.zip([])
-        else
-          db[:concept].filter(:vocabulary_id => vocabulary_id).filter(:concept_code => codes).select_map([:concept_code, :concept_name])
-        end
+        vocab_op.describe_codes(db, codes)
       end
 
       private

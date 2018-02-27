@@ -87,7 +87,7 @@ FROM
       db = ConceptQL::Database.new(DB)
       query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
       query.code_list(DB).map(&:to_s).must_equal([
-        "CPT 99214: Office or other outpatient visit for the evaluation and management of an established patient, which requires at least 2 of these 3 key components: A detailed history; A detailed examination; Medical decision making of moderate complexity. Counseling and/o",
+        "CPT 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes",
         "ICD-9 CM 250.00: Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled",
         "ICD-9 CM 250.02: Diabetes mellitus without mention of complication, type II or unspecified type, uncontrolled"
       ])
@@ -136,7 +136,9 @@ FROM
       db = ConceptQL::Database.new(DB)
       query = db.query(["union", ["cpt_or_hcpcs","99214"], ["ATC", "*"]])
       query.code_list(DB).map(&:to_s).must_equal([
-        "CPT or HCPCS 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes", "WHO ATC *: ALL CODES"
+        "CPT or HCPCS 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes",
+        "CPT or HCPCS 99214",
+        "WHO ATC *: ALL CODES"
       ])
     end
 
@@ -146,6 +148,11 @@ FROM
       query.code_list(nil).map(&:to_s).must_equal([
         "CPT or HCPCS 99214", "WHO ATC *: ALL CODES"
       ])
+    end
+
+    it "should return codes even if the code doesn't exist in the database" do
+      query = CDB.query(["hcpcs", "A0000", "A0021"])
+      query.code_list.map(&:code).must_equal(["A0000", "A0021"])
     end
   end
 end

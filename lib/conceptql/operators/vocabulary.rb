@@ -138,7 +138,9 @@ module ConceptQL
       def describe_codes(db, codes)
         return [["*", "ALL CODES"]] if select_all?
         return codes.zip([]) if no_db?(db)
-        dm.concepts_ds(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
+        results = dm.concepts_ds(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
+        remaining_codes = codes - results.map(&:first).map(&:to_s)
+        (results + remaining_codes.zip([])).sort_by(&:first)
       end
 
       def select_all?
