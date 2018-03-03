@@ -288,7 +288,7 @@ module ConceptQL
             opts ||= {}
             table_names = temp_tables.reverse_each.map(&:first)
             begin
-              db.drop_table?(*table_names, opts.merge(cascade: true))
+              db.drop_table?(*table_names, opts.merge(cascade: true, purge: true))
             rescue Sequel::DatabaseError
               warn("Unable to drop scratch table: #{literal(*table_names)}")
             end
