@@ -13,7 +13,7 @@ module ConceptQL
       end
 
       def installed?(name)
-        `which #{name}`
+        `which #{name} > /dev/null 2>&1`
         $?.success?
       end
 
