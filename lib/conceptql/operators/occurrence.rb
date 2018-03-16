@@ -64,7 +64,7 @@ occurrence, this operator returns nothing for that person.
       end
 
       def occurrences(db)
-        all_or_uniquified_results(db)
+        stream.evaluate(db)
           .from_self
           .select_append { |o| o.row_number.function.over(partition: :person_id, order: ordered_columns).as(:rn) }
       end
@@ -87,24 +87,6 @@ occurrence, this operator returns nothing for that person.
       def ordered_columns
         ordered_columns = [Sequel.send(asc_or_desc, rdbms.partition_fix(:start_date))]
         ordered_columns += [:criterion_id]
-      end
-
-      def uniquify_partition_columns
-        cols = dynamic_columns
-        cols -= [:criterion_id, :start_date, :end_date, :criterion_domain, :criterion_table]
-        cols += [rdbms.partition_fix(:criterion_domain), rdbms.partition_fix(:criterion_table)]
-      end
-
-      def all_or_uniquified_results(db)
-        return stream.evaluate(db) unless options[:unique]
-        uniquify = stream.evaluate(db)
-          .from_self
-        name = cte_name(:uniqued)
-        db[name]
-          .with(name, uniquify)
-          .select_append { |o| o.row_number.function.over(partition: uniquify_partition_columns, order: ordered_columns).as(:unique_rn) }
-          .from_self
-          .where(unique_rn: 1)
       end
     end
   end
