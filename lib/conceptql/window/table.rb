@@ -9,7 +9,7 @@ module ConceptQL
         @adjust_end = adjust_end
       end
 
-      def windowfy(op, query)
+      def call(op, query)
         start_date = apply_adjustments(op, Sequel[:tw][:start_date], adjust_start)
         end_date = apply_adjustments(op, Sequel[:tw][:end_date], adjust_end)
         query.from_self(alias: :og)
