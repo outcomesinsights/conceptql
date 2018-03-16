@@ -84,8 +84,7 @@ occurrence, this operator returns nothing for that person.
       end
 
       def ordered_columns
-        ordered_columns = [Sequel.send(asc_or_desc, rdbms.partition_fix(:start_date))]
-        ordered_columns += [:criterion_id]
+        [Sequel.send(asc_or_desc, rdbms.partition_fix(:start_date)), :criterion_id]
       end
     end
   end
