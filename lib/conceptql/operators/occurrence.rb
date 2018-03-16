@@ -46,7 +46,6 @@ occurrence, this operator returns nothing for that person.
       basic_type :temporal
       allows_one_upstream
       validate_at_least_one_upstream
-      option :unique, type: :boolean, label: 'Unique Source Values Only'
 
       def query_cols
         dynamic_columns + [:rn]
