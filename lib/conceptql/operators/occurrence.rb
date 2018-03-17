@@ -47,28 +47,70 @@ occurrence, this operator returns nothing for that person.
       allows_one_upstream
       validate_at_least_one_upstream
 
+      #option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      #option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :group_by_date, type: :boolean, instructions: 'Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence'
+
       def query_cols
         dynamic_columns + [:rn]
-      end
-
-      def query(db)
-        name = cte_name(:occurrences)
-        db[name]
-          .with(name, occurrences(db))
-          .where(rn: occurrence.abs)
       end
 
       def occurrence
         @occurrence ||= arguments.first
       end
 
-      def occurrences(db)
-        stream.evaluate(db)
-          .from_self
-          .select_append { |o| o.row_number.function.over(partition: :person_id, order: ordered_columns).as(:rn) }
+      def query(db)
+        function = options[:group_by_date] ? :DENSE_RANK : :ROW_NUMBER
+        #at_least_option = options[:at_least]
+        #within_option = options[:within]
+        name = cte_name(:occurrences)
+        main_ds = db[name]
+=begin
+        if at_least_option || within_option
+          unique_ds = stream.evaluate(db)
+            .from_self
+            .select_append(Sequel[:ROW_NUMBER].function.over.as(:global_rn))
+
+          uname = cte_name(:unique_occurrences)
+
+          subquery = db[Sequel.as(uname, :b)]
+            .where{{:person_id=>a[:person_id]}}
+            .select(:global_rn)
+            .select_append((Sequel[function].function.over(partition: :person_id, order: ordered_columns) + 1).as(:rn))
+
+          if at_least_option
+            subquery = subquery.where(Sequel[:b][:start_date] >= adjust_date(at_least_option, Sequel[:a][:end_date]))
+          end
+          if within_option
+            subquery = subquery.where(Sequel[:b][:start_date] <= adjust_date(within_option, Sequel[:a][:end_date]))
+          end
+
+          subquery = subquery
+            .from_self
+            .where(rn: occurrence.abs)
+            .select(:global_rn)
+
+          ds = db[Sequel.as(uname, :a)]
+            .where(:global_rn=>subquery)
+            .from_self
+
+          main_ds.with(uname, unique_ds).with(name,ds)
+=end
+    #    else
+          ds = stream.evaluate(db)
+            .select_append(Sequel[function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
+            .from_self
+            .where(rn: occurrence.abs)
+          main_ds.with(name, ds)
+    #    end
       end
 
       private
+
+      def adjust_date(adjustment, column, reverse = false)
+        adjuster = DateAdjuster.new(self, adjustment)
+        adjuster.adjust(column, reverse)
+      end
 
       def validate(db, opts = {})
         super
@@ -84,7 +126,9 @@ occurrence, this operator returns nothing for that person.
       end
 
       def ordered_columns
-        [Sequel.send(asc_or_desc, rdbms.partition_fix(:start_date)), :criterion_id]
+        order = [Sequel.send(asc_or_desc, rdbms.partition_fix(:start_date))]
+        order << :criterion_id unless options[:group_by_date]
+        order
       end
     end
   end
