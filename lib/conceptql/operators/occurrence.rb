@@ -47,8 +47,8 @@ occurrence, this operator returns nothing for that person.
       allows_one_upstream
       validate_at_least_one_upstream
 
-      #option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
-      #option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
       option :group_by_date, type: :boolean, instructions: 'Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence'
 
       def query_cols
@@ -61,48 +61,71 @@ occurrence, this operator returns nothing for that person.
 
       def query(db)
         function = options[:group_by_date] ? :DENSE_RANK : :ROW_NUMBER
-        #at_least_option = options[:at_least]
-        #within_option = options[:within]
+        at_least_option = options[:at_least]
+        within_option = options[:within]
         name = cte_name(:occurrences)
-        main_ds = db[name]
-=begin
+
         if at_least_option || within_option
-          unique_ds = stream.evaluate(db)
+          ordered_name = cte_name(:ordered_occurrences)
+          ordered = stream.evaluate(db)
             .from_self
-            .select_append(Sequel[:ROW_NUMBER].function.over.as(:global_rn))
+            .select_append(Sequel[function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
 
-          uname = cte_name(:unique_occurrences)
+          first_name = cte_name(:first_occurrences)
+          first = db[ordered_name]
+            .where(:rn=>1)
+            .select(:person_id)
 
-          subquery = db[Sequel.as(uname, :b)]
-            .where{{:person_id=>a[:person_id]}}
-            .select(:global_rn)
-            .select_append((Sequel[function].function.over(partition: :person_id, order: ordered_columns) + 1).as(:rn))
+          joined_name = cte_name(:joined_occurrences)
+          joined = db[ordered_name]
+            .join(first_name, person_id: :person_id)
+            .select_all(ordered_name)
 
           if at_least_option
-            subquery = subquery.where(Sequel[:b][:start_date] >= adjust_date(at_least_option, Sequel[:a][:end_date]))
+            first = first.select_append(adjust_date(at_least_option, Sequel[:end_date]).as(:after))
+            joined = joined.where(Sequel[ordered_name][:start_date] >= Sequel[first_name][:after])
           end
           if within_option
-            subquery = subquery.where(Sequel[:b][:start_date] <= adjust_date(within_option, Sequel[:a][:end_date]))
+            first = first.select_append(adjust_date(within_option, Sequel[:end_date]).as(:before))
+            joined = joined.where(Sequel[ordered_name][:start_date] <= Sequel[first_name][:before])
           end
 
-          subquery = subquery
+          first = first
             .from_self
-            .where(rn: occurrence.abs)
-            .select(:global_rn)
+            .select_group(:person_id)
 
-          ds = db[Sequel.as(uname, :a)]
-            .where(:global_rn=>subquery)
-            .from_self
+          if at_least_option
+            first = first.select_append{min(:after).as(:after)}
+          end
+          if within_option
+            first = first.select_append{max(:before).as(:before)}
+          end
 
-          main_ds.with(uname, unique_ds).with(name,ds)
-=end
-    #    else
+          adjustments_name = cte_name(:adjustment_occurrences)
+          adjustments = db[joined_name]
+            .exclude(:rn=>1)
+            .select_group(:person_id)
+            .select_append{min(:rn).as(:min_rn)}
+
+          adjusted_name = cte_name(:adjusted_occurrences)
+          adjusted = db[joined_name]
+            .join(adjustments_name, person_id: :person_id)
+            .select_all(joined_name)
+            .where((Sequel[:rn] - :min_rn)=>occurrence-2)
+
+          db[adjusted_name]
+            .with(ordered_name, ordered)
+            .with(first_name, first)
+            .with(joined_name, joined)
+            .with(adjustments_name, adjustments)
+            .with(adjusted_name, adjusted)
+        else
           ds = stream.evaluate(db)
             .select_append(Sequel[function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
             .from_self
             .where(rn: occurrence.abs)
-          main_ds.with(name, ds)
-    #    end
+          db[name].with(name, ds)
+        end
       end
 
       private
