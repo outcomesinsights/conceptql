@@ -59,73 +59,62 @@ occurrence, this operator returns nothing for that person.
         @occurrence ||= arguments.first
       end
 
+      def rank_function
+        options[:group_by_date] ? :DENSE_RANK : :ROW_NUMBER
+      end
+
       def query(db)
-        function = options[:group_by_date] ? :DENSE_RANK : :ROW_NUMBER
+        ds = if options[:at_least] || options[:within]
+          query_complex(db)
+        else
+          query_simple(db)
+        end
+        
+        ds.where(rn: occurrence.abs)
+      end
+
+      # With at_least or within option, return all matching occurrences that meet the date criteria by doing a self join.
+      # If within is specified, assume an at_least of everything after the current event to not pick
+      # prior occurrences when doing the self join.
+      def query_complex(db)
         at_least_option = options[:at_least]
         within_option = options[:within]
-        name = cte_name(:occurrences)
+        input_name = cte_name(:occurrence_input)
 
-        if at_least_option || within_option
-          ordered_name = cte_name(:ordered_occurrences)
-          ordered = stream.evaluate(db)
-            .from_self
-            .select_append(Sequel[function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
+        # Give a global row number to all rows, so that the self joined dataset can partition based on
+        # the global row number when ordering
+        input_ds = stream.evaluate(db)
+          .select_append(Sequel[:ROW_NUMBER].function.over(partition: :person_id, order: ordered_columns(:global=>true)).as(:global_rn))
 
-          first_name = cte_name(:first_occurrences)
-          first = db[ordered_name]
-            .where(:rn=>1)
-            .select(:person_id)
-
-          joined_name = cte_name(:joined_occurrences)
-          joined = db[ordered_name]
-            .join(first_name, person_id: :person_id)
-            .select_all(ordered_name)
-
-          if at_least_option
-            first = first.select_append(adjust_date(at_least_option, Sequel[:end_date]).as(:after))
-            joined = joined.where(Sequel[ordered_name][:start_date] >= Sequel[first_name][:after])
+        first = Sequel[:first]
+        rest = Sequel[:rest]
+        joined_name = cte_name(:occurrence_joined)
+        joined_ds = db[Sequel[input_name].as(:first)]
+          .join(Sequel[input_name].as(:rest), :person_id=>:person_id) do
+            cond = rest[:global_rn] > first[:global_rn]
+            if at_least_option
+              cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date])
+            end
+            if within_option
+              cond &= rest[:start_date] <= adjust_date(within_option, first[:end_date])
+            end
+            cond | {rest[:global_rn] => first[:global_rn]}
           end
-          if within_option
-            first = first.select_append(adjust_date(within_option, Sequel[:end_date]).as(:before))
-            joined = joined.where(Sequel[ordered_name][:start_date] <= Sequel[first_name][:before])
-          end
+          .select_all(:rest)
+          .select_append(first[:global_rn].as(:initial_rn))
+          .select_append(Sequel[rank_function].function.over(partition: first[:global_rn], order: ordered_columns(:qualify=>:rest)).as(:rn))
 
-          first = first
-            .from_self
-            .select_group(:person_id)
+        db[joined_name]
+          .with(input_name, input_ds)
+          .with(joined_name, joined_ds)
+          .order(:global_rn)
+      end
 
-          if at_least_option
-            first = first.select_append{min(:after).as(:after)}
-          end
-          if within_option
-            first = first.select_append{max(:before).as(:before)}
-          end
-
-          adjustments_name = cte_name(:adjustment_occurrences)
-          adjustments = db[joined_name]
-            .exclude(:rn=>1)
-            .select_group(:person_id)
-            .select_append{min(:rn).as(:min_rn)}
-
-          adjusted_name = cte_name(:adjusted_occurrences)
-          adjusted = db[joined_name]
-            .join(adjustments_name, person_id: :person_id)
-            .select_all(joined_name)
-            .where((Sequel[:rn] - :min_rn)=>occurrence-2)
-
-          db[adjusted_name]
-            .with(ordered_name, ordered)
-            .with(first_name, first)
-            .with(joined_name, joined)
-            .with(adjustments_name, adjustments)
-            .with(adjusted_name, adjusted)
-        else
-          ds = stream.evaluate(db)
-            .select_append(Sequel[function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
-            .from_self
-            .where(rn: occurrence.abs)
-          db[name].with(name, ds)
-        end
+      # Without at_least or within option, only return the first occurrence for each person, if any.
+      def query_simple(db)
+        stream.evaluate(db)
+          .select_append(Sequel[rank_function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
+          .from_self
       end
 
       private
@@ -148,9 +137,29 @@ occurrence, this operator returns nothing for that person.
         occurrence < 0 ? :desc : :asc
       end
 
-      def ordered_columns
-        order = [Sequel.send(asc_or_desc, rdbms.partition_fix(:start_date))]
-        order << :criterion_id unless options[:group_by_date]
+      def qualify_with(qualifier, col)
+        if qualifier
+          Sequel.qualify(qualifier, col)
+        else
+          col
+        end
+      end
+
+      def ordered_columns(opts={})
+        qualifier = opts[:qualify]
+        start_date = rdbms.partition_fix(qualify_with(qualifier, :start_date))
+        unless opts[:global]
+          start_date = Sequel.send(asc_or_desc, start_date)
+        end
+
+        order = [start_date]
+        unless options[:group_by_date]
+          criterion_id = qualify_with(qualifier, :criterion_id)
+          unless opts[:global]
+            criterion_id = Sequel.send(asc_or_desc, criterion_id)
+          end
+          order << criterion_id
+        end
         order
       end
     end
