@@ -1,0 +1,20 @@
+[
+  {
+    "person_id": 2,
+    "criterion_id": 13607473,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-15",
+    "end_date": "2009-04-15",
+    "source_value": "401.9"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 13607473,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-15",
+    "end_date": "2009-04-15",
+    "source_value": "401.9"
+  }
+]
