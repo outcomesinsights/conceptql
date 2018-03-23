@@ -46,30 +46,83 @@ occurrence, this operator returns nothing for that person.
       basic_type :temporal
       allows_one_upstream
       validate_at_least_one_upstream
-      option :unique, type: :boolean, label: 'Unique Source Values Only'
+
+      option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :group_by_date, type: :boolean, instructions: 'Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence'
 
       def query_cols
         dynamic_columns + [:rn]
-      end
-
-      def query(db)
-        name = cte_name(:occurrences)
-        db[name]
-          .with(name, occurrences(db))
-          .where(rn: occurrence.abs)
       end
 
       def occurrence
         @occurrence ||= arguments.first
       end
 
-      def occurrences(db)
-        all_or_uniquified_results(db)
+      def rank_function
+        options[:group_by_date] ? :DENSE_RANK : :ROW_NUMBER
+      end
+
+      def query(db)
+        ds = if options[:at_least] || options[:within]
+          query_complex(db)
+        else
+          query_simple(db)
+        end
+        
+        ds.where(rn: occurrence.abs)
+      end
+
+      # With at_least or within option, return all matching occurrences that meet the date criteria by doing a self join.
+      # If within is specified, assume an at_least of everything after the current event to not pick
+      # prior occurrences when doing the self join.
+      def query_complex(db)
+        at_least_option = options[:at_least]
+        within_option = options[:within]
+        input_name = cte_name(:occurrence_input)
+
+        # Give a global row number to all rows, so that the self joined dataset can partition based on
+        # the global row number when ordering
+        input_ds = stream.evaluate(db)
+          .select_append(Sequel[:ROW_NUMBER].function.over(partition: :person_id, order: ordered_columns(:global=>true)).as(:global_rn))
+
+        first = Sequel[:first]
+        rest = Sequel[:rest]
+        joined_name = cte_name(:occurrence_joined)
+        joined_ds = db[Sequel[input_name].as(:first)]
+          .join(Sequel[input_name].as(:rest), :person_id=>:person_id) do
+            cond = rest[:global_rn] > first[:global_rn]
+            if at_least_option
+              cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date])
+            end
+            if within_option
+              cond &= rest[:start_date] <= adjust_date(within_option, first[:end_date])
+            end
+            cond | {rest[:global_rn] => first[:global_rn]}
+          end
+          .select_all(:rest)
+          .select_append(first[:global_rn].as(:initial_rn))
+          .select_append(Sequel[rank_function].function.over(partition: first[:global_rn], order: ordered_columns(:qualify=>:rest)).as(:rn))
+
+        db[joined_name]
+          .with(input_name, input_ds)
+          .with(joined_name, joined_ds)
+          .order(:global_rn)
+      end
+
+      # Without at_least or within option, only return the first occurrence for each person, if any.
+      def query_simple(db)
+        stream.evaluate(db)
+          .select_append(Sequel[rank_function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
           .from_self
-          .select_append { |o| o.row_number.function.over(partition: :person_id, order: ordered_columns).as(:rn) }
       end
 
       private
+
+      def adjust_date(adjustment, column, reverse = false)
+        adjuster = DateAdjuster.new(self, adjustment)
+        adjuster.adjust(column, reverse)
+      end
 
       def validate(db, opts = {})
         super
@@ -84,27 +137,30 @@ occurrence, this operator returns nothing for that person.
         occurrence < 0 ? :desc : :asc
       end
 
-      def ordered_columns
-        ordered_columns = [Sequel.send(asc_or_desc, rdbms.partition_fix(:start_date))]
-        ordered_columns += [:criterion_id]
+      def qualify_with(qualifier, col)
+        if qualifier
+          Sequel.qualify(qualifier, col)
+        else
+          col
+        end
       end
 
-      def uniquify_partition_columns
-        cols = dynamic_columns
-        cols -= [:criterion_id, :start_date, :end_date, :criterion_domain, :criterion_table]
-        cols += [rdbms.partition_fix(:criterion_domain), rdbms.partition_fix(:criterion_table)]
-      end
+      def ordered_columns(opts={})
+        qualifier = opts[:qualify]
+        start_date = rdbms.partition_fix(qualify_with(qualifier, :start_date))
+        unless opts[:global]
+          start_date = Sequel.send(asc_or_desc, start_date)
+        end
 
-      def all_or_uniquified_results(db)
-        return stream.evaluate(db) unless options[:unique]
-        uniquify = stream.evaluate(db)
-          .from_self
-        name = cte_name(:uniqued)
-        db[name]
-          .with(name, uniquify)
-          .select_append { |o| o.row_number.function.over(partition: uniquify_partition_columns, order: ordered_columns).as(:unique_rn) }
-          .from_self
-          .where(unique_rn: 1)
+        order = [start_date]
+        unless options[:group_by_date]
+          criterion_id = qualify_with(qualifier, :criterion_id)
+          unless opts[:global]
+            criterion_id = Sequel.send(asc_or_desc, criterion_id)
+          end
+          order << criterion_id
+        end
+        order
       end
     end
   end

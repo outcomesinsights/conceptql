@@ -1,0 +1,38 @@
+[
+  {
+    "person_id": 2,
+    "criterion_id": 5896373,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-16",
+    "end_date": "2009-05-16",
+    "source_value": "401.9"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 5896373,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-16",
+    "end_date": "2009-05-16",
+    "source_value": "401.9"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 8094484,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-16",
+    "end_date": "2009-05-16",
+    "source_value": "250.00"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 8094484,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-16",
+    "end_date": "2009-05-16",
+    "source_value": "250.00"
+  }
+]

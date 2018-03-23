@@ -324,8 +324,8 @@ module ConceptQL
       known_operators[label]
     end
 
-    def window
-      @window ||= Window.from(opts)
+    def windows
+      @windows ||= Window.from(opts)
     end
 
     def force_temp_tables?

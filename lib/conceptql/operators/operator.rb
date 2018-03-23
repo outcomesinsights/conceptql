@@ -19,6 +19,7 @@ module ConceptQL
       attr :nodifier, :values, :options, :arguments, :upstreams, :op_name
 
       option :label, type: :string
+      option :person_ids
 
       @validations = []
 
@@ -225,6 +226,9 @@ module ConceptQL
 
         if scope && scope.person_ids && upstreams.empty?
           q = q.where(person_id: scope.person_ids).from_self
+        end
+        if person_ids = options[:person_ids]
+          q = q.where(person_id: person_ids).from_self
         end
 
         q

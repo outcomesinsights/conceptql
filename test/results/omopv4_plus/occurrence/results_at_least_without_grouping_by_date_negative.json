@@ -1,0 +1,155 @@
+[
+  {
+    "person_id": 2,
+    "criterion_id": 6354880,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "459.81"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 12949863,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 16101877,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 17489726,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "355.8"
+  }
+]

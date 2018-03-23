@@ -1,5 +1,3 @@
-require_relative "window/none"
-require_relative "window/date_literal"
 require_relative "window/table"
 
 module ConceptQL
@@ -9,14 +7,29 @@ module ConceptQL
         start_date = opts[:start_date]
         end_date = opts[:end_date]
         window_table = opts[:window_table]
+        person_ids = opts[:person_ids]
+
+        windows = []
 
         if start_date && end_date
-          return DateLiteral.new(start_date, end_date)
-        elsif window_table
-          Table.new(window_table, opts[:adjust_window_start], opts[:adjust_window_end])
-        else
-          None.new
+          windows << lambda do |op, ds|
+            start_check = op.rdbms.cast_date(start_date) <= :start_date
+            end_check = Sequel.expr(:end_date) <= op.rdbms.cast_date(end_date)
+            ds.from_self.where(start_check).where(end_check)
+          end
         end
+
+        if window_table
+          windows << Table.new(window_table, opts[:adjust_window_start], opts[:adjust_window_end])
+        end
+
+        if person_ids
+          windows << lambda do |_, ds|
+            ds.where(:person_id=>person_ids)
+          end
+        end
+
+        windows
       end
     end
   end
