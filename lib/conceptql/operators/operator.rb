@@ -6,7 +6,17 @@ module ConceptQL
   module Operators
     OPERATORS = {:omopv4_plus=>{}, :gdm=>{}}.freeze
 
-    SELECTED_COLUMNS = [:person_id, :criterion_id, :criterion_table, :criterion_domain, :start_date, :end_date, :value_as_number, :value_as_string, :value_as_concept_id, :units_source_value, :source_value].freeze
+    SELECTED_COLUMNS = [:person_id,
+                        :criterion_id,
+                        :criterion_table,
+                        :criterion_domain,
+                        :start_date,
+                        :end_date,
+                        :value_as_number,
+                        :value_as_string,
+                        :value_as_concept_id,
+                        :units_source_value,
+                        :source_value].freeze
 
     def self.operators
       OPERATORS
