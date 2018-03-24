@@ -7,6 +7,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "2/8365057/condition_occurrence"
   },
   {
@@ -17,6 +18,7 @@
     "start_date": "2009-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "6/8477416/condition_occurrence"
   },
   {
@@ -27,6 +29,7 @@
     "start_date": "2009-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "6/7794004/condition_occurrence"
   },
   {
@@ -37,6 +40,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "8/8293854/condition_occurrence"
   },
   {
@@ -47,6 +51,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "8/15535375/condition_occurrence"
   },
   {
@@ -57,6 +62,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "8/5595335/condition_occurrence"
   },
   {
@@ -67,6 +73,7 @@
     "start_date": "2009-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "9/14451011/condition_occurrence"
   },
   {
@@ -77,6 +84,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "11/9688787/condition_occurrence"
   },
   {
@@ -87,6 +95,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "13/4834105/condition_occurrence"
   },
   {
@@ -97,6 +106,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "13/5775923/condition_occurrence"
   },
   {
@@ -107,6 +117,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "14/8938303/condition_occurrence"
   },
   {
@@ -117,6 +128,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "14/21291053/condition_occurrence"
   },
   {
@@ -127,6 +139,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "19/7293464/condition_occurrence"
   },
   {
@@ -137,6 +150,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "19/5325899/condition_occurrence"
   },
   {
@@ -147,6 +161,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "31/6063923/condition_occurrence"
   },
   {
@@ -157,6 +172,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "31/9665002/condition_occurrence"
   },
   {
@@ -167,6 +183,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "31/16558836/condition_occurrence"
   },
   {
@@ -177,6 +194,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "38/7175009/condition_occurrence"
   },
   {
@@ -187,6 +205,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "46/6426635/condition_occurrence"
   },
   {
@@ -197,6 +216,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/12745738/condition_occurrence"
   },
   {
@@ -207,6 +227,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/13883139/condition_occurrence"
   },
   {
@@ -217,6 +238,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/19159405/condition_occurrence"
   },
   {
@@ -227,6 +249,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/18660999/condition_occurrence"
   },
   {
@@ -237,6 +260,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/5599471/condition_occurrence"
   },
   {
@@ -247,6 +271,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/18247897/condition_occurrence"
   },
   {
@@ -257,6 +282,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/17446345/condition_occurrence"
   },
   {
@@ -267,6 +293,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/7908811/condition_occurrence"
   },
   {
@@ -277,6 +304,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/16014873/condition_occurrence"
   },
   {
@@ -287,6 +315,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "51/14432933/condition_occurrence"
   },
   {
@@ -297,6 +326,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "52/14371179/condition_occurrence"
   },
   {
@@ -307,6 +337,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "58/9654567/condition_occurrence"
   },
   {
@@ -317,6 +348,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "58/8194002/condition_occurrence"
   },
   {
@@ -327,6 +359,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "60/14013395/condition_occurrence"
   },
   {
@@ -337,6 +370,7 @@
     "start_date": "2008-01-01",
     "end_date": "2009-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "65/11169853/condition_occurrence"
   },
   {
@@ -347,6 +381,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "68/15874356/condition_occurrence"
   },
   {
@@ -357,6 +392,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "68/6830271/condition_occurrence"
   },
   {
@@ -367,6 +403,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "68/12415518/condition_occurrence"
   },
   {
@@ -377,6 +414,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "72/12900716/condition_occurrence"
   },
   {
@@ -387,6 +425,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "72/6898145/condition_occurrence"
   },
   {
@@ -397,6 +436,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "72/10809528/condition_occurrence"
   },
   {
@@ -407,6 +447,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "73/11286496/condition_occurrence"
   },
   {
@@ -417,6 +458,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "73/15393559/condition_occurrence"
   },
   {
@@ -427,6 +469,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "73/6964622/condition_occurrence"
   },
   {
@@ -437,6 +480,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "73/18523646/condition_occurrence"
   },
   {
@@ -447,6 +491,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "73/17136861/condition_occurrence"
   },
   {
@@ -457,6 +502,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "73/18021373/condition_occurrence"
   },
   {
@@ -467,6 +513,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "76/5212654/condition_occurrence"
   },
   {
@@ -477,6 +524,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "77/7102084/condition_occurrence"
   },
   {
@@ -487,6 +535,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "77/8821262/condition_occurrence"
   },
   {
@@ -497,6 +546,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "83/7004191/condition_occurrence"
   },
   {
@@ -507,6 +557,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "83/7854287/condition_occurrence"
   },
   {
@@ -517,6 +568,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "85/9549748/condition_occurrence"
   },
   {
@@ -527,6 +579,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "85/7091957/condition_occurrence"
   },
   {
@@ -537,6 +590,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "86/13885754/condition_occurrence"
   },
   {
@@ -547,6 +601,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "86/8147878/condition_occurrence"
   },
   {
@@ -557,6 +612,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/19385169/condition_occurrence"
   },
   {
@@ -567,6 +623,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/14988213/condition_occurrence"
   },
   {
@@ -577,6 +634,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/16486887/condition_occurrence"
   },
   {
@@ -587,6 +645,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/16934505/condition_occurrence"
   },
   {
@@ -597,6 +656,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/17907987/condition_occurrence"
   },
   {
@@ -607,6 +667,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/10333596/condition_occurrence"
   },
   {
@@ -617,6 +678,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/18455051/condition_occurrence"
   },
   {
@@ -627,6 +689,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/18787497/condition_occurrence"
   },
   {
@@ -637,6 +700,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/9202977/condition_occurrence"
   },
   {
@@ -647,6 +711,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "90/18997732/condition_occurrence"
   },
   {
@@ -657,6 +722,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "92/7449119/condition_occurrence"
   },
   {
@@ -667,6 +733,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "92/18447701/condition_occurrence"
   },
   {
@@ -677,6 +744,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "92/4780111/condition_occurrence"
   },
   {
@@ -687,6 +755,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "92/6484055/condition_occurrence"
   },
   {
@@ -697,6 +766,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "92/16913142/condition_occurrence"
   },
   {
@@ -707,6 +777,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "92/17896036/condition_occurrence"
   },
   {
@@ -717,6 +788,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "95/8755874/condition_occurrence"
   },
   {
@@ -727,6 +799,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "95/6873652/condition_occurrence"
   },
   {
@@ -737,6 +810,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "98/16333485/condition_occurrence"
   },
   {
@@ -747,6 +821,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "99/12294369/condition_occurrence"
   },
   {
@@ -757,6 +832,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "99/18321889/condition_occurrence"
   },
   {
@@ -767,6 +843,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "99/5216620/condition_occurrence"
   },
   {
@@ -777,6 +854,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "101/9695696/condition_occurrence"
   },
   {
@@ -787,6 +865,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "104/9087705/condition_occurrence"
   },
   {
@@ -797,6 +876,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "104/5465600/condition_occurrence"
   },
   {
@@ -807,6 +887,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "104/5516070/condition_occurrence"
   },
   {
@@ -817,6 +898,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "114/8743359/condition_occurrence"
   },
   {
@@ -827,6 +909,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "114/6239348/condition_occurrence"
   },
   {
@@ -837,6 +920,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "114/7517487/condition_occurrence"
   },
   {
@@ -847,6 +931,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "120/14765289/condition_occurrence"
   },
   {
@@ -857,6 +942,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "120/6251724/condition_occurrence"
   },
   {
@@ -867,6 +953,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "124/16537404/condition_occurrence"
   },
   {
@@ -877,6 +964,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "124/6135640/condition_occurrence"
   },
   {
@@ -887,6 +975,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "124/7130600/condition_occurrence"
   },
   {
@@ -897,6 +986,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "127/6462160/condition_occurrence"
   },
   {
@@ -907,6 +997,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "127/5555849/condition_occurrence"
   },
   {
@@ -917,6 +1008,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "130/9859194/condition_occurrence"
   },
   {
@@ -927,6 +1019,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "131/21916675/condition_occurrence"
   },
   {
@@ -937,6 +1030,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "131/9855505/condition_occurrence"
   },
   {
@@ -947,6 +1041,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "131/4999222/condition_occurrence"
   },
   {
@@ -957,6 +1052,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "136/5909409/condition_occurrence"
   },
   {
@@ -967,6 +1063,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "136/11561786/condition_occurrence"
   },
   {
@@ -977,6 +1074,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "136/14680178/condition_occurrence"
   },
   {
@@ -987,6 +1085,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "137/21354067/condition_occurrence"
   },
   {
@@ -997,6 +1096,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "141/15874157/condition_occurrence"
   },
   {
@@ -1007,6 +1107,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "141/12415031/condition_occurrence"
   },
   {
@@ -1017,6 +1118,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "142/8807619/condition_occurrence"
   },
   {
@@ -1027,6 +1129,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "142/7772592/condition_occurrence"
   },
   {
@@ -1037,6 +1140,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "145/11238234/condition_occurrence"
   },
   {
@@ -1047,6 +1151,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "145/9295731/condition_occurrence"
   },
   {
@@ -1057,6 +1162,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "146/5772870/condition_occurrence"
   },
   {
@@ -1067,6 +1173,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "146/12962708/condition_occurrence"
   },
   {
@@ -1077,6 +1184,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "149/10756746/condition_occurrence"
   },
   {
@@ -1087,6 +1195,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "149/7252448/condition_occurrence"
   },
   {
@@ -1097,6 +1206,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "150/10457400/condition_occurrence"
   },
   {
@@ -1107,6 +1217,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "159/8705117/condition_occurrence"
   },
   {
@@ -1117,6 +1228,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "161/7698029/condition_occurrence"
   },
   {
@@ -1127,6 +1239,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "163/21283985/condition_occurrence"
   },
   {
@@ -1137,6 +1250,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "169/6828520/condition_occurrence"
   },
   {
@@ -1147,6 +1261,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "169/5935195/condition_occurrence"
   },
   {
@@ -1157,6 +1272,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "169/9751771/condition_occurrence"
   },
   {
@@ -1167,6 +1283,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "187/10426989/condition_occurrence"
   },
   {
@@ -1177,6 +1294,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "187/21721900/condition_occurrence"
   },
   {
@@ -1187,6 +1305,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "187/17602250/condition_occurrence"
   },
   {
@@ -1197,6 +1316,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "188/6486405/condition_occurrence"
   },
   {
@@ -1207,6 +1327,7 @@
     "start_date": "2008-01-01",
     "end_date": "2009-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "190/19845799/condition_occurrence"
   },
   {
@@ -1217,6 +1338,7 @@
     "start_date": "2008-01-01",
     "end_date": "2009-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "191/10931750/condition_occurrence"
   },
   {
@@ -1227,6 +1349,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "195/8736546/condition_occurrence"
   },
   {
@@ -1237,6 +1360,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "195/4822981/condition_occurrence"
   },
   {
@@ -1247,6 +1371,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "195/10250473/condition_occurrence"
   },
   {
@@ -1257,6 +1382,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "195/5722730/condition_occurrence"
   },
   {
@@ -1267,6 +1393,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "196/10347123/condition_occurrence"
   },
   {
@@ -1277,6 +1404,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "196/21869018/condition_occurrence"
   },
   {
@@ -1287,6 +1415,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "197/10328567/condition_occurrence"
   },
   {
@@ -1297,6 +1426,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "197/9938873/condition_occurrence"
   },
   {
@@ -1307,6 +1437,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "199/8807990/condition_occurrence"
   },
   {
@@ -1317,6 +1448,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "207/12109735/condition_occurrence"
   },
   {
@@ -1327,6 +1459,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "207/11890472/condition_occurrence"
   },
   {
@@ -1337,6 +1470,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "207/12554403/condition_occurrence"
   },
   {
@@ -1347,6 +1481,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "208/6637277/condition_occurrence"
   },
   {
@@ -1357,6 +1492,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "210/6150971/condition_occurrence"
   },
   {
@@ -1367,6 +1503,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "212/14440212/condition_occurrence"
   },
   {
@@ -1377,6 +1514,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "213/21245286/condition_occurrence"
   },
   {
@@ -1387,6 +1525,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "213/9678504/condition_occurrence"
   },
   {
@@ -1397,6 +1536,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "214/6073559/condition_occurrence"
   },
   {
@@ -1407,6 +1547,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "214/7156880/condition_occurrence"
   },
   {
@@ -1417,6 +1558,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "214/5208916/condition_occurrence"
   },
   {
@@ -1427,6 +1569,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "216/14963697/condition_occurrence"
   },
   {
@@ -1437,6 +1580,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "216/6538085/condition_occurrence"
   },
   {
@@ -1447,6 +1591,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "216/9360316/condition_occurrence"
   },
   {
@@ -1457,6 +1602,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "216/10276066/condition_occurrence"
   },
   {
@@ -1467,6 +1613,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "216/5070964/condition_occurrence"
   },
   {
@@ -1477,6 +1624,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "219/6621271/condition_occurrence"
   },
   {
@@ -1487,6 +1635,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "222/8949343/condition_occurrence"
   },
   {
@@ -1497,6 +1646,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "222/8306911/condition_occurrence"
   },
   {
@@ -1507,6 +1657,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "225/11706147/condition_occurrence"
   },
   {
@@ -1517,6 +1668,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "228/14661324/condition_occurrence"
   },
   {
@@ -1527,6 +1679,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "234/6119330/condition_occurrence"
   },
   {
@@ -1537,6 +1690,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "234/16320634/condition_occurrence"
   },
   {
@@ -1547,6 +1701,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "234/6672299/condition_occurrence"
   },
   {
@@ -1557,6 +1712,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "238/5649143/condition_occurrence"
   },
   {
@@ -1567,6 +1723,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "243/21041988/condition_occurrence"
   },
   {
@@ -1577,6 +1734,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "243/7349003/condition_occurrence"
   },
   {
@@ -1587,6 +1745,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "243/6946608/condition_occurrence"
   },
   {
@@ -1597,6 +1756,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "248/7661749/condition_occurrence"
   },
   {
@@ -1607,6 +1767,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "248/11704706/condition_occurrence"
   },
   {
@@ -1617,6 +1778,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "248/14011379/condition_occurrence"
   },
   {
@@ -1627,6 +1789,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "249/12223204/condition_occurrence"
   },
   {
@@ -1637,6 +1800,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "249/11927348/condition_occurrence"
   },
   {
@@ -1647,6 +1811,7 @@
     "start_date": "2008-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
+    "source_vocabulary_id": null,
     "uuid": "249/15792299/condition_occurrence"
   }
 ]

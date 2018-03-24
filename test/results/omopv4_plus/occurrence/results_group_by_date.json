@@ -6,6 +6,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-12",
     "end_date": "2009-04-18",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   }
 ]

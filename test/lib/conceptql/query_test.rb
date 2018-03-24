@@ -49,7 +49,8 @@ FROM
              cast('condition_occurrence' AS text) AS \"criterion_domain\",
              cast(\"condition_start_date\" AS date) AS \"start_date\",
              cast(coalesce(\"condition_end_date\", \"condition_start_date\") AS date) AS \"end_date\",
-             cast(\"condition_source_value\" AS text) AS \"source_value\"
+             cast(\"condition_source_value\" AS text) AS \"source_value\",
+             cast(\"condition_source_vocabulary_id\" AS integer) AS \"source_vocabulary_id\"
       FROM \"condition_occurrence\" AS \"tab\"
       WHERE ((\"condition_source_value\" IN ('412'))
              AND (\"condition_source_vocabulary_id\" = 2))) AS \"t1\") AS \"t1\""

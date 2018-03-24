@@ -413,6 +413,11 @@ module ConceptQL
         cast_column(:source_value, dm.source_value_column(query, table))
       end
 
+      def source_vocabulary_id(query, table)
+        return :source_vocabulary_id if query_columns(query).include?(:source_vocabulary_id)
+        cast_column(:source_vocabulary_id, dm.source_vocabulary_id_column(query, table))
+      end
+
       def provenance_type(query, table)
         return :provenance_type if query_columns(query).include?(:provenance_type)
         cast_column(:provenance_type, dm.provenance_type_column(query, table))

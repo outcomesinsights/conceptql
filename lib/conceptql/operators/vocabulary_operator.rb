@@ -65,7 +65,7 @@ module ConceptQL
       end
 
       def vocabulary_id_column
-        dm.table_vocabulary_id(table_name)
+        dm.source_vocabulary_id(table_name)
       end
 
       def table_name

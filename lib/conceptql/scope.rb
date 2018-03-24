@@ -21,7 +21,8 @@ module ConceptQL
       criterion_domain: :String,
       start_date: :Date,
       end_date: :Date,
-      source_value: :String
+      source_value: :String,
+      source_vocabulary_id: :Bigint
     }.freeze
 
     ADDITIONAL_COLUMNS = {

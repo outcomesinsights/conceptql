@@ -186,6 +186,7 @@ module ConceptQL
           start_date: start_date,
           end_date: end_date,
           source_value: Sequel.cast_string(source_value_column(table)).as(:source_value),
+          source_vocabulary_id: Sequel.cast_numeric(source_vocabulary_id(table)).as(:source_vocabulary_id)
         }
       end
 
@@ -260,8 +261,8 @@ module ConceptQL
         end
       end
 
-      def table_vocabulary_ids
-        @table_vocabulary_ids = assign_column_to_table do |table, columns|
+      def source_vocabulary_ids
+        @source_vocabulary_ids = assign_column_to_table do |table, columns|
           reggy = /#{table.to_s.split("_").first}_source_vocabulary_id/
           column = columns.select { |k| k =~ reggy }.first
           column ||= columns.select { |k| k =~ /_source_vocabulary_id/ }.first
@@ -377,8 +378,8 @@ module ConceptQL
         source_value_columns.fetch(table_to_sym(table))
       end
 
-      def table_vocabulary_id(table)
-        table_vocabulary_ids[table_to_sym(table)]
+      def source_vocabulary_id(table)
+        source_vocabulary_ids[table_to_sym(table)]
       end
 
       def table_is_missing?(db)

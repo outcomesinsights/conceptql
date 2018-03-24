@@ -6,7 +6,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
     "end_date": "2010-01-23",
-    "source_value": "459.81"
+    "source_value": "459.81",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -15,7 +16,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-11",
     "end_date": "2009-05-11",
-    "source_value": "250.00"
+    "source_value": "250.00",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -24,7 +26,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-11",
     "end_date": "2009-05-11",
-    "source_value": "250.00"
+    "source_value": "250.00",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -33,7 +36,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
     "end_date": "2010-01-23",
-    "source_value": "355.8"
+    "source_value": "355.8",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -42,7 +46,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-15",
     "end_date": "2009-04-15",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -51,7 +56,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-15",
     "end_date": "2009-04-15",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -60,7 +66,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-06",
     "end_date": "2009-12-06",
-    "source_value": "780.93"
+    "source_value": "780.93",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -69,7 +76,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-06",
     "end_date": "2009-12-06",
-    "source_value": "780.93"
+    "source_value": "780.93",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -78,7 +86,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-06",
     "end_date": "2009-12-06",
-    "source_value": "780.93"
+    "source_value": "780.93",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -87,7 +96,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-23",
     "end_date": "2010-02-23",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -96,7 +106,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-23",
     "end_date": "2010-02-23",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -105,7 +116,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
     "end_date": "2010-01-23",
-    "source_value": "355.8"
+    "source_value": "355.8",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -114,7 +126,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-23",
     "end_date": "2010-02-23",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -123,7 +136,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-23",
     "end_date": "2010-02-23",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -132,7 +146,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
     "end_date": "2010-01-23",
-    "source_value": "355.8"
+    "source_value": "355.8",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -141,7 +156,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
     "end_date": "2010-07-01",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -150,7 +166,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-23",
     "end_date": "2009-06-23",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   },
   {
     "person_id": 2,
@@ -159,6 +176,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-23",
     "end_date": "2009-06-23",
-    "source_value": "401.9"
+    "source_value": "401.9",
+    "source_vocabulary_id": 2
   }
 ]

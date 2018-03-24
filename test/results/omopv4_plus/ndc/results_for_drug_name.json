@@ -7,6 +7,7 @@
     "start_date": "2008-08-11",
     "end_date": "2008-08-11",
     "source_value": "00002021008",
+    "source_vocabulary_id": 9,
     "drug_name": "exenatide 0.25 MG/ML Injectable Solution [Byetta]",
     "drug_amount": null,
     "drug_amount_units": null,

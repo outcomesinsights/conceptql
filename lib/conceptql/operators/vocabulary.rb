@@ -96,7 +96,7 @@ module ConceptQL
           concept_ids = db[:concepts].where(where_conds).select(:id)
           { clinical_code_concept_id: concept_ids }
         else
-          conds = { dm.table_vocabulary_id(domain) => vocabulary_id.to_i }
+          conds = { dm.source_vocabulary_id(domain) => vocabulary_id.to_i }
           conds[dm.source_value_column(domain)] = arguments unless select_all?
           conds
         end
