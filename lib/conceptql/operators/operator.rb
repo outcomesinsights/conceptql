@@ -29,7 +29,6 @@ module ConceptQL
       attr :nodifier, :values, :options, :arguments, :upstreams, :op_name
 
       option :label, type: :string
-      option :person_ids
 
       @validations = []
 
