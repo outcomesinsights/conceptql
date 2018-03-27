@@ -263,9 +263,7 @@ module ConceptQL
 
       def source_vocabulary_ids
         @source_vocabulary_ids = assign_column_to_table do |table, columns|
-          %w(person death).each do |table_name|
-            next if table.to_s =~ /#{table_name}/
-          end
+          next if %w(person death).any? { |tn| table.to_s =~ /#{tn}/ }
           reggy = /#{table.to_s.split("_").first}_source_vocabulary_id/
           column = columns.select { |k| k =~ reggy }.first
           column ||= columns.select { |k| k =~ /_source_vocabulary_id/ }.first
