@@ -41,7 +41,7 @@ is passed through unaffected.
       end
 
       def replacement_columns
-        { start_date: Sequel.function(:greatest, l_start_date, within_end) }
+        { start_date: Sequel.function(:greatest, l_start_date, Sequel.function(:coalesce, within_end, l_start_date)) }
       end
 
       def occurrence_number
