@@ -82,6 +82,17 @@ module ConceptQL
         super
         vocab_ops.each { |vo| vo.validate(db, opts) }
         @warnings += vocab_ops.map(&:warnings).inject(:+).uniq
+        unknowns = @warnings.select { |warning_text, *codes| warning_text.to_s =~ /unknown.+code/i }.map(&:dup)
+        unless unknowns.empty?
+          @warnings -= unknowns
+          unknowns.map(&:shift)
+          truly_unknown_codes = unknowns.inject do |unknown_codes, codes|
+            unknown_codes &= codes
+          end
+          unless truly_unknown_codes.nil? || truly_unknown_codes.empty?
+            @warnings << ["unknown source code", *truly_unknown_codes]
+          end
+        end
       end
 
       def describe_codes(db, codes)
