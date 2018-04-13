@@ -90,8 +90,15 @@ module ConceptQL
       end
     end
 
+    def harvest_person_ids(op)
+      if person_ids = op.options[:person_ids]
+        opts[:person_ids] = person_ids
+      end
+    end
+
     def nest(op)
       add_required_columns(op)
+      harvest_person_ids(op)
       return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
 
       unless label.is_a?(String)

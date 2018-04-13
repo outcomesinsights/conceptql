@@ -13,6 +13,8 @@ module ConceptQL
               [ k.respond_to?(:to_sym) ? k.to_sym : k, rekey(v, opts) ]
             end
           ]
+        when Sequel::Dataset
+          h
         when Enumerable
           h.map { |v| rekey(v, opts) }
         else

@@ -23,6 +23,8 @@ module ConceptQL
     # Also, if a casting operator is passed no streams, it will return all the
     # rows in its table as results.
     class CastingOperator < Operator
+      include ConceptQL::Behaviors::Windowable
+
       category "Get Related Data"
       basic_type :cast
       validate_at_most_one_upstream

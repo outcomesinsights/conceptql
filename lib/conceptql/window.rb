@@ -25,7 +25,7 @@ module ConceptQL
 
         if person_ids
           windows << lambda do |_, ds|
-            ds.where(:person_id=>person_ids)
+            ds.where(person_id: person_ids)
           end
         end
 

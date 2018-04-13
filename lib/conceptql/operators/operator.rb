@@ -233,13 +233,6 @@ module ConceptQL
         dom = domain rescue nil
         q = dm.selectify(query, table: specific_table, criterion_domain: dom, query_columns: override_columns, uuid: options[:uuid])
 
-        if scope && scope.person_ids && upstreams.empty?
-          q = q.where(person_id: scope.person_ids).from_self
-        end
-        if person_ids = options[:person_ids]
-          q = q.where(person_id: person_ids).from_self
-        end
-
         q
       end
 
