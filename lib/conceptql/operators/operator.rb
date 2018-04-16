@@ -231,7 +231,14 @@ module ConceptQL
         specific_table ||= dm.determine_table(:domain)
 
         dom = domain rescue nil
-        q = dm.selectify(query, table: specific_table, criterion_domain: dom, query_columns: override_columns, uuid: options[:uuid])
+
+        opts = {
+          table: specific_table,
+          criterion_domain: dom,
+          query_columns: override_columns,
+          uuid: options[:uuid]
+        }
+        q = dm.selectify(query, opts)
 
         q
       end
@@ -407,7 +414,7 @@ module ConceptQL
 
       def source_vocabulary_id(query, table)
         return :source_vocabulary_id if query_columns(query).include?(:source_vocabulary_id)
-        cast_column(:source_vocabulary_id, dm.source_vocabulary_id_column(query, table))
+        cast_column(:source_vocabulary_id, dm.source_vocabulary_id(query, table))
       end
 
       def provenance_type(query, table)

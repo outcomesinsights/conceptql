@@ -22,6 +22,10 @@ describe ConceptQL::DataModel::Omopv4Plus do
     it "should have no source_vocabulary_id for death" do
       dm.source_vocabulary_id(:death).must_be_nil
     end
+
+    it "should have a source_vocabulary_id for drug_exposure" do
+      dm.source_vocabulary_id(:drug_exposure).must_equal(:drug_source_vocabulary_id)
+    end
   end
 end
 
