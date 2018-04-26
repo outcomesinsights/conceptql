@@ -58,10 +58,11 @@ module ConceptQL
         end
       end
       Hash[stmts]
+      # TODO: throw a reasonable error here
     rescue
       puts $!.message
       puts $!.backtrace.join("\n")
-      return ["SQL unavailable for this statement"]
+      return { query: "SQL unavailable for this statement" }
     end
 
     def annotate(opts = {})
