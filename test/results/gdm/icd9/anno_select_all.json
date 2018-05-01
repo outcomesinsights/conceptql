@@ -1,0 +1,16 @@
+[
+  "icd9",
+  "*",
+  "412",
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 201414,
+          "n": 244
+        }
+      }
+    },
+    "name": "ICD-9 CM"
+  }
+]

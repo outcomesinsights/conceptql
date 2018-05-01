@@ -1,0 +1,38 @@
+[
+  "first",
+  [
+    "date_range",
+    {
+      "start": "2009-01-01",
+      "end": "2009-01-01",
+      "annotation": {
+        "counts": {
+          "patients": {
+            "rows": 250,
+            "n": 250
+          },
+          "person": {
+            "rows": 0,
+            "n": 0
+          }
+        }
+      },
+      "name": "Date Range"
+    }
+  ],
+  {
+    "annotation": {
+      "counts": {
+        "patients": {
+          "rows": 250,
+          "n": 250
+        },
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    },
+    "name": "First"
+  }
+]
