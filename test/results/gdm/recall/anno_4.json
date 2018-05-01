@@ -11,11 +11,9 @@
       "errors": [
         [
           "has no arguments"
-        ],
-        [
-          "has no arguments"
         ]
       ]
-    }
+    },
+    "name": "Recall"
   }
 ]

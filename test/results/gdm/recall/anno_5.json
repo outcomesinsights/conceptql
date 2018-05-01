@@ -17,15 +17,9 @@
             "foo",
             "bar"
           ]
-        ],
-        [
-          "has multiple arguments",
-          [
-            "foo",
-            "bar"
-          ]
         ]
       ]
-    }
+    },
+    "name": "Recall"
   }
 ]

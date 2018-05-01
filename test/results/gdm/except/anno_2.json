@@ -26,8 +26,14 @@
               "rows": 0,
               "n": 0
             }
-          }
-        }
+          },
+          "warnings": [
+            [
+              "This operator will no longer be available in a future version of Jigsaw. Please use provenance instead."
+            ]
+          ]
+        },
+        "name": "Condition Type"
       }
     ],
     "foo": true,
@@ -38,6 +44,7 @@
           "n": 30
         }
       }
-    }
+    },
+    "name": "Except"
   }
 ]

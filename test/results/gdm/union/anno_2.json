@@ -40,7 +40,8 @@
             "n": 186
           }
         }
-      }
+      },
+      "name": "Union"
     }
   ],
   [
@@ -53,8 +54,14 @@
             "rows": 0,
             "n": 0
           }
-        }
-      }
+        },
+        "warnings": [
+          [
+            "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
+          ]
+        ]
+      },
+      "name": "Place Of Service Code"
     }
   ],
   {
@@ -65,6 +72,7 @@
           "n": 186
         }
       }
-    }
+    },
+    "name": "Union"
   }
 ]

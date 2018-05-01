@@ -15,27 +15,10 @@
           [
             "invalid operator",
             "foo"
-          ],
-          [
-            [
-              "invalid operator",
-              "foo"
-            ]
-          ],
-          [
-            [
-              "invalid operator",
-              "foo"
-            ],
-            [
-              [
-                "invalid operator",
-                "foo"
-              ]
-            ]
           ]
         ]
-      }
+      },
+      "name": "Invalid"
     }
   ],
   {
@@ -46,6 +29,7 @@
           "n": 0
         }
       }
-    }
+    },
+    "name": "Union"
   }
 ]

@@ -25,9 +25,15 @@
             "rows": 21,
             "n": 15
           }
-        }
+        },
+        "warnings": [
+          [
+            "unknown source code",
+            "69210"
+          ]
+        ]
       },
-      "name": "CPT/HCPCS"
+      "name": "CPT or HCPCS"
     }
   ],
   {
@@ -42,6 +48,7 @@
           "n": 0
         }
       }
-    }
+    },
+    "name": "Co Reported"
   }
 ]

@@ -26,7 +26,8 @@
             "n": 0
           }
         }
-      }
+      },
+      "name": "Gender"
     }
   ],
   {
@@ -46,6 +47,7 @@
           ]
         ]
       ]
-    }
+    },
+    "name": "Procedure Occurrence"
   }
 ]

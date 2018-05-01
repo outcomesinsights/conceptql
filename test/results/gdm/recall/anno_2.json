@@ -48,21 +48,10 @@
             [
               "icd9"
             ]
-          ],
-          [
-            "has upstreams",
-            [
-              "icd9"
-            ]
-          ],
-          [
-            "has upstreams",
-            [
-              "icd9"
-            ]
           ]
         ]
-      }
+      },
+      "name": "Recall"
     }
   ],
   {
@@ -73,6 +62,7 @@
           "n": 0
         }
       }
-    }
+    },
+    "name": "Union"
   }
 ]

@@ -33,7 +33,7 @@
               "ZZZZZZZ"
             ],
             [
-              "unknown source code",
+              "improperly formatted code",
               "ZZZZZZZ"
             ]
           ]
@@ -52,14 +52,9 @@
         [
           "invalid operator",
           "bad_op"
-        ],
-        [
-          [
-            "invalid operator",
-            "bad_op"
-          ]
         ]
       ]
-    }
+    },
+    "name": "Invalid"
   }
 ]

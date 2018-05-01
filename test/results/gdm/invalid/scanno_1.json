@@ -4,12 +4,6 @@
       [
         "invalid operator",
         "cpt1"
-      ],
-      [
-        [
-          "invalid operator",
-          "cpt1"
-        ]
       ]
     ]
   },
@@ -22,8 +16,5 @@
         "n": 0
       }
     }
-  },
-  "operators": [
-    "cpt1"
-  ]
+  }
 }
