@@ -123,7 +123,7 @@ module ConceptQL
       end
 
       def occurrences_column
-        :start_date
+        [:start_date, :end_date, :criterion_id]
       end
 
       def at_least_check?
