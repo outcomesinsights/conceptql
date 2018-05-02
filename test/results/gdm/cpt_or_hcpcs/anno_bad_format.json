@@ -4,6 +4,7 @@
   "A0382",
   "0382",
   "AA0382",
+  "12345",
   {
     "annotation": {
       "counts": {
@@ -20,11 +21,10 @@
         ],
         [
           "unknown source code",
-          "0382",
-          "AA0382"
+          "12345"
         ]
       ]
     },
-    "name": "CPT/HCPCS"
+    "name": "CPT or HCPCS"
   }
 ]
