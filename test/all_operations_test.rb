@@ -36,6 +36,8 @@ describe ConceptQL::Operators do
         optimized_criteria_counts(f)
       when "num"
         numeric_values(f)
+      when "codes"
+        code_check(f)
       when "results"
         results(f)
       else

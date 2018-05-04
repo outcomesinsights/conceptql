@@ -84,16 +84,6 @@ FROM
   end
 
   describe "#code_list" do
-    it "should list codes and descriptions" do
-      db = CDB
-      query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
-      query.code_list(DB).map(&:to_s).must_equal([
-        "CPT 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes",
-        "ICD-9 CM 250.00: Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled",
-        "ICD-9 CM 250.02: Diabetes mellitus without mention of complication, type II or unspecified type, uncontrolled"
-      ])
-    end
-
     it "should handle nil for a DB" do
       db = ConceptQL::Database.new(nil)
       query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
@@ -130,16 +120,6 @@ FROM
       query.code_list(seq_db).map(&:to_s).must_equal([
         "CPT *: ALL CODES",
         "ICD-9 CM *: ALL CODES"
-      ])
-    end
-
-    it "should return codes from vocabulary-based operators" do
-      db = CDB
-      query = db.query(["union", ["cpt_or_hcpcs","99214"], ["ATC", "*"]])
-      query.code_list(DB).map(&:to_s).must_equal([
-        "CPT or HCPCS 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes",
-        "CPT or HCPCS 99214",
-        "WHO ATC *: ALL CODES"
       ])
     end
 

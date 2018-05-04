@@ -38,6 +38,10 @@ class Minitest::Spec
     load_check(test_name, statement){|stmt| hash_groups(stmt, :criterion_domain, :criterion_id)}
   end
 
+  def code_check(test_name, statement=nil)
+    load_check(test_name, statement){|stmt| query(stmt).code_list.map(&:to_s)}
+  end
+
   # If no statement is passed, this function loads the statement from the specified test
   # file. If a statement is passed, it is written to the file.
   def load_statement(test_name, statement)

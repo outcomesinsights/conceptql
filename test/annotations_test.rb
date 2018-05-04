@@ -8,16 +8,6 @@ describe ConceptQL::Operators do
     ConceptQL::Database.new(DB)
   end
 
-  it "should validate source codes" do
-    query = cdb.query(["union",["cpt","00000"],["icd9", "000.00"]])
-    query.scope_annotate.must_equal({:errors=>{},
-                                     :warnings=>{"cpt"=>[["unknown concept code", "00000"]], "icd9"=>[["unknown source code", "000.00"]]},
-                                     :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},
-                                               "icd9"=>{:condition_occurrence=>{:rows=>0, :n=>0}},
-                                               "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0},
-                                                         :condition_occurrence=>{:rows=>0, :n=>0}}}})
-  end
-
   describe "when tables aren't available" do
 
     it "should not blow up" do
