@@ -46,14 +46,14 @@ module ConceptQL
         concept_ids = if gdm?
           db[:concepts]
             .where(Sequel.function(:lower, :concept_text) => words.map(&:downcase))
-            .select(:id)
+            .select(Sequel[:id].as(:concept_id))
         else
           db[:concept]
             .where(Sequel.function(:lower, :concept_name) => words.map(&:downcase))
             .select(:concept_id)
         end
 
-        c_ids = (concept_ids.select_map(:concept_id) + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
+        c_ids = (concept_ids.from_self.select_map(:concept_id) + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
 
         q = db.from(source_table)
         if words.any? { |w| w.match(/unknown/i) }
