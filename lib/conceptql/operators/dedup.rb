@@ -15,6 +15,10 @@ module ConceptQL
           .from_self
       end
 
+      def query_cols
+        dynamic_columns
+      end
+
       def unioned(db)
         upstreams.map { |c| c.evaluate(db) }.inject do |uni, q|
           uni.union(q)
