@@ -85,7 +85,7 @@ FROM
 
   describe "#code_list" do
     it "should list codes and descriptions" do
-      db = ConceptQL::Database.new(DB)
+      db = CDB
       query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
       query.code_list(DB).map(&:to_s).must_equal([
         "CPT 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes",
@@ -134,7 +134,7 @@ FROM
     end
 
     it "should return codes from vocabulary-based operators" do
-      db = ConceptQL::Database.new(DB)
+      db = CDB
       query = db.query(["union", ["cpt_or_hcpcs","99214"], ["ATC", "*"]])
       query.code_list(DB).map(&:to_s).must_equal([
         "CPT or HCPCS 99214: Level 4 outpatient visit for evaluation and management of established patient with problem of moderate to high severity, including detailed history and medical decision making of moderate complexity - typical time with patient and/or family 25 minutes",
