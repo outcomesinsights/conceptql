@@ -27,7 +27,7 @@ module ConceptQL
       #
       # So, by default, return the name of the column and in the Impala adapter
       # we'll return something funky to trick Impala into allowing a constant
-      def partition_fix(column)
+      def partition_fix(column, qualifier=nil)
         column
       end
     end
