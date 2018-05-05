@@ -154,13 +154,14 @@ module ConceptQL
       private
 
       def vocab_entry
-        self.class.all_vocabs[op_name]
+        self.class.all_vocabs[op_name] || {format_regexp: ""}
       end
 
       # Defined so that bad_arguments can check for bad codes
       def code_regexp
         unless defined?(@code_regexp)
           @code_regexp = nil
+
           if reg_str = vocab_entry[:format_regexp]
             @code_regexp = Regexp.new(reg_str, Regexp::IGNORECASE)
           end
