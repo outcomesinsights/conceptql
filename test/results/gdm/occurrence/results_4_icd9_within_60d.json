@@ -1,0 +1,4822 @@
+[
+  {
+    "person_id": 1920,
+    "criterion_id": 1308723,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-02-06",
+    "end_date": "2006-02-06",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 1308725,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-02-06",
+    "end_date": "2006-05-06",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 1308727,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-02-06",
+    "end_date": "2006-05-06",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12487650,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-02-14",
+    "end_date": "2006-02-14",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12487651,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-02-14",
+    "end_date": "2006-02-14",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12487652,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-02-14",
+    "end_date": "2006-02-14",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12490085,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-03-17",
+    "end_date": "2006-03-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12490086,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-03-17",
+    "end_date": "2006-03-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12490087,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-03-17",
+    "end_date": "2006-03-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12490088,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-03-17",
+    "end_date": "2006-03-17",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12490616,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-03-17",
+    "end_date": "2006-03-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 1920,
+    "criterion_id": 12490617,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-03-17",
+    "end_date": "2006-03-17",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 2704,
+    "criterion_id": 556443,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2005-12-13",
+    "end_date": "2006-03-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 3846,
+    "criterion_id": 1545980,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2005-11-09",
+    "end_date": "2006-02-08",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 3846,
+    "criterion_id": 1545981,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2005-11-09",
+    "end_date": "2006-02-08",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 681699,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-29",
+    "end_date": "2006-04-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 681700,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-29",
+    "end_date": "2006-04-29",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 2633601,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-29",
+    "end_date": "2006-06-27",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 2634081,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-06-28",
+    "end_date": "2006-07-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5215871,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-16",
+    "end_date": "2006-04-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218129,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-20",
+    "end_date": "2006-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218248,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-27",
+    "end_date": "2006-04-28",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218249,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-27",
+    "end_date": "2006-04-28",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218379,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-18",
+    "end_date": "2006-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218381,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-20",
+    "end_date": "2006-04-20",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218382,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-21",
+    "end_date": "2006-04-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218383,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-24",
+    "end_date": "2006-04-24",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218384,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-25",
+    "end_date": "2006-04-25",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218385,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-26",
+    "end_date": "2006-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218386,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-27",
+    "end_date": "2006-04-27",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 5218387,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-28",
+    "end_date": "2006-04-28",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 7159,
+    "criterion_id": 34951283,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-06-05",
+    "end_date": "2006-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12054,
+    "criterion_id": 2701822,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-10",
+    "end_date": "2008-06-08",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12054,
+    "criterion_id": 5962695,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-01",
+    "end_date": "2008-04-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12054,
+    "criterion_id": 5962897,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-16",
+    "end_date": "2008-09-16",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12054,
+    "criterion_id": 5962939,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-19",
+    "end_date": "2008-09-19",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12054,
+    "criterion_id": 17042549,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-12",
+    "end_date": "2010-04-12",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12054,
+    "criterion_id": 17042613,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-05",
+    "end_date": "2010-05-05",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12054,
+    "criterion_id": 37259773,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-12",
+    "end_date": "2010-04-12",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12449,
+    "criterion_id": 1691054,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-01-14",
+    "end_date": "2006-01-14",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12449,
+    "criterion_id": 20702983,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-01-09",
+    "end_date": "2006-01-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 12449,
+    "criterion_id": 20702985,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-01-09",
+    "end_date": "2006-01-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 13972,
+    "criterion_id": 7397296,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-04",
+    "end_date": "2008-04-04",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 17123,
+    "criterion_id": 1764415,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-06-22",
+    "end_date": "2007-08-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 17123,
+    "criterion_id": 1764425,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-21",
+    "end_date": "2007-09-14",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 17123,
+    "criterion_id": 1764427,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-21",
+    "end_date": "2007-09-14",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 17917,
+    "criterion_id": 18714476,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-01-25",
+    "end_date": "2006-01-25",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 17917,
+    "criterion_id": 18715543,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-01-25",
+    "end_date": "2006-01-25",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 17917,
+    "criterion_id": 18715545,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-01-25",
+    "end_date": "2006-01-25",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579209,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-19",
+    "end_date": "2008-07-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579210,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-19",
+    "end_date": "2008-04-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579211,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-19",
+    "end_date": "2008-07-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579212,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-19",
+    "end_date": "2008-07-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579213,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-19",
+    "end_date": "2008-07-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579214,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-19",
+    "end_date": "2008-07-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579219,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-19",
+    "end_date": "2008-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579220,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-19",
+    "end_date": "2008-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579221,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-19",
+    "end_date": "2008-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579222,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-19",
+    "end_date": "2008-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579223,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-19",
+    "end_date": "2008-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579227,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-19",
+    "end_date": "2008-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579228,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-19",
+    "end_date": "2008-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579229,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-19",
+    "end_date": "2008-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579230,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-19",
+    "end_date": "2008-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579231,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-19",
+    "end_date": "2008-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579235,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-14",
+    "end_date": "2008-10-13",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579236,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-14",
+    "end_date": "2008-10-13",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579237,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-14",
+    "end_date": "2008-10-13",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579238,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-14",
+    "end_date": "2008-10-13",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579239,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-14",
+    "end_date": "2008-10-13",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579243,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579244,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-04-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579245,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-04-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579246,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579247,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579248,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579249,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579265,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-06",
+    "end_date": "2008-05-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579266,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-06",
+    "end_date": "2008-05-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579267,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-06",
+    "end_date": "2008-05-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579268,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-06",
+    "end_date": "2008-05-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 579269,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-06",
+    "end_date": "2008-05-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 830004,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2005-12-19",
+    "end_date": "2006-03-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 830203,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-09-19",
+    "end_date": "2006-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 830203,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-09-19",
+    "end_date": "2006-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 830205,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-09-19",
+    "end_date": "2006-12-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911127,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-08-06",
+    "end_date": "2009-11-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911128,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-08-06",
+    "end_date": "2009-11-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911129,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-08-06",
+    "end_date": "2009-11-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911130,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-08-06",
+    "end_date": "2009-11-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911131,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-08-06",
+    "end_date": "2009-11-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911135,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-06",
+    "end_date": "2009-08-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911136,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-06",
+    "end_date": "2009-05-06",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911137,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-06",
+    "end_date": "2009-08-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911138,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-06",
+    "end_date": "2009-08-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911139,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-06",
+    "end_date": "2009-08-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911140,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-06",
+    "end_date": "2009-08-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911149,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-12",
+    "end_date": "2009-11-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911154,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-12",
+    "end_date": "2009-11-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911155,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-12",
+    "end_date": "2009-11-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911156,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-12",
+    "end_date": "2009-11-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911159,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-12",
+    "end_date": "2009-11-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911160,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-12",
+    "end_date": "2009-11-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911161,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-12",
+    "end_date": "2009-11-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911164,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-02-19",
+    "end_date": "2009-05-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911165,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-02-19",
+    "end_date": "2009-02-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911166,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-02-19",
+    "end_date": "2009-05-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911167,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-02-19",
+    "end_date": "2009-05-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911168,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-02-19",
+    "end_date": "2009-05-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 911169,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-02-19",
+    "end_date": "2009-05-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188400,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188401,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188402,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188405,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188406,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188407,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188414,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188415,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188416,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-12",
+    "end_date": "2010-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188419,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188420,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188421,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188424,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188425,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188426,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188429,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188430,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188431,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-08-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188434,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-05",
+    "end_date": "2010-07-04",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188435,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-05",
+    "end_date": "2010-04-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188436,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-05",
+    "end_date": "2010-04-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188437,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-05",
+    "end_date": "2010-07-04",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188438,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-05",
+    "end_date": "2010-07-04",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188439,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-05",
+    "end_date": "2010-07-04",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188440,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-05",
+    "end_date": "2010-07-04",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188446,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188447,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188448,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188451,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188452,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188453,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188456,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188457,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188458,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-12",
+    "end_date": "2010-11-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188461,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-30",
+    "end_date": "2010-12-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188462,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-30",
+    "end_date": "2010-12-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188463,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-30",
+    "end_date": "2010-12-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188464,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-30",
+    "end_date": "2010-12-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188465,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-30",
+    "end_date": "2010-12-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188484,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-05-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188485,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-05-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188486,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-05-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188489,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-05-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188490,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-05-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1188491,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-05-12",
+    "end_date": "2010-05-12",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872089,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-12-19",
+    "end_date": "2007-03-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872090,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-12-19",
+    "end_date": "2007-03-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872091,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-12-19",
+    "end_date": "2007-03-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872092,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-12-19",
+    "end_date": "2007-03-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872093,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-12-19",
+    "end_date": "2007-03-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872101,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-01",
+    "end_date": "2007-12-31",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872102,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-01",
+    "end_date": "2007-10-01",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872103,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-01",
+    "end_date": "2007-10-01",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872104,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-01",
+    "end_date": "2007-12-31",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872105,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-01",
+    "end_date": "2007-12-31",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872106,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-01",
+    "end_date": "2007-12-31",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872107,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-01",
+    "end_date": "2007-12-31",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872113,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-17",
+    "end_date": "2007-04-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872114,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-17",
+    "end_date": "2007-01-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872115,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-17",
+    "end_date": "2007-01-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872116,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-17",
+    "end_date": "2007-04-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872117,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-17",
+    "end_date": "2007-04-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872118,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-17",
+    "end_date": "2007-04-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872119,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-17",
+    "end_date": "2007-04-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872125,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-17",
+    "end_date": "2007-07-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872126,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-17",
+    "end_date": "2007-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872127,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-17",
+    "end_date": "2007-07-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872128,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-17",
+    "end_date": "2007-07-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872129,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-17",
+    "end_date": "2007-07-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 1872130,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-17",
+    "end_date": "2007-07-16",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 4001905,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-10-25",
+    "end_date": "2010-11-08",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 4001906,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-10-25",
+    "end_date": "2010-11-08",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 4001913,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-20",
+    "end_date": "2010-07-22",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 4001914,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-20",
+    "end_date": "2010-07-22",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 4001919,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-03",
+    "end_date": "2010-09-28",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 4001920,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-03",
+    "end_date": "2010-09-28",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062146,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062149,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062150,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062151,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062152,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062153,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062155,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062169,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062170,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062171,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062172,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062175,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-10",
+    "end_date": "2008-07-10",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062180,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062181,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062182,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062183,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062184,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062185,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062186,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062187,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062203,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062204,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062205,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062206,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062207,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062217,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062218,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062219,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062220,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-03",
+    "end_date": "2008-09-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062234,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062235,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062236,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062239,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062284,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-11",
+    "end_date": "2008-07-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062285,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-11",
+    "end_date": "2008-07-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062286,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-11",
+    "end_date": "2008-07-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062288,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-11",
+    "end_date": "2008-07-11",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062291,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-11",
+    "end_date": "2008-01-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062292,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-11",
+    "end_date": "2008-01-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062293,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-11",
+    "end_date": "2008-01-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062295,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-01-11",
+    "end_date": "2008-01-11",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062304,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-29",
+    "end_date": "2008-04-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062305,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-29",
+    "end_date": "2008-04-29",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062312,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-04-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062313,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-04-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062314,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-04-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062316,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-04-11",
+    "end_date": "2008-04-11",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062319,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-10-09",
+    "end_date": "2008-10-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062320,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-10-09",
+    "end_date": "2008-10-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062321,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-10-09",
+    "end_date": "2008-10-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062323,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-10-09",
+    "end_date": "2008-10-09",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062326,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062327,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062328,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062329,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062330,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062331,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062332,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062333,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062334,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 5062337,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-02",
+    "end_date": "2008-02-02",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6849909,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-11-10",
+    "end_date": "2006-11-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6849911,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-11-10",
+    "end_date": "2006-11-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6849912,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-11-10",
+    "end_date": "2006-11-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6849913,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-11-10",
+    "end_date": "2006-11-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6849914,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-11-10",
+    "end_date": "2006-11-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6849917,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-11-10",
+    "end_date": "2006-11-10",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6850194,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-10",
+    "end_date": "2006-04-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6850196,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-10",
+    "end_date": "2006-04-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6850198,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-10",
+    "end_date": "2006-04-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6850202,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-04-10",
+    "end_date": "2006-04-10",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6850436,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-07-26",
+    "end_date": "2006-07-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6850727,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-10-17",
+    "end_date": "2006-10-17",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 6850729,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2006-10-17",
+    "end_date": "2006-10-17",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029039,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029040,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029041,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029042,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029043,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029044,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029045,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029046,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029062,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029063,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029064,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029065,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-18",
+    "end_date": "2009-04-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029098,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029099,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029100,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029101,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029102,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029105,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029117,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029118,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029119,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029121,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-07",
+    "end_date": "2009-01-07",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029124,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-06-08",
+    "end_date": "2009-06-08",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029127,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-06-08",
+    "end_date": "2009-06-08",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029133,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029134,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029135,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029136,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029137,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029138,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029139,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029140,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029161,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029162,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029163,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029164,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-15",
+    "end_date": "2009-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029172,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-21",
+    "end_date": "2009-07-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029173,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-21",
+    "end_date": "2009-07-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029174,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-21",
+    "end_date": "2009-07-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029176,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-21",
+    "end_date": "2009-07-21",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029179,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029180,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029181,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029182,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029183,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029184,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029185,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029186,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029199,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029200,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029201,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029202,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-21",
+    "end_date": "2009-11-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029207,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-24",
+    "end_date": "2009-11-24",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029213,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-22",
+    "end_date": "2009-04-22",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029214,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-22",
+    "end_date": "2009-04-22",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029215,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-22",
+    "end_date": "2009-04-22",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029217,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-22",
+    "end_date": "2009-04-22",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029220,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-09",
+    "end_date": "2009-01-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029221,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-09",
+    "end_date": "2009-01-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029222,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-09",
+    "end_date": "2009-01-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 11029224,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-01-09",
+    "end_date": "2009-01-09",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248496,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248497,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248498,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248499,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248500,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248501,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248502,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248503,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248519,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248520,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248521,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248522,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248523,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248524,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-05",
+    "end_date": "2010-06-05",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248536,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-21",
+    "end_date": "2010-06-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248537,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-21",
+    "end_date": "2010-06-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248538,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-21",
+    "end_date": "2010-06-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248539,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-21",
+    "end_date": "2010-06-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248540,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-21",
+    "end_date": "2010-06-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248549,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-14",
+    "end_date": "2010-09-14",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248550,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-14",
+    "end_date": "2010-09-14",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248551,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-14",
+    "end_date": "2010-09-14",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248672,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-08",
+    "end_date": "2010-07-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248674,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-08",
+    "end_date": "2010-07-09",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248683,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-11",
+    "end_date": "2010-07-15",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248714,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-10",
+    "end_date": "2010-07-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248715,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-10",
+    "end_date": "2010-07-10",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248725,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-11",
+    "end_date": "2010-07-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248748,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-12",
+    "end_date": "2010-07-15",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248749,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-12",
+    "end_date": "2010-07-15",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248750,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-12",
+    "end_date": "2010-07-15",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248763,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-16",
+    "end_date": "2010-07-18",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248777,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-19",
+    "end_date": "2010-07-19",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248795,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-08",
+    "end_date": "2010-07-08",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248810,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-08",
+    "end_date": "2010-07-08",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248811,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-08",
+    "end_date": "2010-07-08",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248812,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-08",
+    "end_date": "2010-07-08",
+    "source_value": "4010",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248865,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-20",
+    "end_date": "2010-07-20",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248928,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-13",
+    "end_date": "2010-07-13",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248929,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-13",
+    "end_date": "2010-07-13",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248930,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-13",
+    "end_date": "2010-07-13",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248931,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-13",
+    "end_date": "2010-07-13",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248951,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-23",
+    "end_date": "2010-07-23",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248952,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-23",
+    "end_date": "2010-07-23",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248953,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-23",
+    "end_date": "2010-07-23",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248958,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248959,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248960,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248961,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248962,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248963,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248964,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248965,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248981,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248982,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248983,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-17",
+    "end_date": "2010-04-17",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248994,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-24",
+    "end_date": "2010-06-24",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16248997,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-24",
+    "end_date": "2010-06-24",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249003,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-11",
+    "end_date": "2010-01-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249004,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-11",
+    "end_date": "2010-01-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249005,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-11",
+    "end_date": "2010-01-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249007,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-11",
+    "end_date": "2010-01-11",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249031,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-21",
+    "end_date": "2010-09-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249032,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-21",
+    "end_date": "2010-09-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249033,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-09-21",
+    "end_date": "2010-09-21",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249113,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-11",
+    "end_date": "2010-07-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249114,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-11",
+    "end_date": "2010-07-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249115,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-11",
+    "end_date": "2010-07-11",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249116,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-11",
+    "end_date": "2010-07-11",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249152,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-26",
+    "end_date": "2010-07-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249153,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-26",
+    "end_date": "2010-07-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249154,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-26",
+    "end_date": "2010-07-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249414,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-19",
+    "end_date": "2010-07-20",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 16249415,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-07-19",
+    "end_date": "2010-07-20",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218902,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-05-07",
+    "end_date": "2007-05-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218903,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-05-07",
+    "end_date": "2007-05-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218904,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-05-07",
+    "end_date": "2007-05-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218909,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218910,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218911,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218914,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218915,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218916,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218917,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218918,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218919,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218920,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218923,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-19",
+    "end_date": "2007-01-19",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218934,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218935,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218936,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218937,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218938,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218939,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218940,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218941,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218943,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218958,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218959,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218960,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218961,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-12-03",
+    "end_date": "2007-12-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218968,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-03",
+    "end_date": "2007-10-03",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218976,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-06",
+    "end_date": "2007-08-06",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218977,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-06",
+    "end_date": "2007-08-06",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218991,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-10",
+    "end_date": "2007-08-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218992,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-10",
+    "end_date": "2007-08-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218993,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-10",
+    "end_date": "2007-08-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28218997,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-10",
+    "end_date": "2007-08-10",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219016,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-18",
+    "end_date": "2007-01-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219017,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-18",
+    "end_date": "2007-01-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219018,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-18",
+    "end_date": "2007-01-18",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219020,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-01-18",
+    "end_date": "2007-01-18",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219032,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-07-25",
+    "end_date": "2007-07-25",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219033,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-07-25",
+    "end_date": "2007-07-25",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219034,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-07-25",
+    "end_date": "2007-07-25",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219035,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-07-25",
+    "end_date": "2007-07-25",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219036,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-07-25",
+    "end_date": "2007-07-25",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219039,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-07-25",
+    "end_date": "2007-07-25",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219051,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-28",
+    "end_date": "2007-09-28",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219057,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-29",
+    "end_date": "2007-09-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219060,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-29",
+    "end_date": "2007-09-29",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219080,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-29",
+    "end_date": "2007-09-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219082,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-29",
+    "end_date": "2007-09-29",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219088,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-06",
+    "end_date": "2007-09-06",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219089,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-06",
+    "end_date": "2007-09-06",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219090,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-06",
+    "end_date": "2007-09-06",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219093,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219094,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219095,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219097,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219109,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219110,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219111,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219112,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219113,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219114,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219115,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219118,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-26",
+    "end_date": "2007-04-26",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219129,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-19",
+    "end_date": "2007-04-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219130,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-19",
+    "end_date": "2007-04-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219131,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-19",
+    "end_date": "2007-04-19",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219133,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-04-19",
+    "end_date": "2007-04-19",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219142,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-29",
+    "end_date": "2007-10-29",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219143,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-29",
+    "end_date": "2007-10-29",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 28219154,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-08-28",
+    "end_date": "2007-08-28",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 34286401,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-10-02",
+    "end_date": "2008-10-02",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 34286402,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-10-02",
+    "end_date": "2008-10-02",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 34286443,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-14",
+    "end_date": "2008-02-14",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 34286446,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-02-14",
+    "end_date": "2008-02-14",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 35710743,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-09-08",
+    "end_date": "2009-09-08",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 35710747,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-09-08",
+    "end_date": "2009-09-08",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 36999945,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-22",
+    "end_date": "2010-04-22",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 36999948,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-04-22",
+    "end_date": "2010-04-22",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 36999984,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-09",
+    "end_date": "2010-08-09",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 36999985,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-08-09",
+    "end_date": "2010-08-09",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 40302018,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-03",
+    "end_date": "2007-10-04",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 40302020,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-10-03",
+    "end_date": "2007-10-04",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 40302045,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-06",
+    "end_date": "2007-09-06",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 40302046,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-09-06",
+    "end_date": "2007-09-06",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 40302068,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-05-07",
+    "end_date": "2007-05-07",
+    "source_value": "25000",
+    "source_vocabulary_id": null
+  },
+  {
+    "person_id": 18993,
+    "criterion_id": 40302069,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2007-05-07",
+    "end_date": "2007-05-07",
+    "source_value": "4019",
+    "source_vocabulary_id": null
+  }
+]
