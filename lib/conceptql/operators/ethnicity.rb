@@ -37,12 +37,14 @@ module ConceptQL
       def ethnicity_concept_ids
         arguments.map do |words|
           case words
-          when /^Not Hispanic/
+          when /^Not Hispanic/i
             38003564
-          when /^Hispanic/
+          when /^Hispanic/i
             38003563
+          when /unknown/i
+            [0, nil]
           end
-        end.compact
+        end.flatten
       end
     end
   end
