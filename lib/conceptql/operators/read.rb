@@ -20,7 +20,7 @@ module ConceptQL
       end
 
       def gdm(db)
-        vocab_op.query(db)
+        klasses[:condition_occurrence].new(self.nodifier, "read_condition_occurrence", *arguments).evaluate(db)
       end
 
       def omopv4(db)
