@@ -10,10 +10,10 @@
     ],
     "icd9": [
       [
-        "unknown concept code",
+        "unknown source code",
         "000.00"
       ]
-    ],
+    ]
   },
   "counts": {
     "cpt": {
@@ -37,7 +37,7 @@
         "rows": 0,
         "n": 0
       }
-    },
+    }
   },
   "operators": [
     "union",
