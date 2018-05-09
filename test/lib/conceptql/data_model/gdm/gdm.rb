@@ -1,4 +1,3 @@
-require_relative "../../../helper"
 
 describe ConceptQL::DataModel::Gdm do
   describe "#related_concept_ids" do
