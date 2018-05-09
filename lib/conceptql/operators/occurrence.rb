@@ -102,7 +102,7 @@ occurrence, this operator returns nothing for that person.
           end
           .select_all(:rest)
           .select_append(first[:global_rn].as(:initial_rn))
-          .select_append(Sequel[rank_function].function.over(partition: first[:global_rn], order: ordered_columns(:qualify=>:rest)).as(:rn))
+          .select_append(Sequel[rank_function].function.over(partition: [first[:person_id], first[:global_rn]], order: ordered_columns(:qualify=>:rest)).as(:rn))
 
         db[joined_name]
           .with(input_name, input_ds)
