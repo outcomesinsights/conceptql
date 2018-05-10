@@ -29,6 +29,7 @@ module ConceptQL
       attr :nodifier, :values, :options, :arguments, :upstreams, :op_name
 
       option :label, type: :string
+      option :inner_join, type: :boolean
 
       @validations = []
 
@@ -607,6 +608,20 @@ module ConceptQL
 
       def preferred_name
         self.class.pref_name
+      end
+
+      def semi_or_inner_join(ds, table, expr)
+        table = Sequel[table] if table.is_a?(Symbol)
+        if options[:inner_join]
+          ds.join(table.as(:r), expr)
+            .select_all(:l)
+        else
+          ds.where(DB[table.as(:r)]
+            .select(1)
+            .where(expr)
+            .exists
+          )
+        end
       end
     end
   end
