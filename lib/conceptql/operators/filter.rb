@@ -12,10 +12,7 @@ module ConceptQL
         rhs = right.evaluate(db)
         rhs = rhs.from_self.select_group(*columns)
         query = db.from(Sequel.as(left.evaluate(db), :l))
-        query = query
-          .left_join(Sequel.as(rhs, :r), join_columns)
-          .exclude(Sequel[:r][:criterion_id] => nil)
-          .select_all(:l)
+        query = semi_or_inner_join(query, rhs, join_columns)
         db.from(query)
       end
 
@@ -24,7 +21,7 @@ module ConceptQL
       end
 
       def join_columns
-        Hash[columns.zip(columns)]
+        columns.map{|c| [Sequel[:l][c], Sequel[:r][c]]}
       end
 
       def determine_columns
