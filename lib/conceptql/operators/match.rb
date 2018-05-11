@@ -25,6 +25,10 @@ module ConceptQL
         @columns ||= determine_columns
       end
 
+      def join_columns_option
+        columns
+      end
+
       def determine_columns
         columns = dynamic_columns
         columns &= options[:only_columns].map(&:to_sym) if options[:only_columns]
