@@ -64,7 +64,7 @@ occurrence, this operator returns nothing for that person.
       end
 
       def query(db)
-        ds = if options[:at_least] || options[:within]
+        ds = if at_least_option || within_option
           query_complex(db)
         else
           query_simple(db)
@@ -77,8 +77,6 @@ occurrence, this operator returns nothing for that person.
       # If within is specified, assume an at_least of everything after the current event to not pick
       # prior occurrences when doing the self join.
       def query_complex(db)
-        at_least_option = options[:at_least]
-        within_option = options[:within]
         input_name = cte_name(:occurrence_input)
 
         # Give a global row number to all rows, so that the self joined dataset can partition based on
@@ -118,6 +116,18 @@ occurrence, this operator returns nothing for that person.
       end
 
       private
+
+      def within_option
+        return unless v = options[:within]
+        return if v.strip.empty?
+        v
+      end
+
+      def at_least_option
+        return unless v = options[:at_least]
+        return if v.strip.empty?
+        v
+      end
 
       def adjust_date(adjustment, column, reverse = false)
         adjuster = DateAdjuster.new(self, adjustment)
