@@ -80,30 +80,37 @@ twice in an outpatient setting with a 30-day gap.
 
         max_gap = options[:outpatient_maximum_gap]
 
-        q = outpatient_events.from_self(alias: :initial)
-              .join(outpatient_events.as(:confirm), person_id: :person_id)
-              .exclude(Sequel[:initial][:criterion_id] => Sequel[:confirm][:criterion_id])
+        return_confirm = options[:outpatient_event_to_return] != 'Initial Event'
+
+        outer_table = return_confirm ? :confirm : :initial
+        sub_table = return_confirm ? :initial : :confirm
+
+        confirm = Sequel[:confirm]
+        initial = Sequel[:initial]
+
+        sub_select = outpatient_events
+                        .from_self(alias: sub_table)
+                        .where(initial[:person_id] => confirm[:person_id])
+                        .exclude(initial[:criterion_id] => confirm[:criterion_id])
 
         # In order to avoid many more comparisons of initial to confirm events, we now
         # filter the join by having only confirm events that come on or after initial events
         #
         # This ensures that initial events represent initial events and confirm events
         # represent confirming events
-        q = q.exclude{confirm[:start_date] < initial[:start_date]}
+        sub_select = sub_select.exclude(confirm[:start_date] < initial[:start_date])
+
 
         if ConceptQL::Utils.present?(min_gap)
-          q = q.where(Sequel.expr(Sequel[:confirm][:start_date]) >= DateAdjuster.new(self, min_gap).adjust(Sequel[:initial][:start_date]))
+          sub_select = sub_select.where(Sequel.expr(confirm[:start_date]) >= DateAdjuster.new(self, min_gap).adjust(initial[:start_date]))
         end
 
         if ConceptQL::Utils.present?(max_gap)
-          q = q.where(Sequel.expr(Sequel[:confirm][:start_date]) <= DateAdjuster.new(self, max_gap).adjust(Sequel[:initial][:start_date]))
+          sub_select = sub_select.where(Sequel.expr(confirm[:start_date]) <= DateAdjuster.new(self, max_gap).adjust(initial[:start_date]))
         end
 
-        if options[:outpatient_event_to_return] != 'Initial Event'
-          q = q.select_all(:confirm)
-        else
-          q = q.select_all(:initial)
-        end
+        q = outpatient_events.from_self(alias: outer_table)
+              .where(sub_select.exists)
 
         q.from_self.select(*dynamic_columns).from_self
       end
