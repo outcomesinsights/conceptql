@@ -75,7 +75,6 @@ twice in an outpatient setting with a 30-day gap.
       end
 
       def valid_outpatient_events
-
         min_gap = options[:outpatient_minimum_gap] || "30d"
 
         max_gap = options[:outpatient_maximum_gap]
