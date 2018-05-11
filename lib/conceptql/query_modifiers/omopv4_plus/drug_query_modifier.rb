@@ -29,8 +29,10 @@ module ConceptQL
 
         def modified_query
           return query unless dm.table_cols(source_table).include?(:drug_concept_id)
+          db = query.db
+          drug_concept_ids = query.select(:drug_concept_id).distinct
           query.from_self(alias: :de)
-            .left_join(micro_table.as(:mt), drug_concept_id: :drug_concept_id)
+            .left_join(micro_table(drug_concept_ids).as(:mt), drug_concept_id: :drug_concept_id)
             .select_all(:de)
             .select_append(Sequel[:de][:quantity].as(:drug_quantity))
             .select_append(Sequel[:de][:days_supply].as(:drug_days_supply))
@@ -42,16 +44,17 @@ module ConceptQL
 
         private
 
-        def micro_table
+        def micro_table(drug_concept_ids)
           # TODO: Does drug_strength only have RXNORM concept_ids?
           # TODO: What is vocabulary for units?  Can we shrink concept table to just that vocab before joining?
           db.from(Sequel[:concept].as(:dc))
             .left_join(Sequel[:drug_strength].as(:ds), drug_concept_id: :concept_id)
-            .select(
-              Sequel[:dc][:concept_id].as(:drug_concept_id),
-              Sequel[:dc][:concept_name].as(:drug_name),
-              Sequel[:ds][:amount_value].as(:amount_value),
-              Sequel[:ds][:amount_unit].as(:amount_unit),
+            .where(Sequel[:dc][:concept_id] => drug_concept_ids)
+            .select_group(Sequel[:dc][:concept_id].as(:drug_concept_id))
+            .select_append(
+              Sequel.function(:min, Sequel[:dc][:concept_name]).as(:drug_name),
+              Sequel.function(:min, Sequel[:ds][:amount_value]).as(:amount_value),
+              Sequel.function(:min, Sequel[:ds][:amount_unit]).as(:amount_unit)
             )
         end
       end
