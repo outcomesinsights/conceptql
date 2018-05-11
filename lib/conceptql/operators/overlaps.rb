@@ -15,9 +15,8 @@ L---Y---L
       R-----R
         L---N---L
       EOF
-      def apply_where_clause(ds)
-        clause = (l_start_date <= within_start) & (within_start <= l_end_date) & (l_end_date <= within_end)
-        ds.where(clause)
+      def where_clause
+        (l_start_date <= within_start) & (within_start <= l_end_date) & (l_end_date <= within_end)
       end
     end
   end

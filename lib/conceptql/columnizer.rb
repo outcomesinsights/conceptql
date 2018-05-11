@@ -24,10 +24,23 @@ module ConceptQL
         end
 
         unless options.no_alias
-          col = Sequel.expr(col).as(name)
+          n = extract_name(name)
+          if ConceptQL::Utils.present?(n)
+            col = Sequel.expr(col).as(n)
+          end
         end
 
         col
+      end
+
+      def extract_name(name)
+        return name if name.is_a?(Symbol)
+        n = nil
+        n = name.column if name.respond_to?(:column)
+        return n unless ConceptQL::Utils.blank?(n)
+        n = name.table if name.respond_to?(:table)
+        return n unless ConceptQL::Utils.blank?(n)
+        return extract_name(name.expr) if name.respond_to?(:expr)
       end
     end
 
@@ -39,7 +52,7 @@ module ConceptQL
 
     def add_columns(*column_names)
       opts = ConceptQL::Utils.extract_opts!(column_names)
-      cols = column_names.map(&:to_sym)
+      cols = column_names.map { |cn| cn.respond_to?(:to_sym) ? cn.to_sym : cn }
       column_names.each do |column_name|
         columns[column_name] = ColumnDefinition.new(column_name, opts)
       end

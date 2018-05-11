@@ -610,11 +610,12 @@ module ConceptQL
         self.class.pref_name
       end
 
-      def semi_or_inner_join(ds, table, expr)
+      def semi_or_inner_join(ds, table, *exprs)
         table = Sequel[table] if table.is_a?(Symbol)
-        if options[:inner_join]
+        expr = exprs.inject(&:&)
+        if use_inner_join?
           ds.join(table.as(:r), expr)
-            .select_all(:l)
+            .select(*query_cols.map { |c| Sequel[:l][c] })
         else
           ds.where(DB[table.as(:r)]
             .select(1)
@@ -622,6 +623,10 @@ module ConceptQL
             .exists
           )
         end
+      end
+
+      def use_inner_join?
+        options[:inner_join]
       end
     end
   end

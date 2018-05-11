@@ -22,23 +22,20 @@ All other results are discarded, including all results in the RHR.
         end
       end
 
-      def apply_where_clause(ds)
+      def where_clause
         before_date = r_start_date
 
         if at_least_option
           before_date = adjust_date(at_least_option, before_date, true)
         end
 
-        before_clause = l_end_date <  before_date
-
-        ds = ds.where(before_clause)
+        before_clause = Sequel.expr(l_end_date <  before_date)
 
         if within_option
-          within_clause = l_end_date >= within_start
-          ds = ds.where(within_clause)
+          before_clause &= l_end_date >= within_start
         end
 
-        ds
+        before_clause
       end
 
       def compare_all?

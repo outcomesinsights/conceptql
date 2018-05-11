@@ -32,12 +32,11 @@ is passed through unaffected.
         # If the RHS's min start date is less than the LHS start date,
         # the entire LHS date range is truncated, which implies the row itself
         # is ineligible to pass thru
-        ds = db.from(left_stream(db))
-               .left_join(Sequel.as(right_stream_query(db), :r), { person_id: :person_id}.merge(join_columns))
-               .where(where_criteria)
+        ds = db.from(left_stream(db)).from_self(alias: :l)
+              .left_join(Sequel.as(right_stream_query(db), :r), join_columns.inject(&:&))
+              .where(where_criteria)
 
         ds = dm.selectify(ds, qualifier: :l, replace: replacement_columns)
-        ds = add_occurrences_condition(ds, occurrences_option)
 
         ds = apply_selectors(ds)
 
@@ -66,7 +65,7 @@ is passed through unaffected.
 
       def columnizer
         columnizer = Columnizer.new
-        columnizer.add_columns(:person_id, trim_date, *join_columns.keys)
+        columnizer.add_columns(:person_id, trim_date, *join_columns_option)
         columnizer
       end
     end

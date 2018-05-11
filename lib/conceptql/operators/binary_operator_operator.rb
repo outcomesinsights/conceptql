@@ -37,11 +37,11 @@ module ConceptQL
       end
 
       def left_stream(db)
-        left_stream_query(db).as(:l)
+        left_stream_query(db)
       end
 
       def left_stream_query(db)
-        left.evaluate(db).from_self
+        left.evaluate(db).from_self(alias: :l)
       end
 
       def right_stream(db)
@@ -49,9 +49,8 @@ module ConceptQL
       end
 
       def right_stream_query(db)
-        right.evaluate(db).from_self
+        right.evaluate(db).from_self(alias: :r)
       end
-
     end
   end
 end

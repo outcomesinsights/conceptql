@@ -13,10 +13,8 @@ module ConceptQL
       default_query_columns
 
       option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
-      option :occurrences, type: :integer, desc: "Number of occurrences that must precede the event of interest, e.g. if you'd like the 4th event in a set of events, set occurrences to 3"
 
       validate_option DateAdjuster::VALID_INPUT, :within, :at_least
-      validate_option /\A\d+\z/, :occurrences
 
       class << self
         def allows_at_least_option
@@ -29,16 +27,10 @@ module ConceptQL
       end
 
       def query(db)
-        right_stream = apply_selectors(right_stream_query(db), function: rhs_function)
-        ds = db.from(left_stream(db))
-                .join(right_stream, {person_id: :person_id}.merge(join_columns), {table_alias: :r})
-               .select(*dynamic_columns.map { |c| Sequel[:l][c].as(c) })
+        right_stream = apply_selectors(right_stream_query(db), function: rhs_function).from_self(alias: :r)
+        ds = semi_or_inner_join(left_stream(db), right_stream, *[*join_columns, where_clause])
 
         ds = apply_selectors(ds, qualifier: :r)
-
-        ds = apply_where_clause(ds)
-
-        ds = add_occurrences_condition(ds, occurrences_option)
 
         ds.from_self
       end
@@ -96,21 +88,10 @@ module ConceptQL
         adjuster.adjust(column, reverse)
       end
 
-      def add_occurrences_condition(ds, occurrences)
-        return ds if occurrences.nil?
-
-        occurrences_col = occurrences_column
-        ds.distinct.from_self
-          .select_append{row_number.function.over(:partition => :person_id, :order => occurrences_col).as(:occurrence)}
-          .from_self
-          .select(*dm.columns)
-          .where{occurrence > occurrences.to_i}
-      end
 
       def apply_selectors(ds, opts = {})
-        return ds unless include_rhs_columns || ConceptQL::Utils.present?(join_columns)
+        return ds unless include_rhs_columns
         ds = ds.select_remove(*include_rhs_columns).select_append(*(rhs_columns(opts))) if include_rhs_columns
-        ds = ds.select_remove(*join_columns(opts).keys).select_append(*join_columns(opts).values) if ConceptQL::Utils.present?(join_columns)
         ds
       end
 
@@ -120,10 +101,6 @@ module ConceptQL
         cols = cols.map { |c| Sequel.function(opts[:function], c).as(c) } if opts[:function]
         cols = cols.map { |c| Sequel[opts[:qualifier]][c].as(c) } if opts[:qualifier]
         cols
-      end
-
-      def occurrences_column
-        [:start_date, :end_date, :criterion_id]
       end
 
       def at_least_check?
@@ -143,13 +120,15 @@ module ConceptQL
       end
 
       def join_columns(opts = {})
-        return {} unless join_columns_option
-        col_defs = join_columns_option.map(&:to_sym)
-        col_defs = col_defs.map { |c| Sequel[opts[:qualifier].to_sym][c].as(c) } if opts[:qualifier]
-        Hash[join_columns_option.zip(col_defs)]
+        join_columns_option.map{ |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
       end
+
       def join_columns_option
-        options[:join_columns]
+        (options[:join_columns] || []) + [:person_id]
+      end
+
+      def use_inner_join?
+        super || options[:include_rhs_columns]
       end
     end
   end

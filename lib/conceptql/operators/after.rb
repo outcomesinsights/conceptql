@@ -26,31 +26,24 @@ R-----R
         end
       end
 
-      def apply_where_clause(ds)
+      def where_clause
         after_date = r_end_date
 
         if at_least_option
           after_date = adjust_date(at_least_option, after_date)
         end
 
-        after_clause = l_start_date > after_date
-
-        ds = ds.where(after_clause)
+        clause = Sequel.expr(l_start_date > after_date)
 
         if within_option
-          within_clause = l_start_date <= within_end
-          ds = ds.where(within_clause)
+          clause = clause.&(l_start_date <= within_end)
         end
 
-        ds
+        clause
       end
 
       def compare_all?
         !(options.keys & [:within]).empty?
-      end
-
-      def occurrences_column
-        :end_date
       end
 
       def rhs_function
