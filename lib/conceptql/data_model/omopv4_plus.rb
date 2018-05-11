@@ -407,7 +407,7 @@ module ConceptQL
       end
 
       def uuid
-        items = %w(person_id criterion_id criterion_table).map do |column|
+        items = %w(person_id criterion_id criterion_table start_date).map do |column|
           Sequel.cast_string(column.to_sym)
         end
         items = items.zip([Sequel.cast_string('/')] * (items.length - 1))

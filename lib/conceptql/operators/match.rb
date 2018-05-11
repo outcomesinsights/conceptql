@@ -13,20 +13,16 @@ module ConceptQL
         rhs = rhs.from_self.select_group(*columns)
         query = db.from(Sequel.as(left.evaluate(db), :l))
 
+        join_check = join_columns.inject(&:&)
         sub_select = rhs.from_self(alias: :r)
                       .select(1)
-                      .where(join_columns)
-
+                      .where(join_check)
 
         query.send(where_method(:where), sub_select.exists).select_all(:l)
       end
 
       def columns
         @columns ||= determine_columns
-      end
-
-      def join_columns
-        Hash[columns.zip(columns)]
       end
 
       def determine_columns
