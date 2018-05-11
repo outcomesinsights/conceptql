@@ -15,10 +15,10 @@ module ConceptQL
 
         sub_select = rhs.from_self(alias: :r)
                       .select(1)
-                      .send(where_method(:where), join_columns)
+                      .where(join_columns)
 
 
-        query.where(sub_select.exists).select_all(:l)
+        query.send(where_method(:where), sub_select.exists).select_all(:l)
       end
 
       def columns
