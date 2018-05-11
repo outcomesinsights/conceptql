@@ -24,6 +24,14 @@ module ConceptQL
 
       private
 
+      def join_columns(opts = {})
+        join_columns_option.map{ |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
+      end
+
+      def join_columns_option
+        (options[:join_columns] || []) + [:person_id]
+      end
+
       def annotate_values(db, opts = {})
         h = {}
         h[:left] = left.annotate(db, opts) if left

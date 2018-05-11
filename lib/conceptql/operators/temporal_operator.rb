@@ -119,14 +119,6 @@ module ConceptQL
         nil
       end
 
-      def join_columns(opts = {})
-        join_columns_option.map{ |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
-      end
-
-      def join_columns_option
-        (options[:join_columns] || []) + [:person_id]
-      end
-
       def use_inner_join?
         super || options[:include_rhs_columns]
       end
