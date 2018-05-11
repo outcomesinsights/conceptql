@@ -20,7 +20,7 @@ module ConceptQL
           .select(1)
 
         query.from_self(alias: :og)
-          .where(sub_select.exist)
+          .where(sub_select.exists)
           .select_all(:og)
           .from_self
       end
