@@ -1,0 +1,7 @@
+[
+  "match", {
+    "left": [ "icd9", "412", { "uuid": true } ],
+    "right": [ "icd9", "412", { "uuid": true } ],
+    "join_columns": [ "uuid" ]
+  }
+]

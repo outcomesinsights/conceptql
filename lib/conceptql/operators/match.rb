@@ -12,15 +12,13 @@ module ConceptQL
         rhs = right.evaluate(db)
         rhs = rhs.from_self.select_group(*columns)
         query = db.from(Sequel.as(left.evaluate(db), :l))
-        if columns.length == 1
-          query = query.send(where_method(:where), columns.first => rhs)
-        else
-          query = query
-            .left_join(Sequel.as(rhs, :r), join_columns)
-            .send(where_method(:exclude), Sequel[:r][join_columns.last] => nil)
-            .select_all(:l)
-        end
-        db.from(query)
+
+        sub_select = rhs.from_self(alias: :r)
+                      .select(1)
+                      .send(where_method(:where), join_columns)
+
+
+        query.where(sub_select.exists).select_all(:l)
       end
 
       def columns
