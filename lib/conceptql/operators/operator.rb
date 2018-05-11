@@ -617,7 +617,7 @@ module ConceptQL
           ds.join(table.as(:r), expr)
             .select(*query_cols.map { |c| Sequel[:l][c] })
         else
-          ds.where(DB[table.as(:r)]
+          ds.where(ds.db[table.as(:r)]
             .select(1)
             .where(expr)
             .exists
