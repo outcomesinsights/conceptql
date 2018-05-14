@@ -16,6 +16,15 @@ module ConceptQL
         new_column.as(column)
       end
 
+      def semi_join(ds, table, *exprs)
+        expr = exprs.inject(&:&)
+        ds.where(ds.db[table.as(:r)]
+          .select(1)
+          .where(expr)
+          .exists
+        )
+      end
+
       def cast_date(date)
         Sequel.cast(date, Date)
       end

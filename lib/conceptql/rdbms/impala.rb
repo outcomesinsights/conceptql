@@ -7,6 +7,13 @@ module ConceptQL
         Sequel.cast(date, DateTime)
       end
 
+      def semi_join(ds, table, *exprs)
+        expr = exprs.inject(&:&)
+        ds.from_self(alias: :l)
+          .left_join(ds.db[table.as(:r)], expr, semi: true)
+          .select_all(:l)
+      end
+
       # Impala is teh dumb in that it won't allow columns with constants to
       # be part of the partition of a window function.
       #
