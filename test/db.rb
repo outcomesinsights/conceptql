@@ -4,9 +4,9 @@ DB = Object.new.extend(Sequelizer).db unless defined?(DB)
 if DB.database_type == :impala
   # Make sure to issue USE statement for every new connection
   ac = DB.pool.after_connect
-  DB.pool.after_connect = proc do |conn|
+  DB.pool.after_connect = proc do |conn, server, db|
     DB.send(:log_connection_execute, conn, "USE #{DB.opts[:database]}")
-    ac.call(conn) if ac
+    ac.call(conn, server, db) if ac
   end
 
   # Remove existing connnections, so that the next query will use a new connection
