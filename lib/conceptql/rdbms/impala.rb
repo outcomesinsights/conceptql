@@ -10,7 +10,7 @@ module ConceptQL
       def semi_join(ds, table, *exprs)
         expr = exprs.inject(&:&)
         ds.from_self(alias: :l)
-          .left_join(ds.db[table.as(:r)], expr, semi: true)
+          .left_join(table, expr, semi: true, table_alias: :r)
           .select_all(:l)
       end
 
