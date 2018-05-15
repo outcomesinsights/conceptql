@@ -8,6 +8,8 @@ module ConceptQL
       end
 
       def semi_join(ds, table, *exprs)
+        ds = Sequel[ds] if ds.is_a?(Symbol)
+        table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
         ds.from_self(alias: :l)
           .left_join(table, expr, semi: true, table_alias: :r)

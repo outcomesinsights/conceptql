@@ -10,19 +10,15 @@ module ConceptQL
       end
 
       def call(op, query)
-        start_date = apply_adjustments(op, Sequel[:tw][:start_date], adjust_start)
-        end_date = apply_adjustments(op, Sequel[:tw][:end_date], adjust_end)
+        start_date = apply_adjustments(op, Sequel[:r][:start_date], adjust_start)
+        end_date = apply_adjustments(op, Sequel[:r][:end_date], adjust_end)
 
-        sub_select = query.db[table_window].from_self(alias: :tw)
-          .where(Sequel[:og][:person_id] => Sequel[:tw][:person_id])
-          .where(start_date <= Sequel[:og][:start_date])
-          .where(Sequel[:og][:end_date] <= end_date)
-          .select(1)
+        exprs = []
+        exprs << (start_date <= Sequel[:l][:start_date])
+        exprs << (Sequel[:l][:end_date] <= end_date)
+        exprs << { Sequel[:l][:person_id] => Sequel[:r][:person_id] }
 
-        query.from_self(alias: :og)
-          .where(sub_select.exists)
-          .select_all(:og)
-          .from_self
+        op.rdbms.semi_join(query, table_window, *exprs)
       end
 
       def apply_adjustments(op, column, adjustment)
