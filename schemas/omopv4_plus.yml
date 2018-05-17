@@ -240,9 +240,6 @@
     :type: Bignum
     :foreign_key: concept
     :null: false
-  :place_of_service_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
   :care_site_id:
     :type: Bignum
     :foreign_key: care_ste
