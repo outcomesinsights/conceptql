@@ -28,6 +28,13 @@ module ConceptQL
         person_id = qualifier ? Sequel.qualify(qualifier, :person_id) : :person_id
         Sequel.expr(column).cast_string + '_' + Sequel.cast_string(person_id)
       end
+
+      def uuid_items
+        items = %w(person_id criterion_id criterion_table).map do |column|
+          Sequel.cast_string(column.to_sym)
+        end
+        items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
+      end
     end
   end
 end

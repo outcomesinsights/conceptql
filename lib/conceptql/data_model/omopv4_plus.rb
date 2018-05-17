@@ -143,7 +143,7 @@ module ConceptQL
       def selectify(query, opts = {})
         ds = modify_query(query, get_table(opts)).select(*columns(opts))
         if opts[:uuid]
-          ds = ds.from_self.select_append(uuid.as(:uuid))
+          ds = ds.from_self.select_append(rdbms.uuid.as(:uuid))
         end
         ds.from_self
       end
@@ -404,14 +404,6 @@ module ConceptQL
           .select(Sequel[:source_vocabulary_id].as(:vocabulary_id), Sequel[:source_code].as(:concept_code), Sequel[:source_code_description].as(:concept_text))
           .from_self
         standards.union(sources).order(:concept_code, :concept_text).from_self.select_group(:vocabulary_id, :concept_code).select_append(Sequel.function(:min, :concept_text).as(:concept_text)).from_self
-      end
-
-      def uuid
-        items = %w(person_id criterion_id criterion_table start_date).map do |column|
-          Sequel.cast_string(column.to_sym)
-        end
-        items = items.zip([Sequel.cast_string('/')] * (items.length - 1))
-        items.flatten.compact.inject(:+)
       end
     end
   end

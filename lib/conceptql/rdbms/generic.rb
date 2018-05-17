@@ -41,6 +41,20 @@ module ConceptQL
       def partition_fix(column, qualifier=nil)
         column
       end
+
+      def uuid
+        uuid_items
+          .zip([Sequel.cast_string('/')] * (uuid_items.length - 1))
+          .flatten
+          .compact
+          .inject(:+)
+      end
+
+      def uuid_items
+        %w(person_id criterion_id criterion_table start_date).map do |column|
+          Sequel.cast_string(column.to_sym)
+        end
+      end
     end
   end
 end

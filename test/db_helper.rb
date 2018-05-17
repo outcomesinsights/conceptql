@@ -22,7 +22,18 @@ class Minitest::Spec
   end
 
   def results(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| dataset(query(stmt)).from_self.order(:person_id, :criterion_table, :criterion_id).all}
+    load_check(test_name, statement) do |stmt|
+      ds = dataset(query(stmt)).from_self
+
+      order_columns = [:person_id, :criterion_table, :criterion_id, :start_date]
+      order_columns << :uuid if ds.columns.include?(:uuid)
+      ds = ds.order(*order_columns)
+
+      results = ds.all
+      results.each do |h|
+        h.transform_values! { |v| v.is_a?(Time) || v.is_a?(DateTime) ? v.to_date : v }
+      end
+    end
   end
 
   def query(statement)
