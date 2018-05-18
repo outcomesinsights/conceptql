@@ -5,7 +5,7 @@ if [[ -z "${USING_POSTGRESQL}" ]]; then
 fi
 
 set -x
-sudo pip install pyOpenSSL cryptography idna certifi urllib3[secure] sqlparse
+pip install --user pyOpenSSL cryptography idna certifi urllib3[secure] sqlparse
 find /var/ramfs/postgresql/9.{2,3,4,5} -maxdepth 0 -print | sudo xargs rm -rf
 df -h
 sudo service postgresql stop 9.6
