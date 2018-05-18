@@ -19,7 +19,7 @@ services:
 - postgresql
 before_install:
 - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
-script: travis_wait 40 bash -c "bash .travis.postgres.sh && bash .travis.impala.sh"
+script: travis_wait 40 bash -c 'bash .travis.postgres.sh && bash .travis.impala.sh'
 notifications:
   slack:
     secure: YrvvLrIOgRIzqb01GbektA0YZXCieghuhaU3O4vBW/otrz26twb/0zeB/HHqKS3P2re0R127wGw6nAUAG9ieEHPYMKcpZZWzvnPrqQ/5ASbIZWX85fps0svFEeQTqRjK8TdHC/0ZJoy3P7i6wgBoWcs434aSR4K6KgisdWJATk0=
