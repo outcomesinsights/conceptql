@@ -1,9 +1,6 @@
 #!/bin/bash
 
-echo "PosgreSQL? ${USE_POSTGRESQL}"
-echo "Impala? ${USE_IMPALA}"
-
-if [[ -z "${USE_IMPALA}" ]]; then
+if env | grep USE_IMPALA ; then
   exit 0
 fi
 
