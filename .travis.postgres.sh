@@ -2,6 +2,7 @@
 
 echo "PosgreSQL? ${USE_POSTGRESQL}"
 echo "Impala? ${USE_IMPALA}"
+env | sort
 
 if [[ -z "${USE_POSTGRESQL}" ]]; then
   exit 0

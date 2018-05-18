@@ -5,6 +5,11 @@ rvm:
 dist: trusty
 sudo: false
 gemfile: ".travis.gemfile"
+env:
+- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USE_POSTRESQL=1
+- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USE_POSTRESQL=1
+- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USE_IMPALA=1
+- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USE_IMPALA=1
 addons:
   postgresql: '9.6'
   apt:
@@ -24,16 +29,6 @@ notifications:
 
 jobs:
   include:
-    - stage: Testing
-      env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
-      before_install: bash .travis.postgres.sh
-      before_script: bundle exec rake diagnostics
-      script: travis_wait 40 bundle exec ruby test/all.rb
-    - stage: Testing
-      env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250"
-      before_install: bash .travis.impala.sh
-      before_script: bundle exec rake diagnostics
-      script: travis_wait 40 bundle exec ruby test/all.rb
     - stage: Ping Jigsaw
       before_install: gem install tping
       before_script: skip
