@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ( env | grep USE_POSTGRESQL ) ; then
+if env | grep -q USE_POSTGRESQL ; then
   echo "Using PostgreSQL..."
   exit 0
 fi

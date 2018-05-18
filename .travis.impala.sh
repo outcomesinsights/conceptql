@@ -1,7 +1,9 @@
 #!/bin/bash
 
 env | sort
-if ( env | grep USE_IMPALA ) ; then
+env | grep -q USE_IMPALA
+
+if env | grep -q USE_IMPALA ; then
   echo "Using Impala..."
   exit 0
 fi
