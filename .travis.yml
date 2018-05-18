@@ -7,11 +7,13 @@ sudo: false
 gemfile: ".travis.gemfile"
 env:
   global:
-  - CONCEPTQL_DATA_MODEL=omopv4_plus SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
+  - CONCEPTQL_DATA_MODEL=omopv4_plus
   - secure: krTfSi0Itzy6NbTg3Fe/H/uyI5mjG6tYjE6G5zSmkl4ftmiDZ8ziI8YEXl5tnOlQtCPJxHzCLFlzfxFle11g+8at8WA7Fc3zwC+LEIDGV7HLG2dev4K18vM7sAtbvbFseprJGQZb1jWf7rez6ie3cp0K4SeLzRl5HWMyCj/HG3A=
   matrix:
-  - CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch
-  - CONCEPTQL_FORCE_TEMP_TABLES=false
+  - CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USING_POSTRESQL=true
+  - CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USING_POSTRESQL=true
+  - CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USING_IMPALA=true
+  - CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USING_IMPALA=true
 addons:
   postgresql: '9.6'
   apt:
@@ -20,7 +22,8 @@ addons:
 services:
 - postgresql
 before_install:
-  - bash .travis.postgres.sh
+- bash .travis.postgres.sh
+- bash .travis.impala.sh
 before_script:
 - bundle exec rake diagnostics
 script: travis_wait 40 bundle exec ruby test/all.rb
