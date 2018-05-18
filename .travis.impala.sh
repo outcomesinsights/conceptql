@@ -2,8 +2,7 @@
 
 set -x
 
-test -n "${USE_IMPALA}" || echo "Not using Impala..."
-test -n "${USE_IMPALA}" || exit 0
+echo "${SEQUELIZER_URI}" | grep -i impala || exit 0
 
 eval "$(ssh-agent -s)"
 ssh-add <(echo "${IMPALA_CLUSTER_PRIVATE_KEY_BASE64}" | base64 --decode)

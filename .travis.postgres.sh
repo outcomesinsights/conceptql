@@ -2,8 +2,7 @@
 
 set -x
 
-test -n "${USE_POSTGRESQL}" || echo "Not using PostgreSQL..."
-test -n "${USE_POSTGRESQL}" || exit 0
+echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
 
 pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
 find /var/ramfs/postgresql/9.{2,3,4,5} -maxdepth 0 -print | sudo xargs rm -rf
