@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ -z "${USING_POSTGRESQL}" ]]; then
-  return
+  exit 0
 fi
 
 set -x
