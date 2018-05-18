@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "PosgreSQL? ${USING_POSTGRESQL}"
-echo "Impala? ${USING_IMPALA}"
+echo "PosgreSQL? ${USE_POSTGRESQL}"
+echo "Impala? ${USE_IMPALA}"
 
-if [[ -z "${USING_POSTGRESQL}" ]]; then
+if [[ -z "${USE_POSTGRESQL}" ]]; then
   exit 0
 fi
 
