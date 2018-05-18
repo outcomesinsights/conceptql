@@ -1,6 +1,6 @@
 #!/bin/bash
 
-env | grep -q USE_IMPALA
+env | grep -q USE_POSTGRESQL
 if [ $? -ne 0 ] ; then
   echo "Not using PostgreSQL..."
   exit 0
