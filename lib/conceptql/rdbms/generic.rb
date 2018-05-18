@@ -20,11 +20,11 @@ module ConceptQL
         ds = Sequel[ds] if ds.is_a?(Symbol)
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
-        ds.where(ds.db[table.as(:r)]
+        ds.from_self(alias: :l).where(ds.db[table.as(:r)]
           .select(1)
           .where(expr)
           .exists
-        )
+        ).from_self
       end
 
       def cast_date(date)
