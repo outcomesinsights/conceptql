@@ -7,10 +7,10 @@ sudo: false
 gemfile: ".travis.gemfile"
 env:
   matrix:
-  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USING_POSTRESQL=true
-  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USING_POSTRESQL=true
-  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USING_IMPALA=true
-  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USING_IMPALA=true
+  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USING_POSTRESQL=1
+  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres" USING_POSTRESQL=1
+  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USING_IMPALA=1
+  - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://nonworker1.hadoop.jsaw.io/synpuf250" USING_IMPALA=1
 addons:
   postgresql: '9.6'
   apt:
