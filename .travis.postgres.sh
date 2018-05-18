@@ -1,6 +1,10 @@
 #!/bin/bash
 
-gem install bundler tping
+if [[ -z "${USING_POSTGRESQL}" ]]; then
+  return
+fi
+
+set -x
 sudo pip install pyOpenSSL cryptography idna certifi urllib3[secure] sqlparse
 find /var/ramfs/postgresql/9.{2,3,4,5} -maxdepth 0 -print | sudo xargs rm -rf
 df -h
@@ -13,4 +17,4 @@ psql -c 'create database synpuf_250_20160815;' -U postgres
 psql -c 'create schema scratch;' -U postgres -d synpuf_250_20160815
 curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres -d synpuf_250_20160815 > /tmp/restore.log 2>&1 || cat /tmp/restore.log
 df -h
-
+set +x
