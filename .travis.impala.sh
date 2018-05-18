@@ -1,13 +1,8 @@
 #!/bin/bash
 
-
-env | grep -q USE_IMPALA
-if [ $? -ne 0 ] ; then
-  echo "Not using Impala..."
-  exit 0
-fi
-
 set -x
+
+test -n "${USE_IMPALA}" || ( echo "Not using Impala..." && exit 0 )
 
 eval "$(ssh-agent -s)"
 ssh-add <(echo "${IMPALA_CLUSTER_PRIVATE_KEY_BASE64}" | base64 --decode)
