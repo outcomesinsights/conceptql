@@ -18,8 +18,8 @@ addons:
 services:
 - postgresql
 before_install:
-- bash .travis.postgres.sh
-- bash .travis.impala.sh
+- USE_POSTGRESQL=${USE_POSTGRESQL} bash .travis.postgres.sh
+- USE_IMPALA=${USE_IMPALA} bash .travis.impala.sh
 before_script:
 - bundle exec rake diagnostics
 script: travis_wait 40 bundle exec ruby test/all.rb
