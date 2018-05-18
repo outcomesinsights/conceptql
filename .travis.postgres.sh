@@ -16,7 +16,7 @@ psql -c 'create schema scratch;' -U postgres -d synpuf_250_20160815
 curl -sSL "http://synpuf250.omopv4_plus.data.jsaw.io" | gunzip -c | psql -U postgres -d synpuf_250_20160815 > /tmp/restore.log 2>&1 || cat /tmp/restore.log
 df -h
 
-travis_wait 40 bundle exec ruby test/all.rb
+bundle exec ruby test/all.rb
 result=$?
 
 set +x
