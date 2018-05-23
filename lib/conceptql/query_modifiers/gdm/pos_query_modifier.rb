@@ -7,7 +7,7 @@ module ConceptQL
         attr :join_id, :table, :source_column, :column
 
         def self.provided_columns
-          [:place_of_service_concept_id]
+          [:visit_source_concept_id]
         end
 
         def self.has_required_columns?(cols)
@@ -18,7 +18,7 @@ module ConceptQL
 
         def initialize(*args)
           super
-          @column = :place_of_service_concept_id
+          @column = :visit_source_concept_id
           @join_id = :context_id
           @table = :contexts
           @source_column = :pos_concept_id

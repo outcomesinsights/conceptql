@@ -9,7 +9,7 @@ module ConceptQL
 
       def query_modifier_for(column)
         {
-          place_of_service_concept_id: ConceptQL::QueryModifiers::Gdm::PoSQueryModifier,
+          visit_source_concept_id: ConceptQL::QueryModifiers::Gdm::PoSQueryModifier,
           provider_id: ConceptQL::QueryModifiers::Gdm::ProviderQueryModifier,
           drug_name: ConceptQL::QueryModifiers::Gdm::DrugQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::Gdm::ProvenanceQueryModifier,
@@ -79,13 +79,6 @@ module ConceptQL
         end
         Sequel.identifier(col).as(:person_id)
       end
-=begin
-      def person_id_column(query)
-        return Sequel.expr(:patient_id).as(:person_id) if query_columns(query).include?(:patient_id)
-        return Sequel.expr(:id).as(:person_id) if query_columns(query).include?(:birth_date)
-        :person_id
-      end
-=end
 
       def data_model
         :gdm

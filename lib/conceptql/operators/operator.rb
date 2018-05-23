@@ -386,7 +386,7 @@ module ConceptQL
         special_columns = {
           provenance_type: Proc.new { provenance_type(query, table) },
           provider_id: Proc.new { provider_id(query, table) },
-          place_of_service_concept_id: Proc.new { dm.place_of_service_concept_id(query, table) }
+          visit_source_concept_id: Proc.new { dm.place_of_service_concept_id(query, table) }
         }
 
         additional_cols = special_columns.each_with_object([]) do |(column, proc_obj), columns|
@@ -429,7 +429,7 @@ module ConceptQL
 
       def modify_query(query, table)
         {
-          place_of_service_concept_id: dm.query_modifier_for(:place_of_service_concept_id),
+          visit_source_concept_id: dm.query_modifier_for(:visit_source_concept_id),
           drug_name: dm.query_modifier_for(:drug_name)
         }.each do |column, klass|
           #p [table, column, table, join_id, source_column]

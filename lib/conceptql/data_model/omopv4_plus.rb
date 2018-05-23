@@ -17,7 +17,7 @@ module ConceptQL
 
       def query_modifier_for(column)
         {
-          place_of_service_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,
+          visit_source_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,
           provider_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
           drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::Omopv4Plus::ProvenanceQueryModifier,
@@ -168,7 +168,7 @@ module ConceptQL
 
       def query_modifiers
         {
-          place_of_service_concept_id: query_modifier_for(:place_of_service_concept_id),
+          visit_source_concept_id: query_modifier_for(:visit_source_concept_id),
           provider_id: query_modifier_for(:provider_id),
           drug_name: query_modifier_for(:drug_name),
           provenance_type: query_modifier_for(:provenance_type),
@@ -197,24 +197,7 @@ module ConceptQL
         end
       end
 
-=begin
-      def query_columns(query)
-        unless cols = query.opts[:force_columns]
-          cols = operator.query_cols
-        end
-
-        if ENV['CONCEPTQL_CHECK_COLUMNS']
-          if cols.sort != query.columns.sort
-            raise "columns don't match:\nclass: #{self.class}\nexpected: #{cols}\nactual: #{query.columns}\nvalues: #{values}\nSQL: #{query.sql}"
-          end
-        end
-
-        cols
-      end
-=end
-
       def place_of_service_concept_id(query, domain)
-        #return :place_of_service_concept_id if query_columns(query).include?(:place_of_service_concept_id)
         place_of_service_concept_id_column(query, domain)
       end
 
@@ -331,7 +314,7 @@ module ConceptQL
 
       def place_of_service_concept_id_column(query, domain)
         return nil if domain.nil?
-        return Sequel.cast(:place_of_service_concept_id, :Bigint) if table_cols(domain).include?(pos_table_fk)
+        return Sequel.cast(:visit_source_concept_id, :Bigint) if table_cols(domain).include?(pos_table_fk)
         return nil
       end
 

@@ -26,12 +26,12 @@ Common values include 21 (inpatient hospital), 23 (emergency room), and 11 (offi
       allows_one_upstream
       validate_one_upstream
       validate_at_least_one_argument
-      require_column :place_of_service_concept_id
+      require_column :visit_source_concept_id
       default_query_columns
 
       def query(db)
         db.from(stream.evaluate(db))
-          .where(place_of_service_concept_id: place_of_service_concept_ids(db))
+          .where(visit_source_concept_id: place_of_service_concept_ids(db))
       end
 
     private

@@ -33,7 +33,7 @@ module ConceptQL
       visit_occurrence_id: :Bigint,
       provenance_type: :Bigint,
       provider_id: :Bigint,
-      place_of_service_concept_id: :Bigint,
+      visit_source_concept_id: :Bigint,
       range_low: :Float,
       range_high: :Float,
       drug_name: :String,

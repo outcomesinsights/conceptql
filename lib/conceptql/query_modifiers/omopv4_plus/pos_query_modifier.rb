@@ -7,7 +7,7 @@ module ConceptQL
         attr :join_id, :table, :source_column, :column
 
         def self.provided_columns
-          [:place_of_service_concept_id]
+          [:visit_source_concept_id]
         end
 
         def self.has_required_columns?(cols)
@@ -18,7 +18,7 @@ module ConceptQL
 
         def initialize(*args)
           super
-          @column = :place_of_service_concept_id
+          @column = :visit_source_concept_id
           @join_id = :visit_occurrence_id
           @table = :visit_occurrence
           @source_column = op.omopv4? ? :place_of_service_concept_id : :visit_source_concept_id
@@ -26,6 +26,8 @@ module ConceptQL
 
         def modified_query
           return query unless dm.table_cols(source_table).include?(join_id)
+          return query if dm.table_cols(source_table).include?(column)
+
           left_alias = "tab1".to_sym
           right_alias = "tab2".to_sym
 
