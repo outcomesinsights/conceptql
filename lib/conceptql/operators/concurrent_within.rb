@@ -13,7 +13,7 @@ module ConceptQL
       validate_at_least_one_upstream
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
-      category "Modify Data"
+      category "Combine Streams"
       basic_type :temporal
       default_query_columns
 
