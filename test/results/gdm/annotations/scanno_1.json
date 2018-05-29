@@ -1,11 +1,5 @@
 {
   "errors": {
-    "union ": [
-      [
-        "invalid operator",
-        "union "
-      ]
-    ]
   },
   "warnings": {
     "cpt": [
@@ -34,7 +28,7 @@
         "n": 0
       }
     },
-    "union ": {
+    "union": {
       "procedure_occurrence": {
         "rows": 0,
         "n": 0
