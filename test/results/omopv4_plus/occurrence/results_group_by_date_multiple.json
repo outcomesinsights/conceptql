@@ -7,7 +7,7 @@
     "start_date": "2009-03-30",
     "end_date": "2009-03-30",
     "source_value": "401.9",
-    "source_vocabulary_id": 2
+    "source_vocabulary_id": "2"
   },
   {
     "person_id": 2,
@@ -17,6 +17,6 @@
     "start_date": "2009-03-30",
     "end_date": "2009-03-30",
     "source_value": "401.9",
-    "source_vocabulary_id": 2
+    "source_vocabulary_id": "2"
   }
 ]

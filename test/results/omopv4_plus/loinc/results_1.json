@@ -7,7 +7,7 @@
     "start_date": "2010-02-15",
     "end_date": "2010-02-15",
     "source_value": "2089-1",
-    "source_vocabulary_id": 6,
+    "source_vocabulary_id": "6",
     "value_as_number": 118.0,
     "value_as_string": null,
     "value_as_concept_id": null,

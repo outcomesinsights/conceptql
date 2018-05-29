@@ -186,7 +186,7 @@ module ConceptQL
           start_date: start_date,
           end_date: end_date,
           source_value: Sequel.cast_string(source_value_column(table)).as(:source_value),
-          source_vocabulary_id: Sequel.cast_numeric(source_vocabulary_id(table)).as(:source_vocabulary_id)
+          source_vocabulary_id: Sequel.cast_string(source_vocabulary_id(table)).as(:source_vocabulary_id)
         }
       end
 

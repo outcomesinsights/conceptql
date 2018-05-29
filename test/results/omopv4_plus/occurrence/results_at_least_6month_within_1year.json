@@ -7,7 +7,7 @@
     "start_date": "2009-05-16",
     "end_date": "2009-05-16",
     "source_value": "401.9",
-    "source_vocabulary_id": 2
+    "source_vocabulary_id": "2"
   },
   {
     "person_id": 2,
@@ -17,7 +17,7 @@
     "start_date": "2009-05-16",
     "end_date": "2009-05-16",
     "source_value": "401.9",
-    "source_vocabulary_id": 2
+    "source_vocabulary_id": "2"
   },
   {
     "person_id": 2,
@@ -27,7 +27,7 @@
     "start_date": "2009-05-16",
     "end_date": "2009-05-16",
     "source_value": "250.00",
-    "source_vocabulary_id": 2
+    "source_vocabulary_id": "2"
   },
   {
     "person_id": 2,
@@ -37,6 +37,6 @@
     "start_date": "2009-05-16",
     "end_date": "2009-05-16",
     "source_value": "250.00",
-    "source_vocabulary_id": 2
+    "source_vocabulary_id": "2"
   }
 ]
