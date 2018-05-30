@@ -22,4 +22,6 @@ test/tmp
 test/version_tmp
 tmp
 yamls/
+Gemfile.local
+Gemfile.local.lock
 doc/.?????????*
