@@ -8,8 +8,8 @@
       "annotation": {
         "counts": {
           "patients": {
-            "rows": 250,
-            "n": 250
+            "rows": 248,
+            "n": 248
           },
           "person": {
             "rows": 0,
@@ -24,8 +24,8 @@
     "annotation": {
       "counts": {
         "patients": {
-          "rows": 250,
-          "n": 250
+          "rows": 248,
+          "n": 248
         },
         "person": {
           "rows": 0,

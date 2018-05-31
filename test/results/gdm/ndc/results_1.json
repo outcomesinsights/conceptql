@@ -1,3 +1,47 @@
 [
-
+  {
+    "person_id": 82,
+    "criterion_id": 872273,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "drug_exposure",
+    "start_date": "2008-01-10",
+    "end_date": "2008-01-10",
+    "source_value": "00247227330",
+    "source_vocabulary_id": "NDC",
+    "drug_name": "clopidogrel 75 MG Oral Tablet",
+    "drug_amount": null,
+    "drug_amount_units": null,
+    "drug_quantity": null,
+    "drug_days_supply": 30
+  },
+  {
+    "person_id": 95,
+    "criterion_id": 1036090,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "drug_exposure",
+    "start_date": "2008-01-20",
+    "end_date": "2008-01-20",
+    "source_value": "00247227330",
+    "source_vocabulary_id": "NDC",
+    "drug_name": "clopidogrel 75 MG Oral Tablet",
+    "drug_amount": null,
+    "drug_amount_units": null,
+    "drug_quantity": null,
+    "drug_days_supply": 30
+  },
+  {
+    "person_id": 139,
+    "criterion_id": 6066024,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "drug_exposure",
+    "start_date": "2008-09-09",
+    "end_date": "2008-09-09",
+    "source_value": "00247227330",
+    "source_vocabulary_id": "NDC",
+    "drug_name": "clopidogrel 75 MG Oral Tablet",
+    "drug_amount": null,
+    "drug_amount_units": null,
+    "drug_quantity": null,
+    "drug_days_supply": 30
+  }
 ]

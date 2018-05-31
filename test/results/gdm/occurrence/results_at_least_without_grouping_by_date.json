@@ -1,3 +1,152 @@
 [
-
+  {
+    "person_id": 2,
+    "criterion_id": 150853,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-12",
+    "end_date": "2009-04-18",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 150853,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-04-12",
+    "end_date": "2009-04-18",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 195895,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-26",
+    "end_date": "2010-07-01",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 195895,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-06-26",
+    "end_date": "2010-07-01",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 54732477,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-16",
+    "end_date": "2009-05-16",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 54732477,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-16",
+    "end_date": "2009-05-16",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 59427868,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "45981",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 59427868,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "45981",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 62446363,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-31",
+    "end_date": "2009-07-31",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 62446363,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-31",
+    "end_date": "2009-07-31",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 62446363,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-07-31",
+    "end_date": "2009-07-31",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 63452462,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-12-06",
+    "end_date": "2009-12-06",
+    "source_value": "78093",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 66648381,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-02-23",
+    "end_date": "2010-02-23",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 67756435,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-11",
+    "end_date": "2009-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 67756435,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-11",
+    "end_date": "2009-05-11",
+    "source_value": "25000",
+    "source_vocabulary_id": "ICD9CM"
+  }
 ]

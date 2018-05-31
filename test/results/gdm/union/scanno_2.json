@@ -16,20 +16,20 @@
   "counts": {
     "1": {
       "condition_occurrence": {
-        "rows": 81,
-        "n": 30
+        "rows": 48,
+        "n": 37
       }
     },
     "2": {
       "condition_occurrence": {
-        "rows": 3855,
-        "n": 184
+        "rows": 1520,
+        "n": 188
       }
     },
     "union": {
       "condition_occurrence": {
-        "rows": 3936,
-        "n": 186
+        "rows": 1568,
+        "n": 188
       }
     }
   }
