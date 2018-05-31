@@ -27,7 +27,11 @@ module ConceptQL
 
         def modified_query
           return query unless self.class.has_required_columns?(dm.table_cols(source_table))
-          query.select_append(Sequel[dm.provenance_type_column(query, source_table)].as(:provenance_type)).from_self
+          query.from_self(alias: :cc)
+            .left_join(Sequel[:contexts].as(:c), Sequel[:cc][:context_id] => Sequel[:c][:id])
+            .select_all(:cc)
+            .select_append(Sequel[:c][:source_type_concept_id].as(:provenance_type))
+            .from_self
         end
       end
     end
