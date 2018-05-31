@@ -3,7 +3,7 @@ begin
 rescue LoadError
 end
 
-ENV['DATA_MODEL'] ||= 'omopv4_plus'
+ENV['CONCEPTQL_DATA_MODEL'] ||= 'omopv4_plus'
 
 desc "Setup test database"
 task :test_db_setup do
@@ -16,7 +16,7 @@ task :test_db_teardown do
 end
 
 run_spec = lambda do |data_model|
-  sh "DATA_MODEL=#{data_model} #{FileUtils::RUBY} test/all.rb"
+  sh "CONCEPTQL_DATA_MODEL=#{data_model} #{FileUtils::RUBY} test/all.rb"
 end
 
 desc "Run tests with omopv4_plus data model"
