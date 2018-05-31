@@ -13,22 +13,28 @@ module ConceptQL
       validate_no_arguments
       require_column :visit_occurrence_id
 
+
       def query(db)
-        events_with_common_visits(db).inject { |q, query| q.union(query, all: true) }
+        if gdm?
+          gdm(db)
+        else
+          events_with_common_visits(db).inject { |q, query| q.union(query, all: true) }
+        end
       end
 
       def gdm(db)
+
         contexteds = upstreams.map do |stream|
           contextify(db, stream)
         end
 
-        context_ids_only = contexteds.map do |contexted|
-          contexted.select(:context_id)
-        end
-
-        shared_context_ids = context_ids_only.inject do |q, tab|
-          q.intersect(tab)
-        end
+        # Get all context_id's that are in all streams and do not share the same critierion_id
+        first, *rest = *contexteds
+        shared_context_ids = rest.inject(first.from_self(alias: :first)) do |q, shared_event|
+            q.join(shared_event.select(:context_id, :criterion_id), context_id: :context_id) do |a,b|
+            ~(Sequel.qualify(a,:criterion_id) =~ Sequel.qualify(b,:criterion_id) )
+          end.select(Sequel[:first][:context_id]).distinct
+        end.from_self
 
         name = cte_name(:shared_context_ids)
         shared_events = contexteds.map do |contexted|
@@ -45,6 +51,7 @@ module ConceptQL
           .join(Sequel[:clinical_codes].as(:c), id: :criterion_id)
           .select_all(:s)
           .select_append(Sequel[:c][:context_id].as(:context_id))
+          .where(criterion_domain: "condition_occurrence")
           .from_self
       end
 
