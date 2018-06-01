@@ -1,4 +1,4 @@
-ENV['DATA_MODEL'] ||= 'omopv4_plus'
+ENV['CONCEPTQL_DATA_MODEL'] ||= 'omopv4_plus'
 
 if ENV['COVERAGE']
   require 'coverage'

@@ -5,7 +5,7 @@ require "logger"
 require "pp"
 require "fileutils"
 
-CDB = ConceptQL::Database.new(DB, :data_model=>ENV["DATA_MODEL"].to_sym)
+CDB = ConceptQL::Database.new(DB, :data_model=>ENV["CONCEPTQL_DATA_MODEL"].to_sym)
 DB.extension :error_sql
 
 class Minitest::Spec
@@ -67,7 +67,7 @@ class Minitest::Spec
   end
 
   def check_output(test_name, results)
-    path = "test/results/#{ENV["DATA_MODEL"]}/#{test_name}"
+    path = "test/results/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name}"
 
     if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
       save_results(path, results)
