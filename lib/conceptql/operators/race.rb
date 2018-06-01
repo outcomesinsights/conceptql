@@ -55,6 +55,8 @@ module ConceptQL
 
         c_ids = (concept_ids.from_self.select_map(:concept_id) + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
 
+        c_ids = dm.related_concept_ids(db,c_ids) if gdm?
+
         q = db.from(source_table)
         if words.any? { |w| w.match(/unknown/i) }
           c_ids << 0

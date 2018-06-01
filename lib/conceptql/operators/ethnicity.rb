@@ -22,11 +22,7 @@ module ConceptQL
       end
 
       def source_table
-        if gdm?
-          :patients
-        else
-          :person
-        end
+        dm.person_table
       end
 
       def query(db)

@@ -3,9 +3,6 @@ require_relative "omopv4_plus"
 module ConceptQL
   module DataModel
     class Gdm < Omopv4Plus
-      def person_table
-        :patients
-      end
 
       def query_modifier_for(column)
         {
@@ -112,7 +109,9 @@ module ConceptQL
       # The mappings table will tell us what other concepts have been directly
       # mapped to the concepts passed in
       def related_concept_ids(db, *ids)
-        other_ids = db[:mappings].where(concept_id_2: ids).where(Sequel.ilike(:relationship_id, "IS_A")).select_map(:concept_id_1)
+
+        ids = ids.flatten
+        other_ids = db[:mappings].where(concept_id_2: ids).where{Sequel.function(:lower, :relationship_id) =~ 'is_a'}.select_map(:concept_id_1)
         other_ids + ids
       end
 
