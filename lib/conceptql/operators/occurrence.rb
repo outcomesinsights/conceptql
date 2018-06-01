@@ -77,7 +77,7 @@ occurrence, this operator returns nothing for that person.
       # If within is specified, assume an at_least of everything after the current event to not pick
       # prior occurrences when doing the self join.
       def query_complex(db)
-        input_name = cte_name(:occurrence_input)
+        input_name = unqualified_cte_name(:occurrence_input)
 
         # Give a global row number to all rows, so that the self joined dataset can partition based on
         # the global row number when ordering
@@ -86,7 +86,7 @@ occurrence, this operator returns nothing for that person.
 
         first = Sequel[:first]
         rest = Sequel[:rest]
-        joined_name = cte_name(:occurrence_joined)
+        joined_name = unqualified_cte_name(:occurrence_joined)
         joined_ds = db[Sequel[input_name].as(:first)]
           .join(Sequel[input_name].as(:rest), :person_id=>:person_id) do
             cond = rest[:global_rn] > first[:global_rn]
@@ -171,6 +171,13 @@ occurrence, this operator returns nothing for that person.
           order << criterion_id
         end
         order
+      end
+
+      def unqualified_cte_name(name)
+        name = cte_name(name)
+        name = name.column if name.is_a?(Sequel::SQL::QualifiedIdentifier)
+        name = Sequel::SQL::Identifier.new(name) if name.is_a?(String)
+        name
       end
     end
   end
