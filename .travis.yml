@@ -6,9 +6,7 @@ sudo: false
 gemfile: ".travis.gemfile"
 env:
 - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
-- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://localhost/synpuf250"
 - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/synpuf_250_20160815?username=postgres"
-- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
 addons:
   postgresql: '9.6'
   apt:
@@ -18,13 +16,21 @@ services:
 - postgresql
 before_install:
 - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
-script: travis_wait 40 bash .travis.postgres.sh && travis_wait 40 bash .travis.impala.sh
+script: travis_wait 40 bash .travis.postgres.sh
 notifications:
   slack:
     secure: YrvvLrIOgRIzqb01GbektA0YZXCieghuhaU3O4vBW/otrz26twb/0zeB/HHqKS3P2re0R127wGw6nAUAG9ieEHPYMKcpZZWzvnPrqQ/5ASbIZWX85fps0svFEeQTqRjK8TdHC/0ZJoy3P7i6wgBoWcs434aSR4K6KgisdWJATk0=
 
 jobs:
   include:
+    - stage: Impala Test 1
+      env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://localhost/synpuf250"
+      script: travis_wait 40 bash .travis.impala.sh
+      allow_failure: true
+    - stage: Impala Test 2
+      env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+      script: travis_wait 40 bash .travis.impala.sh
+      allow_failure: true
     - stage: Ping Jigsaw
       before_install: gem install tping
       before_script: skip
