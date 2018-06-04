@@ -248,10 +248,10 @@ module ConceptQL
       query
     end
 
-    def with_ctes(query, db)
-      #puts
-      #p [:with_ctes, query]
+    def with_ctes(op, db)
       raise "recall operator use without matching label" unless valid?
+
+      query = op.evaluate(db)
       query = query.from_self
       temp_tables = ctes.map do |label, operator|
         [label_cte_name(label), operator.evaluate(db)]
