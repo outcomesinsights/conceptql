@@ -25,7 +25,7 @@ module ConceptQL
     end
 
     def query
-      nodifier.scope.with_ctes(operator.evaluate(db), db)
+      nodifier.scope.with_ctes(operator, db)
     end
 
     def query_cols(opts = {})
