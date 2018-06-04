@@ -22,6 +22,7 @@ notifications:
     secure: YrvvLrIOgRIzqb01GbektA0YZXCieghuhaU3O4vBW/otrz26twb/0zeB/HHqKS3P2re0R127wGw6nAUAG9ieEHPYMKcpZZWzvnPrqQ/5ASbIZWX85fps0svFEeQTqRjK8TdHC/0ZJoy3P7i6wgBoWcs434aSR4K6KgisdWJATk0=
 
 jobs:
+  fast_finish: true
   include:
     - stage: Impala Test No Temp Tables
       env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
