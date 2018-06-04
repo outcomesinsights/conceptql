@@ -23,6 +23,12 @@ notifications:
 
 jobs:
   include:
+    - stage: Ping Jigsaw
+      before_install: gem install tping
+      before_script: skip
+      script:
+        - tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw-diagram-editor pro
+        - tping $TRAVIS_PRO_TOKEN outcomesinsights t_shank pro
     - stage: Impala Test 1
       env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 40 bash .travis.impala.sh
@@ -31,10 +37,4 @@ jobs:
       env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 40 bash .travis.impala.sh
       allow_failure: true
-    - stage: Ping Jigsaw
-      before_install: gem install tping
-      before_script: skip
-      script:
-        - tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw-diagram-editor pro
-        - tping $TRAVIS_PRO_TOKEN outcomesinsights t_shank pro
 
