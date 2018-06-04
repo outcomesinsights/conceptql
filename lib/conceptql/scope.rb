@@ -252,6 +252,8 @@ module ConceptQL
       raise "recall operator use without matching label" unless valid?
 
       query = op.evaluate(db)
+      rdbms = op.rdbms
+
       query = query.from_self
       temp_tables = ctes.map do |label, operator|
         [label_cte_name(label), operator.evaluate(db)]
@@ -272,7 +274,8 @@ module ConceptQL
                 begin
                   temp_tables.each do |table_name, ds|
                     #p [:create_table, table_name]
-                    db.create_table(table_name, as: ds)
+                    db.create_table(table_name, rdbms.create_options.merge(as: ds))
+                    rdbms.post_create(db, table_name)
                   end
 
                   clone(:conceptql_temp_tables_created=>true).send(meth, *args, &block)
@@ -296,7 +299,7 @@ module ConceptQL
             opts ||= {}
             table_names = temp_tables.reverse_each.map(&:first)
             begin
-              db.drop_table?(*table_names, opts.merge(cascade: true, purge: true))
+              db.drop_table?(*table_names, rdbms.drop_options.merge(opts))
             rescue Sequel::DatabaseError
               warn("Unable to drop scratch table: #{literal(*table_names)}")
             end
