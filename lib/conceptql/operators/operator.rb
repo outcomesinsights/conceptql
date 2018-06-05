@@ -166,7 +166,7 @@ module ConceptQL
         res = [op_name, *annotate_values(db, opts)]
 
         if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
-          scope.with_ctes(evaluate(db), db)
+          scope.with_ctes(self, db)
             .from_self
             .select_group(:criterion_domain)
             .select_append{Sequel.function(:count, 1).as(:rows)}

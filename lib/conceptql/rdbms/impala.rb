@@ -35,6 +35,23 @@ module ConceptQL
         end
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
+
+      def create_options
+        {
+          parquet: true
+        }
+      end
+
+      def post_create(db, table_name)
+        db.compute_stats(table_name)
+      end
+
+      def drop_options
+        {
+          cascade: true,
+          purge: true
+        }
+      end
     end
   end
 end
