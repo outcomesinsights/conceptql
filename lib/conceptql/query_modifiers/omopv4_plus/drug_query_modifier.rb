@@ -47,28 +47,14 @@ module ConceptQL
         def micro_table(drug_concept_ids)
           # TODO: Does drug_strength only have RXNORM concept_ids?
           # TODO: What is vocabulary for units?  Can we shrink concept table to just that vocab before joining?
-          collapsed_strengths = db[:drug_strength]
-            .where(drug_concept_id: drug_concept_ids)
-            .select_group(:drug_concept_id)
-            .select_append(
-              Sequel.function(:min, :amount_value).as(:amount_value),
-              Sequel.function(:min, :amount_unit).as(:amount_unit),
-              Sequel.function(:count, 1).as(:dcount)
-            )
-
-          value_case = Sequel.case({ 1 => :amount_value }, -1, :dcount).as(:amount_value)
-          unit_case = Sequel.case({ 1 => :amount_unit }, "N/A", :dcount).as(:amount_unit)
-
-          collapsed_strengths = collapsed_strengths.from_self.select(:drug_concept_id, value_case, unit_case)
-
           db.from(Sequel[:concept].as(:dc))
-            .left_join(collapsed_strengths, { drug_concept_id: :concept_id }, { table_alias: :ds })
+            .left_join(Sequel[:drug_strength].as(:ds), drug_concept_id: :concept_id)
             .where(Sequel[:dc][:concept_id] => drug_concept_ids)
-            .select(
-              Sequel[:dc][:concept_id].as(:drug_concept_id),
-              Sequel[:dc][:concept_name].as(:drug_name),
-              Sequel[:ds][:amount_value].as(:amount_value),
-              Sequel[:ds][:amount_unit].as(:amount_unit)
+            .select_group(Sequel[:dc][:concept_id].as(:drug_concept_id))
+            .select_append(
+              Sequel.function(:min, Sequel[:dc][:concept_name]).as(:drug_name),
+              Sequel.function(:min, Sequel[:ds][:amount_value]).as(:amount_value),
+              Sequel.function(:min, Sequel[:ds][:amount_unit]).as(:amount_unit)
             )
         end
       end
