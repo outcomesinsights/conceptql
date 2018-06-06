@@ -14,7 +14,7 @@ module ConceptQL
       end
 
       def query_cols
-        upstreams.first.query_cols
+        upstreams.map(&:query_cols).inject(:|)
       end
     end
   end

@@ -1,0 +1,23 @@
+[
+  "union",
+  [
+    "from",
+    "condition_occurrence",
+    {
+      "query_cols": [
+        "person_id",
+        "condition_source_value"
+      ]
+    }
+  ],
+  [
+    "from",
+    "condition_occurrence",
+    {
+      "query_cols": [
+        "condition_source_value",
+        "person_id"
+      ]
+    }
+  ]
+]

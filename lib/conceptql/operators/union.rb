@@ -14,7 +14,7 @@ module ConceptQL
 
       def query(db)
         upstreams.map do |expression|
-          expression.evaluate(db).from_self
+          expression.evaluate(db).from_self.select(*query_cols)
         end.inject do |q, query|
           q.union(query, all: true)
         end
