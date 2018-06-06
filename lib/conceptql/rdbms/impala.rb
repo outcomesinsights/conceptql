@@ -12,7 +12,7 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
         ds.from_self(alias: :l)
-          .left_join(table, expr, semi: true, table_alias: :r)
+          .left_semi_join(table, expr, table_alias: :r)
           .select_all(:l)
       end
 
