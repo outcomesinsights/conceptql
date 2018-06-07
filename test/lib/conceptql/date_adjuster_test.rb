@@ -120,6 +120,39 @@ describe ConceptQL::DateAdjuster do
         da.adjustments.must_equal([[:days, 1], [:days, 1], [:days, 1]])
       end
     end
+
+    describe "with YYYY-MM-DD" do
+      let(:str) { "2001-01-01" }
+
+      it "should use date literal" do
+        da.adjust(:end_date).must_equal(str)
+      end
+    end
+
+    describe "with START" do
+      let(:str) { "START" }
+
+      it "should use start_date column" do
+        da.adjust(:end_date).must_equal(Sequel[:start_date])
+      end
+    end
+
+    describe "with END" do
+      let(:str) { "END" }
+
+      it "should use end_date column" do
+        da.adjust(:start_date).must_equal(Sequel[:end_date])
+      end
+    end
+
+    describe "with R as prefix" do
+      let(:str) { "rddd" }
+
+      it "should reverse the adjustments" do
+        da.adjust(:end_date)
+        da.adjustments.must_equal([[:days, -1], [:days, -1], [:days, -1]])
+      end
+    end
   end
 end
 
