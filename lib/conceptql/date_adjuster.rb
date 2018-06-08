@@ -4,7 +4,7 @@ module ConceptQL
   # Used to translate a string of terse date adjustments into a set of adjustments that are compatible with most RDBMSs
   class DateAdjuster
 
-    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /r?[es]?([-+]?[\ddwmy]+)+/i, /\s*/])}\z/
+    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /[ers]*([-+]?[\ddwmy]+)+/i, /\s*/])}\z/
 
     attr :op, :str, :manipulator
     def initialize(op, str, opts = {})
@@ -21,21 +21,14 @@ module ConceptQL
 
       origin_column = column
 
-      if str =~ /\Ar/i
-        reverse = true
-        str.sub!(/\Ar/i, '')
-      end
-
-      if (chr = str.chars.first) =~ /S|E/i
-        origin_column = if chr.upcase == "E"
-                          :end_date
-                        else
-                          :start_date
-                        end
-        if column.respond_to?(:qualify)
-          origin_column = Sequel.qualify(column.table, origin_column)
-        end
+      while (chr = str.chars.first) =~ /[res]/i
         str.sub!(chr, '')
+        if chr.downcase == 'r'
+          reverse = true
+        else
+          origin_column = chr.downcase == 'e' ? :end_date : :start_date
+          origin_column = Sequel.qualify(column.table, origin_column) if column.respond_to?(:table)
+        end
       end
 
       adjusted_date = adjustments(reverse).inject(Sequel.expr(origin_column)) do |sql, (units, quantity)|

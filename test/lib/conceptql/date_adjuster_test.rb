@@ -1,4 +1,5 @@
 require_relative "../../helper"
+require "pp"
 
 describe ConceptQL::DateAdjuster do
   describe ".adjust" do
@@ -147,6 +148,15 @@ describe ConceptQL::DateAdjuster do
 
     describe "with R as prefix" do
       let(:str) { "rddd" }
+
+      it "should reverse the adjustments" do
+        da.adjust(:end_date)
+        da.adjustments.must_equal([[:days, -1], [:days, -1], [:days, -1]])
+      end
+    end
+
+    describe "with ER as prefix" do
+      let(:str) { "erddd" }
 
       it "should reverse the adjustments" do
         da.adjust(:end_date)
