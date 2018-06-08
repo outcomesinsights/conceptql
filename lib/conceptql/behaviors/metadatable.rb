@@ -111,8 +111,24 @@ module ConceptQL
         desc: get_desc,
         categories: @categories || [],
         basic_type: @basic_type,
-        deprecated: @deprecated
+        deprecated: @deprecated,
+        arity: arity
       }
+    end
+
+    def arity
+      case basic_type
+      when :set
+        -1
+      when :temporal, :cast
+        1
+      when :selection, nil
+        0
+      when :filter
+        2
+      else
+        raise "#{self.name} has unknown basic_type: #{basic_type.pretty_inspect}"
+      end
     end
 
     def get_desc
