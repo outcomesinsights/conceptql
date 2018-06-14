@@ -32,6 +32,8 @@ twice in an outpatient setting with a 30-day gap.
       default_query_columns
 
       require_column :provenance_type
+      require_column :admission_date
+      require_column :discharge_date
 
       attr_reader :db
 
@@ -58,12 +60,16 @@ twice in an outpatient setting with a 30-day gap.
       def valid_inpatient_events
         q = all_inpatient_events
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
-          q = q.where{ |o| Sequel.date_sub(o.end_date, o.start_date) > options[:inpatient_length_of_stay].to_i }
+          q = q.where{ |o| Sequel.date_sub(o.discharge_date, o.admission_date) > options[:inpatient_length_of_stay].to_i }
         end
 
-        if options[:inpatient_return_date] != 'Admit Date'
-          q = q.select(*(query_cols - [:start_date])).select_append(Sequel[:end_date].as(:start_date))
-        end
+        q = q.select(*(query_cols - [:start_date, :end_date]))
+
+        q = if options[:inpatient_return_date] == 'Admit Date'
+              q.select_append(Sequel[:admission_date].as(:start_date), Sequel[:admission_date].as(:end_date))
+            else
+              q.select_append(Sequel[:discharge_date].as(:start_date), Sequel[:discharge_date].as(:end_date))
+            end
 
         q.from_self.select(*dynamic_columns).from_self
       end

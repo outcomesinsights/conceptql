@@ -20,6 +20,7 @@ module ConceptQL
           visit_source_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,
           provider_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
           drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier,
+          admission_date: ConceptQL::QueryModifiers::Omopv4Plus::AdmissionDateQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::Omopv4Plus::ProvenanceQueryModifier,
         }[column]
       end
@@ -172,6 +173,7 @@ module ConceptQL
           provider_id: query_modifier_for(:provider_id),
           drug_name: query_modifier_for(:drug_name),
           provenance_type: query_modifier_for(:provenance_type),
+          admission_date: query_modifier_for(:admission_date)
         }
       end
 

@@ -41,6 +41,8 @@ module ConceptQL
       drug_amount_units: :String,
       drug_days_supply: :Float,
       drug_quantity: :Bigint,
+      admission_date: :Date,
+      discharge_date: :Date,
       uuid: :String
     }.freeze
 

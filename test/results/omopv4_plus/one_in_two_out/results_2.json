@@ -8,7 +8,9 @@
     "end_date": "2009-04-15",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2009-04-15",
+    "discharge_date": "2009-04-15"
   },
   {
     "person_id": 7,
@@ -19,7 +21,9 @@
     "end_date": "2009-07-12",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-07-12",
+    "discharge_date": "2009-07-12"
   },
   {
     "person_id": 11,
@@ -30,7 +34,9 @@
     "end_date": "2008-10-23",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2008-10-23",
+    "discharge_date": "2008-10-23"
   },
   {
     "person_id": 12,
@@ -41,7 +47,9 @@
     "end_date": "2009-10-20",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2009-10-19",
+    "discharge_date": "2009-10-20"
   },
   {
     "person_id": 13,
@@ -52,7 +60,9 @@
     "end_date": "2010-09-08",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756839
+    "provenance_type": 45756839,
+    "admission_date": "2010-09-08",
+    "discharge_date": "2010-09-08"
   },
   {
     "person_id": 14,
@@ -63,7 +73,9 @@
     "end_date": "2009-06-05",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2009-06-05",
+    "discharge_date": "2009-06-05"
   },
   {
     "person_id": 15,
@@ -74,7 +86,9 @@
     "end_date": "2010-09-01",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2010-09-01",
+    "discharge_date": "2010-09-01"
   },
   {
     "person_id": 17,
@@ -85,7 +99,9 @@
     "end_date": "2009-11-29",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2009-11-29",
+    "discharge_date": "2009-11-29"
   },
   {
     "person_id": 19,
@@ -96,7 +112,9 @@
     "end_date": "2008-04-19",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756846
+    "provenance_type": 45756846,
+    "admission_date": "2008-04-19",
+    "discharge_date": "2008-04-19"
   },
   {
     "person_id": 23,
@@ -107,7 +125,9 @@
     "end_date": "2009-10-07",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-10-07",
+    "discharge_date": "2009-10-07"
   },
   {
     "person_id": 25,
@@ -118,7 +138,9 @@
     "end_date": "2008-04-13",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2008-04-13",
+    "discharge_date": "2008-04-13"
   },
   {
     "person_id": 28,
@@ -129,7 +151,9 @@
     "end_date": "2010-04-26",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2010-04-26",
+    "discharge_date": "2010-04-26"
   },
   {
     "person_id": 35,
@@ -140,7 +164,9 @@
     "end_date": "2009-05-18",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-05-18",
+    "discharge_date": "2009-05-18"
   },
   {
     "person_id": 38,
@@ -151,7 +177,9 @@
     "end_date": "2009-03-08",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756845
+    "provenance_type": 45756845,
+    "admission_date": "2009-03-08",
+    "discharge_date": "2009-03-08"
   },
   {
     "person_id": 40,
@@ -162,7 +190,9 @@
     "end_date": "2009-06-12",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-06-12",
+    "discharge_date": "2009-06-12"
   },
   {
     "person_id": 42,
@@ -173,7 +203,9 @@
     "end_date": "2008-12-27",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2008-12-27",
+    "discharge_date": "2008-12-27"
   },
   {
     "person_id": 44,
@@ -184,7 +216,9 @@
     "end_date": "2010-02-25",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2010-02-25",
+    "discharge_date": "2010-02-25"
   },
   {
     "person_id": 46,
@@ -195,7 +229,9 @@
     "end_date": "2010-07-17",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2010-07-17",
+    "discharge_date": "2010-07-17"
   },
   {
     "person_id": 61,
@@ -206,7 +242,9 @@
     "end_date": "2009-06-08",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756844
+    "provenance_type": 45756844,
+    "admission_date": "2009-06-08",
+    "discharge_date": "2009-06-08"
   },
   {
     "person_id": 63,
@@ -217,7 +255,9 @@
     "end_date": "2009-02-15",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000203
+    "provenance_type": 38000203,
+    "admission_date": "2009-02-09",
+    "discharge_date": "2009-02-15"
   },
   {
     "person_id": 65,
@@ -228,7 +268,9 @@
     "end_date": "2008-11-26",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2008-11-26",
+    "discharge_date": "2008-11-26"
   },
   {
     "person_id": 66,
@@ -239,7 +281,9 @@
     "end_date": "2009-08-06",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000204
+    "provenance_type": 38000204,
+    "admission_date": "2009-08-04",
+    "discharge_date": "2009-08-06"
   },
   {
     "person_id": 67,
@@ -250,7 +294,9 @@
     "end_date": "2010-02-05",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756835
+    "provenance_type": 45756835,
+    "admission_date": "2010-02-05",
+    "discharge_date": "2010-02-05"
   },
   {
     "person_id": 68,
@@ -261,7 +307,9 @@
     "end_date": "2008-04-14",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000207
+    "provenance_type": 38000207,
+    "admission_date": "2008-04-09",
+    "discharge_date": "2008-04-14"
   },
   {
     "person_id": 71,
@@ -272,7 +320,9 @@
     "end_date": "2009-10-15",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000231
+    "provenance_type": 38000231,
+    "admission_date": "2009-10-15",
+    "discharge_date": "2009-10-15"
   },
   {
     "person_id": 72,
@@ -283,7 +333,9 @@
     "end_date": "2008-06-23",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2008-06-23",
+    "discharge_date": "2008-06-23"
   },
   {
     "person_id": 82,
@@ -294,7 +346,9 @@
     "end_date": "2008-04-12",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2008-04-12",
+    "discharge_date": "2008-04-12"
   },
   {
     "person_id": 83,
@@ -305,7 +359,9 @@
     "end_date": "2010-10-26",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2010-10-26",
+    "discharge_date": "2010-10-26"
   },
   {
     "person_id": 86,
@@ -316,7 +372,9 @@
     "end_date": "2008-08-02",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2008-08-02",
+    "discharge_date": "2008-08-02"
   },
   {
     "person_id": 88,
@@ -327,7 +385,9 @@
     "end_date": "2008-03-26",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000206
+    "provenance_type": 38000206,
+    "admission_date": "2008-03-23",
+    "discharge_date": "2008-03-26"
   },
   {
     "person_id": 90,
@@ -338,7 +398,9 @@
     "end_date": "2009-01-11",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2009-01-11",
+    "discharge_date": "2009-01-11"
   },
   {
     "person_id": 93,
@@ -349,7 +411,9 @@
     "end_date": "2009-05-09",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2009-05-09",
+    "discharge_date": "2009-05-09"
   },
   {
     "person_id": 95,
@@ -360,7 +424,9 @@
     "end_date": "2008-09-12",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000207
+    "provenance_type": 38000207,
+    "admission_date": "2008-09-03",
+    "discharge_date": "2008-09-12"
   },
   {
     "person_id": 96,
@@ -371,7 +437,9 @@
     "end_date": "2009-07-12",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000235
+    "provenance_type": 38000235,
+    "admission_date": "2009-07-12",
+    "discharge_date": "2009-07-12"
   },
   {
     "person_id": 104,
@@ -382,7 +450,9 @@
     "end_date": "2010-08-11",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000231
+    "provenance_type": 38000231,
+    "admission_date": "2010-08-11",
+    "discharge_date": "2010-08-11"
   },
   {
     "person_id": 105,
@@ -393,7 +463,9 @@
     "end_date": "2009-08-07",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-08-07",
+    "discharge_date": "2009-08-07"
   },
   {
     "person_id": 106,
@@ -404,7 +476,9 @@
     "end_date": "2009-08-28",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756845
+    "provenance_type": 45756845,
+    "admission_date": "2009-08-28",
+    "discharge_date": "2009-08-28"
   },
   {
     "person_id": 108,
@@ -415,7 +489,9 @@
     "end_date": "2009-08-10",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2009-08-10",
+    "discharge_date": "2009-08-10"
   },
   {
     "person_id": 110,
@@ -426,7 +502,9 @@
     "end_date": "2008-04-14",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2008-04-14",
+    "discharge_date": "2008-04-14"
   },
   {
     "person_id": 111,
@@ -437,7 +515,9 @@
     "end_date": "2010-05-26",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2010-05-22",
+    "discharge_date": "2010-05-26"
   },
   {
     "person_id": 120,
@@ -448,7 +528,9 @@
     "end_date": "2009-09-03",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2009-09-03",
+    "discharge_date": "2009-09-03"
   },
   {
     "person_id": 123,
@@ -459,7 +541,9 @@
     "end_date": "2010-02-19",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2010-02-14",
+    "discharge_date": "2010-02-19"
   },
   {
     "person_id": 126,
@@ -470,7 +554,9 @@
     "end_date": "2008-12-29",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000232
+    "provenance_type": 38000232,
+    "admission_date": "2008-12-29",
+    "discharge_date": "2008-12-29"
   },
   {
     "person_id": 131,
@@ -481,7 +567,9 @@
     "end_date": "2008-02-16",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000202
+    "provenance_type": 38000202,
+    "admission_date": "2008-02-12",
+    "discharge_date": "2008-02-16"
   },
   {
     "person_id": 134,
@@ -492,7 +580,9 @@
     "end_date": "2009-11-30",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000201
+    "provenance_type": 38000201,
+    "admission_date": "2009-11-23",
+    "discharge_date": "2009-11-30"
   },
   {
     "person_id": 135,
@@ -503,7 +593,9 @@
     "end_date": "2009-12-25",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000233
+    "provenance_type": 38000233,
+    "admission_date": "2009-12-25",
+    "discharge_date": "2009-12-25"
   },
   {
     "person_id": 136,
@@ -514,7 +606,9 @@
     "end_date": "2009-01-16",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000205
+    "provenance_type": 38000205,
+    "admission_date": "2009-01-14",
+    "discharge_date": "2009-01-16"
   },
   {
     "person_id": 137,
@@ -525,7 +619,9 @@
     "end_date": "2008-10-19",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000232
+    "provenance_type": 38000232,
+    "admission_date": "2008-10-19",
+    "discharge_date": "2008-10-19"
   },
   {
     "person_id": 138,
@@ -536,7 +632,9 @@
     "end_date": "2009-11-23",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-11-23",
+    "discharge_date": "2009-11-23"
   },
   {
     "person_id": 141,
@@ -547,7 +645,9 @@
     "end_date": "2008-06-18",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000231
+    "provenance_type": 38000231,
+    "admission_date": "2008-06-18",
+    "discharge_date": "2008-06-18"
   },
   {
     "person_id": 146,
@@ -558,7 +658,9 @@
     "end_date": "2009-09-22",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-09-22",
+    "discharge_date": "2009-09-22"
   },
   {
     "person_id": 147,
@@ -569,7 +671,9 @@
     "end_date": "2009-02-08",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000231
+    "provenance_type": 38000231,
+    "admission_date": "2009-02-08",
+    "discharge_date": "2009-02-08"
   },
   {
     "person_id": 148,
@@ -580,7 +684,9 @@
     "end_date": "2008-04-11",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2008-04-11",
+    "discharge_date": "2008-04-11"
   },
   {
     "person_id": 149,
@@ -591,7 +697,9 @@
     "end_date": "2008-10-05",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000236
+    "provenance_type": 38000236,
+    "admission_date": "2008-10-05",
+    "discharge_date": "2008-10-05"
   },
   {
     "person_id": 150,
@@ -602,7 +710,9 @@
     "end_date": "2009-07-06",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-07-06",
+    "discharge_date": "2009-07-06"
   },
   {
     "person_id": 156,
@@ -613,7 +723,9 @@
     "end_date": "2009-06-10",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756844
+    "provenance_type": 45756844,
+    "admission_date": "2009-06-10",
+    "discharge_date": "2009-06-10"
   },
   {
     "person_id": 157,
@@ -624,7 +736,9 @@
     "end_date": "2009-10-29",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2009-10-29",
+    "discharge_date": "2009-10-29"
   },
   {
     "person_id": 159,
@@ -635,7 +749,9 @@
     "end_date": "2009-03-27",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756845
+    "provenance_type": 45756845,
+    "admission_date": "2009-03-27",
+    "discharge_date": "2009-03-27"
   },
   {
     "person_id": 163,
@@ -646,7 +762,9 @@
     "end_date": "2009-01-26",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000232
+    "provenance_type": 38000232,
+    "admission_date": "2009-01-26",
+    "discharge_date": "2009-01-26"
   },
   {
     "person_id": 167,
@@ -657,7 +775,9 @@
     "end_date": "2009-03-26",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2009-03-26",
+    "discharge_date": "2009-03-26"
   },
   {
     "person_id": 168,
@@ -668,7 +788,9 @@
     "end_date": "2010-02-18",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000204
+    "provenance_type": 38000204,
+    "admission_date": "2010-02-14",
+    "discharge_date": "2010-02-18"
   },
   {
     "person_id": 176,
@@ -679,7 +801,9 @@
     "end_date": "2008-08-05",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2008-08-05",
+    "discharge_date": "2008-08-05"
   },
   {
     "person_id": 180,
@@ -690,7 +814,9 @@
     "end_date": "2009-10-19",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2009-10-19",
+    "discharge_date": "2009-10-19"
   },
   {
     "person_id": 183,
@@ -701,7 +827,9 @@
     "end_date": "2008-03-11",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000231
+    "provenance_type": 38000231,
+    "admission_date": "2008-03-11",
+    "discharge_date": "2008-03-11"
   },
   {
     "person_id": 184,
@@ -712,7 +840,9 @@
     "end_date": "2008-08-16",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2008-08-16",
+    "discharge_date": "2008-08-16"
   },
   {
     "person_id": 187,
@@ -723,7 +853,9 @@
     "end_date": "2010-09-10",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756841
+    "provenance_type": 45756841,
+    "admission_date": "2010-09-10",
+    "discharge_date": "2010-09-10"
   },
   {
     "person_id": 188,
@@ -734,7 +866,9 @@
     "end_date": "2008-11-25",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756837
+    "provenance_type": 45756837,
+    "admission_date": "2008-11-25",
+    "discharge_date": "2008-11-25"
   },
   {
     "person_id": 190,
@@ -745,7 +879,9 @@
     "end_date": "2008-12-04",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000204
+    "provenance_type": 38000204,
+    "admission_date": "2008-12-02",
+    "discharge_date": "2008-12-04"
   },
   {
     "person_id": 195,
@@ -756,7 +892,9 @@
     "end_date": "2009-04-01",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000207
+    "provenance_type": 38000207,
+    "admission_date": "2009-03-28",
+    "discharge_date": "2009-04-01"
   },
   {
     "person_id": 199,
@@ -767,7 +905,9 @@
     "end_date": "2009-06-08",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2009-06-08",
+    "discharge_date": "2009-06-08"
   },
   {
     "person_id": 202,
@@ -778,7 +918,9 @@
     "end_date": "2010-08-01",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756839
+    "provenance_type": 45756839,
+    "admission_date": "2010-08-01",
+    "discharge_date": "2010-08-01"
   },
   {
     "person_id": 207,
@@ -789,7 +931,9 @@
     "end_date": "2008-08-27",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756850
+    "provenance_type": 45756850,
+    "admission_date": "2008-08-27",
+    "discharge_date": "2008-08-27"
   },
   {
     "person_id": 208,
@@ -800,7 +944,9 @@
     "end_date": "2010-05-04",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2010-05-04",
+    "discharge_date": "2010-05-04"
   },
   {
     "person_id": 209,
@@ -811,7 +957,9 @@
     "end_date": "2009-11-19",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2009-11-19",
+    "discharge_date": "2009-11-19"
   },
   {
     "person_id": 211,
@@ -822,7 +970,9 @@
     "end_date": "2009-11-04",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2009-11-04",
+    "discharge_date": "2009-11-04"
   },
   {
     "person_id": 214,
@@ -833,7 +983,9 @@
     "end_date": "2008-12-23",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756839
+    "provenance_type": 45756839,
+    "admission_date": "2008-12-23",
+    "discharge_date": "2008-12-23"
   },
   {
     "person_id": 217,
@@ -844,7 +996,9 @@
     "end_date": "2009-10-03",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2009-10-03",
+    "discharge_date": "2009-10-03"
   },
   {
     "person_id": 219,
@@ -855,7 +1009,9 @@
     "end_date": "2009-08-22",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000202
+    "provenance_type": 38000202,
+    "admission_date": "2009-08-18",
+    "discharge_date": "2009-08-22"
   },
   {
     "person_id": 220,
@@ -866,7 +1022,9 @@
     "end_date": "2008-11-03",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2008-11-03",
+    "discharge_date": "2008-11-03"
   },
   {
     "person_id": 222,
@@ -877,7 +1035,9 @@
     "end_date": "2010-12-25",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2010-12-25",
+    "discharge_date": "2010-12-25"
   },
   {
     "person_id": 223,
@@ -888,7 +1048,9 @@
     "end_date": "2008-07-03",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756843
+    "provenance_type": 45756843,
+    "admission_date": "2008-07-03",
+    "discharge_date": "2008-07-03"
   },
   {
     "person_id": 225,
@@ -899,7 +1061,9 @@
     "end_date": "2008-11-02",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2008-11-02",
+    "discharge_date": "2008-11-02"
   },
   {
     "person_id": 228,
@@ -910,7 +1074,9 @@
     "end_date": "2009-08-01",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2009-08-01",
+    "discharge_date": "2009-08-01"
   },
   {
     "person_id": 234,
@@ -921,7 +1087,9 @@
     "end_date": "2009-07-23",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000231
+    "provenance_type": 38000231,
+    "admission_date": "2009-07-23",
+    "discharge_date": "2009-07-23"
   },
   {
     "person_id": 239,
@@ -932,7 +1100,9 @@
     "end_date": "2009-10-30",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756835
+    "provenance_type": 45756835,
+    "admission_date": "2009-10-30",
+    "discharge_date": "2009-10-30"
   },
   {
     "person_id": 240,
@@ -943,7 +1113,9 @@
     "end_date": "2008-11-03",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2008-11-03",
+    "discharge_date": "2008-11-03"
   },
   {
     "person_id": 242,
@@ -954,7 +1126,9 @@
     "end_date": "2009-06-22",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 38000231
+    "provenance_type": 38000231,
+    "admission_date": "2009-06-22",
+    "discharge_date": "2009-06-22"
   },
   {
     "person_id": 243,
@@ -965,7 +1139,9 @@
     "end_date": "2010-06-02",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756836
+    "provenance_type": 45756836,
+    "admission_date": "2010-06-02",
+    "discharge_date": "2010-06-02"
   },
   {
     "person_id": 247,
@@ -976,6 +1152,8 @@
     "end_date": "2008-05-29",
     "source_value": "244.9",
     "source_vocabulary_id": "2",
-    "provenance_type": 45756838
+    "provenance_type": 45756838,
+    "admission_date": "2008-05-29",
+    "discharge_date": "2008-05-29"
   }
 ]
