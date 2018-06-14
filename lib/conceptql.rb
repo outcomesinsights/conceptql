@@ -9,8 +9,8 @@ require "conceptql/database"
 require "conceptql/data_model"
 require "conceptql/columnizer"
 
-Dir.glob("lib/conceptql/query_modifiers/**/*.rb").each do |file|
-  require_relative "../" + file
+Dir.glob(File.dirname(__FILE__) + "/../lib/conceptql/query_modifiers/**/*.rb").each do |file|
+  require_relative file
 end
 
 module ConceptQL
