@@ -8,14 +8,10 @@ require "conceptql/null_query"
 require "conceptql/database"
 require "conceptql/data_model"
 require "conceptql/columnizer"
-require_relative "conceptql/query_modifiers/gdm/pos_query_modifier"
-require_relative "conceptql/query_modifiers/gdm/drug_query_modifier"
-require_relative "conceptql/query_modifiers/gdm/provider_query_modifier"
-require_relative "conceptql/query_modifiers/gdm/provenance_query_modifier"
-require_relative "conceptql/query_modifiers/omopv4_plus/provider_query_modifier"
-require_relative "conceptql/query_modifiers/omopv4_plus/pos_query_modifier"
-require_relative "conceptql/query_modifiers/omopv4_plus/drug_query_modifier"
-require_relative "conceptql/query_modifiers/omopv4_plus/provenance_query_modifier"
+
+Dir.glob("lib/conceptql/query_modifiers/**/*.rb").each do |file|
+  require_relative "../" + file
+end
 
 module ConceptQL
   def self.metadata(opts = {})
