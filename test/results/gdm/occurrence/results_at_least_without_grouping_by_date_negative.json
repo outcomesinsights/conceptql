@@ -1,7 +1,7 @@
 [
   {
     "person_id": 2,
-    "criterion_id": 59427866,
+    "criterion_id": 138597,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -11,7 +11,27 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138598,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "3558",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 138599,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2010-01-23",
+    "end_date": "2010-01-23",
+    "source_value": "3558",
+    "source_vocabulary_id": "ICD9CM"
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -21,7 +41,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -31,7 +51,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -41,7 +61,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -51,7 +71,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -61,7 +81,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -71,7 +91,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -81,7 +101,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -91,7 +111,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -101,7 +121,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -111,7 +131,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -121,7 +141,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -131,7 +151,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",
@@ -141,7 +161,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 59427868,
+    "criterion_id": 138601,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-23",

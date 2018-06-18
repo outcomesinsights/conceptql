@@ -1,970 +1,1159 @@
 [
   {
     "person_id": 2,
-    "criterion_id": 64209304,
+    "criterion_id": 149770,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-09",
     "end_date": "2008-10-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-10-09",
+    "discharge_date": "2008-10-18"
   },
   {
     "person_id": 7,
-    "criterion_id": 18772302,
+    "criterion_id": 44253,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-03",
     "end_date": "2009-03-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2009-03-03",
+    "discharge_date": "2009-03-03"
   },
   {
     "person_id": 11,
-    "criterion_id": 43520572,
+    "criterion_id": 99851,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-17",
     "end_date": "2008-05-17",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-05-17",
+    "discharge_date": "2008-05-17"
   },
   {
     "person_id": 12,
-    "criterion_id": 48708001,
+    "criterion_id": 112585,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-21",
     "end_date": "2009-05-21",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-05-21",
+    "discharge_date": "2009-05-21"
   },
   {
     "person_id": 13,
-    "criterion_id": 59572402,
+    "criterion_id": 138915,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-10-18",
     "end_date": "2009-10-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-10-18",
+    "discharge_date": "2009-10-18"
   },
   {
     "person_id": 14,
-    "criterion_id": 49714405,
+    "criterion_id": 114938,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-10",
     "end_date": "2009-03-10",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-03-10",
+    "discharge_date": "2009-03-10"
   },
   {
     "person_id": 15,
-    "criterion_id": 50833527,
+    "criterion_id": 117265,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-02",
     "end_date": "2008-12-02",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-12-02",
+    "discharge_date": "2008-12-02"
   },
   {
     "person_id": 17,
-    "criterion_id": 38053498,
+    "criterion_id": 86782,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-25",
     "end_date": "2008-08-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-08-25",
+    "discharge_date": "2008-08-25"
   },
   {
     "person_id": 19,
-    "criterion_id": 65372565,
+    "criterion_id": 152704,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-26",
     "end_date": "2008-01-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-01-26",
+    "discharge_date": "2008-01-26"
   },
   {
     "person_id": 23,
-    "criterion_id": 38350663,
+    "criterion_id": 87541,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-16",
     "end_date": "2008-08-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-08-16",
+    "discharge_date": "2008-08-18"
   },
   {
     "person_id": 25,
-    "criterion_id": 55560762,
+    "criterion_id": 128680,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-13",
     "end_date": "2008-03-13",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-03-13",
+    "discharge_date": "2008-03-13"
   },
   {
     "person_id": 28,
-    "criterion_id": 55857139,
+    "criterion_id": 129537,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-09-15",
     "end_date": "2009-09-15",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-09-15",
+    "discharge_date": "2009-09-15"
   },
   {
     "person_id": 35,
-    "criterion_id": 25348306,
+    "criterion_id": 58468,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-01",
     "end_date": "2008-09-01",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-09-01",
+    "discharge_date": "2008-09-01"
   },
   {
     "person_id": 38,
-    "criterion_id": 42693643,
+    "criterion_id": 97973,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-29",
     "end_date": "2008-06-29",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-06-29",
+    "discharge_date": "2008-06-29"
   },
   {
     "person_id": 40,
-    "criterion_id": 62230286,
+    "criterion_id": 145262,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-06",
     "end_date": "2008-09-06",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-09-06",
+    "discharge_date": "2008-09-06"
   },
   {
     "person_id": 42,
-    "criterion_id": 47906973,
+    "criterion_id": 110377,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-10",
     "end_date": "2008-09-10",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-09-10",
+    "discharge_date": "2008-09-10"
   },
   {
     "person_id": 44,
-    "criterion_id": 64078803,
+    "criterion_id": 149501,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-27",
     "end_date": "2009-06-27",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-06-27",
+    "discharge_date": "2009-06-27"
   },
   {
     "person_id": 46,
-    "criterion_id": 52867879,
+    "criterion_id": 122390,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-07-09",
     "end_date": "2009-07-09",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-07-09",
+    "discharge_date": "2009-07-09"
   },
   {
     "person_id": 61,
-    "criterion_id": 65122904,
+    "criterion_id": 152080,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-09",
     "end_date": "2008-09-09",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-09-09",
+    "discharge_date": "2008-09-09"
   },
   {
     "person_id": 63,
-    "criterion_id": 273631,
+    "criterion_id": 615,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-02-15",
     "end_date": "2009-02-15",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000060
+    "provenance_type": 100000060,
+    "admission_date": "2009-02-09",
+    "discharge_date": "2009-02-15"
   },
   {
     "person_id": 65,
-    "criterion_id": 63059841,
+    "criterion_id": 147251,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-03",
     "end_date": "2008-06-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-06-03",
+    "discharge_date": "2008-06-03"
   },
   {
     "person_id": 66,
-    "criterion_id": 48657565,
+    "criterion_id": 112460,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-02",
     "end_date": "2008-08-02",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-08-02",
+    "discharge_date": "2008-08-02"
   },
   {
     "person_id": 67,
-    "criterion_id": 46800142,
+    "criterion_id": 107695,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-13",
     "end_date": "2009-12-13",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-12-13",
+    "discharge_date": "2009-12-13"
   },
   {
     "person_id": 68,
-    "criterion_id": 342285,
+    "criterion_id": 762,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-14",
     "end_date": "2008-04-14",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000060
+    "provenance_type": 100000060,
+    "admission_date": "2008-04-09",
+    "discharge_date": "2008-04-14"
   },
   {
     "person_id": 71,
-    "criterion_id": 43827917,
+    "criterion_id": 100572,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-07-12",
     "end_date": "2009-07-12",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-07-12",
+    "discharge_date": "2009-07-12"
   },
   {
     "person_id": 72,
-    "criterion_id": 60197020,
+    "criterion_id": 140390,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-22",
     "end_date": "2008-04-22",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-04-22",
+    "discharge_date": "2008-04-22"
   },
   {
     "person_id": 82,
-    "criterion_id": 24830798,
+    "criterion_id": 57680,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-13",
     "end_date": "2008-02-13",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-02-13",
+    "discharge_date": "2008-02-13"
   },
   {
     "person_id": 83,
-    "criterion_id": 43866801,
+    "criterion_id": 100713,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-31",
     "end_date": "2009-05-31",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-05-31",
+    "discharge_date": "2009-05-31"
   },
   {
     "person_id": 86,
-    "criterion_id": 19502963,
+    "criterion_id": 45583,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-06",
     "end_date": "2008-04-06",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-04-06",
+    "discharge_date": "2008-04-06"
   },
   {
     "person_id": 88,
-    "criterion_id": 761824,
+    "criterion_id": 1731,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-26",
     "end_date": "2008-03-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000060
+    "provenance_type": 100000060,
+    "admission_date": "2008-03-23",
+    "discharge_date": "2008-03-26"
   },
   {
     "person_id": 90,
-    "criterion_id": 50918223,
+    "criterion_id": 117587,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-28",
     "end_date": "2008-11-28",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-11-28",
+    "discharge_date": "2008-11-28"
   },
   {
     "person_id": 93,
-    "criterion_id": 53819435,
+    "criterion_id": 124609,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-24",
     "end_date": "2008-10-24",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-10-24",
+    "discharge_date": "2008-10-24"
   },
   {
     "person_id": 95,
-    "criterion_id": 67572422,
+    "criterion_id": 158010,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-17",
     "end_date": "2008-06-17",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-06-17",
+    "discharge_date": "2008-06-17"
   },
   {
     "person_id": 96,
-    "criterion_id": 62281375,
+    "criterion_id": 145372,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-23",
     "end_date": "2008-09-23",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-09-23",
+    "discharge_date": "2008-09-23"
   },
   {
     "person_id": 104,
-    "criterion_id": 58196616,
+    "criterion_id": 135474,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-19",
     "end_date": "2008-01-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-01-19",
+    "discharge_date": "2008-01-19"
   },
   {
     "person_id": 105,
-    "criterion_id": 40291998,
+    "criterion_id": 91934,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-13",
     "end_date": "2009-01-13",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2009-01-13",
+    "discharge_date": "2009-01-13"
   },
   {
     "person_id": 106,
-    "criterion_id": 17598294,
+    "criterion_id": 41664,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-02",
     "end_date": "2008-11-02",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-11-02",
+    "discharge_date": "2008-11-02"
   },
   {
     "person_id": 108,
-    "criterion_id": 57564047,
+    "criterion_id": 133995,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-11",
     "end_date": "2008-04-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-04-11",
+    "discharge_date": "2008-04-11"
   },
   {
     "person_id": 110,
-    "criterion_id": 58383753,
+    "criterion_id": 135982,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-06",
     "end_date": "2008-03-06",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-03-06",
+    "discharge_date": "2008-03-06"
   },
   {
     "person_id": 111,
-    "criterion_id": 62692523,
+    "criterion_id": 146453,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-22",
     "end_date": "2009-06-22",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-06-22",
+    "discharge_date": "2009-06-22"
   },
   {
     "person_id": 120,
-    "criterion_id": 63796256,
+    "criterion_id": 148892,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-25",
     "end_date": "2009-05-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-05-25",
+    "discharge_date": "2009-05-25"
   },
   {
     "person_id": 123,
-    "criterion_id": 57074677,
+    "criterion_id": 132853,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-28",
     "end_date": "2009-03-28",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-03-28",
+    "discharge_date": "2009-03-28"
   },
   {
     "person_id": 126,
-    "criterion_id": 6700632,
+    "criterion_id": 14622,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-18",
     "end_date": "2008-09-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-09-18",
+    "discharge_date": "2008-09-19"
   },
   {
     "person_id": 131,
-    "criterion_id": 95103,
+    "criterion_id": 246,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-16",
     "end_date": "2008-02-16",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000060
+    "provenance_type": 100000060,
+    "admission_date": "2008-02-12",
+    "discharge_date": "2008-02-16"
   },
   {
     "person_id": 134,
-    "criterion_id": 10598,
+    "criterion_id": 2,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-11-30",
     "end_date": "2009-11-30",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000060
+    "provenance_type": 100000060,
+    "admission_date": "2009-11-23",
+    "discharge_date": "2009-11-30"
   },
   {
     "person_id": 135,
-    "criterion_id": 60434830,
+    "criterion_id": 140913,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-11",
     "end_date": "2008-02-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-02-11",
+    "discharge_date": "2008-02-11"
   },
   {
     "person_id": 136,
-    "criterion_id": 277546,
+    "criterion_id": 632,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-16",
     "end_date": "2009-01-16",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000060
+    "provenance_type": 100000060,
+    "admission_date": "2009-01-14",
+    "discharge_date": "2009-01-16"
   },
   {
     "person_id": 137,
-    "criterion_id": 6718932,
+    "criterion_id": 14770,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-30",
     "end_date": "2008-04-30",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-04-30",
+    "discharge_date": "2008-04-30"
   },
   {
     "person_id": 138,
-    "criterion_id": 22890576,
+    "criterion_id": 52904,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-30",
     "end_date": "2008-01-30",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-01-30",
+    "discharge_date": "2008-01-30"
   },
   {
     "person_id": 141,
-    "criterion_id": 51644606,
+    "criterion_id": 119266,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-27",
     "end_date": "2008-04-27",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-04-27",
+    "discharge_date": "2008-04-27"
   },
   {
     "person_id": 146,
-    "criterion_id": 51921729,
+    "criterion_id": 119954,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-29",
     "end_date": "2008-03-29",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-03-29",
+    "discharge_date": "2008-03-29"
   },
   {
     "person_id": 147,
-    "criterion_id": 18266987,
+    "criterion_id": 42937,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-20",
     "end_date": "2008-03-20",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-03-20",
+    "discharge_date": "2008-03-20"
   },
   {
     "person_id": 148,
-    "criterion_id": 6635470,
+    "criterion_id": 14285,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-19",
     "end_date": "2008-01-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-01-19",
+    "discharge_date": "2008-01-19"
   },
   {
     "person_id": 149,
-    "criterion_id": 40946271,
+    "criterion_id": 93501,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-07",
     "end_date": "2008-04-07",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-04-07",
+    "discharge_date": "2008-04-07"
   },
   {
     "person_id": 150,
-    "criterion_id": 42500663,
+    "criterion_id": 97456,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-08",
     "end_date": "2008-07-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-07-08",
+    "discharge_date": "2008-07-08"
   },
   {
     "person_id": 156,
-    "criterion_id": 43762356,
+    "criterion_id": 100351,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-18",
     "end_date": "2008-11-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-11-18",
+    "discharge_date": "2008-11-18"
   },
   {
     "person_id": 157,
-    "criterion_id": 46592611,
+    "criterion_id": 107073,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-16",
     "end_date": "2008-08-16",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-08-16",
+    "discharge_date": "2008-08-16"
   },
   {
     "person_id": 159,
-    "criterion_id": 46167486,
+    "criterion_id": 106065,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-25",
     "end_date": "2008-09-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-09-25",
+    "discharge_date": "2008-09-25"
   },
   {
     "person_id": 163,
-    "criterion_id": 46069907,
+    "criterion_id": 105799,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-08",
     "end_date": "2008-11-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-11-08",
+    "discharge_date": "2008-11-08"
   },
   {
     "person_id": 167,
-    "criterion_id": 50966081,
+    "criterion_id": 117749,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-12",
     "end_date": "2008-05-12",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-05-12",
+    "discharge_date": "2008-05-12"
   },
   {
     "person_id": 168,
-    "criterion_id": 106165,
+    "criterion_id": 296,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-18",
     "end_date": "2010-02-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000060
+    "provenance_type": 100000060,
+    "admission_date": "2010-02-14",
+    "discharge_date": "2010-02-18"
   },
   {
     "person_id": 176,
-    "criterion_id": 38683402,
+    "criterion_id": 88286,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-11",
     "end_date": "2008-04-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-04-11",
+    "discharge_date": "2008-04-11"
   },
   {
     "person_id": 180,
-    "criterion_id": 42230878,
+    "criterion_id": 96835,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-16",
     "end_date": "2008-11-23",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-11-16",
+    "discharge_date": "2008-11-23"
   },
   {
     "person_id": 183,
-    "criterion_id": 44164953,
+    "criterion_id": 101397,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-07",
     "end_date": "2008-01-07",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-01-07",
+    "discharge_date": "2008-01-07"
   },
   {
     "person_id": 184,
-    "criterion_id": 44187498,
+    "criterion_id": 101465,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-13",
     "end_date": "2008-03-13",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-03-13",
+    "discharge_date": "2008-03-13"
   },
   {
     "person_id": 187,
-    "criterion_id": 30667548,
+    "criterion_id": 70436,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-08",
     "end_date": "2008-06-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-06-08",
+    "discharge_date": "2008-06-08"
   },
   {
     "person_id": 188,
-    "criterion_id": 15857588,
+    "criterion_id": 37271,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-25",
     "end_date": "2008-07-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-07-25",
+    "discharge_date": "2008-07-25"
   },
   {
     "person_id": 190,
-    "criterion_id": 68956850,
+    "criterion_id": 161479,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-09",
     "end_date": "2008-07-09",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-07-09",
+    "discharge_date": "2008-07-09"
   },
   {
     "person_id": 195,
-    "criterion_id": 48560696,
+    "criterion_id": 112216,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-08",
     "end_date": "2008-01-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-01-08",
+    "discharge_date": "2008-01-08"
   },
   {
     "person_id": 199,
-    "criterion_id": 40655864,
+    "criterion_id": 92685,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-09",
     "end_date": "2008-10-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-10-09",
+    "discharge_date": "2008-10-11"
   },
   {
     "person_id": 202,
-    "criterion_id": 25782008,
+    "criterion_id": 59081,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-03",
     "end_date": "2009-04-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2009-04-03",
+    "discharge_date": "2009-04-03"
   },
   {
     "person_id": 207,
-    "criterion_id": 26271053,
+    "criterion_id": 60632,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-19",
     "end_date": "2008-03-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-03-19",
+    "discharge_date": "2008-03-19"
   },
   {
     "person_id": 208,
-    "criterion_id": 42257079,
+    "criterion_id": 96988,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-08",
     "end_date": "2008-12-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-12-08",
+    "discharge_date": "2008-12-08"
   },
   {
     "person_id": 209,
-    "criterion_id": 27605337,
+    "criterion_id": 63433,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-24",
     "end_date": "2008-04-24",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-04-24",
+    "discharge_date": "2008-04-24"
   },
   {
     "person_id": 211,
-    "criterion_id": 54836032,
+    "criterion_id": 126958,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-26",
     "end_date": "2009-06-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-06-26",
+    "discharge_date": "2009-06-26"
   },
   {
     "person_id": 214,
-    "criterion_id": 54447404,
+    "criterion_id": 125996,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-19",
     "end_date": "2008-06-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-06-19",
+    "discharge_date": "2008-06-19"
   },
   {
     "person_id": 217,
-    "criterion_id": 44632212,
+    "criterion_id": 102594,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-02-21",
     "end_date": "2009-02-21",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2009-02-21",
+    "discharge_date": "2009-02-21"
   },
   {
     "person_id": 219,
-    "criterion_id": 67449461,
+    "criterion_id": 157711,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-11",
     "end_date": "2008-10-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-10-11",
+    "discharge_date": "2008-10-11"
   },
   {
     "person_id": 220,
-    "criterion_id": 44151055,
+    "criterion_id": 101356,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-22",
     "end_date": "2008-07-22",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-07-22",
+    "discharge_date": "2008-07-22"
   },
   {
     "person_id": 222,
-    "criterion_id": 44864508,
+    "criterion_id": 103022,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-09-05",
     "end_date": "2010-09-05",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2010-09-05",
+    "discharge_date": "2010-09-05"
   },
   {
     "person_id": 223,
-    "criterion_id": 70126372,
+    "criterion_id": 164163,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-15",
     "end_date": "2008-02-15",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-02-15",
+    "discharge_date": "2008-02-15"
   },
   {
     "person_id": 225,
-    "criterion_id": 29547568,
+    "criterion_id": 67404,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-03",
     "end_date": "2008-02-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-02-03",
+    "discharge_date": "2008-02-03"
   },
   {
     "person_id": 228,
-    "criterion_id": 52888864,
+    "criterion_id": 122506,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-08",
     "end_date": "2008-11-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-11-08",
+    "discharge_date": "2008-11-08"
   },
   {
     "person_id": 234,
-    "criterion_id": 50147531,
+    "criterion_id": 115933,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-11",
     "end_date": "2008-07-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-07-11",
+    "discharge_date": "2008-07-11"
   },
   {
     "person_id": 239,
-    "criterion_id": 34363674,
+    "criterion_id": 78817,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-21",
     "end_date": "2008-11-21",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2008-11-21",
+    "discharge_date": "2008-11-21"
   },
   {
     "person_id": 240,
-    "criterion_id": 51282254,
+    "criterion_id": 118459,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-04",
     "end_date": "2008-09-04",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-09-04",
+    "discharge_date": "2008-09-04"
   },
   {
     "person_id": 242,
-    "criterion_id": 17053626,
+    "criterion_id": 40139,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-21",
     "end_date": "2009-03-21",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000061
+    "provenance_type": 100000061,
+    "admission_date": "2009-03-21",
+    "discharge_date": "2009-03-21"
+  },
+  {
+    "person_id": 243,
+    "criterion_id": 153037,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-24",
+    "end_date": "2008-09-24",
+    "source_value": "2449",
+    "source_vocabulary_id": "ICD9CM",
+    "provenance_type": 100000062,
+    "admission_date": "2008-09-24",
+    "discharge_date": "2008-09-24"
   },
   {
     "person_id": 247,
-    "criterion_id": 53614910,
+    "criterion_id": 124162,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-24",
     "end_date": "2008-02-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "provenance_type": 100000062
+    "provenance_type": 100000062,
+    "admission_date": "2008-02-24",
+    "discharge_date": "2008-02-26"
   }
 ]

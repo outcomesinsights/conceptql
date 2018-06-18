@@ -1,7 +1,7 @@
 [
   {
     "person_id": 2,
-    "criterion_id": 195895,
+    "criterion_id": 455,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
@@ -11,7 +11,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 195895,
+    "criterion_id": 455,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
@@ -21,7 +21,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 195895,
+    "criterion_id": 455,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
@@ -31,7 +31,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 195895,
+    "criterion_id": 455,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
@@ -41,7 +41,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 195895,
+    "criterion_id": 455,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
@@ -51,7 +51,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 195895,
+    "criterion_id": 455,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
@@ -61,7 +61,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 195895,
+    "criterion_id": 455,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
@@ -71,7 +71,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 54732476,
+    "criterion_id": 126683,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-16",
@@ -81,7 +81,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 54732476,
+    "criterion_id": 126683,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-16",
@@ -91,7 +91,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 54732477,
+    "criterion_id": 126684,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-16",
@@ -101,7 +101,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 54732477,
+    "criterion_id": 126684,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-16",

@@ -2420,6 +2420,16 @@
     "source_vocabulary_id": null
   },
   {
+    "person_id": 243,
+    "criterion_id": 243,
+    "criterion_table": "patients",
+    "criterion_domain": "person",
+    "start_date": "1938-04-24",
+    "end_date": "1938-05-08",
+    "source_value": "00809537996386E1",
+    "source_vocabulary_id": null
+  },
+  {
     "person_id": 244,
     "criterion_id": 244,
     "criterion_table": "patients",

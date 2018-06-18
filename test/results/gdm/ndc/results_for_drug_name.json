@@ -1,7 +1,7 @@
 [
   {
     "person_id": 68,
-    "criterion_id": 2346157,
+    "criterion_id": 5197,
     "criterion_table": "clinical_codes",
     "criterion_domain": "drug_exposure",
     "start_date": "2008-08-11",

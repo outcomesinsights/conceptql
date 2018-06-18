@@ -1,7 +1,7 @@
 [
   {
     "person_id": 82,
-    "criterion_id": 872273,
+    "criterion_id": 2003,
     "criterion_table": "clinical_codes",
     "criterion_domain": "drug_exposure",
     "start_date": "2008-01-10",
@@ -16,7 +16,7 @@
   },
   {
     "person_id": 95,
-    "criterion_id": 1036090,
+    "criterion_id": 2328,
     "criterion_table": "clinical_codes",
     "criterion_domain": "drug_exposure",
     "start_date": "2008-01-20",
@@ -31,7 +31,7 @@
   },
   {
     "person_id": 139,
-    "criterion_id": 6066024,
+    "criterion_id": 12983,
     "criterion_table": "clinical_codes",
     "criterion_domain": "drug_exposure",
     "start_date": "2008-09-09",
