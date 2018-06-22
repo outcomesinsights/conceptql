@@ -368,6 +368,10 @@ module ConceptQL
         raise NotImplementedError, self
       end
 
+      def lexicon
+        scope.lexicon
+      end
+
       private
 
       def annotate_values(db, opts)
@@ -559,7 +563,7 @@ module ConceptQL
       end
 
       def add_warnings?(db, opts = {})
-        @errors.empty? && !no_db?(db, opts)
+        @errors.empty? && (!no_db?(db, opts) || !lexicon.nil?)
       end
 
       def add_error(*args)

@@ -125,7 +125,11 @@ module ConceptQL
           args -= bad_arguments
           missing_args = []
 
-          unless no_db?(db, opts)
+          if no_db?(db, opts)
+            if lexicon
+              missing_args = args - lexicon.known_codes(vocabulary_id, args)
+            end
+          else
             missing_args = args - dm.concepts_ds(db, vocabulary_id, args).select_map(:concept_code) rescue []
           end
 
@@ -137,7 +141,12 @@ module ConceptQL
 
       def describe_codes(db, codes)
         return [["*", "ALL CODES"]] if select_all?
-        return codes.zip([]) if no_db?(db)
+        if no_db?(db)
+          if lexicon
+            lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
+          end
+          return codes.zip([])
+        end
         results = dm.concepts_ds(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
         remaining_codes = codes - results.map(&:first).map(&:to_s)
         (results + remaining_codes.zip([])).sort_by(&:first)

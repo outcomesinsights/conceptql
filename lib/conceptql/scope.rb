@@ -50,7 +50,7 @@ module ConceptQL
 
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns, :lexicon
 
     def initialize(opts = {})
       @known_operators = {}
@@ -63,6 +63,7 @@ module ConceptQL
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
+      @lexicon = opts[:lexicon]
 
       @i = 0
       @mutex = Mutex.new
