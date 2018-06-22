@@ -6,9 +6,7 @@ module ConceptQL
       @db = db
       db_type = :impala
       if db
-        extensions.each do |extension|
-          db.extension extension
-        end
+        db_extensions(db)
         db_type = db.database_type.to_sym
       end
 
@@ -21,6 +19,7 @@ module ConceptQL
         force_temp_tables: opts.fetch(:force_temp_tables, ENV["CONCEPTQL_FORCE_TEMP_TABLES"] == "true"),
         scratch_database: opts.fetch(:scratch_database, ENV["DOCKER_SCRATCH_DATABASE"])
       }.merge(opts[:scope_opts] || {})
+      @opts[:scope_opts][:lexicon] = lexicon
     end
 
     def query(statement, opts={})
@@ -31,6 +30,20 @@ module ConceptQL
 
     def extensions
       [:date_arithmetic, :error_sql, :select_remove]
+    end
+
+    def db_extensions(db)
+      return unless db
+      extensions.each do |extension|
+        db.extension extension
+      end
+    end
+
+    def lexicon
+      return unless lexicon_url = ENV["LEXICON_URL"]
+      lexicon_db = Sequel.connect(lexicon_url)
+      db_extensions(lexicon_db)
+      Lexicon.new(lexicon_db)
     end
   end
 end

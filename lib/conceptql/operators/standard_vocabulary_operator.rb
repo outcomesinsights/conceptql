@@ -67,7 +67,11 @@ module ConceptQL
             args -= bad_arguments
             missing_args = []
 
-            unless no_db?(db, opts)
+            if no_db?(db, opts)
+              if lexicon
+                missing_args = args - lexicon.known_codes(vocabulary_id, args)
+              end
+            else
               missing_args = args - db[:concept].where(:vocabulary_id=>vocabulary_id, :concept_code=>arguments_fix(db, args)).select_map(:concept_code)
             end
 

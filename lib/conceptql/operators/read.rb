@@ -48,7 +48,13 @@ module ConceptQL
       end
 
       def get_codes_by_domain(db)
-        return { observation: arguments } if db.is_a?(::Sequel::Mock)
+        if no_db?(db)
+          if lexicon
+            return lexicon.codes_by_domain(arguments, "READ")
+          end
+          return { observation: arguments }
+        end
+
         codes_and_mapping_types = db[:source_to_concept_map]
           .where(source_code: arguments, source_vocabulary_id: 17)
           .select_map([:source_code, :mapping_type])
@@ -68,12 +74,12 @@ module ConceptQL
       end
 
       def mapping_type_to_domain(mapping_type)
-        case mapping_type.downcase.to_sym
-        when :condition
+        case mapping_type.to_s
+        when /cond/i
           :condition_occurrence
-        when :procedure
+        when /proc/i
           :procedure_occurrence
-        when :drug
+        when /drug/i
           :drug_exposure
         else
           :observation
