@@ -21,11 +21,11 @@ module ConceptQL
     end
 
     def custom_vocabularies_file_path
-      ConceptQL.config_dir + "vocabularies.custom.csv"
+      Pathname.new(ENV["CONCEPTQL_CUSTOM_VOCABULARIES"] || ConceptQL.config_dir + "vocabularies.custom.csv")
     end
 
     def custom_multiple_vocabularies_file_path
-      ConceptQL.config_dir + "multiple_vocabularies.custom.csv"
+      Pathname.new(ENV["CONCEPTQL_CUSTOM_MULTIPLE_VOCABULARIES"] || ConceptQL.config_dir + "multiple_vocabularies.custom.csv")
     end
 
     def race_file
