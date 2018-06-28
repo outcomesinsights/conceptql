@@ -4,11 +4,13 @@ module ConceptQL
   class Database
     attr :db, :opts
 
+    EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove]
+
     def initialize(db, opts={})
       @db = db
       db_type = :impala
       if db
-        db_extensions(db)
+        self.class.db_extensions(db)
         db_type = db.database_type.to_sym
       end
 
@@ -30,22 +32,22 @@ module ConceptQL
       Query.new(db, statement, @opts.merge(opts))
     end
 
-    def extensions
-      [:date_arithmetic, :error_sql, :select_remove]
-    end
+    class << self
+      def db_extensions(db)
+        return unless db
+        EXTENSIONS.each do |extension|
+          db.extension extension
+        end
+      end
 
-    def db_extensions(db)
-      return unless db
-      extensions.each do |extension|
-        db.extension extension
+      def lexicon
+        return unless lexicon_url = ENV["LEXICON_URL"]
+        @lexicon ||= Lexicon.new(Sequel.connect(lexicon_url).tap { |db| db_extensions(db) })
       end
     end
 
     def lexicon
-      return unless lexicon_url = ENV["LEXICON_URL"]
-      lexicon_db = Sequel.connect(lexicon_url)
-      db_extensions(lexicon_db)
-      Lexicon.new(lexicon_db)
+      self.class.lexicon
     end
   end
 end
