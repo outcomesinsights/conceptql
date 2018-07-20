@@ -42,7 +42,7 @@ module ConceptQL
       end
 
       def lexicon
-        return unless lexicon_url = ENV["LEXICON_URL"]
+        return unless ENV["LEXICON_URL"]
         @lexicon_mutex.synchronize do
           unless defined?(@lexicon)
             @lexicon = make_lexicon
@@ -58,7 +58,7 @@ module ConceptQL
           log_path.dirname.mkpath
           db_opts[:logger] = Logger.new(log_path)
         end
-        db = Sequel.connect(lexicon_url, db_opts)
+        db = Sequel.connect(ENV["LEXICON_URL"], db_opts)
         db_extensions(db)
         Lexicon.new(db)
       end
