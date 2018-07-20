@@ -351,7 +351,7 @@ module ConceptQL
     end
 
     def cte_name(name)
-      name = Sequel.identifier("#{name.to_s.gsub(/\W+/, "_")}_#{$$}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
+      name = Sequel.identifier("#{opts[:table_prefix]}#{name.to_s.gsub(/\W+/, "_")}_#{$$}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
 
       if force_temp_tables? && scratch_database
         name = name.qualify(scratch_database)

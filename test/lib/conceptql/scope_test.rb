@@ -15,6 +15,17 @@ describe ConceptQL::Scope do
 
     let(:host) { :postgres }
 
+    describe "with a table_prefix" do
+      let(:opts) do
+        { scope_opts: { table_prefix: "jtemp123456" } }
+      end
+
+      it "should use prefix in table name" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm, force_temp_tables: true, scratch_database: "jigsaw_temp")
+        db.query(["ADMSRCE", "12", {label: "test label"}], opts).sql.must_match /jtemp123456/
+      end
+    end
+
     describe "with date literal windows" do
       let(:opts) do
         { scope_opts: { start_date: "2001-01-01", end_date: "2001-12-31" } }
