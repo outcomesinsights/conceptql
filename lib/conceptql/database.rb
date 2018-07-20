@@ -42,7 +42,7 @@ module ConceptQL
 
       def lexicon
         return unless lexicon_url = ENV["LEXICON_URL"]
-        @lexicon ||= Lexicon.new(Sequel.connect(lexicon_url).tap { |db| db_extensions(db) })
+        @lexicon ||= Lexicon.new(Sequel.connect(lexicon_url, logger: Logger.new("log/conceptql_lexicon.log")).tap { |db| db_extensions(db) })
       end
     end
 
