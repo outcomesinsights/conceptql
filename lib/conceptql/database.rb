@@ -3,6 +3,7 @@ require_relative "lexicon"
 module ConceptQL
   class Database
     attr :db, :opts
+    @lexicon_mutex = Mutex.new
 
     EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove]
 
@@ -42,7 +43,24 @@ module ConceptQL
 
       def lexicon
         return unless lexicon_url = ENV["LEXICON_URL"]
-        @lexicon ||= Lexicon.new(Sequel.connect(lexicon_url, logger: Logger.new("log/conceptql_lexicon.log")).tap { |db| db_extensions(db) })
+        @lexicon_mutex.synchronize do
+          unless defined?(@lexicon)
+            @lexicon = make_lexicon
+          end
+        end
+        @lexicon
+      end
+
+      def make_lexicon
+        db_opts = {}
+        if ENV["CONCEPTQL_LOG_LEXICON"]
+          log_path = Pathname.new("log") + "conceptql_lexicon.log"
+          log_path.dirname.mkpath
+          db_opts[:logger] = Logger.new(log_path)
+        end
+        db = Sequel.connect(lexicon_url, db_opts)
+        db_extensions(db)
+        Lexicon.new(db)
       end
     end
 
