@@ -29,7 +29,9 @@ module ConceptQL
     end
 
     def translate_vocab_id(vocabulary_id)
-      vocab_translator[vocabulary_id.to_s]
+      Array(vocabulary_id).map do |vocab_id|
+        vocab_translator[vocab_id.to_s]
+      end
     end
 
     def vocab_translator
