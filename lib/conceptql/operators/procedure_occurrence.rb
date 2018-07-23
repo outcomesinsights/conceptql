@@ -3,6 +3,8 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class ProcedureOccurrence < CastingOperator
+      include ConceptQL::Behaviors::Windowable
+
       register __FILE__
 
       desc 'Generates all procedure_occurrence records, or, if fed a stream, fetches all procedure_occurrence records for the people represented in the incoming result set.'

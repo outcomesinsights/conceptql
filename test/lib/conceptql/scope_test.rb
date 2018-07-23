@@ -86,6 +86,16 @@ describe ConceptQL::Scope do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
         check_sequel(db.query(["cpt", "99214"], opts), :postgres_window_table_under_gdm_standard_vocab)
       end
+
+      it "should not limit selection on person table" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
+        db.query(["person", true], opts).sql.wont_match(/EXISTS/)
+      end
+
+      it "should limit selection on condition_occurrence table" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
+        db.query(["visit_occurrence", true], opts).sql.must_match(/EXISTS/)
+      end
     end
 
     describe "with windows from another table, along with adjustments" do
@@ -183,6 +193,16 @@ describe ConceptQL::Scope do
       it "should limit selection by date range under gdm with old standard vocab operator" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
         check_sequel(db.query(["cpt", "99214"], opts), :impala_window_table_under_gdm_standard_vocab)
+      end
+
+      it "should not limit selection on person table" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
+        db.query(["person", true], opts).sql.wont_match(/JOIN/)
+      end
+
+      it "should limit selection on condition_occurrence table" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
+        db.query(["visit_occurrence", true], opts).sql.must_match(/JOIN/)
       end
     end
 

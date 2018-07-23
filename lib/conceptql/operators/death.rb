@@ -3,6 +3,8 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class Death < CastingOperator
+      include ConceptQL::Behaviors::Windowable
+
       register __FILE__
 
       desc 'Generates all death records, or, if fed a stream, fetches all death records for the people represented in the incoming result set.'
