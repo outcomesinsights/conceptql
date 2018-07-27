@@ -1,10 +1,16 @@
+require_relative "../../../../db_helper"
 
 describe ConceptQL::DataModel::Gdm do
-  describe "#related_concept_ids" do
-    let(:dm) do
-      ConceptQL::DataModel::Gdm.new(nil, nil)
-    end
+  let(:dm) do
+    ConceptQL::DataModel::Gdm.new(nil, nil)
+  end
 
+  describe "#concept_id" do
+    it "should return correct column for clinical_codes" do
+      dm.concept_id(:clinical_codes).must_equal :clinical_code_concept_id
+    end
+  end
+  describe "#related_concept_ids" do
     let(:db) do
       Sequel.sqlite
     end
