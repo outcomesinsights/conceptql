@@ -347,7 +347,7 @@ module ConceptQL
         when Sequel::SQL::Identifier
           table = table.value
         end
-        table
+        table.to_sym
       end
 
       def table_cols(table)
@@ -377,6 +377,26 @@ module ConceptQL
       # for OMOPv4.5+
       def related_concept_ids(db, *ids)
         ids
+      end
+
+      def concept_id(table)
+        table_cols(table).find do |col|
+          col = col.to_s
+          next unless col =~ /concept_id/
+
+          table_parts = table.to_s.chomp("s").to_s.split("_")
+
+          possible_names = ["concept_id"]
+
+          until table_parts.empty?
+            possible_names.unshift([table_parts.join("_"), possible_names.last].join("_"))
+            table_parts.pop
+          end
+
+          possible_names.any? do |name|
+            col == name
+          end
+        end
       end
 
       def concepts_ds(db, vocabulary_id, codes)

@@ -1,3 +1,5 @@
+require_relative "../../../../helper"
+require_relative "../../../../db_helper"
 
 describe ConceptQL::DataModel::Omopv4Plus do
   describe "#related_concept_ids" do
@@ -23,6 +25,18 @@ describe ConceptQL::DataModel::Omopv4Plus do
 
     it "should have a source_vocabulary_id for drug_exposure" do
       dm.source_vocabulary_id(:drug_exposure).must_equal(:drug_source_vocabulary_id)
+    end
+
+    it "should return correct concept_id for condition_occurrence" do
+      dm.concept_id(:condition_occurrence).must_equal(:condition_concept_id)
+    end
+
+    it "should return correct concept_id for observation" do
+      dm.concept_id(:observation).must_equal(:observation_concept_id)
+    end
+
+    it "should return correct concept_id for procedure_occurrence" do
+      dm.concept_id(:procedure_occurrence).must_equal(:procedure_concept_id)
     end
   end
 end
