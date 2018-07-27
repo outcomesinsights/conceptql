@@ -33,6 +33,10 @@ module ConceptQL
       Query.new(db, statement, @opts.merge(opts))
     end
 
+    def data_model
+      @data_model ||= DataModel.get(opts[:data_model])
+    end
+
     class << self
       def db_extensions(db)
         return unless db
