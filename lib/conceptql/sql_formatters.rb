@@ -14,12 +14,18 @@ module ConceptQL
       end
     end
 
-    def self.formatters
-      [
-        Sqlformat,
-        PgFormat,
-        None
-      ]
+    class << self
+      def format(sql)
+        formatters.map(&:new).detect(&:available?).format(sql)
+      end
+
+      def formatters
+        [
+          Sqlformat,
+          PgFormat,
+          None
+        ]
+      end
     end
   end
 end

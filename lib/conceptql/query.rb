@@ -118,7 +118,7 @@ module ConceptQL
     end
 
     def format(sql)
-      SqlFormatters.formatters.map(&:new).detect(&:available?).format(sql)
+      SqlFormatters.format(sql)
     end
   end
 end
