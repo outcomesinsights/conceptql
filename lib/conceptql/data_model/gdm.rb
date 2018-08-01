@@ -69,6 +69,15 @@ module ConceptQL
         end
       end
 
+      def table_to_domain(table)
+        {
+          patients: :person,
+          deaths: :death,
+          information_periods: :observation_period,
+          practitioners: :provider
+        }[table]
+      end
+
       def person_id_column(table)
         col = if table.to_sym == :patients
           :id

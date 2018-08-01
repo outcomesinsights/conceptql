@@ -184,12 +184,16 @@ module ConceptQL
           person_id: Sequel.expr(person_id(table)).as(:person_id),
           criterion_id: Sequel.identifier(pk_by_domain(table)).as(:criterion_id),
           criterion_table: Sequel.cast_string(table.to_s).as(:criterion_table),
-          criterion_domain: Sequel.cast_string((opts[:criterion_domain] || table).to_s).as(:criterion_domain),
+          criterion_domain: Sequel.cast_string((opts[:criterion_domain] || table_to_domain(table) || table).to_s).as(:criterion_domain),
           start_date: start_date,
           end_date: end_date,
           source_value: Sequel.cast_string(source_value_column(table)).as(:source_value),
           source_vocabulary_id: Sequel.cast_string(source_vocabulary_id(table)).as(:source_vocabulary_id)
         }
+      end
+
+      def table_to_domain(table)
+        table
       end
 
       def replace(replace_hash)
