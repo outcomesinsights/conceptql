@@ -1,0 +1,27 @@
+[
+  "cpt_or_hcpcs",
+  "99214",
+  "12345",
+  "123",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 1077,
+          "n": 175
+        }
+      },
+      "warnings": [
+        [
+          "improperly formatted code",
+          "123"
+        ],
+        [
+          "unknown source code",
+          "12345"
+        ]
+      ]
+    },
+    "name": "CPT or HCPCS"
+  }
+]
