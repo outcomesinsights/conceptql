@@ -76,7 +76,7 @@ module ConceptQL
             end
 
             unless missing_args.empty?
-              add_warning("unknown concept code", *missing_args)
+              add_warning("unknown code(s)", *missing_args)
             end
           end
         end
