@@ -82,10 +82,14 @@ module ConceptQL
         super
         vocab_ops.each { |vo| vo.validate(db, opts) }
 
-        warnings = vocab_ops.map(&:warnings).inject(:+).each.with_object({}) do |warnings, h|
-          key = warnings.shift
-          h[key] ||= warnings
-          h[key] &= warnings
+        warnings = vocab_ops.map(&:warnings).map do |warns|
+          Hash[warns.map { |warn| [warn.shift, warn] }]
+        end
+
+        warning_keys = warnings.map(&:keys).inject(:+).uniq
+
+        warnings = warning_keys.each.with_object({}) do |key, h|
+          h[key] = warnings.map { |w| w[key] || [] }.inject(:&)
         end
 
         warnings = warnings.reject { |_, v| v.empty? }
