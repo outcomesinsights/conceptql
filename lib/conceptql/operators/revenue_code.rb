@@ -31,6 +31,8 @@ module ConceptQL
       end
 
       class CostOp < StandardVocabularyOperator
+        include ConceptQL::Behaviors::Unwindowable
+
         def table
           :procedure_cost
         end
