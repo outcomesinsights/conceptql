@@ -139,6 +139,11 @@ module ConceptQL
           .select(Sequel[:concept_code].as(:concept_code), Sequel[:concept_text].as(:concept_text))
           .from_self
       end
+
+      def information_period_where_clause(arguments)
+        return true if arguments.empty?
+        { information_type_concept_id: arguments.map(&:to_i) }
+      end
     end
   end
 end

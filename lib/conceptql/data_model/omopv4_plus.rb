@@ -414,6 +414,11 @@ module ConceptQL
           .from_self
         standards.union(sources).order(:concept_code, :concept_text).from_self.select_group(:vocabulary_id, :concept_code).select_append(Sequel.function(:min, :concept_text).as(:concept_text)).from_self
       end
+
+      def information_period_where_clause(arguments)
+        return true if arguments.empty?
+        { plan_source_value: arguments }
+      end
     end
   end
 end

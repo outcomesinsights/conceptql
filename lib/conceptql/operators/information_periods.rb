@@ -13,10 +13,19 @@ module ConceptQL
 
       def query(db)
         db[source_table]
+          .where(where_clause)
       end
 
       def source_table
-        dm.table_by_domain(domain)
+        tab = dm.table_by_domain(domain)
+        if tab == :observation_period && ConceptQL::Utils.present?(arguments)
+          tab = :payer_plan_period
+        end
+        tab
+      end
+
+      def where_clause
+        dm.information_period_where_clause(arguments)
       end
     end
   end
