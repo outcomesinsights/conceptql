@@ -66,10 +66,6 @@ module ConceptQL
           @lexicon || ConceptQL::Database.lexicon
         end
 
-        def lexicon=(lexicon)
-          @lexicon = lexicon
-        end
-
         def from_old_vocab(nodifier, old_vocab_id, *values)
           new(nodifier, v4_vocab_to_v5_vocab[old_vocab_id.to_s], *values)
         end

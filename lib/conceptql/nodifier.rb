@@ -6,11 +6,15 @@ module ConceptQL
 
     def initialize(opts={})
       @scope = opts[:scope] || Scope.new(opts.delete(:scope_opts) || {})
-      @data_model = opts[:data_model] || :omopv4_plus
+      @data_model = get_data_model(opts)
       @database_type = opts[:database_type] || :impala
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
         nil
       end)
+    end
+
+    def get_data_model(opts)
+      (opts[:data_model] || ENV["CONCEPTQL_DATA_MODEL"] || :omopv4_plus).to_sym
     end
 
     def create(operator, *values)
