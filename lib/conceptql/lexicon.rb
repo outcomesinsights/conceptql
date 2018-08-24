@@ -40,5 +40,13 @@ module ConceptQL
         .union(db[:vocabularies].select(Sequel.cast_string(:omopv5_id).as(:original_id), Sequel.cast_string(:omopv5_id).as(:new_id)))
         .to_hash(:original_id, :new_id)
     end
+
+    def vocabularies
+      db[:vocabularies]
+        .select(Sequel[:omopv5_id].as(:id),
+                Sequel[:omopv4_id].as(:omopv4_vocabulary_id),
+                Sequel[:vocabulary_name].as(:vocabulary_full_name))
+        .all
+    end
   end
 end

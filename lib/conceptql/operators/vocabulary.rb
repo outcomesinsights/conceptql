@@ -1,5 +1,6 @@
 require "sequelizer"
 require_relative "vocabulary_operator"
+require_relative "../database"
 require "csv"
 
 module ConceptQL
@@ -50,9 +51,23 @@ module ConceptQL
         end
 
         def get_all_vocabs
-          [ConceptQL.vocabularies_file_path, ConceptQL.custom_vocabularies_file_path].select(&:exist?).map do |path|
+          vocabs = [ConceptQL.vocabularies_file_path, ConceptQL.custom_vocabularies_file_path].select(&:exist?).map do |path|
             CSV.foreach(path, headers: true, header_converters: :symbol).to_a
           end.inject(:+)
+
+          vocabs + additional_vocabularies
+        end
+
+        def additional_vocabularies
+          lexicon ? lexicon.vocabularies : []
+        end
+
+        def lexicon
+          @lexicon || ConceptQL::Database.lexicon
+        end
+
+        def lexicon=(lexicon)
+          @lexicon = lexicon
         end
 
         def from_old_vocab(nodifier, old_vocab_id, *values)

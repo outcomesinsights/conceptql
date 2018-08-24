@@ -633,6 +633,11 @@ module ConceptQL
 end
 
 # Require all operator subclasses eagerly
+#
+# First, require vocabulary operator.  It will establish operators for all
+# vocabularies found in Lexicon.  Then other operators might override
+# some of those dynamically generated operators
+require_relative "vocabulary"
 Dir.new(File.dirname(__FILE__)).
   entries.
   each{|filename| require_relative filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}

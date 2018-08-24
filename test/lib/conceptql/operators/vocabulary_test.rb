@@ -46,4 +46,28 @@ describe ConceptQL::Operators::Vocabulary do
       row[:id] == "test"
     end)
   end
+
+  it "should read from lexicon" do
+    db = Sequel.connect("sqlite:/")
+    db.create_table!(:vocabularies) do
+      String :omopv4_id
+      String :omopv5_id
+      String :vocabulary_name
+    end
+    db[:vocabularies].multi_insert([{ omopv4_id: "10000000", omopv5_id: "EXAMPLE", vocabulary_name: "Example Vocabulary" }])
+
+    assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
+      row[:id] == "EXAMPLE"
+    end)
+
+    ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
+      refute_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
+        row[:id] == "EXAMPLE"
+      end)
+    end
+
+    assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
+      row[:id] == "EXAMPLE"
+    end)
+  end
 end
