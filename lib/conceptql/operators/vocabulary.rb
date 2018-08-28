@@ -23,7 +23,7 @@ module ConceptQL
         end
 
         def assigned_vocabularies
-          @assigned_vocabularies ||= all_vocabs.select { |k, vocab| vocab[:hidden].nil? }.sort_by(&:first)
+          @assigned_vocabularies ||= Hash[all_vocabs.select { |k, vocab| vocab[:hidden].nil? }.sort_by(&:first)]
         end
 
         def vocab_domain
@@ -42,7 +42,9 @@ module ConceptQL
 
         def all_vocabs
           @all_vocabs ||= each_vocab.each_with_object({}) do |row, h|
-            h[row[:id]] = row.to_hash
+            row = row.to_hash
+            row[:id] = row[:id].to_s.downcase
+            h[row[:id]] = row
           end
         end
 
@@ -55,7 +57,7 @@ module ConceptQL
             CSV.foreach(path, headers: true, header_converters: :symbol).to_a
           end.inject(:+)
 
-          lexicon_vocabularies + vocabs 
+          lexicon_vocabularies + vocabs
         end
 
         def lexicon_vocabularies
@@ -77,7 +79,7 @@ module ConceptQL
         # for this operator
         def to_metadata(name, opts = {})
           h = super
-          vocab = assigned_vocabularies[name]
+          vocab = assigned_vocabularies[name.downcase]
           h[:preferred_name] = vocab[:vocabulary_short_name] || vocab[:id]
           h[:predominant_domains] = [vocab[:domain]].flatten
           h
