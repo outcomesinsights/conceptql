@@ -23,7 +23,7 @@ module ConceptQL
         end
 
         def assigned_vocabularies
-          @assigned_vocabularies ||= all_vocabs.select { |k, vocab| vocab[:hidden].nil? }
+          @assigned_vocabularies ||= all_vocabs.select { |k, vocab| vocab[:hidden].nil? }.sort_by(&:first)
         end
 
         def vocab_domain
@@ -55,10 +55,10 @@ module ConceptQL
             CSV.foreach(path, headers: true, header_converters: :symbol).to_a
           end.inject(:+)
 
-          vocabs + additional_vocabularies
+          lexicon_vocabularies + vocabs 
         end
 
-        def additional_vocabularies
+        def lexicon_vocabularies
           lexicon ? lexicon.vocabularies : []
         end
 

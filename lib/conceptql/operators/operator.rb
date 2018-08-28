@@ -38,7 +38,8 @@ module ConceptQL
         def register(file, *data_models)
           data_models = OPERATORS.keys if data_models.empty?
           data_models.each do |dm|
-            OPERATORS[dm][File.basename(file).sub(/\.rb\z/, '')] = self
+            op_name = File.basename(file).sub(/\.rb\z/, '').downcase
+            OPERATORS[dm][op_name] = self
           end
         end
 
