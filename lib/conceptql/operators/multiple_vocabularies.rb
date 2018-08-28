@@ -11,7 +11,9 @@ module ConceptQL
 
         def get_multiple_vocabularies
           [ConceptQL.multiple_vocabularies_file_path, ConceptQL.custom_multiple_vocabularies_file_path].select(&:exist?).map do |path|
-            CSV.foreach(path, headers: true, header_converters: :symbol).each_with_object({}) { |row, h| (h[operator_symbol(row[:operator])] ||= []) << row.to_hash }
+            CSV.foreach(path, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
+              (h[operator_symbol(row[:operator])] ||= []) << row.to_hash
+            end
           end.inject(&:merge)
         end
 
@@ -102,7 +104,11 @@ module ConceptQL
       end
 
       def vocab_ops
-        @vocab_ops ||= self.class.multiple_vocabularies[op_name].map { |op_info| op_info[:vocabulary_id] }.map { |vocab_id| Vocabulary.new(nodifier, vocab_id, *arguments) }
+        @vocab_ops ||= self.class.multiple_vocabularies[op_name].map do |op_info|
+          op_info[:vocabulary_id]
+        end.map do |vocab_id|
+          Vocabulary.new(nodifier, vocab_id, *arguments)
+        end
       end
 
       def preferred_name
