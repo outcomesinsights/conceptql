@@ -39,7 +39,7 @@ module ConceptQL
           data_models = OPERATORS.keys if data_models.empty?
           data_models.each do |dm|
             op_name = File.basename(file).sub(/\.rb\z/, '').downcase
-            OPERATORS[dm][op_name] = self
+            Operators.operators[dm][op_name] = self
           end
         end
 

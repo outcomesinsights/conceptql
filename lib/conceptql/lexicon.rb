@@ -44,7 +44,9 @@ module ConceptQL
     def vocabularies
       db[:vocabularies]
         .select(Sequel[:omopv5_id].as(:id),
+                Sequel[:omopv5_id].as(:omopv5_vocabulary_id),
                 Sequel[:omopv4_id].as(:omopv4_vocabulary_id),
+                Sequel[:vocabulary_name].as(:vocabulary_short_name),
                 Sequel[:vocabulary_name].as(:vocabulary_full_name))
         .all
     end

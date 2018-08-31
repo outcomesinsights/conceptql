@@ -11,23 +11,26 @@ module ConceptQL
 
       class << self
         def v4_vocab_to_v5_vocab
-          each_vocab.each_with_object({}) do |row, h|
-            h[row[:omopv4_vocabulary_id]] = row[:id]
+          all_vocabs.values.each_with_object({}) do |row, h|
+            h[row[:omopv4_vocabulary_id]] = row[:omopv5_vocabulary_id] || row[:id]
           end
         end
 
         def v5_vocab_to_v4_vocab
-          each_vocab.each_with_object({}) do |row, h|
+          all_vocabs.values.each_with_object({}) do |row, h|
             h[row[:id]] = row[:omopv4_vocabulary_id]
           end
         end
 
         def assigned_vocabularies
-          @assigned_vocabularies ||= Hash[all_vocabs.select { |k, vocab| vocab[:hidden].nil? }.sort_by(&:first)]
+          @assigned_vocabularies ||= all_vocabs.select { |k, vocab| vocab[:hidden].nil? }.sort_by(&:first).each.with_object({}) do |arr, h|
+            h[arr.first] ||= {}
+            h[arr.first] = h[arr.first].merge(arr.last)
+          end
         end
 
         def vocab_domain
-          each_vocab.each_with_object({}) do |row, h|
+          all_vocabs.values.each_with_object({}) do |row, h|
             h[row[:id]] = row[:domain]
           end
         end
@@ -43,8 +46,10 @@ module ConceptQL
         def all_vocabs
           @all_vocabs ||= each_vocab.each_with_object({}) do |row, h|
             row = row.to_hash
+            row[:omopv5_vocabulary_id] ||= row[:id]
             row[:id] = row[:id].to_s.downcase
-            h[row[:id]] = row
+            h[row[:id]] ||= {}
+            h[row[:id]].merge!(row.compact)
           end
         end
 
@@ -80,9 +85,16 @@ module ConceptQL
         def to_metadata(name, opts = {})
           h = super
           vocab = assigned_vocabularies[name.downcase]
-          h[:preferred_name] = vocab[:vocabulary_short_name] || vocab[:id]
+          h[:preferred_name] = vocab[:vocabulary_short_name] || vocab[:omopv5_vocabulary_id] || vocab[:id]
           h[:predominant_domains] = [vocab[:domain]].flatten
           h
+        end
+
+        def force_refresh!
+          @all_vocabs = nil
+          @each_vocab = nil
+          @assigned_vocabularies = nil
+          register_many
         end
       end
 
@@ -170,14 +182,18 @@ module ConceptQL
       end
 
       def preferred_name
-        vocab = self.class.all_vocabs[op_name]
-        vocab[:vocabulary_short_name] || vocab[:id]
+        vocab = self.class.assigned_vocabularies[op_name]
+        vocab[:vocabulary_short_name] || vocab[:omopv5_vocabulary_id] || vocab[:id]
       end
 
       private
 
       def vocab_entry
-        self.class.all_vocabs[op_name] || {format_regexp: ""}
+        self.class.assigned_vocabularies[op_name]
+      end
+
+      def vocab_format_regexp
+        (vocab_entry || {format_regexp: ""})[:format_regexp]
       end
 
       # Defined so that bad_arguments can check for bad codes
@@ -185,7 +201,7 @@ module ConceptQL
         unless defined?(@code_regexp)
           @code_regexp = nil
 
-          if reg_str = vocab_entry[:format_regexp]
+          if reg_str = vocab_format_regexp
             @code_regexp = Regexp.new(reg_str, Regexp::IGNORECASE)
           end
         end
@@ -197,7 +213,7 @@ module ConceptQL
       end
 
       def translated_vocabulary_id
-        return op_name if gdm?
+        return (vocab_entry && vocab_entry[:omopv5_vocabulary_id]) || op_name if gdm?
         return translate_to_old(op_name)
       end
 
