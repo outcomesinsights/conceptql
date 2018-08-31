@@ -170,7 +170,8 @@ module ConceptQL
       end
 
       def preferred_name
-        self.class.all_vocabs[op_name][:vocabulary_short_name] || vocab[:id]
+        vocab = self.class.all_vocabs[op_name]
+        vocab[:vocabulary_short_name] || vocab[:id]
       end
 
       private
