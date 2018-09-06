@@ -61,7 +61,7 @@ module ConceptQL
         if add_warnings?(db, opts) && !select_all?
           if gdm?
             vocab_op.validate(db)
-            @warnings += vocab_op.warnings
+            @warnings |= vocab_op.warnings
           else
             args = arguments.dup
             args -= bad_arguments
