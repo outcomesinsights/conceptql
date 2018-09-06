@@ -18,6 +18,7 @@ module ConceptQL
     end
 
     def create(operator, *values)
+      operator = operator.to_s.downcase
       if operator.to_s == 'algorithm'
         statement, desc = algorithm_fetcher.call(values.first)
         if statement
