@@ -1,12 +1,12 @@
 {
-  "procedure_occurrence": [
-    1482758,
-    3847399,
-    4561406
-  ],
   "condition_occurrence": [
-    2069542,
-    3919348,
-    19397970
+    420,
+    26444,
+    44433
+  ],
+  "procedure_occurrence": [
+    17565,
+    28090,
+    31190
   ]
 }

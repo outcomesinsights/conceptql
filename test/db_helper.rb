@@ -25,7 +25,7 @@ class Minitest::Spec
     load_check(test_name, statement) do |stmt|
       ds = dataset(query(stmt)).from_self
 
-      order_columns = [:person_id, :criterion_table, :criterion_id, :start_date]
+      order_columns = [:person_id, :criterion_table, :criterion_domain, :start_date, :criterion_id]
       order_columns << :uuid if ds.columns.include?(:uuid)
       ds = ds.order(*order_columns)
 
@@ -102,7 +102,7 @@ class Minitest::Spec
   end
 
   def hash_groups(statement, key, value)
-    dataset(statement).from_self.distinct.order(*value).to_hash_groups(key, value)
+    dataset(statement).from_self.distinct.order(key, *value).to_hash_groups(key, value)
   rescue
     puts $!.sql if $!.respond_to?(:sql)
     raise

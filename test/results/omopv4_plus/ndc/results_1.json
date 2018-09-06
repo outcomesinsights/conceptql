@@ -1,7 +1,7 @@
 [
   {
     "person_id": 82,
-    "criterion_id": 106252,
+    "criterion_id": 250,
     "criterion_table": "drug_exposure",
     "criterion_domain": "drug_exposure",
     "start_date": "2008-01-10",
@@ -16,7 +16,7 @@
   },
   {
     "person_id": 95,
-    "criterion_id": 270069,
+    "criterion_id": 575,
     "criterion_table": "drug_exposure",
     "criterion_domain": "drug_exposure",
     "start_date": "2008-01-20",
@@ -31,7 +31,7 @@
   },
   {
     "person_id": 139,
-    "criterion_id": 5300003,
+    "criterion_id": 11230,
     "criterion_table": "drug_exposure",
     "criterion_domain": "drug_exposure",
     "start_date": "2008-09-09",

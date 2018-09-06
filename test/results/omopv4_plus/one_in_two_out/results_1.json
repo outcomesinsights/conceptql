@@ -1,7 +1,7 @@
 [
   {
     "person_id": 2,
-    "criterion_id": 8640036,
+    "criterion_id": 42150,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-09",
@@ -14,7 +14,7 @@
   },
   {
     "person_id": 7,
-    "criterion_id": 21416649,
+    "criterion_id": 3289,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-03",
@@ -27,7 +27,7 @@
   },
   {
     "person_id": 11,
-    "criterion_id": 4803531,
+    "criterion_id": 7741,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-17",
@@ -40,7 +40,7 @@
   },
   {
     "person_id": 12,
-    "criterion_id": 10015257,
+    "criterion_id": 16528,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-21",
@@ -53,7 +53,7 @@
   },
   {
     "person_id": 13,
-    "criterion_id": 6369063,
+    "criterion_id": 34675,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-10-18",
@@ -66,7 +66,7 @@
   },
   {
     "person_id": 14,
-    "criterion_id": 15395090,
+    "criterion_id": 18163,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-10",
@@ -79,7 +79,7 @@
   },
   {
     "person_id": 15,
-    "criterion_id": 11481261,
+    "criterion_id": 19762,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-02",
@@ -92,7 +92,7 @@
   },
   {
     "person_id": 17,
-    "criterion_id": 21910907,
+    "criterion_id": 5954,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-25",
@@ -105,7 +105,7 @@
   },
   {
     "person_id": 19,
-    "criterion_id": 8707305,
+    "criterion_id": 44173,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-26",
@@ -118,7 +118,7 @@
   },
   {
     "person_id": 23,
-    "criterion_id": 21911803,
+    "criterion_id": 6008,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-16",
@@ -131,7 +131,7 @@
   },
   {
     "person_id": 25,
-    "criterion_id": 8142158,
+    "criterion_id": 27629,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-13",
@@ -144,7 +144,7 @@
   },
   {
     "person_id": 28,
-    "criterion_id": 6005881,
+    "criterion_id": 28210,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-09-15",
@@ -157,7 +157,7 @@
   },
   {
     "person_id": 35,
-    "criterion_id": 21472538,
+    "criterion_id": 4216,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-01",
@@ -170,7 +170,7 @@
   },
   {
     "person_id": 38,
-    "criterion_id": 21308293,
+    "criterion_id": 6673,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-29",
@@ -183,7 +183,7 @@
   },
   {
     "person_id": 40,
-    "criterion_id": 10089601,
+    "criterion_id": 39047,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-06",
@@ -196,7 +196,7 @@
   },
   {
     "person_id": 42,
-    "criterion_id": 15264065,
+    "criterion_id": 15000,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-10",
@@ -209,7 +209,7 @@
   },
   {
     "person_id": 44,
-    "criterion_id": 18701250,
+    "criterion_id": 41968,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-27",
@@ -222,7 +222,7 @@
   },
   {
     "person_id": 46,
-    "criterion_id": 11828617,
+    "criterion_id": 23292,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-07-09",
@@ -235,7 +235,7 @@
   },
   {
     "person_id": 61,
-    "criterion_id": 13922247,
+    "criterion_id": 43749,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-09",
@@ -248,7 +248,7 @@
   },
   {
     "person_id": 63,
-    "criterion_id": 19532224,
+    "criterion_id": 491,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-02-15",
@@ -261,7 +261,7 @@
   },
   {
     "person_id": 65,
-    "criterion_id": 13570103,
+    "criterion_id": 40398,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-03",
@@ -274,7 +274,7 @@
   },
   {
     "person_id": 66,
-    "criterion_id": 7743733,
+    "criterion_id": 16438,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-02",
@@ -287,7 +287,7 @@
   },
   {
     "person_id": 67,
-    "criterion_id": 10791863,
+    "criterion_id": 13141,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-13",
@@ -300,7 +300,7 @@
   },
   {
     "person_id": 68,
-    "criterion_id": 19770030,
+    "criterion_id": 615,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-14",
@@ -313,7 +313,7 @@
   },
   {
     "person_id": 71,
-    "criterion_id": 10283683,
+    "criterion_id": 8233,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-07-12",
@@ -326,7 +326,7 @@
   },
   {
     "person_id": 72,
-    "criterion_id": 8409161,
+    "criterion_id": 35678,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-22",
@@ -339,7 +339,7 @@
   },
   {
     "person_id": 82,
-    "criterion_id": 21067712,
+    "criterion_id": 4176,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-13",
@@ -352,7 +352,7 @@
   },
   {
     "person_id": 83,
-    "criterion_id": 4837259,
+    "criterion_id": 8329,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-31",
@@ -365,7 +365,7 @@
   },
   {
     "person_id": 86,
-    "criterion_id": 21422907,
+    "criterion_id": 3387,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-06",
@@ -378,7 +378,7 @@
   },
   {
     "person_id": 88,
-    "criterion_id": 19747476,
+    "criterion_id": 1367,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-26",
@@ -391,7 +391,7 @@
   },
   {
     "person_id": 90,
-    "criterion_id": 15482857,
+    "criterion_id": 19973,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-28",
@@ -404,7 +404,7 @@
   },
   {
     "person_id": 93,
-    "criterion_id": 8041665,
+    "criterion_id": 24816,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-24",
@@ -417,7 +417,7 @@
   },
   {
     "person_id": 95,
-    "criterion_id": 9795880,
+    "criterion_id": 47846,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-17",
@@ -430,7 +430,7 @@
   },
   {
     "person_id": 96,
-    "criterion_id": 9622456,
+    "criterion_id": 39124,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-23",
@@ -443,7 +443,7 @@
   },
   {
     "person_id": 104,
-    "criterion_id": 9489100,
+    "criterion_id": 32306,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-19",
@@ -456,7 +456,7 @@
   },
   {
     "person_id": 105,
-    "criterion_id": 21599870,
+    "criterion_id": 6266,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-13",
@@ -469,7 +469,7 @@
   },
   {
     "person_id": 106,
-    "criterion_id": 20970274,
+    "criterion_id": 3120,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-02",
@@ -482,7 +482,7 @@
   },
   {
     "person_id": 108,
-    "criterion_id": 6172773,
+    "criterion_id": 31282,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-11",
@@ -495,7 +495,7 @@
   },
   {
     "person_id": 110,
-    "criterion_id": 12771563,
+    "criterion_id": 32656,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-06",
@@ -508,7 +508,7 @@
   },
   {
     "person_id": 111,
-    "criterion_id": 6672824,
+    "criterion_id": 39845,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-22",
@@ -521,7 +521,7 @@
   },
   {
     "person_id": 120,
-    "criterion_id": 13695792,
+    "criterion_id": 41543,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-05-25",
@@ -534,7 +534,7 @@
   },
   {
     "person_id": 123,
-    "criterion_id": 18614714,
+    "criterion_id": 30491,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-28",
@@ -547,7 +547,7 @@
   },
   {
     "person_id": 126,
-    "criterion_id": 20823555,
+    "criterion_id": 1466,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-18",
@@ -560,7 +560,7 @@
   },
   {
     "person_id": 131,
-    "criterion_id": 19452001,
+    "criterion_id": 200,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-16",
@@ -573,7 +573,7 @@
   },
   {
     "person_id": 134,
-    "criterion_id": 19378529,
+    "criterion_id": 2,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-11-30",
@@ -586,7 +586,7 @@
   },
   {
     "person_id": 135,
-    "criterion_id": 6452907,
+    "criterion_id": 36041,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-11",
@@ -599,7 +599,7 @@
   },
   {
     "person_id": 136,
-    "criterion_id": 19656142,
+    "criterion_id": 507,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-16",
@@ -612,7 +612,7 @@
   },
   {
     "person_id": 137,
-    "criterion_id": 20823802,
+    "criterion_id": 1480,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-30",
@@ -625,7 +625,7 @@
   },
   {
     "person_id": 138,
-    "criterion_id": 21958373,
+    "criterion_id": 3844,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-30",
@@ -638,7 +638,7 @@
   },
   {
     "person_id": 141,
-    "criterion_id": 11619796,
+    "criterion_id": 21121,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-27",
@@ -651,7 +651,7 @@
   },
   {
     "person_id": 146,
-    "criterion_id": 11667140,
+    "criterion_id": 21594,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-29",
@@ -664,7 +664,7 @@
   },
   {
     "person_id": 147,
-    "criterion_id": 21412362,
+    "criterion_id": 3205,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-20",
@@ -677,7 +677,7 @@
   },
   {
     "person_id": 148,
-    "criterion_id": 21623421,
+    "criterion_id": 1437,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-19",
@@ -690,7 +690,7 @@
   },
   {
     "person_id": 149,
-    "criterion_id": 21994592,
+    "criterion_id": 6381,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-07",
@@ -703,7 +703,7 @@
   },
   {
     "person_id": 150,
-    "criterion_id": 21305672,
+    "criterion_id": 6640,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-08",
@@ -716,7 +716,7 @@
   },
   {
     "person_id": 156,
-    "criterion_id": 7462310,
+    "criterion_id": 8081,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-18",
@@ -729,7 +729,7 @@
   },
   {
     "person_id": 157,
-    "criterion_id": 5102813,
+    "criterion_id": 12713,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-16",
@@ -742,7 +742,7 @@
   },
   {
     "person_id": 159,
-    "criterion_id": 10683677,
+    "criterion_id": 12015,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-25",
@@ -755,7 +755,7 @@
   },
   {
     "person_id": 163,
-    "criterion_id": 5052040,
+    "criterion_id": 11827,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-08",
@@ -768,7 +768,7 @@
   },
   {
     "person_id": 167,
-    "criterion_id": 5529432,
+    "criterion_id": 20080,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-12",
@@ -781,7 +781,7 @@
   },
   {
     "person_id": 168,
-    "criterion_id": 19581889,
+    "criterion_id": 239,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-18",
@@ -794,7 +794,7 @@
   },
   {
     "person_id": 176,
-    "criterion_id": 21254423,
+    "criterion_id": 6050,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-11",
@@ -807,7 +807,7 @@
   },
   {
     "person_id": 180,
-    "criterion_id": 21809926,
+    "criterion_id": 6591,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-16",
@@ -820,7 +820,7 @@
   },
   {
     "person_id": 183,
-    "criterion_id": 4866416,
+    "criterion_id": 8802,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-07",
@@ -833,7 +833,7 @@
   },
   {
     "person_id": 184,
-    "criterion_id": 9032633,
+    "criterion_id": 8848,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-13",
@@ -846,7 +846,7 @@
   },
   {
     "person_id": 187,
-    "criterion_id": 21146533,
+    "criterion_id": 4920,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-08",
@@ -859,7 +859,7 @@
   },
   {
     "person_id": 188,
-    "criterion_id": 20946921,
+    "criterion_id": 2863,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-25",
@@ -872,7 +872,7 @@
   },
   {
     "person_id": 190,
-    "criterion_id": 16794153,
+    "criterion_id": 50236,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-09",
@@ -885,7 +885,7 @@
   },
   {
     "person_id": 195,
-    "criterion_id": 7738233,
+    "criterion_id": 16277,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-08",
@@ -898,7 +898,7 @@
   },
   {
     "person_id": 199,
-    "criterion_id": 21602974,
+    "criterion_id": 6313,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-09",
@@ -911,7 +911,7 @@
   },
   {
     "person_id": 202,
-    "criterion_id": 21080618,
+    "criterion_id": 4257,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-03",
@@ -924,7 +924,7 @@
   },
   {
     "person_id": 207,
-    "criterion_id": 21480447,
+    "criterion_id": 4356,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-19",
@@ -937,7 +937,7 @@
   },
   {
     "person_id": 208,
-    "criterion_id": 21302391,
+    "criterion_id": 6612,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-08",
@@ -950,7 +950,7 @@
   },
   {
     "person_id": 209,
-    "criterion_id": 21105272,
+    "criterion_id": 4517,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-24",
@@ -963,7 +963,7 @@
   },
   {
     "person_id": 211,
-    "criterion_id": 12165067,
+    "criterion_id": 26449,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-26",
@@ -976,7 +976,7 @@
   },
   {
     "person_id": 214,
-    "criterion_id": 5868377,
+    "criterion_id": 25771,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-19",
@@ -989,7 +989,7 @@
   },
   {
     "person_id": 217,
-    "criterion_id": 10420966,
+    "criterion_id": 9621,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-02-21",
@@ -1002,7 +1002,7 @@
   },
   {
     "person_id": 219,
-    "criterion_id": 7136458,
+    "criterion_id": 47644,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-11",
@@ -1015,7 +1015,7 @@
   },
   {
     "person_id": 220,
-    "criterion_id": 16935596,
+    "criterion_id": 8776,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-22",
@@ -1028,7 +1028,7 @@
   },
   {
     "person_id": 222,
-    "criterion_id": 7525954,
+    "criterion_id": 9911,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-09-05",
@@ -1041,7 +1041,7 @@
   },
   {
     "person_id": 223,
-    "criterion_id": 7397708,
+    "criterion_id": 52091,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-15",
@@ -1054,7 +1054,7 @@
   },
   {
     "person_id": 225,
-    "criterion_id": 21508483,
+    "criterion_id": 4748,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-03",
@@ -1067,7 +1067,7 @@
   },
   {
     "person_id": 228,
-    "criterion_id": 11832164,
+    "criterion_id": 23366,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-08",
@@ -1080,7 +1080,7 @@
   },
   {
     "person_id": 234,
-    "criterion_id": 11364224,
+    "criterion_id": 18844,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-11",
@@ -1093,7 +1093,7 @@
   },
   {
     "person_id": 239,
-    "criterion_id": 21196348,
+    "criterion_id": 5469,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-21",
@@ -1106,7 +1106,7 @@
   },
   {
     "person_id": 240,
-    "criterion_id": 5560110,
+    "criterion_id": 20564,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-04",
@@ -1119,7 +1119,7 @@
   },
   {
     "person_id": 242,
-    "criterion_id": 21846053,
+    "criterion_id": 3047,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-21",
@@ -1132,7 +1132,7 @@
   },
   {
     "person_id": 243,
-    "criterion_id": 16543063,
+    "criterion_id": 44402,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-24",
@@ -1145,7 +1145,7 @@
   },
   {
     "person_id": 247,
-    "criterion_id": 8029828,
+    "criterion_id": 24508,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-24",

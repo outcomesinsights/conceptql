@@ -1,7 +1,7 @@
 [
   {
     "person_id": 2,
-    "criterion_id": 2026533,
+    "criterion_id": 25987,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-30",
@@ -11,7 +11,7 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 12122317,
+    "criterion_id": 25988,
     "criterion_table": "condition_occurrence",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-30",

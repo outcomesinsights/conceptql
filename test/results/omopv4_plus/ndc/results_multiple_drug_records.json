@@ -1,7 +1,7 @@
 [
   {
     "person_id": 12,
-    "criterion_id": 3560914,
+    "criterion_id": 7564,
     "criterion_table": "drug_exposure",
     "criterion_domain": "drug_exposure",
     "start_date": "2009-08-04",
