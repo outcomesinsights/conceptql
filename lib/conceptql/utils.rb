@@ -60,21 +60,21 @@ module ConceptQL
           sleep timeout
           if wait_thread.alive?
             begin
+              wait_thread[:timed_out] = true
               # please note: we are assuming the command will create ONE process (not handling subprocs / proc groups)
               command = "kill -9 #{wait_thread.pid}"
               system(command)
-              wait_thread[:timed_out] = true
             rescue(Errno::ESRCH)
               # Do nothing!
             end
           end
-        end
+        end.join
 
         wait_thread.value # wait for process to finish, one way or the other
         out = stdout.read
         stdout.close
 
-        raise Timeout::Error if wait_thread[:timed_out]
+        raise Timeout::Error.new("Command #{commands} failed to complete after #{timeout} seconds") if wait_thread[:timed_out]
 
         out
       end
