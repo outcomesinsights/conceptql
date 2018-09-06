@@ -6,7 +6,7 @@ sudo: false
 gemfile: ".travis.gemfile"
 env:
 - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
-- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
 addons:
   postgresql: '9.6'
   apt:
@@ -30,7 +30,7 @@ jobs:
       script: travis_wait 40 bash .travis.impala.sh
       allow_failures: true
     - stage: Impala Test Temp Tables
-      env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://localhost/synpuf250"
+      env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 40 bash .travis.impala.sh
     - stage: Ping Jigsaw
       before_install: gem install tping
@@ -39,5 +39,5 @@ jobs:
         - tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw-diagram-editor pro
         - tping $TRAVIS_PRO_TOKEN outcomesinsights t_shank pro
   allow_failures:
-    - env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=scratch SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
     - env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
