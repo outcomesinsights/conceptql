@@ -34,8 +34,6 @@ def run_test(f, basename)
     domains(f)
   when "cc"
     criteria_counts(f)
-  when "optcc"
-    optimized_criteria_counts(f)
   when "num"
     numeric_values(f)
   when "codes"
