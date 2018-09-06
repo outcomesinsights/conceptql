@@ -5,7 +5,7 @@ describe ConceptQL::Query do
     query(
       [:foo]
     ).annotate.must_equal(
-      [:foo, {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", :foo]]}, :name=>"Invalid"}]
+      ["foo", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", "foo"]]}, :name=>"Invalid"}]
     )
   end
 
