@@ -6,7 +6,9 @@ sudo: false
 gemfile: ".travis.gemfile"
 env:
 - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+- CONCEPTQL_DATA_MODEL=gdm CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
 - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+- CONCEPTQL_DATA_MODEL=gdm CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
 addons:
   postgresql: '9.6'
   apt:
