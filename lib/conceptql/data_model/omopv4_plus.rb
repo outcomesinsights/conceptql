@@ -416,7 +416,7 @@ module ConceptQL
       end
 
       def information_period_where_clause(arguments)
-        return true if arguments.empty?
+        return if arguments.empty?
         { plan_source_value: arguments }
       end
     end

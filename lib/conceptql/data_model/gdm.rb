@@ -141,7 +141,7 @@ module ConceptQL
       end
 
       def information_period_where_clause(arguments)
-        return true if arguments.empty?
+        return if arguments.empty?
         { information_type_concept_id: arguments.map(&:to_i) }
       end
     end

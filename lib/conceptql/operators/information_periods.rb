@@ -12,8 +12,9 @@ module ConceptQL
       validate_no_upstreams
 
       def query(db)
-        db[source_table]
-          .where(where_clause)
+        ds = db[source_table]
+        ds = ds.where(where_clause) if where_clause
+        ds
       end
 
       def source_table
