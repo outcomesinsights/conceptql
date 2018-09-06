@@ -5,13 +5,9 @@
     "end": "2008-03-20",
     "annotation": {
       "counts": {
-        "patients": {
+        "person": {
           "rows": 249,
           "n": 249
-        },
-        "person": {
-          "rows": 0,
-          "n": 0
         }
       }
     },

@@ -8,14 +8,8 @@
           "rows": 0,
           "n": 0
         }
-      },
-      "warnings": [
-        [
-          "unknown code(s)",
-          "00"
-        ]
-      ]
+      }
     },
-    "name": "seer_seq"
+    "name": "SEER Sequence Number"
   }
 ]
