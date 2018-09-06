@@ -23,9 +23,9 @@ module ConceptQL
         end
 
         def assigned_vocabularies
-          @assigned_vocabularies ||= all_vocabs.select { |k, vocab| vocab[:hidden].nil? }.sort_by(&:first).each.with_object({}) do |arr, h|
-            h[arr.first] ||= {}
-            h[arr.first] = h[arr.first].merge(arr.last)
+          @assigned_vocabularies ||= all_vocabs.values.each.with_object({}) do |v, h|
+            h[v[:id]] ||= {}
+            h[v[:id]] = h[v[:id]].merge(v)
           end
         end
 
@@ -182,8 +182,7 @@ module ConceptQL
       end
 
       def preferred_name
-        vocab = self.class.assigned_vocabularies[op_name]
-        vocab[:vocabulary_short_name] || vocab[:omopv5_vocabulary_id] || vocab[:id]
+        vocab_entry && vocab_entry[:vocabulary_short_name] || vocab_entry[:omopv5_vocabulary_id] || vocab_entry[:id]
       end
 
       private
@@ -218,13 +217,13 @@ module ConceptQL
       end
 
       def translate_to_old(v_id)
-        v = self.class.v5_vocab_to_v4_vocab[v_id.to_s]
+        v = self.class.v5_vocab_to_v4_vocab[v_id.to_s.downcase]
         return v.to_i if v
         v
       end
 
       def domain_map(v_id)
-        (self.class.vocab_domain[v_id] || :condition_occurrence).to_sym
+        ((vocab_entry && vocab_entry[:domain]) || :condition_occurrence).to_sym
       end
 
       def table_is_missing?(db)
