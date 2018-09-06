@@ -188,7 +188,7 @@ module ConceptQL
       private
 
       def vocab_entry
-        self.class.assigned_vocabularies[op_name]
+        self.class.assigned_vocabularies[op_name.to_s.downcase]
       end
 
       def vocab_format_regexp
