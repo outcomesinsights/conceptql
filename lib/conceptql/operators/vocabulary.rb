@@ -193,7 +193,7 @@ module ConceptQL
       end
 
       def vocab_format_regexp
-        (vocab_entry || {format_regexp: ""})[:format_regexp]
+        (vocab_entry || {format_regexp: nil})[:format_regexp]
       end
 
       # Defined so that bad_arguments can check for bad codes
