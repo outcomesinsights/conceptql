@@ -126,7 +126,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def first_valid_event
         all_valid_events
-          .select_append { |o| o.row_number.function.over(partition: :person_id, order: [ :start_date, :criterion_id ]).as(:rn) }
+          .select_append { |o| o.row_number.function.over(partition: :person_id, order: [ rdbms.partition_fix(:start_date), :criterion_id ]).as(:rn) }
           .from_self
           .where(rn: 1)
       end
