@@ -19,15 +19,15 @@ module ConceptQL
 
     def create(operator, *values)
       operator = operator.to_s.downcase
-      if operator.to_s == 'algorithm'
+      if operator == 'algorithm'
         statement, desc = algorithm_fetcher.call(values.first)
         if statement
           create(*statement)
         else
           invalid_op(operator, values, "invalid algorithm", values.first)
         end
-      elsif klass = operators[operator.to_s]
-        klass.new(self, operator.to_s, *values)
+      elsif klass = operators[operator]
+        klass.new(self, operator, *values)
       else
         invalid_op(operator, values, "invalid operator", operator)
       end

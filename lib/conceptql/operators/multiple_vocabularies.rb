@@ -107,7 +107,7 @@ module ConceptQL
         @vocab_ops ||= self.class.multiple_vocabularies[op_name].map do |op_info|
           op_info[:vocabulary_id]
         end.map do |vocab_id|
-          Vocabulary.new(nodifier, vocab_id, *arguments)
+          Vocabulary.new(nodifier, vocab_id.to_s.downcase, *arguments)
         end
       end
 
