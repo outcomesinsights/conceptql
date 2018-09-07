@@ -68,7 +68,7 @@ module ConceptQL
               # Do nothing!
             end
           end
-        end.join
+        end
 
         wait_thread.value # wait for process to finish, one way or the other
         out = stdout.read
