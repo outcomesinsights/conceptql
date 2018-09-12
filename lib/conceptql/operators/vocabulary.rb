@@ -9,53 +9,137 @@ module ConceptQL
       extend Sequelizer
       include ConceptQL::Behaviors::Windowable
 
+      class Entry
+        attr :hash
+
+        METHODS = %i(
+          id
+          omopv4_vocabulary_id
+          omopv5_vocabulary_id
+          domain
+          vocabulary_short_name
+          vocabulary_long_name
+          format_regexp
+        )
+
+        METHODS.each do |meth|
+          define_method(meth) do
+            hash[meth]
+          end
+        end
+
+        METADATA_METHODS = METHODS + %i(
+          preferred_name
+          predominant_domains
+        )
+
+        def initialize(hash)
+          @hash = hash
+          @hash[:omopv5_vocabulary_id] ||= @hash[:id]
+          @hash[:id] = @hash[:id].to_s.downcase
+        end
+
+        def merge(other_entry)
+          self.class.new(hash.merge(other_entry.hash))
+        end
+
+        def belongs_in_omopv4_plus?
+          (!from_lexicon? || from_csv?) \
+            && has_domain? \
+            && visible?
+        end
+
+        def to_hash
+          METADATA_METHODS.each_with_object({}) do |meth, h|
+            h[meth] = send(meth)
+          end
+        end
+
+        def short_name
+          vocabulary_short_name
+        end
+
+        def long_name
+          vocabulary_long_name
+        end
+
+        def preferred_name
+          short_name || omopv5_id || id
+        end
+
+        def predominant_domains
+          Array(domain).flatten
+        end
+
+        def from_lexicon?
+          ConceptQL::Utils.present?(hash[:from_lexicon])
+        end
+
+        def from_csv?
+          ConceptQL::Utils.present?(hash[:from_csv])
+        end
+
+        def has_domain?
+          ConceptQL::Utils.present?(hash[:domain])
+        end
+
+        def hidden?
+          ConceptQL::Utils.present?(hash[:hidden])
+        end
+
+        def visible?
+          !hidden?
+        end
+
+        def omopv5_id
+          omopv5_vocabulary_id || id
+        end
+
+        def omopv4_id
+          omopv4_vocabulary_id
+        end
+      end
+
       class << self
         def v4_vocab_to_v5_vocab
-          all_vocabs.values.each_with_object({}) do |row, h|
-            h[row[:omopv4_vocabulary_id]] = row[:omopv5_vocabulary_id] || row[:id]
+          all_vocabs.values.each_with_object({}) do |entry, h|
+            h[entry.omopv4_id] = entry.omopv5_id
           end
         end
 
         def v5_vocab_to_v4_vocab
-          all_vocabs.values.each_with_object({}) do |row, h|
-            h[row[:id]] = row[:omopv4_vocabulary_id]
+          all_vocabs.values.each_with_object({}) do |entry, h|
+            h[entry.id] = entry.omopv4_id
           end
         end
 
         def assigned_vocabularies
-          @assigned_vocabularies ||= all_vocabs.values.each.with_object({}) do |v, h|
-            h[v[:id]] ||= {}
-            h[v[:id]] = h[v[:id]].merge(v)
+          @assigned_vocabularies ||= all_vocabs.values.each.with_object({}) do |entry, h|
+            h[entry.id] ||= entry
+            h[entry.id] = h[entry.id].merge(entry)
           end
         end
 
         def vocab_domain
-          all_vocabs.values.each_with_object({}) do |row, h|
-            h[row[:id]] = row[:domain]
+          all_vocabs.values.each_with_object({}) do |entry, h|
+            h[entry.id] = entry.domain
           end
         end
 
         def register_many
-          assigned_vocabularies.each do |name, vocab|
+          assigned_vocabularies.each do |name, entry|
             dms = [:gdm]
-            dms << :omopv4_plus if belongs_in_omopv4_plus?(vocab)
+            dms << :omopv4_plus if entry.belongs_in_omopv4_plus?
             register(name, *dms)
           end
         end
 
-        def belongs_in_omopv4_plus?(vocab)
-          (ConceptQL::Utils.blank?(vocab[:from_lexicon]) || ConceptQL::Utils.present?(vocab[:from_csv])) \
-            && ConceptQL::Utils.present?(vocab[:domain]) \
-            && ConceptQL::Utils.blank?(vocab[:hidden])
-        end
 
         def all_vocabs
           @all_vocabs ||= each_vocab.each_with_object({}) do |row, h|
-            row = row.to_hash
-            row[:omopv5_vocabulary_id] ||= row[:id]
-            row[:id] = row[:id].to_s.downcase
-            h[row[:id]] ||= {}
-            h[row[:id]].merge!(row.compact)
+            entry = Entry.new(row.to_hash.compact)
+            h[entry.id] ||= entry
+            h[entry.id] = h[entry.id].merge(entry)
           end
         end
 
@@ -90,10 +174,7 @@ module ConceptQL
         # for this operator
         def to_metadata(name, opts = {})
           h = super
-          vocab = assigned_vocabularies[name.downcase]
-          h[:preferred_name] = vocab[:vocabulary_short_name] || vocab[:omopv5_vocabulary_id] || vocab[:id]
-          h[:predominant_domains] = [vocab[:domain]].flatten
-          h
+          h.merge(assigned_vocabularies[name.to_s.downcase].to_hash)
         end
 
         def force_refresh!
@@ -188,17 +269,13 @@ module ConceptQL
       end
 
       def preferred_name
-        vocab_entry && vocab_entry[:vocabulary_short_name] || vocab_entry[:omopv5_vocabulary_id] || vocab_entry[:id]
+        vocab_entry.short_name || vocab.omopv5_id
       end
 
       private
 
       def vocab_entry
-        self.class.assigned_vocabularies[op_name.to_s.downcase]
-      end
-
-      def vocab_format_regexp
-        (vocab_entry || {format_regexp: nil})[:format_regexp]
+        self.class.assigned_vocabularies[op_name.to_s.downcase] || Entry.new({})
       end
 
       # Defined so that bad_arguments can check for bad codes
@@ -206,7 +283,7 @@ module ConceptQL
         unless defined?(@code_regexp)
           @code_regexp = nil
 
-          if reg_str = vocab_format_regexp
+          if reg_str = vocab_entry.format_regexp
             @code_regexp = Regexp.new(reg_str, Regexp::IGNORECASE)
           end
         end
@@ -218,7 +295,7 @@ module ConceptQL
       end
 
       def translated_vocabulary_id
-        return (vocab_entry && vocab_entry[:omopv5_vocabulary_id]) || op_name if gdm?
+        return vocab_entry.omopv5_vocabulary_id || op_name if gdm?
         return translate_to_old(op_name)
       end
 
@@ -229,7 +306,7 @@ module ConceptQL
       end
 
       def domain_map(v_id)
-        ((vocab_entry && vocab_entry[:domain]) || :condition_occurrence).to_sym
+        (vocab_entry.domain || :condition_occurrence).to_sym
       end
 
       def table_is_missing?(db)
