@@ -2,8 +2,13 @@ require_relative "../../../helper"
 require "conceptql"
 
 describe ConceptQL::Operators::Vocabulary do
-  it "should populate known vocabularies from file" do
+  it "should populate known vocabularies from file in gdm" do
     ConceptQL::Operators.operators[:gdm]["admsrce"].must_equal ConceptQL::Operators::Vocabulary
+  end
+
+  it "should populate known vocabularies from file in omopv4_plus" do
+    op_names = ConceptQL::Nodifier.new(data_model: :omopv4_plus).to_metadata.map { |_, v| v[:preferred_name] }
+    op_names.must_include("WHO ATC")
   end
 
   it "should not create duplicate vocabulary operators for omopv4_plus" do

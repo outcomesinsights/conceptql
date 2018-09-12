@@ -44,7 +44,7 @@ module ConceptQL
         end
 
         def belongs_in_omopv4_plus?(vocab)
-          ConceptQL::Utils.blank?(vocab[:from_lexicon]) \
+          (ConceptQL::Utils.blank?(vocab[:from_lexicon]) || ConceptQL::Utils.present?(vocab[:from_csv])) \
             && ConceptQL::Utils.present?(vocab[:domain]) \
             && ConceptQL::Utils.blank?(vocab[:hidden])
         end
@@ -66,7 +66,7 @@ module ConceptQL
         def get_all_vocabs
           vocabs = [ConceptQL.vocabularies_file_path, ConceptQL.custom_vocabularies_file_path].select(&:exist?).map do |path|
             CSV.foreach(path, headers: true, header_converters: :symbol).to_a
-          end.inject(:+)
+          end.inject(:+).each { |v| v[:from_csv] = true }
 
           lexicon_vocabularies + vocabs
         end
