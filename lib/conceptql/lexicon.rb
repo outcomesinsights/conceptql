@@ -47,7 +47,8 @@ module ConceptQL
                 Sequel[:omopv5_id].as(:omopv5_vocabulary_id),
                 Sequel[:omopv4_id].as(:omopv4_vocabulary_id),
                 Sequel[:vocabulary_name].as(:vocabulary_short_name),
-                Sequel[:vocabulary_name].as(:vocabulary_full_name))
+                Sequel[:vocabulary_name].as(:vocabulary_full_name),
+                Sequel.expr(1).as(:from_lexicon))
         .all
     end
   end

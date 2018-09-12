@@ -6,6 +6,12 @@ describe ConceptQL::Operators::Vocabulary do
     ConceptQL::Operators.operators[:gdm]["admsrce"].must_equal ConceptQL::Operators::Vocabulary
   end
 
+  it "should not create duplicate vocabulary operators for omopv4_plus" do
+    op_names = ConceptQL::Nodifier.new(data_model: :omopv4_plus).to_metadata.map { |_, v| v[:preferred_name] }
+    duplicate_names = op_names.select { |op_name| op_names.count(op_name) > 1 }.uniq
+    duplicate_names.must_equal([], "Found duplicate operators: #{duplicate_names}")
+  end
+
   it "should produce correct SQL under gdm" do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
     db.query(["admsrce", "12"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ADMSRCE') AND (\"concept_code\" IN ('12')))))) AS \"t1\") AS \"t1\""

@@ -38,9 +38,15 @@ module ConceptQL
         def register_many
           assigned_vocabularies.each do |name, vocab|
             dms = [:gdm]
-            dms << :omopv4_plus if ConceptQL::Utils.present?(vocab[:domain])
+            dms << :omopv4_plus if belongs_in_omopv4_plus?(vocab)
             register(name, *dms)
           end
+        end
+
+        def belongs_in_omopv4_plus?(vocab)
+          ConceptQL::Utils.blank?(vocab[:from_lexicon]) \
+            && ConceptQL::Utils.present?(vocab[:domain]) \
+            && ConceptQL::Utils.blank?(vocab[:hidden])
         end
 
         def all_vocabs
