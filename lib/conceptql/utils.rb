@@ -25,7 +25,7 @@ module ConceptQL
       end
 
       def blank?(thing)
-        thing.nil? || thing.empty?
+        thing.nil? || (thing.respond_to?(:empty?) ? thing.empty? : false)
       end
 
       def present?(thing)

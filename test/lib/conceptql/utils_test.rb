@@ -43,6 +43,7 @@ describe ConceptQL::Utils do
       assert !ConceptQL::Utils.blank?([1])
       assert !ConceptQL::Utils.blank?({a: 1})
       assert !ConceptQL::Utils.blank?("1")
+      assert !ConceptQL::Utils.blank?(1)
     end
   end
 
