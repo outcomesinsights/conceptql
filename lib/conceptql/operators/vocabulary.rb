@@ -269,7 +269,7 @@ module ConceptQL
       end
 
       def preferred_name
-        vocab_entry.short_name || vocab.omopv5_id
+        vocab_entry.short_name || vocab_entry.omopv5_id
       end
 
       private
