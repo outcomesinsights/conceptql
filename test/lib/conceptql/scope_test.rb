@@ -209,6 +209,55 @@ describe ConceptQL::Scope do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
         db.query(["visit_occurrence", true], opts).sql.must_match(/JOIN/)
       end
+
+      it "avoids infinite recursion when processing CTEs" do
+        statement = [:any_overlap,
+                     {:left=>
+                      [:from,
+                       Sequel[:jigsaw_temp][:jtemp1c4qd4w_baseline_windows],
+                       {:query_cols=>
+                        [:person_id,
+                         :criterion_id,
+                         :criterion_table,
+                         :criterion_domain,
+                         :start_date,
+                         :end_date,
+                         :source_value,
+                         :source_vocabulary_id,
+                         :uuid]}],
+                         :right=>
+                        ["after",
+                         {"left"=>
+                          ["one_in_two_out",
+                           ["during",
+                            {"left"=>["union", ["icd9", "198.5"], ["icd10", "C79.51"]],
+                             "right"=>
+                          ["date_range", {"start"=>"2015-01-01", "end"=>"2016-12-31"}]}],
+                          {"inpatient_return_date"=>"Discharge Date",
+                           "outpatient_minimum_gap"=>"1y",
+                           "outpatient_event_to_return"=>"Initial Event",
+                           "outpatient_maximum_gap"=>"2y"}],
+                           "right"=>["time_window", ["person"], {"start"=>"+18y-1d", "end"=>""}]}]}]
+
+        opts = {
+          force_temp_tables: true,
+          scratch_database: :scratch,
+          scope_opts: {
+            window_table: :baseline_windows
+          }
+        }
+
+        q = ConceptQL::Database.new(Sequel.mock(host: :impala), opts).query(statement)
+
+        begin
+          result = Timeout::timeout(2) do
+            q.sql_statements
+          end
+          pass
+        rescue Timeout::Error
+          flunk
+        end
+      end
     end
 
     describe "with windows from another table, along with adjustments" do
