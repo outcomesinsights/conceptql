@@ -227,7 +227,6 @@ module ConceptQL
       #p [:rec, ctes, query.opts]
 
       if from = query.opts[:from]
-        from = from.map{|t| recursive_extract_cte_expr(t, ctes)}
         query = query.clone(:from=>from.map{|t| recursive_extract_cte_expr(t, ctes)})
         #p [:rec_from, ctes.map(&:first), from]
       end
