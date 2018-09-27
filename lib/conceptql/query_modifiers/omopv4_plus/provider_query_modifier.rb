@@ -9,25 +9,14 @@ module ConceptQL
         end
 
         def self.has_required_columns?(cols)
-          needed = [:practitioner_id, :context_id].sort
-          found = needed & cols
-          !found.empty?
+          cols.find { |col| col.to_s =~ /provider_id/ }
         end
 
         def modified_query
-          if dm.table_cols(source_table).include?(:context_id)
-            query.from_self(alias: :c)
-              .join(Sequel[:contexts_practitioners].as(:cp), context_id: :context_id)
-              .select_all(:c)
-              .select_append(Sequel[:cp][:practitioner_id].as(:provider_id))
-              .from_self
-          else
-            query
-              .select_all
-              .select_append(Sequel[:practitioner_id].as(:provider_id))
-          end
+          col = self.class.has_required_columns?(dm.table_cols(source_table))
+          return query if col.nil? || col.to_sym == :provider_id
+          query.select_append(Sequel[col].as(:provider_id)).from_self
         end
-
       end
     end
   end
