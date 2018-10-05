@@ -34,12 +34,11 @@ jobs:
     - stage: Impala Test Temp Tables
       env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 40 bash .travis.impala.sh
-    - stage: Ping Jigsaw
+    - stage: deploy
       before_install: gem install tping
-      before_script: skip
       script:
-        - tping $TRAVIS_PRO_TOKEN outcomesinsights jigsaw-diagram-editor pro
-        - tping $TRAVIS_PRO_TOKEN outcomesinsights t_shank pro
+        - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo jigsaw-diagram-editor --pro --branch $TRAVIS_BRANCH
+        - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo t_shank --pro --branch $TRAVIS_BRANCH
   allow_failures:
     - env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
     - env: CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
