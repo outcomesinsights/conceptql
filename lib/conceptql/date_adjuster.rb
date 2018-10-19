@@ -21,13 +21,13 @@ module ConceptQL
 
       origin_column = column
 
-      while (chr = str.chars.first) =~ /[res]/i
-        str.sub!(chr, '')
+      chrs = str.chars
+      while (chr = chrs.shift) =~ /[res]/i
         if chr.downcase == 'r'
           reverse = true
         else
           origin_column = chr.downcase == 'e' ? :end_date : :start_date
-          origin_column = Sequel.qualify(column.table, origin_column) if column.respond_to?(:table)
+          origin_column = Sequel.qualify(column.table.to_sym, origin_column) if column.respond_to?(:table)
         end
       end
 

@@ -88,13 +88,33 @@ describe ConceptQL::DateAdjuster do
     end
 
     describe "with end_date specified as part of a QualifiedIdentifier adjustment" do
-      let(:str) { "E6y" }
+      let(:str) { "ER6y" }
 
       it "should work" do
         adj = da.adjust(Sequel.qualify(:table, :start_date))
         adj.expr.table.must_equal(:table)
         adj.expr.column.must_equal(:end_date)
-        adj.interval.must_equal(years: 6)
+        adj.interval.must_equal(years: -6)
+      end
+
+      it "should work with Sequel Identifier" do
+        adj = da.adjust(Sequel[:table][:start_date])
+        adj.expr.table.must_equal(:table)
+        adj.expr.column.must_equal(:end_date)
+        adj.interval.must_equal(years: -6)
+      end
+
+      it "should preserve with original string" do
+        adj = da.adjust(Sequel[:table][:start_date])
+        adj.expr.table.must_equal(:table)
+        adj.expr.column.must_equal(:end_date)
+        adj.interval.must_equal(years: -6)
+
+        op.expect :rdbms, rdbms
+        adj = da.adjust(Sequel[:table][:start_date])
+        adj.expr.table.must_equal(:table)
+        adj.expr.column.must_equal(:end_date)
+        adj.interval.must_equal(years: -6)
       end
     end
 
