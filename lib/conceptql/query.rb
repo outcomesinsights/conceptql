@@ -13,10 +13,9 @@ module ConceptQL
     def_delegators :db, :profile_for
 
     attr :statement
-      @statement = extract_statement(statement)
-      opts = opts.dup
     def initialize(cdb, statement, opts={})
       @cdb = cdb
+      @statement, opts = extract_statement(statement, opts.dup)
       opts[:algorithm_fetcher] ||= proc do |alg|
         statement, description = db[:concepts].where(concept_id: alg).get([:statement, :label])
         statement = JSON.parse(statement) if statement.is_a?(String)
@@ -108,13 +107,19 @@ module ConceptQL
     private
     attr :cdb, :nodifier
 
-    def extract_statement(stmt)
+    def extract_statement(stmt, opts)
       if !stmt.is_a?(Array)
         raise "Improper ConceptQL statement: Expected an Array, got a #{stmt.class}"
+      elsif stmt.first.to_s == "window"
+        raise "window operator needs a hash as the last item of the array." unless stmt.last.is_a?(Hash)
+        raise "window operator needs a ConceptQL statement followed by a hash as the last item of the array." unless stmt.length == 3
+        opts[:scope_opts] = (opts[:scope_opts] || {}).dup
+        opts[:scope_opts].merge!(window_opts: stmt.last.merge(cdb: cdb))
+        [stmt[1], opts]
       elsif stmt.length == 1 && stmt.first.is_a?(Array)
-        stmt.first
+        [stmt.first, opts]
       else
-        stmt
+        [stmt, opts]
       end
     end
 

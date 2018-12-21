@@ -338,7 +338,7 @@ module ConceptQL
     end
 
     def windows
-      @windows ||= Window.from(opts)
+      @windows ||= Window.from(opts.merge(opts[:window_opts] || {}))
     end
 
     def force_temp_tables?
