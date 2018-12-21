@@ -19,7 +19,18 @@ module ConceptQL
         exprs << (Sequel[:l][:end_date] <= end_date)
         exprs << { Sequel[:l][:person_id] => Sequel[:r][:person_id] }
 
-        op.rdbms.semi_join(query, get_table_window(table_window, query), *exprs)
+        query = Sequel[query] if query.is_a?(Symbol)
+        table = get_table_window(table_window, query)
+        table = Sequel[table] if table.is_a?(Symbol)
+        expr = exprs.inject(&:&)
+        rhs = query.db[table]
+        query.from_self(alias: :l).join(rhs
+          .select_append{row_number.function.over(order: rhs.columns).as(:window_id)}.as(:r),
+          expr
+        )
+        .select_all(:l)
+        .select_append(:window_id)
+        .from_self
       end
 
       def get_table_window(table_window, query)

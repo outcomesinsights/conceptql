@@ -69,7 +69,7 @@ occurrence, this operator returns nothing for that person.
         else
           query_simple(db)
         end
-        
+
         ds.where(rn: occurrence.abs)
       end
 
@@ -82,13 +82,13 @@ occurrence, this operator returns nothing for that person.
         # Give a global row number to all rows, so that the self joined dataset can partition based on
         # the global row number when ordering
         input_ds = stream.evaluate(db)
-          .select_append(Sequel[:ROW_NUMBER].function.over(partition: :person_id, order: ordered_columns(:global=>true)).as(:global_rn))
+          .select_append(Sequel[:ROW_NUMBER].function.over(partition: matching_columns, order: ordered_columns(:global=>true)).as(:global_rn))
 
         first = Sequel[:first]
         rest = Sequel[:rest]
         joined_name = unqualified_cte_name(:occurrence_joined)
         joined_ds = db[Sequel[input_name].as(:first)]
-          .join(Sequel[input_name].as(:rest), :person_id=>:person_id) do
+          .join(Sequel[input_name].as(:rest), matching_columns.map{|c| [c,c]}) do
             cond = rest[:global_rn] > first[:global_rn]
             if at_least_option
               cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date])
@@ -100,7 +100,7 @@ occurrence, this operator returns nothing for that person.
           end
           .select_all(:rest)
           .select_append(first[:global_rn].as(:initial_rn))
-          .select_append(Sequel[rank_function].function.over(partition: [first[:person_id], first[:global_rn]], order: ordered_columns(:qualify=>:rest)).as(:rn))
+          .select_append(Sequel[rank_function].function.over(partition: matching_columns.map{|c| first[c]} + [first[:global_rn]], order: ordered_columns(:qualify=>:rest)).as(:rn))
 
         db[joined_name]
           .with(input_name, input_ds)
@@ -111,7 +111,7 @@ occurrence, this operator returns nothing for that person.
       # Without at_least or within option, only return the first occurrence for each person, if any.
       def query_simple(db)
         stream.evaluate(db)
-          .select_append(Sequel[rank_function].function.over(partition: :person_id, order: ordered_columns).as(:rn))
+          .select_append(Sequel[rank_function].function.over(partition: matching_columns, order: ordered_columns).as(:rn))
           .from_self
       end
 

@@ -626,6 +626,14 @@ module ConceptQL
         end
       end
 
+      def matching_columns
+        if scope.opts.dig(:window_opts, :window_table)
+          [:person_id, :window_id]
+        else
+          [:person_id]
+        end
+      end
+
       def use_inner_join?
         options[:inner_join]
       end
