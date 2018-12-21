@@ -9,13 +9,14 @@ module ConceptQL
   class Query
     extend Forwardable
     def_delegators :query, :all, :count, :execute, :order, :profile
+    def_delegators :cdb, :db
     def_delegators :db, :profile_for
 
     attr :statement
-    def initialize(db, statement, opts={})
-      @db = db
       @statement = extract_statement(statement)
       opts = opts.dup
+    def initialize(cdb, statement, opts={})
+      @cdb = cdb
       opts[:algorithm_fetcher] ||= proc do |alg|
         statement, description = db[:concepts].where(concept_id: alg).get([:statement, :label])
         statement = JSON.parse(statement) if statement.is_a?(String)
@@ -105,7 +106,7 @@ module ConceptQL
     end
 
     private
-    attr :db, :nodifier
+    attr :cdb, :nodifier
 
     def extract_statement(stmt)
       if !stmt.is_a?(Array)
