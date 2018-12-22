@@ -1,0 +1,21 @@
+[
+  "window",
+  [
+    "one_in_two_out",
+    [
+      "icd9",
+      "401.1"
+    ], {
+      "outpatient_event_to_return": "Initial Event",
+      "outpatient_minimum_gap": "3w"
+    }
+  ],
+  {
+    "person_ids": [2],
+    "window_table": [
+      "union",
+      ["date_range", { "start": "2009-01-01", "end": "2009-12-31" }],
+      ["date_range", { "start": "2010-01-01", "end": "2010-12-31" }]
+    ]
+  }
+]

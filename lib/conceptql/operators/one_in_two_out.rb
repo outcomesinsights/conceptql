@@ -95,7 +95,7 @@ twice in an outpatient setting with a 30-day gap.
 
         sub_select = outpatient_events
                         .from_self(alias: sub_table)
-                        .where({ initial[:person_id] => confirm[:person_id] })
+                        .where(matching_columns.map { |c| [initial[c], confirm[c]] })
                         .exclude({ initial[:criterion_id] => confirm[:criterion_id] })
 
         # In order to avoid many more comparisons of initial to confirm events, we now
@@ -126,7 +126,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def first_valid_event
         all_valid_events
-          .select_append { |o| o.row_number.function.over(partition: :person_id, order: [ rdbms.partition_fix(:start_date), :criterion_id ]).as(:rn) }
+          .select_append { |o| o.row_number.function.over(partition: matching_columns , order: [ rdbms.partition_fix(:start_date), :criterion_id ]).as(:rn) }
           .from_self
           .where(rn: 1)
       end
