@@ -95,8 +95,8 @@ twice in an outpatient setting with a 30-day gap.
 
         sub_select = outpatient_events
                         .from_self(alias: sub_table)
-                        .where(initial[:person_id] => confirm[:person_id])
-                        .exclude(initial[:criterion_id] => confirm[:criterion_id])
+                        .where({ initial[:person_id] => confirm[:person_id] })
+                        .exclude({ initial[:criterion_id] => confirm[:criterion_id] })
 
         # In order to avoid many more comparisons of initial to confirm events, we now
         # filter the join by having only confirm events that come on or after initial events
