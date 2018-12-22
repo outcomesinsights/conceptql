@@ -43,7 +43,8 @@ module ConceptQL
       drug_quantity: :Float,
       admission_date: :Date,
       discharge_date: :Date,
-      uuid: :String
+      uuid: :String,
+      window_id: :Bigint
     }.freeze
 
     COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
@@ -63,6 +64,7 @@ module ConceptQL
       @annotation[:warnings] = @warnings = {}
       @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
+      @query_columns << :window_id if opts.dig(:window_opts, :window_table)
       @lexicon = opts[:lexicon]
 
       @i = 0

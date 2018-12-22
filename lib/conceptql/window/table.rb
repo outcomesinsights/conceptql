@@ -24,12 +24,15 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
         rhs = query.db[table]
-        query.from_self(alias: :l).join(rhs
+        query
+          .select_remove(:window_id)
+          .from_self(alias: :l).join(rhs
+          .select_remove(:window_id)
           .select_append{row_number.function.over(order: rhs.columns).as(:window_id)}.as(:r),
           expr
         )
         .select_all(:l)
-        .select_append(:window_id)
+        .select_append(Sequel[:r][:window_id])
         .from_self
       end
 
