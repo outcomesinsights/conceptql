@@ -22,7 +22,7 @@ R-----R
         if compare_all?
           right.evaluate(db).from_self
         else
-          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:min, :end_date).as(:end_date))
+          right.evaluate(db).from_self.select_group(*matching_columns).select_append(Sequel.function(:min, :end_date).as(:end_date))
         end
       end
 

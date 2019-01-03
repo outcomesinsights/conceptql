@@ -1,0 +1,18 @@
+[
+  "window",
+  [
+    "after",
+    {
+      "left":[ "icd9", "401.1" ],
+      "right":[ "icd9", "401.1" ]
+    }
+  ],
+  {
+    "person_ids": [2],
+    "window_table": [
+      "union",
+      ["date_range", { "start": "2009-01-01", "end": "2009-12-31" }],
+      ["date_range", { "start": "2010-01-01", "end": "2010-12-31" }]
+    ]
+  }
+]
