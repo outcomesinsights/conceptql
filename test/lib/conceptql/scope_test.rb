@@ -94,12 +94,12 @@ describe ConceptQL::Scope do
 
       it "should limit selection on condition_occurrence table" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        db.query(["visit_occurrence", true], opts).sql.must_match(/EXISTS/)
+        db.query(["visit_occurrence", true], opts).sql.must_match(/INNER JOIN/)
       end
 
       it "should not apply to inner query of revenue code operator" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        db.query(["revenue_code", "0450"], opts).sql.downcase.scan("exists").count.must_equal 1
+        db.query(["revenue_code", "0450"], opts).sql.downcase.scan("inner join").count.must_equal 1
       end
     end
 
