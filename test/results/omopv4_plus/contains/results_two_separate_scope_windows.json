@@ -1,0 +1,46 @@
+[
+  {
+    "person_id": 2,
+    "criterion_id": 45788,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-06-05",
+    "end_date": "2009-06-04",
+    "source_value": "401.1",
+    "source_vocabulary_id": "2",
+    "window_id": 3
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 26413,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-07-03",
+    "end_date": "2009-07-02",
+    "source_value": "401.1",
+    "source_vocabulary_id": "2",
+    "window_id": 3
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 22498,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-03-21",
+    "end_date": "2010-03-20",
+    "source_value": "401.1",
+    "source_vocabulary_id": "2",
+    "window_id": 4
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 22499,
+    "criterion_table": "condition_occurrence",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-03-21",
+    "end_date": "2010-03-20",
+    "source_value": "401.1",
+    "source_vocabulary_id": "2",
+    "window_id": 4
+  }
+]
