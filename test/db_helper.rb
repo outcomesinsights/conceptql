@@ -108,8 +108,33 @@ class Minitest::Spec
     raise
   end
 
+  def clock_time
+    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
+  PERFORMANCE_TEST_TIMES = ENV["CONCEPTQL_PERFORMANCE_TEST_TIMES"].to_i
   def load_check(test_name, statement)
-    check_output(test_name, yield(load_statement(test_name, statement)))
+    statement = load_statement(test_name, statement)
+    results = yield statement
+    check_output(test_name, results)
+
+    if PERFORMANCE_TEST_TIMES > 0
+      times = PERFORMANCE_TEST_TIMES.times.map do 
+        before = clock_time
+        yield statement
+        clock_time - before
+      end
+      avg_time = times.sum/times.length
+
+      path = "test/performance/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name.sub(/\.json\z/, '.csv')}"
+      sha1 = `git rev-parse HEAD`.chomp
+      adapter = "#{DB.adapter_scheme}/#{DB.database_type}"
+
+      FileUtils.mkdir_p(File.dirname(path))
+      File.open(path, 'ab') do |file|
+        file.puts([sha1, adapter, DB.opts[:database], Time.now, avg_time].join(','))
+      end
+    end
   rescue
     puts $!.sql if $!.respond_to?(:sql)
     raise
