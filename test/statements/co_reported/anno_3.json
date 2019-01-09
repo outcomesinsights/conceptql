@@ -1,14 +1,11 @@
 [
+  "co_reported",
   [
-    "co_reported",
-    [
-      "icd9",
-      "004.3"
-    ],
-    [
-      "cpt_or_hcpcs",
-      "69210"
-    ]
+    "icd9",
+    "004.3"
+  ],
+  [
+    "cpt_or_hcpcs",
+    "69210"
   ]
 ]
-
