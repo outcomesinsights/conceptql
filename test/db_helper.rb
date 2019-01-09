@@ -78,8 +78,8 @@ class Minitest::Spec
     expected = begin
       File.read(path)
     rescue Errno::ENOENT
-      save_results(path, [])
-      "[]"
+      save_results(path, { fail: true })
+      '{ "fail": true }'
     end
 
     JSON.parse(results.to_json).must_equal(JSON.parse(expected))
