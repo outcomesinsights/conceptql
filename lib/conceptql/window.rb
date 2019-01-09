@@ -20,7 +20,7 @@ module ConceptQL
         end
 
         if window_table
-          windows << Table.new(window_table, opts[:adjust_window_start], opts[:adjust_window_end])
+          windows << Table.new(window_table, opts[:cdb], opts[:adjust_window_start], opts[:adjust_window_end])
         end
 
         if person_ids

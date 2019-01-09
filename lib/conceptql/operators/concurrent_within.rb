@@ -35,9 +35,9 @@ module ConceptQL
               .from_self(:alias=>:r)
               .where(adjusted_start_date <= Sequel[:r][:start_date])
               .where(adjusted_end_date >= Sequel[:r][:end_date])
-              .select(:person_id)
+              .select(*matching_columns)
 
-            matching = matching.where(:person_id=>other)
+            matching = matching.where(matching_columns=>other)
           end
 
           matching

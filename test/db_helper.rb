@@ -22,7 +22,7 @@ class Minitest::Spec
   end
 
   def results(test_name, statement=nil)
-    load_check(test_name, statement) do |stmt|
+    load_check(test_name, statement) do |stmt, remove_window|
       ds = dataset(query(stmt)).from_self
 
       order_columns = [:person_id, :criterion_table, :criterion_domain, :start_date, :criterion_id]
@@ -32,6 +32,8 @@ class Minitest::Spec
       results = ds.all
       results.each do |h|
         h.transform_values! { |v| v.is_a?(Time) || v.is_a?(DateTime) ? v.to_date : v }
+        h.delete(:window_id) if remove_window
+        h
       end
     end
   end
@@ -108,8 +110,42 @@ class Minitest::Spec
     raise
   end
 
+  def clock_time
+    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
+  PERFORMANCE_TEST_TIMES = ENV["CONCEPTQL_PERFORMANCE_TEST_TIMES"].to_i
   def load_check(test_name, statement)
-    check_output(test_name, yield(load_statement(test_name, statement)))
+    statement = load_statement(test_name, statement)
+
+    # Check without scope windows
+    results = yield(statement, false)
+    check_output(test_name, results)
+
+    # Check with scope windows, unless the test is already a scope window test
+    unless statement.first == 'window'
+      sw_statement = ["window", statement, {'window_table' => [ 'date_range', { 'start' => '2007-01-01', 'end' => '2011-12-31' } ] } ]
+      results = yield(sw_statement, true)
+      check_output(test_name, results)
+    end
+
+    if PERFORMANCE_TEST_TIMES > 0
+      times = PERFORMANCE_TEST_TIMES.times.map do 
+        before = clock_time
+        yield(statement, false)
+        clock_time - before
+      end
+      avg_time = times.sum/times.length
+
+      path = "test/performance/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name.sub(/\.json\z/, '.csv')}"
+      sha1 = `git rev-parse HEAD`.chomp
+      adapter = "#{DB.adapter_scheme}/#{DB.database_type}"
+
+      FileUtils.mkdir_p(File.dirname(path))
+      File.open(path, 'ab') do |file|
+        file.puts([sha1, adapter, DB.opts[:database], Time.now, avg_time].join(','))
+      end
+    end
   rescue
     puts $!.sql if $!.respond_to?(:sql)
     raise

@@ -16,7 +16,7 @@ All other results are discarded, including all results in the RHR.
 
       def right_stream_query(db)
         unless compare_all?
-          right.evaluate(db).from_self.group_by(:person_id).select(:person_id, Sequel.function(:max, :start_date).as(:start_date))
+          right.evaluate(db).from_self.select_group(*matching_columns).select_append(Sequel.function(:max, :start_date).as(:start_date))
         else
           right.evaluate(db).from_self
         end
