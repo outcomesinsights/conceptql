@@ -13,10 +13,33 @@ module ConceptQL
       validate_no_arguments
 
       def query(db)
-        upstreams.map do |expression|
-          expression.evaluate(db).from_self.select(*query_cols)
-        end.inject do |q, query|
-          q.union(query, all: true)
+        datasets = upstreams.map do |expression|
+          expression.evaluate(db)
+        end
+
+        optss = datasets
+          .map { |ds| ds.opts.compact }
+          .each { |opts| opts.delete(:num_dataset_sources) }
+
+        possibly_combinable = optss.all? { |opts| opts.length == 1 && opts[:from].length == 1 }
+        if possibly_combinable
+          subqueries = optss.map { |opts| opts[:from].first }
+          subqueries.map! { |ds| ds.is_a?(Sequel::SQL::AliasedExpression) ? ds.expression : ds }
+          subquery_optss = subqueries.map { |ds| ds.opts.compact }
+          subquery_optss.each{|opts| opts.delete(:where)}
+          combinable = subquery_optss.uniq.length == 1
+        end
+
+        if combinable
+          first = subqueries.shift
+          first
+            .or(Sequel.|(*subqueries.map{|ds| ds.opts[:where] || true}))
+            .from_self
+        else
+          datasets.map!{|ds| ds.from_self.select(*query_cols)}
+          datasets.inject do |q, query|
+            q.union(query, all: true)
+          end
         end
       end
 
