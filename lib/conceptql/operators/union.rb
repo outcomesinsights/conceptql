@@ -31,10 +31,9 @@ module ConceptQL
         end
 
         if combinable
-          first = subqueries.shift
-          first
-            .or(Sequel.|(*subqueries.map{|ds| ds.opts[:where] || true}))
-            .from_self
+          subqueries.inject do |ds, q|
+            q.or(Sequel.|(ds.opts[:where] || true))
+          end.from_self
         else
           datasets.map!{|ds| ds.from_self.select(*query_cols)}
           datasets.inject do |q, query|
