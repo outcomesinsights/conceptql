@@ -72,7 +72,7 @@ class Minitest::Spec
   def check_output(test_name, results, has_windows = false)
     path = "test/results/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name}"
 
-    if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
+    if ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
       save_results(path, results)
     end
 

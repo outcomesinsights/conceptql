@@ -3,7 +3,7 @@ require_relative "../../helper"
 def check_sequel(query, name)
   file = Pathname.new("test") + "fixtures" + "scope" + "#{name}.txt"
   actual_sql = query.sql
-  if !file.exist? || ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
+  if !file.exist? || ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
     file.dirname.mkpath
     file.write(actual_sql)
   end
