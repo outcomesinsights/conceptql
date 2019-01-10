@@ -125,7 +125,7 @@ class Minitest::Spec
 
     # Check with scope windows, unless the test is already a scope window test
     unless statement.first == 'window'
-      sw_statement = ["window", statement, {'window_table' => [ 'date_range', { 'start' => '2007-01-01', 'end' => '2011-12-31' } ] } ]
+      sw_statement = ["window", statement, {'window_table' => [ 'date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' } ] } ]
       results = yield(sw_statement, true)
       check_output(test_name, results, true)
     end
