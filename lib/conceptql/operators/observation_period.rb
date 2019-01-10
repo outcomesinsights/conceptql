@@ -5,6 +5,9 @@ module ConceptQL
     class ObservationPeriod < CastingOperator
       register __FILE__
 
+      include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::Timeless
+
       desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming result set.'
       domains :observation_period
       allows_one_upstream
