@@ -131,7 +131,7 @@ class Minitest::Spec
     end
 
     if PERFORMANCE_TEST_TIMES > 0
-      times = PERFORMANCE_TEST_TIMES.times.map do 
+      times = PERFORMANCE_TEST_TIMES.times.map do
         before = clock_time
         yield(statement, false)
         clock_time - before
