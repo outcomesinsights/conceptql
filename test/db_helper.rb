@@ -46,7 +46,7 @@ class Minitest::Spec
 
   def dataset(statement)
     statement = query(statement) unless statement.is_a?(ConceptQL::Query)
-    puts statement.query.sql if PRINT_CONCEPTQL
+    puts statement.sql if PRINT_CONCEPTQL
     statement.query
   end
 
@@ -100,17 +100,17 @@ class Minitest::Spec
 
   def criteria_counts(test_name, statement=nil)
     load_check(test_name, statement) do |stmt|
-      q = query(stmt).query
-      puts q.sql if PRINT_CONCEPTQL
-      q.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
+      cq = query(stmt)
+      puts cq.sql if PRINT_CONCEPTQL
+      cq.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
     end
   end
 
   def optimized_criteria_counts(test_name, statement=nil)
     load_check(test_name, statement) do |stmt|
-      q = query(stmt).optimized.query
-      puts q.sql if PRINT_CONCEPTQL
-      q.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
+      cq = query(stmt).optimized
+      puts cq.sql if PRINT_CONCEPTQL
+      cq.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
     end
   end
 
