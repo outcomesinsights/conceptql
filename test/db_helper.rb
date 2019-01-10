@@ -8,6 +8,8 @@ require "fileutils"
 CDB = ConceptQL::Database.new(DB, :data_model=>ENV["CONCEPTQL_DATA_MODEL"].to_sym)
 DB.extension :error_sql
 
+PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
+
 class Minitest::Spec
   def annotate(test_name, statement=nil)
     load_check(test_name, statement){|stmt| query(stmt).annotate}
@@ -44,7 +46,7 @@ class Minitest::Spec
 
   def dataset(statement)
     statement = query(statement) unless statement.is_a?(ConceptQL::Query)
-    puts statement.query.sql if ENV["CONCEPTQL_PRINT_SQL"]
+    puts statement.query.sql if PRINT_CONCEPTQL
     statement.query
   end
 
@@ -97,11 +99,19 @@ class Minitest::Spec
   end
 
   def criteria_counts(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| query(stmt).query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)}
+    load_check(test_name, statement) do |stmt|
+      q = query(stmt).query
+      puts q.sql if PRINT_CONCEPTQL
+      q.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
+    end
   end
 
   def optimized_criteria_counts(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| query(stmt).optimized.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)}
+    load_check(test_name, statement) do |stmt|
+      q = query(stmt).optimized.query
+      puts q.sql if PRINT_CONCEPTQL
+      q.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
+    end
   end
 
   def hash_groups(statement, key, value)
