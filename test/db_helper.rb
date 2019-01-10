@@ -68,7 +68,7 @@ class Minitest::Spec
     end
   end
 
-  def check_output(test_name, results)
+  def check_output(test_name, results, has_windows = false)
     path = "test/results/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name}"
 
     if ENV["OVERWRITE_CONCEPTQL_TEST_RESULTS"]
@@ -82,7 +82,7 @@ class Minitest::Spec
       '{ "fail": true }'
     end
 
-    JSON.parse(results.to_json).must_equal(JSON.parse(expected))
+    JSON.parse(results.to_json).must_equal(JSON.parse(expected), "#{test_name}#{has_windows ? " (with windows)" : ""}")
     results
   end
 
@@ -120,13 +120,13 @@ class Minitest::Spec
 
     # Check without scope windows
     results = yield(statement, false)
-    check_output(test_name, results)
+    check_output(test_name, results, false)
 
     # Check with scope windows, unless the test is already a scope window test
     unless statement.first == 'window'
       sw_statement = ["window", statement, {'window_table' => [ 'date_range', { 'start' => '2007-01-01', 'end' => '2011-12-31' } ] } ]
       results = yield(sw_statement, true)
-      check_output(test_name, results)
+      check_output(test_name, results, true)
     end
 
     if PERFORMANCE_TEST_TIMES > 0
