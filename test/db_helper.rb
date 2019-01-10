@@ -44,6 +44,7 @@ class Minitest::Spec
 
   def dataset(statement)
     statement = query(statement) unless statement.is_a?(ConceptQL::Query)
+    puts statement.query.sql if ENV["CONCEPTQL_PRINT_SQL"]
     statement.query
   end
 
