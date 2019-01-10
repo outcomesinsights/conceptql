@@ -12,7 +12,8 @@ module ConceptQL
         windows = []
 
         if start_date && end_date
-          windows << lambda do |op, ds|
+          windows << lambda do |op, ds, opts = {}|
+            return ds if opts[:timeless]
             start_check = op.rdbms.cast_date(start_date) <= :start_date
             end_check = Sequel.expr(:end_date) <= op.rdbms.cast_date(end_date)
             ds.from_self.where(start_check).where(end_check)
@@ -24,7 +25,7 @@ module ConceptQL
         end
 
         if person_ids
-          windows << lambda do |_, ds|
+          windows << lambda do |_, ds, opts = {}|
             ds.where(person_id: person_ids)
           end
         end

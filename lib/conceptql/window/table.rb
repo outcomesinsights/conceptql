@@ -10,27 +10,32 @@ module ConceptQL
         @adjust_end = adjust_end
       end
 
-      def call(op, query)
+      def call(op, query, opts = {})
         start_date = apply_adjustments(op, Sequel[:r][:start_date], adjust_start)
         end_date = apply_adjustments(op, Sequel[:r][:end_date], adjust_end)
 
         exprs = []
-        exprs << (start_date <= Sequel[:l][:start_date])
-        exprs << (Sequel[:l][:end_date] <= end_date)
-        exprs << { Sequel[:l][:person_id] => Sequel[:r][:person_id] }
+        exprs << Sequel.expr({ Sequel[:l][:person_id] => Sequel[:r][:person_id] })
 
         query = Sequel[query] if query.is_a?(Symbol)
         table = get_table_window(table_window, query)
         table = Sequel[table] if table.is_a?(Symbol)
+
+        unless opts[:timeless]
+          exprs << (start_date <= Sequel[:l][:start_date])
+          exprs << (Sequel[:l][:end_date] <= end_date)
+        end
         expr = exprs.inject(&:&)
+
         rhs = query.db[table]
         query
           .select_remove(:window_id)
-          .from_self(alias: :l).join(rhs
-          .select_remove(:window_id)
-          .select_append{row_number.function.over(order: rhs.columns).as(:window_id)}.as(:r),
-          expr
-        )
+          .from_self(alias: :l)
+          .join(
+            rhs
+              .select_remove(:window_id)
+              .select_append{row_number.function.over(order: rhs.columns).as(:window_id)}.as(:r),
+            expr)
         .select_all(:l)
         .select_append(Sequel[:r][:window_id])
         .from_self
