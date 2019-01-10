@@ -172,13 +172,6 @@ occurrence, this operator returns nothing for that person.
         end
         order
       end
-
-      def unqualified_cte_name(name)
-        name = cte_name(name)
-        name = name.column if name.is_a?(Sequel::SQL::QualifiedIdentifier)
-        name = Sequel::SQL::Identifier.new(name) if name.is_a?(String)
-        name
-      end
     end
   end
 end

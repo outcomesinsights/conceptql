@@ -36,9 +36,9 @@ module ConceptQL
           end.select(Sequel[:first][:context_id]).distinct
         end.from_self
 
-        name = cte_name(:shared_context_ids)
+        name = unqualified_cte_name(:shared_context_ids)
         shared_events = contexteds.map do |contexted|
-          contexted.where(context_id: db[name])
+          contexted.where(context_id: db[name]).select(*query_cols)
         end
 
         shared_events.inject do |q, shared_event|
@@ -71,7 +71,7 @@ module ConceptQL
 
       def upstream_queries(db)
         @upstream_queries ||= upstreams.map do |expression|
-          expression.evaluate(db).from_self
+          expression.evaluate(db).select(*query_cols).from_self
         end
       end
     end
