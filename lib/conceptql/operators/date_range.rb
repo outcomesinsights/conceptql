@@ -11,6 +11,9 @@ module ConceptQL
     class DateRange < Operator
       register __FILE__
 
+      include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::Timeless
+
       DATE_FORMAT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/])}\z/
 
       desc "Used to represent a date literal.  Dates must be in the format YYYY-MM-DD"

@@ -12,6 +12,9 @@ module ConceptQL
     class Race < Operator
       register __FILE__
 
+      include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::Timeless
+
       desc 'Generates all person records that match the given set of Race codes.'
       argument :races, type: :codelist, vocab: 'Race'
       domains :person
