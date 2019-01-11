@@ -16,7 +16,7 @@ module ConceptQL
             return ds if opts[:timeless]
             start_check = op.rdbms.cast_date(start_date) <= :start_date
             end_check = Sequel.expr(:end_date) <= op.rdbms.cast_date(end_date)
-            ds.from_self.where(start_check).where(end_check)
+            ds.where(start_check).where(end_check).from_self
           end
         end
 

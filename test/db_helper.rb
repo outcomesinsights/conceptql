@@ -138,6 +138,10 @@ class Minitest::Spec
       sw_statement = ["window", statement, {'window_table' => [ 'date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' } ] } ]
       results = yield(sw_statement, true)
       check_output(test_name, results, true)
+
+      sw_statement = ["window", statement, { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' } ]
+      results = yield(sw_statement, true)
+      check_output(test_name, results, true)
     end
 
     if PERFORMANCE_TEST_TIMES > 0
