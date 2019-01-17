@@ -150,6 +150,14 @@ describe ConceptQL::DateAdjuster do
       end
     end
 
+    describe "with Date" do
+      let(:str) { Date.parse("2001-01-01") }
+
+      it "should use date literal" do
+        da.adjust(:end_date).must_equal(str.strftime("%Y-%m-%d"))
+      end
+    end
+
     describe "with START" do
       let(:str) { "START" }
 
