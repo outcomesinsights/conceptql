@@ -41,11 +41,20 @@ module ConceptQL
           .join(
             rhs
               .select_remove(:window_id)
-              .select_append{row_number.function.over(order: rhs.columns).as(:window_id)}.as(:r),
+              .select_append{row_number.function.over(order: order_columns(rhs.columns)).as(:window_id)}.as(:r),
             expr)
         .select_all(:l)
         .select_append(Sequel[:r][:window_id])
         .from_self
+      end
+
+      def order_columns(rhs_columns)
+        return rhs_columns unless ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+
+        # It's possible we've already sorted the tables a bit, so let's try
+        # to use that existing order and then order by everything else after
+        already_ordered_columns = rhs_columns & ConceptQL::Rdbms::Impala::SORT_BY_COLUMNS
+        already_ordered_columns + (rhs_columns - already_ordered_columns)
       end
 
       def get_table_window(table_window, query)
