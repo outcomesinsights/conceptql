@@ -41,6 +41,7 @@ module ConceptQL
       def create_options(scope)
         opts = { parquet: true }
         opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+        opts = opts.merge(hints: :shuffle) if ENV["CONCEPTQL_FORCE_SHUFFLE_JOINS"] == "true"
         opts
       end
 
