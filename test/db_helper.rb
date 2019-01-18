@@ -10,6 +10,8 @@ DB.extension :error_sql
 
 PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
 
+ENV["CONCEPTQL_IN_TEST_MODE"] = "I'm so sorry I did this"
+
 class Minitest::Spec
   def annotate(test_name, statement=nil)
     load_check(test_name, statement){|stmt| query(stmt).annotate}

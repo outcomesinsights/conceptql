@@ -28,7 +28,7 @@ module ConceptQL
         expr = exprs.inject(&:&)
 
         rhs = query.db[table]
-        rhs_columns = order_columns(rhs.columns)
+        rhs_columns = order_columns(op, rhs.columns)
         query
           .select_remove(:window_id)
           .from_self(alias: :l)
@@ -42,13 +42,25 @@ module ConceptQL
         .from_self
       end
 
-      def order_columns(rhs_columns)
-        return rhs_columns unless ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+      def order_columns(op, rhs_columns)
+        possibly_static_columns = rhs_columns & ConceptQL::Rdbms::Impala::POSSIBLY_STATIC_COLUMNS
+        fixed_static_columns = possibly_static_columns.tap { |o| p o }.map { |c| op.rdbms.partition_fix(c) }
+        final_columns = (rhs_columns - possibly_static_columns)
 
-        # It's possible we've already sorted the tables a bit, so let's try
-        # to use that existing order and then order by everything else after
-        already_ordered_columns = rhs_columns & ConceptQL::Rdbms::Impala::SORT_BY_COLUMNS
-        already_ordered_columns + (rhs_columns - already_ordered_columns)
+        if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+          # It's possible we've already sorted the tables a bit, so let's try
+          # to use that existing order and then order by everything else after
+          already_ordered_columns = rhs_columns & ConceptQL::Rdbms::Impala::SORT_BY_COLUMNS
+          final_columns = already_ordered_columns
+          final_columns += (rhs_columns - already_ordered_columns) - possibly_static_columns
+        end
+
+        if ENV["CONCEPTQL_IN_TEST_MODE"] ==  "I'm so sorry I did this"
+          final_columns = final_columns.map { |c| op.rdbms.partition_fix(c) }
+        end
+
+        final_columns += fixed_static_columns
+        final_columns.tap { |o| p o }
       end
 
       def get_table_window(table_window, query)
