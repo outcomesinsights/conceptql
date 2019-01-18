@@ -44,7 +44,7 @@ module ConceptQL
 
       def order_columns(op, rhs_columns)
         possibly_static_columns = rhs_columns & ConceptQL::Rdbms::Impala::POSSIBLY_STATIC_COLUMNS
-        fixed_static_columns = possibly_static_columns.tap { |o| p o }.map { |c| op.rdbms.partition_fix(c) }
+        fixed_static_columns = possibly_static_columns.map { |c| op.rdbms.partition_fix(c) }
         final_columns = (rhs_columns - possibly_static_columns)
 
         if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
@@ -95,7 +95,7 @@ module ConceptQL
         end
 
         final_columns += fixed_static_columns
-        final_columns.tap { |o| p o }
+        final_columns
       end
 
       def get_table_window(table_window, query)
