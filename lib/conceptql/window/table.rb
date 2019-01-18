@@ -55,7 +55,42 @@ module ConceptQL
           final_columns += (rhs_columns - already_ordered_columns) - possibly_static_columns
         end
 
+        # When we're doing testing, we use a lot of constant expressions
+        # for our columns.
+        #
+        # In 2014, someone decided to handle constant expressions thusly:
+        # https://issues.apache.org/jira/browse/IMPALA-1354
+        #
+        # I've suffered myriad exceptions for 4 years because of that decision.
+        #
+        # Today, I discovered there is a recent change in Impala 3.1.0
+        # that finally allows constant expressions:
+        # https://issues.apache.org/jira/browse/IMPALA-6323
+        #
+        # But it is unlikely that Cloudera 6.1 will be available on our
+        # production environment for years to come.  So it does me no good
+        # today.
+        #
+        # Against all instinct, against all sense of decorum, against all I
+        # know to be right, honest, and good, I have decided to detect when
+        # tests are being run and make this software behave differently in those
+        # circumstances.
+        #
+        # If we know we are running in test mode, we will make it so ALL
+        # columns are no longer constant expressions.
+        #
+        # If we are not running in test mode, I will only apply this awful hack
+        # to those columns that are most likely to be constant expressions.
+        #
+        # I already regret this decision.  I already apologize to my future
+        # self and fellow future maintainers for what I have done on this day.
+        #
+        # I am so sorry for this ugly hack that I've implemented to work around
+        # an ugly hack that someone else implemented 4 years prior.
+        #
+        # Though we may not be worthy of it, may we all be forgiven.
         if ENV["CONCEPTQL_IN_TEST_MODE"] ==  "I'm so sorry I did this"
+
           final_columns = final_columns.map { |c| op.rdbms.partition_fix(c) }
         end
 
