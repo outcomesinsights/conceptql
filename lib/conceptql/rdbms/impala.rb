@@ -4,6 +4,7 @@ module ConceptQL
   module Rdbms
     class Impala < Generic
       SORT_BY_COLUMNS = %i(person_id window_id start_date end_date)
+      POSSIBLY_STATIC_COLUMNS = %i(criterion_table criterion_domain value_as_number)
 
       def cast_date(date)
         Sequel.cast(date, DateTime)
