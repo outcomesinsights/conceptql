@@ -28,13 +28,14 @@ module ConceptQL
         expr = exprs.inject(&:&)
 
         rhs = query.db[table]
+        rhs_columns = order_columns(rhs.columns)
         query
           .select_remove(:window_id)
           .from_self(alias: :l)
           .join(
             rhs
               .select_remove(:window_id)
-              .select_append{row_number.function.over(order: order_columns(rhs.columns)).as(:window_id)}.as(:r),
+              .select_append{row_number.function.over(order: rhs_columns).as(:window_id)}.as(:r),
             expr)
         .select_all(:l)
         .select_append(Sequel[:r][:window_id])
