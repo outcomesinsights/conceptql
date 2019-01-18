@@ -117,7 +117,7 @@ class Minitest::Spec
   def hash_groups(statement, key, value)
     dataset(statement).from_self.distinct.order(key, *value).to_hash_groups(key, value)
   rescue
-    puts $!.sql if $!.respond_to?(:sql)
+    puts $!.sql if ENV["CONCEPTQL_PRINT_SQL_ON_ERROR"] == "true" && $!.respond_to?(:sql)
     raise
   end
 
