@@ -3,6 +3,8 @@ require_relative "generic"
 module ConceptQL
   module Rdbms
     class Impala < Generic
+      SORT_BY_COLUMNS = %i(person_id window_id start_date end_date)
+
       def cast_date(date)
         Sequel.cast(date, DateTime)
       end
@@ -36,10 +38,10 @@ module ConceptQL
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
 
-      def create_options
-        {
-          parquet: true
-        }
+      def create_options(scope)
+        opts = { parquet: true }
+        opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+        opts
       end
 
       def post_create(db, table_name)
