@@ -256,8 +256,9 @@ module ConceptQL
         if no_db?(db)
           if lexicon
             results = lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
-          end
-          return codes.zip([])
+          else
+            return codes.zip([])
+	  end
 	else
           results = dm.concepts_ds(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
         end
