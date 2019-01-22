@@ -7,8 +7,7 @@
     "start_date": "2009-04-08",
     "end_date": "2009-04-15",
     "source_value": "401.1",
-    "source_vocabulary_id": "2",
-    "window_id": 3
+    "source_vocabulary_id": "2"
   },
   {
     "person_id": 2,
@@ -18,7 +17,6 @@
     "start_date": "2010-02-16",
     "end_date": "2010-02-23",
     "source_value": "401.1",
-    "source_vocabulary_id": "2",
-    "window_id": 4
+    "source_vocabulary_id": "2"
   }
 ]
