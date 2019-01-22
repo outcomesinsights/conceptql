@@ -38,7 +38,7 @@ class Minitest::Spec
       results = ds.all
       results.each do |h|
         h.transform_values! { |v| v.is_a?(Time) || v.is_a?(DateTime) ? v.to_date : v }
-        h.delete(:window_id) if remove_window
+        h.delete(:window_id)
         h
       end
     end
