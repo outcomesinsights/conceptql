@@ -37,7 +37,7 @@ module ConceptQL
               .where(adjusted_end_date >= Sequel[:r][:end_date])
               .select(*matching_columns)
 
-            matching = matching.where(matching_columns=>other)
+            matching = matching.where(other.where(matching_columns.map{|x| [Sequel.qualify(:l, x), Sequel.qualify(:r, x)]}).exists)
           end
 
           matching
