@@ -29,12 +29,9 @@ module ConceptQL
 
         rhs = query.db[table]
         rhs_columns = order_columns(op, rhs.columns)
-        query
-          .select_remove(:window_id)
+        remove_window_id(query)
           .from_self(alias: :l)
-          .join(
-            rhs
-              .select_remove(:window_id)
+          .join(remove_window_id(rhs)
               .select_append{row_number.function.over(order: rhs_columns).as(:window_id)}.as(:r),
             expr)
         .select_all(:l)
@@ -96,6 +93,22 @@ module ConceptQL
 
         final_columns += fixed_static_columns
         final_columns
+      end
+
+      def remove_window_id(ds)
+        if (cols = selected_columns(ds)) && cols.all?{|s| s.is_a?(Symbol)}
+          ds.select(*(cols - [:window_id]))
+        else
+          ds.select_remove(:window_id)
+        end
+      end
+
+      def selected_columns(ds)
+        if ds.opts[:select]
+          ds.opts[:select]
+        elsif ds.opts[:from].first.is_a?(Sequel::Dataset)
+          selected_columns(ds.opts[:from].first)
+        end
       end
 
       def get_table_window(table_window, query)
