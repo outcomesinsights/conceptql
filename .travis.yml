@@ -20,7 +20,7 @@ services:
 before_install:
 - sudo mount -o remount,size=50% /var/ramfs
 - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
-script: travis_wait 50 bash .travis.postgres.sh
+script: travis_wait 45 bash .travis.postgres.sh
 notifications:
   slack:
     secure: YrvvLrIOgRIzqb01GbektA0YZXCieghuhaU3O4vBW/otrz26twb/0zeB/HHqKS3P2re0R127wGw6nAUAG9ieEHPYMKcpZZWzvnPrqQ/5ASbIZWX85fps0svFEeQTqRjK8TdHC/0ZJoy3P7i6wgBoWcs434aSR4K6KgisdWJATk0=
@@ -58,11 +58,22 @@ jobs:
         - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo jigsaw-diagram-editor --pro --branch $TRAVIS_BRANCH
         - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo t_shank --pro --branch $TRAVIS_BRANCH
   allow_failures:
-    - env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
-    - env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
-    - env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
-    - env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+    - env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="4 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+
+    - env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="4 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+
+    - env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+    - env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+    - env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+    - env: TESTS_DIV_MOD="4 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+
+    - env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+    - env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+    - env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+    - env: TESTS_DIV_MOD="4 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
