@@ -1,6 +1,16 @@
 module ConceptQL
   module Rdbms
     class Generic
+      attr_reader :nodifier
+
+      def initialize(nodifier)
+        @nodifier = nodifier
+      end
+
+      def scope
+        nodifier.scope
+      end
+
       def process(column, value = nil)
         type = Scope::COLUMN_TYPES.fetch(column)
         new_column = case type

@@ -29,7 +29,9 @@ class Minitest::Spec
     load_check(test_name, statement) do |stmt, remove_window|
       ds = dataset(query(stmt)).from_self
 
-      order_columns = [:person_id, :criterion_table, :criterion_domain, :start_date, :criterion_id]
+      order_columns = [:person_id]
+      order_columns << :window_id if ds.columns.include?(:window_id)
+      order_columns += [:criterion_table, :criterion_domain, :start_date, :criterion_id]
       order_columns << :uuid if ds.columns.include?(:uuid)
       ds = ds.order(*order_columns)
 

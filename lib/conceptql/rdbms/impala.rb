@@ -15,7 +15,7 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
         ds.from_self(alias: :l)
-          .left_semi_join(table, expr, table_alias: :r)
+          .left_semi_join(table, expr, { table_alias: :r }.merge(join_options))
           .select_all(:l)
       end
 
@@ -39,6 +39,12 @@ module ConceptQL
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
 
+      def semi_join_first_opt
+        return nil unless ENV["CONCEPTQL_SEMI_JOIN_FIRST"]
+        return true if ENV["CONCEPTQL_SEMI_JOIN_FIRST"] == "true"
+        return scope.cte_name("semi_join_table") if ENV["CONCEPTQL_SEMI_JOIN_FIRST"] == "table"
+      end
+
       def create_options(scope)
         opts = { parquet: true }
         opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
@@ -48,6 +54,12 @@ module ConceptQL
 
       def post_create(db, table_name)
         db.compute_stats(table_name)
+      end
+
+      def join_options
+        opts = {}
+        opts = { semi_join_first: semi_join_first_opt } if semi_join_first_opt
+        opts
       end
 
       def drop_options
