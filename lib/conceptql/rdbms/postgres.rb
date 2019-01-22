@@ -3,7 +3,7 @@ require_relative "generic"
 module ConceptQL
   module Rdbms
     class Postgres < Generic
-      def create_options(scope)
+      def create_options
         {}
       end
 

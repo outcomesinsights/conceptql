@@ -12,7 +12,7 @@ module ConceptQL
       end
 
       def rdbms
-        @rdbms ||= ConceptQL::Rdbms.generate(nodifier.database_type, self)
+        @rdbms ||= ConceptQL::Rdbms.generate(nodifier.database_type, nodifier)
       end
 
       def query_modifier_for(column)
