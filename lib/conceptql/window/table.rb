@@ -60,7 +60,7 @@ module ConceptQL
         end
 
         if ENV["CONCEPTQL_IN_TEST_MODE"] ==  "I'm so sorry I did this"
-          final_columns = final_columns.map { |c| op.rdbms.partition_fix(c) }
+          final_columns = final_columns.map { |c| c == :person_id ? c : op.rdbms.partition_fix(c) }
         end
 
         final_columns += fixed_static_columns
