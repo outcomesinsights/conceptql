@@ -29,28 +29,52 @@ jobs:
   fast_finish: true
   include:
     - stage: Impala Test Sorted, Shuffle-joined Temp Tables, Set 1
-      env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+      env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
       script: travis_wait 50 bash .travis.impala.sh
     - stage: Impala Test Sorted, Shuffle-joined Temp Tables, Set 2
-      env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+      env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test Sorted, Shuffle-joined Temp Tables, Set 3
+      env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test Sorted, Shuffle-joined Temp Tables, Set 4
+      env: TESTS_DIV_MOD="4 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true CONCEPTQL_FORCE_SHUFFLE_JOINS=true
       script: travis_wait 50 bash .travis.impala.sh
     - stage: Impala Test Sorted Temp Tables, Set 1
-      env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+      env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
       script: travis_wait 50 bash .travis.impala.sh
     - stage: Impala Test Sorted Temp Tables, Set 2
-      env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+      env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test Sorted Temp Tables, Set 3
+      env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test Sorted Temp Tables, Set 4
+      env: TESTS_DIV_MOD="4 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250" CONCEPTQL_SORT_TEMP_TABLES=true
       script: travis_wait 50 bash .travis.impala.sh
     - stage: Impala Test Temp Tables, Set 1
-      env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+      env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 50 bash .travis.impala.sh
     - stage: Impala Test Temp Tables, Set 2
-      env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+      env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test Temp Tables, Set 3
+      env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test Temp Tables, Set 4
+      env: TESTS_DIV_MOD="4 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 50 bash .travis.impala.sh
     - stage: Impala Test No Temp Tables, Set 1
-      env: TESTS_DIV_MOD="2 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+      env: TESTS_DIV_MOD="4 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 50 bash .travis.impala.sh
     - stage: Impala Test No Temp Tables, Set 2
-      env: TESTS_DIV_MOD="2 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+      env: TESTS_DIV_MOD="4 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test No Temp Tables, Set 3
+      env: TESTS_DIV_MOD="4 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
+      script: travis_wait 50 bash .travis.impala.sh
+    - stage: Impala Test No Temp Tables, Set 4
+      env: TESTS_DIV_MOD="4 4" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 50 bash .travis.impala.sh
     - stage: deploy
       before_install: gem install tping
