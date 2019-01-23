@@ -86,7 +86,7 @@ module ConceptQL
         # an ugly hack that someone else implemented 4 years prior.
         #
         # Though we may not be worthy of it, may we all be forgiven.
-        if ENV["CONCEPTQL_IN_TEST_MODE"] ==  "I'm so sorry I did this"
+        if ENV["CONCEPTQL_IN_TEST_MODE"] == "I'm so sorry I did this"
 
           final_columns = final_columns.map { |c| c == :person_id ? c : op.rdbms.partition_fix(c) }
         end
