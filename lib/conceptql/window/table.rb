@@ -33,7 +33,7 @@ module ConceptQL
           .from_self(alias: :l)
           .join(remove_window_id(rhs)
               .select_append{row_number.function.over(order: rhs_columns).as(:window_id)}.as(:r),
-            expr)
+        expr, op.rdbms.join_options)
         .select_all(:l)
         .select_append(Sequel[:r][:window_id])
         .from_self

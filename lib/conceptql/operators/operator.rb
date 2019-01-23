@@ -622,11 +622,12 @@ module ConceptQL
       end
 
       def semi_or_inner_join(ds, table, *exprs)
+        opts = ConceptQL::Utils.extract_opts!(exprs)
         ds = Sequel[ds] if ds.is_a?(Symbol)
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
         if use_inner_join?
-          ds.join(table.as(:r), expr)
+          ds.join(table.as(:r), expr, rdbms.join_options.merge(opts))
             .select(*query_cols.map { |c| Sequel[:l][c] })
         else
           rdbms.semi_join(ds, table, *exprs)
