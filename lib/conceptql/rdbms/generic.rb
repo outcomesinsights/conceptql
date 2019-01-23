@@ -11,6 +11,22 @@ module ConceptQL
         nodifier.scope
       end
 
+      def create_options
+        {}
+      end
+
+      def drop_options
+        {}
+      end
+
+      def join_options
+        {}
+      end
+
+      def post_create(db, table_name)
+        # Do nothing
+      end
+
       def process(column, value = nil)
         type = Scope::COLUMN_TYPES.fetch(column)
         new_column = case type
