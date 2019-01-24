@@ -29,14 +29,16 @@ module ConceptQL
 
         rhs = query.db[table]
         rhs_columns = order_columns(op, rhs.columns)
-        remove_window_id(query)
+        join_ds = remove_window_id(rhs)
+          .select_append{row_number.function.over(order: rhs_columns).as(:window_id)}.as(:r)
+
+        ds = remove_window_id(query)
           .from_self(alias: :l)
-          .join(remove_window_id(rhs)
-              .select_append{row_number.function.over(order: rhs_columns).as(:window_id)}.as(:r),
-        expr, op.rdbms.join_options)
-        .select_all(:l)
-        .select_append(Sequel[:r][:window_id])
-        .from_self
+
+        op.rdbms.inner_join(ds, join_ds, expr)
+          .select_all(:l)
+          .select_append(Sequel[:r][:window_id])
+          .from_self
       end
 
       def order_columns(op, rhs_columns)

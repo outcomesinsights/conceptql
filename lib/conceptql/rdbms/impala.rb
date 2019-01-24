@@ -19,6 +19,34 @@ module ConceptQL
           .select_all(:l)
       end
 
+      CONCEPTQL_SEMI_JOIN_FIRST = case ENV["CONCEPTQL_SEMI_JOIN_FIRST"]
+      when "true"
+        true
+      when "table"
+        :table
+      when nil, ""
+        nil
+      else
+        raise "invalid CONCEPTQL_SEMI_JOIN_FIRST environment variable, should be true or table if set"
+      end
+
+      def inner_join(ds, table, expr, opts={}, &block)
+        if CONCEPTQL_SEMI_JOIN_FIRST
+          alias_name = ds.send(:alias_symbol, ds.opts[:from].first)
+          ds = ds.left_semi_join(table, expr, opts, &block)
+
+          ds = case CONCEPTQL_SEMI_JOIN_FIRST
+          when :table
+            temp_table = scope.cte_name("semi_join_table")
+            ds.db.from(Sequel.as(temp_table, alias_name)).with(temp_table, ds)
+          when true
+            ds.from_self(:alias=>alias_name)
+          end
+        end
+
+        ds.join(table, expr, join_options.merge(opts), &block)
+      end
+
       # Impala is teh dumb in that it won't allow columns with constants to
       # be part of the partition of a window function.
       #
@@ -39,12 +67,6 @@ module ConceptQL
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
 
-      def semi_join_first_opt
-        return nil unless ENV["CONCEPTQL_SEMI_JOIN_FIRST"]
-        return true if ENV["CONCEPTQL_SEMI_JOIN_FIRST"] == "true"
-        return scope.cte_name("semi_join_table") if ENV["CONCEPTQL_SEMI_JOIN_FIRST"] == "table"
-      end
-
       def create_options
         opts = { parquet: true }
         opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
@@ -57,7 +79,6 @@ module ConceptQL
 
       def join_options
         opts = {}
-        opts = opts.merge(semi_join_first: semi_join_first_opt) if semi_join_first_opt
         opts = opts.merge(hints: :shuffle) if ENV["CONCEPTQL_FORCE_SHUFFLE_JOINS"] == "true"
         opts
       end

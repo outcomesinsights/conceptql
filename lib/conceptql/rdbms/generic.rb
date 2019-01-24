@@ -42,6 +42,10 @@ module ConceptQL
         new_column.as(column)
       end
 
+      def inner_join(ds, table, expr, opts={}, &block)
+        ds.join(table, expr, opts, &block)
+      end
+
       def semi_join(ds, table, *exprs)
         ds = Sequel[ds] if ds.is_a?(Symbol)
         table = Sequel[table] if table.is_a?(Symbol)

@@ -12,7 +12,7 @@ module ConceptQL
         rhs = right.evaluate(db)
         rhs = rhs.from_self.select_group(*columns)
         query = db.from(Sequel.as(left.evaluate(db), :l))
-        query = semi_or_inner_join(query, rhs, join_columns, rdbms.join_options)
+        query = semi_or_inner_join(query, rhs, join_columns)
         db.from(query)
       end
 

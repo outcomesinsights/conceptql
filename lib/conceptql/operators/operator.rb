@@ -627,7 +627,7 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
         if use_inner_join?
-          ds.join(table.as(:r), expr, rdbms.join_options.merge(opts))
+          rdbms.inner_join(ds, table.as(:r), expr, opts)
             .select(*query_cols.map { |c| Sequel[:l][c] })
         else
           rdbms.semi_join(ds, table, *exprs)
