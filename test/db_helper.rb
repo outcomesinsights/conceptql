@@ -1,5 +1,5 @@
-require_relative "helper"
 require_relative "db"
+require_relative "helper"
 
 require "logger"
 require "pp"
