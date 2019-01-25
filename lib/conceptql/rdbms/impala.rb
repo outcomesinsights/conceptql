@@ -38,6 +38,8 @@ module ConceptQL
           ds = case CONCEPTQL_SEMI_JOIN_FIRST
           when :table
             temp_table = scope.cte_name("semi_join_table")
+            temp_table = temp_table.column if temp_table.is_a?(Sequel::SQL::QualifiedIdentifier)
+            temp_table = Sequel.identifier(temp_table) if temp_table.is_a?(String)
             ds.db.from(Sequel.as(temp_table, alias_name)).with(temp_table, ds)
           when true
             ds.from_self(:alias=>alias_name)
