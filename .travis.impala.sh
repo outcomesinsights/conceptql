@@ -18,6 +18,8 @@ echo "nonworker is up..."
 ssh -o "StrictHostKeyChecking=no" -M -S my-ctrl-socket -fnNT -L 21000:nonworker2.hadoop.jsaw.io:21000 ec2-user@ec2-52-40-86-190.us-west-2.compute.amazonaws.com
 echo "Tunnel is up..."
 
+export CONCEPTQL_IGNORE_SCOPE_TESTS_FOR_IMPALA=true
+
 bundle exec ruby test/all.rb
 result=$?
 

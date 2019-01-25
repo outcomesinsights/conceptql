@@ -7,6 +7,7 @@ def check_sequel(query, name)
     file.dirname.mkpath
     file.write(actual_sql)
   end
+  skip "Please reinstate me soon" if ENV["CONCEPTQL_IGNORE_SCOPE_TESTS_FOR_IMPALA"]
   actual_sql.must_equal file.read
 end
 
