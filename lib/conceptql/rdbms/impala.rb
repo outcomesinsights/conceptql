@@ -38,6 +38,8 @@ module ConceptQL
           ds = case CONCEPTQL_SEMI_JOIN_FIRST
           when :table
             temp_table = scope.cte_name("semi_join_table")
+            temp_table = temp_table.column if temp_table.is_a?(Sequel::SQL::QualifiedIdentifier)
+            temp_table = Sequel.identifier(temp_table) if temp_table.is_a?(String)
             ds.db.from(Sequel.as(temp_table, alias_name)).with(temp_table, ds)
           when true
             ds.from_self(:alias=>alias_name)
@@ -67,9 +69,9 @@ module ConceptQL
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
 
-      def create_options
+      def create_options(ds)
         opts = { parquet: true }
-        opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+        opts = opts.merge(sort_by: SORT_BY_COLUMNS & ds.columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
         opts
       end
 

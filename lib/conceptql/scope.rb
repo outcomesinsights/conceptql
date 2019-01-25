@@ -278,7 +278,7 @@ module ConceptQL
                 begin
                   temp_tables.each do |table_name, ds|
                     #p [:create_table, table_name]
-                    db.create_table(table_name, rdbms.create_options.merge(as: ds))
+                    db.create_table(table_name, rdbms.create_options(ds).merge(as: ds))
                     rdbms.post_create(db, table_name)
                   end
 

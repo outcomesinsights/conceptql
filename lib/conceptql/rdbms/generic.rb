@@ -11,7 +11,7 @@ module ConceptQL
         nodifier.scope
       end
 
-      def create_options
+      def create_options(_ds)
         {}
       end
 
