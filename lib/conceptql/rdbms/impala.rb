@@ -69,9 +69,9 @@ module ConceptQL
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
 
-      def create_options
+      def create_options(ds)
         opts = { parquet: true }
-        opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+        opts = opts.merge(sort_by: SORT_BY_COLUMNS & ds.columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
         opts
       end
 
