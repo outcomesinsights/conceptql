@@ -1,6 +1,8 @@
 module ConceptQL
   module Operators
     class From < Operator
+      include ConceptQL::Behaviors::Windowable
+
       register __FILE__
       basic_type :selection
       no_desc
