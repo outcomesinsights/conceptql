@@ -46,6 +46,10 @@ module ConceptQL
         cols = (options[:query_cols] || dynamic_columns).map(&:to_sym)
         Hash[cols.zip(cols)]
       end
+
+      def same_table?(table)
+        table_name === table
+      end
     end
   end
 end

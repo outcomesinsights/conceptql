@@ -21,6 +21,13 @@ module ConceptQL
         table = get_table_window(table_window, query)
         table = Sequel[table] if table.is_a?(Symbol)
 
+        if op.same_table?(table)
+          return query
+            .select_remove(:window_id)
+            .select_append{row_number.function.over(order: query.columns).as(:window_id)}
+            .from_self
+        end
+
         unless opts[:timeless]
           exprs << (start_date <= Sequel[:l][:start_date])
           exprs << (Sequel[:l][:end_date] <= end_date)
