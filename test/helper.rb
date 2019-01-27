@@ -39,13 +39,4 @@ class Minitest::Spec
       end
     end)
   end
-
-  def log
-    begin
-      DB.loggers << Logger.new(STDOUT)
-      yield
-    ensure
-     DB.loggers.pop
-    end
-  end
 end
