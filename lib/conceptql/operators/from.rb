@@ -29,9 +29,17 @@ module ConceptQL
       end
 
       def table_name
+        return @table_name if @table_name
         name = values.first
-        name = name.to_sym if name.respond_to?(:to_sym)
-        name
+        if name.is_a?(String)
+          table, column = name.split('__', 2)
+          if column
+            name = Sequel.qualify(table, column)
+          else
+            name = name.to_sym
+          end
+        end
+        @table_name = name
       end
 
       def required_columns
