@@ -60,8 +60,8 @@ module ConceptQL
       Hash[stmts]
       # TODO: throw a reasonable error here
     rescue
-      puts $!.message
-      puts $!.backtrace.join("\n")
+      #puts $!.message
+      #puts $!.backtrace.join("\n")
       return { query: "SQL unavailable for this statement\n#{$!.message}\n#{$!.backtrace.join("\n")}" }
     end
 
