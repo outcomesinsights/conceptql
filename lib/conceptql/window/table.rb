@@ -22,8 +22,7 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
 
         if op.same_table?(table)
-          return query
-            .select_remove(:window_id)
+          return remove_window_id(query)
             .select_append{row_number.function.over(order: query.columns).as(:window_id)}
             .from_self
         end
