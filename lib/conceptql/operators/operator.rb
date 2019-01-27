@@ -380,6 +380,10 @@ module ConceptQL
         scope.lexicon
       end
 
+      def same_table?(table)
+        false
+      end
+
       private
 
       def annotate_values(db, opts)
