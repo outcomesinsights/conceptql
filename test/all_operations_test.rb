@@ -1,4 +1,4 @@
-require_relative "./db_helper"
+require_relative "db_helper"
 
 file_regexps = nil
 argv = ARGV.reject { |f| f.start_with?('-') }
@@ -50,6 +50,9 @@ describe ConceptQL::Operators do
   Dir['./test/statements/**/*'].each do |f|
     next if File.directory? f
     next unless file_regexps.nil? || file_regexps.any? { |r| f =~ r }
+    next if f =~ /gdm_only/ && CDB.data_model.data_model != :gdm
+    next if f =~ /omopv4_plus_only/ && CDB.data_model.data_model != :omopv4_plus
+
     f.slice! './test/statements/'
     basename = File.basename(f)
 
