@@ -81,3 +81,21 @@ jobs:
       script:
         - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo jigsaw-diagram-editor --pro --branch $TRAVIS_BRANCH
         - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo t_shank --pro --branch $TRAVIS_BRANCH
+  allow_failures:
+    - env: TESTS_DIV_MOD="16 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 4" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 5" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 6" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 7" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 8" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 9" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 10" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 11" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 12" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 13" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 14" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+    - env: TESTS_DIV_MOD="16 15" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
+
