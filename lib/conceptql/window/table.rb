@@ -47,6 +47,7 @@ module ConceptQL
       end
 
       def order_columns(op, rhs_columns)
+=begin
         possibly_static_columns = rhs_columns & ConceptQL::Rdbms::Impala::POSSIBLY_STATIC_COLUMNS
         fixed_static_columns = possibly_static_columns.map { |c| op.rdbms.partition_fix(c) }
         final_columns = (rhs_columns - possibly_static_columns)
@@ -65,6 +66,9 @@ module ConceptQL
 
         final_columns += fixed_static_columns
         final_columns
+=end
+        # Hack until Cloudera 6.1
+        rhs_columns.map { |c| c == :person_id ? c : op.rdbms.partition_fix(c) }
       end
 
       def remove_window_id(ds)
