@@ -9,10 +9,10 @@ if scratch = ENV['DOCKER_SCRATCH_DATABASE']
     end
 
     it "should select from the table" do
-      DB.create_table(temp_table, :as=>CDB.query([:window, [:person, [:icd9, '412']], {person_ids: [11]}]).query)
+      DB.create_table(temp_table, :as=>CDB.query([:window, [:person], {person_ids: [1]}]).query)
       CDB.query([:from, "#{scratch}__from_operator_test"]).query.all.must_equal DB[temp_table].all
-      CDB.query([:window, [:from, "#{scratch}__from_operator_test"], {person_ids: [11]}]).query.count.must_equal 1
-      CDB.query([:window, [:from, "#{scratch}__from_operator_test"], {person_ids: [12]}]).query.count.must_equal 0
+      CDB.query([:window, [:from, "#{scratch}__from_operator_test"], {person_ids: [1]}]).query.count.must_equal 1
+      CDB.query([:window, [:from, "#{scratch}__from_operator_test"], {person_ids: [2]}]).query.count.must_equal 0
     end
   end
 end
