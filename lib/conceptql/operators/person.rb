@@ -4,6 +4,7 @@ module ConceptQL
   module Operators
     class Person < CastingOperator
       include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::Timeless
 
       register __FILE__
 
