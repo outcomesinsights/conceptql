@@ -200,9 +200,9 @@ describe ConceptQL::Scope do
         check_sequel(db.query(["cpt", "99214"], opts), :impala_window_table_under_gdm_standard_vocab)
       end
 
-      it "should not limit selection on person table" do
+      it "should limit selection on person table" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        db.query(["person", true], opts).sql.wont_match(/JOIN/)
+        db.query(["person", true], opts).sql.must_match(/JOIN/)
       end
 
       it "should limit selection on condition_occurrence table" do
