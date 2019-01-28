@@ -28,8 +28,10 @@ module ConceptQL
       # safe bet that we can append the person_id to any constant, making it
       # no longer a constant, but still a viable column for partitioning
       def partition_fix(column, qualifier=nil)
-        person_id = qualifier ? Sequel.qualify(qualifier, :person_id) : :person_id
-        Sequel.function(:coalesce, column, person_id).cast_string + '_' + Sequel.cast_string(person_id)
+        person_id = qualifier ? Sequel.qualify(qualifier, :person_id).cast_string : :person_id
+        person_id = Sequel.cast_string(person_id)
+        column = Sequel.expr(column).cast_string
+        Sequel.function(:coalesce, column, person_id) + '_' + person_id
       end
 
       def uuid_items
