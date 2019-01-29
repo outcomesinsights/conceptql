@@ -22,9 +22,10 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
 
         if op.same_table?(table)
+          cols = order_columns(op, query.columns)
           return query
             .select_remove(:window_id)
-            .select_append{row_number.function.over(order: query.columns).as(:window_id)}
+            .select_append{row_number.function.over(order: cols).as(:window_id)}
             .from_self
         end
 
