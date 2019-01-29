@@ -2,6 +2,7 @@ module ConceptQL
   module Operators
     class From < Operator
       include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::Timeless
 
       register __FILE__
       basic_type :selection
