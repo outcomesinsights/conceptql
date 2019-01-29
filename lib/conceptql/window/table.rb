@@ -22,15 +22,9 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
 
         if op.same_table?(table)
-          cols = order_columns(op, query.columns)
-          return query
-            .from_self
-            .select_group(:person_id, :start_date, :end_date)
-            .select_append{row_number.function.over(order: cols).as(:window_id)}
-            .from_self
-        end
-
-        unless opts[:timeless]
+          exprs << (start_date == Sequel[:l][:start_date])
+          exprs << (Sequel[:l][:end_date] == end_date)
+        elsif !opts[:timeless]
           exprs << (start_date <= Sequel[:l][:start_date])
           exprs << (Sequel[:l][:end_date] <= end_date)
         end
