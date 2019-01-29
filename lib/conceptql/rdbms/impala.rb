@@ -31,7 +31,7 @@ module ConceptQL
         person_id = qualifier ? Sequel.qualify(qualifier, :person_id).cast_string : :person_id
         person_id = Sequel.cast_string(person_id)
         column = Sequel.expr(column).cast_string
-        Sequel.function(:coalesce, column, person_id) + '_' + person_id
+        column + '_' + person_id
       end
 
       def uuid_items

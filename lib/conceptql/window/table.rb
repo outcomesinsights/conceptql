@@ -24,7 +24,8 @@ module ConceptQL
         if op.same_table?(table)
           cols = order_columns(op, query.columns)
           return query
-            .select_remove(:window_id)
+            .from_self
+            .select_group(:person_id, :start_date, :end_date)
             .select_append{row_number.function.over(order: cols).as(:window_id)}
             .from_self
         end
@@ -40,6 +41,7 @@ module ConceptQL
         remove_window_id(query)
           .from_self(alias: :l)
           .join(remove_window_id(rhs)
+              .select_group(:person_id, :start_date, :end_date)
               .select_append{row_number.function.over(order: rhs_columns).as(:window_id)}.as(:r),
             expr)
         .select_all(:l)
@@ -69,7 +71,7 @@ module ConceptQL
         final_columns
 =end
         # Hack until Cloudera 6.1
-        rhs_columns.map { |c| c == :person_id ? c : op.rdbms.partition_fix(c) }
+        %i(person_id start_date end_date).map { |c| c == :person_id ? c : op.rdbms.partition_fix(c) }
       end
 
       def remove_window_id(ds)
