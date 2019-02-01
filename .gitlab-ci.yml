@@ -23,6 +23,50 @@ before_script:
   # Install dependencies into the cache directory.
   - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor
 
+# Postgres jobs ----------------------------------------------------------------
+
+# Shared environment variables for postgres (no temp) related jobs.
+.postgres_no_temp_env_variables:
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "false"
+
+# Shared environment variables for postgres (temp) related jobs.
+.postgres_temp_env_variables:
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "true"
+    DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
+
+# Postgres related jobs.
+postgres_omopv4_no_temp:
+  extends: ".postgres_no_temp_env_variables"
+  variables:
+    CONCEPTQL_DATA_MODEL: "omopv4_plus"
+    SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+  script: "env"
+
+postgres_gdm_no_temp:
+  extends: ".postgres_no_temp_env_variables"
+  variables:
+    CONCEPTQL_DATA_MODEL: "gdm"
+    SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+  script: "env"
+
+postgres_omopv4_temp:
+  extends: ".postgres_temp_env_variables"
+  variables:
+    CONCEPTQL_DATA_MODEL: "omopv4_plus"
+    SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+  script: "env"
+
+postgres_gdm_temp:
+  extends: ".postgres_temp_env_variables"
+  variables:
+    CONCEPTQL_DATA_MODEL: "gdm"
+    SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+  script: "env"
+
+# Impala jobs ------------------------------------------------------------------
+
 # Shared environment variables for impala related jobs.
 .impala_env_variables:
   variables:
