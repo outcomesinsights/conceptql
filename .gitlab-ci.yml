@@ -1,0 +1,40 @@
+# Find additional versions at:
+#   https://hub.docker.com/r/library/ruby/tags/
+image: "ruby:2.4"
+
+# Find additional services at:
+#   http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
+services:
+  - "postgres:9.6.11"
+
+# Cache gems in between builds.
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - "vendor/ruby"
+
+# Scripts that get executed before any jobs.
+before_script:
+  # Output the ruby version for debug purposes.
+  - ruby -v
+  # Install dependencies into the cache directory.
+  - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor
+
+# Shared environment variables for impala related jobs.
+.impala_env_variables:
+  variables:
+    CONCEPTQL_DATA_MODEL: "omopv4_plus"
+    SEQUELIZER_URI: "impala://localhost/synpuf250s"
+
+# Impala related jobs.
+impala_no_temp_tables:
+  extends: ".impala_env_variables"
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "false"
+  script: "env"
+
+impala_temp_tables:
+  extends: ".impala_env_variables"
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "true"
+  script: "env"
