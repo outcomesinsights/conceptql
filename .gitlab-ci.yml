@@ -39,7 +39,6 @@ postgres_omopv4_no_temp:
     CONCEPTQL_FORCE_TEMP_TABLES: "false"
     CONCEPTQL_DATA_MODEL: "omopv4_plus"
     SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
-  script: "env"
 
 postgres_gdm_no_temp:
   extends: ".postgres_run_tests"
@@ -47,7 +46,6 @@ postgres_gdm_no_temp:
     CONCEPTQL_FORCE_TEMP_TABLES: "false"
     CONCEPTQL_DATA_MODEL: "gdm"
     SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
-  script: "env"
 
 postgres_omopv4_temp:
   extends: ".postgres_run_tests"
@@ -56,7 +54,6 @@ postgres_omopv4_temp:
     CONCEPTQL_DATA_MODEL: "omopv4_plus"
     DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
     SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
-  script: "env"
 
 postgres_gdm_temp:
   extends: ".postgres_run_tests"
@@ -65,7 +62,6 @@ postgres_gdm_temp:
     CONCEPTQL_DATA_MODEL: "gdm"
     DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
     SEQUELIZER_URI: "postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
-  script: "env"
 
 # Impala jobs ------------------------------------------------------------------
 
