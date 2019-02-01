@@ -22,6 +22,9 @@ before_script:
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
   # Install dependencies into the cache directory.
   - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor
+  # Debugging
+  - ls -la /builds/nickjj
+  - ls -laR ./vendor
 
 # Postgres jobs ----------------------------------------------------------------
 
@@ -82,4 +85,5 @@ impala_temp_tables:
   extends: ".impala_env_variables"
   variables:
     CONCEPTQL_FORCE_TEMP_TABLES: "true"
+    DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
   script: "env"
