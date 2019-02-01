@@ -18,7 +18,7 @@ before_script:
   # Output the ruby version for debug purposes.
   - ruby -v
   # Add Python dependencies.
-  - apt-get install python-pip pigz
+  - apt-get update && apt-get install python-pip pigz
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
   # Install dependencies into the cache directory.
   - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor
