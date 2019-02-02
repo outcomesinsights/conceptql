@@ -7,21 +7,19 @@ image: "ruby:2.4"
 services:
   - "postgres:9.6.11"
 
-# Cache gems in between builds.
-# cache:
-#   key: "${CI_COMMIT_REF_SLUG}"
-#   paths:
-#     - "vendor/ruby"
+Cache gems in between builds.
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - "vendor/ruby"
 
 # Scripts that get executed before any jobs.
 before_script:
-  # Output the ruby version for debug purposes.
-  - ruby -v
   # Add dependencies.
   - apt-get update -y && apt-get install -y python-pip pigz postgresql-client
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
   # Install dependencies into the cache directory.
-  - bundle install --gemfile .travis.gemfile -j $(nproc) # --path vendor
+  - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor
 
 # Postgres jobs ----------------------------------------------------------------
 
@@ -31,10 +29,12 @@ before_script:
     - echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
     - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
     - psql postgres://postgres@postgres/postgres --list
-    - bundle list
+    - ruby -v
+    - bundle check --gemfile .travis.gemfile
+    - bundle show
     - bundle exec ruby test/all.rb
 
-# Postgres related jobs.!
+# Postgres related jobs.
 postgres_omopv4_no_temp:
   extends: ".postgres_run_tests"
   variables:
