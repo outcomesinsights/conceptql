@@ -34,7 +34,7 @@ before_script:
     - bundle list
     - bundle exec ruby test/all.rb
 
-# Postgres related jobs.
+# Postgres related jobs.!
 postgres_omopv4_no_temp:
   extends: ".postgres_run_tests"
   variables:
