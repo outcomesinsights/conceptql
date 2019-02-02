@@ -25,6 +25,8 @@ before_script:
 
 # Shared script for postgres related jobs.
 .postgres_run_tests:
+  variables:
+    SEQUELIZER_HOST: "postgres"
   script:
     - echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
     - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
