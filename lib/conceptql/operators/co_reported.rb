@@ -36,7 +36,7 @@ module ConceptQL
           end.select(Sequel[:first][:context_id]).distinct
         end.from_self
 
-        name = unqualified_cte_name(:shared_context_ids)
+        name = cte_name(:shared_context_ids)
         shared_events = contexteds.map do |contexted|
           contexted.where(context_id: db[name]).select(*query_cols)
         end

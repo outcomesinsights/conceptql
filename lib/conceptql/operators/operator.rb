@@ -154,13 +154,6 @@ module ConceptQL
         scope.cte_name(name)
       end
 
-      def unqualified_cte_name(name)
-        name = cte_name(name)
-        name = name.column if name.is_a?(Sequel::SQL::QualifiedIdentifier)
-        name = Sequel::SQL::Identifier.new(name) if name.is_a?(String)
-        name
-      end
-
       def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
