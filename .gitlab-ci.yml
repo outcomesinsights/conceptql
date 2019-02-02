@@ -29,7 +29,7 @@ before_script:
     - echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
     - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
     - psql postgres://postgres@postgres/postgres --list
-    - bundle exec ruby test/all.rb
+    - bundle exec --gemfile .travis.gemfile ruby test/all.rb
 
 # Postgres related jobs.
 postgres_omopv4_no_temp:
