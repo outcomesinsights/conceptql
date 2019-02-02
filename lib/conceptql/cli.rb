@@ -17,7 +17,7 @@ module ConceptQL
       desc: 'adapter for database'
     class_option :host,
       aliases: :h,
-      banner: 'localhost',
+      banner: 'postgres',
       desc: 'host for database'
     class_option :username,
       aliases: :u,
@@ -125,4 +125,3 @@ module ConceptQL
     end
   end
 end
-
