@@ -259,8 +259,9 @@ module ConceptQL
       rdbms = op.rdbms
 
       query = query.from_self
-      temp_tables = ctes.map do |label, operator|
-        [label_cte_name(label), operator.evaluate(db)]
+      temp_tables = []
+      ctes.each do |label, operator|
+        temp_tables << [label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables)]
       end
 
       if force_temp_tables?
