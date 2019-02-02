@@ -4,6 +4,16 @@ set -x
 
 echo "${SEQUELIZER_URI}" | grep -i impala || exit 0
 
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+  echo "Skipping tests because PRs can't access cluster"
+  exit 0
+fi
+
+if [ -z "${IMPALA_CLUSTER_PRIVATE_KEY_BASE64}" ]; then
+  echo "Looks like the private key for the cluster is empty?"
+  exit 1
+fi
+
 eval "$(ssh-agent -s)"
 timeout 10 ssh-add <(echo "${IMPALA_CLUSTER_PRIVATE_KEY_BASE64}" | base64 --decode)
 ssh-add -l
