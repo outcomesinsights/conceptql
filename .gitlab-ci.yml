@@ -22,19 +22,15 @@ before_script:
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
   # Install dependencies into the cache directory.
   - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor
-  # Debugging
-  - ls -la /builds/nickjj
-  - ls -laR ./vendor
-  - docker image ls
-  - docker container ls
 
 # Postgres jobs ----------------------------------------------------------------
 
 # Shared script for postgres related jobs.
 .postgres_run_tests:
+  image: "postgres:9.6.11"
   script:
     - echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
-    - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@localhost/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
+    - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
     - bundle exec ruby test/all.rb
 
 # Postgres related jobs.
