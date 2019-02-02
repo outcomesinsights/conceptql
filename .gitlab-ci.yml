@@ -8,10 +8,10 @@ services:
   - "postgres:9.6.11"
 
 # Cache gems in between builds.
-cache:
-  key: "${CI_COMMIT_REF_SLUG}"
-  paths:
-    - "vendor/ruby"
+# cache:
+#   key: "${CI_COMMIT_REF_SLUG}"
+#   paths:
+#     - "vendor/ruby"
 
 # Scripts that get executed before any jobs.
 before_script:
@@ -21,7 +21,7 @@ before_script:
   - apt-get update -y && apt-get install -y python-pip pigz postgresql-client
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
   # Install dependencies into the cache directory.
-  - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor
+  - bundle install --gemfile .travis.gemfile -j $(nproc) # --path vendor
 
 # Postgres jobs ----------------------------------------------------------------
 
