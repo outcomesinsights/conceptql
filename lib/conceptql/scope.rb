@@ -1,6 +1,6 @@
 require_relative "window"
 require "securerandom"
-
+require "sequel"
 
 module ConceptQL
   # Scope coordinates the creation of any common table expressions that might
