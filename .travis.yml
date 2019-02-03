@@ -53,6 +53,7 @@ jobs:
       env: TESTS_DIV_MOD="8 7" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
       script: travis_wait 45 bash .travis.impala.sh
     - stage: deploy
+      if: type != pull_request
       before_install: gem install tping
       script:
         - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo jigsaw-diagram-editor --pro --branch $TRAVIS_BRANCH
