@@ -209,6 +209,23 @@ module ConceptQL
       true
     end
 
+    class CteExtractor < Sequel::ASTTransformer
+      def initialize(scope, ctes)
+        @scope = scope
+        @ctes = ctes
+      end
+
+      private
+
+      def v(o)
+        if o.is_a?(Sequel::Dataset)
+          @scope.recursive_extract_ctes(o, @ctes)
+        else
+          super
+        end
+      end
+    end
+
     def recursive_extract_cte_expr(t, ctes)
       case t
       when Sequel::Dataset
@@ -241,6 +258,10 @@ module ConceptQL
       if compounds = query.opts[:compounds]
         query = query.clone(:compounds=>compounds.map{|t,ds,a| [t, recursive_extract_ctes(ds, ctes),a]})
         #p [:rec_compounds, ctes.map(&:first), compounds]
+      end
+
+      if where = query.opts[:where]
+        query = query.clone(:where=>CteExtractor.new(self, ctes).transform(where))
       end
 
       if with = query.opts[:with]
