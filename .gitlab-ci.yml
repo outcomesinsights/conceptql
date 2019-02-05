@@ -15,6 +15,8 @@ cache:
 
 # Scripts that get executed before any jobs.
 before_script:
+  # Adjust the system path.
+  - export PATH="$HOME/.local/bin:$PATH"
   # Add dependencies.
   - apt-get update -y && apt-get install -y python-pip pigz postgresql-client
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
