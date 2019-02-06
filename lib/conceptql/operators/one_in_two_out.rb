@@ -60,7 +60,7 @@ twice in an outpatient setting with a 30-day gap.
       def valid_inpatient_events
         q = all_inpatient_events
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
-          q = q.where{ |o| Sequel.date_sub(o.discharge_date, o.admission_date) > options[:inpatient_length_of_stay].to_i }
+          q = q.where{ |o| rdbms.days_between(o.admission_date, o.discharge_date) > options[:inpatient_length_of_stay].to_i }
         end
 
         q = q.select(*(query_cols - [:start_date, :end_date]))
