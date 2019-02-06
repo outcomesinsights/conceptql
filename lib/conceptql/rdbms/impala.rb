@@ -41,6 +41,10 @@ module ConceptQL
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
 
+      def days_between(from_column, to_column)
+        Sequel.function(:datediff, cast_date(to_column), cast_date(from_column))
+      end
+
       def create_options(scope)
         opts = { parquet: true }
         opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
