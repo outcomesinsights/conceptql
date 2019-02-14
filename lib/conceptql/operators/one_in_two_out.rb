@@ -31,7 +31,6 @@ twice in an outpatient setting with a 30-day gap.
 
       default_query_columns
 
-      require_column :provenance_type
       require_column :admission_date
       require_column :discharge_date
 
@@ -47,13 +46,12 @@ twice in an outpatient setting with a 30-day gap.
       def condition_events
         db[stream.evaluate(db)]
           .where(criterion_domain: 'condition_occurrence')
-          .exclude(provenance_type: nil)
           .from_self
       end
 
       def all_inpatient_events
         condition_events
-          .where(provenance_type: to_concept_id(:inpatient))
+          .where(build_where_from_codes(["inpatient"]))
           .from_self
       end
 
@@ -76,7 +74,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def outpatient_events
         condition_events
-          .where(provenance_type: to_concept_id(:claim) + to_concept_id(:outpatient))
+          .where(build_where_from_codes(["carrier_claim","outpatient"]))
           .from_self
       end
 

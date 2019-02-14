@@ -6,13 +6,15 @@ module ConceptQL
       class ProvenanceQueryModifier < QueryModifier
         RELATED_COLUMNS = %w(
           provenance_concept_id
+          source_type_concept_id
         ).sort.map(&:to_sym)
 
         attr :db
 
         def self.provided_columns
           [
-            :provenance_type
+            :file_provenance_type,
+            :code_provenance_type
           ]
         end
 
@@ -30,7 +32,8 @@ module ConceptQL
           query.from_self(alias: :cc)
             .left_join(Sequel[:contexts].as(:c), Sequel[:cc][:context_id] => Sequel[:c][:id])
             .select_all(:cc)
-            .select_append(Sequel[:c][:source_type_concept_id].as(:provenance_type))
+            .select_append(Sequel[:c][:source_type_concept_id].as(:file_provenance_type),
+                           Sequel[:cc][:provenance_concept_id].as(:code_provenance_type))
             .from_self
         end
       end

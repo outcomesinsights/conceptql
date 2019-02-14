@@ -16,7 +16,8 @@ module ConceptQL
 
         def self.provided_columns
           [
-            :provenance_type
+            :file_provenance_type,
+            :code_provenance_type
           ]
         end
 
@@ -31,7 +32,7 @@ module ConceptQL
 
         def modified_query
           return query unless self.class.has_required_columns?(dm.table_cols(source_table))
-          query.select_append(Sequel[dm.provenance_type_column(query, source_table)].as(:provenance_type)).from_self
+          query.select_append(Sequel[dm.file_provenance_type_column(query, source_table)].as(:file_provenance_type), Sequel[dm.code_provenance_type_column(query, source_table)].as(:code_provenance_type)).from_self
         end
       end
     end
