@@ -42,7 +42,14 @@ Enter numeric concept id(s), or the corresponding text label(s):
 
       def validate(db, opts = {})
         super
-        # TODO
+        bad_keywords = arguments.select{|c| c.to_i.zero?}.reject{|c|
+          allowed_provenance_types.include?(c)
+        }
+
+        if ConceptQL::Utils.present?(bad_keywords)
+          add_error("unrecognized keywords", *bad_keywords)
+        end
+
       end
     end
   end

@@ -8,8 +8,6 @@ module ConceptQL
     class OneInTwoOut < Operator
       register __FILE__
 
-      include ConceptQL::Provenanceable
-
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for an event
 that appears either once in an inpatient setting or
@@ -30,6 +28,8 @@ twice in an outpatient setting with a 30-day gap.
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 
       default_query_columns
+
+      include ConceptQL::Provenanceable
 
       require_column :admission_date
       require_column :discharge_date
