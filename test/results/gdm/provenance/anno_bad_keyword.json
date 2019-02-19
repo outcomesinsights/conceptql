@@ -15,7 +15,8 @@
       "name": "ICD-9 CM"
     }
   ],
-  "carrier, garbage",
+  "carrier",
+  "garbage",
   "other",
   {
     "annotation": {
