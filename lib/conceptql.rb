@@ -15,6 +15,10 @@ Dir.glob(File.dirname(__FILE__) + "/../lib/conceptql/query_modifiers/**/*.rb").e
   require_relative file
 end
 
+Dir.glob(File.dirname(__FILE__) + "/../lib/conceptql/validators/**/*.rb").each do |file|
+  require_relative file
+end
+
 module ConceptQL
   def self.metadata(opts = {})
     {

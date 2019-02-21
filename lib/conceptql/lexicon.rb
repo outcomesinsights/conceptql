@@ -21,6 +21,29 @@ module ConceptQL
       domains_and_codes
     end
 
+    # Takes all concept_ids or a Sequel::Dataset
+    # and finds all descendant_ids associated to the set of IDs passed in
+    #
+    # We also return back all concept_ids that were passed in.  That way,
+    # if a concept_id isn't in our ancestors table, we still look for that
+    # concept and don't secretly drop it
+    def descendants_of(*concept_ids_or_ds)
+      where_values = concept_ids_or_ds.dup
+
+      if where_values.last.is_a?(Sequel::Dataset)
+        where_values = where_values.pop
+      else
+        where_values = lexicon_db.values(where_values.map { |value| [ancestor_id: value, descendant_id: value] })
+      end
+      where_values = where_values.select(:ancestor_id)
+
+      ancestors_table
+        .where(ancestor_id: where_values)
+        .union(where_values)
+        .select(:descendant_id)
+        .distinct
+    end
+
     def known_codes(vocabulary_id, codes)
       concepts(vocabulary_id, codes).select_map(:concept_code)
     end

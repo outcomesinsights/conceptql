@@ -232,22 +232,8 @@ module ConceptQL
 
       def validate(db, opts = {})
         super
-        if add_warnings?(db, opts) && !select_all?
-          args = arguments.dup
-          args -= bad_arguments
-          missing_args = []
-
-          if no_db?(db, opts)
-            if lexicon
-              missing_args = args - lexicon.known_codes(vocabulary_id, args)
-            end
-          else
-            missing_args = args - dm.concepts_ds(db, vocabulary_id, args).select_map(:concept_code) rescue []
-          end
-
-          unless missing_args.empty?
-            add_warning("unknown code(s)", *missing_args)
-          end
+        ConceptQL::Validators::Warners::CodesWarner.new(self).warnings.each do |message, values|
+          add_warning(message, *values)
         end
       end
 
@@ -272,8 +258,6 @@ module ConceptQL
         vocab_entry.short_name || vocab_entry.omopv5_id
       end
 
-      private
-
       def vocab_entry
         self.class.assigned_vocabularies[op_name.to_s.downcase] || Entry.new({})
       end
@@ -293,6 +277,8 @@ module ConceptQL
       def vocabulary_id
         @vocabulary_id ||= translated_vocabulary_id
       end
+
+      private
 
       def translated_vocabulary_id
         return vocab_entry.omopv5_vocabulary_id || op_name if gdm?
