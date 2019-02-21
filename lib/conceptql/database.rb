@@ -46,7 +46,6 @@ module ConceptQL
       end
 
       def lexicon
-        return unless ENV["LEXICON_URL"]
         @lexicon_mutex.synchronize do
           unless defined?(@lexicon)
             @lexicon = make_lexicon
@@ -57,14 +56,21 @@ module ConceptQL
 
       def make_lexicon
         db_opts = {}
+
         if ENV["CONCEPTQL_LOG_LEXICON"]
           log_path = Pathname.new("log") + "conceptql_lexicon.log"
           log_path.dirname.mkpath
           db_opts[:logger] = Logger.new(log_path)
         end
-        db = Sequel.connect(ENV["LEXICON_URL"], db_opts)
+
+        db = if ENV["LEXICON_URL"]
+          Sequel.connect(ENV["LEXICON_URL"], db_opts)
+        else
+          Sequel.mock(db_opts.merge(host: :postgres))
+        end
+
         db_extensions(db)
-        Lexicon.new(db)
+        Lexicon.new(db, @db)
       end
     end
 

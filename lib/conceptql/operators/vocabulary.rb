@@ -160,7 +160,7 @@ module ConceptQL
         end
 
         def lexicon
-          @lexicon || ConceptQL::Database.lexicon
+          ConceptQL::Database.lexicon
         end
 
         def from_old_vocab(nodifier, old_vocab_id, *values)
