@@ -1,13 +1,14 @@
 require_relative "../../helper"
 
 describe ConceptQL::Lexicon do
-  let(:ldb) { Sequel.connect("sqlite:/") }
-  let(:ddb) { Sequel.connect("sqlite:/") }
+  include Sequelizer
+  let(:ldb) { new_db }
+  let(:ddb) { new_db }
   let(:lexicon) { ConceptQL::Lexicon.new(ldb, ddb) }
 
   describe "#descendants_of" do
     def make_ancestor_row(db, a_id, d_id)
-      db.create_table?(:ancestors) do
+      db.create_table?(:ancestors, temp: true) do
         Integer :ancestor_id
         Integer :descendant_id
       end
@@ -19,9 +20,9 @@ describe ConceptQL::Lexicon do
     end
 
     def make_concept_row(db, id, name)
-      db.create_table?(:concepts) do
+      db.create_table?(:concepts, temp: true) do
         Integer :id
-        Integer :concept_code
+        String :concept_code
       end
       db[:concepts].insert([id, name])
     end
