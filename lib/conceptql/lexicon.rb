@@ -44,6 +44,7 @@ module ConceptQL
     end
 
     def known_codes(vocabulary_id, codes)
+      return codes if lexicon_db_is_mock?
       concepts(vocabulary_id, codes).select_map(:concept_code)
     end
 
@@ -74,6 +75,10 @@ module ConceptQL
                 Sequel[:vocabulary_name].as(:vocabulary_full_name),
                 Sequel.expr(1).as(:from_lexicon))
         .all
+    end
+
+    def lexicon_db_is_mock?
+      lexicon_db.is_a?(Sequel::Mock::Database)
     end
 
     %i(ancestors concepts mappings vocabularies).each do |meth|
