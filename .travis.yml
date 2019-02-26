@@ -20,6 +20,7 @@ services:
 before_install:
 - sudo mount -o remount,size=50% /var/ramfs
 - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
+- sqlite3 --version
 script: travis_wait 45 bash .travis.postgres.sh
 notifications:
   slack:
