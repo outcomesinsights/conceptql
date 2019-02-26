@@ -19,12 +19,21 @@ describe ConceptQL::Lexicon do
       lexicon.descendants_of(ids_or_ds).select_map(:descendant_id)
     end
 
-    def make_concept_row(db, id, name)
+    def make_concept_row(db, id, vocab_id, code)
       db.create_table?(:concepts, temp: true) do
         Integer :id
+        String :vocabulary_id
         String :concept_code
       end
-      db[:concepts].insert([id, name])
+      db[:concepts].insert([id, vocab_id, code])
+    end
+
+    def make_vocabulary_row(db, omopv4_id, omopv5_id)
+      db.create_table?(:vocabularies, temp: true) do
+        Integer :omopv4_id
+        String :omopv5_id
+      end
+      db[:vocabularies].insert([omopv4_id, omopv5_id])
     end
 
     it "should find passed in concept_id and descendants of concept_id" do
@@ -41,8 +50,10 @@ describe ConceptQL::Lexicon do
 
     it "should handle Sequel::Dataset as concepts to look for" do
       make_ancestor_row(ldb, 1, 2)
-      make_concept_row(ldb, 1, "example")
-      ds = ldb[:concepts].where(concept_code: "example").select(:id)
+      make_vocabulary_row(ldb, 2, "vocab")
+      make_concept_row(ldb, 1, "vocab", "EXAMPLE")
+
+      ds = lexicon.concepts(2, "example").select(:id)
 
       get_descendants_of(ds).must_equal([1, 2])
     end
