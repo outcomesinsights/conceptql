@@ -45,16 +45,20 @@ module ConceptQL
         end
       end
 
-      def lexicon
+      def lexicon_db
         @lexicon_mutex.synchronize do
-          unless defined?(@lexicon)
-            @lexicon = make_lexicon
+          unless defined?(@lexicon_db)
+            @lexicon_db = make_lexicon_db
           end
         end
-        @lexicon
+        @lexicon_db
       end
 
-      def make_lexicon
+      def lexicon
+        @lexicon ||= Lexicon.new(lexicon_db)
+      end
+
+      def make_lexicon_db
         db_opts = {}
         if ENV["CONCEPTQL_LOG_LEXICON"]
           log_path = Pathname.new("log") + "conceptql_lexicon.log"
@@ -67,12 +71,12 @@ module ConceptQL
                        Sequel.mock(host: :postgres)
                      end
         db_extensions(lexicon_db)
-        Lexicon.new(lexicon_db, db)
+        lexicon_db
       end
     end
 
     def lexicon
-      self.class.lexicon
+      @lexicon ||= Lexicon.new(self.class.lexicon_db, db)
     end
   end
 end

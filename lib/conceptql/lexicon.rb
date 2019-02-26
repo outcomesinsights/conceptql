@@ -27,7 +27,7 @@ module ConceptQL
       descendants = ancestors_table
         .where(ancestor_id: where_values)
         .select(:descendant_id)
-      descendants.union(union_clause).distinct.tap { |o| puts o.sql }
+      descendants.union(union_clause).distinct
     end
 
     def codes_by_domain(codes, vocabulary_id)
