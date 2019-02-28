@@ -1,20 +1,15 @@
-FROM phusion/passenger-ruby24:0.9.27
+FROM ruby:2.4.5-stretch
 
-RUN apt-get update
-RUN apt-get install -y wget python
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python get-pip.py
-RUN pip install --upgrade sqlparse
-RUN ruby --version
+WORKDIR /app
 
-ENV INSTALL_PATH /home/app
-WORKDIR $INSTALL_PATH
-COPY . ./
+ENV PATH="/root/.local/bin:${PATH}"
 
-RUN grep -iv "\(pg\|sequel_impala\)" Gemfile > Gemfile.temp
-RUN echo 'gem "pg"' >> Gemfile.temp
-RUN echo 'gem "sequel_impala", github: "outcomesinsights/sequel_impala", branch: "master"' >> Gemfile.temp
-RUN mv Gemfile.temp Gemfile
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  libpq-dev python-pip python-setuptools git \
+  && pip install --user \
+  pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
 
-RUN gem install bundler
-RUN bundle install --jobs=4 --retry=3
+COPY .travis.gemfile ./
+RUN bundle install --gemfile .travis.gemfile
+
+CMD ["bash"]
