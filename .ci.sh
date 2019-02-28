@@ -182,7 +182,7 @@ impala_tests () {
   done
 }
 
-#prepare_ci_environment
+prepare_ci_environment
 postgres_tests
 impala_tests
 
