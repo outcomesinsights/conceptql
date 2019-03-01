@@ -2,6 +2,8 @@
 
 source "http://rubygems.org"
 
+gemspec
+
 gem "minitest", ">= 5.7.0"
 gem "minitest-hooks"
 gem "minitest-shared_description"
@@ -22,3 +24,5 @@ platforms :jruby do
   gem "jdbc-sqlite3"
   gem "jdbc-postgres"
 end
+
+

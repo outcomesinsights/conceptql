@@ -597,8 +597,9 @@ module ConceptQL
         args.unshift(first_arg)
         args = args.map { |v| [v] }
         args_cte = db.values(args)
-        db[:args]
-          .with(:args, args_cte)
+        args_cte_name = cte_name(:args)
+        db[args_cte_name]
+          .with(args_cte_name, args_cte)
           .select(:arg)
       end
 

@@ -22,7 +22,7 @@ module ConceptQL
       start_date: :Date,
       end_date: :Date,
       source_value: :String,
-      source_vocabulary_id: :Bigint
+      source_vocabulary_id: :String
     }.freeze
 
     ADDITIONAL_COLUMNS = {
@@ -44,6 +44,11 @@ module ConceptQL
       drug_quantity: :Float,
       admission_date: :Date,
       discharge_date: :Date,
+      length_of_stay: :Bigint,
+      admission_source: :String,
+      discharge_location: :String,
+      primary_diagnosis_code: :String,
+      primary_diagnosis_vocabulary: :String,
       uuid: :String,
       window_id: :Bigint
     }.freeze

@@ -16,7 +16,7 @@ describe ConceptQL::Operators do
         save_lexicon = ENV["LEXICON_URL"]
         ENV["LEXICON_URL"] = nil
         db = ConceptQL::Database.new(seq_db)
-        query = db.query(["union",["cpt","00000"],["icd9", "000.00"]])
+        query = db.query(["union",["cpt", "00000", "99213"],["icd9", "000.00", "412"]])
         query.scope_annotate(skip_counts: true).must_equal(
           {:errors=>{},
           :warnings=>{},
