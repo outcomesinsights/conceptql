@@ -45,21 +45,7 @@ module ConceptQL
           .left_join(:concepts, { Sequel[:ad][:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
           .left_join(:concepts, { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
           .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[:cl][:id] }, table_alias: :pcon)
-          .where(collection_type_concept_id: descendant_ids)
-          .select(*select_columns)
-          .from_self
-      end
-
-      def select_columns
-        [
-          Sequel[:ad][:admission_date].as(:start_date),
-          Sequel[:ad][:discharge_date].as(:end_date),
-          ((rdbms.days_between(Sequel[:ad][:admission_date], Sequel[:ad][:discharge_date])) + 1).as(:length_of_stay),
-          Sequel[:asc][:concept_code].as(:admission_source),
-          Sequel[:dlc][:concept_code].as(:discharge_location),
-          Sequel[:pcon][:concept_code].as(:source_value),
-          Sequel[:pcon][:vocabulary_id].as(:source_vocabulary_id)
-        ]
+          .where(Sequel[:cn][:source_type_concept_id] => descendant_ids)
       end
 
       def table
@@ -67,7 +53,19 @@ module ConceptQL
       end
 
       def override_columns
-        required_columns.zip(required_columns).to_h if gdm?
+        {
+          start_date: Sequel[:ad][:admission_date].as(:start_date),
+          end_date: Sequel[:ad][:discharge_date].as(:end_date),
+          length_of_stay: ((rdbms.days_between(Sequel[:ad][:admission_date], Sequel[:ad][:discharge_date])) + 1).as(:length_of_stay),
+          admission_source: Sequel[:asc][:concept_code].as(:admission_source),
+          discharge_location: Sequel[:dlc][:concept_code].as(:discharge_location),
+          source_value: Sequel[:pcon][:concept_code].as(:source_value),
+          source_vocabulary_id: Sequel[:pcon][:vocabulary_id].as(:source_vocabulary_id),
+          person_id: Sequel[:cl][:patient_id].as(:person_id),
+          criterion_id: Sequel[:cl][:id].as(:criterion_id),
+          criterion_table: Sequel.cast_string("collections").as(:criterion_table),
+          criterion_domain: Sequel.cast_string("condition_occurrence").as(:criterion_domain)
+        }
       end
     end
   end
