@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # This was built locally by running: `docker build -t conceptql .`
 # In the near future this will be put on your Docker Hub account and then it
 # will be pulled from there without having to build anything locally.
@@ -13,6 +11,9 @@ readonly DOCKER_POSTGRES_IMAGE="jigsaw_test_data:latest"
 # Where should state files be written to? State files will include container
 # logs and CSV files that store results about the test run.
 readonly STATE_ROOT_PATH="/tmp/ci"
+
+# Which file name should be used to store the master CSV file?
+readonly STATE_CSV_FILE="ci.csv"
 
 # Which path and branch are we working on?
 #
@@ -60,13 +61,10 @@ ci_cleanup() {
   docker network rm "${namespace}" >/dev/null
 }
 
-# Ensure Docker resources always get removed.
-trap "ci_cleanup" ERR
-
 # Set up and test scripts.
 SCRIPT=$(cat <<-END
 bundle install --gemfile .travis.gemfile
-bundle exec --gemfile .travis.gemfile ruby test/all.rbaaa
+bundle exec --gemfile .travis.gemfile ruby test/all.rb
 END
 )
 
@@ -74,7 +72,7 @@ prepare_ci_environment () {
   if [ "${ARG_COUNT}" -ne 0 ]; then
     # Move into and checkout the branch for testing. This is really only meant
     # to run if you're running this script on your CI server, not dev box.
-    cd "${REPO_PATH}"
+    cd "${REPO_PATH}" || exit
     git checkout "${BRANCH}" 
     echo ""
 
@@ -85,17 +83,13 @@ prepare_ci_environment () {
 
 wait_for_postgres () {
   local container_id="${1}"
-  local rc
 
   while sleep 1; do
     # Wait until psql can query the database.
-    set +e
     docker exec "${container_id}" psql -U postgres -c "\dt;" &>/dev/null
-    rc="${?}"
-    set -e
 
     # PostgreSQL is ready, time to bail.
-    if [ "${rc}" -eq 0 ]; then
+    if [ "${?}" -eq 0 ]; then
       break
     fi
   done
@@ -134,10 +128,11 @@ run_postgres_test () {
 
   # Wait until the container's tests are finished and get the exit code of
   # the container.
+  local exit_code
   exit_code="$(docker container wait "${conceptql_cid}")"
 
   # Stop measuring conceptql's test suite in seconds.
-  time_conceptql="$(("${SECONDS}" - "${time_conceptql_start_time}"))"
+  local time_conceptql="$(("${SECONDS}" - "${time_conceptql_start_time}"))"
 
   # Stop and remove any resources created for this test.
   ci_cleanup "${postgres_cid}" "${conceptql_cid}" "${namespace}" "${exit_code}"
@@ -152,6 +147,8 @@ run_postgres_test () {
   
   if [ "${ARG_COUNT}" -ne 0 ]; then
     echo "${results}" > "${STATE_ROOT_PATH}/${namespace}.csv"
+  else
+    echo "${results}"
   fi
 }
 
@@ -186,9 +183,57 @@ prepare_ci_environment
 postgres_tests
 impala_tests
 
-# TODO: All tests are finished, combine individual CSV files into the main
-# CSV file that is acting as a CI test run database. Parse individual CSV
-# files to see if everything passed, store that result, remove the individual
-# CSV files and move onto the next steps.
+write_log_and_report_errors() {
+  local namespace="${1}"
+  local csv_path="${STATE_ROOT_PATH}/${STATE_CSV_FILE}"
+  local csv_pattern="${STATE_ROOT_PATH}/${namespace}"
+
+  for file in "${csv_pattern}"*.csv; do
+    cat "${file}" >> "${csv_path}"
+
+    # Determine if this test had a failing test.
+    cat "${file}" | cut -d"," -f3 | grep "1" >/dev/null
+
+    # Exit code 0 means grep found a match.
+    if [ "${?}" -eq 0 ]; then
+      echo "This file had a failing test (error notification):"
+      echo "  ${file}"
+    fi
+
+    rm "${file}"
+  done
+}
+
+check_all_log_status_codes () {
+  local namespace="${1}"
+  local csv_path="${STATE_ROOT_PATH}/${STATE_CSV_FILE}"
+  local exit_codes
+
+  exit_codes="$(grep "${DOCKER_NAMESPACE}" "${csv_path}" | cut -d"," -f3)"
+
+  # Grep reports an exit code of 0 if it finds a match but in the case of this
+  # function, it's more natural to return 0 if all tests pass, so we swap the
+  # exit codes by negating it.
+  ! echo "${exit_codes}" | grep "1" >/dev/null
+
+  echo "${?}"
+}
+
+build_and_publish_new_conceptql_image () {
+  echo "All tests have passed, building new conceptql Docker image"
+  docker build -t conceptql .
+
+  # TODO: Push this to the Docker Hub.
+}
+
+# We're in development mode, so nothing else needs to run.
+if [ "${ARG_COUNT}" -eq 0 ]; then exit 0; fi
+
+write_log_and_report_errors "${DOCKER_NAMESPACE}"
+all_tests_passed="$(check_all_log_status_codes "${DOCKER_NAMESPACE}")"
+
+if [ "${all_tests_passed}" -eq 0 ]; then
+  build_and_publish_new_conceptql_image
+fi
 
 exit 0
