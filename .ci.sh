@@ -94,12 +94,24 @@ prepare_ci_environment () {
 wait_for_postgres () {
   local container_id="${1}"
 
+  # Wait until psql can query the database.
   while sleep 1; do
-    # Wait until psql can query the database.
-    docker exec "${container_id}" psql -U postgres -c "\dt;" &>/dev/null
+    # Make sure the container itself is capable of starting up.
+    if ! docker exec "${container_id}" /bin/true; then
+      echo "PostgreSQL container ${container_id:0:4} unexpectedly failed to start"
+      echo "  docker container logs ${container_id:0:4}"
+      exit 1
+    fi
+
+    if [ -n "${DEBUG}" ]; then
+      echo "Waiting on PostgreSQL container ${container_id:0:4} to be ready..."
+    fi
 
     # PostgreSQL is ready, time to bail.
-    if [ "${?}" -eq 0 ]; then
+    if docker exec "${container_id}" psql -U postgres -c "\dt;" &>/dev/null; then
+      if [ -n "${DEBUG}" ]; then
+        echo "PostgreSQL container ${container_id:0:4} is ready!"
+      fi
       break
     fi
   done
@@ -114,10 +126,19 @@ run_postgres_test () {
   # PostgreSQL and each conceptql container will belong to its own network.
   docker network create "${namespace}" >/dev/null
 
+  if [ -n "${DEBUG}" ]; then
+    echo "Created network ${namespace}"
+  fi
+
   # Start PostgreSQL and wait until PostgreSQL is ready for connections.
   local postgres_cid
   postgres_cid="$(docker run -d --rm --network-alias pg \
     --network "${namespace}" "${DOCKER_POSTGRES_IMAGE}" -c fsync=off)"
+
+  if [ -n "${DEBUG}" ]; then
+    echo "Starting PostgreSQL container ${postgres_cid:0:4}"
+  fi
+
   wait_for_postgres "${postgres_cid}"
 
   # Start measuring conceptql's test suite in seconds.
@@ -128,6 +149,10 @@ run_postgres_test () {
   conceptql_cid="$(docker run -d -v "$(pwd)":/app \
     --network "${namespace}" --env-file "${file}" \
     "${DOCKER_CONCEPTQL_IMAGE}" bash -c "${SCRIPT}")"
+
+  if [ -n "${DEBUG}" ]; then
+    echo "Running tests for conceptql container ${conceptql_cid:0:4}..."
+  fi
 
   # Follow the container's logs and redirect both stdout and stderr to a new
   # file. Run it in the background and only do this in a CI environment.
