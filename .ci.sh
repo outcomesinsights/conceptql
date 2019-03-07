@@ -167,13 +167,15 @@ run_postgres_test () {
   exit_code="$(docker container wait "${conceptql_cid}")"
 
   # Stop measuring conceptql's test suite in seconds.
-  local time_conceptql="$(("${SECONDS}" - "${time_conceptql_start_time}"))"
+  local time_conceptql
+  time_conceptql="$(echo "${SECONDS} - ${time_conceptql_start_time}" | bc)"
 
   # Stop and remove any resources created for this test.
   ci_cleanup "${postgres_cid}" "${conceptql_cid}" "${namespace}" "${exit_code}"
 
   # Stop measuring how long this test took.
-  local time_wall_clock="$(("${SECONDS}" - "${time_wall_clock_start_time}"))"
+  local time_wall_clock
+  time_wall_clock="$(echo "${SECONDS} - ${time_wall_clock_start_time}" | bc)"
 
   # Record the results of how things went.
   local now
