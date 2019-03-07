@@ -68,6 +68,16 @@ bundle exec --gemfile .travis.gemfile ruby test/all.rb
 END
 )
 
+pull_or_build_image () {
+  local image="${1}"
+
+  if docker pull "${image}" &>/dev/null; then
+    if ! docker image ls | grep "${image}" /dev/null; then
+      docker build -t "${image}" .
+    fi
+  fi
+}
+
 prepare_ci_environment () {
   if [ "${ARG_COUNT}" -ne 0 ]; then
     # Move into and checkout the branch for testing. This is really only meant
@@ -180,6 +190,8 @@ impala_tests () {
 }
 
 prepare_ci_environment
+pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
+
 postgres_tests
 impala_tests
 
