@@ -65,7 +65,7 @@ module ConceptQL
           criterion_id: Sequel[:cl][:id].as(:criterion_id),
           criterion_table: Sequel.cast_string("collections").as(:criterion_table),
           criterion_domain: Sequel.cast_string("condition_occurrence").as(:criterion_domain)
-        }
+        } if gdm?
       end
     end
   end
