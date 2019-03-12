@@ -10,7 +10,7 @@ readonly DOCKER_POSTGRES_IMAGE="jigsaw_test_data:latest"
 
 # Where should state files be written to? State files will include container
 # logs and CSV files that store results about the test run.
-readonly STATE_ROOT_PATH="/tmp/ci"
+readonly STATE_ROOT_PATH="${STATE_ROOT_PATH:-./.ci}"
 
 # Which file name should be used to store the master CSV file?
 readonly STATE_CSV_FILE="ci.csv"
