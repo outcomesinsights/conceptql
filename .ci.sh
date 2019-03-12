@@ -30,7 +30,7 @@ readonly ARG_COUNT="${#}"
 # Set up a few variables that are used to name the Docker resources.
 readonly REPO="$(basename "${REPO_PATH}")"
 readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
-readonly TIMESTAMP="$(date +"%s")"
+readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
 readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
 
 # Remove a few resources Docker will create for the test run.
