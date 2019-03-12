@@ -258,21 +258,10 @@ check_all_log_status_codes () {
   echo "${?}"
 }
 
-build_and_publish_new_conceptql_image () {
-  echo "All tests have passed, building new conceptql Docker image"
-  docker build -t conceptql .
-
-  # TODO: Push this to the Docker Hub.
-}
-
 # We're in development mode, so nothing else needs to run.
 if [ "${ARG_COUNT}" -eq 0 ]; then exit 0; fi
 
 write_log_and_report_errors "${DOCKER_NAMESPACE}"
 all_tests_passed="$(check_all_log_status_codes "${DOCKER_NAMESPACE}")"
-
-if [ "${all_tests_passed}" -eq 0 ]; then
-  build_and_publish_new_conceptql_image
-fi
 
 exit 0
