@@ -264,4 +264,4 @@ if [ "${ARG_COUNT}" -eq 0 ]; then exit 0; fi
 write_log_and_report_errors "${DOCKER_NAMESPACE}"
 all_tests_passed="$(check_all_log_status_codes "${DOCKER_NAMESPACE}")"
 
-exit 0
+exit "${all_tests_passed}"
