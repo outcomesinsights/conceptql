@@ -178,7 +178,7 @@ run_postgres_test () {
   # Record the results of how things went.
   local now
   now="$(date "+%F %H:%M:%S")"
-  local results="${now},${namespace},${exit_code},${time_conceptql},${time_wall_clock}"
+  local results="${now},${exit_code},${namespace},${time_conceptql},${time_wall_clock}"
 
   echo "${results}" > "${STATE_ROOT_PATH}/${namespace}.csv"
   echo "${results}"
