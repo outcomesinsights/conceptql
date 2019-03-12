@@ -8,12 +8,9 @@ readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
 # This was built with the jigsaw_test_data preparation script.
 readonly DOCKER_POSTGRES_IMAGE="jigsaw_test_data:latest"
 
-# Where should state files be written to? State files will include container
-# logs and CSV files that store results about the test run.
-readonly STATE_ROOT_PATH="${STATE_ROOT_PATH:-./.ci}"
-
-# Which file name should be used to store the master CSV file?
-readonly STATE_CSV_FILE="ci.csv"
+# Where should the log files be written to? This will include both container
+# logs as well as the master CSV log file to track all CI runs.
+readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
 
 # Which path and branch are we working on?
 #
@@ -87,9 +84,8 @@ prepare_ci_environment () {
     echo ""
   fi
 
-  # Create state directory and supporting directories.
-  mkdir -p "${STATE_ROOT_PATH}"
-  mkdir -p "${STATE_ROOT_PATH}/logs"
+  # Create log directory.
+  mkdir -p "${CI_LOG_PATH}"
 }
 
 wait_for_postgres () {
@@ -158,7 +154,7 @@ run_postgres_test () {
   # Follow the container's logs and redirect both stdout and stderr to a new
   # file. Run it in the background and only do this in a CI environment.
   docker container logs -f "${conceptql_cid}" \
-    &> "${STATE_ROOT_PATH}/logs/${namespace}.log" &
+    &> "${CI_LOG_PATH}/${namespace}.log" &
 
   # Wait until the container's tests are finished and get the exit code of
   # the container.
@@ -181,7 +177,7 @@ run_postgres_test () {
   now="$(date "+%F %H:%M:%S")"
   local results="${now},${exit_code},${namespace},${time_conceptql},${time_wall_clock}"
 
-  echo "${results}" > "${STATE_ROOT_PATH}/logs/${namespace}.csv"
+  echo "${results}" > "${CI_LOG_PATH}/${namespace}.csv"
   echo "${results}"
 }
 
@@ -220,8 +216,8 @@ impala_tests
 
 write_log_and_report_errors() {
   local namespace="${1}"
-  local csv_path="${STATE_ROOT_PATH}/logs/${STATE_CSV_FILE}"
-  local csv_pattern="${STATE_ROOT_PATH}/logs/${namespace}"
+  local csv_path="${CI_LOG_PATH}/all.csv"
+  local csv_pattern="${CI_LOG_PATH}/${namespace}"
 
   for file in "${csv_pattern}"*.csv; do
     cat "${file}" >> "${csv_path}"
@@ -241,7 +237,7 @@ write_log_and_report_errors() {
 
 check_all_log_status_codes () {
   local namespace="${1}"
-  local csv_path="${STATE_ROOT_PATH}/logs/${STATE_CSV_FILE}"
+  local csv_path="${CI_LOG_PATH}/all.csv"
   local exit_codes
 
   exit_codes="$(grep "${DOCKER_NAMESPACE}" "${csv_path}" | cut -d"," -f2)"
