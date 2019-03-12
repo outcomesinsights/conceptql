@@ -226,12 +226,12 @@ write_log_and_report_errors() {
     cat "${file}" >> "${csv_path}"
 
     # Determine if this test had a failing test.
-    cat "${file}" | cut -d"," -f3 | grep "1" >/dev/null
+    cat "${file}" | cut -d"," -f2 | grep "1" >/dev/null
 
     # Exit code 0 means grep found a match.
     if [ "${?}" -eq 0 ]; then
-      echo "This file had a failing test (error notification):"
-      echo "  ${file}"
+      echo "The test listed below failed, see why by copy / pasting this:"
+      echo "  cat ${file}"
     fi
 
     rm "${file}"
@@ -243,7 +243,7 @@ check_all_log_status_codes () {
   local csv_path="${STATE_ROOT_PATH}/${STATE_CSV_FILE}"
   local exit_codes
 
-  exit_codes="$(grep "${DOCKER_NAMESPACE}" "${csv_path}" | cut -d"," -f3)"
+  exit_codes="$(grep "${DOCKER_NAMESPACE}" "${csv_path}" | cut -d"," -f2)"
 
   # Grep reports an exit code of 0 if it finds a match but in the case of this
   # function, it's more natural to return 0 if all tests pass, so we swap the
