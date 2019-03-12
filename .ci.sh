@@ -157,7 +157,7 @@ run_postgres_test () {
   # Follow the container's logs and redirect both stdout and stderr to a new
   # file. Run it in the background and only do this in a CI environment.
   docker container logs -f "${conceptql_cid}" \
-    &> "${STATE_ROOT_PATH}/${namespace}.json" &
+    &> "${STATE_ROOT_PATH}/${namespace}.log" &
 
   # Wait until the container's tests are finished and get the exit code of
   # the container.
