@@ -87,8 +87,9 @@ prepare_ci_environment () {
     echo ""
   fi
 
-  # Where should the state files be created?
+  # Create state directory and supporting directories.
   mkdir -p "${STATE_ROOT_PATH}"
+  mkdir -p "${STATE_ROOT_PATH}/logs"
 }
 
 wait_for_postgres () {
@@ -157,7 +158,7 @@ run_postgres_test () {
   # Follow the container's logs and redirect both stdout and stderr to a new
   # file. Run it in the background and only do this in a CI environment.
   docker container logs -f "${conceptql_cid}" \
-    &> "${STATE_ROOT_PATH}/${namespace}.log" &
+    &> "${STATE_ROOT_PATH}/logs/${namespace}.log" &
 
   # Wait until the container's tests are finished and get the exit code of
   # the container.
@@ -180,7 +181,7 @@ run_postgres_test () {
   now="$(date "+%F %H:%M:%S")"
   local results="${now},${exit_code},${namespace},${time_conceptql},${time_wall_clock}"
 
-  echo "${results}" > "${STATE_ROOT_PATH}/${namespace}.csv"
+  echo "${results}" > "${STATE_ROOT_PATH}/logs/${namespace}.csv"
   echo "${results}"
 }
 
@@ -219,8 +220,8 @@ impala_tests
 
 write_log_and_report_errors() {
   local namespace="${1}"
-  local csv_path="${STATE_ROOT_PATH}/${STATE_CSV_FILE}"
-  local csv_pattern="${STATE_ROOT_PATH}/${namespace}"
+  local csv_path="${STATE_ROOT_PATH}/logs/${STATE_CSV_FILE}"
+  local csv_pattern="${STATE_ROOT_PATH}/logs/${namespace}"
 
   for file in "${csv_pattern}"*.csv; do
     cat "${file}" >> "${csv_path}"
@@ -240,7 +241,7 @@ write_log_and_report_errors() {
 
 check_all_log_status_codes () {
   local namespace="${1}"
-  local csv_path="${STATE_ROOT_PATH}/${STATE_CSV_FILE}"
+  local csv_path="${STATE_ROOT_PATH}/logs/${STATE_CSV_FILE}"
   local exit_codes
 
   exit_codes="$(grep "${DOCKER_NAMESPACE}" "${csv_path}" | cut -d"," -f2)"
