@@ -253,6 +253,10 @@ check_all_log_status_codes () {
   echo "${?}"
 }
 
+# Wait until everything is done before finishing up.
+echo "Waiting until all tests are complete before moving on..."
+wait
+
 # Log everything and finish the run.
 write_log_and_report_errors "${DOCKER_NAMESPACE}"
 all_tests_passed="$(check_all_log_status_codes "${DOCKER_NAMESPACE}")"
