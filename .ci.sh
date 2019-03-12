@@ -85,10 +85,10 @@ prepare_ci_environment () {
     cd "${REPO_PATH}" || exit
     git checkout "${BRANCH}" 
     echo ""
-
-    # Where should the state files be created? 
-    mkdir -p "${STATE_ROOT_PATH}"
   fi
+
+  # Where should the state files be created?
+  mkdir -p "${STATE_ROOT_PATH}"
 }
 
 wait_for_postgres () {
@@ -156,10 +156,8 @@ run_postgres_test () {
 
   # Follow the container's logs and redirect both stdout and stderr to a new
   # file. Run it in the background and only do this in a CI environment.
-  if [ "${ARG_COUNT}" -ne 0 ]; then
-    docker container logs -f "${conceptql_cid}" \
-      &> "${STATE_ROOT_PATH}/${namespace}.json" &
-  fi
+  docker container logs -f "${conceptql_cid}" \
+    &> "${STATE_ROOT_PATH}/${namespace}.json" &
 
   # Wait until the container's tests are finished and get the exit code of
   # the container.
@@ -181,12 +179,9 @@ run_postgres_test () {
   local now
   now="$(date "+%F %H:%M:%S")"
   local results="${now},${namespace},${exit_code},${time_conceptql},${time_wall_clock}"
-  
-  if [ "${ARG_COUNT}" -ne 0 ]; then
-    echo "${results}" > "${STATE_ROOT_PATH}/${namespace}.csv"
-  else
-    echo "${results}"
-  fi
+
+  echo "${results}" > "${STATE_ROOT_PATH}/${namespace}.csv"
+  echo "${results}"
 }
 
 postgres_tests () {
@@ -258,9 +253,7 @@ check_all_log_status_codes () {
   echo "${?}"
 }
 
-# We're in development mode, so nothing else needs to run.
-if [ "${ARG_COUNT}" -eq 0 ]; then exit 0; fi
-
+# Log everything and finish the run.
 write_log_and_report_errors "${DOCKER_NAMESPACE}"
 all_tests_passed="$(check_all_log_status_codes "${DOCKER_NAMESPACE}")"
 
