@@ -68,8 +68,12 @@ END
 pull_or_build_image () {
   local image="${1}"
 
-  if docker pull "${image}" &>/dev/null; then
-    if ! docker image ls | grep "${image}" /dev/null; then
+  if ! docker pull "${image}" &>/dev/null; then
+    if ! docker image ls | grep "${image}"; then
+      if [ -n "${DEBUG}" ]; then
+        echo "Building initial ${image} image..."
+      fi
+
       docker build -t "${image}" .
     fi
   fi
@@ -185,10 +189,10 @@ postgres_tests () {
   local test_file
   local namespace
 
-  for file in .ci.env.postgres*; do
+  for file in .ci/.ci.env.postgres*; do
     [ -f "${file}" ] || break
 
-    test_file="$(echo "${file}" | cut -d "." -f 4)"
+    test_file="$(echo "${file}" | cut -d "." -f 5)"
     namespace="${DOCKER_NAMESPACE}-${test_file}"
 
     echo "Running tests for ${namespace}"
@@ -200,10 +204,10 @@ impala_tests () {
   local test_file
   local namespace
 
-  for file in .ci.env.impala*; do
+  for file in .ci/.ci.env.impala*; do
     [ -f "${file}" ] || break
 
-    test_file="$(echo "${file}" | cut -d "." -f 4)"
+    test_file="$(echo "${file}" | cut -d "." -f 5)"
     namespace="${DOCKER_NAMESPACE}-${test_file}"
   done
 }
