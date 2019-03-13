@@ -696,7 +696,7 @@
     :comment: Full name of the vocabulary
     :null: false
 :mappings:
-  :concept_id_1:
+  :concept_1_id:
     :type: :Bigint
     :comment: FK reference to [concepts](#concepts) table for the source concept
     :foreign_key: concepts
@@ -705,7 +705,7 @@
     :type: String
     :comment: The type or nature of the relationship (e.g., "is_a")
     :null: false
-  :concept_id_2:
+  :concept_2_id:
     :type: :Bigint
     :comment: FK reference to [concepts](#concepts) table for the destination concept
     :foreign_key: concepts
