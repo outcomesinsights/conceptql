@@ -69,13 +69,11 @@ pull_or_build_image () {
   local image="${1}"
 
   if ! docker pull "${image}" &>/dev/null; then
-    if ! docker image ls | grep "${image}"; then
-      if [ -n "${DEBUG}" ]; then
-        echo "Building initial ${image} image..."
-      fi
-
-      docker build -t "${image}" .
+    if [ -n "${DEBUG}" ]; then
+      echo "Building initial ${image} image..."
     fi
+
+    docker build -t "${image}" .
   fi
 }
 
@@ -84,7 +82,7 @@ prepare_ci_environment () {
     # Move into and checkout the branch for testing. This is really only meant
     # to run if you're running this script on your CI server, not dev box.
     cd "${REPO_PATH}" || exit
-    git checkout "${BRANCH}" 
+    git checkout "${BRANCH}"
     echo ""
   fi
 
