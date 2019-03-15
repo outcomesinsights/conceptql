@@ -129,6 +129,10 @@ class Minitest::Spec
 
   PERFORMANCE_TEST_TIMES = ENV["CONCEPTQL_PERFORMANCE_TEST_TIMES"].to_i
   def load_check(test_name, statement)
+    if test_name =~ /requires_lexicon/i && ENV["LEXICON_URL"].nil?
+      skip
+      return
+    end
     statement = load_statement(test_name, statement)
 
     # Check without scope windows

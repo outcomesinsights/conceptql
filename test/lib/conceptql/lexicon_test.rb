@@ -16,7 +16,7 @@ describe ConceptQL::Lexicon do
     end
 
     def get_descendants_of(ids_or_ds)
-      lexicon.descendants_of(ids_or_ds).select_map(:descendant_id)
+      lexicon.descendants_of(ids_or_ds).select_map(:descendant_id).sort
     end
 
     def make_concept_row(db, id, vocab_id, code)
