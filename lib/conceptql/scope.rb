@@ -299,7 +299,7 @@ module ConceptQL
             define_method(meth) do |*args, &block|
               if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
                 begin
-                  temp_tables.each do |table_name, ds|
+                  temp_tables.uniq(&:first).each do |table_name, ds|
                     db.create_table(table_name, rdbms.create_options(scope, ds).merge(as: ds))
                     rdbms.post_create(db, table_name)
                   end
