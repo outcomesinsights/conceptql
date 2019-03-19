@@ -128,6 +128,7 @@ class Minitest::Spec
   end
 
   PERFORMANCE_TEST_TIMES = ENV["CONCEPTQL_PERFORMANCE_TEST_TIMES"].to_i
+  SKIP_SQL_GENERATION_TEST = ENV["CONCEPTQL_SKIP_SQL_GENERATION_TEST"]
   def load_check(test_name, statement)
     statement = load_statement(test_name, statement)
 
@@ -144,6 +145,12 @@ class Minitest::Spec
       sw_statement = ["window", statement, { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' } ]
       results = yield(sw_statement, true)
       check_output(test_name, results, true)
+    end
+
+    unless SKIP_SQL_GENERATION_TEST
+      query(statement).sql(:create_tables)
+      query(["window", statement, {'window_table' => [ 'date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' } ] } ]).sql(:create_tables)
+      query(["window", statement, { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' } ]).sql(:create_tables)
     end
 
     if PERFORMANCE_TEST_TIMES > 0
