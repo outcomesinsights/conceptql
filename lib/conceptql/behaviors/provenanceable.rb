@@ -15,15 +15,30 @@ module ConceptQL
     # Hash with provenance type concept_codes by vocabulary_id
     #
     def provenance_types
-      @provenance_types ||= lexicon.lexicon_db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, :concept_code)
+      @provenance_types ||= lexicon.lexicon_db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
     end
 
     def base_file_provenance_types
-      @base_file_proveance_types ||= provenance_types[FILE_PROVENANCE_TYPES_VOCAB]
+      @base_file_provenance_types ||= provenance_types[FILE_PROVENANCE_TYPES_VOCAB].to_h
     end
 
     def base_code_provenance_types
-      @base_code_provenance_types ||= provenance_types[CODE_PROVENANCE_TYPES_VOCAB]
+      @base_code_provenance_types ||= provenance_types[CODE_PROVENANCE_TYPES_VOCAB].to_h
+    end
+
+    # Creates hash of mixed provenance type codes (ex: inpatient_primary) with the key set to the code and the value a hash that splits out the file type code and code type code
+    #
+    # Makes all combinations of base file provenance type and base code provenance type into new codes of the form <file prov code>_<code prov code>
+    #
+    # == Returns:
+    # Hash with code as key and value hash with code split into file_type and code_type
+    #
+    # {
+    #  inpatient_primary: {file_type: "inpatient", code_type: "primary" },
+    #  outpatient_primary: {file_type: "outpatient", code_type: "primary" }
+    # }
+    def mixed_provenance_types
+      @mixed_provenance_types ||= base_file_provenance_types.keys.product(base_code_provenance_types.keys).map{|c| [c.join(CODE_SEPARATOR),{file_type: c[0], code_type: c[1]}] }.to_h
     end
 
     # Creates array of all unique combinations of allowed file provenance and code provenance types
@@ -48,7 +63,7 @@ module ConceptQL
       }
     end
 
-    # Creates hash of mixed provenance type codes (ex: inpatient_primary) with the key set to the code and the value a hash that splits out the file type code and code type code
+    # Creates array of all unique combinations of allowed file provenance and code provenance types
     #
     # Makes all combinations of base file provenance type and base code provenance type into new codes of the form <file prov code>_<code prov code>
     #
