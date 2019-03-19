@@ -7,7 +7,7 @@ module ConceptQL
         cast_date(to_column) - cast_date(from_column)
       end
 
-      def create_options(scope)
+      def create_options(scope, ds)
         {}
       end
 
