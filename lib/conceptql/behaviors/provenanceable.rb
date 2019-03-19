@@ -9,6 +9,8 @@ module ConceptQL
     FILE_PROVENANCE_TYPES_VOCAB = "JIGSAW_FILE_PROVENANCE_TYPE"
     CODE_PROVENANCE_TYPES_VOCAB = "JIGSAW_CODE_PROVENANCE_TYPE"
 
+    CODE_SEPARATOR = ":"
+
     # Creates hash of provenance type concept codes by vocabulary_id (JIGSAW_FILE_PROVENANCE_TYPE, JIGSAW_CODE_PROVENANCE_TYPE)
     #
     # == Returns:
@@ -41,13 +43,13 @@ module ConceptQL
       @mixed_provenance_types ||= base_file_provenance_types.keys.product(base_code_provenance_types.keys).map{|c| [c.join(CODE_SEPARATOR),{file_type: c[0], code_type: c[1]}] }.to_h
     end
 
-    # Creates array of all unique combinations of allowed file provenance and code provenance types
+    # Creates array of all unique file provenance codes
     #
     # == Returns:
     # Array with every combination of file and code type separated by "_"
     #
-    def allowed_provenance_types
-      @allowed_provenance_types ||= allowed_provenance_types_by_source.flat_map(&:last)
+    def allowed_file_provenance_types
+      @allowed_file_provenance_types ||= std_code_concept_ids[FILE_PROVENANCE_TYPES_VOCAB].keys
     end
 
     # Creates array of all unique combinations of allowed file provenance and code provenance types
@@ -55,27 +57,8 @@ module ConceptQL
     # == Returns:
     # Array with every combination of file and code type separated by "_"
     #
-    def allowed_provenance_types_by_source
-      @allowed_provenance_types_by_source ||= {
-        file_only: base_file_provenance_types,
-        code_only: base_code_provenance_types,
-        mixed: mixed_provenance_types.map(&:first)
-      }
-    end
-
-    # Creates array of all unique combinations of allowed file provenance and code provenance types
-    #
-    # Makes all combinations of base file provenance type and base code provenance type into new codes of the form <file prov code>_<code prov code>
-    #
-    # == Returns:
-    # Hash with code as key and value hash with code split into file_type and code_type
-    #
-    # {
-    #  inpatient_primary: {file_type: "inpatient", code_type: "primary" },
-    #  outpatient_primary: {file_type: "outpatient", code_type: "primary" }
-    # }
-    def mixed_provenance_types
-      @mixed_provenance_types ||= base_file_provenance_types.product(base_code_provenance_types).map{|c| [c.join("_"),{file_type: c[0], code_type: c[1]}] }.to_h
+    def allowed_code_provenance_types
+      @allowed_code_provenance_types ||= std_code_concept_ids[CODE_PROVENANCE_TYPES_VOCAB].keys
     end
 
     # Takes list of codes (inpatient, outpatient_primary, etc) or concept ids and returns a Sequel or statement to be used in where clause of data stream
@@ -98,16 +81,13 @@ module ConceptQL
     #
     def build_where_from_codes(codes)
 
-      codes = codes.each_with_object({concept_codes: [], concept_ids: []}) {|code, h|
-        h[:concept_codes] << code.to_s.downcase if code.to_i.zero?
-        h[:concept_ids] << code.to_i if !code.to_i.zero?
-      }
+      codes = codes
 
-      build_std_code_concept_ids(codes[:concept_codes])
+      build_std_code_concept_ids(codes)
 
       w = []
 
-      w = concept_ids_by_code(codes[:concept_codes]).each_with_object([]){|code, arr|
+      w = concept_ids_by_code(codes).each_with_object([]){|code, arr|
         file_prov_concept_ids = code[1][FILE_PROVENANCE_TYPES_VOCAB].to_a
         code_prov_concept_ids = code[1][CODE_PROVENANCE_TYPES_VOCAB].to_a
 
@@ -126,9 +106,6 @@ module ConceptQL
           arr << res
         end
       }
-
-      # If there are raw concept_id's check either/or file/code provenance columns
-      w += [{file_provenance_type: codes[:concept_ids]}, {code_provenance_type: codes[:concept_ids]}] unless codes[:concept_ids].to_a.empty?
 
       return Sequel.|(*w) unless w.empty?
       return Sequel.lit("0=1")
@@ -149,49 +126,37 @@ module ConceptQL
     #
     def concept_ids_by_code(codes)
       codes.map{|code|
-        code = code.to_s.downcase
+        code = code.to_s
 
         file_type = file_provenance_part_from_code(code)
         code_type = code_provenance_part_from_code(code)
 
         h = {}
 
-        h[FILE_PROVENANCE_TYPES_VOCAB] = std_code_concept_ids[file_type]
-        h[CODE_PROVENANCE_TYPES_VOCAB] = std_code_concept_ids[code_type]
+        # Look up code in std_code_concept_ids and use if not nil otherwise use submitted value
+        h[FILE_PROVENANCE_TYPES_VOCAB] = std_code_concept_ids[FILE_PROVENANCE_TYPES_VOCAB][file_type]
+
+        if h[FILE_PROVENANCE_TYPES_VOCAB].nil?
+          h[FILE_PROVENANCE_TYPES_VOCAB] = [file_type] unless file_type.nil?
+        end
+
+        # Look up code in std_code_concept_ids and use if not nil otherwise use submitted value
+        h[CODE_PROVENANCE_TYPES_VOCAB] = std_code_concept_ids[CODE_PROVENANCE_TYPES_VOCAB][code_type]
+
+        if h[CODE_PROVENANCE_TYPES_VOCAB].nil?
+          h[CODE_PROVENANCE_TYPES_VOCAB] = [code_type]  unless code_type.nil?
+        end
 
         [code, h]
       }.to_h
     end
 
     def build_std_code_concept_ids(codes)
-      @std_code_concept_ids = get_std_code_concept_ids(codes)
+      @std_code_concept_ids = get_related_concept_ids_by_codes(codes)
     end
 
     def std_code_concept_ids
       @std_code_concept_ids
-    end
-
-    # Takes list of codes (inpatient, outpatient_primary, etc) and splits them into file and code provenance types
-    #
-    # == Parameters:
-    # codes::
-    #   Array of standard provenance codes to get related concept ids split by file and code type provenance
-    #
-    # == Returns:
-    # A hash in the form:
-    # {
-    #  JIGSAW_FILE_PROVENANCE_TYPE: ['inpatient', 'ouptient'],
-    #  JIGSAW_CODE_PROVENANCE_TYPE: ['primary']
-    # }
-    #
-    def std_codes_by_prov_type(codes)
-      codes.each_with_object({FILE_PROVENANCE_TYPES_VOCAB => [], CODE_PROVENANCE_TYPES_VOCAB => []}){|code, h|
-        file_types = file_provenance_part_from_code(code)
-        code_types = code_provenance_part_from_code(code)
-
-        h[FILE_PROVENANCE_TYPES_VOCAB] << file_types if file_types
-        h[CODE_PROVENANCE_TYPES_VOCAB] << code_types if code_types
-      }
     end
 
     # Takes list of codes (inpatient, outpatient_primary, etc) and returns hash of related concept ids
@@ -204,16 +169,20 @@ module ConceptQL
     # == Returns:
     # A hash in the form:
     # {
-    #  inpatient: [related concept ids],
-    #  outpatient: [related concept ids],
-    #  primary: [related concept ids]
+    #  JIGSAW_FILE_PROVENANCE_TYPE: {
+    #    inpatient: [related concept ids],
+    #    outpatient: [related concept ids]
+    #  }
+    #  JIGSAW_CODE_PROVENANCE_TYPE: {
+    #    primary: [related concept ids]
+    #  }
     # }
     #
-    def get_std_code_concept_ids(codes)
-      std_codes = std_codes_by_prov_type(codes)
+    def get_related_concept_ids_by_codes(codes)
 
-      file_type_codes = std_codes[FILE_PROVENANCE_TYPES_VOCAB].uniq
-      code_type_codes = std_codes[CODE_PROVENANCE_TYPES_VOCAB].uniq
+      # Get all character based codes
+      file_type_codes = codes.map{|code| file_provenance_part_from_code(code)}.select{|c| !c.nil? && c.to_i.zero?}.uniq
+      code_type_codes = codes.map{|code| code_provenance_part_from_code(code)}.select{|c| !c.nil? && c.to_i.zero?}.uniq
 
       conditions = []
       conditions << {vocabulary_id: FILE_PROVENANCE_TYPES_VOCAB, concept_code: file_type_codes} unless file_type_codes.to_a.empty?
@@ -226,43 +195,49 @@ module ConceptQL
 
         db = db.from_self(alias: :c).join(:ancestors, ancestor_id: :id)
 
-        res = db.select_hash_groups(Sequel[:c][:concept_code], [Sequel[:ancestors][:ancestor_id], Sequel[:ancestors][:descendant_id]])
+        res = db.select_hash_groups([Sequel[:c][:vocabulary_id], Sequel[:c][:concept_code]], [Sequel[:ancestors][:ancestor_id], Sequel[:ancestors][:descendant_id]])
 
-        res.transform_values{|v| v.flatten.uniq}
+        res = res.each_with_object({FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}){|c,h|
+          h[c[0][0]].merge!( [[c[0][1],c[1].flatten]].to_h){|key,new_v,old_v| (new_v.flatten + old_v.flatten).uniq}
+        }
       else
-        return {}
+        res = {}
       end
+
+      return res
     end
 
-    # Takes a code (ex: outpatient_primary) and returns the corresponding BASE_FILE_PROVENANCE_TYPE of the code
+    # Takes a code (ex: outpatient_primary) and returns the file provenance type part
     #
     # == Parameters:
     # code::
     #   String
     #
     # == Returns:
-    # The longest string from base_file_provenance_types that is found within code.
-    # ex: file_provenance_part_from_code("outpatient_primary") returns "outpatient"
+    # file provenance type part of code
+    # ex: file_provenance_part_from_code("outpatient:primary") returns "outpatient"
     #
     def file_provenance_part_from_code(code)
-      return code if allowed_provenance_types_by_source[:file_only].include?(code)
-      return mixed_provenance_types[code][:file_type] if mixed_provenance_types[code]
+      code_split = code.split(CODE_SEPARATOR)
+
+      return code_split[0] unless code_split[0].empty?
       return nil
     end
 
-    # Takes a code (ex: outpatient_primary) and returns the corresponding BASE_CODE_PROVENANCE_TYPE of the code
+    # Takes a code (ex: outpatient:primary) and returns the code provenance type part
     #
     # == Parameters:
     # code::
     #   String
     #
     # == Returns:
-    # The longest string from base_code_provenance_types that is found within code
-    # ex: file_provenance_part_from_code("outpatient_primary") returns "primary"
+    # code provenance type part of code
+    # ex: file_provenance_part_from_code("outpatient:primary") returns "primary"
     #
     def code_provenance_part_from_code(code)
-      return code if allowed_provenance_types_by_source[:code_only].include?(code)
-      return mixed_provenance_types[code][:code_type] if mixed_provenance_types[code]
+      code_split = code.split(CODE_SEPARATOR)
+
+      return code_split[1] if code_split.length == 2 && !code_split[1].empty?
       return nil
     end
   end
