@@ -286,6 +286,7 @@ module ConceptQL
       end
 
       if force_temp_tables?
+        scope = self
         query = recursive_extract_ctes(query, temp_tables).with_extend do
           # Create temp tables for each CTE
           #
@@ -299,8 +300,7 @@ module ConceptQL
               if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
                 begin
                   temp_tables.each do |table_name, ds|
-                    #p [:create_table, table_name]
-                    db.create_table(table_name, rdbms.create_options(self).merge(as: ds))
+                    db.create_table(table_name, rdbms.create_options(scope, ds).merge(as: ds))
                     rdbms.post_create(db, table_name)
                   end
 

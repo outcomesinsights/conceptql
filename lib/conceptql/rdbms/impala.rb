@@ -46,9 +46,16 @@ module ConceptQL
         Sequel.function(:datediff, cast_date(to_column), cast_date(from_column))
       end
 
-      def create_options(scope)
+      def create_options(scope, ds)
         opts = { parquet: true }
-        opts = opts.merge(sort_by: SORT_BY_COLUMNS & scope.query_columns) if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+        if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+          sort_by_columns = if ds.opts[:values]
+            ds.opts[:values].first.map(&:alias)
+          else
+            SORT_BY_COLUMNS & scope.query_columns
+          end
+          opts[:sort_by] = sort_by_columns
+        end
         opts
       end
 
