@@ -201,7 +201,7 @@ module ConceptQL
           h[c[0][0]].merge!( [[c[0][1],c[1].flatten]].to_h){|key,new_v,old_v| (new_v.flatten + old_v.flatten).uniq}
         }
       else
-        res = {}
+        res = {FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}
       end
 
       return res
