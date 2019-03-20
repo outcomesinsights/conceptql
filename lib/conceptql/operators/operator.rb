@@ -592,8 +592,13 @@ module ConceptQL
         args = args.map { |v| [v] }
         args_cte = db.values(args)
         args_cte_name = cte_name(:args)
+
+        if args_cte_name.is_a?(Sequel::SQL::QualifiedIdentifier)
+          args_cte_name = Sequel.identifier(args_cte_name.column)
+        end
+
         db[args_cte_name]
-          .with(args_cte_name, args_cte)
+          .with(args_cte_name, args_cte, :no_temp_table=>true)
           .select(:arg)
       end
 

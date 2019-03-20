@@ -265,9 +265,10 @@ module ConceptQL
       end
 
       if with = query.opts[:with]
-        ctes.concat(with.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
+        keep, remove = with.partition{|w| w[:no_temp_table]}
+        ctes.concat(remove.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
         #p [:rec_with, ctes.map(&:first), with]
-        query = query.clone(:with=>nil)
+        query = query.clone(:with=>keep.empty? ? nil : keep)
       end
 
       query
