@@ -10,10 +10,11 @@ describe ConceptQL::Operators::Icd9 do
     ]
 
     sql = db.query(stmt).sql(:create_tables)
-    match_data = sql.scan(/(args_[^`]+)/).flatten
+    match_data = sql.scan(/FROM `(args_[^`]+)/).flatten
     match_data[0].must_match(/args_\d+/)
     match_data[1].must_match(/args_\d+/)
     match_data[0].wont_equal(match_data[1])
+    match_data.length.must_equal 2
   end
 end
 
