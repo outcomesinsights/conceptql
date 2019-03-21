@@ -270,9 +270,10 @@ module ConceptQL
       end
 
       if with = query.opts[:with]
-        ctes.concat(with.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
+        keep, remove = with.partition{|w| w[:no_temp_table]}
+        ctes.concat(remove.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
         #p [:rec_with, ctes.map(&:first), with]
-        query = query.clone(:with=>nil)
+        query = query.clone(:with=>keep.empty? ? nil : keep)
       end
 
       query
@@ -291,6 +292,7 @@ module ConceptQL
       end
 
       if force_temp_tables?
+        scope = self
         query = recursive_extract_ctes(query, temp_tables).with_extend do
           # Create temp tables for each CTE
           #
@@ -303,9 +305,8 @@ module ConceptQL
             define_method(meth) do |*args, &block|
               if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
                 begin
-                  temp_tables.each do |table_name, ds|
-                    #p [:create_table, table_name]
-                    db.create_table(table_name, rdbms.create_options(self).merge(as: ds))
+                  temp_tables.uniq(&:first).each do |table_name, ds|
+                    db.create_table(table_name, rdbms.create_options(scope, ds).merge(as: ds))
                     rdbms.post_create(db, table_name)
                   end
 
