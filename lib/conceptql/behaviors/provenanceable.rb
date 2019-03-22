@@ -88,8 +88,8 @@ module ConceptQL
       w = []
 
       w = concept_ids_by_code(codes).each_with_object([]){|code, arr|
-        file_prov_concept_ids = code[1][FILE_PROVENANCE_TYPES_VOCAB].to_a
-        code_prov_concept_ids = code[1][CODE_PROVENANCE_TYPES_VOCAB].to_a
+        file_prov_concept_ids = code[1][FILE_PROVENANCE_TYPES_VOCAB].to_a.map(&:to_i)
+        code_prov_concept_ids = code[1][CODE_PROVENANCE_TYPES_VOCAB].to_a.map(&:to_i)
 
         if !file_prov_concept_ids.empty? || !code_prov_concept_ids.empty?
           res = {}
