@@ -5,10 +5,13 @@ dist: trusty
 sudo: false
 gemfile: ".travis.gemfile"
 env:
-- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
-- CONCEPTQL_DATA_MODEL=gdm CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
-- CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
-- CONCEPTQL_DATA_MODEL=gdm CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+  global:
+    - LEXICON_URL=postgres://postgres@localhost/lexicon
+  matrix:
+    - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+    - CONCEPTQL_DATA_MODEL=gdm CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+    - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+    - CONCEPTQL_DATA_MODEL=gdm CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
 addons:
   postgresql: '9.6'
   apt:
@@ -21,6 +24,8 @@ before_install:
 - sudo mount -o remount,size=50% /var/ramfs
 - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
 - sqlite3 --version
+- psql -c "create database lexicon;" -U postgres
+- curl -sSL "http://chisel.lexicon.jsaw.io" | pigz -dc | psql postgres://postgres@localhost/lexicon > /tmp/restore.log 2>&1 || cat /tmp/restore.log
 script: travis_wait 45 bash .travis.postgres.sh
 notifications:
   slack:

@@ -9,7 +9,8 @@
     "source_value": "4011",
     "source_vocabulary_id": "ICD9CM",
     "window_id": 3,
-    "provenance_type": 100000062,
+    "file_provenance_type": 100000062,
+    "code_provenance_type": 100000075,
     "admission_date": "2009-04-15",
     "discharge_date": "2009-04-15"
   },
@@ -23,7 +24,8 @@
     "source_value": "4011",
     "source_vocabulary_id": "ICD9CM",
     "window_id": 4,
-    "provenance_type": 100000062,
+    "file_provenance_type": 100000062,
+    "code_provenance_type": 100000075,
     "admission_date": "2010-02-23",
     "discharge_date": "2010-02-23"
   }

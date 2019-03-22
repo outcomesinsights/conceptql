@@ -129,8 +129,12 @@ module ConceptQL
         !db.table_exists?(:concepts)
       end
 
-      def provenance_type_column(query, domain)
+      def code_provenance_type(query, domain)
         :provenance_concept_id
+      end
+
+      def file_provenance_type(query, domain)
+        :source_type_concept_id
       end
 
       def concepts_ds(db, vocabulary_id, codes)
