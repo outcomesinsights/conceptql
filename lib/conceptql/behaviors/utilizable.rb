@@ -28,7 +28,7 @@ module ConceptQL
       end
 
       def gdm_it(db)
-        ancestor_ids = lexicon.concepts("JIGSAW_FILE_PROVENANCE_TYPE", collection_type).select(:id)
+        ancestor_ids = lexicon.concepts("JIGSAW_FILE_PROVENANCE_TYPE", collection_type).select_map(:id)
         descendant_ids = lexicon.descendants_of(ancestor_ids).select_map(:descendant_id)
         primary_ids = lexicon.concepts("JIGSAW_CODE_PROVENANCE_TYPE", "primary").select_map(:id)
 
