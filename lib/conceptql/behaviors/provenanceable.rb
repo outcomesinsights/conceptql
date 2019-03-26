@@ -147,6 +147,9 @@ module ConceptQL
           h[CODE_PROVENANCE_TYPES_VOCAB] = [code_type]  unless code_type.nil?
         end
 
+        h[FILE_PROVENANCE_TYPES_VOCAB] = h[FILE_PROVENANCE_TYPES_VOCAB].uniq unless h[FILE_PROVENANCE_TYPES_VOCAB].nil?
+        h[CODE_PROVENANCE_TYPES_VOCAB] = h[CODE_PROVENANCE_TYPES_VOCAB].uniq unless h[CODE_PROVENANCE_TYPES_VOCAB].nil?
+
         [code, h]
       }.to_h
     end
