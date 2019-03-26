@@ -83,14 +83,14 @@ module ConceptQL
 
     %i(ancestors concepts mappings vocabularies).each do |meth|
       define_method("#{meth}_table") do
-        tables[meth] ||= send("get_#{meth}_table")
+        tables[meth.to_sym] ||= send("get_#{meth}_table")
       end
 
       define_method("get_#{meth}_table") do
-        if dataset_db && dataset_db.table_exists?(meth)
-          dataset_db[meth]
+        if dataset_db && dataset_db.table_exists?(meth) && !dataset_db.is_a?(Sequel::Mock::Database)
+          dataset_db[meth.to_sym]
         else
-          lexicon_db[meth]
+          lexicon_db[meth.to_sym]
         end
       end
     end
