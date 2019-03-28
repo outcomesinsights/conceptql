@@ -81,6 +81,18 @@ module ConceptQL
       lexicon_db.is_a?(Sequel::Mock::Database)
     end
 
+    def db
+      if dataset_db && db_has_all_vocabulary_tables?(dataset_db) && !dataset_db.is_a?(Sequel::Mock::Database)
+        dataset_db
+      else
+        lexicon_db
+      end
+    end
+
+    def db_has_all_vocabulary_tables?(db_)
+      %i(ancestors concepts mappings vocabularies).all?{|t| db_.table_exists?(t)}
+    end
+
     %i(ancestors concepts mappings vocabularies).each do |meth|
       define_method("#{meth}_table") do
         tables[meth.to_sym] ||= send("get_#{meth}_table")
