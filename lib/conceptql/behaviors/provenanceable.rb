@@ -17,7 +17,7 @@ module ConceptQL
     # Hash with provenance type concept_codes by vocabulary_id
     #
     def provenance_types
-      @provenance_types ||= lexicon.concepts_table.where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
+      @provenance_types ||= lexicon.db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
     end
 
     def base_file_provenance_types
@@ -192,11 +192,11 @@ module ConceptQL
       conditions << {vocabulary_id: CODE_PROVENANCE_TYPES_VOCAB, concept_code: code_type_codes} unless code_type_codes.to_a.empty?
 
       if !conditions.empty?
-        q = lexicon.concepts_table
+        q = lexicon.db[:concepts]
 
         q = q.where(Sequel.|(*conditions))
 
-        q = q.from_self(alias: :c).join(:ancestors, ancestor_id: :id)
+        q = q.from_self(alias: :c).join(lexicon.db[:ancestors], {ancestor_id: :id}, table_alias: :ancestors)
 
         res = q.select_hash_groups([Sequel[:c][:vocabulary_id], Sequel[:c][:concept_code]], [Sequel[:ancestors][:ancestor_id], Sequel[:ancestors][:descendant_id]])
 
