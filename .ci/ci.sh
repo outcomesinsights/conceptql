@@ -227,7 +227,7 @@ write_log_and_report_errors() {
     # Exit code 0 means grep found a match.
     if cut -d"," -f2 "${file}" | grep "1" >/dev/null; then
       echo "The test listed below failed, see why by copy / pasting this:"
-      echo "  cat ${file}"
+      echo "  cat ${csv_pattern}.log"
     fi
 
     rm "${file}"
