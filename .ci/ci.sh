@@ -6,7 +6,7 @@
 readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
 
 # This was built with the jigsaw_test_data preparation script.
-readonly DOCKER_POSTGRES_IMAGE="jigsaw_test_data:latest"
+readonly DOCKER_JIGSAW_TEST_DATA_IMAGE="jigsaw_test_data:latest"
 
 # Where should the log files be written to? This will include both container
 # logs as well as the master CSV log file to track all CI runs.
@@ -32,12 +32,12 @@ readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
 
 # Remove a few resources Docker will create for the test run.
 ci_cleanup() {
-  local postgres_cid="${1}"
+  local jigsaw_test_data_cid="${1}"
   local conceptql_cid="${2}"
   local namespace="${3}"
   local exit_code="${4}"
 
-  docker container rm -f "${postgres_cid}" >/dev/null
+  docker container rm -f "${jigsaw_test_data_cid}" >/dev/null
 
   if [ "${ARG_COUNT}" -ne 0 ]; then
     # If there's arguments, then it's a CI run, so we can safely remove the
@@ -90,26 +90,26 @@ prepare_ci_environment () {
   mkdir -p "${CI_LOG_PATH}"
 }
 
-wait_for_postgres () {
+wait_for_jigsaw_test_data () {
   local container_id="${1}"
 
   # Wait until psql can query the database.
   while sleep 1; do
     # Make sure the container itself is capable of starting up.
     if ! docker exec "${container_id}" /bin/true; then
-      echo "PostgreSQL container ${container_id:0:4} unexpectedly failed to start"
+      echo "Jigsaw test data container ${container_id:0:4} unexpectedly failed to start"
       echo "  docker container logs ${container_id:0:4}"
       exit 1
     fi
 
     if [ -n "${DEBUG}" ]; then
-      echo "Waiting on PostgreSQL container ${container_id:0:4} to be ready..."
+      echo "Waiting on Jigsaw test data container ${container_id:0:4} to be ready..."
     fi
 
-    # PostgreSQL is ready, time to bail.
+    # Jigsaw test data is ready, time to bail.
     if docker exec "${container_id}" psql -U postgres -c "\dt;" &>/dev/null; then
       if [ -n "${DEBUG}" ]; then
-        echo "PostgreSQL container ${container_id:0:4} is ready!"
+        echo "Jigsaw test data container ${container_id:0:4} is ready!"
       fi
       break
     fi
@@ -129,16 +129,16 @@ run_postgres_test () {
     echo "Created network ${namespace}"
   fi
 
-  # Start PostgreSQL and wait until PostgreSQL is ready for connections.
-  local postgres_cid
-  postgres_cid="$(docker run -d --rm --network-alias pg \
-    --network "${namespace}" "${DOCKER_POSTGRES_IMAGE}" -c fsync=off)"
+  # Start Jigsaw test data and wait until PostgreSQL is ready for connections.
+  local jigsaw_test_data_cid
+  jigsaw_test_data_cid="$(docker run -d --rm --network-alias pg \
+    --network "${namespace}" "${DOCKER_JIGSAW_TEST_DATA_IMAGE}" -c fsync=off)"
 
   if [ -n "${DEBUG}" ]; then
-    echo "Starting PostgreSQL container ${postgres_cid:0:4}"
+    echo "Starting Jigsaw test data container ${jigsaw_test_data_cid:0:4}"
   fi
 
-  wait_for_postgres "${postgres_cid}"
+  wait_for_jigsaw_test_data "${jigsaw_test_data_cid}"
 
   # Start measuring conceptql's test suite in seconds.
   local time_conceptql_start_time="${SECONDS}"
@@ -168,7 +168,7 @@ run_postgres_test () {
   time_conceptql="$(echo "${SECONDS} - ${time_conceptql_start_time}" | bc)"
 
   # Stop and remove any resources created for this test.
-  ci_cleanup "${postgres_cid}" "${conceptql_cid}" "${namespace}" "${exit_code}"
+  ci_cleanup "${jigsaw_test_data_cid}" "${conceptql_cid}" "${namespace}" "${exit_code}"
 
   # Stop measuring how long this test took.
   local time_wall_clock
