@@ -224,11 +224,8 @@ write_log_and_report_errors() {
   for file in "${csv_pattern}"*.csv; do
     cat "${file}" >> "${csv_path}"
 
-    # Determine if this test had a failing test.
-    cat "${file}" | cut -d"," -f2 | grep "1" >/dev/null
-
     # Exit code 0 means grep found a match.
-    if [ "${?}" -eq 0 ]; then
+    if cut -d"," -f2 "${file}" | grep "1" >/dev/null; then
       echo "The test listed below failed, see why by copy / pasting this:"
       echo "  cat ${file}"
     fi
