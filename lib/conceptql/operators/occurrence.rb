@@ -77,7 +77,10 @@ occurrence, this operator returns nothing for that person.
       # If within is specified, assume an at_least of everything after the current event to not pick
       # prior occurrences when doing the self join.
       def query_complex(db)
-        input_name = cte_name(:occurrence_input)
+        unless ConceptQL.avoid_ctes?
+          input_name = cte_name(:occurrence_input)
+          joined_name = cte_name(:occurrence_joined)
+        end
 
         # Give a global row number to all rows, so that the self joined dataset can partition based on
         # the global row number when ordering
@@ -86,9 +89,9 @@ occurrence, this operator returns nothing for that person.
 
         first = Sequel[:first]
         rest = Sequel[:rest]
-        joined_name = cte_name(:occurrence_joined)
-        joined_ds = db[Sequel[input_name].as(:first)]
-          .join(Sequel[input_name].as(:rest), matching_columns.map{|c| [c,c]}) do
+        base_input_ds = input_name ? Sequel[input_name] : input_ds
+        joined_ds = db[base_input_ds.as(:first)]
+          .join(base_input_ds.as(:rest), matching_columns.map{|c| [c,c]}) do
             cond = rest[:global_rn] > first[:global_rn]
             if at_least_option
               cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date])
@@ -102,10 +105,15 @@ occurrence, this operator returns nothing for that person.
           .select_append(first[:global_rn].as(:initial_rn))
           .select_append(Sequel[rank_function].function.over(partition: matching_columns.map{|c| first[c]} + [first[:global_rn]], order: ordered_columns(:qualify=>:rest)).as(:rn))
 
-        db[joined_name]
-          .with(input_name, input_ds)
-          .with(joined_name, joined_ds)
-          .order(:global_rn)
+        if joined_name
+          joined_ds = db[joined_name]
+            .with(input_name, input_ds)
+            .with(joined_name, joined_ds)
+        else
+          joined_ds = joined_ds.from_self
+        end
+
+        joined_ds.order(:global_rn)
       end
 
       # Without at_least or within option, only return the first occurrence for each person, if any.
