@@ -30,14 +30,22 @@ readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
 readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
 readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
 
+cleanup_postgres_test () {
+  local namespace="${1}"
+  local jigsaw_test_data_cid
+
+  jigsaw_test_data_cid=$(get_cid "test_data_${namespace}")
+  docker container rm -f "${jigsaw_test_data_cid}" >/dev/null
+}
+
 # Remove a few resources Docker will create for the test run.
 ci_cleanup() {
-  local jigsaw_test_data_cid="${1}"
+  local rdbms="${1}"
   local conceptql_cid="${2}"
   local namespace="${3}"
   local exit_code="${4}"
 
-  docker container rm -f "${jigsaw_test_data_cid}" >/dev/null
+  "cleanup_${rdbms}_test" "${namespace}"
 
   if [ "${ARG_COUNT}" -ne 0 ]; then
     # If there's arguments, then it's a CI run, so we can safely remove the
@@ -58,20 +66,11 @@ ci_cleanup() {
   docker network rm "${namespace}" >/dev/null
 }
 
-# Set up and test scripts.
-SCRIPT=$(cat <<-END
-bundle install --gemfile .travis.gemfile
-bundle exec --gemfile .travis.gemfile ruby test/all.rb
-END
-)
-
 pull_or_build_image () {
   local image="${1}"
 
   if ! docker pull "${image}" &>/dev/null; then
-    if [ -n "${DEBUG}" ]; then
-      echo "Building initial ${image} image..."
-    fi
+    debug_msg "Building initial ${image} image..."
 
     docker build -t "${image}" .
   fi
@@ -102,22 +101,75 @@ wait_for_jigsaw_test_data () {
       exit 1
     fi
 
-    if [ -n "${DEBUG}" ]; then
-      echo "Waiting on Jigsaw test data container ${container_id:0:4} to be ready..."
-    fi
+    debug_msg "Waiting on Jigsaw test data container ${container_id:0:4} to be ready..."
 
     # Jigsaw test data is ready, time to bail.
     if docker exec "${container_id}" psql -U postgres -c "\dt;" &>/dev/null; then
-      if [ -n "${DEBUG}" ]; then
-        echo "Jigsaw test data container ${container_id:0:4} is ready!"
-      fi
+      debug_msg "Jigsaw test data container ${container_id:0:4} is ready!"
       break
     fi
   done
 }
 
-run_postgres_test () {
+record_cid () {
+  local name="${1}"
+  local cid="${2}"
+  mkdir -p .ci/cids
+  echo "${cid}" > ".ci/cids/${name}"
+}
+
+get_cid () {
+  local name="${1}"
+  cat ".ci/cids/${name}"
+}
+
+prep_postgres_test() {
   local namespace="${1}"
+
+  # Start Jigsaw test data and wait until PostgreSQL is ready for connections.
+  local jigsaw_test_data_cid
+  jigsaw_test_data_cid="$(docker run --detach --rm --network-alias pg \
+    --network "${namespace}" "${DOCKER_JIGSAW_TEST_DATA_IMAGE}" -c fsync=off)"
+
+  record_cid "test_data_${namespace}" "${jigsaw_test_data_cid}"
+
+  debug_msg "Starting Jigsaw test data container ${jigsaw_test_data_cid:0:4}"
+
+  wait_for_jigsaw_test_data "${jigsaw_test_data_cid}"
+}
+
+run_test () {
+  local rdbms="${1}"
+  local namespace="${2}"
+  local the_script
+  local prep_script_name="${rdbms}_prep_script"
+  local kdir=.ci/kerberos
+  local kconf="${kdir}/krb5.conf"
+  local keytab="${kdir}/test.keytab"
+  local impala_prep_script=$(cat <<-END
+if [ -e "${kconf}" ]; then
+  cp "${kconf}" /etc/
+  echo "Copied ${kconf}..."
+else
+  echo "No ${kconf}...skipping"
+fi
+if [ -e "${keytab}" ]; then
+  kinit -k -t "${keytab}" "\${KERBEROS_USER}"
+  klist
+else
+  echo "No ${keytab}...skipping"
+fi
+END
+)
+
+# Set up and test scripts.
+the_script=$(cat <<-END
+${!prep_script_name}
+bundle install --gemfile .travis.gemfile
+bundle exec --gemfile .travis.gemfile ruby test/all.rb
+END
+)
+  debug_msg "${the_script}"
 
   # Start measuring how long this test will take.
   local time_wall_clock_start_time="${SECONDS}"
@@ -125,20 +177,9 @@ run_postgres_test () {
   # PostgreSQL and each conceptql container will belong to its own network.
   docker network create "${namespace}" >/dev/null
 
-  if [ -n "${DEBUG}" ]; then
-    echo "Created network ${namespace}"
-  fi
+  debug_msg "Created network ${namespace}"
 
-  # Start Jigsaw test data and wait until PostgreSQL is ready for connections.
-  local jigsaw_test_data_cid
-  jigsaw_test_data_cid="$(docker run -d --rm --network-alias pg \
-    --network "${namespace}" "${DOCKER_JIGSAW_TEST_DATA_IMAGE}" -c fsync=off)"
-
-  if [ -n "${DEBUG}" ]; then
-    echo "Starting Jigsaw test data container ${jigsaw_test_data_cid:0:4}"
-  fi
-
-  wait_for_jigsaw_test_data "${jigsaw_test_data_cid}"
+  "prep_${rdbms}_test" "${namespace}"
 
   # Start measuring conceptql's test suite in seconds.
   local time_conceptql_start_time="${SECONDS}"
@@ -147,11 +188,9 @@ run_postgres_test () {
   local conceptql_cid
   conceptql_cid="$(docker run -d -v "$(pwd)":/app \
     --network "${namespace}" --env-file "${file}" \
-    "${DOCKER_CONCEPTQL_IMAGE}" bash -c "${SCRIPT}")"
+    "${DOCKER_CONCEPTQL_IMAGE}" bash -c "${the_script}")"
 
-  if [ -n "${DEBUG}" ]; then
-    echo "Running tests for conceptql container ${conceptql_cid:0:4}..."
-  fi
+  debug_msg "Running tests for conceptql container ${conceptql_cid:0:4}..."
 
   # Follow the container's logs and redirect both stdout and stderr to a new
   # file. Run it in the background and only do this in a CI environment.
@@ -168,7 +207,7 @@ run_postgres_test () {
   time_conceptql="$(echo "${SECONDS} - ${time_conceptql_start_time}" | bc)"
 
   # Stop and remove any resources created for this test.
-  ci_cleanup "${jigsaw_test_data_cid}" "${conceptql_cid}" "${namespace}" "${exit_code}"
+  ci_cleanup "${rdbms}" "${conceptql_cid}" "${namespace}" "${exit_code}"
 
   # Stop measuring how long this test took.
   local time_wall_clock
@@ -183,38 +222,41 @@ run_postgres_test () {
   echo "${results}"
 }
 
-postgres_tests () {
-  local test_file
-  local namespace
-
-  for file in .ci/.ci.env.postgres*; do
-    [ -f "${file}" ] || break
-
-    test_file="$(echo "${file}" | cut -d "." -f 5)"
-    namespace="${DOCKER_NAMESPACE}-${test_file}"
-
-    echo "Running tests for ${namespace}"
-    run_postgres_test "${namespace}" &
-  done
+debug_msg () {
+  if [ -n "${DEBUG}" ]; then 
+    echo "${1}"
+  fi
 }
 
-impala_tests () {
+prep_impala_test () {
+echo
+}
+cleanup_impala_test () {
+echo
+}
+
+run_tests () {
+  local rdbms="${1}"
   local test_file
   local namespace
 
-  for file in .ci/.ci.env.impala*; do
+  debug_msg "Running tests for ${rdbms}..."
+  for file in $(ls -1 .ci/.ci.env.${rdbms}*); do
+    debug_msg "Checking for ${file}"
     [ -f "${file}" ] || break
 
     test_file="$(echo "${file}" | cut -d "." -f 5)"
     namespace="${DOCKER_NAMESPACE}-${test_file}"
+    echo "Running tests for ${namespace}"
+    run_test "${rdbms}" "${namespace}" &
   done
 }
 
 prepare_ci_environment
 pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
 
-postgres_tests
-impala_tests
+run_tests "postgres" 
+run_tests "impala" 
 
 write_log_and_report_errors() {
   local namespace="${1}"
