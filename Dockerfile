@@ -10,6 +10,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
 
 COPY .travis.gemfile ./
-RUN bundle install --gemfile .travis.gemfile
+RUN bundle config github.https true && bundle install --gemfile .travis.gemfile
 
 CMD ["bash"]
