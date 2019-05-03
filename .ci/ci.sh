@@ -162,7 +162,10 @@ run_test () {
   local kdir=.ci/kerberos
   local kconf="${kdir}/krb5.conf"
   local keytab="${kdir}/test.keytab"
-  local impala_prep_script=$(cat <<-END
+  local impala_prep_script
+
+  # shellcheck disable=SC2034
+  impala_prep_script=$(cat <<-END
 if [ -e "${kconf}" ]; then
   cp "${kconf}" /etc/
   echo "Copied ${kconf}..."
@@ -258,7 +261,8 @@ run_tests () {
   local namespace
 
   debug_msg "Running tests for ${rdbms}..."
-  for file in $(ls -1 .ci/.ci.env.${rdbms}*); do
+
+  for file in .ci/.ci.env."${rdbms}"*; do
     debug_msg "Checking for ${file}"
     [ -f "${file}" ] || break
 
