@@ -78,7 +78,11 @@ FROM
       end
 
       it "should use WITH statements" do
-        cdb.query([:icd9, "412", label: "l"]).sql(:formatted).must_match(/WITH/)
+        if ENV["CONCEPTQL_AVOID_CTES"] == "true"
+          skip
+        else
+          cdb.query([:icd9, "412", label: "l"]).sql(:formatted).must_match(/WITH/)
+        end
       end
     end
   end
