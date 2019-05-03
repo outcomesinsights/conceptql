@@ -8,6 +8,9 @@ readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
 # This was built with the jigsaw_test_data preparation script.
 readonly DOCKER_JIGSAW_TEST_DATA_IMAGE="jigsaw_test_data:latest"
 
+# This was built with the jigsaw_test_data preparation script.
+readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:chisel.latest"
+
 # Where should the log files be written to? This will include both container
 # logs as well as the master CSV log file to track all CI runs.
 readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
@@ -89,23 +92,25 @@ prepare_ci_environment () {
   mkdir -p "${CI_LOG_PATH}"
 }
 
-wait_for_jigsaw_test_data () {
+wait_for_database () {
   local container_id="${1}"
+  local container_type="${2}"
+  local pg_user="${3}"
 
   # Wait until psql can query the database.
   while sleep 1; do
     # Make sure the container itself is capable of starting up.
     if ! docker exec "${container_id}" /bin/true; then
-      echo "Jigsaw test data container ${container_id:0:4} unexpectedly failed to start"
+      echo "Jigsaw ${container_type} data container ${container_id:0:4} unexpectedly failed to start"
       echo "  docker container logs ${container_id:0:4}"
       exit 1
     fi
 
-    debug_msg "Waiting on Jigsaw test data container ${container_id:0:4} to be ready..."
+    debug_msg "Waiting on Jigsaw ${container_type} data container ${container_id:0:4} to be ready..."
 
     # Jigsaw test data is ready, time to bail.
-    if docker exec "${container_id}" psql -U postgres -c "\dt;" &>/dev/null; then
-      debug_msg "Jigsaw test data container ${container_id:0:4} is ready!"
+    if docker exec "${container_id}" psql --username="${pg_user}" --dbname=postgres --command="\dt;" &>/dev/null; then
+      debug_msg "Jigsaw ${container_type} data container ${container_id:0:4} is ready!"
       break
     fi
   done
@@ -114,6 +119,7 @@ wait_for_jigsaw_test_data () {
 record_cid () {
   local name="${1}"
   local cid="${2}"
+
   mkdir -p .ci/cids
   echo "${cid}" > ".ci/cids/${name}"
 }
@@ -135,7 +141,17 @@ prep_postgres_test() {
 
   debug_msg "Starting Jigsaw test data container ${jigsaw_test_data_cid:0:4}"
 
-  wait_for_jigsaw_test_data "${jigsaw_test_data_cid}"
+  # Start Jigsaw Lexicon data and wait until PostgreSQL is ready for connections.
+  local jigsaw_lexicon_data_cid
+  jigsaw_lexicon_data_cid="$(docker run --detach --rm --network-alias lexicon \
+    --network "${namespace}" "${DOCKER_JIGSAW_LEXICON_DATA_IMAGE}" -c fsync=off)"
+
+  record_cid "lexicon_data_${namespace}" "${jigsaw_lexicon_data_cid}"
+
+  debug_msg "Starting Jigsaw lexicon data container ${jigsaw_lexicon_data_cid:0:4}"
+
+  wait_for_database "${jigsaw_test_data_cid}" "test" "postgres"
+  wait_for_database "${jigsaw_lexicon_data_cid}" "lexicon" "ryan"
 }
 
 run_test () {
@@ -223,7 +239,7 @@ END
 }
 
 debug_msg () {
-  if [ -n "${DEBUG}" ]; then 
+  if [ -n "${DEBUG}" ]; then
     echo "${1}"
   fi
 }
@@ -255,8 +271,8 @@ run_tests () {
 prepare_ci_environment
 pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
 
-run_tests "postgres" 
-run_tests "impala" 
+run_tests "postgres"
+run_tests "impala"
 
 write_log_and_report_errors() {
   local namespace="${1}"
