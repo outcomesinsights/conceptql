@@ -28,4 +28,4 @@ Gemfile.local.lock
 doc/.?????????*
 .ci/logs/
 .ci/cids/
-.ci/Gemfile.lock
+.ci.Gemfile.lock

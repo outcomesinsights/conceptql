@@ -165,8 +165,8 @@ END
 # Set up and test scripts.
 the_script=$(cat <<-END
 ${!prep_script_name}
-bundle install --gemfile .ci/Gemfile
-bundle exec --gemfile .ci/Gemfile ruby test/all.rb
+bundle install --gemfile .ci.Gemfile
+bundle exec --gemfile .ci.Gemfile ruby test/all.rb
 END
 )
   debug_msg "${the_script}"
