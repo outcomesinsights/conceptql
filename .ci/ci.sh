@@ -247,6 +247,7 @@ debug_msg () {
 prep_impala_test () {
 echo
 }
+
 cleanup_impala_test () {
 echo
 }
@@ -267,12 +268,6 @@ run_tests () {
     run_test "${rdbms}" "${namespace}" &
   done
 }
-
-prepare_ci_environment
-pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
-
-run_tests "postgres"
-run_tests "impala"
 
 write_log_and_report_errors() {
   local namespace="${1}"
@@ -307,6 +302,12 @@ check_all_log_status_codes () {
 
   echo "${?}"
 }
+
+prepare_ci_environment
+pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
+
+run_tests "postgres"
+run_tests "impala"
 
 # Wait until everything is done before finishing up.
 echo "Waiting until all tests are complete before moving on..."
