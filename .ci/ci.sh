@@ -15,30 +15,16 @@ readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:chisel.lates
 # logs as well as the master CSV log file to track all CI runs.
 readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
 
-# Which path and branch are we working on?
-#
-# In development you're not meant to set these. When unset, your current
-# working directory and active branch will be used, and no state files will be
-# created.
-#
-# On your CI server, these will be automatically set by the script that checks
-# for repo updates. State files will be written.
-readonly REPO_PATH="${1:-$(pwd)}"
-readonly BRANCH="${2:-$(git symbolic-ref --short -q HEAD)}"
-readonly ARG_COUNT="${#}"
-
-# Set up a few variables that are used to name the Docker resources.
-readonly REPO="$(basename "${REPO_PATH}")"
-readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
-readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
-readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
-
 cleanup_postgres_test () {
   local namespace="${1}"
   local jigsaw_test_data_cid
+  local jigsaw_lexicon_data_cid
 
   jigsaw_test_data_cid=$(get_cid "test_data_${namespace}")
+  jigsaw_lexicon_data_cid=$(get_cid "lexicon_data_${namespace}")
+
   docker container rm -f "${jigsaw_test_data_cid}" >/dev/null
+  docker container rm -f "${jigsaw_lexicon_data_cid}" >/dev/null
 }
 
 # Remove a few resources Docker will create for the test run.
@@ -80,7 +66,7 @@ pull_or_build_image () {
 }
 
 prepare_ci_environment () {
-  if [ "${ARG_COUNT}" -ne 0 ]; then
+  if [ -n "${ARG_REPO_PATH}" ]; then
     # Move into and checkout the branch for testing. This is really only meant
     # to run if you're running this script on your CI server, not dev box.
     cd "${REPO_PATH}" || exit
@@ -248,21 +234,29 @@ debug_msg () {
 }
 
 prep_impala_test () {
-echo
+  echo
 }
 
 cleanup_impala_test () {
-echo
+  echo
 }
 
 run_tests () {
   local rdbms="${1}"
   local test_file
   local namespace
+  local env_files
 
   debug_msg "Running tests for ${rdbms}..."
 
-  for file in .ci/.ci.env."${rdbms}"*; do
+  if [ -n "${EXPRS}" ]; then
+    env_files=$(ls -1 .ci/.ci.env."${rdbms}"* | grep -e "\(${EXPRS}\)")
+  else
+    env_files=$(ls -1 .ci/.ci.env."${rdbms}"*)
+  fi
+
+  debug_msg "Looking for ${env_files}"
+  for file in ${env_files}; do
     debug_msg "Checking for ${file}"
     [ -f "${file}" ] || break
 
@@ -306,6 +300,60 @@ check_all_log_status_codes () {
 
   echo "${?}"
 }
+
+while (( "$#" )); do
+  case "$1" in
+    -e|--expr)
+      EXPRS="$2|${EXPRS}"
+      shift 2
+      ;;
+    -p|--path)
+      ARG_REPO_PATH="$2"
+      shift 2
+      ;;
+    -b|--branch)
+      ARG_BRANCH="$2"
+      shift 2
+      ;;
+    --) # end argument parsing
+      shift
+      break
+      ;;
+    --*=|-*) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+
+# Which path and branch are we working on?
+#
+# In development you're not meant to set these. When unset, your current
+# working directory and active branch will be used, and no state files will be
+# created.
+#
+# On your CI server, these will be automatically set by the script that checks
+# for repo updates. State files will be written.
+readonly REPO_PATH="${ARG_REPO_PATH:-$(pwd)}"
+readonly BRANCH="${ARG_BRANCH:-$(git symbolic-ref --short -q HEAD)}"
+readonly ARG_COUNT="${#}"
+
+# Set up a few variables that are used to name the Docker resources.
+readonly REPO="$(basename "${REPO_PATH}")"
+readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
+readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
+readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
+
+if [ -n "${EXPRS}" ]; then
+  EXPRS="${EXPRS%?}"
+fi
+
+# set positional arguments in their proper place
+eval set -- "$PARAMS"
 
 prepare_ci_environment
 pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
