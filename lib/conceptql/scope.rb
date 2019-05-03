@@ -162,18 +162,22 @@ module ConceptQL
     end
 
     def from(db, label)
-      ds = db.from(label_cte_name(label))
+      if ConceptQL.avoid_ctes?
+        ds = db.from(fetch_operator(label).evaluate(db).as(label_cte_name(label)))
+      else
+        ds = db.from(label_cte_name(label))
 
-      if ENV['CONCEPTQL_CHECK_COLUMNS']
-        # Work around requests for columns by operators.  These
-        # would fail because the CTE would not be defined.  You
-        # don't want to define the CTE normally, but to allow the
-        # columns to still work, send the columns request to the
-        # underlying operator.
-        op = fetch_operator(label)
-        ds = ds.with_extend do
-          define_method(:columns) do
-            (@main_op ||= op.evaluate(db)).columns
+        if ENV['CONCEPTQL_CHECK_COLUMNS']
+          # Work around requests for columns by operators.  These
+          # would fail because the CTE would not be defined.  You
+          # don't want to define the CTE normally, but to allow the
+          # columns to still work, send the columns request to the
+          # underlying operator.
+          op = fetch_operator(label)
+          ds = ds.with_extend do
+            define_method(:columns) do
+              (@main_op ||= op.evaluate(db)).columns
+            end
           end
         end
       end
@@ -339,8 +343,10 @@ module ConceptQL
           end
         end
       else
-        temp_tables.each do |table_name, ds|
-          query = query.with(table_name, ds)
+        unless ConceptQL.avoid_ctes?
+          temp_tables.each do |table_name, ds|
+            query = query.with(table_name, ds)
+          end
         end
 
         query = query.with_extend do

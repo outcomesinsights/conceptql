@@ -21,8 +21,12 @@ describe ConceptQL::Scope do
       end
 
       it "should use prefix in table name" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm, force_temp_tables: true, scratch_database: "jigsaw_temp")
-        db.query(["ADMSRCE", "12", {label: "test label"}], opts).sql.must_match /jtemp123456/
+        if ENV["CONCEPTQL_AVOID_CTES"] == "true"
+          skip
+        else
+          db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm, force_temp_tables: true, scratch_database: "jigsaw_temp")
+          db.query(["ADMSRCE", "12", {label: "test label"}], opts).sql.must_match /jtemp123456/
+        end
       end
     end
 

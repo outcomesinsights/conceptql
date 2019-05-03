@@ -603,6 +603,7 @@ module ConceptQL
           args_cte_name = Sequel.identifier(args_cte_name.column)
         end
 
+        # CTE here only used on impala due to needs_arguments_cte? above
         db[args_cte_name]
           .with(args_cte_name, args_cte, :no_temp_table=>true)
           .select(:arg)
