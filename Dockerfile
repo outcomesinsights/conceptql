@@ -11,7 +11,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   wheel pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
 
 
+COPY .ci.Gemfile conceptql.gemspec ./
+COPY ./lib/ ./lib
+RUN ls && bundle config github.https true && bundle install --gemfile .ci.Gemfile
+
 COPY . ./
-RUN bundle config github.https true && bundle install --gemfile .ci.Gemfile
 
 CMD ["bash"]
