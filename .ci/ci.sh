@@ -15,6 +15,9 @@ readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:chisel.lates
 # logs as well as the master CSV log file to track all CI runs.
 readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
 
+# State files for container ids. They are used temporarily during the CI run.
+readonly CI_CID_PATH="${CI_CID_PATH:.ci/cids}"
+
 cleanup_postgres_test () {
   local namespace="${1}"
   local jigsaw_test_data_cid
@@ -74,8 +77,9 @@ prepare_ci_environment () {
     echo ""
   fi
 
-  # Create log directory.
+  # Create preparation directories.
   mkdir -p "${CI_LOG_PATH}"
+  mkdir -p "${CI_CID_PATH}"
 }
 
 wait_for_database () {
@@ -106,13 +110,12 @@ record_cid () {
   local name="${1}"
   local cid="${2}"
 
-  mkdir -p .ci/cids
-  echo "${cid}" > ".ci/cids/${name}"
+  echo "${cid}" > "${CI_CID_PATH}/${name}"
 }
 
 get_cid () {
   local name="${1}"
-  cat ".ci/cids/${name}"
+  cat "${CI_CID_PATH}/${name}"
 }
 
 prep_postgres_test() {
@@ -251,6 +254,7 @@ run_tests () {
   debug_msg "Running tests for ${rdbms}..."
 
   if [ -n "${EXPRS}" ]; then
+    # shellcheck disable=SC2010
     env_files=$(ls -1 .ci/.ci.env."${rdbms}"* | grep -e "\(${EXPRS}\)")
   else
     env_files=$(ls -1 .ci/.ci.env."${rdbms}"*)
