@@ -38,6 +38,7 @@ ci_cleanup() {
   local exit_code="${4}"
 
   "cleanup_${rdbms}_test" "${namespace}"
+  rm -rf "${CI_CID_PATH:?}"/*
 
   if [ "${ARG_COUNT}" -ne 0 ]; then
     # If there's arguments, then it's a CI run, so we can safely remove the
