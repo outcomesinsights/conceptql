@@ -8,34 +8,23 @@ readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
 # This was built with the jigsaw_test_data preparation script.
 readonly DOCKER_JIGSAW_TEST_DATA_IMAGE="jigsaw_test_data:latest"
 
+# This was built with the jigsaw_test_data preparation script.
+readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:chisel.latest"
+
 # Where should the log files be written to? This will include both container
 # logs as well as the master CSV log file to track all CI runs.
 readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
 
-# Which path and branch are we working on?
-#
-# In development you're not meant to set these. When unset, your current
-# working directory and active branch will be used, and no state files will be
-# created.
-#
-# On your CI server, these will be automatically set by the script that checks
-# for repo updates. State files will be written.
-readonly REPO_PATH="${1:-$(pwd)}"
-readonly BRANCH="${2:-$(git symbolic-ref --short -q HEAD)}"
-readonly ARG_COUNT="${#}"
-
-# Set up a few variables that are used to name the Docker resources.
-readonly REPO="$(basename "${REPO_PATH}")"
-readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
-readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
-readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
-
 cleanup_postgres_test () {
   local namespace="${1}"
   local jigsaw_test_data_cid
+  local jigsaw_lexicon_data_cid
 
   jigsaw_test_data_cid=$(get_cid "test_data_${namespace}")
+  jigsaw_lexicon_data_cid=$(get_cid "lexicon_data_${namespace}")
+
   docker container rm -f "${jigsaw_test_data_cid}" >/dev/null
+  docker container rm -f "${jigsaw_lexicon_data_cid}" >/dev/null
 }
 
 # Remove a few resources Docker will create for the test run.
@@ -77,7 +66,7 @@ pull_or_build_image () {
 }
 
 prepare_ci_environment () {
-  if [ "${ARG_COUNT}" -ne 0 ]; then
+  if [ -n "${ARG_REPO_PATH}" ]; then
     # Move into and checkout the branch for testing. This is really only meant
     # to run if you're running this script on your CI server, not dev box.
     cd "${REPO_PATH}" || exit
@@ -89,23 +78,25 @@ prepare_ci_environment () {
   mkdir -p "${CI_LOG_PATH}"
 }
 
-wait_for_jigsaw_test_data () {
+wait_for_database () {
   local container_id="${1}"
+  local container_type="${2}"
+  local pg_user="${3}"
 
   # Wait until psql can query the database.
   while sleep 1; do
     # Make sure the container itself is capable of starting up.
     if ! docker exec "${container_id}" /bin/true; then
-      echo "Jigsaw test data container ${container_id:0:4} unexpectedly failed to start"
+      echo "Jigsaw ${container_type} data container ${container_id:0:4} unexpectedly failed to start"
       echo "  docker container logs ${container_id:0:4}"
       exit 1
     fi
 
-    debug_msg "Waiting on Jigsaw test data container ${container_id:0:4} to be ready..."
+    debug_msg "Waiting on Jigsaw ${container_type} data container ${container_id:0:4} to be ready..."
 
     # Jigsaw test data is ready, time to bail.
-    if docker exec "${container_id}" psql -U postgres -c "\dt;" &>/dev/null; then
-      debug_msg "Jigsaw test data container ${container_id:0:4} is ready!"
+    if docker exec "${container_id}" psql --username="${pg_user}" --dbname=postgres --command="\dt;" &>/dev/null; then
+      debug_msg "Jigsaw ${container_type} data container ${container_id:0:4} is ready!"
       break
     fi
   done
@@ -114,6 +105,7 @@ wait_for_jigsaw_test_data () {
 record_cid () {
   local name="${1}"
   local cid="${2}"
+
   mkdir -p .ci/cids
   echo "${cid}" > ".ci/cids/${name}"
 }
@@ -135,7 +127,17 @@ prep_postgres_test() {
 
   debug_msg "Starting Jigsaw test data container ${jigsaw_test_data_cid:0:4}"
 
-  wait_for_jigsaw_test_data "${jigsaw_test_data_cid}"
+  # Start Jigsaw Lexicon data and wait until PostgreSQL is ready for connections.
+  local jigsaw_lexicon_data_cid
+  jigsaw_lexicon_data_cid="$(docker run --detach --rm --network-alias lexicon \
+    --network "${namespace}" "${DOCKER_JIGSAW_LEXICON_DATA_IMAGE}" -c fsync=off)"
+
+  record_cid "lexicon_data_${namespace}" "${jigsaw_lexicon_data_cid}"
+
+  debug_msg "Starting Jigsaw lexicon data container ${jigsaw_lexicon_data_cid:0:4}"
+
+  wait_for_database "${jigsaw_test_data_cid}" "test" "postgres"
+  wait_for_database "${jigsaw_lexicon_data_cid}" "lexicon" "ryan"
 }
 
 run_test () {
@@ -146,7 +148,10 @@ run_test () {
   local kdir=.ci/kerberos
   local kconf="${kdir}/krb5.conf"
   local keytab="${kdir}/test.keytab"
-  local impala_prep_script=$(cat <<-END
+  local impala_prep_script
+
+  # shellcheck disable=SC2034
+  impala_prep_script=$(cat <<-END
 if [ -e "${kconf}" ]; then
   cp "${kconf}" /etc/
   echo "Copied ${kconf}..."
@@ -165,8 +170,8 @@ END
 # Set up and test scripts.
 the_script=$(cat <<-END
 ${!prep_script_name}
-bundle install --gemfile .ci/Gemfile
-bundle exec --gemfile .ci/Gemfile ruby test/all.rb
+bundle install --gemfile .ci.Gemfile
+bundle exec --gemfile .ci.Gemfile ruby test/all.rb
 END
 )
   debug_msg "${the_script}"
@@ -223,25 +228,36 @@ END
 }
 
 debug_msg () {
-  if [ -n "${DEBUG}" ]; then 
-    echo "${1}"
+  local msg="${1}"
+  if [ -n "${DEBUG}" ]; then
+    echo "${msg}"
   fi
 }
 
 prep_impala_test () {
-echo
+  echo
 }
+
 cleanup_impala_test () {
-echo
+  echo
 }
 
 run_tests () {
   local rdbms="${1}"
   local test_file
   local namespace
+  local env_files
 
   debug_msg "Running tests for ${rdbms}..."
-  for file in $(ls -1 .ci/.ci.env.${rdbms}*); do
+
+  if [ -n "${EXPRS}" ]; then
+    env_files=$(ls -1 .ci/.ci.env."${rdbms}"* | grep -e "\(${EXPRS}\)")
+  else
+    env_files=$(ls -1 .ci/.ci.env."${rdbms}"*)
+  fi
+
+  debug_msg "Looking for ${env_files}"
+  for file in ${env_files}; do
     debug_msg "Checking for ${file}"
     [ -f "${file}" ] || break
 
@@ -251,12 +267,6 @@ run_tests () {
     run_test "${rdbms}" "${namespace}" &
   done
 }
-
-prepare_ci_environment
-pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
-
-run_tests "postgres" 
-run_tests "impala" 
 
 write_log_and_report_errors() {
   local namespace="${1}"
@@ -291,6 +301,66 @@ check_all_log_status_codes () {
 
   echo "${?}"
 }
+
+while (( "$#" )); do
+  case "$1" in
+    -e|--expr)
+      EXPRS="$2|${EXPRS}"
+      shift 2
+      ;;
+    -p|--path)
+      ARG_REPO_PATH="$2"
+      shift 2
+      ;;
+    -b|--branch)
+      ARG_BRANCH="$2"
+      shift 2
+      ;;
+    --) # end argument parsing
+      shift
+      break
+      ;;
+    --*=|-*) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+
+# Which path and branch are we working on?
+#
+# In development you're not meant to set these. When unset, your current
+# working directory and active branch will be used, and no state files will be
+# created.
+#
+# On your CI server, these will be automatically set by the script that checks
+# for repo updates. State files will be written.
+readonly REPO_PATH="${ARG_REPO_PATH:-$(pwd)}"
+readonly BRANCH="${ARG_BRANCH:-$(git symbolic-ref --short -q HEAD)}"
+readonly ARG_COUNT="${#}"
+
+# Set up a few variables that are used to name the Docker resources.
+readonly REPO="$(basename "${REPO_PATH}")"
+readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
+readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
+readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
+
+if [ -n "${EXPRS}" ]; then
+  EXPRS="${EXPRS%?}"
+fi
+
+# set positional arguments in their proper place
+eval set -- "${PARAMS}"
+
+prepare_ci_environment
+pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"
+
+run_tests "postgres"
+run_tests "impala"
 
 # Wait until everything is done before finishing up.
 echo "Waiting until all tests are complete before moving on..."
