@@ -1,23 +1,5 @@
 #!/bin/bash
 
-# This was built locally by running: `docker build -t conceptql .`
-# In the near future this will be put on your Docker Hub account and then it
-# will be pulled from there without having to build anything locally.
-readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
-
-# This was built with the jigsaw_test_data preparation script.
-readonly DOCKER_JIGSAW_TEST_DATA_IMAGE="jigsaw_test_data:latest"
-
-# This was built with the jigsaw_test_data preparation script.
-readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:chisel.latest"
-
-# Where should the log files be written to? This will include both container
-# logs as well as the master CSV log file to track all CI runs.
-readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
-
-# State files for container ids. They are used temporarily during the CI run.
-readonly CI_CID_PATH="${CI_CID_PATH:-.ci/cids}"
-
 cleanup_postgres_test () {
   local namespace="${1}"
   local jigsaw_test_data_cid
@@ -361,6 +343,25 @@ readonly REPO="$(basename "${REPO_PATH}")"
 readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
 readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
 readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
+
+# This was built locally by running: `docker build -t conceptql .`
+# In the near future this will be put on your Docker Hub account and then it
+# will be pulled from there without having to build anything locally.
+readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
+
+# This was built with the jigsaw_test_data preparation script.
+readonly DOCKER_JIGSAW_TEST_DATA_IMAGE="jigsaw_test_data:${BRANCH}.latest"
+
+# This was built with the jigsaw_test_data preparation script.
+readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:${BRANCH}.latest"
+#readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="lexicon:broom2.latest"
+
+# Where should the log files be written to? This will include both container
+# logs as well as the master CSV log file to track all CI runs.
+readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
+
+# State files for container ids. They are used temporarily during the CI run.
+readonly CI_CID_PATH="${CI_CID_PATH:-.ci/cids}"
 
 if [ -n "${EXPRS}" ]; then
   EXPRS="${EXPRS%?}"
