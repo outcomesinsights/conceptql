@@ -111,6 +111,7 @@ remove_cid () {
 
 prep_postgres_test() {
   local namespace="${1}"
+  local env_file="${2}"
 
   # Start Jigsaw test data and wait until PostgreSQL is ready for connections.
   local jigsaw_test_data_cid
@@ -123,7 +124,11 @@ prep_postgres_test() {
 
   # Start Jigsaw Lexicon data and wait until PostgreSQL is ready for connections.
   local jigsaw_lexicon_data_cid
-  jigsaw_lexicon_data_cid="$(docker run --detach --rm --network-alias lexicon \
+  jigsaw_lexicon_data_cid="$(docker run \
+    --detach \
+    --rm \
+    --env-file "${env_file}" \
+    --network-alias lexicon \
     --network "${namespace}" "${DOCKER_JIGSAW_LEXICON_DATA_IMAGE}" -c fsync=off)"
 
   record_cid "lexicon_data_${namespace}" "${jigsaw_lexicon_data_cid}"
@@ -137,6 +142,7 @@ prep_postgres_test() {
 run_test () {
   local rdbms="${1}"
   local namespace="${2}"
+  local env_file="${3}"
   local the_script
   local prep_script_name="${rdbms}_prep_script"
   local kdir=.ci/kerberos
@@ -178,7 +184,7 @@ END
 
   debug_msg "Created network ${namespace}"
 
-  "prep_${rdbms}_test" "${namespace}"
+  "prep_${rdbms}_test" "${namespace}" "${env_file}"
 
   # Start measuring conceptql's test suite in seconds.
   local time_conceptql_start_time="${SECONDS}"
@@ -186,7 +192,7 @@ END
   # Start the conceptql container and run its test suite.
   local conceptql_cid
   conceptql_cid="$(docker run -d -v "$(pwd)":/app \
-    --network "${namespace}" --env-file "${file}" \
+    --network "${namespace}" --env-file "${env_file}" \
     "${DOCKER_CONCEPTQL_IMAGE}" bash -c "${the_script}")"
 
   debug_msg "Running tests for conceptql container ${conceptql_cid:0:4}..."
@@ -252,14 +258,14 @@ run_tests () {
   fi
 
   debug_msg "Looking for ${env_files}"
-  for file in ${env_files}; do
-    debug_msg "Checking for ${file}"
-    [ -f "${file}" ] || break
+  for env_file in ${env_files}; do
+    debug_msg "Checking for ${env_file}"
+    [ -f "${env_file}" ] || break
 
-    test_file="$(echo "${file}" | cut -d "." -f 5)"
+    test_file="$(echo "${env_file}" | cut -d "." -f 5)"
     namespace="${DOCKER_NAMESPACE}-${test_file}"
     echo "Running tests for ${namespace}"
-    run_test "${rdbms}" "${namespace}" &
+    run_test "${rdbms}" "${namespace}" "${env_file}" &
   done
 }
 
