@@ -26,8 +26,12 @@ cleanup_postgres_test () {
   jigsaw_test_data_cid=$(get_cid "test_data_${namespace}")
   jigsaw_lexicon_data_cid=$(get_cid "lexicon_data_${namespace}")
 
+  remove_cid "test_data_${namespace}"
+  remove_cid "lexicon_data_${namespace}"
+
   docker container rm -f "${jigsaw_test_data_cid}" >/dev/null
   docker container rm -f "${jigsaw_lexicon_data_cid}" >/dev/null
+
 }
 
 # Remove a few resources Docker will create for the test run.
@@ -38,7 +42,6 @@ ci_cleanup() {
   local exit_code="${4}"
 
   "cleanup_${rdbms}_test" "${namespace}"
-  rm -rf "${CI_CID_PATH:?}"/*
 
   if [ "${ARG_COUNT}" -ne 0 ]; then
     # If there's arguments, then it's a CI run, so we can safely remove the
@@ -115,6 +118,11 @@ record_cid () {
 }
 
 get_cid () {
+  local name="${1}"
+  cat "${CI_CID_PATH}/${name}"
+}
+
+remove_cid () {
   local name="${1}"
   cat "${CI_CID_PATH}/${name}"
 }
