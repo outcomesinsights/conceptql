@@ -16,7 +16,7 @@ readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:chisel.lates
 readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
 
 # State files for container ids. They are used temporarily during the CI run.
-readonly CI_CID_PATH="${CI_CID_PATH:.ci/cids}"
+readonly CI_CID_PATH="${CI_CID_PATH:-.ci/cids}"
 
 cleanup_postgres_test () {
   local namespace="${1}"
