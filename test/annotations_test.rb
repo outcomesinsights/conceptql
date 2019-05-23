@@ -12,21 +12,15 @@ describe ConceptQL::Operators do
 
     it "should not blow up" do
       seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
-      begin
-        save_lexicon = ENV["LEXICON_URL"]
-        ENV["LEXICON_URL"] = nil
-        db = ConceptQL::Database.new(seq_db)
-        query = db.query(["union",["cpt","00000"],["icd9", "000.00"]])
-        query.scope_annotate(skip_counts: true).must_equal(
-          {:errors=>{},
-          :warnings=>{},
-          :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},
-                    "icd9"=>{:condition_occurrence=>{:rows=>0, :n=>0}},
-                    "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:rows=>0, :n=>0}}}}
-        )
-      ensure
-        ENV["LEXICON_URL"] = save_lexicon
-      end
+      db = ConceptQL::Database.new(seq_db)
+      query = db.query(["union",["cpt", "00000", "99213"],["icd9", "000.00", "412"]])
+      query.scope_annotate(skip_counts: true).must_equal(
+        {:errors=>{},
+        :warnings=>{"cpt"=>[["unknown code(s)", "00000"]], "icd9"=>[["unknown code(s)", "000.00"]]},
+        :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},
+                  "icd9"=>{:condition_occurrence=>{:rows=>0, :n=>0}},
+                  "union"=>{:procedure_occurrence=>{:rows=>0, :n=>0}, :condition_occurrence=>{:rows=>0, :n=>0}}}}
+      )
     end
 
     it "should still report if codes aren't properly formatted" do

@@ -172,7 +172,7 @@ module ConceptQL
           visit_source_concept_id: query_modifier_for(:visit_source_concept_id),
           provider_id: query_modifier_for(:provider_id),
           drug_name: query_modifier_for(:drug_name),
-          provenance_type: query_modifier_for(:provenance_type),
+          file_provenance_type: query_modifier_for(:provenance_type),
           admission_date: query_modifier_for(:admission_date)
         }
       end
@@ -296,7 +296,17 @@ module ConceptQL
         source_value_columns[table]
       end
 
-      def provenance_type_column(query, domain)
+      def code_provenance_type_column(query, domain)
+        {
+          condition_occurrence: :condition_type_concept_id,
+          death: :death_type_concept_id,
+          drug_exposure: :drug_type_concept_id,
+          observation: :observation_type_concept_id,
+          procedure_occurrence: :procedure_type_concept_id
+        }[domain]
+      end
+
+      def file_provenance_type_column(query, domain)
         {
           condition_occurrence: :condition_type_concept_id,
           death: :death_type_concept_id,

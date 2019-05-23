@@ -9,7 +9,8 @@
     "source_value": "401.1",
     "source_vocabulary_id": "2",
     "window_id": 3,
-    "provenance_type": 45756835,
+    "file_provenance_type": 45756835,
+    "code_provenance_type": 45756835,
     "admission_date": "2009-04-15",
     "discharge_date": "2009-04-15"
   },
@@ -23,7 +24,8 @@
     "source_value": "401.1",
     "source_vocabulary_id": "2",
     "window_id": 4,
-    "provenance_type": 45756835,
+    "file_provenance_type": 45756835,
+    "code_provenance_type": 45756835,
     "admission_date": "2010-02-23",
     "discharge_date": "2010-02-23"
   }

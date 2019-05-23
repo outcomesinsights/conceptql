@@ -121,7 +121,7 @@ module ConceptQL
       def related_concept_ids(db, *ids)
 
         ids = ids.flatten
-        other_ids = db[:mappings].where(concept_id_2: ids).where{Sequel.function(:lower, :relationship_id) =~ 'is_a'}.select_map(:concept_id_1)
+        other_ids = db[:mappings].where(concept_2_id: ids).where{Sequel.function(:lower, :relationship_id) =~ 'is_a'}.select_map(:concept_1_id)
         other_ids + ids
       end
 
@@ -129,8 +129,12 @@ module ConceptQL
         !db.table_exists?(:concepts)
       end
 
-      def provenance_type_column(query, domain)
+      def code_provenance_type(query, domain)
         :provenance_concept_id
+      end
+
+      def file_provenance_type(query, domain)
+        :source_type_concept_id
       end
 
       def concepts_ds(db, vocabulary_id, codes)

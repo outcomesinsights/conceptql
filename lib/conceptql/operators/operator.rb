@@ -154,13 +154,6 @@ module ConceptQL
         scope.cte_name(name)
       end
 
-      def unqualified_cte_name(name)
-        name = cte_name(name)
-        name = name.column if name.is_a?(Sequel::SQL::QualifiedIdentifier)
-        name = Sequel::SQL::Identifier.new(name) if name.is_a?(String)
-        name
-      end
-
       def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
@@ -380,6 +373,10 @@ module ConceptQL
         scope.lexicon
       end
 
+      def same_table?(table)
+        false
+      end
+
       private
 
       def annotate_values(db, opts)
@@ -396,7 +393,8 @@ module ConceptQL
 
       def additional_columns(query, table)
         special_columns = {
-          provenance_type: Proc.new { provenance_type(query, table) },
+          code_provenance_type: Proc.new { code_provenance_type(query, table) },
+          file_provenance_type: Proc.new { file_provenance_type(query, table) },
           provider_id: Proc.new { provider_id(query, table) },
           visit_source_concept_id: Proc.new { dm.place_of_service_concept_id(query, table) }
         }
@@ -429,9 +427,14 @@ module ConceptQL
         cast_column(:source_vocabulary_id, dm.source_vocabulary_id(query, table))
       end
 
-      def provenance_type(query, table)
-        return :provenance_type if query_columns(query).include?(:provenance_type)
-        cast_column(:provenance_type, dm.provenance_type_column(query, table))
+      def code_provenance_type(query, table)
+        return :code_provenance_type if query_columns(query).include?(:code_provenance_type)
+        cast_column(:code_provenance_type, dm.provenance_type_column(query, table))
+      end
+
+      def file_provenance_type(query, table)
+        return :file_provenance_type if query_columns(query).include?(:file_provenance_type)
+        cast_column(:file_provenance_type, dm.provenance_type_column(query, table))
       end
 
       def provider_id(query, table)
@@ -594,8 +597,15 @@ module ConceptQL
         args.unshift(first_arg)
         args = args.map { |v| [v] }
         args_cte = db.values(args)
-        db[:args]
-          .with(:args, args_cte)
+        args_cte_name = cte_name(:args)
+
+        if args_cte_name.is_a?(Sequel::SQL::QualifiedIdentifier)
+          args_cte_name = Sequel.identifier(args_cte_name.column)
+        end
+
+        # CTE here only used on impala due to needs_arguments_cte? above
+        db[args_cte_name]
+          .with(args_cte_name, args_cte, :no_temp_table=>true)
           .select(:arg)
       end
 

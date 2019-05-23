@@ -17,11 +17,11 @@ describe ConceptQL::DataModel::Gdm do
 
     it "should find concept IDs related to standard concept ids" do
       db.create_table(:mappings) do
-        column :concept_id_1, :Bigint
+        column :concept_1_id, :Bigint
         column :relationship_id, :text
-        column :concept_id_2, :Bigint
+        column :concept_2_id, :Bigint
       end
-      db[:mappings].import([:concept_id_1, :relationship_id, :concept_id_2], [[111111111, "IS_A", 8532]])
+      db[:mappings].import([:concept_1_id, :relationship_id, :concept_2_id], [[111111111, "IS_A", 8532]])
       dm.related_concept_ids(db, 8532).sort.must_equal [8532, 111111111].sort
     end
   end

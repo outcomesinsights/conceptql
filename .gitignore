@@ -26,3 +26,6 @@ yamls/
 Gemfile.local
 Gemfile.local.lock
 doc/.?????????*
+.ci/logs/
+.ci/cids/
+.ci.Gemfile.lock

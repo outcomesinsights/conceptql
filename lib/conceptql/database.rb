@@ -5,7 +5,7 @@ module ConceptQL
     attr :db, :opts
     @lexicon_mutex = Mutex.new
 
-    EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove]
+    EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove, :null_dataset]
 
     def initialize(db, opts={})
       @db = db
@@ -45,31 +45,38 @@ module ConceptQL
         end
       end
 
-      def lexicon
-        return unless ENV["LEXICON_URL"]
+      def lexicon_db
         @lexicon_mutex.synchronize do
-          unless defined?(@lexicon)
-            @lexicon = make_lexicon
+          unless defined?(@lexicon_db)
+            @lexicon_db = make_lexicon_db
           end
         end
-        @lexicon
+        @lexicon_db
       end
 
-      def make_lexicon
+      def lexicon
+        @lexicon ||= Lexicon.new(lexicon_db)
+      end
+
+      def make_lexicon_db
         db_opts = {}
         if ENV["CONCEPTQL_LOG_LEXICON"]
           log_path = Pathname.new("log") + "conceptql_lexicon.log"
           log_path.dirname.mkpath
           db_opts[:logger] = Logger.new(log_path)
         end
-        db = Sequel.connect(ENV["LEXICON_URL"], db_opts)
-        db_extensions(db)
-        Lexicon.new(db)
+        lexicon_db = if ENV["LEXICON_URL"]
+                       Sequel.connect(ENV["LEXICON_URL"], db_opts)
+                     else
+                       Sequel.mock(host: :postgres)
+                     end
+        db_extensions(lexicon_db)
+        lexicon_db
       end
     end
 
     def lexicon
-      self.class.lexicon
+      @lexicon ||= Lexicon.new(self.class.lexicon_db, db)
     end
   end
 end

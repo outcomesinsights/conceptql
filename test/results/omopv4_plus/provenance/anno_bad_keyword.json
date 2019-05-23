@@ -15,7 +15,8 @@
       "name": "ICD-9 CM"
     }
   ],
-  "carrier, garbage",
+  "carrier",
+  "garbage",
   "other",
   {
     "annotation": {
@@ -27,7 +28,7 @@
       },
       "errors": [
         [
-          "unrecognized keywords",
+          "unrecognized file type keywords",
           "carrier",
           "garbage",
           "other"

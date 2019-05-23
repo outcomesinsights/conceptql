@@ -8,6 +8,7 @@ module ConceptQL
 
     attr :op, :str, :manipulator
     def initialize(op, str, opts = {})
+      str = str.strftime("%Y-%m-%d") if str.respond_to?(:strftime)
       raise "Invalid adjustment string: #{str.pretty_inspect}" unless str.nil? || str =~ VALID_INPUT
       @op = op
       @str = str || ""

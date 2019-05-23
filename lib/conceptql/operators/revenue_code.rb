@@ -26,6 +26,10 @@ module ConceptQL
         end
       end
 
+      def domain
+        :procedure_occurrence
+      end
+
       def vocabulary_id
         43
       end

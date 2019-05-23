@@ -21,8 +21,12 @@ describe ConceptQL::Scope do
       end
 
       it "should use prefix in table name" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm, force_temp_tables: true, scratch_database: "jigsaw_temp")
-        db.query(["ADMSRCE", "12", {label: "test label"}], opts).sql.must_match /jtemp123456/
+        if ENV["CONCEPTQL_AVOID_CTES"] == "true"
+          skip
+        else
+          db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm, force_temp_tables: true, scratch_database: "jigsaw_temp")
+          db.query(["ADMSRCE", "12", {label: "test label"}], opts).sql.must_match /jtemp123456/
+        end
       end
     end
 
@@ -200,9 +204,9 @@ describe ConceptQL::Scope do
         check_sequel(db.query(["cpt", "99214"], opts), :impala_window_table_under_gdm_standard_vocab)
       end
 
-      it "should not limit selection on person table" do
+      it "should limit selection on person table" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        db.query(["person", true], opts).sql.wont_match(/JOIN/)
+        db.query(["person", true], opts).sql.must_match(/JOIN/)
       end
 
       it "should limit selection on condition_occurrence table" do

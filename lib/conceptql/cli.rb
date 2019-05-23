@@ -125,4 +125,3 @@ module ConceptQL
     end
   end
 end
-

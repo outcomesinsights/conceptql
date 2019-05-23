@@ -3,6 +3,9 @@ require_relative "generic"
 module ConceptQL
   module Rdbms
     class Impala < Generic
+      SORT_BY_COLUMNS = %i(person_id window_id start_date end_date)
+      POSSIBLY_STATIC_COLUMNS = %i(criterion_table criterion_domain value_as_number)
+
       def cast_date(date)
         Sequel.cast(date, DateTime)
       end
@@ -25,8 +28,11 @@ module ConceptQL
       # safe bet that we can append the person_id to any constant, making it
       # no longer a constant, but still a viable column for partitioning
       def partition_fix(column, qualifier=nil)
-        person_id = qualifier ? Sequel.qualify(qualifier, :person_id) : :person_id
-        Sequel.expr(column).cast_string + '_' + Sequel.cast_string(person_id)
+        return column if ENV["CONCEPTQL_DISABLE_ORDER_BY_FIX"] == "true"
+        person_id = qualifier ? Sequel.qualify(qualifier, :person_id).cast_string : :person_id
+        person_id = Sequel.cast_string(person_id)
+        column = Sequel.expr(column).cast_string
+        column + '_' + person_id
       end
 
       def uuid_items
@@ -36,10 +42,21 @@ module ConceptQL
         items << Sequel.function(:split_part, Sequel.cast_string(:start_date), " ", 1)
       end
 
-      def create_options
-        {
-          parquet: true
-        }
+      def days_between(from_column, to_column)
+        Sequel.function(:datediff, cast_date(to_column), cast_date(from_column))
+      end
+
+      def create_options(scope, ds)
+        opts = { parquet: true }
+        if ENV["CONCEPTQL_SORT_TEMP_TABLES"] == "true"
+          sort_by_columns = if ds.opts[:values]
+            ds.opts[:values].first.map(&:alias)
+          else
+            SORT_BY_COLUMNS & scope.query_columns
+          end
+          opts[:sort_by] = sort_by_columns
+        end
+        opts
       end
 
       def post_create(db, table_name)

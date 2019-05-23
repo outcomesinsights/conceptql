@@ -8,8 +8,6 @@ module ConceptQL
     class OneInTwoOut < Operator
       register __FILE__
 
-      include ConceptQL::Provenanceable
-
       desc <<-EOF
 Represents a common pattern in research algorithms: searching for an event
 that appears either once in an inpatient setting or
@@ -31,7 +29,8 @@ twice in an outpatient setting with a 30-day gap.
 
       default_query_columns
 
-      require_column :provenance_type
+      include ConceptQL::Provenanceable
+
       require_column :admission_date
       require_column :discharge_date
 
@@ -47,20 +46,19 @@ twice in an outpatient setting with a 30-day gap.
       def condition_events
         db[stream.evaluate(db)]
           .where(criterion_domain: 'condition_occurrence')
-          .exclude(provenance_type: nil)
           .from_self
       end
 
       def all_inpatient_events
         condition_events
-          .where(provenance_type: to_concept_id(:inpatient))
+          .where(build_where_from_codes(["inpatient"]))
           .from_self
       end
 
       def valid_inpatient_events
         q = all_inpatient_events
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
-          q = q.where{ |o| Sequel.date_sub(o.discharge_date, o.admission_date) > options[:inpatient_length_of_stay].to_i }
+          q = q.where{ |o| rdbms.days_between(o.admission_date, o.discharge_date) > options[:inpatient_length_of_stay].to_i }
         end
 
         q = q.select(*(query_cols - [:start_date, :end_date]))
@@ -76,7 +74,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def outpatient_events
         condition_events
-          .where(provenance_type: to_concept_id(:claim) + to_concept_id(:outpatient))
+          .where(build_where_from_codes(["carrier_claim","outpatient"]))
           .from_self
       end
 

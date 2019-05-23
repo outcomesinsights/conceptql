@@ -3,6 +3,9 @@ require_relative 'casting_operator'
 module ConceptQL
   module Operators
     class Person < CastingOperator
+      include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::Timeless
+
       register __FILE__
 
       desc 'Generates all person records, or, if fed a stream, fetches all person records for the people represented in the incoming result set.'

@@ -16,8 +16,6 @@ module ConceptQL
     class Provenance < Operator
       register __FILE__
 
-      include ConceptQL::Provenanceable
-
       desc <<-EOF
 Filters incoming events to those with the indicated provenance.
 
@@ -32,34 +30,50 @@ Enter numeric concept id(s), or the corresponding text label(s):
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
-      require_column :provenance_type
       default_query_columns
 
+      include ConceptQL::Provenanceable
+
       def query(db)
-        db.from(stream.evaluate(db))
-          .where(provenance_type: provenance_concept_ids)
+        db.from(stream.evaluate(db)).where(build_where_from_codes(arguments))
       end
 
     private
 
       def validate(db, opts = {})
         super
-        bad_keywords = all_args.select { |arg| arg.to_i.zero? }
-                        .reject { |arg| concept_ids.keys.include?(arg.to_sym) }
 
-        if ConceptQL::Utils.present?(bad_keywords)
-          add_error("unrecognized keywords", *bad_keywords)
+        build_std_code_concept_ids(arguments)
+
+        bad_keywords = arguments.each_with_object({file: [], code: []}){|c,h|
+
+          file_type = file_provenance_part_from_code(c)
+          code_type = code_provenance_part_from_code(c)
+
+          h[:file] << file_type if file_type.to_i.zero? && !file_type.nil? && !allowed_file_provenance_types.include?(file_type)
+          h[:code] << code_type if code_type.to_i.zero? && !code_type.nil? && !allowed_code_provenance_types.include?(code_type)
+        }
+
+        warn_keywords = arguments.each_with_object([]){|c,h|
+          file_type = file_provenance_part_from_code(c)
+          code_type = code_provenance_part_from_code(c)
+
+          h << file_type if !file_type.to_i.zero?
+          h << code_type if !code_type.to_i.zero?
+        }
+
+        if ConceptQL::Utils.present?(bad_keywords[:file])
+          add_error("unrecognized file type keywords", *bad_keywords[:file].uniq)
         end
-      end
 
-      def provenance_concept_ids
-        all_args.flat_map do |arg|
-          to_concept_id(arg)
+        if ConceptQL::Utils.present?(bad_keywords[:code])
+          add_error("unrecognized code type keywords", *bad_keywords[:code].uniq)
         end
-      end
 
-      def all_args
-        arguments.map(&:to_s).flat_map { |w| w.split(/\s*,\s*/) }.uniq
+        if ConceptQL::Utils.present?(warn_keywords)
+          add_warning("concept ids are not checked", *warn_keywords)
+        end
+
       end
     end
   end

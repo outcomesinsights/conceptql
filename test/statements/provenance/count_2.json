@@ -4,5 +4,5 @@
     "icd9",
     "412"
   ],
-  "inpatient_header_5"
+  "carrier_claim:primary_or_first"
 ]

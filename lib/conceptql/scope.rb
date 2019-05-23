@@ -1,6 +1,6 @@
 require_relative "window"
 require "securerandom"
-
+require "sequel"
 
 module ConceptQL
   # Scope coordinates the creation of any common table expressions that might
@@ -22,7 +22,7 @@ module ConceptQL
       start_date: :Date,
       end_date: :Date,
       source_value: :String,
-      source_vocabulary_id: :Bigint
+      source_vocabulary_id: :String
     }.freeze
 
     ADDITIONAL_COLUMNS = {
@@ -31,7 +31,8 @@ module ConceptQL
       value_as_concept_id: :Bigint,
       unit_source_value: :String,
       visit_occurrence_id: :Bigint,
-      provenance_type: :Bigint,
+      file_provenance_type: :Bigint,
+      code_provenance_type: :Bigint,
       provider_id: :Bigint,
       visit_source_concept_id: :Bigint,
       range_low: :Float,
@@ -43,6 +44,11 @@ module ConceptQL
       drug_quantity: :Float,
       admission_date: :Date,
       discharge_date: :Date,
+      length_of_stay: :Bigint,
+      admission_source: :String,
+      discharge_location: :String,
+      primary_diagnosis_code: :String,
+      primary_diagnosis_vocabulary: :String,
       uuid: :String,
       window_id: :Bigint
     }.freeze
@@ -156,18 +162,22 @@ module ConceptQL
     end
 
     def from(db, label)
-      ds = db.from(label_cte_name(label))
+      if ConceptQL.avoid_ctes?
+        ds = db.from(fetch_operator(label).evaluate(db).as(label_cte_name(label)))
+      else
+        ds = db.from(label_cte_name(label))
 
-      if ENV['CONCEPTQL_CHECK_COLUMNS']
-        # Work around requests for columns by operators.  These
-        # would fail because the CTE would not be defined.  You
-        # don't want to define the CTE normally, but to allow the
-        # columns to still work, send the columns request to the
-        # underlying operator.
-        op = fetch_operator(label)
-        ds = ds.with_extend do
-          define_method(:columns) do
-            (@main_op ||= op.evaluate(db)).columns
+        if ENV['CONCEPTQL_CHECK_COLUMNS']
+          # Work around requests for columns by operators.  These
+          # would fail because the CTE would not be defined.  You
+          # don't want to define the CTE normally, but to allow the
+          # columns to still work, send the columns request to the
+          # underlying operator.
+          op = fetch_operator(label)
+          ds = ds.with_extend do
+            define_method(:columns) do
+              (@main_op ||= op.evaluate(db)).columns
+            end
           end
         end
       end
@@ -209,6 +219,23 @@ module ConceptQL
       true
     end
 
+    class CteExtractor < Sequel::ASTTransformer
+      def initialize(scope, ctes)
+        @scope = scope
+        @ctes = ctes
+      end
+
+      private
+
+      def v(o)
+        if o.is_a?(Sequel::Dataset)
+          @scope.recursive_extract_ctes(o, @ctes)
+        else
+          super
+        end
+      end
+    end
+
     def recursive_extract_cte_expr(t, ctes)
       case t
       when Sequel::Dataset
@@ -243,10 +270,15 @@ module ConceptQL
         #p [:rec_compounds, ctes.map(&:first), compounds]
       end
 
+      if where = query.opts[:where]
+        query = query.clone(:where=>CteExtractor.new(self, ctes).transform(where))
+      end
+
       if with = query.opts[:with]
-        ctes.concat(with.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
+        keep, remove = with.partition{|w| w[:no_temp_table]}
+        ctes.concat(remove.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
         #p [:rec_with, ctes.map(&:first), with]
-        query = query.clone(:with=>nil)
+        query = query.clone(:with=>keep.empty? ? nil : keep)
       end
 
       query
@@ -259,11 +291,13 @@ module ConceptQL
       rdbms = op.rdbms
 
       query = query.from_self
-      temp_tables = ctes.map do |label, operator|
-        [label_cte_name(label), operator.evaluate(db)]
+      temp_tables = []
+      ctes.each do |label, operator|
+        temp_tables << [label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables)]
       end
 
       if force_temp_tables?
+        scope = self
         query = recursive_extract_ctes(query, temp_tables).with_extend do
           # Create temp tables for each CTE
           #
@@ -276,9 +310,8 @@ module ConceptQL
             define_method(meth) do |*args, &block|
               if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
                 begin
-                  temp_tables.each do |table_name, ds|
-                    #p [:create_table, table_name]
-                    db.create_table(table_name, rdbms.create_options.merge(as: ds))
+                  temp_tables.uniq(&:first).each do |table_name, ds|
+                    db.create_table(table_name, rdbms.create_options(scope, ds).merge(as: ds))
                     rdbms.post_create(db, table_name)
                   end
 
@@ -310,8 +343,10 @@ module ConceptQL
           end
         end
       else
-        temp_tables.each do |table_name, ds|
-          query = query.with(table_name, ds)
+        unless ConceptQL.avoid_ctes?
+          temp_tables.each do |table_name, ds|
+            query = query.with(table_name, ds)
+          end
         end
 
         query = query.with_extend do
