@@ -258,13 +258,13 @@ module ConceptQL
             results = lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
           else
             return codes.zip([])
-	  end
-	else
+          end
+        else
           results = dm.concepts_ds(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
         end
 
         remaining_codes = codes - results.map(&:first).map(&:to_s)
-        (results + remaining_codes.zip([])).sort_by(&:first)
+        uniq_code_list((results + remaining_codes.zip([])).sort_by(&:first))
       end
 
       def select_all?

@@ -100,7 +100,9 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        vocab_ops.map { |vo| vo.describe_codes(db, codes) }.inject(&:+).uniq
+        all_codes = vocab_ops.map { |vo| vo.describe_codes(db, codes) }.inject(&:+).uniq
+
+        uniq_code_list(all_codes)
       end
 
       def vocab_ops
