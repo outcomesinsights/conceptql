@@ -20,6 +20,7 @@ before_script:
   # Add dependencies.
   - apt-get update -y && apt-get install -y python-pip pigz postgresql-client
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
+  - gem update --system && gem install bundler
   # Install dependencies into the cache directory.
   - bundle install --gemfile .ci.Gemfile -j $(nproc) --path vendor/ruby
 
