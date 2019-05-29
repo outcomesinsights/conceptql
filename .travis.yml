@@ -3,7 +3,7 @@ rvm:
 - 2.4
 dist: trusty
 sudo: false
-gemfile: ".travis.gemfile"
+gemfile: ".ci.Gemfile"
 env:
   global:
     - LEXICON_URL=postgres://postgres@localhost/lexicon
