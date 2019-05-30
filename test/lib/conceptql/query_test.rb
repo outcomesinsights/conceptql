@@ -102,7 +102,7 @@ FROM
       db = ConceptQL::Database.new(nil)
       query = db.query(["revenue_code", "0100"])
       query.code_list.map(&:to_s).must_equal([
-        "Revenue Code 0100"
+        "Revenue Code 0100: All-Inclusive Room and Board Plus Ancillary"
       ])
     end
 
