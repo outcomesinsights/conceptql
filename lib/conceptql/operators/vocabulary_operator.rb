@@ -40,11 +40,9 @@ module ConceptQL
       # Multi-dimensional array of the form [[code1, code1_desc], [code2_code2_desc], etc] where if the same code
       #
       def uniq_code_list(all_codes)
-        # Get codes with descriptions
-        codes_w_desc = all_codes.select{ |c| !c[1].nil? }.uniq
-        codes_wo_desc = all_codes.select{ |c| c[1].nil? }.uniq
-
-        (codes_w_desc + codes_wo_desc).uniq{|c| c.first}.sort
+        all_codes.each_with_object({}) do |item, h|
+          h[item[0].to_s] ||= item[1]
+        end.to_a.sort
       end
 
       def code_list(db)
