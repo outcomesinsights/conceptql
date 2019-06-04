@@ -8,8 +8,8 @@ gem "minitest", ">= 5.7.0"
 gem "minitest-hooks"
 gem "minitest-shared_description"
 
-gem "sequelizer", github: "outcomesinsights/sequelizer", branch: "broom"
-gem "sequel_impala", github: "outcomesinsights/sequel_impala", branch: "broom"
+gem "sequelizer", github: "outcomesinsights/sequelizer", branch: "chisel"
+gem "sequel_impala", github: "outcomesinsights/sequel_impala", branch: "chisel"
 gem "thor"
 gem "rake"
 
