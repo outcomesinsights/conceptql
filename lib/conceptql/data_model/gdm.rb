@@ -11,6 +11,7 @@ module ConceptQL
           drug_name: ConceptQL::QueryModifiers::Gdm::DrugQueryModifier,
           admission_date: ConceptQL::QueryModifiers::Gdm::AdmissionDateQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::Gdm::ProvenanceQueryModifier,
+          value_as_number: ConceptQL::QueryModifiers::Gdm::LabQueryModifier,
         }[column]
       end
 

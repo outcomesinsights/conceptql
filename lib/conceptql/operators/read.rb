@@ -3,6 +3,7 @@ require 'sequel/adapters/mock'
 require_relative "condition_occurrence_source_vocabulary_operator"
 require_relative "source_vocabulary_operator"
 require_relative "vocabulary"
+require_relative '../behaviors/labish'
 
 module ConceptQL
   module Operators
@@ -20,7 +21,7 @@ module ConceptQL
       end
 
       def gdm(db)
-        klasses[:condition_occurrence].new(self.nodifier, "read_condition_occurrence", *arguments).evaluate(db)
+        ReadGDM.new(self.nodifier, "read_condition_occurrence", *arguments).evaluate(db)
       end
 
       def omopv4(db)
@@ -93,6 +94,17 @@ module ConceptQL
           drug_exposure: ReadDrug,
           observation: ReadObservation
         }
+      end
+
+      class ReadGDM < ConditionOccurrenceSourceVocabularyOperator
+        preferred_name "READ"
+        argument :read_codes, type: :codelist, vocab: "Read"
+
+        include ConceptQL::Labish
+
+        def vocabulary_id
+          17
+        end
       end
 
       class ReadCondition < ConditionOccurrenceSourceVocabularyOperator
