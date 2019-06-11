@@ -203,8 +203,9 @@ module ConceptQL
 
       def where_clause(db)
         if gdm?
+          return { clinical_code_vocabulary_id: vocabulary_id } if select_all?
           where_conds = {vocabulary_id: vocabulary_id}
-          where_conds[:concept_code] = arguments.flatten unless select_all?
+          where_conds[:concept_code] = arguments.flatten
           concept_ids = db[:concepts].where(where_conds).select(:id)
           { clinical_code_concept_id: concept_ids }
         else
