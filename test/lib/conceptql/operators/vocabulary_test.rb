@@ -29,7 +29,7 @@ describe ConceptQL::Operators::Vocabulary do
 
   it "should produce correct SQL for select all under gdm" do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-    db.query(["atc", "*"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('drug_exposure' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE (\"vocabulary_id\" = 'ATC')))) AS \"t1\") AS \"t1\""
+    db.query(["atc", "*"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('drug_exposure' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_vocabulary_id\" = 'ATC')) AS \"t1\") AS \"t1\""
   end
 
   it "should produce correct SQL for select all under omopv4_plus" do
