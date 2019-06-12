@@ -195,10 +195,16 @@ module ConceptQL
         ds = db[dm.table_by_domain(domain)]
 
         ds = ds.where(where_clause(db))
+        ds = apply_exclusion(ds)
         if gdm?
           ds = ds.select_append(Sequel.cast_string(domain.to_s).as(:criterion_domain))
         end
         ds
+      end
+
+      def apply_exclusion(ds)
+        return ds unless gdm? && select_all?
+        ds.exclude(clinical_code_concept_id: 0)
       end
 
       def where_clause(db)
