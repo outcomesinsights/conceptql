@@ -3,7 +3,7 @@ rvm:
 - 2.4
 dist: trusty
 sudo: false
-gemfile: ".travis.gemfile"
+gemfile: ".ci.Gemfile"
 env:
 - CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
 - CONCEPTQL_DATA_MODEL=gdm CONCEPTQL_FORCE_TEMP_TABLES=false SEQUELIZER_URI="postgres://localhost/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
@@ -20,6 +20,7 @@ services:
 before_install:
 - sudo mount -o remount,size=50% /var/ramfs
 - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
+- gem update --system && gem install bundler
 script: travis_wait 45 bash .travis.postgres.sh
 notifications:
   slack:

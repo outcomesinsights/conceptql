@@ -1,0 +1,87 @@
+# Find additional versions at:
+#   https://hub.docker.com/r/library/ruby/tags/
+image: "ruby:2.4"
+
+# Find additional services at:
+#   http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
+services:
+  - "postgres:9.6.11"
+
+# Cache gems in between builds.
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - "vendor/ruby"
+
+# Scripts that get executed before any jobs.
+before_script:
+  # Adjust the system path.
+  - export PATH="$HOME/.local/bin:$PATH"
+  # Add dependencies.
+  - apt-get update -y && apt-get install -y python-pip pigz postgresql-client
+  - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
+  - gem update --system && gem install bundler
+  # Install dependencies into the cache directory.
+  - bundle install --gemfile .ci.Gemfile -j $(nproc) --path vendor/ruby
+
+# Postgres jobs ----------------------------------------------------------------
+
+# Shared script for postgres related jobs.
+.postgres_run_tests:
+  script:
+    - echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
+    - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
+    - bundle exec --gemfile .ci.Gemfile ruby test/all.rb
+
+# Postgres related jobs.
+postgres_omopv4_no_temp:
+  extends: ".postgres_run_tests"
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "false"
+    CONCEPTQL_DATA_MODEL: "omopv4_plus"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+
+postgres_gdm_no_temp:
+  extends: ".postgres_run_tests"
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "false"
+    CONCEPTQL_DATA_MODEL: "gdm"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+
+postgres_omopv4_temp:
+  extends: ".postgres_run_tests"
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "true"
+    CONCEPTQL_DATA_MODEL: "omopv4_plus"
+    DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+
+postgres_gdm_temp:
+  extends: ".postgres_run_tests"
+  variables:
+    CONCEPTQL_FORCE_TEMP_TABLES: "true"
+    CONCEPTQL_DATA_MODEL: "gdm"
+    DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+
+# # Impala jobs ------------------------------------------------------------------
+
+# # Shared environment variables for impala related jobs.
+# .impala_env_variables:
+#   variables:
+#     CONCEPTQL_DATA_MODEL: "omopv4_plus"
+#     SEQUELIZER_URI: "impala://postgres/synpuf250s"
+
+# # Impala related jobs.
+# impala_no_temp_tables:
+#   extends: ".impala_env_variables"
+#   variables:
+#     CONCEPTQL_FORCE_TEMP_TABLES: "false"
+#   script: "env"
+
+# impala_temp_tables:
+#   extends: ".impala_env_variables"
+#   variables:
+#     CONCEPTQL_FORCE_TEMP_TABLES: "true"
+#     DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
+#   script: "env"
