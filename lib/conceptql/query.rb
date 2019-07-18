@@ -96,6 +96,10 @@ module ConceptQL
       end
     end
 
+    def rdbms
+      operator.rdbms
+    end
+
     def code_list(ignored_db = nil)
       operator.code_list(db).uniq
     end
@@ -124,7 +128,7 @@ module ConceptQL
     end
 
     def format(sql)
-      SqlFormatters.format(sql)
+      SqlFormatters.format(sql, rdbms)
     end
   end
 end

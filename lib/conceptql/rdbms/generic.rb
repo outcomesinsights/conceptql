@@ -16,6 +16,10 @@ module ConceptQL
         new_column.as(column)
       end
 
+      def preferred_formatter
+        nil
+      end
+
       def semi_join(ds, table, *exprs)
         ds = Sequel[ds] if ds.is_a?(Symbol)
         table = Sequel[table] if table.is_a?(Symbol)

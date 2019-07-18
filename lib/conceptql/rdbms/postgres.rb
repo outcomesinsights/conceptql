@@ -18,6 +18,10 @@ module ConceptQL
       def post_create(db, table_name)
         # Do nothing
       end
+
+      def preferred_formatter
+        SqlFormatters::PgFormat
+      end
     end
   end
 end

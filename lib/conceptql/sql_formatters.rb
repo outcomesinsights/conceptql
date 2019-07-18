@@ -15,16 +15,17 @@ module ConceptQL
     end
 
     class << self
-      def format(sql)
-        formatters.map(&:new).detect(&:available?).format(sql)
+      def format(sql, rdbms)
+        formatters(rdbms).map(&:new).detect(&:available?).format(sql)
       end
 
-      def formatters
+      def formatters(rdbms)
         [
+          rdbms.preferred_formatter,
           Sqlformat,
           PgFormat,
           None
-        ]
+        ].compact
       end
     end
   end
