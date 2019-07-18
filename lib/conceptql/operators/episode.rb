@@ -1,3 +1,5 @@
+require_relative 'pass_thru'
+
 module ConceptQL
   module Operators
     class Episode < PassThru
