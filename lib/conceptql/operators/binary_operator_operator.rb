@@ -24,6 +24,10 @@ module ConceptQL
 
       private
 
+      def complete_upstreams
+        { left: left, right: right }
+      end
+
       def join_columns(opts = {})
         join_columns_option.map{ |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
       end

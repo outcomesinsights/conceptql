@@ -214,6 +214,30 @@ module ConceptQL
         select_it(query(db))
       end
 
+      def pretty_print(pp)
+        pp.object_group self do
+          unless complete_upstreams.empty?
+            pp.breakable
+            pp.text "@upstreams="
+            pp.pp complete_upstreams
+            unless arguments.empty?
+              pp.comma_breakable
+            end
+          end
+          unless arguments.empty?
+            if complete_upstreams.empty?
+              pp.breakable
+            end
+            pp.text "@arguments="
+            pp.pp arguments
+          end
+        end
+      end
+
+      def complete_upstreams
+        upstreams
+      end
+
       def sql(db)
         evaluate(db).sql
       end
@@ -239,9 +263,22 @@ module ConceptQL
           query_columns: override_columns,
           uuid: options[:uuid]
         }
+
+        if comments?
+          query = query.comment(comment)
+        end
+
         q = dm.selectify(query, opts)
 
         q
+      end
+
+      def comments?
+        ENV["CONCEPTQL_ENABLE_COMMENTS"] == "true"
+      end
+
+      def comment
+        PP.pp(self, ''.dup, 10)
       end
 
       def override_columns
