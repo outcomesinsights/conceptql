@@ -255,7 +255,7 @@ module ConceptQL
         return [["*", "ALL CODES"]] if select_all?
         if no_db?(db)
           if lexicon
-            lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
+            return lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
           end
           return codes.zip([])
         end
