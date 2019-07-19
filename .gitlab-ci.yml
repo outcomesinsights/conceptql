@@ -20,8 +20,9 @@ before_script:
   # Add dependencies.
   - apt-get update -y && apt-get install -y python-pip pigz postgresql-client
   - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
+  - gem update --system && gem install bundler
   # Install dependencies into the cache directory.
-  - bundle install --gemfile .travis.gemfile -j $(nproc) --path vendor/ruby
+  - bundle install --gemfile .ci.Gemfile -j $(nproc) --path vendor/ruby
 
 # Postgres jobs ----------------------------------------------------------------
 
@@ -30,7 +31,7 @@ before_script:
   script:
     - echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
     - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
-    - bundle exec --gemfile .travis.gemfile ruby test/all.rb
+    - bundle exec --gemfile .ci.Gemfile ruby test/all.rb
 
 # Postgres related jobs.
 postgres_omopv4_no_temp:

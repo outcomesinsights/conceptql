@@ -24,5 +24,3 @@ platforms :jruby do
   gem "jdbc-sqlite3"
   gem "jdbc-postgres"
 end
-
-

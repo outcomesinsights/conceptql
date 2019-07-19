@@ -1,20 +1,5 @@
 #!/bin/bash
 
-# This was built locally by running: `docker build -t conceptql .`
-# In the near future this will be put on your Docker Hub account and then it
-# will be pulled from there without having to build anything locally.
-readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
-
-# This was built with the jigsaw_test_data preparation script.
-readonly DOCKER_JIGSAW_TEST_DATA_IMAGE="jigsaw_test_data:latest"
-
-# This was built with the jigsaw_test_data preparation script.
-readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:chisel.latest"
-
-# Where should the log files be written to? This will include both container
-# logs as well as the master CSV log file to track all CI runs.
-readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
-
 cleanup_postgres_test () {
   local namespace="${1}"
   local jigsaw_test_data_cid
@@ -22,6 +7,9 @@ cleanup_postgres_test () {
 
   jigsaw_test_data_cid=$(get_cid "test_data_${namespace}")
   jigsaw_lexicon_data_cid=$(get_cid "lexicon_data_${namespace}")
+
+  remove_cid "test_data_${namespace}"
+  remove_cid "lexicon_data_${namespace}"
 
   docker container rm -f "${jigsaw_test_data_cid}" >/dev/null
   docker container rm -f "${jigsaw_lexicon_data_cid}" >/dev/null
@@ -74,8 +62,9 @@ prepare_ci_environment () {
     echo ""
   fi
 
-  # Create log directory.
+  # Create preparation directories.
   mkdir -p "${CI_LOG_PATH}"
+  mkdir -p "${CI_CID_PATH}"
 }
 
 wait_for_database () {
@@ -106,17 +95,22 @@ record_cid () {
   local name="${1}"
   local cid="${2}"
 
-  mkdir -p .ci/cids
-  echo "${cid}" > ".ci/cids/${name}"
+  echo "${cid}" > "${CI_CID_PATH}/${name}"
 }
 
 get_cid () {
   local name="${1}"
-  cat ".ci/cids/${name}"
+  cat "${CI_CID_PATH}/${name}"
+}
+
+remove_cid () {
+  local name="${1}"
+  cat "${CI_CID_PATH}/${name}"
 }
 
 prep_postgres_test() {
   local namespace="${1}"
+  local env_file="${2}"
 
   # Start Jigsaw test data and wait until PostgreSQL is ready for connections.
   local jigsaw_test_data_cid
@@ -129,7 +123,11 @@ prep_postgres_test() {
 
   # Start Jigsaw Lexicon data and wait until PostgreSQL is ready for connections.
   local jigsaw_lexicon_data_cid
-  jigsaw_lexicon_data_cid="$(docker run --detach --rm --network-alias lexicon \
+  jigsaw_lexicon_data_cid="$(docker run \
+    --detach \
+    --rm \
+    --env-file "${env_file}" \
+    --network-alias lexicon \
     --network "${namespace}" "${DOCKER_JIGSAW_LEXICON_DATA_IMAGE}" -c fsync=off)"
 
   record_cid "lexicon_data_${namespace}" "${jigsaw_lexicon_data_cid}"
@@ -143,6 +141,7 @@ prep_postgres_test() {
 run_test () {
   local rdbms="${1}"
   local namespace="${2}"
+  local env_file="${3}"
   local the_script
   local prep_script_name="${rdbms}_prep_script"
   local kdir=.ci/kerberos
@@ -184,7 +183,7 @@ END
 
   debug_msg "Created network ${namespace}"
 
-  "prep_${rdbms}_test" "${namespace}"
+  "prep_${rdbms}_test" "${namespace}" "${env_file}"
 
   # Start measuring conceptql's test suite in seconds.
   local time_conceptql_start_time="${SECONDS}"
@@ -192,7 +191,7 @@ END
   # Start the conceptql container and run its test suite.
   local conceptql_cid
   conceptql_cid="$(docker run -d -v "$(pwd)":/app \
-    --network "${namespace}" --env-file "${file}" \
+    --network "${namespace}" --env-file "${env_file}" \
     "${DOCKER_CONCEPTQL_IMAGE}" bash -c "${the_script}")"
 
   debug_msg "Running tests for conceptql container ${conceptql_cid:0:4}..."
@@ -228,8 +227,9 @@ END
 }
 
 debug_msg () {
+  local msg="${1}"
   if [ -n "${DEBUG}" ]; then
-    echo "${1}"
+    echo "${msg}"
   fi
 }
 
@@ -250,20 +250,21 @@ run_tests () {
   debug_msg "Running tests for ${rdbms}..."
 
   if [ -n "${EXPRS}" ]; then
+    # shellcheck disable=SC2010
     env_files=$(ls -1 .ci/.ci.env."${rdbms}"* | grep -e "\(${EXPRS}\)")
   else
     env_files=$(ls -1 .ci/.ci.env."${rdbms}"*)
   fi
 
   debug_msg "Looking for ${env_files}"
-  for file in ${env_files}; do
-    debug_msg "Checking for ${file}"
-    [ -f "${file}" ] || break
+  for env_file in ${env_files}; do
+    debug_msg "Checking for ${env_file}"
+    [ -f "${env_file}" ] || break
 
-    test_file="$(echo "${file}" | cut -d "." -f 5)"
+    test_file="$(echo "${env_file}" | cut -d "." -f 5)"
     namespace="${DOCKER_NAMESPACE}-${test_file}"
     echo "Running tests for ${namespace}"
-    run_test "${rdbms}" "${namespace}" &
+    run_test "${rdbms}" "${namespace}" "${env_file}" &
   done
 }
 
@@ -348,12 +349,31 @@ readonly COMMIT_SHA="$(git rev-parse --short HEAD)"
 readonly TIMESTAMP="$(date "+%Y%m%d%H%M%S")"
 readonly DOCKER_NAMESPACE="${REPO}-${BRANCH}-${COMMIT_SHA}-${TIMESTAMP}"
 
+# This was built locally by running: `docker build -t conceptql .`
+# In the near future this will be put on your Docker Hub account and then it
+# will be pulled from there without having to build anything locally.
+readonly DOCKER_CONCEPTQL_IMAGE="conceptql:latest"
+
+# This was built with the jigsaw_test_data preparation script.
+readonly DOCKER_JIGSAW_TEST_DATA_IMAGE="jigsaw_test_data:${BRANCH}.latest"
+
+# This was built with the jigsaw_test_data preparation script.
+readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="outcomesinsights/lexicon:${BRANCH}.latest"
+#readonly DOCKER_JIGSAW_LEXICON_DATA_IMAGE="lexicon:broom2.latest"
+
+# Where should the log files be written to? This will include both container
+# logs as well as the master CSV log file to track all CI runs.
+readonly CI_LOG_PATH="${CI_LOG_PATH:-.ci/logs}"
+
+# State files for container ids. They are used temporarily during the CI run.
+readonly CI_CID_PATH="${CI_CID_PATH:-.ci/cids}"
+
 if [ -n "${EXPRS}" ]; then
   EXPRS="${EXPRS%?}"
 fi
 
 # set positional arguments in their proper place
-eval set -- "$PARAMS"
+eval set -- "${PARAMS}"
 
 prepare_ci_environment
 pull_or_build_image "${DOCKER_CONCEPTQL_IMAGE}"

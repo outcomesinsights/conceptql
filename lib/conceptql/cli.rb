@@ -51,6 +51,12 @@ module ConceptQL
       puts q.sql(:formatted, :create_tables)
     end
 
+    desc 'code_list statement_file', 'Reads the ConceptQL statement from the statement file and prints the code list out'
+    def code_list(statement_file)
+      q = cdb(options).query(criteria_from_file(statement_file))
+      puts q.code_list
+    end
+
     desc "annotate_statement", "Reads in a statement and annotates it"
     def annotate_statement(statement_file)
       q = ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file))
