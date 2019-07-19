@@ -100,7 +100,13 @@ module ConceptQL
       end
 
       def describe_codes(db, codes)
-        vocab_ops.map { |vo| vo.describe_codes(db, codes) }.inject(&:+).uniq
+        codes = vocab_ops.flat_map do |vo|
+          vo.describe_codes(db, codes)
+        end
+        codes_with_descriptions = codes.select(&:last)
+        codes_without_descriptions = codes.reject(&:last).map(&:first)
+        codes_without_descriptions -= codes_with_descriptions.map(&:first)
+        codes_with_descriptions + codes_without_descriptions.zip([])
       end
 
       def vocab_ops
