@@ -30,7 +30,9 @@ before_script:
 .postgres_run_tests:
   script:
     - echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
-    - curl -sSL "http://test_data_for_jigsaw.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
+    - curl -sSL "http://test_data_for_chisel.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
+    - createdb -U postgres lexicon
+    - curl -sSL "http://chisel.lexicon.jsaw.io" | pigz -dc | psql postgres://postgres@postgres/lexicon > /tmp/restore.log 2>&1 || cat /tmp/restore.log
     - bundle exec --gemfile .ci.Gemfile ruby test/all.rb
 
 # Postgres related jobs.
@@ -39,14 +41,16 @@ postgres_omopv4_no_temp:
   variables:
     CONCEPTQL_FORCE_TEMP_TABLES: "false"
     CONCEPTQL_DATA_MODEL: "omopv4_plus"
-    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_chisel?search_path=omopv4_plus_250&username=postgres"
+    LEXICON_URL: "postgres://postgres@postgres/lexicon"
 
 postgres_gdm_no_temp:
   extends: ".postgres_run_tests"
   variables:
     CONCEPTQL_FORCE_TEMP_TABLES: "false"
     CONCEPTQL_DATA_MODEL: "gdm"
-    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_chisel?search_path=gdm_250&username=postgres"
+    LEXICON_URL: "postgres://postgres@postgres/lexicon"
 
 postgres_omopv4_temp:
   extends: ".postgres_run_tests"
@@ -54,7 +58,8 @@ postgres_omopv4_temp:
     CONCEPTQL_FORCE_TEMP_TABLES: "true"
     CONCEPTQL_DATA_MODEL: "omopv4_plus"
     DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
-    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=omopv4_plus_250&username=postgres"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_chisel?search_path=omopv4_plus_250&username=postgres"
+    LEXICON_URL: "postgres://postgres@postgres/lexicon"
 
 postgres_gdm_temp:
   extends: ".postgres_run_tests"
@@ -62,7 +67,8 @@ postgres_gdm_temp:
     CONCEPTQL_FORCE_TEMP_TABLES: "true"
     CONCEPTQL_DATA_MODEL: "gdm"
     DOCKER_SCRATCH_DATABASE: "jigsaw_temp"
-    SEQUELIZER_URI: "postgres://postgres/test_data_for_jigsaw?search_path=gdm_250&username=postgres"
+    SEQUELIZER_URI: "postgres://postgres/test_data_for_chisel?search_path=gdm_250&username=postgres"
+    LEXICON_URL: "postgres://postgres@postgres/lexicon"
 
 # # Impala jobs ------------------------------------------------------------------
 
