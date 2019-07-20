@@ -20,7 +20,7 @@ time curl -sSL "http://chisel.test_data.jsaw.io" | pigz -dc | psql postgres://po
 
 df -h
 
-time bundle exec ruby test/all.rb
+time bundle exec ruby test/lib/conceptql/query_test.rb -n "/nil for pre/"
 result=$?
 
 set +x

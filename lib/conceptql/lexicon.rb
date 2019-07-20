@@ -51,6 +51,7 @@ module ConceptQL
     def concepts(vocabulary_id, codes)
       lexicon_db[:concepts]
         .where(vocabulary_id: translate_vocab_id(vocabulary_id), Sequel.function(:lower, :concept_code) => Array(codes).map(&:downcase))
+        .tap { |o| puts o.sql; puts o.to_a }
     end
 
     def translate_vocab_id(vocabulary_id)
