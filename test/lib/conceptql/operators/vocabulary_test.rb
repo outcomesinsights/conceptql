@@ -97,6 +97,7 @@ describe ConceptQL::Operators::Vocabulary do
             assert_match(/EXAMPLE/, q.sql)
           end
         end
+        ConceptQL::Operators::Vocabulary.force_refresh!
       end
     end
   end
