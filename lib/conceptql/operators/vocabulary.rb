@@ -266,10 +266,12 @@ module ConceptQL
           if lexicon
             found_codes = lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
           end
-          return found_codes + (codes - found_codes.map(&:first)).zip([])
+          return found_codes + (codes - found_codes.map(&:first)).zip([]).sort_by(&:first)
         end
 
-        results = dm.concepts_ds(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
+        puts "hey"
+        results = dm.concepts_ds(db, vocabulary_id, codes).tap { |o| puts o.sql; p o.to_a }.select_map([:concept_code, :concept_text])
+        p results
         remaining_codes = codes - results.map(&:first).map(&:to_s)
         (results + remaining_codes.zip([])).sort_by(&:first)
       end

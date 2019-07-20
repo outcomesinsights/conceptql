@@ -108,7 +108,7 @@ FROM
     end
 
     it "should handle nil for preferred name" do
-      db = ConceptQL::Database.new(nil)
+      db = ConceptQL::Database.new(Sequel.connect(DB.opts))
       query = db.query(["revenue_code", "0100"])
       query.code_list.map(&:to_s).must_equal([
         "Revenue Code 0100: All-Inclusive Room and Board Plus Ancillary"
