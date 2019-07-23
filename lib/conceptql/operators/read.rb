@@ -4,6 +4,7 @@ require_relative "condition_occurrence_source_vocabulary_operator"
 require_relative "source_vocabulary_operator"
 require_relative "vocabulary"
 require_relative '../behaviors/labish'
+require "byebug"
 
 module ConceptQL
   module Operators
@@ -45,27 +46,27 @@ module ConceptQL
       private
 
       def ops(db = nil)
-        @ops ||= if gdm?
+        if gdm?
           [ReadGDM.new(self.nodifier, "read_condition_occurrence", *arguments)]
         else
-          ops = codes_by_domain(db).map do |domain, codes|
+          codes_by_domain(db).map do |domain, codes|
             klasses[domain].new(self.nodifier, "read_#{domain}", *codes)
           end
         end
       end
 
       def codes_by_domain(db)
+        if no_db?(db)
+          if lexicon
+            @no_db_codes_by_domain ||= lexicon.codes_by_domain(arguments, "READ")
+            return @no_db_codes_by_domain
+          end
+          return { observation: arguments }
+        end
         @codes_by_domain ||= get_codes_by_domain(db)
       end
 
       def get_codes_by_domain(db)
-        if no_db?(db)
-          if lexicon
-            return lexicon.codes_by_domain(arguments, "READ")
-          end
-          return { observation: arguments }
-        end
-
         codes_and_mapping_types = db[:source_to_concept_map]
           .where(source_code: arguments, source_vocabulary_id: 17)
           .select_map([:source_code, :mapping_type])
