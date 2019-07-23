@@ -21,15 +21,11 @@ module ConceptQL
       end
 
       def gdm(db)
-        ReadGDM.new(self.nodifier, "read_condition_occurrence", *arguments).evaluate(db)
+        ops(db).first.evaluate(db)
       end
 
       def omopv4(db)
-        ops = codes_by_domain(db).map do |domain, codes|
-          klasses[domain].new(self.nodifier, "read_#{domain}", *codes)
-        end
-
-        streams = ops.map { |op| op.evaluate(db) }
+        streams = ops(db).map { |op| op.evaluate(db) }
 
         streams.inject { |q, query| q.union(query, all: true) }.from_self
       end
@@ -39,10 +35,24 @@ module ConceptQL
       end
 
       def query_cols
-        vocab_op.query_cols
+        gdm? ? ops.first.query_cols : vocab_op.query_cols
+      end
+
+      def required_columns
+        ops.flat_map(&:required_columns).uniq
       end
 
       private
+
+      def ops(db = nil)
+        @ops ||= if gdm?
+          [ReadGDM.new(self.nodifier, "read_condition_occurrence", *arguments)]
+        else
+          ops = codes_by_domain(db).map do |domain, codes|
+            klasses[domain].new(self.nodifier, "read_#{domain}", *codes)
+          end
+        end
+      end
 
       def codes_by_domain(db)
         @codes_by_domain ||= get_codes_by_domain(db)
