@@ -4,7 +4,6 @@ require_relative "condition_occurrence_source_vocabulary_operator"
 require_relative "source_vocabulary_operator"
 require_relative "vocabulary"
 require_relative '../behaviors/labish'
-require "byebug"
 
 module ConceptQL
   module Operators
