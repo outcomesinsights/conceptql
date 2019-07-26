@@ -1,36 +1,47 @@
 require_relative "window/table"
+require_relative "window/date_range"
 
 module ConceptQL
+  # Provides a singleton method which will return a series of scope windows
+  # that should be applied to each selection operator in a ConceptQL statement
   module Window
     class << self
       def from(opts)
-        start_date = opts[:start_date]
-        end_date = opts[:end_date]
-        window_table = opts[:window_table]
-        person_ids = opts[:person_ids]
-
         windows = []
 
-        if start_date && end_date
-          windows << lambda do |op, ds, opts = {}|
-            return ds if opts[:timeless]
-            start_check = op.rdbms.cast_date(start_date) <= :start_date
-            end_check = Sequel.expr(:end_date) <= op.rdbms.cast_date(end_date)
-            ds.where(start_check).where(end_check).from_self
-          end
-        end
+        windows << date_range_window(opts) if use_date_range?(opts)
 
-        if window_table
-          windows << Table.new(window_table, opts[:cdb], opts[:adjust_window_start], opts[:adjust_window_end])
-        end
+        windows << table_window(opts) if use_table_window?(opts)
 
-        if person_ids
-          windows << lambda do |_, ds, opts = {}|
-            ds.where(person_id: person_ids)
-          end
-        end
+        windows << person_filter(opts) if use_person_filter?(opts)
 
         windows
+      end
+
+      def use_date_range?(opts)
+        opts[:start_date] && opts[:end_date]
+      end
+
+      def use_table_window?(opts)
+        opts[:window_table]
+      end
+
+      def use_person_filter?(opts)
+        opts[:person_ids]
+      end
+
+      def date_range_window(opts)
+        DateRange.new(opts)
+      end
+
+      def person_filter(opts)
+        lambda do |_, ds, _options = {}|
+          ds.where(person_id: opts[:person_ids])
+        end
+      end
+
+      def table_window(opts)
+        Table.new(opts)
       end
     end
   end

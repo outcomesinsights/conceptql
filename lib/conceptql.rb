@@ -16,6 +16,7 @@ require "conceptql/null_query"
 require "conceptql/database"
 require "conceptql/data_model"
 require "conceptql/columnizer"
+require "byebug" rescue nil
 
 Dir.glob(File.dirname(__FILE__) + "/../lib/conceptql/query_modifiers/**/*.rb").each do |file|
   require_relative file
