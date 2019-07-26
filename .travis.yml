@@ -35,42 +35,9 @@ notifications:
 jobs:
   #fast_finish: true
   include:
-    - stage: Impala Test Set 1
-      env: TESTS_DIV_MOD="8 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
-    - stage: Impala Test Set 2
-      env: TESTS_DIV_MOD="8 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
-    - stage: Impala Test Set 3
-      env: TESTS_DIV_MOD="8 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
-    - stage: Impala Test Set 4
-      env: TESTS_DIV_MOD="8 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
-    - stage: Impala Test Set 5
-      env: TESTS_DIV_MOD="8 4" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
-    - stage: Impala Test Set 6
-      env: TESTS_DIV_MOD="8 5" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
-    - stage: Impala Test Set 7
-      env: TESTS_DIV_MOD="8 6" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
-    - stage: Impala Test Set 8
-      env: TESTS_DIV_MOD="8 7" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-      script: travis_wait 45 bash .travis.impala.sh
     - stage: deploy
       if: type != pull_request
       before_install: gem install tping
       script:
         - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo jigsaw-diagram-editor --pro --branch $TRAVIS_BRANCH
         - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo t_shank --pro --branch $TRAVIS_BRANCH
-  allow_failures:
-    - env: TESTS_DIV_MOD="8 0" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="8 1" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="8 2" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="8 3" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="8 4" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="8 5" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="8 6" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
-    - env: TESTS_DIV_MOD="8 7" CONCEPTQL_DATA_MODEL=omopv4_plus CONCEPTQL_FORCE_TEMP_TABLES=true DOCKER_SCRATCH_DATABASE=jigsaw_temp SEQUELIZER_URI="impala://localhost/synpuf250"
