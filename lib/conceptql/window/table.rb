@@ -1,22 +1,14 @@
+require_relative "base"
+
 module ConceptQL
   module Window
     # Provides a scope window based on the ConceptQL result set of another table
-    class Table
-      attr_reader :table_window, :cdb, :adjust_start, :adjust_end
-
-      def initialize(opts = {})
-        @cdb = opts[:cdb]
-        @table_window = opts[:window_table]
-        @adjust_start = opts[:adjust_window_start]
-        @adjust_end = opts[:adjust_window_end]
-        @opts = opts
-      end
-
+    class Table < Base
       def call(op, query, options = {})
         l_table = Sequel[:l]
         r_table = Sequel[:r]
-        start_date = apply_adjustments(op, r_table[:start_date], adjust_start)
-        end_date = apply_adjustments(op, r_table[:end_date], adjust_end)
+        r_start_date = apply_adjustments(op, r_table[:start_date], adjust_start)
+        r_end_date = apply_adjustments(op, r_table[:end_date], adjust_end)
 
         exprs = []
         exprs << Sequel.expr(l_table[:person_id] => r_table[:person_id])
@@ -24,8 +16,8 @@ module ConceptQL
         query = Sequel[query] if query.is_a?(Symbol)
 
         unless options[:timeless]
-          exprs << (start_date <= l_table[:start_date])
-          exprs << (l_table[:end_date] <= end_date)
+          exprs << (r_start_date <= l_table[event_start_date_column])
+          exprs << (l_table[event_end_date_column] <= r_end_date)
         end
         expr = exprs.inject(&:&)
 
@@ -90,6 +82,22 @@ module ConceptQL
       def apply_adjustments(op, column, adjustment)
         return column unless adjustment
         DateAdjuster.new(op, adjustment).adjust(column)
+      end
+
+      def table_window
+        opts[:window_table]
+      end
+
+      def cdb
+        opts[:cdb]
+      end
+
+      def adjust_start
+        opts[:adjust_window_start]
+      end
+
+      def adjust_end
+        opts[:adjust_window_end]
       end
     end
   end

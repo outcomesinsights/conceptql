@@ -1,26 +1,22 @@
+require_relative "base"
+
 module ConceptQL
   module Window
     # Provides a scope window that uses a date range literal
-    class DateRange
-      attr_reader :opts
+    class DateRange < Base
+      def call(operator, dset, options = {})
+        return dset if options[:timeless]
 
-      def initialize(opts = {})
-        @opts = opts
-      end
-
-      def call(op, ds, options = {})
-        return ds if options[:timeless]
-
-        rdbms = op.rdbms
-        ds.where(start_check(rdbms)).where(end_check(rdbms)).from_self
+        rdbms = operator.rdbms
+        dset.where(start_check(rdbms)).where(end_check(rdbms)).from_self
       end
 
       def start_check(rdbms)
-        rdbms.cast_date(opts[:start_date]) <= :start_date
+        rdbms.cast_date(opts[:start_date]) <= event_start_date_column
       end
 
       def end_check(rdbms)
-        Sequel.expr(:end_date) <= rdbms.cast_date(opts[:end_date])
+        event_end_date_column <= rdbms.cast_date(opts[:end_date])
       end
     end
   end

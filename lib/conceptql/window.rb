@@ -6,7 +6,18 @@ module ConceptQL
   # that should be applied to each selection operator in a ConceptQL statement
   module Window
     class << self
+      EVENT_DATE_COLUMNS = {
+        nil => %i[start_date start_date],
+        start_date: %i[start_date start_date],
+        end_date: %i[end_date end_date],
+        range: %i[start_date end_date]
+      }.freeze
+
       def from(opts)
+        fetch_windows(prep_options(opts))
+      end
+
+      def fetch_windows(opts)
         windows = []
 
         windows << date_range_window(opts) if use_date_range?(opts)
@@ -42,6 +53,15 @@ module ConceptQL
 
       def table_window(opts)
         Table.new(opts)
+      end
+
+      def prep_options(opts)
+        scope_by = opts.fetch(:scope_by, :start_date).to_sym
+        start_col, end_col = *(EVENT_DATE_COLUMNS[scope_by])
+        opts.merge(
+          event_start_date_column: start_col,
+          event_end_date_column: end_col
+        )
       end
     end
   end
