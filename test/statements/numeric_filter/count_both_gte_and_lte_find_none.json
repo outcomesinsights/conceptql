@@ -1,0 +1,18 @@
+[
+  "numeric_filter",
+  [
+    "union",
+    [
+      "numeric",
+      "1"
+    ],
+    [
+      "numeric",
+      "2"
+    ]
+  ],
+  {
+    "greater_than_or_equal_to": "3",
+    "less_than_or_equal_to": "3"
+  }
+]
