@@ -2998,7 +2998,7 @@
                               "LC OP"
                             ],
                             "within": "1y",
-                           "at_least": "30d"
+                            "at_least": "30d"
                           }
                         ]
                       ],
@@ -3236,7 +3236,7 @@
                               {
                                 "label": "NHL ICD10"
                               }
-                           ]
+                            ]
                           ],
                           "right": [
                             "time_window",

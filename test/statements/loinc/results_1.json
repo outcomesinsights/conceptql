@@ -1,10 +1,13 @@
 [
-  "person_filter", {
+  "person_filter",
+  {
     "left": [
       "loinc",
       "2089-1"
     ],
-    "right": ["icd9", "410.00"]
+    "right": [
+      "icd9",
+      "410.00"
+    ]
   }
 ]
-

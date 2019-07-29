@@ -1,5 +1,6 @@
 [
-  "except", {
+  "except",
+  {
     "left": [
       "gender",
       "Male"
@@ -10,4 +11,3 @@
     ]
   }
 ]
-

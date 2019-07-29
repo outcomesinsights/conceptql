@@ -1,22 +1,45 @@
 [
   "window",
   [
-    "contains", {
+    "contains",
+    {
       "left": [
         "time_window",
-        [ "icd9", "401.1" ],
-        { "start": "-1y", "end": "-1d" }
+        [
+          "icd9",
+          "401.1"
+        ],
+        {
+          "start": "-1y",
+          "end": "-1d"
+        }
       ],
-      "right":[ "icd9", "401.1" ]
+      "right": [
+        "icd9",
+        "401.1"
+      ]
     }
   ],
   {
-    "person_ids": [2],
+    "person_ids": [
+      2
+    ],
     "window_table": [
       "union",
-      ["date_range", { "start": "2009-01-01", "end": "2009-12-31" }],
-      ["date_range", { "start": "2010-01-01", "end": "2010-12-31" }]
+      [
+        "date_range",
+        {
+          "start": "2009-01-01",
+          "end": "2009-12-31"
+        }
+      ],
+      [
+        "date_range",
+        {
+          "start": "2010-01-01",
+          "end": "2010-12-31"
+        }
+      ]
     ]
   }
 ]
-

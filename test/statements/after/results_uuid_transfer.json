@@ -1,7 +1,18 @@
 [
-  "contains", {
-    "left": ["observation_period"],
-    "right": ["icd9", "729.5", { "uuid": "true" }],
-    "include_rhs_columns": ["uuid"]
+  "contains",
+  {
+    "left": [
+      "observation_period"
+    ],
+    "right": [
+      "icd9",
+      "729.5",
+      {
+        "uuid": "true"
+      }
+    ],
+    "include_rhs_columns": [
+      "uuid"
+    ]
   }
 ]

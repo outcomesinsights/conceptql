@@ -1,6 +1,8 @@
 [
-  "first", [
-    "date_range", {
+  "first",
+  [
+    "date_range",
+    {
       "start": "2009-01-01",
       "end": "2009-01-01"
     }

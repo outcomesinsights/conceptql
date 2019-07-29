@@ -2,12 +2,13 @@
   "time_window",
   [
     "place_of_service_filter",
-    "21", [
+    "21",
+    [
       "visit_occurrence"
     ]
-  ], {
-    "start":"-14d",
-    "end":"-14d"
+  ],
+  {
+    "start": "-14d",
+    "end": "-14d"
   }
 ]
-
