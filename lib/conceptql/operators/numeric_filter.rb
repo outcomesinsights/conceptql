@@ -8,7 +8,7 @@ module ConceptQL
     # are passed through
     #
     # If an event has NULL for value_as_number, it is filtered out.
-    class PlaceOfServiceFilter < Operator
+    class NumericFilter < Operator
       register __FILE__
 
       desc <<-DESC
