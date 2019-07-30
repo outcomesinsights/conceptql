@@ -1,7 +1,22 @@
 [
-  "match", {
-    "left": [ "icd9", "412", { "uuid": true } ],
-    "right": [ "icd9", "410.0", { "uuid": true } ],
-    "join_columns": [ "uuid" ]
+  "match",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "uuid": true
+      }
+    ],
+    "right": [
+      "icd9",
+      "410.0",
+      {
+        "uuid": true
+      }
+    ],
+    "join_columns": [
+      "uuid"
+    ]
   }
 ]

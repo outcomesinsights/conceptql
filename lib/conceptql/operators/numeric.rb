@@ -50,12 +50,16 @@ Accepts two params:
       end
 
       def first_argument
-        case arguments.first
-        when String
-          Sequel.identifier(arguments.first)
+        value = arguments.first.to_s.strip
+        if is_a_number?(value)
+          Sequel.expr(value.to_f)
         else
-          Sequel.expr(arguments.first)
+          Sequel.identifier(value)
         end
+      end
+
+      def is_a_number?(value)
+        value =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/
       end
     end
   end

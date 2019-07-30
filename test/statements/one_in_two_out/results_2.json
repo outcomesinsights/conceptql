@@ -3,7 +3,8 @@
   [
     "icd9",
     "244.9"
-  ], {
+  ],
+  {
     "outpatient_event_to_return": "Confirming Event"
   }
 ]

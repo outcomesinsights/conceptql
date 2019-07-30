@@ -1,18 +1,20 @@
 [
-  "trim_date_start", {
+  "trim_date_start",
+  {
     "left": [
       "observation_period",
       true
     ],
     "right": [
-      "time_window", [
+      "time_window",
+      [
         "gender",
         "female"
-      ], {
+      ],
+      {
         "start": "2008-03-22",
         "end": "2008-03-22"
       }
     ]
   }
 ]
-

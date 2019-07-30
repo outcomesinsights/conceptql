@@ -2,7 +2,8 @@
   "any_overlap",
   {
     "left": [
-      "icd9", "412"
+      "icd9",
+      "412"
     ],
     "right": [
       "occurrence",

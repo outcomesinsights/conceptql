@@ -1,5 +1,11 @@
 [
   "time_window",
-  [ "person", true ],
-  { "start": "-1w", "end": "1w" }
+  [
+    "person",
+    true
+  ],
+  {
+    "start": "-1w",
+    "end": "1w"
+  }
 ]

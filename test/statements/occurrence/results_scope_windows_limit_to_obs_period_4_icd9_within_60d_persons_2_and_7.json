@@ -1,5 +1,31 @@
 [
   "window",
-  ["occurrence",4,["icd9","355.8","401.0","401.9","250.00","780.93","459.81"],{"within":"60d"}],
-  { "window_table": [ "first", ["information_periods"] ], "person_ids": [2, 7] }
+  [
+    "occurrence",
+    4,
+    [
+      "icd9",
+      "355.8",
+      "401.0",
+      "401.9",
+      "250.00",
+      "780.93",
+      "459.81"
+    ],
+    {
+      "within": "60d"
+    }
+  ],
+  {
+    "window_table": [
+      "first",
+      [
+        "information_periods"
+      ]
+    ],
+    "person_ids": [
+      2,
+      7
+    ]
+  }
 ]

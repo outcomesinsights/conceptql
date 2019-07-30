@@ -1,23 +1,35 @@
 [
-  "union", [
-    "except", {
+  "union",
+  [
+    "except",
+    {
       "left": [
-        "cpt_or_hcpcs", "J0897", "C9272", {"label": "cpt"}
+        "cpt_or_hcpcs",
+        "J0897",
+        "C9272",
+        {
+          "label": "cpt"
+        }
       ],
       "right": [
-        "co_reported", [
-          "recall", "cpt"
-        ], [
-          "union", [
+        "co_reported",
+        [
+          "recall",
+          "cpt"
+        ],
+        [
+          "union",
+          [
             "icd10",
             "M80",
             "Z87.310"
-          ], [
-          "icd9",
-          "733",
-          "733",
-          "733",
-          "733.09"
+          ],
+          [
+            "icd9",
+            "733",
+            "733",
+            "733",
+            "733.09"
           ]
         ]
       ]
