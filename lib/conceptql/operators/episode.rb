@@ -96,6 +96,16 @@ Groups all incoming results into episodes by person allowing for there to be a g
 
       def date_adjust_add(db, from, by, timeframe)
         if db.database_type == :postgres
+          if db.respond_to?(:redshift_version)
+            case timeframe
+            when /year/
+              by = (by * 365.24).round
+              timeframe = 'day'
+            when /month/
+              by = (by * 30.44).round
+              timeframe = 'day'
+            end
+          end
           Sequel.cast(from + Sequel.lit("(? * INTERVAL '1' ?)", by, Sequel.lit(timeframe.sub(/s\z/, ''))), Date)
         else
           from + Sequel.lit("INTERVAL ? ?", by, Sequel.lit(timeframe))
