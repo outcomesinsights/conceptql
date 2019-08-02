@@ -1,3 +1,5 @@
 operator,vocabulary_id,domain
 CPT or HCPCS,CPT4,procedure_occurrence
 CPT or HCPCS,HCPCS,procedure_occurrence
+ICD10,ICD10CM,condition_occurrence
+ICD10,ICD10WHO,condition_occurrence

@@ -1,6 +1,8 @@
 {
-  "errors": {},
-  "warnings": {},
+  "errors": {
+  },
+  "warnings": {
+  },
   "counts": {
     "cpt": {
       "procedure_occurrence": {

@@ -40,9 +40,7 @@ Enter numeric concept id(s), or the corresponding text label(s):
 
     private
 
-      def validate(db, opts = {})
-        super
-
+      def additional_validation(db, opts = {})
         build_std_code_concept_ids(arguments)
 
         bad_keywords = arguments.each_with_object({file: [], code: []}){|c,h|
@@ -62,6 +60,7 @@ Enter numeric concept id(s), or the corresponding text label(s):
           h << code_type if !code_type.to_i.zero?
         }
 
+        # TODO: we're using ActiveSupport now, so remove this Utils stuff
         if ConceptQL::Utils.present?(bad_keywords[:file])
           add_error("unrecognized file type keywords", *bad_keywords[:file].uniq)
         end

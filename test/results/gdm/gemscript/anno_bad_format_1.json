@@ -5,7 +5,7 @@
   {
     "annotation": {
       "counts": {
-        "condition_occurrence": {
+        "drug_exposure": {
           "rows": 0,
           "n": 0
         }
@@ -13,11 +13,6 @@
       "warnings": [
         [
           "improperly formatted code",
-          "7992602",
-          "179926020"
-        ],
-        [
-          "unknown code(s)",
           "7992602",
           "179926020"
         ]

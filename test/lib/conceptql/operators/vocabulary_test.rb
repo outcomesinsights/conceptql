@@ -3,18 +3,12 @@ require "conceptql"
 
 describe ConceptQL::Operators::Vocabulary do
   it "should populate known vocabularies from file in gdm" do
-    ConceptQL::Operators.operators[:gdm]["admsrce"].must_equal ConceptQL::Operators::Vocabulary
+    assert ConceptQL::Operators.operators[:gdm]["admsrce"]
   end
 
   it "should populate known vocabularies from file in omopv4_plus" do
     op_names = ConceptQL::Nodifier.new(data_model: :omopv4_plus).to_metadata.map { |_, v| v[:preferred_name] }
     op_names.must_include("WHO ATC")
-  end
-
-  it "should not create duplicate vocabulary operators for omopv4_plus" do
-    op_names = ConceptQL::Nodifier.new(data_model: :omopv4_plus).to_metadata.map { |_, v| v[:preferred_name] }
-    duplicate_names = op_names.select { |op_name| op_names.count(op_name) > 1 }.uniq
-    duplicate_names.must_equal([], "Found duplicate operators: #{duplicate_names}")
   end
 
   it "should produce correct SQL under gdm" do
@@ -29,17 +23,17 @@ describe ConceptQL::Operators::Vocabulary do
 
   it "should produce correct SQL for select all under gdm" do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-    db.query(["atc", "*"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('drug_exposure' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE ((\"clinical_code_vocabulary_id\" = 'ATC') AND (\"clinical_code_concept_id\" != 0))) AS \"t1\") AS \"t1\""
+    db.query(["atc", "*"]).sql.must_match %Q{"clinical_code_vocabulary_id" = 'ATC'}
   end
 
   it "should produce correct SQL for select all under omopv4_plus" do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
-    db.query(["atc", "*"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"person_id\" AS \"person_id\", \"drug_exposure_id\" AS \"criterion_id\", CAST('drug_exposure' AS text) AS \"criterion_table\", CAST('drug_exposure' AS text) AS \"criterion_domain\", CAST(\"drug_exposure_start_date\" AS date) AS \"start_date\", CAST(coalesce(\"drug_exposure_end_date\", \"drug_exposure_start_date\") AS date) AS \"end_date\", CAST(\"drug_source_value\" AS text) AS \"source_value\", CAST(\"drug_source_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"drug_exposure\" WHERE (\"drug_source_vocabulary_id\" = 21)) AS \"t1\") AS \"t1\""
+    db.query(["atc", "*"]).sql.must_match %Q{"drug_source_vocabulary_id" = 21}
   end
 
   it "should read operators from a custom file" do
-    assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
-      row[:id] == "test"
+    assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+      entry.id == "test"
     end)
     Tempfile.create("blah.csv") do |f|
       CSV(f) do |csv|
@@ -48,13 +42,13 @@ describe ConceptQL::Operators::Vocabulary do
       end
       f.rewind
       ConceptQL.stub(:custom_vocabularies_file_path, Pathname.new(f.path)) do
-        refute_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
-          row[:id] == "test"
+        refute_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+          entry.id == "test"
         end)
       end
     end
-    assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
-      row[:id] == "test"
+    assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+      entry.id == "test"
     end)
   end
 
@@ -71,18 +65,18 @@ describe ConceptQL::Operators::Vocabulary do
     end
 
     it "should read from lexicon" do
-      assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
-        row[:id] == "EXAMPLE"
+      assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+        entry.id == "example"
       end)
 
       ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
-        refute_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
-          row[:id] == "EXAMPLE"
+        refute_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+          entry.id == "example"
         end)
       end
 
-      assert_empty(ConceptQL::Operators::Vocabulary.get_all_vocabs.select do |row|
-        row[:id] == "EXAMPLE"
+      assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+        entry.id == "example"
       end)
     end
 
@@ -92,12 +86,11 @@ describe ConceptQL::Operators::Vocabulary do
       ConceptQL::Operators.stub(:operators, {gdm: {}, omopv4_plus: {}}) do
         ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
           cdb.stub(:lexicon, lexicon) do
-            ConceptQL::Operators::Vocabulary.force_refresh!
+            ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
             q = cdb.query([ "example", "12" ])
             assert_match(/EXAMPLE/, q.sql)
           end
         end
-        ConceptQL::Operators::Vocabulary.force_refresh!
       end
     end
   end

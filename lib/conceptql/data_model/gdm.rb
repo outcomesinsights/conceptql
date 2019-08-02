@@ -1,8 +1,8 @@
-require_relative "omopv4_plus"
+require_relative "base"
 
 module ConceptQL
   module DataModel
-    class Gdm < Omopv4Plus
+    class Gdm < Base
 
       def query_modifier_for(column)
         {

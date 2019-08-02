@@ -161,7 +161,8 @@ module ConceptQL
         annotation = {}
         counts = (annotation[:counts] ||= {})
         metadata = {:annotation=>annotation}
-        if name = preferred_name
+
+        if (name = preferred_name)
           metadata[:name] = name
         end
         res = [op_name, *annotate_values(db, opts)]
@@ -349,7 +350,7 @@ module ConceptQL
       end
 
       def upstreams_valid?(db, opts = {})
-        valid?(db, opts) && upstreams.all?{|u| u.upstreams_valid?(db, opts)}
+        valid?(db, opts) && upstreams.all?{ |u| u.upstreams_valid?(db, opts) }
       end
 
       def scope
@@ -524,7 +525,7 @@ module ConceptQL
       # Validation Related
 
       def upstream_operator_names
-        @upstreams.map(&:operator_name)
+        @upstreams.map(&:op_name)
       end
 
       def validate(db, opts = {})
@@ -536,6 +537,8 @@ module ConceptQL
         self.class.validations.each do |args|
           send(*args)
         end
+
+        additional_validation(db, opts)
 
         @_validated = true
       end
@@ -608,6 +611,10 @@ module ConceptQL
         unless bad_arguments.empty?
           add_warning("improperly formatted code", *bad_arguments)
         end
+      end
+
+      def additional_validation(_db, _opts = {})
+        # Do nothing by default
       end
 
       def add_warnings?(db, opts = {})
@@ -694,14 +701,3 @@ module ConceptQL
     end
   end
 end
-
-# Require all operator subclasses eagerly
-#
-# First, require vocabulary operator.  It will establish operators for all
-# vocabularies found in Lexicon.  Then other operators might override
-# some of those dynamically generated operators
-require_relative "vocabulary"
-Dir.new(File.dirname(__FILE__)).
-  entries.
-  each{|filename| require_relative filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}
-ConceptQL::Operators.operators.values.each(&:freeze)

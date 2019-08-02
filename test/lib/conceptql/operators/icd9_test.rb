@@ -1,6 +1,6 @@
 require_relative "../../../helper"
 
-describe ConceptQL::Operators::Icd9 do
+describe "ConceptQL::Operators::Icd9" do
   it "should use unique names for 'args table' under Impala" do
     db = ConceptQL::Database.new(Sequel.mock(host: :impala), data_model: :omopv4_plus, force_temp_tables: true, scratch_database: "jigsaw_temp")
     values = (1..11_000).to_a

@@ -1,8 +1,5 @@
 require 'sequel'
 require 'sequel/adapters/mock'
-require_relative "condition_occurrence_source_vocabulary_operator"
-require_relative "source_vocabulary_operator"
-require_relative "vocabulary"
 require_relative '../behaviors/labish'
 
 module ConceptQL
@@ -31,11 +28,11 @@ module ConceptQL
       end
 
       def domains(db)
-        gdm? ? vocab_op.domains(db) : codes_by_domain(db).keys
+        gdm? ? ops.first.domains(db) : codes_by_domain(db).keys
       end
 
       def query_cols
-        gdm? ? ops.first.query_cols : vocab_op.query_cols
+        gdm? ? ops.first.query_cols : ops.map(&:query_cols).flatten.uniq
       end
 
       def required_columns
@@ -106,36 +103,52 @@ module ConceptQL
         }
       end
 
-      class ReadGDM < ConditionOccurrenceSourceVocabularyOperator
+      class ReadBase < ConceptQL::Operators::Vocabulary
         preferred_name "READ"
         argument :read_codes, type: :codelist, vocab: "Read"
+      end
 
-        include ConceptQL::Labish
+      class ReadOmopBase < ReadBase
+        include ConceptQL::Vocabularies::Behaviors::Omopish
+        include ConceptQL::Vocabularies::Behaviors::Sourcish
 
         def vocabulary_id
           17
         end
-      end
 
-      class ReadCondition < ConditionOccurrenceSourceVocabularyOperator
-        preferred_name "READ"
-        argument :read_codes, type: :codelist, vocab: "Read"
+        def source_table
+          table
+        end
 
-        def vocabulary_id
-          17
+        def domain
+          table
+        end
+
+        def domains(db)
+          Array(domain)
         end
       end
 
-      class ReadProcedure < SourceVocabularyOperator
-        preferred_name "READ"
-        argument :read_codes, type: :codelist, vocab: "Read"
+      class ReadGDM < ReadBase
+        include ConceptQL::Vocabularies::Behaviors::Gdmish
+        include ConceptQL::Behaviors::Labish
 
+        def vocabulary_id
+          "Read"
+        end
+
+        def domain_map(v_id)
+          :condition_occurrence
+        end
+
+        def domains(db)
+          [:condition_occurrence]
+        end
+      end
+
+      class ReadCondition < ReadOmopBase
         def table
           :procedure_occurrence
-        end
-
-        def vocabulary_id
-          17
         end
 
         def source_column
@@ -147,16 +160,25 @@ module ConceptQL
         end
       end
 
-      class ReadObservation < SourceVocabularyOperator
-        preferred_name "READ"
-        argument :read_codes, type: :codelist, vocab: "Read"
+      class ReadProcedure < ReadOmopBase
+        def table
+          :procedure_occurrence
+        end
+
+        def source_column
+          :procedure_source_value
+        end
+
+        def concept_column
+          :procedure_concept_id
+        end
+      end
+
+      class ReadObservation < ReadOmopBase
+        include ConceptQL::Behaviors::Labish
 
         def table
           :observation
-        end
-
-        def vocabulary_id
-          17
         end
 
         def source_column
@@ -168,16 +190,11 @@ module ConceptQL
         end
       end
 
-      class ReadDrug < SourceVocabularyOperator
-        preferred_name "READ"
-        argument :read_codes, type: :codelist, vocab: "Read"
+      class ReadDrug < ReadOmopBase
+        include ConceptQL::Behaviors::Drugish
 
         def table
           :drug_exposure
-        end
-
-        def vocabulary_id
-          17
         end
 
         def source_column
@@ -187,10 +204,6 @@ module ConceptQL
         def concept_column
           :drug_concept_id
         end
-      end
-
-      def vocab_op
-        @vocab_op ||= Vocabulary.new(nodifier, *values, vocabulary: "Read")
       end
     end
   end

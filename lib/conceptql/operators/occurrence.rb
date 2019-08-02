@@ -142,8 +142,7 @@ occurrence, this operator returns nothing for that person.
         adjuster.adjust(column, reverse)
       end
 
-      def validate(db, opts = {})
-        super
+      def additional_validation(db, opts = {})
         if self.class == Occurrence
           validate_one_argument
         else

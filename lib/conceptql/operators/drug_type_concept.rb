@@ -15,7 +15,7 @@ module ConceptQL
       validate_no_upstreams
       validate_at_least_one_argument
       deprecated replaced_by: "provenance"
-      include ConceptQL::Drugish
+      include ConceptQL::Behaviors::Drugish
 
       def domain
         :drug_exposure

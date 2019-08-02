@@ -14,14 +14,9 @@
         [
           "improperly formatted code",
           "Z561.1"
-        ],
-        [
-          "unknown code(s)",
-          "Z56.1",
-          "Z561.1"
         ]
       ]
     },
-    "name": "ICD-10 CM"
+    "name": "ICD10"
   }
 ]

@@ -53,8 +53,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
 
       private
 
-      def validate(db, opts = {})
-        super
+      def additional_validation(db, opts = {})
         if arguments.length == 1
           if scope.fetch_operator(source)
             scope.recall_dependencies[source].each do |d|

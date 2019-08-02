@@ -1,9 +1,9 @@
-require_relative "vocabulary_operator"
-require_relative "vocabulary"
-
 module ConceptQL
   module Operators
-    class MultipleVocabularies < VocabularyOperator
+    class MultipleVocabularies < Operator
+      include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::CodeLister
+
       class << self
         def multiple_vocabularies
           @multiple_vocabularies ||= get_multiple_vocabularies
@@ -80,29 +80,34 @@ module ConceptQL
         []
       end
 
-      def validate(db, opts = {})
-        super
-        vocab_ops.each { |vo| vo.validate(db, opts) }
+      def additional_validation(db, opts = {})
+        vocab_ops.each { |vo| vo.valid?(db, opts) }
 
-        warnings = vocab_ops.map(&:warnings).map do |warns|
-          Hash[warns.map { |warn| [warn.shift, warn] }]
+        @errors += aggregate_messages(vocab_ops.map(&:errors))
+        @warnings += aggregate_messages(vocab_ops.map(&:warnings))
+      end
+
+      def aggregate_messages(message_sets)
+        messages = message_sets.map do |message_set|
+          Hash[message_set.map { |message| [message.shift, message] }]
         end
 
-        warning_keys = warnings.map(&:keys).inject(:+).uniq
+        messages_keys = messages.map(&:keys).inject(:|)
 
-        warnings = warning_keys.each.with_object({}) do |key, h|
-          h[key] = warnings.map { |w| w[key] || [] }.inject(:&)
+        messages = messages_keys.each.with_object({}) do |key, h|
+          h[key] = messages.map { |w| w[key] || [] }.inject(:&)
         end
 
-        warnings = warnings.reject { |_, v| v.empty? }
+        messages = messages.reject { |_, v| v.empty? }
 
-        @warnings = warnings.map { |k, v| [k, *v] }
+        messages.map { |k, v| [k, *v] }
       end
 
       def describe_codes(db, codes)
         codes = vocab_ops.flat_map do |vo|
           vo.describe_codes(db, codes)
         end
+
         codes_with_descriptions = codes.select(&:last)
         codes_without_descriptions = codes.reject(&:last).map(&:first)
         codes_without_descriptions -= codes_with_descriptions.map(&:first)
@@ -111,9 +116,9 @@ module ConceptQL
 
       def vocab_ops
         @vocab_ops ||= self.class.multiple_vocabularies[op_name].map do |op_info|
-          op_info[:vocabulary_id]
-        end.map do |vocab_id|
-          Vocabulary.new(nodifier, vocab_id.to_s.downcase, *arguments)
+          op_info[:vocabulary_id].to_s.downcase
+        end.map do |name|
+          ConceptQL::Operators.operators[dm.data_model][name].new(nodifier, name, *arguments)
         end
       end
 
