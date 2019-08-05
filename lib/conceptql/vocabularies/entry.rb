@@ -156,7 +156,7 @@ module ConceptQL
       end
 
       def predominant_domains
-        Array(domain).flatten
+        Array(domain || :condition_occurrence).flatten
       end
 
       def from_lexicon?
