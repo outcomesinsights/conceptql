@@ -63,7 +63,6 @@ module ConceptQL
           .join(Sequel[:clinical_codes].as(:c), id: :criterion_id)
           .select_all(:s)
           .select_append(Sequel[:c][:context_id].as(:context_id))
-          .where(criterion_domain: "condition_occurrence")
           .from_self
       end
 

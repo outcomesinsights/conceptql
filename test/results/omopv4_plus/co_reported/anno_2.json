@@ -2,28 +2,13 @@
   "co_reported",
   [
     "icd9",
-    "412",
+    "250.00",
     {
       "annotation": {
         "counts": {
           "condition_occurrence": {
-            "rows": 48,
-            "n": 37
-          }
-        }
-      },
-      "name": "ICD-9 CM"
-    }
-  ],
-  [
-    "icd9",
-    "412",
-    {
-      "annotation": {
-        "counts": {
-          "condition_occurrence": {
-            "rows": 48,
-            "n": 37
+            "rows": 1036,
+            "n": 162
           }
         }
       },
@@ -32,17 +17,13 @@
   ],
   [
     "cpt",
-    "99201",
-    "99202",
-    "99203",
-    "99204",
-    "99205",
+    "99214",
     {
       "annotation": {
         "counts": {
           "procedure_occurrence": {
-            "rows": 247,
-            "n": 133
+            "rows": 1073,
+            "n": 175
           }
         }
       },
@@ -53,12 +34,12 @@
     "annotation": {
       "counts": {
         "condition_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": 49,
+          "n": 39
         },
         "procedure_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": 49,
+          "n": 39
         }
       }
     },
