@@ -5,6 +5,11 @@ module ConceptQL
       @preferred_name = value
     end
 
+    def aliases(value = nil)
+      return @aliases unless value
+      @aliases = value
+    end
+
     def desc(value = nil)
       return @desc unless value
       @desc = value
@@ -112,7 +117,8 @@ module ConceptQL
         categories: @categories || [],
         basic_type: @basic_type,
         deprecated: @deprecated,
-        arity: arity
+        arity: arity,
+        aliases: @aliases
       }
     end
 

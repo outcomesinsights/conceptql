@@ -119,9 +119,9 @@ module ConceptQL
         raise "window operator needs a ConceptQL statement followed by a hash as the last item of the array." unless stmt.length == 3
         opts[:scope_opts] = (opts[:scope_opts] || {}).dup
         opts[:scope_opts].merge!(window_opts: stmt.last.merge(cdb: cdb))
-        [stmt[1], opts]
+        extract_statement(stmt[1], opts)
       elsif stmt.length == 1 && stmt.first.is_a?(Array)
-        [stmt.first, opts]
+        extract_statement(stmt.first, opts)
       else
         [stmt, opts]
       end

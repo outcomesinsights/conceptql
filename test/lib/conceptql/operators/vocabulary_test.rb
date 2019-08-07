@@ -14,6 +14,11 @@ describe ConceptQL::Operators::Vocabulary do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"].to_metadata("admsrce")[:arguments].present?
   end
 
+  it "should have aliases" do
+    assert ConceptQL::Operators.operators[:gdm]["admsrce"].to_metadata("admsrce")[:aliases].empty?
+    assert ConceptQL::Operators.operators[:gdm]["icd9cm"].to_metadata("admsrce")[:aliases].present?
+  end
+
   it "should populate known vocabularies from file in omopv4_plus" do
     op_names = ConceptQL::Nodifier.new(data_model: :omopv4_plus).to_metadata.map { |_, v| v[:preferred_name] }
     op_names.must_include("WHO ATC")

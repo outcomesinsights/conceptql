@@ -55,6 +55,7 @@ module ConceptQL
 
           preferred_name entry.preferred_name
           argument :codes, type: :codelist
+          aliases entry.aliases
 
           klass.class_eval(&block)
 

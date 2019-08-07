@@ -26,7 +26,7 @@ module ConceptQL
         else
           invalid_op(operator, values, "invalid algorithm", values.first)
         end
-      elsif klass = operators[operator]
+      elsif (klass = fetch_op(operator))
         klass.new(self, operator, *values)
       else
         invalid_op(operator, values, "invalid operator", operator)
@@ -41,6 +41,21 @@ module ConceptQL
 
     def operators
       @operators ||= Operators.operators.fetch(@data_model)
+    end
+
+    def fetch_op(operator)
+      operators[alias_for(operator)]
+    end
+
+    def alias_for(operator)
+      operator_aliases[operator] || operator
+    end
+
+    def operator_aliases
+      @operator_aliases ||= operators.flat_map do |id, klass|
+        next unless klass.aliases.present?
+        klass.aliases.map { |klass_alias| [klass_alias, id] }
+      end.compact.to_h
     end
 
     def invalid_op(operator, values, *error_args)

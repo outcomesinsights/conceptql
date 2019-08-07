@@ -26,14 +26,6 @@ module ConceptQL
         predominant_domains
       )
 
-      ALIASES = {
-        "cpt4" => %w[ cpt ],
-        "icd10pcs" => %w[ icd10_pcs ],
-        "icd9cm" => %w[ icd9 ],
-        "icd9proc" => %w[ icd9_procedure ],
-        "revenue code" => %w[ revenue_code ],
-      }.tap { |h| h.default = [] }
-
       STANDARD_VOCABS = %w(
         ABMS
         AMT
@@ -110,7 +102,7 @@ module ConceptQL
       def initialize(hash)
         @hash = hash
         @hash[:omopv5_vocabulary_id] ||= @hash[:id]
-        @hash[:id] = translate_id(@hash[:id].to_s.downcase)
+        @hash[:id] = translate_id(@hash[:id].to_s.downcase.gsub(/\W+/, "_"))
       end
 
       def translate_id(id)
@@ -155,6 +147,10 @@ module ConceptQL
         short_name || omopv5_id || id
       end
 
+      def aliases
+        (hash[:aliases] || "").split(";")
+      end
+
       def predominant_domains
         Array(domain || :condition_occurrence).flatten
       end
@@ -185,10 +181,6 @@ module ConceptQL
 
       def is_costish?
         belongs_in_omopv4_plus? && COST_RELATED_VOCABS.include?(id)
-      end
-
-      def names
-        (Array(id) + ALIASES[id])
       end
 
       def visible?

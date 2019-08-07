@@ -12,12 +12,9 @@ module ConceptQL
   module Vocabularies
     class DynamicVocabularies
       def register_operators
-        all_vocabs.each do |_name, entry|
-          names = entry.names
+        all_vocabs.each do |name, entry|
           klasses = entry.dup.get_klasses.each do |data_model, klass|
-            names.each do |name|
-              klass.register(name, data_model)
-            end
+            klass.register(name, data_model)
           end
         end
       end
