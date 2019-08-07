@@ -54,6 +54,7 @@ module ConceptQL
           end
 
           preferred_name entry.preferred_name
+          argument :codes, type: :codelist
 
           klass.class_eval(&block)
 
