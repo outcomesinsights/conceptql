@@ -10,7 +10,7 @@ describe ConceptQL::Operators::Vocabulary do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"].standard_description
   end
 
-  it "should have a arguments" do
+  it "should have arguments" do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"].to_metadata("admsrce")[:arguments].present?
   end
 
