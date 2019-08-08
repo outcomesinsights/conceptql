@@ -11,6 +11,6 @@
     ],
     "start_date": "2010-06-25",
     "end_date": "2010-07-02",
-    "scope_by": "range"
+    "scope_by": "date_range"
   }
 ]
