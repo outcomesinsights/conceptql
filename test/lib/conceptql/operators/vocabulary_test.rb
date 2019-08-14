@@ -19,6 +19,12 @@ describe ConceptQL::Operators::Vocabulary do
     assert ConceptQL::Operators.operators[:gdm]["icd9cm"].to_metadata("admsrce")[:aliases].present?
   end
 
+  it "should have predominant_domains set to correct value" do
+    assert ConceptQL::Operators.operators[:gdm]["icd9cm"].to_metadata("icd9cm")[:predominant_domains] == [["condition_occurrence"]]
+    assert ConceptQL::Operators.operators[:gdm]["hcpcs"].to_metadata("icd9cm")[:predominant_domains] == [["procedure_occurrence"]]
+    assert ConceptQL::Operators.operators[:gdm]["ndc"].to_metadata("icd9cm")[:predominant_domains] == [["drug_exposure"]]
+  end
+
   it "should populate known vocabularies from file in omopv4_plus" do
     op_names = ConceptQL::Nodifier.new(data_model: :omopv4_plus).to_metadata.map { |_, v| v[:preferred_name] }
     op_names.must_include("WHO ATC")

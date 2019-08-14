@@ -44,18 +44,16 @@ module ConceptQL
         ventry = entry
         Class.new(ConceptQL::Operators::Vocabulary) do |klass|
           @entry = ventry
-          
+
           def self.entry
             @entry
           end
 
-          def self.predominant_domains
-            entry.predominant_domains
-          end
 
           preferred_name entry.preferred_name
           argument :codes, type: :codelist
           aliases entry.aliases
+          predominant_domains entry.predominant_domains
 
           klass.class_eval(&block)
 
