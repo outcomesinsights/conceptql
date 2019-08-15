@@ -51,8 +51,9 @@ Accepts two params:
 
       def first_argument
         value = arguments.first.to_s.strip
-        if is_a_number?(value)
-          Sequel.expr(value.to_f)
+        value = nil if value.blank?
+        if !value || is_a_number?(value)
+          Sequel.cast_numeric(value, Float)
         else
           Sequel.identifier(value)
         end
