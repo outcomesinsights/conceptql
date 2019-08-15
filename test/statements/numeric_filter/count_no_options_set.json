@@ -1,0 +1,14 @@
+[
+  "numeric_filter",
+  [
+    "union",
+    [
+      "numeric",
+      "1"
+    ],
+    [
+      "numeric",
+      null 
+    ]
+  ]
+]

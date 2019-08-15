@@ -36,6 +36,7 @@ module ConceptQL
 
       def range_criteria
         criteria = []
+        criteria << Sequel.~(VALUE_COLUMN => nil)
         criteria << gte_criteria if gte.present?
         criteria << lte_criteria if lte.present?
         criteria.inject(&:&)
@@ -50,7 +51,7 @@ module ConceptQL
       end
 
       def gte_literal
-        Sequel.expr(gte.to_f)
+        Sequel.cast_numeric(gte.to_f, Float)
       end
 
       def lte_literal
