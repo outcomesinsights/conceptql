@@ -45,6 +45,14 @@ module ConceptQL
       pp q.query.all
     end
 
+    desc 'analyze statement_file', 'Reads the ConceptQL statement from the statement file and executes EXPLAIN ANALYZE against the DB'
+    def analyze(statement_file)
+      q = cdb(options).query(criteria_from_file(statement_file))
+      puts q.sql(:formatted)
+      puts JSON.pretty_generate(q.statement)
+      puts q.query.analyze 
+    end
+
     desc 'sql statement_file', 'Reads the ConceptQL statement from the statement file and prints the SQL out'
     def sql(statement_file)
       q = cdb(options).query(criteria_from_file(statement_file))
