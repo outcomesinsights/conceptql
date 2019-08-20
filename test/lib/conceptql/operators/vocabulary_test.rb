@@ -27,7 +27,7 @@ describe ConceptQL::Operators::Vocabulary do
 
   it "should populate known vocabularies from file in omopv4_plus" do
     op_names = ConceptQL::Nodifier.new(data_model: :omopv4_plus).to_metadata.map { |_, v| v[:preferred_name] }
-    op_names.must_include("WHO ATC")
+    op_names.must_include("ATC")
   end
 
   it "should produce correct SQL under gdm" do
