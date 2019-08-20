@@ -15,6 +15,16 @@ module ConceptQL
       @desc = value
     end
 
+    def short_name(value = nil)
+      return @short_name unless value
+      @short_name = value
+    end
+
+    def long_name(value = nil)
+      return @long_name unless value
+      @long_name = value
+    end
+
     def predominant_domains(*values)
       return @predominant_domains if values.empty?
       @predominant_domains = values
@@ -107,6 +117,8 @@ module ConceptQL
       {
         name: name,
         preferred_name: pref_name,
+        short_name: short_name,
+        long_name: long_name,
         operation: ConceptQL::Utils.snakecase(just_class_name),
         min_upstreams: @max_upstreams || 0,
         max_upstreams: @max_upstreams || 0,

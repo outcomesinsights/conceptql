@@ -136,15 +136,15 @@ module ConceptQL
       end
 
       def short_name
-        vocabulary_short_name
+        vocabulary_short_name || vocabulary_long_name
       end
 
       def long_name
-        vocabulary_long_name
+        vocabulary_long_name || vocabulary_short_name
       end
 
       def preferred_name
-        short_name || omopv5_id || id
+        omopv5_id || id
       end
 
       def aliases

@@ -54,6 +54,8 @@ module ConceptQL
           argument :codes, type: :codelist
           aliases entry.aliases
           predominant_domains entry.predominant_domains
+          short_name entry.short_name
+          long_name entry.long_name
 
           klass.class_eval(&block)
 
