@@ -24,8 +24,12 @@ module ConceptQL
       @nodifier = opts[:nodifier] || Nodifier.new({ database_type: db ? db.database_type : nil }.merge(opts))
     end
 
-    def query
-      nodifier.scope.with_ctes(operator, db)
+    def analyze
+      query(explain: true, analyze: true).analyze
+    end
+
+    def query(opts = {})
+      nodifier.scope.with_ctes(operator, db, opts)
     end
 
     def query_cols(opts = {})

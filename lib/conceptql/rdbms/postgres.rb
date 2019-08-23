@@ -8,7 +8,9 @@ module ConceptQL
       end
 
       def create_options(scope, ds)
-        {}
+        opts = {}
+        opts[:analyze] = opts[:explain] = explain_temp_tables?
+        opts
       end
 
       def drop_options
@@ -16,11 +18,19 @@ module ConceptQL
       end
 
       def post_create(db, table_name)
-        # Do nothing
+        db.vacuum_table(table_name, analyze: true) if analyze_temp_tables?
       end
 
       def preferred_formatter
         SqlFormatters::PgFormat
+      end
+
+      def analyze_temp_tables?
+        ENV["CONCEPTQL_PG_ANALYZE_TEMP_TABLES"] == "true"
+      end
+
+      def explain_temp_tables?
+        ENV["CONCEPTQL_PG_EXPLAIN_TEMP_TABLES"] == "true"
       end
     end
   end
