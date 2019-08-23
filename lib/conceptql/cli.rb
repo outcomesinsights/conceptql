@@ -48,9 +48,10 @@ module ConceptQL
     desc 'analyze statement_file', 'Reads the ConceptQL statement from the statement file and executes EXPLAIN ANALYZE against the DB'
     def analyze(statement_file)
       q = cdb(options).query(criteria_from_file(statement_file))
-      puts q.sql(:formatted)
       puts JSON.pretty_generate(q.statement)
-      puts q.query.analyze 
+      puts q.sql(:formatted, :create_tables)
+      q.db.logger = db.loggers + [Logger.new(STDOUT).tap { |l| l.level = Logger::INFO }]
+      puts q.analyze
     end
 
     desc 'sql statement_file', 'Reads the ConceptQL statement from the statement file and prints the SQL out'
@@ -69,7 +70,13 @@ module ConceptQL
     desc "annotate_statement", "Reads in a statement and annotates it"
     def annotate_statement(statement_file)
       q = ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file))
-      pp q.annotate
+      pp q.annotate(skip_counts: true)
+    end
+
+    desc "scope_annotate", "Reads in a statement and annotates it"
+    def scope_annotate(statement_file)
+      q = ConceptQL::Query.new(cdb(nil), criteria_from_file(statement_file))
+      pp q.scope_annotate(skip_counts: true)
     end
 
     desc 'metadata', 'Generates the metadata.js file for the JAM'

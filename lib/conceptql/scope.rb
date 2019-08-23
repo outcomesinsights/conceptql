@@ -284,7 +284,7 @@ module ConceptQL
       query
     end
 
-    def with_ctes(op, db)
+    def with_ctes(op, db, options = {})
       raise "recall operator use without matching label" unless valid?
 
       query = op.evaluate(db)
@@ -311,7 +311,7 @@ module ConceptQL
               if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
                 begin
                   temp_tables.uniq(&:first).each do |table_name, ds|
-                    db.create_table(table_name, rdbms.create_options(scope, ds).merge(as: ds))
+                    db.create_table(table_name, rdbms.create_options(scope, ds).merge(options).merge(as: ds))
                     rdbms.post_create(db, table_name)
                   end
 
