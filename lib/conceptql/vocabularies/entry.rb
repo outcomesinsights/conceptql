@@ -102,7 +102,11 @@ module ConceptQL
       def initialize(hash)
         @hash = hash
         @hash[:omopv5_vocabulary_id] ||= @hash[:id]
-        @hash[:id] = translate_id(@hash[:id].to_s.downcase.gsub(/\W+/, "_"))
+        @hash[:aliases_arr] ||= []
+        @hash[:aliases_arr] |= (@hash[:aliases] || "").split(";")
+        @hash[:id] = @hash[:id].to_s.downcase
+        @hash[:aliases_arr] << @hash[:id] if @hash[:id] =~ /\s/
+        @hash[:id] = translate_id(@hash[:id].gsub(/\W+/, "_"))
       end
 
       def translate_id(id)
@@ -148,7 +152,7 @@ module ConceptQL
       end
 
       def aliases
-        (hash[:aliases] || "").split(";")
+        @hash[:aliases_arr]
       end
 
       def predominant_domains

@@ -14,7 +14,9 @@ module ConceptQL
       def register_operators
         all_vocabs.each do |name, entry|
           klasses = entry.dup.get_klasses.each do |data_model, klass|
-            klass.register(name, data_model)
+            klass.names.each do |name|
+              klass.register(name, data_model)
+            end
           end
         end
       end

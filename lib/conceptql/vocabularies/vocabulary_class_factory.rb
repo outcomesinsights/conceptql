@@ -49,7 +49,6 @@ module ConceptQL
             @entry
           end
 
-
           preferred_name entry.preferred_name
           argument :codes, type: :codelist
           aliases entry.aliases
@@ -69,6 +68,10 @@ module ConceptQL
 
           def self.name
             "ConceptQL::Operator::#{entry.id}"
+          end
+
+          def self.names
+            [entry.id] + entry.aliases
           end
 
           if entry.is_labish?

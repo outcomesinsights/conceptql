@@ -6,6 +6,10 @@ describe ConceptQL::Operators::Vocabulary do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"]
   end
 
+  it "should populate known aliases for vocabularies from file in gdm" do
+    assert ConceptQL::Operators.operators[:gdm]["revenue code"]
+  end
+
   it "should have a description" do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"].standard_description
   end
