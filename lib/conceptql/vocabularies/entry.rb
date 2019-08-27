@@ -107,6 +107,7 @@ module ConceptQL
         @hash[:id] = @hash[:id].to_s.downcase
         @hash[:aliases_arr] << @hash[:id] if @hash[:id] =~ /\s/
         @hash[:id] = translate_id(@hash[:id].gsub(/\W+/, "_"))
+        @hash[:aliases_arr] -= [@hash[:id]]
       end
 
       def translate_id(id)

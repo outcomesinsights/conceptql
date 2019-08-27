@@ -70,10 +70,6 @@ module ConceptQL
             "ConceptQL::Operator::#{entry.id}"
           end
 
-          def self.names
-            [entry.id] + entry.aliases
-          end
-
           if entry.is_labish?
             include ConceptQL::Behaviors::Labish
           end

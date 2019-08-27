@@ -6,10 +6,6 @@ describe ConceptQL::Operators::Vocabulary do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"]
   end
 
-  it "should populate known aliases for vocabularies from file in gdm" do
-    assert ConceptQL::Operators.operators[:gdm]["revenue code"]
-  end
-
   it "should have a description" do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"].standard_description
   end
@@ -34,24 +30,38 @@ describe ConceptQL::Operators::Vocabulary do
     op_names.must_include("ATC")
   end
 
-  it "should produce correct SQL under gdm" do
-    db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-    db.query(["admsrce", "12"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ADMSRCE') AND (\"concept_code\" IN ('12')))))) AS \"t1\") AS \"t1\""
+  describe "under gdm" do
+    let :cdb do
+      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
+    end
+
+    it "should handle aliases in a statement" do
+      assert cdb.query(["revenue code", "001"])
+      assert cdb.query(["revenue_code", "001"])
+    end
+
+    it "should produce correct SQL" do
+      cdb.query(["admsrce", "12"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ADMSRCE') AND (\"concept_code\" IN ('12')))))) AS \"t1\") AS \"t1\""
+    end
+
+    it "should produce correct SQL for older selection operators" do
+      cdb.query(["icd9", "412"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ICD9CM') AND (\"concept_code\" IN ('412')))))) AS \"t1\") AS \"t1\""
+    end
+
+    it "should produce correct SQL for select all" do
+      cdb.query(["atc", "*"]).sql.must_match %Q{"clinical_code_vocabulary_id" = 'ATC'}
+    end
+
   end
 
-  it "should produce correct SQL under gdm for older selection operators" do
-    db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-    db.query(["icd9", "412"]).sql.must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ICD9CM') AND (\"concept_code\" IN ('412')))))) AS \"t1\") AS \"t1\""
-  end
+  describe "under omopv4_plus" do
+    let :cdb do
+      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
+    end
 
-  it "should produce correct SQL for select all under gdm" do
-    db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-    db.query(["atc", "*"]).sql.must_match %Q{"clinical_code_vocabulary_id" = 'ATC'}
-  end
-
-  it "should produce correct SQL for select all under omopv4_plus" do
-    db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
-    db.query(["atc", "*"]).sql.must_match %Q{"drug_source_vocabulary_id" = 21}
+    it "should produce correct SQL for select all under omopv4_plus" do
+      cdb.query(["atc", "*"]).sql.must_match %Q{"drug_source_vocabulary_id" = 21}
+    end
   end
 
   it "should read operators from a custom file" do
