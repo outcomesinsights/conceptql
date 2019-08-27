@@ -83,8 +83,9 @@ describe ConceptQL::Operators::Vocabulary do
         String :omopv4_id
         String :omopv5_id
         String :vocabulary_name
+        String :domain
       end
-      db[:vocabularies].multi_insert([{ omopv4_id: "10000000", omopv5_id: "EXAMPLE", vocabulary_name: "Example Vocabulary" }])
+      db[:vocabularies].multi_insert([{ omopv4_id: "10000000", omopv5_id: "EXAMPLE", vocabulary_name: "Example Vocabulary", domain: "measurement" }])
     end
 
     it "should read from lexicon" do
