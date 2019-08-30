@@ -33,7 +33,7 @@ module ConceptQL
             .select_append(Sequel[:dose_con][:concept_text].as(:drug_amount_units))
             .select_append(Sequel[:ing_con][:concept_text].as(:drug_name))
             .select_append(Sequel[:de][:days_supply].as(:drug_days_supply))
-            .select_append(Sequel[:de][:refills].as(:drug_quantity))
+            .select_append(Sequel[:cc][:quantity].as(:drug_quantity))
             .from_self
         end
 

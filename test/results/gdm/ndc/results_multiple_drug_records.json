@@ -11,7 +11,7 @@
     "drug_name": "Ephedrine sulfate 25 MG / Hydroxyzine Hydrochloride 10 MG / Theophylline 130 MG Oral Tablet [Marax]",
     "drug_amount": null,
     "drug_amount_units": null,
-    "drug_quantity": null,
+    "drug_quantity": 20,
     "drug_days_supply": 30
   }
 ]

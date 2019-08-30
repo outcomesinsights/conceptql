@@ -11,7 +11,7 @@
     "drug_name": "clopidogrel 75 MG Oral Tablet",
     "drug_amount": null,
     "drug_amount_units": null,
-    "drug_quantity": null,
+    "drug_quantity": 30,
     "drug_days_supply": 30
   },
   {
@@ -26,7 +26,7 @@
     "drug_name": "clopidogrel 75 MG Oral Tablet",
     "drug_amount": null,
     "drug_amount_units": null,
-    "drug_quantity": null,
+    "drug_quantity": 90,
     "drug_days_supply": 30
   },
   {
@@ -41,7 +41,7 @@
     "drug_name": "clopidogrel 75 MG Oral Tablet",
     "drug_amount": null,
     "drug_amount_units": null,
-    "drug_quantity": null,
+    "drug_quantity": 30,
     "drug_days_supply": 30
   }
 ]
