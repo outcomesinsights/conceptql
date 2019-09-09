@@ -58,7 +58,6 @@ module ConceptQL
     def sql(statement_file)
       q = cdb(options).query(criteria_from_file(statement_file))
       puts q.sql(:formatted, :create_tables)
-      puts q.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).sql
     end
 
     desc 'code_list statement_file', 'Reads the ConceptQL statement from the statement file and prints the code list out'
