@@ -52,11 +52,15 @@ module ConceptQL
       end
 
       def within_option
-        options[:within]
+        return unless v = options[:within]
+        return if v.strip.empty?
+        v
       end
 
       def at_least_option
-        options[:at_least]
+        return unless v = options[:at_least]
+        return if v.strip.empty?
+        v
       end
 
       def occurrences_option
