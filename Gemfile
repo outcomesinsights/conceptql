@@ -4,3 +4,7 @@ source 'https://rubygems.org'
 gemspec
 gem "pg"
 gem "sequel_impala", path: "../sequel_impala"
+
+group :test, :development do
+  gem "pry"
+end
