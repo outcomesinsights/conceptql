@@ -65,6 +65,8 @@ module ConceptQL
           :information_periods
         when :provider, :practitioners
           :practitioners
+        when :collections
+          :collections
         else
           :clinical_codes
         end
