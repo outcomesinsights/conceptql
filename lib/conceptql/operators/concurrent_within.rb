@@ -14,7 +14,7 @@ module ConceptQL
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
       category "Combine Streams"
-      basic_type :temporal
+      basic_type :set
       default_query_columns
 
       def query(db)
