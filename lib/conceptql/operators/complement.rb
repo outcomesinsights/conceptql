@@ -14,6 +14,7 @@ module ConceptQL
       default_query_columns
       validate_one_upstream
       validate_no_arguments
+      deprecated
 
       # TODO: This is going to fail under GDM
       # The problem is that most domains live in clinical_codes, so we'll end up

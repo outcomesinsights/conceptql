@@ -10,6 +10,7 @@ module ConceptQL
       desc 'Generates all visit_occurrence records, or, if fed a stream, fetches all visit_occurrence records for the people represented in the incoming result set.'
       allows_one_upstream
       domains :visit_occurrence
+      deprecated replaced_by: "Place Of Service"
 
       def my_domain
         :visit_occurrence

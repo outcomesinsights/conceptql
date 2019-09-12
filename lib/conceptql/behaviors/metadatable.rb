@@ -156,7 +156,7 @@ module ConceptQL
     def deprecated(opts = {})
       @deprecated = true
       message = ["This operator will no longer be available in a future version of Jigsaw."]
-      message << "Please use #{Array(opts[:replaced_by]).join("/")} instead." if opts[:replaced_by]
+      message << "Please use #{Array(opts[:replaced_by]).to_sentence(last_word_connector: "or")} instead." if opts[:replaced_by]
       define_method(:deprecation_warning) do |*args|
         add_warning(message.join(" "))
       end

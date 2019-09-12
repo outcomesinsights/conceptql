@@ -11,6 +11,7 @@ module ConceptQL
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments
+      deprecated replaced_by: ["Provenance", "Place of Service", "Provider"]
 
       def query(db)
         exprs = {}
