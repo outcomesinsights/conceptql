@@ -88,26 +88,32 @@
     :npi:
       :type: String
       :size: 20
+      :ignorable: true
     :dea:
       :type: String
       :size: 20
+      :ignorable: true
     :specialty_concept_id:
       :type: Bignum
       :foreign_key: concept
     :specialty_source_vocabulary_id:
       :type: Bignum
       :foreign_key: vocabulary
+      :ignorable: true
     :care_site_id:
       :type: Bignum
       :foreign_key: care_site
       :null: false
+      :ignorable: true
     :provider_source_value:
       :type: String
       :size: 50
       :null: false
+      :ignorable: true
     :specialty_source_value:
       :type: String
       :size: 50
+      :ignorable: true
 
 :person:
   :columns:
@@ -121,6 +127,7 @@
     :gender_source_vocabulary_id:
       :type: Bignum
       :foreign_key: vocabulary
+      :ignorable: true
     :year_of_birth:
       :type: Integer
       :null: false
@@ -134,33 +141,40 @@
     :race_source_vocabulary_id:
       :type: Bignum
       :foreign_key: vocabulary
+      :ignorable: true
     :ethnicity_concept_id:
       :type: Bignum
       :foreign_key: concept
     :ethnicity_source_vocabulary_id:
       :type: Bignum
       :foreign_key: vocabulary
+      :ignorable: true
     :location_id:
       :type: Bignum
       :foreign_key: location
+      :ignorable: true
     :provider_id:
       :type: Bignum
       :foreign_key: provider
     :care_site_id:
       :type: Bignum
       :foreign_key: care_site
+      :ignorable: true
     :person_source_value:
       :type: String
       :size: 50
     :gender_source_value:
       :type: String
       :size: 50
+      :ignorable: true
     :race_source_value:
       :type: String
       :size: 50
+      :ignorable: true
     :ethnicity_source_value:
       :type: String
       :size: 50
+      :ignorable: true
 
 :death:
   :columns:
@@ -178,15 +192,19 @@
     :death_type_source_vocabulary_id:
       :type: Bignum
       :foreign_key: vocabulary
+      :ignorable: true
     :cause_of_death_concept_id:
       :type: Bignum
       :foreign_key: concept
+      :ignorable: true
     :cause_of_death_source_vocabulary_id:
       :type: Bignum
       :foreign_key: vocabulary
+      :ignorable: true
     :cause_of_death_source_value:
       :type: String
       :size: 50
+      :ignorable: true
 
 :observation_period:
   :columns:
@@ -205,6 +223,7 @@
       :null: false
     :prev_ds_period_end_date:
       :type: Date
+      :ignorable: true
 
 :payer_plan_period:
   :columns:
@@ -224,14 +243,17 @@
     :payer_source_value:
       :type: String
       :size: 50
+      :ignorable: true
     :plan_source_value:
       :type: String
       :size: 50
     :family_source_value:
       :type: String
       :size: 50
+      :ignorable: true
     :prev_ds_period_end_date:
       :type: Date
+      :ignorable: true
 
 :visit_occurrence:
   :columns:
@@ -255,18 +277,22 @@
     :care_site_id:
       :type: Bignum
       :foreign_key: care_ste
+      :ignorable: true
     :place_of_service_source_value:
       :type: String
       :size: 50
+      :ignorable: true
     :visit_occurrence_type_id:
       :type: Bignum
       :foreign_key: concept
+      :ignorable: true
     :visit_source_concept_id:
       :type: Bignum
       :foreign_key: concept
     :admitting_source_value:
       :type: String
       :size: 50
+      :ignorable: true
 
 :condition_occurrence:
   :columns:
@@ -296,6 +322,7 @@
     :stop_reason:
       :type: String
       :size: 20
+      :ignorable: true
     :associated_provider_id:
       :type: Bignum
       :foreign_key: provider
@@ -334,8 +361,10 @@
     :stop_reason:
       :type: String
       :size: 20
+      :ignorable: true
     :refills:
       :type: Integer
+      :ignorable: true
     :quantity:
       :type: Float
     :days_supply:
@@ -343,6 +372,7 @@
     :sig:
       :type: String
       :size: 500
+      :ignorable: true
     :prescribing_provider_id:
       :type: Bignum
       :foreign_key: provider
@@ -352,6 +382,7 @@
     :relevant_condition_concept_id:
       :type: Bignum
       :foreign_key: concept
+      :ignorable: true
     :drug_source_value:
       :type: String
       :size: 50
@@ -367,27 +398,38 @@
       :null: false
     :paid_copay:
       :type: Float
+      :ignorable: true
     :paid_coinsurance:
       :type: Float
+      :ignorable: true
     :paid_toward_deductible:
       :type: Float
+      :ignorable: true
     :paid_by_payer:
       :type: Float
+      :ignorable: true
     :paid_by_coordination_benefits:
       :type: Float
+      :ignorable: true
     :total_out_of_pocket:
       :type: Float
+      :ignorable: true
     :total_paid:
       :type: Float
+      :ignorable: true
     :ingredient_cost:
       :type: Float
+      :ignorable: true
     :dispensing_fee:
       :type: Float
+      :ignorable: true
     :average_wholesale_price:
       :type: Float
+      :ignorable: true
     :payer_plan_period_id:
       :type: Bignum
       :foreign_key: payer_plan_period
+      :ignorable: true
 
 :procedure_occurrence:
   :columns:
@@ -421,6 +463,7 @@
     :relevant_condition_concept_id:
       :type: Bignum
       :foreign_key: concept
+      :ignorable: true
     :procedure_source_value:
       :type: String
       :size: 50
@@ -436,30 +479,40 @@
       :null: false
     :paid_copay:
       :type: Float
+      :ignorable: true
     :paid_coinsurance:
       :type: Float
+      :ignorable: true
     :paid_toward_deductible:
       :type: Float
+      :ignorable: true
     :paid_by_payer:
       :type: Float
+      :ignorable: true
     :paid_by_coordination_benefits:
       :type: Float
+      :ignorable: true
     :total_out_of_pocket:
       :type: Float
+      :ignorable: true
     :total_paid:
       :type: Float
+      :ignorable: true
     :disease_class_concept_id:
       :type: Bignum
       :foreign_key: concept
+      :ignorable: true
     :revenue_code_concept_id:
       :type: Bignum
       :foreign_key: concept
     :payer_plan_period_id:
       :type: Bignum
       :foreign_key: payer_plan_period
+      :ignorable: true
     :disease_class_source_value:
       :type: String
       :size: 50
+      :ignorable: true
     :revenue_code_source_value:
       :type: String
       :size: 50
@@ -485,6 +538,7 @@
       :null: false
     :observation_time:
       :type: Date
+      :ignorable: true
     :value_as_number:
       :type: Float
     :value_as_string:
@@ -513,6 +567,7 @@
     :relevant_condition_concept_id:
       :type: Bignum
       :foreign_key: concept
+      :ignorable: true
     :observation_source_value:
       :type: String
       :size: 50
@@ -529,8 +584,10 @@
       :type: String
     :concept_level:
       :type: Integer
+      :ignorable: true
     :concept_class:
       :type: String
+      :ignorable: true
     :vocabulary_id:
       :type: Bignum
       :foreign_key: vocabulary
@@ -538,10 +595,13 @@
       :type: String
     :valid_start_date:
       :type: Date
+      :ignorable: true
     :valid_end_date:
       :type: Date
+      :ignorable: true
     :invalid_reason:
       :type: String
+      :ignorable: true
 
 :vocabulary:
   :columns:
@@ -572,10 +632,13 @@
       :type: String
     :valid_start_date:
       :type: Date
+      :ignorable: true
     :valid_end_date:
       :type: Date
+      :ignorable: true
     :invalid_reason:
       :type: String
+      :ignorable: true
 
 :cohort:
   :ignorable: true
