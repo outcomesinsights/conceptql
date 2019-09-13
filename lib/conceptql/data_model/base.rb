@@ -218,8 +218,8 @@ module ConceptQL
 
       def assign_column_to_table
         schema.each_with_object({}) do |(table, table_info), cols|
-          column_info = table_info[:columns]
-          column = yield table, column_info.keys.map(&:to_s)
+          columns_info = table_info[:columns]
+          column = yield table, columns_info.keys.map(&:to_s)
           cols[table] = column ? column.to_sym : nil
         end
       end
