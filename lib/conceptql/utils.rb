@@ -42,6 +42,28 @@ module ConceptQL
           downcase
       end
 
+      # Copy of rails to_sentence method
+      def to_sentence(array, options = {})
+        default_connectors = {
+          words_connector: ", ",
+          two_words_connector: " and ",
+          last_word_connector: ", and "
+        }
+
+        options = default_connectors.merge!(options)
+
+        case array.length
+        when 0
+          ""
+        when 1
+          "#{array[0]}"
+        when 2
+          "#{array[0]}#{options[:two_words_connector]}#{array[1]}"
+        else
+          "#{array[0...-1].join(options[:words_connector])}#{options[:last_word_connector]}#{array[-1]}"
+        end
+      end
+
       def timed_capture(*commands)
         # Heavily adapted from:
         # https://gist.github.com/lpar/1032297#gistcomment-1738285
