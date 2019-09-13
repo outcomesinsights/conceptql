@@ -78,6 +78,22 @@ task :make_vocabs_csv, [:csv_path] do |t, args|
   end
 end
 
+desc "Show which columns can be ignored"
+task :ignorables, [:data_model] do |t, args|
+  require 'conceptql'
+  ConceptQL::DataModel.get(args[:data_model].to_sym).schema.each do |table, table_info|
+    if table_info[:ignorable]
+      puts "#{table}\tall_columns"
+      next
+    end
+    table_info[:columns].each do |column_name, column_info|
+      if column_info[:ignorable]
+        puts "#{table}\t#{column_name}"
+      end
+    end
+  end
+end
+
 desc "Dump a set of diagnostics"
 task :diagnostics do
   require "sequelizer"
