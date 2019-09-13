@@ -217,7 +217,7 @@ module ConceptQL
       end
 
       def assign_column_to_table
-        schema.each_with_object({}) do |(table, column_info), cols|
+        schema[:columns].each_with_object({}) do |(table, column_info), cols|
           column = yield table, column_info.keys.map(&:to_s)
           cols[table] = column ? column.to_sym : nil
         end
@@ -369,7 +369,7 @@ module ConceptQL
 
       def table_cols(table)
         table = table_to_sym(table)
-        cols = schema.fetch(table).keys
+        cols = schema.fetch(table)[:columns].keys
         cols
       end
 

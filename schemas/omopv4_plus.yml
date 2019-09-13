@@ -1,580 +1,603 @@
 ---
 :location:
-  :location_id:
-    :type: Bignum
-    :primary_key: true
-  :address_1:
-    :type: String
-    :size: 50
-  :address_2:
-    :type: String
-    :size: 50
-  :city:
-    :type: String
-    :size: 50
-  :state:
-    :type: String
-    :size: 2
-    :fixed: true
-  :zip:
-    :type: String
-    :size: 9
-  :county:
-    :type: String
-    :size: 20
-  :location_source_value:
-    :type: String
-    :size: 50
+  :ignorable: true
+  :columns:
+    :location_id:
+      :type: Bignum
+      :primary_key: true
+    :address_1:
+      :type: String
+      :size: 50
+    :address_2:
+      :type: String
+      :size: 50
+    :city:
+      :type: String
+      :size: 50
+    :state:
+      :type: String
+      :size: 2
+      :fixed: true
+    :zip:
+      :type: String
+      :size: 9
+    :county:
+      :type: String
+      :size: 20
+    :location_source_value:
+      :type: String
+      :size: 50
 
 :organization:
-  :organization_id:
-    :type: Bignum
-    :primary_key: true
-  :place_of_service_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :place_of_service_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :location_id:
-    :type: Bignum
-    :foreign_key: location
-  :organization_source_value:
-    :type: String
-    :size: 50
-    :null: false
-  :place_of_service_source_value:
-    :type: String
-    :size: 50
+  :ignorable: true
+  :columns:
+    :organization_id:
+      :type: Bignum
+      :primary_key: true
+    :place_of_service_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :place_of_service_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :location_id:
+      :type: Bignum
+      :foreign_key: location
+    :organization_source_value:
+      :type: String
+      :size: 50
+      :null: false
+    :place_of_service_source_value:
+      :type: String
+      :size: 50
 
 :care_site:
-  :care_site_id:
-    :type: Bignum
-    :primary_key: true
-    :null: false
-  :location_id:
-    :type: Bignum
-    :foreign_key: location
-    :null: false
-  :organization_id:
-    :type: Bignum
-    :foreign_key: organization
-    :null: false
-  :place_of_service_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :place_of_service_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :care_site_source_value:
-    :type: String
-    :size: 50
-  :place_of_service_source_value:
-    :type: String
-    :size: 50
-    :null: false
+  :ignorable: true
+  :columns:
+    :care_site_id:
+      :type: Bignum
+      :primary_key: true
+      :null: false
+    :location_id:
+      :type: Bignum
+      :foreign_key: location
+      :null: false
+    :organization_id:
+      :type: Bignum
+      :foreign_key: organization
+      :null: false
+    :place_of_service_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :place_of_service_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :care_site_source_value:
+      :type: String
+      :size: 50
+    :place_of_service_source_value:
+      :type: String
+      :size: 50
+      :null: false
 
 :provider:
-  :provider_id:
-    :type: Bignum
-    :primary_key: true
-  :npi:
-    :type: String
-    :size: 20
-  :dea:
-    :type: String
-    :size: 20
-  :specialty_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :specialty_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :care_site_id:
-    :type: Bignum
-    :foreign_key: care_site
-    :null: false
-  :provider_source_value:
-    :type: String
-    :size: 50
-    :null: false
-  :specialty_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :provider_id:
+      :type: Bignum
+      :primary_key: true
+    :npi:
+      :type: String
+      :size: 20
+    :dea:
+      :type: String
+      :size: 20
+    :specialty_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :specialty_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :care_site_id:
+      :type: Bignum
+      :foreign_key: care_site
+      :null: false
+    :provider_source_value:
+      :type: String
+      :size: 50
+      :null: false
+    :specialty_source_value:
+      :type: String
+      :size: 50
 
 :person:
-  :person_id:
-    :type: Bignum
-    :primary_key: true
-  :gender_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :gender_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :year_of_birth:
-    :type: Integer
-    :null: false
-  :month_of_birth:
-    :type: Integer
-  :day_of_birth:
-    :type: Integer
-  :race_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :race_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :ethnicity_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :ethnicity_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :location_id:
-    :type: Bignum
-    :foreign_key: location
-  :provider_id:
-    :type: Bignum
-    :foreign_key: provider
-  :care_site_id:
-    :type: Bignum
-    :foreign_key: care_site
-  :person_source_value:
-    :type: String
-    :size: 50
-  :gender_source_value:
-    :type: String
-    :size: 50
-  :race_source_value:
-    :type: String
-    :size: 50
-  :ethnicity_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :person_id:
+      :type: Bignum
+      :primary_key: true
+    :gender_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :gender_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :year_of_birth:
+      :type: Integer
+      :null: false
+    :month_of_birth:
+      :type: Integer
+    :day_of_birth:
+      :type: Integer
+    :race_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :race_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :ethnicity_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :ethnicity_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :location_id:
+      :type: Bignum
+      :foreign_key: location
+    :provider_id:
+      :type: Bignum
+      :foreign_key: provider
+    :care_site_id:
+      :type: Bignum
+      :foreign_key: care_site
+    :person_source_value:
+      :type: String
+      :size: 50
+    :gender_source_value:
+      :type: String
+      :size: 50
+    :race_source_value:
+      :type: String
+      :size: 50
+    :ethnicity_source_value:
+      :type: String
+      :size: 50
 
 :death:
-  :person_id:
-    :type: Bignum
-    :primary_key: true
-    :foreign_key: person
-  :death_date:
-    :type: Date
-    :null: false
-  :death_type_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :death_type_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :cause_of_death_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :cause_of_death_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :cause_of_death_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :person_id:
+      :type: Bignum
+      :primary_key: true
+      :foreign_key: person
+    :death_date:
+      :type: Date
+      :null: false
+    :death_type_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :death_type_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :cause_of_death_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :cause_of_death_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :cause_of_death_source_value:
+      :type: String
+      :size: 50
 
 :observation_period:
-  :observation_period_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :observation_period_start_date:
-    :type: Date
-    :null: false
-  :observation_period_end_date:
-    :type: Date
-    :null: false
-  :prev_ds_period_end_date:
-    :type: Date
+  :columns:
+    :observation_period_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :observation_period_start_date:
+      :type: Date
+      :null: false
+    :observation_period_end_date:
+      :type: Date
+      :null: false
+    :prev_ds_period_end_date:
+      :type: Date
 
 :payer_plan_period:
-  :payer_plan_period_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :payer_plan_period_start_date:
-    :type: Date
-    :null: false
-  :payer_plan_period_end_date:
-    :type: Date
-    :null: false
-  :payer_source_value:
-    :type: String
-    :size: 50
-  :plan_source_value:
-    :type: String
-    :size: 50
-  :family_source_value:
-    :type: String
-    :size: 50
-  :prev_ds_period_end_date:
-    :type: Date
+  :columns:
+    :payer_plan_period_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :payer_plan_period_start_date:
+      :type: Date
+      :null: false
+    :payer_plan_period_end_date:
+      :type: Date
+      :null: false
+    :payer_source_value:
+      :type: String
+      :size: 50
+    :plan_source_value:
+      :type: String
+      :size: 50
+    :family_source_value:
+      :type: String
+      :size: 50
+    :prev_ds_period_end_date:
+      :type: Date
 
 :visit_occurrence:
-  :visit_occurrence_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :visit_start_date:
-    :type: Date
-    :null: false
-  :visit_end_date:
-    :type: Date
-    :null: false
-  :place_of_service_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :care_site_id:
-    :type: Bignum
-    :foreign_key: care_ste
-  :place_of_service_source_value:
-    :type: String
-    :size: 50
-  :visit_occurrence_type_id:
-    :type: Bignum
-    :foreign_key: concept
-  :visit_source_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :admitting_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :visit_occurrence_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :visit_start_date:
+      :type: Date
+      :null: false
+    :visit_end_date:
+      :type: Date
+      :null: false
+    :place_of_service_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :care_site_id:
+      :type: Bignum
+      :foreign_key: care_ste
+    :place_of_service_source_value:
+      :type: String
+      :size: 50
+    :visit_occurrence_type_id:
+      :type: Bignum
+      :foreign_key: concept
+    :visit_source_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :admitting_source_value:
+      :type: String
+      :size: 50
 
 :condition_occurrence:
-  :condition_occurrence_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :condition_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :condition_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :condition_start_date:
-    :type: Date
-    :null: false
-  :condition_end_date:
-    :type: Date
-  :condition_type_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :stop_reason:
-    :type: String
-    :size: 20
-  :associated_provider_id:
-    :type: Bignum
-    :foreign_key: provider
-  :visit_occurrence_id:
-    :type: Bignum
-    :foreign_key: visit_occurrence
-  :condition_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :condition_occurrence_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :condition_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :condition_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :condition_start_date:
+      :type: Date
+      :null: false
+    :condition_end_date:
+      :type: Date
+    :condition_type_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :stop_reason:
+      :type: String
+      :size: 20
+    :associated_provider_id:
+      :type: Bignum
+      :foreign_key: provider
+    :visit_occurrence_id:
+      :type: Bignum
+      :foreign_key: visit_occurrence
+    :condition_source_value:
+      :type: String
+      :size: 50
 
 :drug_exposure:
-  :drug_exposure_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :drug_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :drug_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :drug_exposure_start_date:
-    :type: Date
-    :null: false
-  :drug_exposure_end_date:
-    :type: Date
-  :drug_type_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :stop_reason:
-    :type: String
-    :size: 20
-  :refills:
-    :type: Integer
-  :quantity:
-    :type: Float
-  :days_supply:
-    :type: Integer
-  :sig:
-    :type: String
-    :size: 500
-  :prescribing_provider_id:
-    :type: Bignum
-    :foreign_key: provider
-  :visit_occurrence_id:
-    :type: Bignum
-    :foreign_key: visit_occurrence
-  :relevant_condition_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :drug_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :drug_exposure_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :drug_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :drug_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :drug_exposure_start_date:
+      :type: Date
+      :null: false
+    :drug_exposure_end_date:
+      :type: Date
+    :drug_type_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :stop_reason:
+      :type: String
+      :size: 20
+    :refills:
+      :type: Integer
+    :quantity:
+      :type: Float
+    :days_supply:
+      :type: Integer
+    :sig:
+      :type: String
+      :size: 500
+    :prescribing_provider_id:
+      :type: Bignum
+      :foreign_key: provider
+    :visit_occurrence_id:
+      :type: Bignum
+      :foreign_key: visit_occurrence
+    :relevant_condition_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :drug_source_value:
+      :type: String
+      :size: 50
 
 :drug_cost:
-  :drug_cost_id:
-    :type: Bignum
-    :primary_key: true
-  :drug_exposure_id:
-    :type: Bignum
-    :foreign_key: drug_exposure
-    :null: false
-  :paid_copay:
-    :type: Float
-  :paid_coinsurance:
-    :type: Float
-  :paid_toward_deductible:
-    :type: Float
-  :paid_by_payer:
-    :type: Float
-  :paid_by_coordination_benefits:
-    :type: Float
-  :total_out_of_pocket:
-    :type: Float
-  :total_paid:
-    :type: Float
-  :ingredient_cost:
-    :type: Float
-  :dispensing_fee:
-    :type: Float
-  :average_wholesale_price:
-    :type: Float
-  :payer_plan_period_id:
-    :type: Bignum
-    :foreign_key: payer_plan_period
+  :columns:
+    :drug_cost_id:
+      :type: Bignum
+      :primary_key: true
+    :drug_exposure_id:
+      :type: Bignum
+      :foreign_key: drug_exposure
+      :null: false
+    :paid_copay:
+      :type: Float
+    :paid_coinsurance:
+      :type: Float
+    :paid_toward_deductible:
+      :type: Float
+    :paid_by_payer:
+      :type: Float
+    :paid_by_coordination_benefits:
+      :type: Float
+    :total_out_of_pocket:
+      :type: Float
+    :total_paid:
+      :type: Float
+    :ingredient_cost:
+      :type: Float
+    :dispensing_fee:
+      :type: Float
+    :average_wholesale_price:
+      :type: Float
+    :payer_plan_period_id:
+      :type: Bignum
+      :foreign_key: payer_plan_period
 
 :procedure_occurrence:
-  :procedure_occurrence_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :procedure_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :procedure_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :procedure_date:
-    :type: Date
-    :null: false
-  :procedure_type_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :associated_provider_id:
-    :type: Bignum
-    :foreign_key: provider
-  :visit_occurrence_id:
-    :type: Bignum
-    :foreign_key: visit_occurrence
-  :relevant_condition_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :procedure_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :procedure_occurrence_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :procedure_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :procedure_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :procedure_date:
+      :type: Date
+      :null: false
+    :procedure_type_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :associated_provider_id:
+      :type: Bignum
+      :foreign_key: provider
+    :visit_occurrence_id:
+      :type: Bignum
+      :foreign_key: visit_occurrence
+    :relevant_condition_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :procedure_source_value:
+      :type: String
+      :size: 50
 
 :procedure_cost:
-  :procedure_cost_id:
-    :type: Bignum
-    :primary_key: true
-  :procedure_occurrence_id:
-    :type: Bignum
-    :foreign_key: procedure_occurrence
-    :null: false
-  :paid_copay:
-    :type: Float
-  :paid_coinsurance:
-    :type: Float
-  :paid_toward_deductible:
-    :type: Float
-  :paid_by_payer:
-    :type: Float
-  :paid_by_coordination_benefits:
-    :type: Float
-  :total_out_of_pocket:
-    :type: Float
-  :total_paid:
-    :type: Float
-  :disease_class_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :revenue_code_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :payer_plan_period_id:
-    :type: Bignum
-    :foreign_key: payer_plan_period
-  :disease_class_source_value:
-    :type: String
-    :size: 50
-  :revenue_code_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :procedure_cost_id:
+      :type: Bignum
+      :primary_key: true
+    :procedure_occurrence_id:
+      :type: Bignum
+      :foreign_key: procedure_occurrence
+      :null: false
+    :paid_copay:
+      :type: Float
+    :paid_coinsurance:
+      :type: Float
+    :paid_toward_deductible:
+      :type: Float
+    :paid_by_payer:
+      :type: Float
+    :paid_by_coordination_benefits:
+      :type: Float
+    :total_out_of_pocket:
+      :type: Float
+    :total_paid:
+      :type: Float
+    :disease_class_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :revenue_code_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :payer_plan_period_id:
+      :type: Bignum
+      :foreign_key: payer_plan_period
+    :disease_class_source_value:
+      :type: String
+      :size: 50
+    :revenue_code_source_value:
+      :type: String
+      :size: 50
 
 :observation:
-  :observation_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :observation_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :observation_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :observation_date:
-    :type: Date
-    :null: false
-  :observation_time:
-    :type: Date
-  :value_as_number:
-    :type: Float
-  :value_as_string:
-    :type: String
-    :size: 60
-  :value_as_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :unit_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :range_low:
-    :type: Float
-  :range_high:
-    :type: Float
-  :observation_type_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :associated_provider_id:
-    :type: Bignum
-    :foreign_key: provider
-  :visit_occurrence_id:
-    :type: Bignum
-    :foreign_key: visit_occurrence
-  :relevant_condition_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :observation_source_value:
-    :type: String
-    :size: 50
-  :unit_source_value:
-    :type: String
-    :size: 50
+  :columns:
+    :observation_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :observation_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :observation_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :observation_date:
+      :type: Date
+      :null: false
+    :observation_time:
+      :type: Date
+    :value_as_number:
+      :type: Float
+    :value_as_string:
+      :type: String
+      :size: 60
+    :value_as_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :unit_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :range_low:
+      :type: Float
+    :range_high:
+      :type: Float
+    :observation_type_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :associated_provider_id:
+      :type: Bignum
+      :foreign_key: provider
+    :visit_occurrence_id:
+      :type: Bignum
+      :foreign_key: visit_occurrence
+    :relevant_condition_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :observation_source_value:
+      :type: String
+      :size: 50
+    :unit_source_value:
+      :type: String
+      :size: 50
 
 :concept:
-  :concept_id:
-    :type: Bignum
-    :primary_key: true
-  :concept_name:
-    :type: String
-  :concept_level:
-    :type: Integer
-  :concept_class:
-    :type: String
-  :vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :concept_code:
-    :type: String
-  :valid_start_date:
-    :type: Date
-  :valid_end_date:
-    :type: Date
-  :invalid_reason:
-    :type: String
+  :columns:
+    :concept_id:
+      :type: Bignum
+      :primary_key: true
+    :concept_name:
+      :type: String
+    :concept_level:
+      :type: Integer
+    :concept_class:
+      :type: String
+    :vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :concept_code:
+      :type: String
+    :valid_start_date:
+      :type: Date
+    :valid_end_date:
+      :type: Date
+    :invalid_reason:
+      :type: String
 
 :vocabulary:
-  :vocabulary_id:
-    :type: Bignum
-    :primary_key: true
-  :vocabulary_name:
-    :type: String
+  :columns:
+    :vocabulary_id:
+      :type: Bignum
+      :primary_key: true
+    :vocabulary_name:
+      :type: String
 
 :source_to_concept_map:
-  :source_code:
-    :type: String
-  :source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :source_code_description:
-    :type: String
-  :target_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-  :target_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :mapping_type:
-    :type: String
-  :primary_map:
-    :type: String
-  :valid_start_date:
-    :type: Date
-  :valid_end_date:
-    :type: Date
-  :invalid_reason:
-    :type: String
+  :columns:
+    :source_code:
+      :type: String
+    :source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :source_code_description:
+      :type: String
+    :target_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+    :target_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :mapping_type:
+      :type: String
+    :primary_map:
+      :type: String
+    :valid_start_date:
+      :type: Date
+    :valid_end_date:
+      :type: Date
+    :invalid_reason:
+      :type: String
 
 :cohort:
-  :cohort_id:
-    :type: Bignum
-    :primary_key: true
-  :cohort_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :cohort_start_date:
-    :type: Date
-    :null: false
-  :cohort_end_date:
-    :type: Date
-  :subject_id:
-    :type: Bignum
-    :null: false
-  :stop_reason:
-    :type: String
-    :size: 20
+  :ignorable: true
+  :columns:
+    :cohort_id:
+      :type: Bignum
+      :primary_key: true
+    :cohort_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :cohort_start_date:
+      :type: Date
+      :null: false
+    :cohort_end_date:
+      :type: Date
+    :subject_id:
+      :type: Bignum
+      :null: false
+    :stop_reason:
+      :type: String
+      :size: 20
   :indexes:
     :coh_cohconid:
       :columns:
@@ -586,59 +609,62 @@
       :columns:
         - subject_id
 
-
 :condition_era:
-  :condition_era_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :condition_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :condition_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :condition_era_start_date:
-    :type: Date
-    :null: false
-  :condition_era_end_date:
-    :type: Date
-    :null: false
-  :condition_type_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :condition_occurrence_count:
-    :type: Integer
+  :ignorable: true
+  :columns:
+    :condition_era_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :condition_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :condition_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :condition_era_start_date:
+      :type: Date
+      :null: false
+    :condition_era_end_date:
+      :type: Date
+      :null: false
+    :condition_type_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :condition_occurrence_count:
+      :type: Integer
 
 :drug_era:
-  :drug_era_id:
-    :type: Bignum
-    :primary_key: true
-  :person_id:
-    :type: Bignum
-    :foreign_key: person
-    :null: false
-  :drug_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :drug_source_vocabulary_id:
-    :type: Bignum
-    :foreign_key: vocabulary
-  :drug_era_start_date:
-    :type: Date
-    :null: false
-  :drug_era_end_date:
-    :type: Date
-    :null: false
-  :drug_type_concept_id:
-    :type: Bignum
-    :foreign_key: concept
-    :null: false
-  :drug_exposure_count:
-    :type: Integer
+  :ignorable: true
+  :columns:
+    :drug_era_id:
+      :type: Bignum
+      :primary_key: true
+    :person_id:
+      :type: Bignum
+      :foreign_key: person
+      :null: false
+    :drug_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :drug_source_vocabulary_id:
+      :type: Bignum
+      :foreign_key: vocabulary
+    :drug_era_start_date:
+      :type: Date
+      :null: false
+    :drug_era_end_date:
+      :type: Date
+      :null: false
+    :drug_type_concept_id:
+      :type: Bignum
+      :foreign_key: concept
+      :null: false
+    :drug_exposure_count:
+      :type: Integer
