@@ -42,7 +42,12 @@
           "rows": 7,
           "n": 7
         }
-      }
+      },
+      "warnings": [
+        [
+          "This operator will no longer be available in a future version of Jigsaw. Please use Provenance, Place of Service, or Provider instead."
+        ]
+      ]
     },
     "name": "Intersect"
   }

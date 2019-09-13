@@ -46,6 +46,11 @@
             "icd9"
           ]
         ]
+      ],
+      "warnings": [
+        [
+          "This operator will no longer be available in a future version of Jigsaw."
+        ]
       ]
     },
     "name": "Complement"
