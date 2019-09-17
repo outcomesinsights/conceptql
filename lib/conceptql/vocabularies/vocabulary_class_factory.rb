@@ -37,6 +37,10 @@ module ConceptQL
           if entry.is_source?
             include Behaviors::Sourcish
           end
+
+          if entry.is_costish?
+            include Behaviors::Costish
+          end
         end
       end
 
@@ -76,10 +80,6 @@ module ConceptQL
 
           if entry.is_drugish?
             include ConceptQL::Behaviors::Drugish
-          end
-
-          if entry.is_costish?
-            include Behaviors::Costish
           end
 
           def vocab_entry
