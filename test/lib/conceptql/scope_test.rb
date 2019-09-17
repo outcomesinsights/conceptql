@@ -105,6 +105,21 @@ describe ConceptQL::Scope do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
         db.query(["revenue_code", "0450"], opts).sql.downcase.scan(/inner join/i).count.must_equal 1
       end
+
+      it "should have revenue code search revenue_code_source_value" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
+        db.query(["revenue_code", "0450"], opts).sql.downcase.must_match(/revenue_code_source_value/i)
+      end
+
+      it "should not apply to inner query of drg operator" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
+        db.query(["drg", "829"], opts).sql.downcase.scan(/inner join/i).count.must_equal 1
+      end
+
+      it "should have drg code search disease_class_source_value" do
+        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
+        db.query(["drg", "829"], opts).sql.downcase.must_match(/disease_class_source_value/i)
+      end
     end
 
     describe "with windows from another table, along with adjustments" do

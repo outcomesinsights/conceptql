@@ -127,7 +127,7 @@ module ConceptQL
       end
 
       def is_standard?
-        belongs_in_omopv4_plus? && STANDARD_VOCABS.include?(id)
+        belongs_in_omopv4_plus? && STANDARD_VOCABS.include?(omopv5_vocabulary_id)
       end
 
       def is_source?
@@ -185,7 +185,7 @@ module ConceptQL
       end
 
       def is_costish?
-        belongs_in_omopv4_plus? && COST_RELATED_VOCABS.include?(id)
+        belongs_in_omopv4_plus? && COST_RELATED_VOCABS.include?(omopv5_vocabulary_id)
       end
 
       def visible?

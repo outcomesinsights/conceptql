@@ -5,7 +5,7 @@ module ConceptQL
     module Behaviors
       module Costish
         def query(db)
-          costs = CostOp.new(nodifier, "drg", *arguments).evaluate(db).select(:criterion_id)
+          costs = db[:procedure_cost].where(column_to_search => values).select(:procedure_occurrence_id)
           db[:procedure_occurrence].where(procedure_occurrence_id: costs)
         end
 
@@ -13,25 +13,8 @@ module ConceptQL
           :procedure_occurrence
         end
 
-        class CostOp < ConceptQL::Operators::Vocabulary 
-          include Omopish
-          include ConceptQL::Behaviors::Unwindowable
-
-          def table
-            :procedure_cost
-          end
-
-          def vocabulary_id
-            40
-          end
-
-          def concept_column
-            :disease_class_concept_id
-          end
-
-          def code_column
-            :disease_class_source_value
-          end
+        def column_to_search
+          vocab_entry.id == "revenue_code" ? :revenue_code_source_value : :disease_class_source_value
         end
       end
     end
