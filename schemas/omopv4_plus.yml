@@ -1,6 +1,5 @@
 ---
 :location:
-  :ignorable: true
   :columns:
     :location_id:
       :type: Bignum
@@ -152,7 +151,6 @@
     :location_id:
       :type: Bignum
       :foreign_key: location
-      :ignorable: true
     :provider_id:
       :type: Bignum
       :foreign_key: provider
@@ -204,7 +202,6 @@
     :cause_of_death_source_value:
       :type: String
       :size: 50
-      :ignorable: true
 
 :observation_period:
   :columns:
@@ -243,7 +240,6 @@
     :payer_source_value:
       :type: String
       :size: 50
-      :ignorable: true
     :plan_source_value:
       :type: String
       :size: 50
@@ -281,7 +277,6 @@
     :place_of_service_source_value:
       :type: String
       :size: 50
-      :ignorable: true
     :visit_occurrence_type_id:
       :type: Bignum
       :foreign_key: concept
@@ -388,6 +383,7 @@
       :size: 50
 
 :drug_cost:
+  :ignorable: true
   :columns:
     :drug_cost_id:
       :type: Bignum
@@ -505,6 +501,7 @@
     :revenue_code_concept_id:
       :type: Bignum
       :foreign_key: concept
+      :ignorable: true
     :payer_plan_period_id:
       :type: Bignum
       :foreign_key: payer_plan_period
@@ -512,7 +509,6 @@
     :disease_class_source_value:
       :type: String
       :size: 50
-      :ignorable: true
     :revenue_code_source_value:
       :type: String
       :size: 50

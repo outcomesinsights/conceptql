@@ -81,14 +81,46 @@ end
 desc "Show which columns can be ignored"
 task :ignorables, [:data_model] do |t, args|
   require 'conceptql'
-  ConceptQL::DataModel.get(args[:data_model].to_sym).schema.each do |table, table_info|
+  dm = args[:data_model].to_sym
+  ignorables = ConceptQL::DataModel.get(dm).schema.each_with_object([]) do |(table, table_info), iggies|
+    if table_info[:ignorable]
+      iggies << [table.to_s, "all columns"]
+      next
+    else
+      table_info[:columns].map do |column_name, column_info|
+        if column_info[:ignorable]
+          iggies << [table.to_s, column_name.to_s]
+        end
+      end
+    end
+  end
+
+  additional = Pathname.new("schemas") + "#{dm}_more_ignorables.tsv"
+  if additional.exist?
+    ignorables += CSV.readlines(additional, col_sep: "\t")
+  end
+
+  puts ignorables.sort.map{ |arr| arr.join("\t") }.join("\n")
+end
+
+desc "Drop all tables/columns which can be ignored"
+task :drop_ignorables, [:data_model] do |t, args|
+  require 'conceptql'
+  require 'sequelizer'
+  include Sequelizer
+  dm = args[:data_model].to_sym
+
+  db.set(search_path: "#{dm}_250")
+  ConceptQL::DataModel.get(dm).schema.each do |table, table_info|
     if table_info[:ignorable]
       puts "#{table}\tall_columns"
+      db.drop_table(table, if_exists: true)
       next
     end
     table_info[:columns].each do |column_name, column_info|
       if column_info[:ignorable]
         puts "#{table}\t#{column_name}"
+        db.drop_column(table, column_name)
       end
     end
   end
