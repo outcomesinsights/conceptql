@@ -55,7 +55,7 @@ module ConceptQL
       end
 
       def uuid_items
-        %w(person_id criterion_id criterion_table start_date).map do |column|
+        %w(person_id criterion_id criterion_table start_date end_date).map do |column|
           Sequel.cast_string(column.to_sym)
         end
       end

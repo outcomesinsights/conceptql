@@ -70,7 +70,14 @@ Groups all incoming results into episodes by person allowing for there to be a g
             Sequel.function(:max, :episode_end_date).as(:end_date)
           )
 
-        episode_query_cols = [:person_id, :start_date, :end_date]
+       # Episodes streams return null for criterion_id,table, and domain which messes up uuid generation so we had to add constants to these values
+       episode_summary = episode_summary.from_self.select_append(
+          Sequel[0].cast_numeric.as(:criterion_id),
+          Sequel.cast_string("episode").as(:criterion_table),
+          Sequel.cast_string("episode").as(:criterion_domain)
+        )
+
+        episode_query_cols = [:person_id, :start_date, :end_date, :criterion_id, :criterion_table, :criterion_domain]
         return dm.selectify(episode_summary.from_self, {query_columns: episode_query_cols.zip(episode_query_cols).to_h})
       end
 
