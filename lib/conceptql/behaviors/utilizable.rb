@@ -19,7 +19,7 @@ module ConceptQL
       end
 
       def query(db)
-        return db[:condition_occurrence].limit(1).nullify if omopv4_plus?
+        return db[:condition_occurrence].where(false) if omopv4_plus?
         return gdm_it(db)
       end
 

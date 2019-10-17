@@ -1,18 +1,5 @@
 [
   {
-    "person_id": 2,
-    "criterion_id": 17635,
-    "criterion_table": "condition_occurrence",
-    "criterion_domain": "condition_occurrence",
-    "start_date": "2009-10-01",
-    "end_date": "2009-10-01",
-    "source_value": "002.0",
-    "source_vocabulary_id": "2",
-    "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
-  },
-  {
     "person_id": 11,
     "criterion_id": 43264,
     "criterion_table": "condition_occurrence",
