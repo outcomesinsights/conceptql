@@ -251,18 +251,19 @@ module ConceptQL
         false
       end
 
-      def select_it(query, specific_table = nil)
+      def select_it(query, opts = {})
+        specific_table = opts[:specific_table]
         specific_table ||= dm.determine_table(:source_table)
         specific_table ||= dm.determine_table(:table)
         specific_table ||= dm.determine_table(:domain)
 
-        dom = domain rescue nil
+        dom = opts[:domain] || domain rescue nil
 
         opts = {
           table: specific_table,
           criterion_domain: dom,
           query_columns: override_columns,
-          uuid: options[:uuid]
+          uuid: opts[:uuid] || options[:uuid]
         }
 
         if comments?

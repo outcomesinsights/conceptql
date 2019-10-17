@@ -66,6 +66,18 @@ module ConceptQL
         (results + remaining_codes.zip([])).sort_by(&:first)
       end
 
+      def filter_clause(db)
+        filter_clause = Sequel[where_clause(db)]
+        if (ex_clause = exclusion_clause(db)).present?
+          filter_clause = filter_clause.&(~Sequel[ex_clause])
+        end
+        filter_clause
+      end
+
+      def criterion_table
+        dm.table_by_domain(domain)
+      end
+
       private
 
       def code_column
@@ -85,21 +97,23 @@ module ConceptQL
       end
 
       def query(db)
-        ds = db[dm.table_by_domain(domain)]
+        ds = db[criterion_table]
 
-        ds = ds.where(where_clause(db))
-        ds = apply_exclusion(ds)
-        ds = apply_additional_columns(ds)
+        ds = ds.where(filter_clause(db))
+
+        unless (more_columns = additional_columns(db)).empty?
+          ds = ds.select_append(*more_columns)
+        end
 
         ds
       end
 
-      def apply_exclusion(ds)
-        return ds
+      def exclusion_clause(db)
+        {}
       end
 
-      def apply_additional_columns(ds)
-        return ds
+      def additional_columns(db)
+        []
       end
 
       def where_clause(db)

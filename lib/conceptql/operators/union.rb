@@ -5,6 +5,28 @@ module ConceptQL
     class Union < PassThru
       register __FILE__
 
+      class Combiner
+        attr_reader :combinables
+
+        def initialize(combinables)
+          @combinables = combinables
+        end
+
+        def queries(db)
+          combinables.group_by(&:domain).map do |domain, combos|
+            include_uuid = combos.any? { |c| c.options[:uuid] }
+            criteria = combos.map do |combo|
+              combo.filter_clause(db)
+            end.inject(&:|)
+
+            table = combos.first.criterion_table
+            ds = db[table]
+                  .where(criteria)
+            combos.first.select_it(ds, specific_table: table, domain: domain, uuid: include_uuid)
+          end
+        end
+      end
+
       desc 'Pools sets of incoming results into a single large set of results.'
       allows_many_upstreams
       category "Combine Streams"
@@ -13,65 +35,18 @@ module ConceptQL
       validate_no_arguments
 
       def query(db)
-        datasets = upstreams.map do |expression|
+        combinables, individuals = upstreams.partition { |upstream| upstream.is_a?(Vocabulary) }
+
+        queries = individuals.map do |expression|
           expression.evaluate(db)
         end
 
-        optss = datasets
-          .map { |ds| ds.opts.compact }
-          .each { |opts| opts.delete(:num_dataset_sources) }
+        queries += Combiner.new(combinables).queries(db)
 
-        possibly_combinable = optss.all? { |opts| opts.length == 1 && opts[:from].length == 1 }
-        if possibly_combinable
-          subqueries = optss.map { |opts| opts[:from].first }
-          subqueries.map! { |ds| ds.is_a?(Sequel::SQL::AliasedExpression) ? ds.expression : ds }
-          subquery_optss = subqueries.map { |ds| ds.opts.compact }
-          subquery_optss.each{|opts| opts.delete(:where)}
-          combinable = subquery_optss.uniq.length == 1
+        queries.map!{|ds| ds.from_self.select(*query_cols).from_self}
+        queries.inject do |q, query|
+          q.union(query, all: true)
         end
-
-        if combinable
-          subqueries.inject do |ds, q|
-            q.or(Sequel.|(ds.opts[:where] || true))
-          end.from_self
-        else
-          datasets.map!{|ds| ds.from_self.select(*query_cols)}
-          datasets.inject do |q, query|
-            q.union(query, all: true)
-          end
-        end
-      end
-
-      def flattened
-        exprs = []
-        upstreams.each do |x|
-          if x.is_a?(Union)
-            exprs.concat x.flattened.upstreams
-          else
-            exprs << x
-          end
-        end
-        dup_values(exprs)
-      end
-
-      def optimized
-        first, *rest = flattened.upstreams
-        exprs = [first]
-
-        rest.each do |expression|
-          add = true
-          exprs.length.times do |i|
-            exp = exprs[i]
-            if exprs[i].unionable?(expression)
-              exprs[i] = exp.union(expression, all: true)
-              add = false
-              break
-            end
-          end
-          exprs << expression if add
-        end
-
-        dup_values(exprs.map{|x| x.is_a?(Operator) ? x.optimized : x})
       end
     end
   end
