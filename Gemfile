@@ -7,4 +7,5 @@ gem "sequel_impala", path: "../sequel_impala"
 
 group :test, :development do
   gem "pry"
+  gem "pry-byebug"
 end
