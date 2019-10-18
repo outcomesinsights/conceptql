@@ -21,8 +21,9 @@ Groups all incoming results into episodes by person allowing for there to be a g
       def query(db)
         ds = unioned(db)
 
-        dt1 = ds.select(
-            :person_id,
+        ids_plus_episode = (partition_vars + [:episode])
+
+        dt1 = ds.select(*partition_vars).select_append(
             :start_date,
             :end_date,
             Sequel[:start_date].as(:episode_start_date),
@@ -46,26 +47,28 @@ Groups all incoming results into episodes by person allowing for there to be a g
           (Sequel.function(:count,:step).over(partition: partition_vars, order: [:start_date, :end_date]) + 1).as(:episode)
         )
 
+        ids_plus_episode = (partition_vars + [:episode])
+
         # Get last dispensing in an episodes gap and
-        last_dispensing = tmp_episode_summary.from_self.select(
-            :person_id,
-            :episode,
+        last_dispensing = tmp_episode_summary.from_self.select(*ids_plus_episode).
+          select_append(
             :gap_of,
-            datediff(db, Sequel[:episode_start_date], Sequel.function(:lag, :episode_end_date).over(partition: [:person_id, :episode], order: :start_date)).as(:LEpisodeGap),
-            Sequel.function(:row_number).over(partition: [:person_id, :episode], order: [Sequel.desc(:start_date)]).as(:event_number)
+            datediff(db, Sequel[:episode_start_date], Sequel.function(:lag, :episode_end_date).over(partition: partition_vars + [:episode], order: :start_date)).as(:LEpisodeGap),
+            Sequel.function(:row_number).over(partition: ids_plus_episode, order: [Sequel.desc(:start_date)]).as(:event_number)
           )
 
         last_dispensing = last_dispensing.from_self.where(event_number: 1)
 
-        episode_summary = tmp_episode_summary.from_self(alias: :e).join(last_dispensing, {person_id: :person_id, episode: :episode},
+        join_hash = ids_plus_episode.map{|c| [c,c]}.to_h
+
+        episode_summary = tmp_episode_summary.from_self(alias: :e).join(last_dispensing, join_hash,
                                                     table_alias: :o)
        e = Sequel[:e]
        o = Sequel[:o]
 
-       episode_summary = episode_summary.select_group(
-            e[:person_id],
-            e[:episode]
-            ).select_append(
+       grp_cols = ids_plus_episode.map{|c| e[c]}
+
+       episode_summary = episode_summary.select_group(*grp_cols).select_append(
             Sequel.function(:min, :episode_start_date).as(:start_date),
             Sequel.function(:max, :episode_end_date).as(:end_date)
           )
@@ -77,7 +80,7 @@ Groups all incoming results into episodes by person allowing for there to be a g
           Sequel.cast_string("episode").as(:criterion_domain)
         )
 
-        episode_query_cols = [:person_id, :start_date, :end_date, :criterion_id, :criterion_table, :criterion_domain]
+        episode_query_cols = partition_vars + [:start_date, :end_date, :criterion_id, :criterion_table, :criterion_domain]
         return dm.selectify(episode_summary.from_self, {query_columns: episode_query_cols.zip(episode_query_cols).to_h})
       end
 
@@ -94,7 +97,7 @@ Groups all incoming results into episodes by person allowing for there to be a g
       end
 
       def partition_vars
-        return :person_id
+        return matching_columns
       end
 
       ##
