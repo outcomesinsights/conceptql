@@ -32,6 +32,8 @@ Dir.glob(File.dirname(__FILE__) + "/../lib/conceptql/query_modifiers/**/*.rb").e
 end
 
 module ConceptQL
+  DEFAULT_DATA_MODEL = :gdm
+
   def self.avoid_ctes?
     ENV['CONCEPTQL_AVOID_CTES'] == 'true'
   end
