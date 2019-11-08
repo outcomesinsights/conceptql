@@ -3,7 +3,7 @@ begin
 rescue LoadError
 end
 
-ENV['CONCEPTQL_DATA_MODEL'] ||= 'omopv4_plus'
+ENV['CONCEPTQL_DATA_MODEL'] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
 
 desc "Setup test database"
 task :test_db_setup do

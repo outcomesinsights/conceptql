@@ -14,7 +14,7 @@ module ConceptQL
     end
 
     def get_data_model(opts)
-      (opts[:data_model] || ENV["CONCEPTQL_DATA_MODEL"] || :omopv4_plus).to_sym
+      (opts[:data_model] || ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
     end
 
     def create(operator, *values)
