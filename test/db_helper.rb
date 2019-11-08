@@ -5,7 +5,9 @@ require "logger"
 require "pp"
 require "fileutils"
 
-CDB = ConceptQL::Database.new(DB, :data_model=>(ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym)
+ENV["CONCEPTQL_DATA_MODEL"] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
+
+CDB = ConceptQL::Database.new(DB, :data_model=>ENV["CONCEPTQL_DATA_MODEL"].to_sym)
 DB.extension :error_sql
 
 PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
