@@ -1,8 +1,8 @@
-require_relative "operator"
+require_relative "base"
 
 module ConceptQL
   module Operators
-    class Snf < Operator
+    class Snf < Base
       register __FILE__
       include ConceptQL::Behaviors::Utilizable
 

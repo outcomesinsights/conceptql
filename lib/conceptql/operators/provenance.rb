@@ -1,5 +1,5 @@
-require_relative 'operator'
-require_relative '../behaviors/provenanceable'
+require_relative "base"
+require_relative "../behaviors/provenanceable"
 
 module ConceptQL
   module Operators
@@ -13,7 +13,7 @@ module ConceptQL
     # out.
     #
     # Multiple provenances can be specified at once
-    class Provenance < Operator
+    class Provenance < Base
       register __FILE__
 
       desc <<-EOF

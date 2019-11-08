@@ -1,8 +1,8 @@
-require_relative "operator"
+require_relative "base"
 
 module ConceptQL
   module Operators
-    class Vocabulary < Operator
+    class Vocabulary < Base
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::CodeLister
 

@@ -1,4 +1,4 @@
-require_relative 'operators/operator'
+require_relative 'operators/base'
 
 module ConceptQL
   class Nodifier

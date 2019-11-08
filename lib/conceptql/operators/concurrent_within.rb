@@ -1,9 +1,9 @@
-require_relative 'operator'
-require_relative '../date_adjuster'
+require_relative "base"
+require_relative "../date_adjuster"
 
 module ConceptQL
   module Operators
-    class ConcurrentWithin < Operator
+    class ConcurrentWithin < Base
       register __FILE__
 
       desc 'Filters each upstream to only include rows where there are matching entries in each of the other upstreams.'

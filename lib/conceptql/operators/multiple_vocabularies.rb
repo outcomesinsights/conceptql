@@ -1,6 +1,6 @@
 module ConceptQL
   module Operators
-    class MultipleVocabularies < Operator
+    class MultipleVocabularies < Base
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::CodeLister
 

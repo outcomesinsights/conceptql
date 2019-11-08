@@ -1,6 +1,8 @@
+require_relative "base"
+
 module ConceptQL
   module Operators
-    class Invalid < Operator
+    class Invalid < Base
       register __FILE__
 
       no_desc

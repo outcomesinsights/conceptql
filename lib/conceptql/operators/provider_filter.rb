@@ -1,10 +1,10 @@
-require_relative 'operator'
+require_relative "base"
 
 module ConceptQL
   module Operators
     # Filters incoming events to only those that have been associated with
     # providers matching the given criteria.
-    class ProviderFilter < Operator
+    class ProviderFilter < Base
       register __FILE__
 
       desc "Filters incoming events to only those that match the associated providers based on provider specialty concept_ids."

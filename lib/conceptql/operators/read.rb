@@ -1,10 +1,11 @@
-require 'sequel'
-require 'sequel/adapters/mock'
-require_relative '../behaviors/labish'
+require "sequel"
+require "sequel/adapters/mock"
+require_relative "base"
+require_relative "../behaviors/labish"
 
 module ConceptQL
   module Operators
-    class Read < Operator
+    class Read < Base
       register __FILE__
 
       preferred_name "READ"

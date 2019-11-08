@@ -1,8 +1,8 @@
-require_relative "operator"
+require_relative "base"
 
 module ConceptQL
   module Operators
-    class Hospitalization < Operator
+    class Hospitalization < Base
       register __FILE__
       include ConceptQL::Behaviors::Utilizable
 

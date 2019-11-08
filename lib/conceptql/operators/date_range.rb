@@ -1,5 +1,5 @@
-require_relative 'operator'
-require 'date'
+require_relative "base"
+require "date"
 
 module ConceptQL
   module Operators
@@ -8,7 +8,7 @@ module ConceptQL
     # Accepts two params: start and end formateed as 'YYYY-MM-DD' or 'START' or 'END'
     # 'START' represents the first date of data in the data source,
     # 'END' represents the last date of data in the data source,
-    class DateRange < Operator
+    class DateRange < Base
       register __FILE__
 
       include ConceptQL::Behaviors::Windowable

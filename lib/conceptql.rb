@@ -1,8 +1,9 @@
+require "pathname"
 require "conceptql/version"
 require "conceptql/logger"
 require "conceptql/paths"
 require "conceptql/utils"
-require "conceptql/operators/operator"
+require "conceptql/operators/base"
 require "conceptql/behaviors/code_lister"
 require "conceptql/behaviors/timeless"
 require "conceptql/behaviors/unwindowable"
@@ -66,7 +67,9 @@ end
 # vocabularies found in Lexicon.  Then other operators might override
 # some of those dynamically generated operators
 ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
-Dir.new(File.dirname(__FILE__) + "/conceptql/operators").
-  entries.
-  each{|filename| require_relative "conceptql/operators/" + filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}
+Pathname.glob(File.dirname(__FILE__) + "/conceptql/operators/**/*.rb")
+  .entries
+  .map { |e| e.to_s.gsub(File.dirname(__FILE__) + "/", '') }
+  .tap { |e| p e }
+  .each{ |filename| require_relative filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}
 ConceptQL::Operators.operators.values.each(&:freeze)

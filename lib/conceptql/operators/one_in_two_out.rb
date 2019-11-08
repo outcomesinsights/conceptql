@@ -1,11 +1,10 @@
-require_relative 'operator'
-require_relative 'visit_occurrence'
-require_relative '../date_adjuster'
-require_relative '../behaviors/provenanceable'
+require_relative "base"
+require_relative "../date_adjuster"
+require_relative "../behaviors/provenanceable"
 
 module ConceptQL
   module Operators
-    class OneInTwoOut < Operator
+    class OneInTwoOut < Base
       register __FILE__
 
       desc <<-EOF

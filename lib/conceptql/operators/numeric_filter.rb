@@ -1,4 +1,4 @@
-require_relative "operator"
+require_relative "base"
 require "active_support/core_ext/object/blank"
 
 module ConceptQL
@@ -8,7 +8,7 @@ module ConceptQL
     # are passed through
     #
     # If an event has NULL for value_as_number, it is filtered out.
-    class NumericFilter < Operator
+    class NumericFilter < Base
       register __FILE__
 
       desc <<-DESC

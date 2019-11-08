@@ -1,4 +1,4 @@
-require_relative 'operator'
+require_relative "base"
 
 module ConceptQL
   module Operators
@@ -12,7 +12,7 @@ module ConceptQL
     # out.
     #
     # Multiple provenances can be specified at once
-    class PlaceOfServiceFilter < Operator
+    class PlaceOfServiceFilter < Base
       register __FILE__
 
       desc <<-EOF

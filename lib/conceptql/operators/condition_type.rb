@@ -1,4 +1,4 @@
-require_relative 'operator'
+require_relative "base"
 
 module ConceptQL
   module Operators
@@ -9,7 +9,7 @@ module ConceptQL
     # the raw data, e.g. primary inpatient header or 15th outpatient detail
     #
     # Multiple types can be specified at once
-    class ConditionType < Operator
+    class ConditionType < Base
       register __FILE__
 
       include ConceptQL::Behaviors::Windowable

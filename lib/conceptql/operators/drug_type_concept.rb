@@ -1,9 +1,9 @@
-require_relative 'operator'
-require_relative '../behaviors/drugish'
+require_relative "base"
+require_relative "../behaviors/drugish"
 
 module ConceptQL
   module Operators
-    class DrugTypeConcept < Operator
+    class DrugTypeConcept < Base
       register __FILE__
 
       desc 'Returns all drug_exposures that match the given set of Drug Type concept IDs.'

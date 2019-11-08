@@ -1,8 +1,8 @@
-require_relative 'operator'
+require_relative "base"
 
 module ConceptQL
   module Operators
-    class Ethnicity < Operator
+    class Ethnicity < Base
       register __FILE__
 
       desc "Generates all person records that match the given set of Race codes."

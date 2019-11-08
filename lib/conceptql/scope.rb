@@ -110,7 +110,7 @@ module ConceptQL
     def nest(op)
       add_required_columns(op)
       harvest_person_ids(op)
-      return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
+      return yield unless label = op.is_a?(Operators::PassThru::Recall) ? op.source : op.label
 
       unless label.is_a?(String)
         op.instance_eval do
@@ -130,7 +130,7 @@ module ConceptQL
         return
       end
 
-      if duplicate_label?(label) && !op.is_a?(Operators::Recall)
+      if duplicate_label?(label) && !op.is_a?(Operators::PassThru::Recall)
         op.instance_eval do
           @errors = []
           add_error("duplicate label")

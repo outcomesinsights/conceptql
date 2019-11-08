@@ -1,6 +1,8 @@
+require_relative "base"
+
 module ConceptQL
   module Operators
-    class From < Operator
+    class From < Base
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 

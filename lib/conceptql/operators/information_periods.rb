@@ -1,8 +1,8 @@
-require_relative "operator"
+require_relative "base"
 
 module ConceptQL
   module Operators
-    class InformationPeriods < Operator
+    class InformationPeriods < Base
       register __FILE__
 
       include ConceptQL::Behaviors::Windowable

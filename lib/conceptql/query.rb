@@ -67,6 +67,7 @@ module ConceptQL
       #puts $!.message
       #puts $!.backtrace.join("\n")
       return { query: "SQL unavailable for this statement\n#{$!.message}\n#{$!.backtrace.join("\n")}" }
+      #raise
     end
 
     def annotate(opts = {})
