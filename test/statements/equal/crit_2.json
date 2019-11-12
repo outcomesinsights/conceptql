@@ -5,8 +5,8 @@
       "numeric",
       1,
       [
-        "drug_type_concept",
-        2
+        "ndc",
+        "12745010902"
       ]
     ],
     "right": [

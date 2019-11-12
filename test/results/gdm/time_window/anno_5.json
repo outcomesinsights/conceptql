@@ -16,23 +16,17 @@
     }
   ],
   [
-    "place_of_service_code",
-    "21",
+    "information_periods",
     {
       "annotation": {
         "counts": {
-          "condition_occurrence": {
-            "rows": 0,
-            "n": 0
+          "observation_period": {
+            "rows": 946,
+            "n": 249
           }
-        },
-        "warnings": [
-          [
-            "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
-          ]
-        ]
+        }
       },
-      "name": "Place Of Service Code"
+      "name": "Information Periods"
     }
   ],
   {
@@ -43,6 +37,10 @@
         "condition_occurrence": {
           "rows": 0,
           "n": 0
+        },
+        "observation_period": {
+          "rows": 0,
+          "n": 0
         }
       },
       "errors": [
@@ -50,7 +48,7 @@
           "has multiple upstreams",
           [
             "icd9",
-            "place_of_service_code"
+            "information_periods"
           ]
         ]
       ]

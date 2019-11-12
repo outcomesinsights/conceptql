@@ -2961,7 +2961,7 @@
                                         }
                                       ],
                                       "right": [
-                                        "observation_period"
+                                        "information_periods"
                                       ]
                                     }
                                   ],

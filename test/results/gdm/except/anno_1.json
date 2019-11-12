@@ -17,30 +17,40 @@
       }
     ],
     "right": [
-      "condition_type",
-      "inpatient_header",
+      "provenance",
+      [
+        "icd9",
+        "412",
+        {
+          "annotation": {
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              }
+            }
+          },
+          "name": "ICD-9 CM"
+        }
+      ],
+      "inpatient",
       {
         "annotation": {
           "counts": {
             "condition_occurrence": {
-              "rows": 0,
-              "n": 0
+              "rows": 7,
+              "n": 7
             }
-          },
-          "warnings": [
-            [
-              "This operator will no longer be available in a future version of Jigsaw. Please use provenance instead."
-            ]
-          ]
+          }
         },
-        "name": "Condition Type"
+        "name": "Provenance"
       }
     ],
     "annotation": {
       "counts": {
         "condition_occurrence": {
-          "rows": 48,
-          "n": 37
+          "rows": 41,
+          "n": 32
         }
       }
     },

@@ -45,30 +45,25 @@
     }
   ],
   [
-    "place_of_service_code",
-    "21",
+    "icd9",
+    "410.00",
     {
       "annotation": {
         "counts": {
           "condition_occurrence": {
-            "rows": 0,
-            "n": 0
+            "rows": 1,
+            "n": 1
           }
-        },
-        "warnings": [
-          [
-            "This operator will no longer be available in a future version of Jigsaw. Please use place_of_service_filter instead."
-          ]
-        ]
+        }
       },
-      "name": "Place Of Service Code"
+      "name": "ICD-9 CM"
     }
   ],
   {
     "annotation": {
       "counts": {
         "condition_occurrence": {
-          "rows": 1596,
+          "rows": 1597,
           "n": 189
         }
       }
