@@ -1,5 +1,4 @@
 require_relative "base"
-require_relative "../behaviors/provenanceable"
 
 module ConceptQL
   module Operators

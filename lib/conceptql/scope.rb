@@ -98,6 +98,7 @@ module ConceptQL
     def add_required_columns(op)
       if op.required_columns
         @query_columns |= op.required_columns
+        @query_columns.sort_by! { |qc| COLUMN_TYPES.keys.index(qc) }
       end
     end
 

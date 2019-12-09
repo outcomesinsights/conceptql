@@ -2,9 +2,14 @@ module ConceptQL
   module Rdbms
     class Generic
       def process(column, value = nil)
+        cast_it(column, value).as(column)
+      end
+
+      def cast_it(column, value = nil)
         type = Scope::COLUMN_TYPES.fetch(column)
+
         new_column = case type
-        when String, :String
+        when String, :String, "String"
           Sequel.cast_string(value)
         when Date, :Date
           cast_date(value)
@@ -13,7 +18,12 @@ module ConceptQL
         else
           raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
         end
-        new_column.as(column)
+
+        new_column
+      end
+
+      def cast_null(columns)
+        columns.map { |c| process(c) }
       end
 
       def preferred_formatter

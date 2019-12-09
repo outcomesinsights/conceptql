@@ -36,7 +36,7 @@ module ConceptQL
         validate_no_arguments
 
         def query(db)
-          combinables, individuals = upstreams.partition { |upstream| upstream.is_a?(Vocabulary) }
+          combinables, individuals = upstreams.partition { |upstream| upstream.is_a?(ConceptQL::Operators::Selection::Vocabulary) }
 
           queries = individuals.map do |expression|
             expression.evaluate(db)

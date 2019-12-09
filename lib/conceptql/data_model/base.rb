@@ -181,18 +181,41 @@ module ConceptQL
       end
 
       def columns_in_table(table, opts = {})
+        alias_em(columns_by_table(table, opts))
+      end
+
+      def alias_em(hash)
+        hash.map.with_object({}) { |(k, v), h| h[k] = Sequel.expr(v).as(k) }
+      end
+
+      def columns_by_table(table, opts = {})
         return opts[:query_columns] unless opts[:query_columns].nil?
-        start_date, end_date = *date_columns(nil, table)
-        {
-          person_id: Sequel.expr(person_id(table)).as(:person_id),
-          criterion_id: Sequel.identifier(pk_by_domain(table)).as(:criterion_id),
-          criterion_table: Sequel.cast_string(table.to_s).as(:criterion_table),
-          criterion_domain: Sequel.cast_string((opts[:criterion_domain] || table_to_domain(table) || table).to_s).as(:criterion_domain),
-          start_date: start_date,
-          end_date: end_date,
-          source_value: Sequel.cast_string(source_value_column(table)).as(:source_value),
-          source_vocabulary_id: Sequel.cast_string(source_vocabulary_id(table)).as(:source_vocabulary_id)
-        }
+        if schema = opts[:schema]
+          schema = Sequel[schema]
+        end
+
+        person = person_id(table)
+        person = schema[person] if schema
+
+        pk = Sequel.identifier(pk_by_domain(table))
+        pk = schema[pk] if schema
+
+        source_value = source_value_column(table)
+        source_value = schema[source_value] if source_value && schema
+        
+        source_vocab_id = source_vocabulary_id(table)
+        source_vocab_id = schema[source_vocab_id] if source_vocab_id && schema
+
+        cols = {
+          person_id: Sequel.expr(person),
+          criterion_id: pk,
+          criterion_table: Sequel.cast_string(table.to_s),
+          criterion_domain: Sequel.cast_string((opts[:criterion_domain] || table_to_domain(table) || table).to_s),
+          source_value: Sequel.cast_string(source_value),
+          source_vocabulary_id: Sequel.cast_string(source_vocab_id)
+        }.merge(determine_date_columns(nil, table))
+
+        cols
       end
 
       def table_to_domain(table)
@@ -347,11 +370,23 @@ module ConceptQL
       end
 
       def date_columns(query, table = nil)
+        alias_em(determine_date_columns(query, table)).values
+      end
+
+      def determine_date_columns(query, table = nil)
         sd = start_date_column(query, table)
-        sd = rdbms.cast_date(Sequel.expr(sd)).as(:start_date) unless sd == :start_date
+        sd = if sd == :start_date 
+          Sequel.expr(sd)
+        else
+          rdbms.cast_date(Sequel.expr(sd))
+        end
         ed = end_date_column(query, table)
-        ed = rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table))).as(:end_date) unless ed == :end_date
-        [sd, ed]
+        ed = if ed == :end_date
+           Sequel.expr(ed)
+        else
+          rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table)))
+        end
+        { start_date: sd, end_date: ed}
       end
 
       def table_to_sym(table)

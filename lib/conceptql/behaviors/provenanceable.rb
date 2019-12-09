@@ -244,5 +244,26 @@ module ConceptQL
       return code_split[1] if code_split.length == 2 && !code_split[1].empty?
       return nil
     end
+
+    def available_join_tables
+      super + [ provenance_context_join ]
+    end
+
+    def provenance_context_join
+      JoinTableInfo.new(
+        type: :left,
+        table: :contexts,
+        alias: :provcon,
+        join_criteria: { Sequel[:tab][:context_id] => Sequel[:provcon][:id] },
+        for_columns: [ :file_provenance_type ]
+      )
+    end
+
+    def available_columns
+      super.merge(
+        file_provenance_type: Sequel[:provcon][:source_type_concept_id],
+        code_provenance_type: Sequel[:tab][:provenance_concept_id]
+      )
+    end
   end
 end

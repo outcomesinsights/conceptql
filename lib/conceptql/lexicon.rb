@@ -58,13 +58,20 @@ module ConceptQL
     end
 
     def vocab_translator
-      @vocab_translator ||= lexicon_db[:vocabularies]
-        .select(Sequel.cast_string(:omopv4_id).as(:original_id), Sequel.cast_string(:omopv5_id).as(:new_id))
-        .union(lexicon_db[:vocabularies].select(Sequel.cast_string(:omopv5_id).as(:original_id), Sequel.cast_string(:omopv5_id).as(:new_id)))
+      @vocab_translator ||= vocabularies_query
+        .select(Sequel.cast_string(:omopv4_vocabulary_id).as(:original_id),
+                Sequel.cast_string(:id).as(:new_id))
+        .union(vocabularies_query.select(
+          Sequel.cast_string(:id).as(:original_id),
+          Sequel.cast_string(:id).as(:new_id)))
         .to_hash(:original_id, :new_id)
     end
 
     def vocabularies
+      vocabularies_query.all
+    end
+
+    def vocabularies_query
       lexicon_db[:vocabularies]
         .select(Sequel[:id].as(:id),
                 Sequel[:id].as(:omopv5_vocabulary_id),

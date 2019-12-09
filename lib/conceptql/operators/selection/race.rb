@@ -3,6 +3,7 @@ require "yaml"
 
 module ConceptQL
   module Operators
+    module Selection
     # Represents a operator that will grab all person rows that match the given races
     #
     # Race parameters are passed in as a set of strings.  Each string represents
@@ -11,9 +12,6 @@ module ConceptQL
     # you won't get any matches
     class Race < Base
       register __FILE__
-
-      include ConceptQL::Behaviors::Windowable
-      include ConceptQL::Behaviors::Timeless
 
       desc 'Generates all person records that match the given set of Race codes.'
       argument :races, type: :codelist, vocab: 'Race'
@@ -27,23 +25,9 @@ module ConceptQL
         @race_descendents ||= YAML.load_file(ConceptQL.race_file)
       end
 
-      def query_cols
-        table_columns(table)
-      end
+      def where_clause(ds, ctx)
+        db = ds.db
 
-      def table
-        source_table
-      end
-
-      def source_table
-        if gdm?
-          :patients
-        else
-          :person
-        end
-      end
-
-      def query(db)
         words = arguments - actual_ids
 
         concept_ids = if gdm?
@@ -60,13 +44,14 @@ module ConceptQL
 
         c_ids = dm.related_concept_ids(db,c_ids) if gdm?
 
-        q = db.from(source_table)
+        where = { race_concept_id: c_ids }
+
         if words.any? { |w| w.match(/unknown/i) }
           c_ids << 0
-          q = q.where(race_concept_id: nil)
+          Sequel[where].|(race_concept_id: nil)
         end
 
-        q.where(race_concept_id: c_ids)
+        where
       end
 
       def actual_ids
@@ -74,4 +59,5 @@ module ConceptQL
       end
     end
   end
+end
 end

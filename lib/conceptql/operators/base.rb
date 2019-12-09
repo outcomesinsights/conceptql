@@ -211,8 +211,24 @@ module ConceptQL
         "<##{self.class} upstreams=[#{upstreams.map(&:inspect).join(', ')}] arguments=[#{arguments.map(&:inspect).join(', ')}]>"
       end
 
-      def evaluate(db)
-        select_it(query(db))
+      def columns
+        @columns ||= Columns.new(available_columns, available_join_tables, rdbms, default_columns_proc)
+      end
+
+      def default_columns_proc
+        Columns::PASS_THRU_COLUMNS
+      end
+
+      def evaluate(db, opts = {})
+        columns.evaluate(query(db), scope.query_columns, options.merge(opts))
+      end
+
+      def available_columns
+        {}
+      end
+
+      def available_join_tables
+        []
       end
 
       def pretty_print(pp)
@@ -303,7 +319,7 @@ module ConceptQL
         query = modify_query(query, table)
         query.select(*columns(table))
       end
-
+=begin
       def columns(table = nil)
         #p table
         return dm.columns(table: table)
@@ -335,6 +351,7 @@ module ConceptQL
         columns += additional_columns(query, local_table)
         columns
       end
+=end
 
       def label
         @label ||= begin

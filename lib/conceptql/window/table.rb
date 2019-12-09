@@ -33,12 +33,9 @@ module ConceptQL
                           .as(:window_id)
               end.as(:r)
 
-        remove_window_id(query)
-          .from_self(alias: :l)
-          .join(rhs, expr)
+        query
           .select_all(:l)
           .select_append(r_table[:window_id])
-          .from_self
       end
 
       def order_columns(op)

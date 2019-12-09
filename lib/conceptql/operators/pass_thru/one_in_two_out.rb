@@ -1,6 +1,4 @@
 require_relative "base"
-require_relative "../date_adjuster"
-require_relative "../behaviors/provenanceable"
 
 module ConceptQL
   module Operators

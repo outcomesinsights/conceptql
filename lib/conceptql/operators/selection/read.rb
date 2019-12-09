@@ -1,7 +1,6 @@
 require "sequel"
 require "sequel/adapters/mock"
 require_relative "base"
-require_relative "../behaviors/labish"
 
 module ConceptQL
   module Operators
@@ -104,7 +103,7 @@ module ConceptQL
         }
       end
 
-      class ReadBase < ConceptQL::Operators::Vocabulary
+      class ReadBase < ConceptQL::Operators::Selection::Vocabulary
         preferred_name "READ"
         argument :read_codes, type: :codelist, vocab: "Read"
       end

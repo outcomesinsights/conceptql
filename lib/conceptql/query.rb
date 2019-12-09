@@ -28,7 +28,12 @@ module ConceptQL
       query(explain: true, analyze: true).analyze
     end
 
+    def make_views
+      operator.dm.views.make(db, rdbms, force: true)
+    end
+
     def query(opts = {})
+      make_views
       nodifier.scope.with_ctes(operator, db, opts)
     end
 
@@ -47,6 +52,7 @@ module ConceptQL
     end
 
     def sql_statements(*args)
+      make_views
       stmts = query.sql_statements
 
       if args.include?(:create_tables)
@@ -71,6 +77,7 @@ module ConceptQL
     end
 
     def annotate(opts = {})
+      make_views
       operator.annotate(db, opts)
     end
 

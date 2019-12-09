@@ -2,8 +2,8 @@ module ConceptQL
   module Behaviors
     # Applies scope windows to Operators
     module Windowable
-      def select_it(query, opts = {})
-        ds = super
+      def evaluate(db, opts = {})
+        ds = super(db, opts)
         return ds if skip_windows?
 
         scope.windows.each do |window|

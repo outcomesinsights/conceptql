@@ -24,6 +24,8 @@ module ConceptQL
       # Also, if a casting operator is passed no streams, it will return all the
       # rows in its table as results.
       class Base < Operators::Base
+        include Behaviors::Selectable
+
         category "Get Related Data"
         basic_type :cast
         validate_at_most_one_upstream
@@ -42,7 +44,7 @@ module ConceptQL
         end
 
         def query(db)
-          return db.from(table) if stream.nil?
+          return db[Sequel[table].as(:tab)] if stream.nil?
           base_query(db, stream.evaluate(db))
         end
 

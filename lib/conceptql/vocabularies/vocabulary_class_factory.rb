@@ -4,7 +4,7 @@ require_relative "behaviors/gdmish"
 require_relative "behaviors/omopish"
 require_relative "behaviors/sourcish"
 require_relative "behaviors/costish"
-require_relative "../operators/vocabulary"
+require_relative "../operators/selection/vocabulary"
 
 module ConceptQL
   module Vocabularies
@@ -46,7 +46,7 @@ module ConceptQL
 
       def get_klass(&block)
         ventry = entry
-        Class.new(ConceptQL::Operators::Vocabulary) do |klass|
+        Class.new(ConceptQL::Operators::Selection::Vocabulary) do |klass|
           @entry = ventry
 
           def self.entry
@@ -72,6 +72,13 @@ module ConceptQL
 
           def self.name
             "ConceptQL::Operator::#{entry.id}"
+          end
+
+          def available_columns
+            dom = domain rescue "condition_occurrence"
+            super.merge(dm.columns_by_table(:clinical_codes, schema: :tab).merge(
+              criterion_domain: Sequel.cast_string(dom.to_s)
+            ))
           end
 
           if entry.is_labish?

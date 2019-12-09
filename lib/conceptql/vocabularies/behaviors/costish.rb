@@ -1,5 +1,3 @@
-require_relative "../../operators/vocabulary"
-
 module ConceptQL
   module Vocabularies
     module Behaviors

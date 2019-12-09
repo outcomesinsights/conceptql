@@ -1,20 +1,26 @@
 require "pathname"
+%w(
+  /../lib/conceptql/query_modifiers/**/*.rb
+  /../lib/conceptql/behaviors/*.rb
+  /../lib/conceptql/data_model/views/*.rb
+).each do |globby|
+  Dir.glob(File.dirname(__FILE__) + globby).each do |file|
+    require_relative file
+  end
+end
 require "conceptql/version"
 require "conceptql/logger"
 require "conceptql/paths"
 require "conceptql/utils"
 require "conceptql/operators/base"
-require "conceptql/behaviors/code_lister"
-require "conceptql/behaviors/timeless"
-require "conceptql/behaviors/unwindowable"
-require "conceptql/behaviors/windowable"
-require "conceptql/behaviors/utilizable"
-require "conceptql/vocabularies/dynamic_vocabularies"
 require "conceptql/query"
+require "conceptql/faux_model"
 require "conceptql/null_query"
 require "conceptql/database"
 require "conceptql/data_model"
+require "conceptql/date_adjuster"
 require "conceptql/columnizer"
+require "conceptql/columns"
 require "conceptql/query"
 require "conceptql/null_query"
 require "conceptql/database"
@@ -24,13 +30,12 @@ require "conceptql/columnizer"
 # byebug is only required during development
 begin
   require "byebug"
+  require "pry"
 rescue LoadError
   nil
 end
 
-Dir.glob(File.dirname(__FILE__) + "/../lib/conceptql/query_modifiers/**/*.rb").each do |file|
-  require_relative file
-end
+require "conceptql/vocabularies/dynamic_vocabularies"
 
 module ConceptQL
   DEFAULT_DATA_MODEL = :gdm
