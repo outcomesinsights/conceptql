@@ -11,8 +11,8 @@ describe ConceptQL::Operators::From do
     }]
 
     sql = CDB.query(stmt).sql
-    sql.must_match(/test_from_schema/)
-    sql.must_match(/test_from_table/)
+    _(sql).must_match(/test_from_schema/)
+    _(sql).must_match(/test_from_table/)
   end
 end
 

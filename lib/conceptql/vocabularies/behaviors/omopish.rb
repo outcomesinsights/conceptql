@@ -9,7 +9,7 @@ module ConceptQL
 
         def where_clause(db)
           conds = { dm.source_vocabulary_id(domain) => vocabulary_id.to_i }
-          conds[dm.source_value_column(domain)] = arguments_fix(db) unless select_all?
+          conds[dm.source_value_column(domain)] = arguments unless select_all?
           conds
         end
 

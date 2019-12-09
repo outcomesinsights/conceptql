@@ -392,10 +392,6 @@ module ConceptQL
         data_model == :gdm
       end
 
-      def impala?
-        database_type.to_sym == :impala
-      end
-
       def dm
         @dm ||= DataModel.for(self, nodifier)
       end
@@ -628,30 +624,6 @@ module ConceptQL
 
       def add_warning(*args)
         warnings << args
-      end
-
-      def needs_arguments_cte?(args)
-        impala? && arguments.length > 5000
-      end
-
-      def arguments_fix(db, args = nil)
-        args ||= arguments
-        return args unless needs_arguments_cte?(args)
-        args = args.dup
-        first_arg = Sequel.expr(args.shift).as(:arg)
-        args.unshift(first_arg)
-        args = args.map { |v| [v] }
-        args_cte = db.values(args)
-        args_cte_name = cte_name(:args)
-
-        if args_cte_name.is_a?(Sequel::SQL::QualifiedIdentifier)
-          args_cte_name = Sequel.identifier(args_cte_name.column)
-        end
-
-        # CTE here only used on impala due to needs_arguments_cte? above
-        db[args_cte_name]
-          .with(args_cte_name, args_cte, :no_temp_table=>true)
-          .select(:arg)
       end
 
       def include_counts?(db, opts)

@@ -5,16 +5,6 @@ end
 
 ENV['CONCEPTQL_DATA_MODEL'] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
 
-desc "Setup test database"
-task :test_db_setup do
-  require_relative 'test/db_setup'
-end
-
-desc "Setup test database"
-task :test_db_teardown do
-  require_relative 'test/db_teardown'
-end
-
 run_spec = lambda do |data_model|
   sh "CONCEPTQL_DATA_MODEL=#{data_model} #{FileUtils::RUBY} test/all.rb"
 end

@@ -2,21 +2,21 @@ require_relative '../../db_helper'
 
 describe ConceptQL::Query do
   it "should handle errors in the root operator" do
-    query(
+    _(query(
       [:foo]
-    ).annotate.must_equal(
+    ).annotate).must_equal(
       ["foo", {:annotation=>{:counts=>{:invalid=>{:rows=>0, :n=>0}}, :errors=>[["invalid operator", "foo"]]}, :name=>"Invalid"}]
     )
   end
 
   it "should handle query_cols for non-CDM tables" do
-    query(
+    _(query(
       [:from, "other_table"]
-    ).query_cols.must_equal(ConceptQL::Scope::DEFAULT_COLUMNS.keys)
+    ).query_cols).must_equal(ConceptQL::Scope::DEFAULT_COLUMNS.keys)
   end
 
   it "should raise error if attempting to execute invalid recall" do
-    proc do
+    _(proc do
       criteria_ids(
       ["after",
         {:left=>["during",
@@ -30,7 +30,7 @@ describe ConceptQL::Query do
                                      {:left=>["cpt", "84156", "84166", "86335", "84155", "84165", "86334", "83883", "81264", "82784", "82785", "82787", "82040", "82232", "77074", "77075", "83615", {"label"=>"Other Tests"}],
                                       :right=>["recall", "Meyloma 90-day Lookback"]}]]]}]
       )
-    end.must_raise
+    end).must_raise
   end
 
   describe "#sql(:formatted)" do
@@ -39,11 +39,11 @@ describe ConceptQL::Query do
     end
 
     it "should produce formatted SQL" do
-      cdb.query([:icd9, "412"]).sql(:formatted).must_match("          ")
+      _(cdb.query([:icd9, "412"]).sql(:formatted)).must_match("          ")
     end
 
     it "should timeout after 10 seconds if can't parse" do
-      cdb.query(json_fixture(:sqlformat_killer)).sql(:formatted).wont_match(/  /)
+      _(cdb.query(json_fixture(:sqlformat_killer)).sql(:formatted)).wont_match(/  /)
     end
 
     describe "with temp tables" do
@@ -52,7 +52,7 @@ describe ConceptQL::Query do
       end
 
       it "should use CREATE TABLE statements" do
-        cdb.query([:icd9, "412", label: "l"]).sql(:formatted, :create_tables).must_match(/CREATE TABLE/)
+        _(cdb.query([:icd9, "412", label: "l"]).sql(:formatted, :create_tables)).must_match(/CREATE TABLE/)
       end
     end
 
@@ -65,7 +65,7 @@ describe ConceptQL::Query do
         if ENV["CONCEPTQL_AVOID_CTES"] == "true"
           skip
         else
-          cdb.query([:icd9, "412", label: "l"]).sql(:formatted).must_match(/WITH/)
+          _(cdb.query([:icd9, "412", label: "l"]).sql(:formatted)).must_match(/WITH/)
         end
       end
     end
@@ -88,13 +88,13 @@ describe ConceptQL::Query do
           "ICD-9 CM 250.02"
         ]
       end
-      query.code_list.map(&:to_s).must_equal(expected)
+      _(query.code_list.map(&:to_s)).must_equal(expected)
     end
 
     it "should handle nil for preferred name" do
       db = ConceptQL::Database.new(nil)
       query = db.query(["revenue_code", "0100"])
-      query.code_list.map(&:to_s).must_equal([
+      _(query.code_list.map(&:to_s)).must_equal([
         "Revenue Code 0100: All-Inclusive Room and Board Plus Ancillary"
       ])
     end
@@ -116,14 +116,14 @@ describe ConceptQL::Query do
           "ICD-9 CM 250.02"
         ]
       end
-      query.code_list.map(&:to_s).must_equal(expected)
+      _(query.code_list.map(&:to_s)).must_equal(expected)
     end
 
     it "should return asterisk when selecting all" do
       seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
       db = ConceptQL::Database.new(seq_db)
       query = db.query(["union",["cpt","*"],["icd9", "250.00", "*"]])
-      query.code_list(seq_db).map(&:to_s).must_equal([
+      _(query.code_list(seq_db).map(&:to_s)).must_equal([
         "CPT *: ALL CODES",
         "ICD-9 CM *: ALL CODES"
       ])
@@ -132,7 +132,7 @@ describe ConceptQL::Query do
     it "should return codes from vocabulary-based operators even with no db" do
       db = ConceptQL::Database.new(nil)
       query = db.query(["union", ["cpt_or_hcpcs","99214"], ["ATC", "*"]])
-      query.code_list(nil).map(&:to_s).must_equal([
+      _(query.code_list(nil).map(&:to_s)).must_equal([
 				"CPT or HCPCS 99214: Office or other outpatient visit for the evaluation and management of an established patient, which requires at least 2 of these 3 key components: A detailed history; A detailed examination; Medical decision making of moderate complexity. Counseling and/o",
 				"WHO ATC *: ALL CODES"
       ])
@@ -140,7 +140,7 @@ describe ConceptQL::Query do
 
     it "should return codes even if the code doesn't exist in the database" do
       query = CDB.query(["hcpcs", "A0000", "A0021"])
-      query.code_list.map(&:code).must_equal(["A0000", "A0021"])
+      _(query.code_list.map(&:code)).must_equal(["A0000", "A0021"])
     end
   end
 end

@@ -70,7 +70,7 @@ module ConceptQL
         opts = extract_opts!(commands)
         timeout = opts.fetch(:timeout)
 
-        stdin, stdout, stderr, wait_thread = Open3.popen3(*commands)
+        stdin, stdout, _, wait_thread = Open3.popen3(*commands)
         wait_thread[:timed_out] = false
         stdin.puts opts[:stdin_data] if opts[:stdin_data]
         stdin.close
@@ -124,9 +124,6 @@ module ConceptQL
         concatted_strings = Sequel.join(strings_with_dashes)
 
         date = concatted_strings
-        if opts[:database_type] == :impala
-          date = Sequel.cast(Sequel.function(:concat_ws, '-', *strings), DateTime)
-        end
 
         date
       end

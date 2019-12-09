@@ -96,26 +96,19 @@ If you're feeling bold, feel free to try your hand at authoring a ConceptQL stat
 
 ### Setup
 
-In order to run the tests for ConceptQL, you first have to create a database and load the OMOP vocabularies into it.  You can use [loadmop](https://github.com/outcomesinsights/loadmop/tree/develop) do to so.
+You must have the latest version of ConceptQL's test database.
 
-Follow the instructions in [loadmop](https://github.com/outcomesinsights/loadmop/#preparation) to setup the vocabulary files correctly.
+To set up this test database in PostgreSQL, execute the following command:
 
-After loading the vocabulary data file into the database,
-create an .env file in the root of the conceptql directory,
-similar or identical to the one used for loadmop.  Then
-run `rake test_db_setup`.  This will load the ConceptQL test
-data into the database.  This only needs to be done once, not
-every time you run the tests.
+```
+curl -sSL http://chisel.test_data.jsaw.io | pigz -dc | psql <url to a test database>
+```
 
-### Running
+Then run the tests using:
 
-If any of the CSV files in `test/data` has been updated since you
-last updated the database, you should run `rake test_db_teardown test_db_setup`
-to reset the data in the database.  Updates to the CSV files in
-`test/data` should be infrequent.
-
-After the test database has been setup, you can run the tests
-using `rake`, as the default task is set to run the tests.
+```
+SEQUELIZER_URL=<same url as above> SEQUELIZER_SEARCH_PATH=gdm_250 bundle exec ruby test/all.rb
+```
 
 ## Contributing
 

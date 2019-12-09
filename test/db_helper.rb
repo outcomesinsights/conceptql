@@ -5,7 +5,7 @@ require "logger"
 require "pp"
 require "fileutils"
 
-CDB = ConceptQL::Database.new(DB, :data_model=>ENV["CONCEPTQL_DATA_MODEL"].to_sym)
+CDB = ConceptQL::Database.new(DB, :data_model=>(ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym)
 DB.extension :error_sql
 
 PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
@@ -91,7 +91,7 @@ class Minitest::Spec
     message += " (with windows)" if has_windows
     message += PP.pp(statement, "".dup, 10) if PRINT_CONCEPTQL
 
-    JSON.parse(results.to_json).must_equal(JSON.parse(expected), message)
+    _(JSON.parse(results.to_json)).must_equal(JSON.parse(expected), message)
     results
   end
 

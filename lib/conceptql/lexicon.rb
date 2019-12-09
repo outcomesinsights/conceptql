@@ -54,9 +54,7 @@ module ConceptQL
     end
 
     def translate_vocab_id(vocabulary_id)
-      Array(vocabulary_id).map do |vocab_id|
-        vocab_translator[vocab_id.to_s]
-      end
+      return vocabulary_id
     end
 
     def vocab_translator
@@ -68,9 +66,8 @@ module ConceptQL
 
     def vocabularies
       lexicon_db[:vocabularies]
-        .select(Sequel[:omopv5_id].as(:id),
-                Sequel[:omopv5_id].as(:omopv5_vocabulary_id),
-                Sequel[:omopv4_id].as(:omopv4_vocabulary_id),
+        .select(Sequel[:id].as(:id),
+                Sequel[:id].as(:omopv5_vocabulary_id),
                 Sequel[:vocabulary_name].as(:vocabulary_short_name),
                 Sequel[:vocabulary_name].as(:vocabulary_full_name),
                 Sequel[:domain],

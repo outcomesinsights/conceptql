@@ -14,7 +14,7 @@ describe ConceptQL::Operators do
       seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
       db = ConceptQL::Database.new(seq_db)
       query = db.query(["union",["cpt", "00000", "99213"],["icd9", "000.00", "412"]])
-      query.scope_annotate(skip_counts: true).must_equal(
+      _(query.scope_annotate(skip_counts: true)).must_equal(
         {:errors=>{},
         :warnings=>{"cpt"=>[["unknown code(s)", "00000"]], "icd9"=>[["unknown code(s)", "000.00"]]},
         :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},
@@ -27,7 +27,7 @@ describe ConceptQL::Operators do
       seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
       db = ConceptQL::Database.new(seq_db)
       query = db.query(["union",["cpt","0000"],["icd9", "00.00"]])
-      query.scope_annotate(skip_counts: true).must_equal(
+      _(query.scope_annotate(skip_counts: true)).must_equal(
         {:errors=>{},
          :warnings=>{"cpt"=>[["improperly formatted code", "0000"]], "icd9"=>[["improperly formatted code", "00.00"]]},
          :counts=>{"cpt"=>{:procedure_occurrence=>{:rows=>0, :n=>0}},

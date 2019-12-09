@@ -7,7 +7,7 @@ describe ConceptQL::DataModel::Gdm do
 
   describe "#concept_id" do
     it "should return correct column for clinical_codes" do
-      dm.concept_id(:clinical_codes).must_equal :clinical_code_concept_id
+      _(dm.concept_id(:clinical_codes)).must_equal :clinical_code_concept_id
     end
   end
   describe "#related_concept_ids" do
@@ -22,7 +22,7 @@ describe ConceptQL::DataModel::Gdm do
         column :concept_2_id, :Bigint
       end
       db[:mappings].import([:concept_1_id, :relationship_id, :concept_2_id], [[111111111, "IS_A", 8532]])
-      dm.related_concept_ids(db, 8532).sort.must_equal [8532, 111111111].sort
+      _(dm.related_concept_ids(db, 8532).sort).must_equal [8532, 111111111].sort
     end
   end
 end

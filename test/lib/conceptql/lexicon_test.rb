@@ -1,3 +1,4 @@
+require "sequelizer"
 require_relative "../../helper"
 
 describe ConceptQL::Lexicon do
@@ -28,34 +29,33 @@ describe ConceptQL::Lexicon do
       db[:concepts].insert([id, vocab_id, code])
     end
 
-    def make_vocabulary_row(db, omopv4_id, omopv5_id)
+    def make_vocabulary_row(db, id)
       db.create_table?(:vocabularies, temp: true) do
-        Integer :omopv4_id
-        String :omopv5_id
+        String :id
       end
-      db[:vocabularies].insert([omopv4_id, omopv5_id])
+      db[:vocabularies].insert([id])
     end
 
     it "should find passed in concept_id and descendants of concept_id" do
       make_ancestor_row(ldb, 1, 2)
 
-      get_descendants_of(1).must_equal([1, 2])
+      _(get_descendants_of(1)).must_equal([1, 2])
     end
 
     it "should find passed in concept_id even if no descendants" do
       make_ancestor_row(ldb, 1, 2)
 
-      get_descendants_of(3).must_equal([3])
+      _(get_descendants_of(3)).must_equal([3])
     end
 
     it "should handle Sequel::Dataset as concepts to look for" do
       make_ancestor_row(ldb, 1, 2)
-      make_vocabulary_row(ldb, 2, "vocab")
+      make_vocabulary_row(ldb, "vocab")
       make_concept_row(ldb, 1, "vocab", "EXAMPLE")
 
-      ds = lexicon.concepts(2, "example").select(:id)
+      ds = lexicon.concepts("vocab", "example").select(:id)
 
-      get_descendants_of(ds).must_equal([1, 2])
+      _(get_descendants_of(ds)).must_equal([1, 2])
     end
   end
 end

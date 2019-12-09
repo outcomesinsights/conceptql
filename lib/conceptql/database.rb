@@ -9,7 +9,7 @@ module ConceptQL
 
     def initialize(db, opts={})
       @db = db
-      db_type = :impala
+      db_type = :postgres
       if db
         self.class.db_extensions(db)
         db_type = db.database_type.to_sym

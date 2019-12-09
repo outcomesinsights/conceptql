@@ -7,7 +7,7 @@ module ConceptQL
     def initialize(opts={})
       @scope = opts[:scope] || Scope.new(opts.delete(:scope_opts) || {})
       @data_model = get_data_model(opts)
-      @database_type = opts[:database_type] || :impala
+      @database_type = opts[:database_type] || ConceptQL::DEFAULT_DATA_MODEL
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
         nil
       end)

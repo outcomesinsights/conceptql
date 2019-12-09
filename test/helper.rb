@@ -1,5 +1,6 @@
 if ENV['COVERAGE']
   require 'coverage'
+  require 'seqelizer'
   require 'simplecov'
 
   ENV.delete('COVERAGE')

@@ -23,9 +23,6 @@ module ConceptQL
           lquery.send("columns=", query_cols)
           rquery.send("columns=", query_cols)
 
-          if impala?
-            lquery = lquery.except_strategy(:not_exists, *(matching_columns + [:criterion_id, :criterion_domain]))
-          end
           lquery.select(*query_cols).except(rquery.select(*query_cols))
         end
       end
