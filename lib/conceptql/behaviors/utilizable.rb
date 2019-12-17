@@ -28,15 +28,23 @@ module ConceptQL
       end
 
       def gdm_it(db)
-        ancestor_ids = lexicon.concepts("JIGSAW_FILE_PROVENANCE_TYPE", collection_type).select_map(:id)
-        descendant_ids = lexicon.descendants_of(ancestor_ids).select_map(:descendant_id)
-        primary_ids = lexicon.concepts("JIGSAW_CODE_PROVENANCE_TYPE", "primary").select_map(:id)
+        source_type_id = lexicon.concepts("JIGSAW_FILE_PROVENANCE_TYPE", collection_type).select_map(:id)
+        all_source_type_ids = lexicon.descendants_of(source_type_id).select_map(:descendant_id)
+        primary_id = lexicon.concepts("JIGSAW_CODE_PROVENANCE_TYPE", "primary").select_map(:id)
+        all_primary_ids = lexicon.descendants_of(primary_id).select_map(:descendant_id)
 
-        primary_concepts = db[:clinical_codes].from_self(alias: :pcc)
-          .join(:contexts, { Sequel[:pcn][:id] => Sequel[:pcc][:context_id] }, table_alias: :pcn)
+        # Get primary diagnosis codes
+        primary_concepts = db[Sequel[:clinical_codes].as(:pcc)]
           .join(:concepts, { Sequel[:pco][:id] => Sequel[:pcc][:clinical_code_concept_id] }, table_alias: :pco)
-          .where(provenance_concept_id: primary_ids)
-          .select(Sequel[:pcn][:collection_id], Sequel[:pco][:concept_code], Sequel[:pco][:vocabulary_id])
+          .join(:vocabularies, { Sequel[:voc][:id] => Sequel[:pco][:vocabulary_id]}, table_alias: :voc)
+          .where(provenance_concept_id: all_primary_ids, Sequel[:voc][:domain] => 'condition_occurrence')
+          .select(
+            Sequel[:pcc][:collection_id].as(:collection_id),
+            Sequel[:pco][:concept_code],
+            Sequel[:pco][:vocabulary_id])
+          .order(Sequel[:pcc][:collection_id],Sequel[:pcc][:clinical_code_concept_id])
+          .from_self
+          .distinct(:collection_id)
 
 
         db[:collections].from_self(alias: :cl)
@@ -45,7 +53,7 @@ module ConceptQL
           .left_join(:concepts, { Sequel[:ad][:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
           .left_join(:concepts, { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
           .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[:cl][:id] }, table_alias: :pcon)
-          .where(Sequel[:cn][:source_type_concept_id] => descendant_ids)
+          .where(Sequel[:cn][:source_type_concept_id] => all_source_type_ids)
       end
 
       def table
