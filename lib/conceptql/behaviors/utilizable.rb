@@ -32,12 +32,12 @@ module ConceptQL
         all_source_type_ids = lexicon.descendants_of(source_type_id).select_map(:descendant_id)
         primary_id = lexicon.concepts("JIGSAW_CODE_PROVENANCE_TYPE", "primary").select_map(:id)
         all_primary_ids = lexicon.descendants_of(primary_id).select_map(:descendant_id)
+        condition_domains = lexicon.lexicon_db[:vocabularies].where(domain: 'condition_occurrence').select_map(:id)
 
         # Get primary diagnosis codes
         primary_concepts = db[Sequel[:clinical_codes].as(:pcc)]
           .join(:concepts, { Sequel[:pco][:id] => Sequel[:pcc][:clinical_code_concept_id] }, table_alias: :pco)
-          .join(:vocabularies, { Sequel[:voc][:id] => Sequel[:pco][:vocabulary_id]}, table_alias: :voc)
-          .where(provenance_concept_id: all_primary_ids, Sequel[:voc][:domain] => 'condition_occurrence')
+          .where(provenance_concept_id: all_primary_ids, Sequel[:pcc][:clinical_code_vocabulary_id] => condition_domains)
           .select(
             Sequel[:pcc][:collection_id].as(:collection_id),
             Sequel[:pco][:concept_code],
