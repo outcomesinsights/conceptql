@@ -6,29 +6,7 @@ module ConceptQL
       class Union < Base
         register __FILE__
 
-        class Combiner
-          attr_reader :combinables
-
-          def initialize(combinables)
-            @combinables = combinables
-          end
-
-          def queries(db)
-            combinables.group_by(&:domain).map do |domain, combos|
-              include_uuid = combos.any? { |c| c.options[:uuid] }
-              criteria = combos.map do |combo|
-                combo.filter_clause(db)
-              end.inject(&:|)
-
-              table = combos.first.criterion_table
-              ds = db[table]
-                .where(criteria)
-              combos.first.select_it(ds, specific_table: table, domain: domain, uuid: include_uuid)
-            end
-          end
-        end
-
-        desc 'Pools sets of incoming results into a single large set of results.'
+        desc "Pools sets of incoming results into a single large set of results."
         allows_many_upstreams
         category "Combine Streams"
         default_query_columns
@@ -36,18 +14,29 @@ module ConceptQL
         validate_no_arguments
 
         def query(db)
-          combinables, individuals = upstreams.partition { |upstream| upstream.is_a?(ConceptQL::Operators::Selection::Vocabulary) }
+          combinables, individuals = upstreams.partition do |upstream|
+            upstream.unionable?
+          end
 
           queries = individuals.map do |expression|
             expression.evaluate(db)
           end
 
-          queries += Combiner.new(combinables).queries(db)
-
-          queries.map!{|ds| ds.from_self.select(*query_cols).from_self}
+          queries << combinables.inject(&:unionize).evaluate(db).from_self
           queries.inject do |q, query|
             q.union(query, all: true)
           end
+        end
+
+        def timeless?
+          !(defined?(@running_combos) && @running_combos)
+        end
+
+        def process_combos
+          @running_combos = true
+          ds = yield
+          @running_combos = false
+          ds
         end
       end
     end

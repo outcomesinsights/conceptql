@@ -4,11 +4,11 @@ module ConceptQL
   module Window
     # Provides a scope window that uses a date range literal
     class DateRange < Base
-      def call(operator, dset, options = {})
-        return dset if options[:timeless]
+      def call(operator, ds, options = {})
+        return ds if options[:timeless]
 
         rdbms = operator.rdbms
-        dset.where(start_check(rdbms)).where(end_check(rdbms)).from_self
+        ds.where(start_check(rdbms)).where(end_check(rdbms)).from_self
       end
 
       def start_check(rdbms)

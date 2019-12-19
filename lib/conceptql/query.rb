@@ -9,7 +9,7 @@ module ConceptQL
   class Query
     extend Forwardable
     def_delegators :query, :all, :count, :execute, :order, :profile
-    def_delegators :cdb, :db
+    def_delegators :cdb, :db, :rdbms, :dm
     def_delegators :db, :profile_for
 
     attr :statement
@@ -21,19 +21,19 @@ module ConceptQL
         statement = JSON.parse(statement) if statement.is_a?(String)
         [statement, description]
       end
-      @nodifier = opts[:nodifier] || Nodifier.new({ database_type: db ? db.database_type : nil }.merge(opts))
+      nodifier_opts = {
+        database_type: db ? db.database_type : nil,
+        dm: dm,
+        rdbms: rdbms
+      }
+      @nodifier = opts[:nodifier] || Nodifier.new(nodifier_opts.merge(opts))
     end
 
     def analyze
       query(explain: true, analyze: true).analyze
     end
 
-    def make_views
-      operator.dm.views.make(db, rdbms, force: true)
-    end
-
     def query(opts = {})
-      make_views
       nodifier.scope.with_ctes(operator, db, opts)
     end
 
@@ -52,7 +52,6 @@ module ConceptQL
     end
 
     def sql_statements(*args)
-      make_views
       stmts = query.sql_statements
 
       if args.include?(:create_tables)
@@ -77,7 +76,6 @@ module ConceptQL
     end
 
     def annotate(opts = {})
-      make_views
       operator.annotate(db, opts)
     end
 
@@ -108,16 +106,16 @@ module ConceptQL
       end
     end
 
-    def rdbms
-      operator.rdbms
-    end
-
     def code_list(ignored_db = nil)
       operator.code_list(db).uniq
     end
 
     def drop_temp_tables(opts = {})
       query.drop_temp_tables(opts)
+    end
+
+    def include_column?(column)
+      nodifier.scope.query_columns.include?(column)
     end
 
     private

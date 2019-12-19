@@ -737,10 +737,12 @@
       :type: :Bigint
       :comment: Database specific code indicating source of admission (e.g., ER visit,
         transfer, etc.)
+      :foreign_key: concepts
     :discharge_location_concept_id:
       :type: :Bigint
       :comment: Database specific code indicating discharge location (e.g., death,
         home, transfer, long-term care, etc.)
+      :foreign_key: concepts
     :admission_type_concept_id:
       :type: :Bigint
       :comment: FK reference to [concepts](#concepts) table representing the type
@@ -775,10 +777,6 @@
       :primary_key: true
       :comment: Short name of the vocabulary which acts as a natural key for record
       :null: false
-    :omopv4_vocabulary_id:
-      :type: Integer
-      :comment: Old ID used in OMOPv4
-      :null: false
     :vocabulary_name:
       :type: String
       :comment: Full name of the vocabulary
@@ -787,7 +785,7 @@
       :type: String
       :comment: Domain to which the majority of the vocabulary is assigned
     :concepts_count:
-      :type: Integer
+      :type: :Bigint
       :comment: Number of row in the [concepts](#concepts) table assigned to this
         vocabulary
     :is_clinical_vocabulary:

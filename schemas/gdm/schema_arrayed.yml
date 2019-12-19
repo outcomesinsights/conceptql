@@ -775,10 +775,6 @@
     :primary_key: true
     :comment: Short name of the vocabulary which acts as a natural key for record
     :null: false
-  - :name: :omopv4_vocabulary_id
-    :type: Integer
-    :comment: Old ID used in OMOPv4
-    :null: false
   - :name: :vocabulary_name
     :type: String
     :comment: Full name of the vocabulary
@@ -787,7 +783,7 @@
     :type: String
     :comment: Domain to which the majority of the vocabulary is assigned
   - :name: :concepts_count
-    :type: Integer
+    :type: :Bigint
     :comment: Number of row in the [concepts](#concepts) table assigned to this vocabulary
   - :name: :is_clinical_vocabulary
     :type: TrueClass

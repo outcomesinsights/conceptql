@@ -2,7 +2,7 @@ require_relative "base"
 
 module ConceptQL
   module Operators
-    module Casting
+    module Selection
       class Death < Base
         include ConceptQL::Behaviors::Windowable
 
@@ -10,22 +10,19 @@ module ConceptQL
 
         desc 'Generates all death records, or, if fed a stream, fetches all death records for the people represented in the incoming result set.'
         domains :death
-        allows_one_upstream
+        validate_no_upstreams
+        validate_no_arguments
 
-        def my_domain
+        def domain
           :death
         end
 
-        def source_table
-          dm.table_by_domain(:death)
+        def table
+          dm.nschema.deaths_cql
         end
 
-        def i_point_at
-          [ :person ]
-        end
-
-        def these_point_at_me
-          []
+        def where_clause(db)
+          nil
         end
       end
     end

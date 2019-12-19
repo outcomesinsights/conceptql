@@ -2,7 +2,7 @@ require_relative "lexicon"
 
 module ConceptQL
   class Database
-    attr :db, :opts
+    attr_reader :db, :opts, :dm, :rdbms
     @lexicon_mutex = Mutex.new
 
     EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove, :null_dataset, :sql_comments, :pg_ctas_explain, :pg_vacuum_table]
@@ -25,16 +25,14 @@ module ConceptQL
         scratch_database: opts.fetch(:scratch_database, ENV["DOCKER_SCRATCH_DATABASE"])
       }.merge(opts[:scope_opts] || {})
       @opts[:scope_opts][:lexicon] = lexicon
+      @rdbms = Rdbms.get(db_type)
+      @dm = DataModel.get(@opts[:data_model], rdbms: @rdbms, lexicon: lexicon)
     end
 
     def query(statement, opts={})
       NullQuery.new if statement.nil? || statement.empty?
       @opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
       Query.new(self, ConceptQL::Utils.rekey(statement), @opts.merge(opts))
-    end
-
-    def data_model
-      @data_model ||= DataModel.get(opts[:data_model])
     end
 
     class << self

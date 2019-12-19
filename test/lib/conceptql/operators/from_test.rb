@@ -1,6 +1,6 @@
 require_relative "../../../db_helper"
 
-describe ConceptQL::Operators::From do
+describe ConceptQL::Operators::From::From do
   it "should handle QualifiedIdentifiers" do
     DB.create_table!(:test_from_table, as: CDB.query(["icd9", "412"]).query, temp: true)
 

@@ -21,45 +21,19 @@ module ConceptQL
         end
         expr = exprs.inject(&:&)
 
-
-        order_cols = order_columns(op)
-
         rhs = query.db[get_table_window(query)]
-        rhs = remove_window_id(rhs)
         rhs = rhs
               .select_group(:person_id, :start_date, :end_date)
               .select_append do
-                row_number.function.over(order: order_cols)
+                row_number.function.over(order: %i[person_id start_date end_date])
                           .as(:window_id)
               end.as(:r)
 
+        op.columns.add_columns(window_id: r_table[:window_id])
         query
+          .from_self(alias: :l)
+          .join(rhs, expr)
           .select_all(:l)
-          .select_append(r_table[:window_id])
-      end
-
-      def order_columns(op)
-        # Hack until Cloudera 6.1
-        %i[person_id start_date end_date].map do |c|
-          c == :person_id ? c : op.rdbms.partition_fix(c)
-        end
-      end
-
-      def remove_window_id(ds)
-        if (cols = selected_columns(ds)) && cols.all? { |s| s.is_a?(Symbol) }
-          ds.select(*(cols - [:window_id]))
-        else
-          ds.select_remove(:window_id)
-        end
-      end
-
-      def selected_columns(ds)
-        opts = ds.opts
-        if select = opts[:select]
-          select
-        elsif (from = opts[:from].first).is_a?(Sequel::Dataset)
-          selected_columns(from)
-        end
       end
 
       def get_table_window(query)

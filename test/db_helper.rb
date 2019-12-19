@@ -8,7 +8,9 @@ require "fileutils"
 ENV["CONCEPTQL_DATA_MODEL"] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
 
 CDB = ConceptQL::Database.new(DB, :data_model=>ENV["CONCEPTQL_DATA_MODEL"].to_sym)
+CDB.dm.nschema.remake_views!(DB)
 DB.extension :error_sql
+DB.logger = ConceptQL.logger
 
 PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
 
@@ -29,10 +31,11 @@ class Minitest::Spec
 
   def results(test_name, statement=nil)
     load_check(test_name, statement) do |stmt, remove_window|
-      ds = dataset(query(stmt)).from_self
+      q = query(stmt)
+      ds = dataset(q).from_self
 
       order_columns = [:person_id, :criterion_table, :criterion_domain, :start_date, :criterion_id]
-      order_columns << :uuid if ds.columns.include?(:uuid)
+      order_columns << :uuid if q.include_column?(:uuid)
       ds = ds.order(*order_columns)
 
       results = ds.all
@@ -55,7 +58,9 @@ class Minitest::Spec
   end
 
   def criteria_ids(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| hash_groups(stmt, :criterion_domain, :criterion_id)}
+    load_check(test_name, statement) do |stmt|
+      hash_groups(stmt, :criterion_domain, :criterion_id)
+    end
   end
 
   def code_check(test_name, statement=nil)
@@ -125,7 +130,7 @@ class Minitest::Spec
   def hash_groups(statement, key, value)
     dataset(statement).from_self.distinct.order(key, *value).to_hash_groups(key, value)
   rescue
-    puts $!.sql if $!.respond_to?(:sql)
+    puts ConceptQL::SqlFormatters.format($!.sql) if $!.respond_to?(:sql)
     raise
   end
 
@@ -181,7 +186,7 @@ class Minitest::Spec
       end
     end
   rescue
-    puts $!.sql if $!.respond_to?(:sql)
+    puts ConceptQL::SqlFormatters.format($!.sql) if $!.respond_to?(:sql)
     raise
   end
 

@@ -14,6 +14,64 @@ module ConceptQL
         validate_at_least_one_argument
         validate_codes_match
 
+        class WhereClause
+
+          attr_reader :vocab_ids, :vocabs
+
+          class Vocab
+            attr_reader :id, :codes
+
+            def initialize(id, *codes)
+              @id = id
+              @codes = Array(codes.flatten)
+            end
+
+            def add_codes(*codes)
+              @codes |= Array(codes.flatten)
+            end
+
+            def to_where_clause(db)
+              Sequel[vocabulary_id: id, concept_code: codes]
+            end
+          end
+
+          def initialize
+            @vocab_ids = []
+            @vocabs = []
+          end
+
+          def add_vocab_ids(*ids)
+            @vocab_ids |= Array(ids.flatten)
+          end
+
+          def add_vocab(id, *codes)
+            @vocabs << Vocab.new(id, *codes)
+          end
+
+          def add_vocabs(*other_vocabs)
+            Array(other_vocabs.flatten).each do |ov|
+              if existing_vocab = vocabs.find { |v| v.id == ov.id }
+                existing_vocab.add_codes(ov.codes)
+              else
+                vocabs << ov
+              end
+            end
+          end
+
+          def unify(other)
+            add_vocab_ids(other.vocab_ids)
+            add_vocabs(other.vocabs)
+          end
+
+          def to_where_clause(db)
+            clauses = []
+            clauses << Sequel[clinical_code_vocabulary_id: vocab_ids] unless vocab_ids.empty?
+            concepts_clause = vocabs.map { |v| v.to_where_clause(db) }.inject(:|)
+            clauses << Sequel[clinical_code_concept_id: db[:concepts].where(concepts_clause).select(:id) ] if concepts_clause
+            clauses.inject(:|)
+          end
+        end
+
         def select_all?
           arguments.include?("*")
         end
@@ -21,11 +79,6 @@ module ConceptQL
         def source_table
           domain_map(op_name)
         end
-=begin
-      def table
-        domain_map(op_name)
-      end
-=end
 
         def domain
           domain_map(op_name)
@@ -70,14 +123,36 @@ module ConceptQL
 
         def filter_clause(db)
           filter_clause = Sequel[where_clause(db)]
-          if (ex_clause = exclusion_clause(db)).present?
-            filter_clause = filter_clause.&(~Sequel[ex_clause])
-          end
           filter_clause
         end
 
-        def criterion_table
-          dm.table_by_domain(domain)
+        def table
+          dm.nschema.cc_cql
+        end
+
+        def unionable?
+          true
+        end
+
+        def unionize(op)
+          unless op.respond_to?(:wheres)
+            raise "Can't unionize #{op} and #{self}"
+          end
+
+          wheres.unify(op.wheres)
+          self
+        end
+
+        def wheres
+          return @wheres if defined?(@wheres)
+          @wheres = WhereClause.new
+
+          if select_all?
+            @wheres.add_vocab_ids(vocabulary_id)
+          else
+            @wheres.add_vocab(vocabulary_id, *arguments)
+          end
+          @wheres
         end
 
         private
@@ -98,39 +173,8 @@ module ConceptQL
           Sequel.qualify(:tab, concept_column)
         end
 
-=begin
-      def query(db)
-        ds = db[Sequel[criterion_table].as(:tab)]
-
-        ds = ds.where(filter_clause(db))
-
-        unless (more_columns = additional_columns(db)).empty?
-          ds = ds.select_append(*more_columns)
-        end
-
-        ds
-      end
-=end
-        def table
-          dm.nschema.cc_cql
-        end
-
-        def exclusion_clause(db)
-          {}
-        end
-
-        def additional_columns(db)
-          []
-        end
-
         def where_clause(db)
-          return { clinical_code_vocabulary_id: vocabulary_id } if select_all?
-
-          where_conds = {vocabulary_id: vocabulary_id}
-          where_conds[:concept_code] = arguments_fix(db)
-          concept_ids = db[:concepts].where(where_conds).select(:id)
-
-          { clinical_code_concept_id: concept_ids }
+          wheres.to_where_clause(db)
         end
 
         def query_cols

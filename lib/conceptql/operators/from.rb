@@ -3,14 +3,15 @@ require_relative "base"
 module ConceptQL
   module Operators
     class From < Base
-      include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
+      include ConceptQL::Behaviors::Windowable
+
 
       register __FILE__
       basic_type :selection
-      no_desc
       option :domains, type: Array
       option :query_cols, type: Array
+      no_desc
       validate_no_upstreams
       validate_one_argument
 
@@ -56,10 +57,6 @@ module ConceptQL
       def override_columns
         cols = (options[:query_cols] || dynamic_columns).map(&:to_sym)
         Hash[cols.zip(cols)]
-      end
-
-      def same_table?(table)
-        table_name === table
       end
     end
   end

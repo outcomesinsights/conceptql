@@ -12,7 +12,12 @@ module ConceptQL
           end
         end
       end
+
       undef :table
+
+      def _table
+        @table
+      end
     end
 
     class FauxModel < FauxpenStruct

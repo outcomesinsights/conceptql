@@ -1,7 +1,7 @@
 require_relative "../../../helper"
 require "conceptql"
 
-describe ConceptQL::Operators::Vocabulary do
+describe ConceptQL::Operators::Selection::Vocabulary do
   it "should populate known vocabularies from file in gdm" do
     assert ConceptQL::Operators.operators[:gdm]["admsrce"]
   end

@@ -1,29 +1,14 @@
-require "zlib"
 require_relative "../behaviors/metadatable"
-require "forwardable"
 
 module ConceptQL
   module Operators
     OPERATORS = {:omopv4_plus=>{}, :gdm=>{}}.freeze
-
-    SELECTED_COLUMNS = [:person_id,
-                        :criterion_id,
-                        :criterion_table,
-                        :criterion_domain,
-                        :start_date,
-                        :end_date,
-                        :value_as_number,
-                        :value_as_string,
-                        :value_as_concept_id,
-                        :units_source_value,
-                        :source_value].freeze
 
     def self.operators
       OPERATORS
     end
 
     class Base
-      extend Forwardable
       extend ConceptQL::Metadatable
 
       attr :nodifier, :values, :options, :arguments, :upstreams, :op_name
@@ -58,6 +43,11 @@ module ConceptQL
         def require_column(column)
           @required_columns ||= []
           @required_columns << column
+        end
+
+        def output_column(column)
+          @output_columns ||= []
+          @output_columns << column
         end
 
         validation_meths = (<<-END).split.map(&:to_sym)
@@ -212,23 +202,11 @@ module ConceptQL
       end
 
       def columns
-        @columns ||= Columns.new(available_columns, available_join_tables, rdbms, default_columns_proc)
-      end
-
-      def default_columns_proc
-        Columns::PASS_THRU_COLUMNS
+        @columns ||= Columns.new(self)
       end
 
       def evaluate(db, opts = {})
         columns.evaluate(query(db), scope.query_columns, options.merge(opts))
-      end
-
-      def available_columns
-        {}
-      end
-
-      def available_join_tables
-        []
       end
 
       def pretty_print(pp)
@@ -319,39 +297,6 @@ module ConceptQL
         query = modify_query(query, table)
         query.select(*columns(table))
       end
-=begin
-      def columns(table = nil)
-        #p table
-        return dm.columns(table: table)
-
-        cols = unless table
-          dynamic_columns
-        else
-          dm.columns_for_table(table, dynamic_columns)
-        end
-        return cols
-
-        criterion_table = :criterion_table
-        criterion_domain = :criterion_domain
-        if local_table
-          criterion_table = Sequel.cast_string(local_table.to_s).as(:criterion_table)
-          if gdm?
-            criterion_domain = Sequel.cast_string(domains(db).first.to_s).as(:criterion_domain)
-          else
-            criterion_domain = Sequel.cast_string(local_table.to_s).as(:criterion_domain)
-          end
-        end
-
-        columns = [dm.person_id_column(query),
-                   dm.table_id(local_table),
-                   criterion_table,
-                   criterion_domain]
-        columns += dm.date_columns(query, local_table)
-        columns += [ source_value(query, local_table) ]
-        columns += additional_columns(query, local_table)
-        columns
-      end
-=end
 
       def label
         @label ||= begin
@@ -375,14 +320,6 @@ module ConceptQL
         nodifier.scope
       end
 
-      def data_model
-        nodifier.data_model
-      end
-
-      def database_type
-        nodifier.database_type
-      end
-
       def cast_column(column, value = nil)
         type = Scope::COLUMN_TYPES.fetch(column)
         case type
@@ -397,20 +334,12 @@ module ConceptQL
         end
       end
 
-      def omopv4_plus?
-        data_model == :omopv4_plus
-      end
-
-      def omopv4?
-        data_model == :omopv4
-      end
-
       def gdm?
-        data_model == :gdm
+        dm.data_model == :gdm
       end
 
       def dm
-        @dm ||= DataModel.for(self, nodifier)
+        nodifier.dm
       end
 
       def rdbms
@@ -425,7 +354,7 @@ module ConceptQL
         scope.lexicon
       end
 
-      def same_table?(table)
+      def unionable?
         false
       end
 

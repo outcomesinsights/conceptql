@@ -1,5 +1,3 @@
-require_relative "../behaviors/drugish"
-require_relative "../behaviors/labish"
 require_relative "behaviors/gdmish"
 require_relative "behaviors/omopish"
 require_relative "behaviors/sourcish"

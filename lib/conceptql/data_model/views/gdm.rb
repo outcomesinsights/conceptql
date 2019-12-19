@@ -27,11 +27,12 @@ module ConceptQL
             [aliaz, Sequel.expr(def_block.call(*args)).as(aliaz)]
           end.to_h
 
-          table_cols = if primary_table
-                    db[primary_table].columns.map do |col|
-                      [col, primary_alias[col].as(col)]
-                    end
-                  end.to_h
+          table_cols =
+            if primary_table
+              db[primary_table].columns.map do |col|
+                [col, primary_alias[col].as(col)]
+              end
+            end.to_h
 
           table_cols.merge(mapped_cols).values
         end
@@ -58,17 +59,18 @@ module ConceptQL
           end
         end
 
-        def make(db, rdbms, opts = {})
+        def remake!(db, dm)
           db.drop_view(name, if_exists: true)
-          db.create_view(name, sql(db, rdbms))
+          db.create_view(name, sql(db, dm.rdbms))
         end
 
         def to_h
-          opts.merge(
+          opts.merge({
             name: name,
             columns: columns,
-            aliaz: aliaz
-          )
+            aliaz: aliaz,
+            primary_table: primary_table
+          }.compact)
         end
       end
 
@@ -85,7 +87,7 @@ module ConceptQL
         end
 
         def make(db, rdbms, opts = {})
-          views.each { |v| v.make(db, rdbms, opts) }
+          views.each { |v| v.remake!(db, rdbms, opts) }
         end
 
         def make_views
@@ -130,30 +132,6 @@ module ConceptQL
               v.new_view_column(:discharge_location) { Sequel[:dlc][:concept_code] }
               v.new_view_column(:source_value) { Sequel[:pcon][:concept_code] }
               v.new_view_column(:source_vocabulary_id) { Sequel[:pcon][:vocabulary_id] }
-            end
-          end
-
-          new_view("clinical_codes_cql_view") do |v|
-            v.primary_table = :clinical_codes
-            v.primary_table_alias = :cc
-            v.aliaz = :cc_cql
-
-            v.new_view_column(:person_id) { |pa| pa[:patient_id] }
-            v.new_view_column(:criterion_id) { |pa| pa[:id] }
-            v.new_view_column(:criterion_table) { Sequel.cast_string("clinical_codes") }
-            v.new_view_column(:start_date) { |pa| pa[:start_date] }
-            v.new_view_column(:end_date) { |pa| pa[:end_date] }
-            v.new_view_column(:source_value) { |pa| pa[:clinical_code_source_value] }
-            v.new_view_column(:source_vocabulary_id) { |pa| pa[:clinical_code_vocabulary_id] }
-            v.new_view_column(:code_provenance_type) { |pa| pa[:provenance_concept_id] }
-            v.new_view_column(:criterion_domain) do |pa, db|
-              lexicon = new_lexicon(db)
-              vocabs_to_domains = lexicon.vocabularies_query
-                .select_hash_groups(:domain, :id)
-                .invert.map do |vocab_ids, domain|
-                [ { pa[:clinical_code_vocabulary_id] => vocab_ids }, domain ]
-              end
-              Sequel.function(:coalesce, Sequel.case(vocabs_to_domains, nil), Sequel.cast_string("condition_occurrence"))
             end
           end
         end

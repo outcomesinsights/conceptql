@@ -14,28 +14,30 @@ module ConceptQL
         validate_no_upstreams
         validate_at_least_one_argument
 
-        def where_clause(ds, ctx)
-          db = ds.db
-
+        def where_clause(db)
           arguments.map do |arg|
             case arg.to_s
             when /^m/i
-              Sequel.expr(ctx.primary_table_alias[:gender_concept_id] => male_ids(ds.db))
+              Sequel.expr(table[:gender_concept_id].name => male_ids(db))
             when /^f/i
-              Sequel.expr(ctx.primary_table_alias[:gender_concept_id] => female_ids(ds.db))
+              Sequel.expr(table[:gender_concept_id].name => female_ids(db))
             else
-              Sequel.expr(ctx.primary_table_alias[:gender_concept_id] => nil) \
-                | Sequel.~(ctx.primary_table_alias[:gender_concept_id] => male_ids(ds.db) + female_ids(ds.db))
+              Sequel.expr(table[:gender_concept_id].name => nil) \
+                | Sequel.~(table[:gender_concept_id].name => male_ids(db) + female_ids(db))
             end
           end.inject(&:|)
         end
 
         def male_ids(db)
-          dm.related_concept_ids(db, 8507)
+          lexicon.descendants_of(8507)
         end
 
         def female_ids(db)
-          dm.related_concept_ids(db, 8532)
+          lexicon.descendants_of(8532)
+        end
+
+        def table
+          dm.nschema.people_cql
         end
       end
     end

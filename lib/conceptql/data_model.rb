@@ -4,19 +4,12 @@ require_relative "rdbms"
 module ConceptQL
   module DataModel
     def self.get(data_model, opts = {})
-      operator = opts[:operator]
-      nodifier = opts[:nodifier]
-
       case data_model
       when :gdm
-        Gdm.new(operator, nodifier)
+        Gdm.new(opts)
       else
         raise "No DataModel defined for #{data_model.inspect}"
       end
-    end
-
-    def self.for(operator, nodifier)
-      get(nodifier.data_model, nodifier: nodifier, operator: operator)
     end
   end
 end

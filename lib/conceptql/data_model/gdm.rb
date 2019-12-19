@@ -8,11 +8,21 @@ module ConceptQL
 
       def initialize(*args)
         super
-        relations.each do |table|
-          table.schema = self 
-          table.setup! 
-          self[table.name] = table
+        self.tables ||= []
+        self.views ||= []
+        update_relations!
+      end
+
+      def update_relations!
+        relations.each do |relation|
+          relation.schema = self 
+          relation.setup! 
+          self[relation.name] = relation
         end 
+      end
+
+      def remake_views!(db)
+        tables.map(&:view).each { |v| v.remake!(db, dm) }
       end
 
       def tables_by_column(*column_names)
@@ -39,10 +49,6 @@ module ConceptQL
     end
 
     class Column < FauxModel
-      def initialize(*args)
-        super
-      end
-
       def pretty_print(pp)
         pp.object_group self do
           %i[name type null foreign_key].each do |meth|
@@ -67,7 +73,7 @@ module ConceptQL
       def setup!
         columns.each do |column|
           column.table = self
-          column.mapped_to ||= [self.name]
+          column.mapped_to = (column.mapped_to || []) | [self.name]
           column.foreign_table = schema[column.foreign_key.to_sym] if column.foreign_key
           self[column.name] = column
         end
@@ -89,9 +95,69 @@ module ConceptQL
         sprintf("%s_%s_%03d", name, op.op_name, counter).downcase
       end
 
+      def remake!(db, dm)
+        db.drop_view(name, if_exists: true)
+        puts name
+        db.create_view(name, db[source_table.name].select(*columns_as_sql(dm)))
+      end
+
+      def columns_as_sql(dm)
+        other_columns = [ Sequel.cast_string(source_table.name.to_s).as(:criterion_table) ]
+
+        if cd = criterion_domain_column(dm)
+          other_columns << Sequel.cast_string(cd).as(:criterion_domain) 
+        end
+        
+        columns_hash.map do |name, info|
+          Sequel[info.source_column.name].as(name)
+        end + other_columns
+      end
+
+      def columns_hash
+        @columns_hash ||= columns.each.with_object({}) do |column, h|
+          ((column.mapped_to || []) | [column.name]).each do |name|
+            h[name] = column
+          end
+        end
+      end
+
+      def criterion_domain_column(dm)
+        if source_table.name == :clinical_codes
+          lexicon = dm.lexicon
+          vocabs_to_domains = lexicon.vocabularies_query
+            .select_hash_groups(:domain, :id)
+            .invert.map do |vocab_ids, domain|
+            [ { clinical_code_vocabulary_id: vocab_ids }, domain ]
+          end
+          return Sequel.case(vocabs_to_domains, Sequel.cast_string("condition_occurrence"))
+        end
+        return domain_lookup[source_table.name]
+      end
+
+      def domain_lookup
+        {
+          patients: "person",
+          collections: "condition_occurrence",
+        }
+      end
+
       def counter
         @counter ||= 0
         @counter += 1
+      end
+
+      def view
+        @view ||= Table.new(name: "#{name}_cql_view_v1".to_sym, 
+                            source_table: self,
+                            columns: columns_hash.map do |name, column|
+          Column.new(
+            name: name,
+            type: column.type,
+            comment: column.comment,
+            foreign_key: column.foreign_key,
+            source_column: column
+          )
+        end)
       end
 
       def pretty_print(pp)
@@ -127,7 +193,8 @@ module ConceptQL
       end
 
       def nschema
-        Models::Schema.new(tables: SCHEMAS[:gdm_arrayed], views: views.views.map(&:to_h)).tap do |schema|
+        Models::Schema.new(tables: SCHEMAS[:gdm_arrayed], dm: self).tap do |schema|
+          #, views: views.views.map(&:to_h)
           mapify(schema)
         end
       end
@@ -157,21 +224,50 @@ module ConceptQL
           end
         end
 
-        schema.relations.each do |relation|
-          if aliaz = relation.aliaz
-            schema[aliaz] = relation
+        # For views that have a primary table, set the view up to pass-thru
+        # all columns from that table
+=begin
+        schema.relations.select(&:primary_table).each do |relation|
+          table = schema[relation[:primary_table]]
+          pass_thru_columns = (table.columns.map(&:name) - relation.columns.map(&:name)).map do |column_name|
+            table[column_name]
+          end
+          relation.columns += pass_thru_columns
+          pass_thru_columns.each do |pass_thru_column|
+            relation[pass_thru_column.name] = pass_thru_column
           end
         end
+=end
 
         schema.clinical_codes.clinical_code_concept_id.mapped_to << :concept_id
         schema.clinical_codes.clinical_code_source_value.mapped_to << :source_value
         schema.clinical_codes.clinical_code_vocabulary_id.mapped_to << :source_vocabulary_id
+
+        schema.patients.patient_id_source_value.mapped_to << :source_value
+        schema.patients.patient_id_source_value.mapped_to << :source_vocabulary_id
 
         schema.tables.each do |table|
           table.columns.each do |column|
             column.mapped_to.each do |mapping|
               table[mapping] = column
             end
+          end
+        end
+        
+        schema.tables.each do |table|
+          schema.views << table.view
+        end
+
+        schema.update_relations!
+
+        schema.clinical_codes_cql_view_v1.aliaz = :cc_cql
+        schema.deaths_cql_view_v1.aliaz = :deaths_cql
+        schema.patients_cql_view_v1.aliaz = :people_cql
+
+        # Apply table aliases to schema
+        schema.relations.each do |relation|
+          if aliaz = relation.aliaz
+            schema[aliaz] = relation
           end
         end
       end
@@ -247,11 +343,12 @@ module ConceptQL
       end
 
       def person_id_column(table)
-        col = if table.to_sym == :patients
-          :id
-        else
-          :patient_id
-        end
+        col =
+          if table.to_sym == :patients
+            :id
+          else
+            :patient_id
+          end
         Sequel.identifier(col).as(:person_id)
       end
 

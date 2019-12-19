@@ -3,18 +3,17 @@ require "psych"
 module ConceptQL
   module DataModel
     class Base
-      SCHEMAS = Dir.glob(ConceptQL.schemas_dir + "*.yml").each_with_object({}) do |schema_file, schemas|
-        schemas[File.basename(schema_file, ".*").to_sym] = Psych.load_file(schema_file)
+      SCHEMAS = Pathname.glob(ConceptQL.schemas_dir + "*").each_with_object({}) do |schema_dir, schemas|
+        data_model = File.basename(schema_dir)
+        schemas[data_model.to_sym] = Psych.load_file(schema_dir + "schema.yml")
+        schemas[("#{data_model}_arrayed").to_sym] = Psych.load_file(schema_dir + "schema_arrayed.yml")
       end
 
-      attr :operator, :nodifier
-      def initialize(operator, nodifier)
-        @operator = operator
-        @nodifier = nodifier
-      end
+      attr_reader :rdbms, :lexicon
 
-      def rdbms
-        @rdbms ||= ConceptQL::Rdbms.generate(nodifier.database_type)
+      def initialize(opts = {})
+        @rdbms = opts.fetch(:rdbms)
+        @lexicon = opts.fetch(:lexicon)
       end
 
       def query_modifier_for(column)
@@ -90,18 +89,15 @@ module ConceptQL
         "#{domain}_id".to_sym
       end
 
-      def query_columns
-        @query_columns ||= Hash[operator.scope.query_columns.zip(operator.scope.query_columns)]
-      end
-
       def columns(opts = {})
         table = get_table(opts)
 
-        cols_hash = if table.nil? && opts[:query_columns].nil?
-                      query_columns
-                    else
-                      columns_in_table(table, opts).merge(modifier_columns(table, opts)).merge(nullified_columns(table, opts))
-                    end.dup
+        cols_hash =
+          if table.nil? && opts[:query_columns].nil?
+            query_columns
+          else
+            columns_in_table(table, opts).merge(modifier_columns(table, opts)).merge(nullified_columns(table, opts))
+          end.dup
 
         except_keys = opts[:except] || []
         if cols_hash.has_key?(:uuid)
@@ -153,16 +149,6 @@ module ConceptQL
 
       def get_table(opts)
         opts[:table] || table_by_domain(opts[:domain])
-      end
-
-      def modify_query(query, table)
-        return query if table.nil?
-
-        applicable_query_modifiers(table).each do |klass|
-          query = klass.new(query, operator, table, self).modified_query
-        end
-
-        query
       end
 
       def applicable_query_modifiers(table)
@@ -231,12 +217,6 @@ module ConceptQL
 
       def place_of_service_concept_id(query, domain)
         place_of_service_concept_id_column(query, domain)
-      end
-
-      def determine_table(table_method)
-        return nil unless operator.respond_to?(table_method)
-        table = table_by_domain(operator.send(table_method))
-        return table if schema.keys.include?(table)
       end
 
       def assign_column_to_table
@@ -375,17 +355,19 @@ module ConceptQL
 
       def determine_date_columns(query, table = nil)
         sd = start_date_column(query, table)
-        sd = if sd == :start_date 
-          Sequel.expr(sd)
-        else
-          rdbms.cast_date(Sequel.expr(sd))
-        end
+        sd =
+          if sd == :start_date 
+            Sequel.expr(sd)
+          else
+            rdbms.cast_date(Sequel.expr(sd))
+          end
         ed = end_date_column(query, table)
-        ed = if ed == :end_date
-           Sequel.expr(ed)
-        else
-          rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table)))
-        end
+        ed =
+          if ed == :end_date
+            Sequel.expr(ed)
+          else
+            rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table)))
+          end
         { start_date: sd, end_date: ed}
       end
 

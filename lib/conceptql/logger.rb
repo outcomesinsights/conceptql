@@ -1,8 +1,8 @@
-require 'logger'
+require "logger"
 module ConceptQL
   def self.logger
     @logger ||= begin
-      l = Logger.new('/tmp/cql.log')
+      l = Logger.new("/tmp/cql.log")
       l.level = Logger::DEBUG
       l
     end

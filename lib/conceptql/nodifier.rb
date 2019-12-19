@@ -1,20 +1,17 @@
-require_relative 'operators/base'
+require_relative "operators/base"
 
 module ConceptQL
   class Nodifier
-    attr :scope, :data_model, :database_type, :algorithm_fetcher
+    attr_reader :scope, :database_type, :algorithm_fetcher, :dm, :rdbms
 
     def initialize(opts={})
       @scope = opts[:scope] || Scope.new(opts.delete(:scope_opts) || {})
-      @data_model = get_data_model(opts)
       @database_type = opts[:database_type] || ConceptQL::DEFAULT_DATA_MODEL
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
         nil
       end)
-    end
-
-    def get_data_model(opts)
-      (opts[:data_model] || ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
+      @dm = opts.fetch(:dm)
+      @rdbms = opts.fetch(:rdbms)
     end
 
     def create(operator, *values)
@@ -40,7 +37,7 @@ module ConceptQL
     private
 
     def operators
-      @operators ||= Operators.operators.fetch(@data_model)
+      @operators ||= Operators.operators.fetch(dm.data_model)
     end
 
     def fetch_op(operator)

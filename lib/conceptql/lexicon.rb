@@ -79,7 +79,6 @@ module ConceptQL
                 Sequel[:vocabulary_name].as(:vocabulary_full_name),
                 Sequel[:domain],
                 Sequel.expr(1).as(:from_lexicon))
-        .all
     end
 
     def lexicon_db_is_mock?

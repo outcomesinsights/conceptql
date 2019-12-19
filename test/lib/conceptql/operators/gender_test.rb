@@ -1,6 +1,6 @@
 require_relative "../../../helper"
 
-describe ConceptQL::Operators::Gender do
+describe ConceptQL::Operators::Selection::Gender do
   it "be present in list of operators" do
     _(ConceptQL::Operators.operators[:omopv4_plus]["gender"]).must_equal ConceptQL::Operators::Gender
   end
