@@ -26,30 +26,31 @@ module ConceptQL
     }.freeze
 
     ADDITIONAL_COLUMNS = {
-      value_as_number: :Float,
-      value_as_string: :String,
-      value_as_concept_id: :Bigint,
-      unit_source_value: :String,
-      visit_occurrence_id: :Bigint,
-      file_provenance_type: :Bigint,
+      admission_date: :Date,
+      admission_source: :String,
       code_provenance_type: :Bigint,
-      provider_id: :Bigint,
-      visit_source_concept_id: :Bigint,
-      range_low: :Float,
-      range_high: :Float,
-      drug_name: :String,
+      discharge_date: :Date,
+      discharge_location: :String,
       drug_amount: :Float,
       drug_amount_units: :String,
       drug_days_supply: :Bigint,
+      drug_name: :String,
       drug_quantity: :Float,
-      admission_date: :Date,
-      discharge_date: :Date,
+      drug_unit_source_value: :String,
+      file_provenance_type: :Bigint,
+      lab_range_high: :Float,
+      lab_range_low: :Float,
+      lab_unit_source_value: :String,
+      lab_value_as_concept_id: :Bigint,
+      lab_value_as_number: :Float,
+      lab_value_as_string: :String,
       length_of_stay: :Bigint,
-      admission_source: :String,
-      discharge_location: :String,
       primary_diagnosis_code: :String,
       primary_diagnosis_vocabulary: :String,
+      provider_id: :Bigint,
       uuid: :String,
+      visit_occurrence_id: :Bigint,
+      visit_source_concept_id: :Bigint,
       window_id: :Bigint
     }.freeze
 
@@ -57,7 +58,14 @@ module ConceptQL
 
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns, :lexicon
+    attr_reader :known_operators,
+      :recall_stack,
+      :recall_dependencies,
+      :annotation,
+      :opts,
+      :query_columns,
+      :output_columns,
+      :lexicon
 
     def initialize(opts = {})
       @known_operators = {}
@@ -71,6 +79,7 @@ module ConceptQL
       @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
       @query_columns << :window_id if opts.dig(:window_opts, :window_table)
+      @output_columns = []
       @lexicon = opts[:lexicon]
 
       @i = 0
@@ -91,6 +100,8 @@ module ConceptQL
     end
 
     def add_counts(key, domain, counts)
+      # Ignore counts of secret Projection operator
+      return if key == "projection"
       c = @counts[key] ||= {}
       c[domain] = counts
     end
@@ -102,6 +113,13 @@ module ConceptQL
       end
     end
 
+    def add_output_columns(op)
+      if op.output_columns
+        @output_columns |= op.output_columns
+        @output_columns.sort_by! { |qc| COLUMN_TYPES.keys.index(qc) }
+      end
+    end
+
     def harvest_person_ids(op)
       if person_ids = op.options[:person_ids]
         opts[:person_ids] = person_ids
@@ -110,6 +128,7 @@ module ConceptQL
 
     def nest(op)
       add_required_columns(op)
+      add_output_columns(op)
       harvest_person_ids(op)
       return yield unless label = op.is_a?(Operators::PassThru::Recall) ? op.source : op.label
 

@@ -18,7 +18,7 @@ module ConceptQL
       @validations = []
 
       class << self
-        attr :validations, :codes_regexp, :required_columns
+        attr :validations, :codes_regexp, :required_columns, :output_columns
 
         def register(file, *data_models)
           data_models = OPERATORS.keys if data_models.empty?
@@ -136,6 +136,10 @@ module ConceptQL
         cols
       end
 
+      def output_columns
+        self.class.output_columns
+      end
+
       def dynamic_columns
         scope.query_columns
       end
@@ -206,7 +210,8 @@ module ConceptQL
       end
 
       def evaluate(db, opts = {})
-        columns.evaluate(query(db), scope.query_columns, options.merge(opts))
+        opts = {required_columns: scope.query_columns}.merge(options.merge(opts))
+        columns.evaluate(opts.fetch(:ds) { query(db) },opts)
       end
 
       def pretty_print(pp)

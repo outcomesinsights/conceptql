@@ -83,6 +83,11 @@ class Minitest::Spec
   def check_output(test_name, results, statement, has_windows = false)
     path = "test/results/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name}"
 
+    # This removes the Projection operator that we've secretly
+    # inserted into every statement
+    if results.is_a?(Array) && results.first.to_s == "projection"
+      results = results[1]
+    end
     if ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
       save_results(path, results)
     end

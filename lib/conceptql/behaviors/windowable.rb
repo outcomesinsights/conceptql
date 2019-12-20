@@ -3,9 +3,9 @@ module ConceptQL
     # Applies scope windows to Operators
     module Windowable
       def evaluate(db, opts = {})
-        ds = super(db, opts)
-        return ds if skip_windows?
-        apply_windows(ds)
+        return super(db, opts) if skip_windows?
+        ds = apply_windows(query(db))
+        super(db, opts.merge(ds: ds))
       end
 
       def apply_windows(ds)

@@ -22,7 +22,7 @@ module ConceptQL
       end
 
       def remake_views!(db)
-        tables.map(&:view).each { |v| v.remake!(db, dm) }
+        views.each { |v| v.remake!(db, dm) }
       end
 
       def tables_by_column(*column_names)
@@ -33,6 +33,16 @@ module ConceptQL
         end
 
         @tables_by_column.values_at(*column_names).flatten.uniq
+      end
+
+      def views_by_column(*column_names)
+        @views_by_column ||= views.each.with_object({}) do |view, h|
+          view.columns.each do |column|
+            (h[column.name] ||= []) << column.table
+          end
+        end
+
+        @views_by_column.values_at(*column_names).flatten.uniq
       end
 
       def pretty_print(pp)
@@ -71,9 +81,11 @@ module ConceptQL
       has_many :columns
 
       def setup!
+        #puts name
+        #binding.pry if name == :patients_cql_view_v1
         columns.each do |column|
           column.table = self
-          column.mapped_to = (column.mapped_to || []) | [self.name]
+          column.mapped_to = (column.mapped_to || []) | [column.name]
           column.foreign_table = schema[column.foreign_key.to_sym] if column.foreign_key
           self[column.name] = column
         end
@@ -97,7 +109,6 @@ module ConceptQL
 
       def remake!(db, dm)
         db.drop_view(name, if_exists: true)
-        puts name
         db.create_view(name, db[source_table.name].select(*columns_as_sql(dm)))
       end
 
@@ -257,6 +268,7 @@ module ConceptQL
         schema.tables.each do |table|
           schema.views << table.view
         end
+        schema.views += views.views
 
         schema.update_relations!
 

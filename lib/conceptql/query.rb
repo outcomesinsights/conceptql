@@ -133,7 +133,7 @@ module ConceptQL
       elsif stmt.length == 1 && stmt.first.is_a?(Array)
         extract_statement(stmt.first, opts)
       else
-        [stmt, opts]
+        [[:projection, stmt], opts]
       end
     end
 

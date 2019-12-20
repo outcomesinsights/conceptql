@@ -2,13 +2,33 @@ module ConceptQL
   module DataModel
     module Views
       class View
-        attr_reader :base_name, :opts
-        attr_accessor :primary_table, :primary_table_alias, :aliaz, :version
+        attr_reader :base_name, :opts, :columns
+        attr_accessor :primary_table, :primary_table_alias, :aliaz, :version, :schema
+
+        class ViewColumn
+          attr_reader :name
+          attr_accessor :table
+          def initialize(name, definition, &def_block)
+            @name = name
+            @definition = definition
+            @def_block = def_block
+          end
+
+          def to_column(primary_alias, db, rdbms)
+            [name, Sequel.expr(get_def(primary_alias, db, rdbms)).as(name)]
+          end
+
+          def get_def(primary_alias, db, rdbms)
+            return @definition if @definition
+            args = [primary_alias, db, rdbms].take(@def_block.arity)
+            @def_block.call(*args)
+          end
+        end
 
         def initialize(base_name, opts = {}, &block)
           @opts = opts
           @base_name = base_name
-          @view_columns = {}
+          @columns = []
           @ds_block = proc { |aliased_table, _, db, _| db[aliased_table] }
           block.call(self) if block
         end
@@ -22,9 +42,8 @@ module ConceptQL
         end
 
         def selection(db, rdbms)
-          mapped_cols = @view_columns.map do |aliaz, def_block|
-            args = [primary_alias, db, rdbms].take(def_block.arity)
-            [aliaz, Sequel.expr(def_block.call(*args)).as(aliaz)]
+          mapped_cols = @columns.map do |vc|
+            vc.to_column(primary_alias, db, rdbms)
           end.to_h
 
           table_cols =
@@ -41,8 +60,10 @@ module ConceptQL
           @ds_block.call(aliased_primary_table, primary_alias, db, rdbms).select(*selection(db, rdbms))
         end
 
-        def new_view_column(name, &def_block)
-          @view_columns[name] = def_block
+        def new_view_column(name, definition = nil, &def_block)
+          @columns << ViewColumn.new(name, definition, &def_block).tap do |v|
+            v.table = self
+          end
         end
 
         def aliased_primary_table
@@ -53,10 +74,8 @@ module ConceptQL
           Sequel[primary_table_alias]
         end
 
-        def columns
-          @view_columns.map do |aliaz, _|
-            { name: aliaz, type: Scope::COLUMN_TYPES[aliaz] }
-          end
+        def setup!
+          #do nothing
         end
 
         def remake!(db, dm)
@@ -123,16 +142,57 @@ module ConceptQL
 
               v.new_view_column(:person_id) { |pa| pa[:patient_id] }
               v.new_view_column(:criterion_id) { |pa| pa[:id] }
-              v.new_view_column(:criterion_table) { Sequel.cast_string("collections") }
-              v.new_view_column(:criterion_domain) { Sequel.cast_string("condition_occurrence") }
-              v.new_view_column(:start_date) { Sequel[:ad][:admission_date] }
-              v.new_view_column(:end_date) { Sequel[:ad][:discharge_date] }
+              v.new_view_column(:criterion_table, Sequel.cast_string("collections"))
+              v.new_view_column(:criterion_domain, Sequel.cast_string("condition_occurrence"))
+              v.new_view_column(:start_date, Sequel[:ad][:admission_date])
+              v.new_view_column(:end_date, Sequel[:ad][:discharge_date])
               v.new_view_column(:length_of_stay) { |pa, db, rdbms| ((rdbms.days_between(Sequel[:ad][:admission_date], Sequel[:ad][:discharge_date])) + 1) }
-              v.new_view_column(:admission_source) { Sequel[:asc][:concept_code] }
-              v.new_view_column(:discharge_location) { Sequel[:dlc][:concept_code] }
-              v.new_view_column(:source_value) { Sequel[:pcon][:concept_code] }
-              v.new_view_column(:source_vocabulary_id) { Sequel[:pcon][:vocabulary_id] }
+              v.new_view_column(:admission_source, Sequel[:asc][:concept_code])
+              v.new_view_column(:discharge_location, Sequel[:dlc][:concept_code])
+              v.new_view_column(:source_value, Sequel[:pcon][:concept_code])
+              v.new_view_column(:source_vocabulary_id, Sequel[:pcon][:vocabulary_id])
             end
+          end
+
+          new_view("druggish") do |v|
+            v.primary_table = :clinical_codes
+            v.primary_table_alias = :dedcc
+
+            v.ds do |aliased_table, pa, db, rdbms|
+             db[aliased_table]
+              .left_join(Sequel[:drug_exposure_details].as(:de), Sequel[pa][:drug_exposure_detail_id] => Sequel[:de][:id])
+              .left_join(Sequel[:concepts].as(:dose_con), Sequel[:de][:dose_unit_concept_id] => Sequel[:dose_con][:id])
+              .left_join(Sequel[:concepts].as(:ing_con), Sequel[pa][:clinical_code_concept_id] => Sequel[:ing_con][:id])
+            end
+
+            v.new_view_column(:criterion_id) { |pa| pa[:id] }
+            v.new_view_column(:criterion_table, Sequel.cast_string("clinical_codes"))
+            v.new_view_column(:drug_amount, Sequel[:de][:dose_value])
+            v.new_view_column(:drug_amount_units, Sequel[:dose_con][:concept_text])
+            v.new_view_column(:drug_name, Sequel[:ing_con][:concept_text])
+            v.new_view_column(:drug_days_supply, Sequel[:de][:days_supply])
+            v.new_view_column(:drug_quantity, Sequel[:dedcc][:quantity])
+          end
+
+          new_view("labish") do |v|
+            v.primary_table = :clinical_codes
+            v.primary_table_alias = :labcc
+
+            v.ds do |aliased_table, pa, db, rdbms|
+             db[aliased_table]
+              .left_join(Sequel[:measurement_details].as(:md), Sequel[pa][:measurement_detail_id] => Sequel[:md][:id])
+              .left_join(Sequel[:concepts].as(:unit_con), Sequel[:md][:unit_concept_id] => Sequel[:unit_con][:id])
+              .left_join(Sequel[:concepts].as(:result_con), Sequel[:md][:result_as_concept_id] => Sequel[:result_con][:id])
+            end
+
+            v.new_view_column(:criterion_id) { |pa| pa[:id] }
+            v.new_view_column(:criterion_table, Sequel.cast_string("clinical_codes"))
+            v.new_view_column(:lab_value_as_number, Sequel[:md][:result_as_number])
+            v.new_view_column(:lab_value_as_string, Sequel[:md][:result_as_string])
+            v.new_view_column(:lab_value_as_concept_id, Sequel[:result_con][:concept_text])
+            v.new_view_column(:lab_unit_source_value, Sequel[:unit_con][:concept_text])
+            v.new_view_column(:lab_range_low, Sequel[:md][:normal_range_low])
+            v.new_view_column(:lab_range_high, Sequel[:md][:normal_range_high])
           end
         end
 
