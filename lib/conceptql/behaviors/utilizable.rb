@@ -36,13 +36,12 @@ module ConceptQL
 
         # Get primary diagnosis codes
         primary_concepts = db[Sequel[:clinical_codes].as(:pcc)]
-          .join(:concepts, { Sequel[:pco][:id] => Sequel[:pcc][:clinical_code_concept_id] }, table_alias: :pco)
           .where(provenance_concept_id: all_primary_ids, Sequel[:pcc][:clinical_code_vocabulary_id] => condition_domains)
           .select(
             Sequel[:pcc][:collection_id].as(:collection_id),
-            Sequel[:pco][:concept_code],
-            Sequel[:pco][:vocabulary_id])
-          .order(Sequel[:pcc][:collection_id],Sequel[:pcc][:clinical_code_concept_id])
+            Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
+            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id))
+          .order(Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id])
           .from_self
           .distinct(:collection_id)
 
