@@ -29,7 +29,7 @@ require "conceptql/columnizer"
 
 # byebug is only required during development
 begin
-  require "byebug"
+  require "byebug" unless ENV["CONCEPTQL_PRY_RESCUE"]
   require "pry"
 rescue LoadError
   nil

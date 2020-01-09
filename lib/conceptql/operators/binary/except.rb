@@ -10,28 +10,30 @@ module ConceptQL
         default_query_columns
 
         def query(db)
-          if ignore_dates?
-            query = db.from(Sequel.as(left.evaluate(db), :l))
-              .left_join(Sequel.as(right.evaluate(db), :r), criterion_id: :criterion_id, criterion_domain: :criterion_domain)
-              .where(Sequel[:r][:criterion_id] => nil)
-              .select_all(:l)
-            db.from(query)
-          else
-            lquery = left.evaluate(db)
-            rquery = right.evaluate(db)
+          prepare_columns
+          lhs(db).left_join(
+            rhs(db),
+            join_clause.inject(&:&),
+            table_alias: :r
+          )
+            .where(where_clause)
+        end
 
-            # Set columns so that impala's EXCEPT emulation doesn't use a query to determine them
-            lquery.send("columns=", query_cols)
-            rquery.send("columns=", query_cols)
-
-            if impala?
-              lquery = lquery.except_strategy(:not_exists, *(matching_columns + [:criterion_id, :criterion_domain]))
-            end
-            lquery.select(*query_cols).except(rquery.select(*query_cols))
-          end
+        def where_clause
+          {Sequel[:r][:criterion_id] => nil}
         end
 
         private
+
+        def join_columns
+          %i[criterion_id criterion_table]
+        end
+
+        def rhs_columns
+          cols = super
+          cols |= %i[start_date end_date] unless ignore_dates?
+          cols
+        end
 
         def ignore_dates?
           options[:ignore_dates]

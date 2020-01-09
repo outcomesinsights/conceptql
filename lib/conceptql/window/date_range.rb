@@ -8,7 +8,7 @@ module ConceptQL
         return ds if options[:timeless]
 
         rdbms = operator.rdbms
-        ds.where(start_check(rdbms)).where(end_check(rdbms)).from_self
+        ds.where(start_check(rdbms)).where(end_check(rdbms))
       end
 
       def start_check(rdbms)

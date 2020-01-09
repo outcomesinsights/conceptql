@@ -1,7 +1,7 @@
 if ENV['COVERAGE']
-  require 'coverage'
-  require 'seqelizer'
-  require 'simplecov'
+  require "coverage"
+  require "seqelizer"
+  require "simplecov"
 
   ENV.delete('COVERAGE')
   SimpleCov.instance_exec do
@@ -15,10 +15,11 @@ if ENV['COVERAGE']
 end
 
 $: << "lib"
-require 'conceptql'
+require "conceptql"
 ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
-require 'minitest/spec'
-require 'minitest/autorun'
+require "minitest/spec"
+require "minitest/autorun"
+require "pry-rescue/minitest" if ENV["CONCEPTQL_PRY_RESCUE"]
 
 Minitest::Test.make_my_diffs_pretty!
 

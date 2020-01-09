@@ -18,19 +18,18 @@ module ConceptQL
           ds = where_clauses(db).inject(ds) do |ds, where_clause|
             ds.where(where_clause)
           end
-          ds
+          prepare_columns(ds)
         end
 
         def table
           raise NotImplementedError
         end
 
-        def columns
-          @columns ||= Columns.new(self).tap do |c| 
-            names = table.columns.map(&:name)
-            c.add_columns(names.zip(names).to_h)
-            c.add_column(:window_id, Sequel.cast_numeric(nil))
-          end
+        def prepare_columns(ds, opts = {})
+          names = table.columns.map(&:name)
+          ds.auto_columns(names.zip(names).to_h)
+            .auto_column(:window_id, Sequel.cast_numeric(nil))
+            .auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
         end
 
         def table_alias

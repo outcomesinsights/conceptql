@@ -24,17 +24,12 @@ module ConceptQL
             end
           end
 
-          def self.within_skip(type)
-            define_method(:"within_check_#{type}?"){false}
+          def rhs_columns
+            super | %i[start_date end_date]
           end
 
-          def query(db)
-            right_stream = apply_selectors(right_stream_query(db), function: rhs_function).from_self(alias: :r)
-            ds = semi_or_inner_join(left_stream(db), right_stream, *[*join_columns, where_clause])
-
-            ds = apply_selectors(ds, qualifier: :r)
-
-            ds.from_self
+          def self.within_skip(type)
+            define_method(:"within_check_#{type}?"){false}
           end
 
           def r_start_date
@@ -94,39 +89,12 @@ module ConceptQL
             adjuster.adjust(column, reverse)
           end
 
-
-          def apply_selectors(ds, opts = {})
-            return ds unless include_rhs_columns
-            ds = ds.select_remove(*include_rhs_columns).select_append(*(rhs_columns(opts))) if include_rhs_columns
-            ds
-          end
-
-          def rhs_columns(opts)
-            cols = include_rhs_columns
-            return cols if opts.empty?
-            cols = cols.map { |c| Sequel.function(opts[:function], c).as(c) } if opts[:function]
-            cols = cols.map { |c| Sequel[opts[:qualifier]][c].as(c) } if opts[:qualifier]
-            cols
-          end
-
           def at_least_check?
             false
           end
 
           def inclusive?
             options[:inclusive]
-          end
-
-          def include_rhs_columns
-            options[:include_rhs_columns] ? options[:include_rhs_columns].map(&:to_sym) : nil
-          end
-
-          def rhs_function
-            nil
-          end
-
-          def use_inner_join?
-            super || options[:include_rhs_columns]
           end
         end
       end

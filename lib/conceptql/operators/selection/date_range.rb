@@ -28,11 +28,10 @@ module ConceptQL
         validate_required_options :start, :end
 
         def query(db)
-          columns.add_columns(
+          super(db).auto_columns(
             start_date: start_date(db),
             end_date: end_date(db)
           )
-          super
         end
 
         def domains(db)

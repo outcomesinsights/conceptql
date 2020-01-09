@@ -11,7 +11,7 @@ module ConceptQL
     class Base
       extend ConceptQL::Metadatable
 
-      attr :nodifier, :values, :options, :arguments, :upstreams, :op_name
+      attr :nodifier, :values, :options, :arguments, :upstreams, :op_name, :id
 
       option :label, type: :string
 
@@ -96,8 +96,9 @@ module ConceptQL
         end
       end
 
-      def initialize(nodifier, op_name, *args)
+      def initialize(nodifier, op_name, id, *args)
         @nodifier = nodifier
+        @id = id
 
         # Under what name was this operator instantiated?
         # For operators like "vocabulary", this tells the instance which
@@ -201,17 +202,20 @@ module ConceptQL
         self.class.new(nodifier, *args)
       end
 
+      def qualifier(extra = nil)
+        [op_name, options[:id] || id, extra].compact.join("_").to_sym
+      end
+
       def inspect
         "<##{self.class} upstreams=[#{upstreams.map(&:inspect).join(', ')}] arguments=[#{arguments.map(&:inspect).join(', ')}]>"
       end
 
-      def columns
-        @columns ||= Columns.new(self)
+      def evaluate(db, opts = {})
+        (opts.fetch(:ds) { query(db) }).auto_select(opts_for_evaluate(opts))
       end
 
-      def evaluate(db, opts = {})
-        opts = {required_columns: scope.query_columns}.merge(options.merge(opts))
-        columns.evaluate(opts.fetch(:ds) { query(db) },opts)
+      def opts_for_evaluate(opts = {})
+        {required_columns: scope.query_columns}.merge(options.merge(opts))
       end
 
       def pretty_print(pp)
@@ -298,9 +302,8 @@ module ConceptQL
         @stream ||= upstreams.first
       end
 
-      def setup_select(query, table = nil)
-        query = modify_query(query, table)
-        query.select(*columns(table))
+      def upstream_query(db, opts = {})
+        stream.evaluate(db, opts)
       end
 
       def label
@@ -603,9 +606,10 @@ module ConceptQL
         ds = Sequel[ds] if ds.is_a?(Symbol)
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
+
+        binding.pry
         if use_inner_join?
-          ds.join(table.as(:r), expr)
-            .select(*query_cols.map { |c| Sequel[:l][c] })
+          ds.join(table, expr, table_alias: :r)
         else
           rdbms.semi_join(ds, table, *exprs)
         end

@@ -1,3 +1,5 @@
+require "sequel/adapters/mock"
+
 module ConceptQL
   class Lexicon
     attr_reader :lexicon_db, :dataset_db, :tables

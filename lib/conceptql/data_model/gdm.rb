@@ -59,6 +59,10 @@ module ConceptQL
     end
 
     class Column < FauxModel
+      def to_column
+        Sequel[source_column.name].as(name)
+      end
+
       def pretty_print(pp)
         pp.object_group self do
           %i[name type null foreign_key].each do |meth|
@@ -74,6 +78,30 @@ module ConceptQL
             pp.pp self[meth].name
           end
         end
+      end
+    end
+
+    class NullColumn
+      attr_reader :name, :type
+      attr_accessor :table, :mapped_to
+
+      def initialize(name, type, table)
+        @name = name
+        @type = type
+        @table = table
+        @mapped_to = [name]
+      end
+
+      def foreign_key
+      end
+
+      def to_column
+        case type
+        when :String, "String"
+          Sequel.cast_string(nil)
+        else
+          Sequel[nil]
+        end.as(name)
       end
     end
 
@@ -112,6 +140,10 @@ module ConceptQL
         db.create_view(name, db[source_table.name].select(*columns_as_sql(dm)))
       end
 
+      def null_column(name, type = :String)
+        columns << NullColumn.new(name, type, self)
+      end
+
       def columns_as_sql(dm)
         other_columns = [ Sequel.cast_string(source_table.name.to_s).as(:criterion_table) ]
 
@@ -120,7 +152,7 @@ module ConceptQL
         end
         
         columns_hash.map do |name, info|
-          Sequel[info.source_column.name].as(name)
+          info.to_column 
         end + other_columns
       end
 
@@ -148,6 +180,8 @@ module ConceptQL
       def domain_lookup
         {
           patients: "person",
+          deaths: "death",
+          information_periods: "information_period",
           collections: "condition_occurrence",
         }
       end
@@ -229,7 +263,7 @@ module ConceptQL
             column.mapped_to << :end_date
           end
 
-          (table.matching_columns(/_date/) - start_cols - end_cols).each do |column|
+          (table.matching_columns(/(\b|_)date\Z/) - start_cols - end_cols).each do |column|
             column.mapped_to << :start_date
             column.mapped_to << :end_date
           end
@@ -254,8 +288,14 @@ module ConceptQL
         schema.clinical_codes.clinical_code_source_value.mapped_to << :source_value
         schema.clinical_codes.clinical_code_vocabulary_id.mapped_to << :source_vocabulary_id
 
-        schema.patients.patient_id_source_value.mapped_to << :source_value
-        schema.patients.patient_id_source_value.mapped_to << :source_vocabulary_id
+        schema.patients.view.null_column(:source_value)
+        schema.patients.view.null_column(:source_vocabulary_id)
+
+        schema.deaths.view.null_column(:source_value)
+        schema.deaths.view.null_column(:source_vocabulary_id)
+
+        schema.information_periods.view.null_column(:source_value)
+        schema.information_periods.view.null_column(:source_vocabulary_id)
 
         schema.tables.each do |table|
           table.columns.each do |column|
@@ -282,6 +322,34 @@ module ConceptQL
             schema[aliaz] = relation
           end
         end
+      end
+
+      def wrappers
+        @wrappers = {
+          lab_value_as_number: Module.new do
+            def query(db)
+              ds = super(db)
+              return ds if ds.has_auto_column?(:lab_value_as_number)
+              super.from_self(alias: :og)
+                .left_join(join_view_name, join_clause, table_alias: :joiny)
+                .auto_column(:lab_value_as_number, Sequel[:joiny][:lab_value_as_number])
+            end
+
+            def join_view_name
+              :labish_v1
+            end
+
+            def join_clause
+              %i[criterion_id criterion_table].map do |c|
+                [Sequel[:og][c], Sequel[:joiny][c]]
+              end.to_h
+            end
+          end
+        }
+      end
+
+      def wrap(op, opts)
+        op.extend(wrappers[opts[:for]])
       end
 
       def make_table_id

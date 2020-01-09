@@ -32,6 +32,10 @@ is passed through unaffected.
 
           allows_one_upstream
 
+          def replacement_columns
+            { start_date: Sequel.function(:greatest, l_start_date, Sequel.function(:coalesce, within_end, l_start_date)) }
+          end
+
           private
 
           def trim_date
@@ -40,10 +44,6 @@ is passed through unaffected.
 
           def where_criteria
             (l_end_date >= within_end) | { r_end_date => nil }
-          end
-
-          def replacement_columns
-            { start_date: Sequel.function(:greatest, l_start_date, Sequel.function(:coalesce, within_end, l_start_date)) }
           end
 
           def occurrence_number

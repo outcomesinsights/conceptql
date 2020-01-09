@@ -16,12 +16,15 @@ All other results are discarded, including all results in the RHR.
           allows_at_least_option
           within_skip :before
 
-          def right_stream_query(db)
+          def rhs(db, opts = {})
+            ds = super
             unless compare_all?
-              right.evaluate(db).from_self.select_group(*matching_columns).select_append(Sequel.function(:max, :start_date).as(:start_date))
-            else
-              right.evaluate(db).from_self
+              ds = ds.from_self
+                .select_group(*join_columns)
+                .select_append(Sequel.function(:max, :start_date).as(:start_date))
+                .from_self
             end
+            ds
           end
 
           def where_clause
@@ -42,10 +45,6 @@ All other results are discarded, including all results in the RHR.
 
           def compare_all?
             !(options.keys & [:within]).empty?
-          end
-
-          def rhs_function
-            compare_all? ? nil : :min
           end
         end
       end

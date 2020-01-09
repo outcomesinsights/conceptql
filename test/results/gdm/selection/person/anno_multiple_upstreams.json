@@ -40,7 +40,7 @@
       },
       "errors": [
         [
-          "has multiple upstreams",
+          "has upstreams",
           [
             "icd9",
             "icd9"

@@ -22,7 +22,10 @@ module ConceptQL
             expression.evaluate(db)
           end
 
-          queries << combinables.inject(&:unionize).evaluate(db).from_self
+          if (combined = combinables.inject(&:unionize))
+            queries << combined.evaluate(db)
+          end
+
           queries.inject do |q, query|
             q.union(query, all: true)
           end

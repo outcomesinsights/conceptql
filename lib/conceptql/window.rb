@@ -22,9 +22,13 @@ module ConceptQL
 
         windows << date_range_window(opts) if use_date_range?(opts)
 
-        windows << table_window(opts) if use_table_window?(opts)
+        qualifier = Sequel
+        if use_table_window?(opts)
+          qualifier = Sequel[:l]
+          windows << table_window(opts)
+        end
 
-        windows << person_filter(opts) if use_person_filter?(opts)
+        windows << person_filter({qualifier: qualifier}.merge(opts)) if use_person_filter?(opts)
 
         windows
       end
@@ -47,7 +51,7 @@ module ConceptQL
 
       def person_filter(opts)
         lambda do |_, ds, _options = {}|
-          ds.where(person_id: opts[:person_ids])
+          ds.where(opts.fetch(:qualifier, Sequel)[:person_id] => opts[:person_ids])
         end
       end
 

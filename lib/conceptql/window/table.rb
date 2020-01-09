@@ -29,11 +29,10 @@ module ConceptQL
                           .as(:window_id)
               end.as(:r)
 
-        op.columns.qualify_columns(:l)
-        op.columns.add_columns(window_id: r_table[:window_id])
         query
           .from_self(alias: :l)
           .join(rhs, expr)
+          .auto_column(:window_id, r_table[:window_id])
       end
 
       def get_table_window(query)

@@ -34,15 +34,10 @@ is passed through unaffected.
             # If the RHS's min start date is less than the LHS start date,
             # the entire LHS date range is truncated, which implies the row itself
             # is ineligible to pass thru
-            ds = db.from(left_stream(db)).from_self(alias: :l)
-              .left_join(Sequel.as(right_stream_query(db), :r), join_columns.inject(&:&))
+            ds = lhs(db)
+              .left_join(rhs(db), join_clause.inject(&:&), table_alias: :r)
               .where(where_criteria)
-
-            ds = dm.selectify(ds, qualifier: :l, replace: replacement_columns)
-
-            ds = apply_selectors(ds)
-
-            ds.from_self
+            prepare_columns(ds)
           end
 
           def within_column
@@ -55,20 +50,10 @@ is passed through unaffected.
             options[:compare_all]
           end
 
-          def right_stream_query(db)
-            rh = if compare_all?
-                   super
-                 else
-                   occ = to_op([:occurrence, occurrence_number, right])
-                   rh = occ.evaluate(db)
-                 end
-            columnizer.apply(rh)
-          end
-
-          def columnizer
-            columnizer = Columnizer.new
-            columnizer.add_columns(:person_id, trim_date, *join_columns_option)
-            columnizer
+          def rhs(db)
+            return super if compare_all?
+            occ = to_op([:occurrence, occurrence_number, right])
+            occ.evaluate(db).from_self(alias: :r)
           end
         end
       end

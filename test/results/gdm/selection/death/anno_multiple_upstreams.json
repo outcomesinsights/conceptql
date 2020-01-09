@@ -39,7 +39,7 @@
       },
       "errors": [
         [
-          "has multiple upstreams",
+          "has upstreams",
           [
             "person",
             "icd9"

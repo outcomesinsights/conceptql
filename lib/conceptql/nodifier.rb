@@ -12,6 +12,7 @@ module ConceptQL
       end)
       @dm = opts.fetch(:dm)
       @rdbms = opts.fetch(:rdbms)
+      @counter = 0
     end
 
     def create(operator, *values)
@@ -24,7 +25,7 @@ module ConceptQL
           invalid_op(operator, values, "invalid algorithm", values.first)
         end
       elsif (klass = fetch_op(operator))
-        klass.new(self, operator, *values)
+        klass.new(self, operator, id, *values)
       else
         invalid_op(operator, values, "invalid operator", operator)
       end
@@ -60,7 +61,11 @@ module ConceptQL
       options ||= {}
       options = options.merge(errors: [error_args])
       values << options
-      Operators::Invalid.new(self, operator, *values)
+      Operators::Invalid.new(self, id, operator, *values)
+    end
+
+    def id
+      @counter += 1
     end
   end
 end

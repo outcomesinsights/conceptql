@@ -20,12 +20,14 @@ R-----R
           allows_at_least_option
           within_skip :after
 
-          def right_stream_query(db)
+          def rhs(db, opts = {})
+            ds = super
             if compare_all?
-              right.evaluate(db).from_self
-            else
-              right.evaluate(db).from_self.select_group(*matching_columns).select_append(Sequel.function(:min, :end_date).as(:end_date))
+              ds = ds.from_self
+                .select_group(*join_columns)
+                .select_append(Sequel.function(:min, :end_date).as(:end_date))
             end
+            ds.from_self(alias: :r)
           end
 
           def where_clause
@@ -45,11 +47,7 @@ R-----R
           end
 
           def compare_all?
-            !(options.keys & [:within]).empty?
-          end
-
-          def rhs_function
-            compare_all? ? nil : :min
+            !options.has_key?(:within)
           end
         end
       end

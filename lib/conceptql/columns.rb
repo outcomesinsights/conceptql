@@ -8,11 +8,10 @@ module ConceptQL
 
     def initialize(op, default_proc = PASS_THRU_COLUMNS)
       @op = op
-      @columns = {
-        uuid: proc { |qualifier| op.rdbms.uuid(qualifier) }
-      }
+      @columns = {}
       @columns.default_proc = default_proc
       @qualifier = Sequel
+      @op_qualifier = Sequel[op.qualifier]
     end
 
     def add_column(name, definition)
@@ -27,8 +26,23 @@ module ConceptQL
       @qualifier = Sequel[qualifier]
     end
 
+    def allow_comments?
+      ENV["CONCEPTQL_ENABLE_COMMENTS"] == "true"
+    end
+
+    def has_column?(column_name)
+      @columns.has_key?(column_name)
+    end
+
     def evaluate(query, opts = {})
+      more_cols = opts.delete(:additional_columns) || {}
+      query.auto_columns(@columns.merge(more_cols))
+      query.auto_qualify(qualifier)
+
+      return query.auto_select(opts)
+
       required_columns = opts.fetch(:required_columns)
+
       cols = required_columns.map do |required_column|
         target_col = @columns[required_column]
         target_col = 
@@ -42,9 +56,12 @@ module ConceptQL
           end
         target_col.as(required_column)
       end
-      from_self_opts = {}
-      from_self_opts[:alias] = opts[:table_alias] if opts[:table_alias]
-      query.select(*cols).from_self(from_self_opts)
+
+      q = query
+        .select(*cols)
+        .from_self({alias: opts[:table_alias] || @op_qualifier})
+      q = q.comment(@op.comment) if allow_comments?
+      q
     end
   end
 end

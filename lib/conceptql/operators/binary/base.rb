@@ -13,6 +13,15 @@ module ConceptQL
         category "Filter by Comparing"
         basic_type :filter
 
+        def query(db)
+          ds = semi_or_inner_join(
+            lhs(db),
+            rhs(db, required_columns: rhs_columns, table_alias: :r),
+            *([*join_clause, where_clause]).compact
+          )
+          prepare_columns(ds)
+        end
+
         def upstreams
           [left]
         end
@@ -25,16 +34,32 @@ module ConceptQL
 
         private
 
+        def rhs_columns
+          join_columns + include_rhs_columns
+        end
+
         def complete_upstreams
-          { left: left, right: right }
+          {left: left, right: right}
         end
 
-        def join_columns(opts = {})
-          join_columns_option.map{ |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
+        def join_clause(opts = {})
+          join_columns.map{ |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
         end
 
-        def join_columns_option
-          (options[:join_columns] || []) + matching_columns
+        def join_columns
+          (options[:join_columns] || []) | matching_columns
+        end
+
+        def prepare_columns(ds, opts = {})
+          ds = ds.auto_qualify(:l)
+          ds = ds.auto_columns(replacement_columns) if respond_to?(:replacement_columns)
+          rhs_qualifier = Sequel[opts.fetch(:qualifier, :r)]
+          rhs_cols = (include_rhs_columns || []).map do |rhs_column_name|
+            rhs_column = rhs_qualifier[rhs_column_name]
+            rhs_column = Sequel.function(opts[:function], rhs_column) if opts[:function]
+            [rhs_column_name, rhs_column]
+          end.to_h
+          ds.auto_columns(rhs_cols) 
         end
 
         def annotate_values(db, opts = {})
@@ -49,22 +74,38 @@ module ConceptQL
           @right = to_op(options[:right])  if options[:right].is_a?(Array)
         end
 
-        def left_stream(db)
-          left_stream_query(db)
+        def left_stream(db, opts = {})
+          left_stream_query(db, opts)
         end
 
-        def left_stream_query(db)
-          left.evaluate(db).from_self(alias: :l)
+        def left_stream_query(db, opts = {})
+          left.evaluate(db, {alias: :l}.merge(opts))
         end
 
-        def right_stream(db)
-          right_stream_query(db).as(:r)
+        def right_stream(db, opts = {})
+          right_stream_query(db, opts).as(:r)
         end
 
-        def right_stream_query(db)
-          right.evaluate(db).from_self(alias: :r)
+        def right_stream_query(db, opts = {})
+          right.evaluate(db, {alias: :r}.merge(opts))
         end
-      end
+
+        def lhs(db, opts = {})
+          left_stream_query(db, opts)
+        end
+ 
+        def rhs(db, opts = {})
+          right_stream_query(db, opts)
+        end
+
+        def include_rhs_columns
+          options[:include_rhs_columns] ? options[:include_rhs_columns].map(&:to_sym) : []
+        end
+
+        def use_inner_join?
+          super || !(include_rhs_columns.empty?)
+        end
+     end
     end
   end
 end

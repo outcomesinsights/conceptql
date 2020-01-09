@@ -1,9 +1,9 @@
 require_relative "helper"
 require_relative "db"
 
+require "fileutils"
 require "logger"
 require "pp"
-require "fileutils"
 
 ENV["CONCEPTQL_DATA_MODEL"] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
 
@@ -53,7 +53,7 @@ class Minitest::Spec
 
   def dataset(statement)
     statement = query(statement) unless statement.is_a?(ConceptQL::Query)
-    puts statement.sql if PRINT_CONCEPTQL
+    puts statement.sql(:formatted) if PRINT_CONCEPTQL
     statement.query
   end
 
@@ -119,7 +119,7 @@ class Minitest::Spec
   def criteria_counts(test_name, statement=nil)
     load_check(test_name, statement) do |stmt|
       cq = query(stmt)
-      puts cq.sql if PRINT_CONCEPTQL
+      puts cq.sql(:formatted) if PRINT_CONCEPTQL
       cq.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
     end
   end
@@ -127,7 +127,7 @@ class Minitest::Spec
   def optimized_criteria_counts(test_name, statement=nil)
     load_check(test_name, statement) do |stmt|
       cq = query(stmt).optimized
-      puts cq.sql if PRINT_CONCEPTQL
+      puts cq.sql(:formatted) if PRINT_CONCEPTQL
       cq.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain).to_hash(:criterion_domain, :count)
     end
   end
