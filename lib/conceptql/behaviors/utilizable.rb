@@ -13,6 +13,8 @@ module ConceptQL
         validate_no_upstreams
         validate_no_arguments
 
+        require_column :admission_date
+        require_column :discharge_date
         require_column :length_of_stay
         require_column :admission_source
         require_column :discharge_location
@@ -61,8 +63,10 @@ module ConceptQL
 
       def override_columns
         {
-          start_date: Sequel[:ad][:admission_date].as(:start_date),
-          end_date: Sequel[:ad][:discharge_date].as(:end_date),
+          start_date: Sequel[:cl][:start_date].as(:start_date),
+          end_date: Sequel[:cl][:end_date].as(:end_date),
+          admission_date: Sequel[:ad][:admission_date],
+          discharge_date: Sequel[:ad][:discharge_date],
           length_of_stay: ((rdbms.days_between(Sequel[:ad][:admission_date], Sequel[:ad][:discharge_date])) + 1).as(:length_of_stay),
           admission_source: Sequel[:asc][:concept_code].as(:admission_source),
           discharge_location: Sequel[:dlc][:concept_code].as(:discharge_location),
