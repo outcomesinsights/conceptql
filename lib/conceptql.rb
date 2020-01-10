@@ -19,13 +19,10 @@ require "conceptql/null_query"
 require "conceptql/database"
 require "conceptql/data_model"
 require "conceptql/date_adjuster"
-require "conceptql/columnizer"
-require "conceptql/columns"
 require "conceptql/query"
 require "conceptql/null_query"
 require "conceptql/database"
 require "conceptql/data_model"
-require "conceptql/columnizer"
 
 # byebug is only required during development
 begin

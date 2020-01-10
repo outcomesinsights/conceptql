@@ -6,8 +6,8 @@
     "criterion_domain": "person",
     "start_date": "1941-06-01",
     "end_date": "1941-06-01",
-    "source_value": "00021CA6FF03E670",
-    "source_vocabulary_id": "00021CA6FF03E670"
+    "source_value": null,
+    "source_vocabulary_id": null
   },
   {
     "person_id": 22,
@@ -16,8 +16,8 @@
     "criterion_domain": "person",
     "start_date": "1942-08-01",
     "end_date": "1942-08-01",
-    "source_value": "000D6D88463D8A76",
-    "source_vocabulary_id": "000D6D88463D8A76"
+    "source_value": null,
+    "source_vocabulary_id": null
   },
   {
     "person_id": 72,
@@ -26,8 +26,8 @@
     "criterion_domain": "person",
     "start_date": "1933-04-01",
     "end_date": "1933-04-01",
-    "source_value": "002354398A00234E",
-    "source_vocabulary_id": "002354398A00234E"
+    "source_value": null,
+    "source_vocabulary_id": null
   },
   {
     "person_id": 76,
@@ -36,8 +36,8 @@
     "criterion_domain": "person",
     "start_date": "1938-03-01",
     "end_date": "1938-03-01",
-    "source_value": "00242FF5E7A3F2D9",
-    "source_vocabulary_id": "00242FF5E7A3F2D9"
+    "source_value": null,
+    "source_vocabulary_id": null
   },
   {
     "person_id": 181,
@@ -46,7 +46,7 @@
     "criterion_domain": "person",
     "start_date": "1939-11-01",
     "end_date": "1939-11-01",
-    "source_value": "005E0AB5172E715F",
-    "source_vocabulary_id": "005E0AB5172E715F"
+    "source_value": null,
+    "source_vocabulary_id": null
   }
 ]

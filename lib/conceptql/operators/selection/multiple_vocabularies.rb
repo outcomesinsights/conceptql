@@ -118,7 +118,7 @@ module ConceptQL
         @vocab_ops ||= self.class.multiple_vocabularies[op_name].map do |op_info|
           op_info[:vocabulary_id].to_s.downcase
         end.map do |name|
-          ConceptQL::Operators.operators[dm.data_model][name].new(nodifier, name, *arguments)
+          nodifier.create(name, *arguments)
         end
       end
 

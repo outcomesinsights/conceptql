@@ -89,7 +89,7 @@ module ConceptQL
           # to it use the same code.
           if operator.label && !operator.errors
             operator.scope.add_operator(operator)
-            operator = Operators::PassThru::Recall.new(operator.nodifier, "recall", operator.label, replaced: true)
+            operator = operator.nodifier.create(:recall, operator.label, replaced: true)
           end
 
           operator
@@ -607,7 +607,6 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
 
-        binding.pry
         if use_inner_join?
           ds.join(table, expr, table_alias: :r)
         else

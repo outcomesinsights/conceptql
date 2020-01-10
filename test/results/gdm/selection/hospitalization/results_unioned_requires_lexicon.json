@@ -8,9 +8,9 @@
     "end_date": "2010-03-13",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 2,
@@ -21,9 +21,9 @@
     "end_date": "2009-04-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 2,
@@ -34,9 +34,9 @@
     "end_date": "2009-09-02",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 2,
@@ -47,9 +47,9 @@
     "end_date": "2009-09-20",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 2,
@@ -60,9 +60,9 @@
     "end_date": "2010-07-01",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 11,
@@ -73,9 +73,9 @@
     "end_date": "2008-10-29",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 14,
@@ -86,9 +86,9 @@
     "end_date": "2008-09-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 1,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 1
   },
   {
     "person_id": 17,
@@ -99,9 +99,9 @@
     "end_date": "2008-08-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 17,
@@ -112,9 +112,9 @@
     "end_date": "2009-04-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 17,
@@ -125,9 +125,9 @@
     "end_date": "2008-09-22",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 17,
@@ -138,9 +138,9 @@
     "end_date": "2010-06-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 22,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 22
   },
   {
     "person_id": 17,
@@ -151,9 +151,9 @@
     "end_date": "2010-06-06",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 17,
@@ -164,9 +164,9 @@
     "end_date": "2010-06-19",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 20,
@@ -177,9 +177,9 @@
     "end_date": "2009-12-13",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 21,
@@ -190,9 +190,9 @@
     "end_date": "2008-10-21",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 25,
@@ -203,9 +203,9 @@
     "end_date": "2009-10-07",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 27,
@@ -216,9 +216,9 @@
     "end_date": "2009-08-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 28,
@@ -229,9 +229,9 @@
     "end_date": "2008-04-26",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 28,
@@ -242,9 +242,9 @@
     "end_date": "2008-04-30",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 31,
@@ -255,9 +255,9 @@
     "end_date": "2009-06-15",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 31,
@@ -268,9 +268,9 @@
     "end_date": "2009-12-13",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 32,
@@ -281,9 +281,9 @@
     "end_date": "2010-09-07",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 9,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 9
   },
   {
     "person_id": 35,
@@ -294,9 +294,9 @@
     "end_date": "2009-06-30",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 37,
@@ -307,9 +307,9 @@
     "end_date": "2008-04-23",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 37,
@@ -320,9 +320,9 @@
     "end_date": "2009-01-20",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 38,
@@ -333,9 +333,9 @@
     "end_date": "2010-02-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 44,
@@ -346,9 +346,9 @@
     "end_date": "2009-06-08",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 44,
@@ -359,9 +359,9 @@
     "end_date": "2010-01-19",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 44,
@@ -372,9 +372,9 @@
     "end_date": "2010-03-24",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 51,
@@ -385,9 +385,9 @@
     "end_date": "2008-05-26",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 51,
@@ -398,9 +398,9 @@
     "end_date": "2008-06-25",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 51,
@@ -411,9 +411,9 @@
     "end_date": "2008-06-26",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 54,
@@ -424,9 +424,9 @@
     "end_date": "2008-06-05",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 60,
@@ -437,9 +437,9 @@
     "end_date": "2009-07-22",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 60,
@@ -450,9 +450,9 @@
     "end_date": "2009-07-22",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 60,
@@ -463,9 +463,9 @@
     "end_date": "2010-03-19",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 61,
@@ -476,9 +476,9 @@
     "end_date": "2009-11-11",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 63,
@@ -489,9 +489,9 @@
     "end_date": "2008-07-21",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 63,
@@ -502,9 +502,9 @@
     "end_date": "2009-02-15",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 66,
@@ -515,9 +515,9 @@
     "end_date": "2009-07-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 66,
@@ -528,9 +528,9 @@
     "end_date": "2008-12-13",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 66,
@@ -541,9 +541,9 @@
     "end_date": "2009-08-06",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 66,
@@ -554,9 +554,9 @@
     "end_date": "2009-12-31",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 68,
@@ -567,9 +567,9 @@
     "end_date": "2008-04-14",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 68,
@@ -580,9 +580,9 @@
     "end_date": "2008-04-23",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 68,
@@ -593,9 +593,9 @@
     "end_date": "2008-09-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 68,
@@ -606,9 +606,9 @@
     "end_date": "2008-11-11",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 68,
@@ -619,9 +619,9 @@
     "end_date": "2009-05-03",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 71,
@@ -632,9 +632,9 @@
     "end_date": "2008-04-11",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 72,
@@ -645,9 +645,9 @@
     "end_date": "2010-08-31",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 12,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 12
   },
   {
     "person_id": 73,
@@ -658,9 +658,9 @@
     "end_date": "2008-11-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 77,
@@ -671,9 +671,9 @@
     "end_date": "2010-10-06",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 77,
@@ -684,9 +684,9 @@
     "end_date": "2008-08-06",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 77,
@@ -697,9 +697,9 @@
     "end_date": "2009-07-21",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 79,
@@ -710,9 +710,9 @@
     "end_date": "2009-08-24",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 16,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 16
   },
   {
     "person_id": 80,
@@ -723,9 +723,9 @@
     "end_date": "2009-03-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 13,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 13
   },
   {
     "person_id": 81,
@@ -736,9 +736,9 @@
     "end_date": "2009-01-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 81,
@@ -749,9 +749,9 @@
     "end_date": "2008-12-04",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 81,
@@ -762,9 +762,9 @@
     "end_date": "2009-01-30",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 83,
@@ -775,9 +775,9 @@
     "end_date": "2008-04-07",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 83,
@@ -788,9 +788,9 @@
     "end_date": "2008-12-20",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 83,
@@ -801,9 +801,9 @@
     "end_date": "2009-01-31",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 12,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 12
   },
   {
     "person_id": 85,
@@ -814,9 +814,9 @@
     "end_date": "2008-09-26",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 86,
@@ -827,9 +827,9 @@
     "end_date": "2010-01-14",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 87,
@@ -840,9 +840,9 @@
     "end_date": "2010-06-17",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 35,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 35
   },
   {
     "person_id": 88,
@@ -853,9 +853,9 @@
     "end_date": "2009-01-09",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 88,
@@ -866,9 +866,9 @@
     "end_date": "2009-05-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 88,
@@ -879,9 +879,9 @@
     "end_date": "2008-02-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 88,
@@ -892,9 +892,9 @@
     "end_date": "2008-03-24",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 88,
@@ -905,9 +905,9 @@
     "end_date": "2008-03-26",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 88,
@@ -918,9 +918,9 @@
     "end_date": "2008-06-16",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 88,
@@ -931,9 +931,9 @@
     "end_date": "2009-01-09",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 90,
@@ -944,9 +944,9 @@
     "end_date": "2010-05-26",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 90,
@@ -957,9 +957,9 @@
     "end_date": "2010-07-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 10,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 10
   },
   {
     "person_id": 90,
@@ -970,9 +970,9 @@
     "end_date": "2010-07-15",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 93,
@@ -983,9 +983,9 @@
     "end_date": "2009-11-08",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 94,
@@ -996,9 +996,9 @@
     "end_date": "2008-06-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 94,
@@ -1009,9 +1009,9 @@
     "end_date": "2009-01-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 94,
@@ -1022,9 +1022,9 @@
     "end_date": "2009-07-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 95,
@@ -1035,9 +1035,9 @@
     "end_date": "2008-02-26",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 95,
@@ -1048,9 +1048,9 @@
     "end_date": "2008-08-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 12,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 12
   },
   {
     "person_id": 95,
@@ -1061,9 +1061,9 @@
     "end_date": "2008-08-22",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 95,
@@ -1074,9 +1074,9 @@
     "end_date": "2008-09-01",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 95,
@@ -1087,9 +1087,9 @@
     "end_date": "2008-09-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 10,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 10
   },
   {
     "person_id": 96,
@@ -1100,9 +1100,9 @@
     "end_date": "2008-09-24",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 96,
@@ -1113,9 +1113,9 @@
     "end_date": "2009-04-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 96,
@@ -1126,9 +1126,9 @@
     "end_date": "2009-10-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 9,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 9
   },
   {
     "person_id": 98,
@@ -1139,9 +1139,9 @@
     "end_date": "2010-01-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 106,
@@ -1152,9 +1152,9 @@
     "end_date": "2009-02-27",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 109,
@@ -1165,9 +1165,9 @@
     "end_date": "2010-07-06",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 110,
@@ -1178,9 +1178,9 @@
     "end_date": "2010-06-27",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 123,
@@ -1191,9 +1191,9 @@
     "end_date": "2008-12-28",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 36,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 36
   },
   {
     "person_id": 123,
@@ -1204,9 +1204,9 @@
     "end_date": "2008-12-31",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 131,
@@ -1217,9 +1217,9 @@
     "end_date": "2008-03-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 131,
@@ -1230,9 +1230,9 @@
     "end_date": "2008-02-16",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 131,
@@ -1243,9 +1243,9 @@
     "end_date": "2008-03-24",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 131,
@@ -1256,9 +1256,9 @@
     "end_date": "2008-03-23",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 134,
@@ -1269,9 +1269,9 @@
     "end_date": "2009-11-30",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 135,
@@ -1282,9 +1282,9 @@
     "end_date": "2010-01-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 135,
@@ -1295,9 +1295,9 @@
     "end_date": "2010-03-02",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 9,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 9
   },
   {
     "person_id": 136,
@@ -1308,9 +1308,9 @@
     "end_date": "2009-01-16",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 138,
@@ -1321,9 +1321,9 @@
     "end_date": "2008-06-05",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 19,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 19
   },
   {
     "person_id": 138,
@@ -1334,9 +1334,9 @@
     "end_date": "2009-02-14",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 25,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 25
   },
   {
     "person_id": 147,
@@ -1347,9 +1347,9 @@
     "end_date": "2009-10-24",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 24,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 24
   },
   {
     "person_id": 148,
@@ -1360,9 +1360,9 @@
     "end_date": "2010-06-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 149,
@@ -1373,9 +1373,9 @@
     "end_date": "2008-04-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 149,
@@ -1386,9 +1386,9 @@
     "end_date": "2009-11-04",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 152,
@@ -1399,9 +1399,9 @@
     "end_date": "2008-08-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 152,
@@ -1412,9 +1412,9 @@
     "end_date": "2010-11-22",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 153,
@@ -1425,9 +1425,9 @@
     "end_date": "2010-02-08",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 11,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 11
   },
   {
     "person_id": 155,
@@ -1438,9 +1438,9 @@
     "end_date": "2010-07-10",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 158,
@@ -1451,9 +1451,9 @@
     "end_date": "2009-12-22",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 161,
@@ -1464,9 +1464,9 @@
     "end_date": "2009-10-29",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 161,
@@ -1477,9 +1477,9 @@
     "end_date": "2009-10-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 163,
@@ -1490,9 +1490,9 @@
     "end_date": "2008-12-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 163,
@@ -1503,9 +1503,9 @@
     "end_date": "2008-04-01",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 168,
@@ -1516,9 +1516,9 @@
     "end_date": "2010-02-04",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 168,
@@ -1529,9 +1529,9 @@
     "end_date": "2010-02-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 172,
@@ -1542,9 +1542,9 @@
     "end_date": "2009-01-20",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 172,
@@ -1555,9 +1555,9 @@
     "end_date": "2008-11-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 172,
@@ -1568,9 +1568,9 @@
     "end_date": "2010-06-13",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 12,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 12
   },
   {
     "person_id": 173,
@@ -1581,9 +1581,9 @@
     "end_date": "2010-01-23",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 177,
@@ -1594,9 +1594,9 @@
     "end_date": "2008-09-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 177,
@@ -1607,9 +1607,9 @@
     "end_date": "2009-06-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 177,
@@ -1620,9 +1620,9 @@
     "end_date": "2009-06-16",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 178,
@@ -1633,9 +1633,9 @@
     "end_date": "2008-05-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 11,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 11
   },
   {
     "person_id": 178,
@@ -1646,9 +1646,9 @@
     "end_date": "2008-11-28",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 179,
@@ -1659,9 +1659,9 @@
     "end_date": "2008-01-21",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 179,
@@ -1672,9 +1672,9 @@
     "end_date": "2008-06-22",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 9,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 9
   },
   {
     "person_id": 179,
@@ -1685,9 +1685,9 @@
     "end_date": "2008-09-19",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 179,
@@ -1698,9 +1698,9 @@
     "end_date": "2009-09-25",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 184,
@@ -1711,9 +1711,9 @@
     "end_date": "2008-01-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 184,
@@ -1724,9 +1724,9 @@
     "end_date": "2009-11-26",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 187,
@@ -1737,9 +1737,9 @@
     "end_date": "2009-01-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 187,
@@ -1750,9 +1750,9 @@
     "end_date": "2010-12-26",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 187,
@@ -1763,9 +1763,9 @@
     "end_date": "2008-02-20",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 187,
@@ -1776,9 +1776,9 @@
     "end_date": "2008-06-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 190,
@@ -1789,9 +1789,9 @@
     "end_date": "2009-04-09",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 190,
@@ -1802,9 +1802,9 @@
     "end_date": "2008-12-04",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 191,
@@ -1815,9 +1815,9 @@
     "end_date": "2009-08-31",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 192,
@@ -1828,9 +1828,9 @@
     "end_date": "2008-04-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 25,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 25
   },
   {
     "person_id": 195,
@@ -1841,9 +1841,9 @@
     "end_date": "2008-06-08",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 195,
@@ -1854,9 +1854,9 @@
     "end_date": "2009-04-01",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 196,
@@ -1867,9 +1867,9 @@
     "end_date": "2008-12-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 196,
@@ -1880,9 +1880,9 @@
     "end_date": "2010-12-13",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 197,
@@ -1893,9 +1893,9 @@
     "end_date": "2009-05-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 199,
@@ -1906,9 +1906,9 @@
     "end_date": "2008-11-02",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 199,
@@ -1919,9 +1919,9 @@
     "end_date": "2010-06-08",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 202,
@@ -1932,9 +1932,9 @@
     "end_date": "2008-07-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 202,
@@ -1945,9 +1945,9 @@
     "end_date": "2008-08-20",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 204,
@@ -1958,9 +1958,9 @@
     "end_date": "2010-08-30",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 16,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 16
   },
   {
     "person_id": 207,
@@ -1971,9 +1971,9 @@
     "end_date": "2010-05-02",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 212,
@@ -1984,9 +1984,9 @@
     "end_date": "2009-10-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 212,
@@ -1997,9 +1997,9 @@
     "end_date": "2009-10-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 213,
@@ -2010,9 +2010,9 @@
     "end_date": "2009-06-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 213,
@@ -2023,9 +2023,9 @@
     "end_date": "2010-02-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 213,
@@ -2036,9 +2036,9 @@
     "end_date": "2010-04-05",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 214,
@@ -2049,9 +2049,9 @@
     "end_date": "2008-02-17",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 214,
@@ -2062,9 +2062,9 @@
     "end_date": "2009-11-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 214,
@@ -2075,9 +2075,9 @@
     "end_date": "2008-09-28",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 214,
@@ -2088,9 +2088,9 @@
     "end_date": "2009-01-04",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 214,
@@ -2101,9 +2101,9 @@
     "end_date": "2009-01-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 217,
@@ -2114,9 +2114,9 @@
     "end_date": "2010-06-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 219,
@@ -2127,9 +2127,9 @@
     "end_date": "2009-08-22",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 220,
@@ -2140,9 +2140,9 @@
     "end_date": "2008-11-20",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 220,
@@ -2153,9 +2153,9 @@
     "end_date": "2009-10-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 220,
@@ -2166,9 +2166,9 @@
     "end_date": "2009-08-20",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 223,
@@ -2179,9 +2179,9 @@
     "end_date": "2008-07-28",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 223,
@@ -2192,9 +2192,9 @@
     "end_date": "2008-10-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 225,
@@ -2205,9 +2205,9 @@
     "end_date": "2009-09-04",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 1,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 1
   },
   {
     "person_id": 226,
@@ -2218,9 +2218,9 @@
     "end_date": "2009-11-14",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 230,
@@ -2231,9 +2231,9 @@
     "end_date": "2008-03-21",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 230,
@@ -2244,9 +2244,9 @@
     "end_date": "2008-03-06",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 230,
@@ -2257,9 +2257,9 @@
     "end_date": "2008-03-21",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 230,
@@ -2270,9 +2270,9 @@
     "end_date": "2008-04-10",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 16,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 16
   },
   {
     "person_id": 230,
@@ -2283,9 +2283,9 @@
     "end_date": "2008-04-02",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 232,
@@ -2296,9 +2296,9 @@
     "end_date": "2008-03-27",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 234,
@@ -2309,9 +2309,9 @@
     "end_date": "2008-09-01",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 234,
@@ -2322,9 +2322,9 @@
     "end_date": "2010-01-07",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 234,
@@ -2335,9 +2335,9 @@
     "end_date": "2010-01-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 237,
@@ -2348,9 +2348,9 @@
     "end_date": "2008-04-12",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 237,
@@ -2361,9 +2361,9 @@
     "end_date": "2010-07-19",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 238,
@@ -2374,9 +2374,9 @@
     "end_date": "2009-10-30",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 239,
@@ -2387,9 +2387,9 @@
     "end_date": "2009-08-04",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 239,
@@ -2400,9 +2400,9 @@
     "end_date": "2010-02-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "length_of_stay": null,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": null
   },
   {
     "person_id": 239,
@@ -2413,9 +2413,9 @@
     "end_date": "2008-08-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 15,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 15
   },
   {
     "person_id": 239,
@@ -2426,9 +2426,9 @@
     "end_date": "2008-11-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 19,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 19
   },
   {
     "person_id": 239,
@@ -2439,9 +2439,9 @@
     "end_date": "2008-12-07",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 242,
@@ -2452,9 +2452,9 @@
     "end_date": "2008-11-07",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 7,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 7
   },
   {
     "person_id": 243,
@@ -2465,9 +2465,9 @@
     "end_date": "2009-08-23",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 247,
@@ -2478,9 +2478,9 @@
     "end_date": "2008-02-10",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 247,
@@ -2491,9 +2491,9 @@
     "end_date": "2008-03-04",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 247,
@@ -2504,9 +2504,9 @@
     "end_date": "2008-03-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   },
   {
     "person_id": 247,
@@ -2517,9 +2517,9 @@
     "end_date": "2008-03-30",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 2,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 2
   },
   {
     "person_id": 247,
@@ -2530,9 +2530,9 @@
     "end_date": "2008-05-16",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 247,
@@ -2543,9 +2543,9 @@
     "end_date": "2008-06-13",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 3,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 3
   },
   {
     "person_id": 247,
@@ -2556,9 +2556,9 @@
     "end_date": "2008-07-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 6,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 6
   },
   {
     "person_id": 247,
@@ -2569,9 +2569,9 @@
     "end_date": "2008-08-21",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 8,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 8
   },
   {
     "person_id": 248,
@@ -2582,9 +2582,9 @@
     "end_date": "2008-08-18",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 4,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 4
   },
   {
     "person_id": 248,
@@ -2595,9 +2595,9 @@
     "end_date": "2010-01-29",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 9,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 9
   },
   {
     "person_id": 249,
@@ -2608,8 +2608,8 @@
     "end_date": "2009-04-11",
     "source_value": null,
     "source_vocabulary_id": null,
-    "length_of_stay": 5,
     "admission_source": null,
-    "discharge_location": null
+    "discharge_location": null,
+    "length_of_stay": 5
   }
 ]

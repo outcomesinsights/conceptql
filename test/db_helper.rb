@@ -4,6 +4,7 @@ require_relative "db"
 require "fileutils"
 require "logger"
 require "pp"
+require "shell"
 
 ENV["CONCEPTQL_DATA_MODEL"] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
 
@@ -134,9 +135,6 @@ class Minitest::Spec
 
   def hash_groups(statement, key, value)
     dataset(statement).from_self.distinct.order(key, *value).to_hash_groups(key, value)
-  rescue
-    puts ConceptQL::SqlFormatters.format($!.sql) if $!.respond_to?(:sql)
-    raise
   end
 
   def clock_time
@@ -191,7 +189,19 @@ class Minitest::Spec
       end
     end
   rescue
-    puts ConceptQL::SqlFormatters.format($!.sql) if $!.respond_to?(:sql)
+    if $!.respond_to?(:sql) 
+      sql = ConceptQL::SqlFormatters.format($!.sql)
+      puts sql
+      if ENV["CONCEPTQL_STOP_ON_ERROR"]
+        file = "/tmp/error.sql"
+        File.write(file, sql)
+        Shell.def_system_command("psql")
+        sh = Shell.new
+        sh.out do
+          cat(file) | psql(Sequelizer.options[:url])
+        end
+      end
+    end
     raise
   end
 

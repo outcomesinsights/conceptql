@@ -20,7 +20,16 @@ module ConceptQL
       end
 
       def query(db)
-        db[Sequel["#{collection_type.downcase}_utilizations".to_sym]]
+        ds = db[table_name]
+        prepare_columns(ds)
+      end
+
+      def table
+        dm.nschema[table_name]
+      end
+
+      def table_name
+        "#{collection_type.downcase}_utilizations_v1".to_sym
       end
 
       def collection_type

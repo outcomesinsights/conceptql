@@ -43,7 +43,7 @@ module ConceptQL
         end
         views.each do |table_alias, view|
           cols_to_include = view.columns.map(&:name)
-          cols_to_include |= scope.output_columns
+          cols_to_include &= scope.output_columns
           cols_to_include -= %i[criterion_id criterion_table]
 
           cols_to_include.each do |col|
