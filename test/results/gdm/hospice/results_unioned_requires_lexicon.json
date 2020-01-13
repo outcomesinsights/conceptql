@@ -8,6 +8,8 @@
     "end_date": "2008-10-29",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-10-29",
+    "discharge_date": "2008-10-29",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -21,6 +23,8 @@
     "end_date": "2008-08-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-08-25",
+    "discharge_date": "2008-08-25",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -34,6 +38,8 @@
     "end_date": "2009-04-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-04-30",
+    "discharge_date": "2009-04-30",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -47,6 +53,8 @@
     "end_date": "2010-02-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-02-12",
+    "discharge_date": "2010-02-12",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -60,6 +68,8 @@
     "end_date": "2008-06-05",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-06-05",
+    "discharge_date": "2008-06-05",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -73,6 +83,8 @@
     "end_date": "2009-07-22",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-07-19",
+    "discharge_date": "2009-07-22",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -86,6 +98,8 @@
     "end_date": "2009-07-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-07-25",
+    "discharge_date": "2009-07-25",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -99,6 +113,8 @@
     "end_date": "2008-11-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-11-16",
+    "discharge_date": "2008-11-16",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -112,6 +128,8 @@
     "end_date": "2010-10-06",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-10-06",
+    "discharge_date": "2010-10-06",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -125,6 +143,8 @@
     "end_date": "2009-01-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-01-28",
+    "discharge_date": "2009-01-30",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -138,6 +158,8 @@
     "end_date": "2009-01-09",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-01-03",
+    "discharge_date": "2009-01-09",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -151,6 +173,8 @@
     "end_date": "2009-05-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-05-30",
+    "discharge_date": "2009-05-30",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -164,6 +188,8 @@
     "end_date": "2010-05-26",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-05-26",
+    "discharge_date": "2010-05-26",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -177,6 +203,8 @@
     "end_date": "2009-11-08",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-11-08",
+    "discharge_date": "2009-11-08",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -190,6 +218,8 @@
     "end_date": "2008-09-24",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-09-21",
+    "discharge_date": "2008-09-24",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -203,6 +233,8 @@
     "end_date": "2009-02-27",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-02-27",
+    "discharge_date": "2009-02-27",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -216,6 +248,8 @@
     "end_date": "2010-07-06",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-07-06",
+    "discharge_date": "2010-07-06",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -229,6 +263,8 @@
     "end_date": "2010-06-27",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-06-27",
+    "discharge_date": "2010-06-27",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -242,6 +278,8 @@
     "end_date": "2008-03-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-03-22",
+    "discharge_date": "2008-03-23",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -255,6 +293,8 @@
     "end_date": "2008-04-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-04-07",
+    "discharge_date": "2008-04-07",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -268,6 +308,8 @@
     "end_date": "2008-08-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-08-16",
+    "discharge_date": "2008-08-16",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -281,6 +323,8 @@
     "end_date": "2010-11-22",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-11-22",
+    "discharge_date": "2010-11-22",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -294,6 +338,8 @@
     "end_date": "2009-10-29",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-10-25",
+    "discharge_date": "2009-10-29",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -307,6 +353,8 @@
     "end_date": "2008-12-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-12-24",
+    "discharge_date": "2008-12-25",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -320,6 +368,8 @@
     "end_date": "2009-01-20",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-01-20",
+    "discharge_date": "2009-01-20",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -333,6 +383,8 @@
     "end_date": "2008-09-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-09-23",
+    "discharge_date": "2008-09-23",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -346,6 +398,8 @@
     "end_date": "2009-06-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-06-13",
+    "discharge_date": "2009-06-16",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -359,6 +413,8 @@
     "end_date": "2008-01-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-01-07",
+    "discharge_date": "2008-01-07",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -372,6 +428,8 @@
     "end_date": "2009-01-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-01-31",
+    "discharge_date": "2009-01-31",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -385,6 +443,8 @@
     "end_date": "2010-12-26",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-12-26",
+    "discharge_date": "2010-12-26",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -398,6 +458,8 @@
     "end_date": "2009-04-09",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-04-09",
+    "discharge_date": "2009-04-09",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -411,6 +473,8 @@
     "end_date": "2008-12-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-12-23",
+    "discharge_date": "2008-12-23",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -424,6 +488,8 @@
     "end_date": "2009-05-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-05-07",
+    "discharge_date": "2009-05-07",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -437,6 +503,8 @@
     "end_date": "2009-10-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-10-07",
+    "discharge_date": "2009-10-07",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -450,6 +518,8 @@
     "end_date": "2009-10-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-10-07",
+    "discharge_date": "2009-10-07",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -463,6 +533,8 @@
     "end_date": "2009-06-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-06-07",
+    "discharge_date": "2009-06-07",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -476,6 +548,8 @@
     "end_date": "2010-02-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-02-07",
+    "discharge_date": "2010-02-07",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -489,6 +563,8 @@
     "end_date": "2008-02-17",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-02-17",
+    "discharge_date": "2008-02-17",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -502,6 +578,8 @@
     "end_date": "2009-11-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-11-12",
+    "discharge_date": "2009-11-12",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -515,6 +593,8 @@
     "end_date": "2010-06-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-06-22",
+    "discharge_date": "2010-06-23",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -528,6 +608,8 @@
     "end_date": "2008-11-20",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-11-16",
+    "discharge_date": "2008-11-20",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -541,6 +623,8 @@
     "end_date": "2009-10-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-10-31",
+    "discharge_date": "2009-10-31",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -554,6 +638,8 @@
     "end_date": "2008-07-28",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-07-28",
+    "discharge_date": "2008-07-28",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -567,6 +653,8 @@
     "end_date": "2008-10-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-10-31",
+    "discharge_date": "2008-10-31",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -580,6 +668,8 @@
     "end_date": "2008-03-21",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-03-14",
+    "discharge_date": "2008-03-21",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -593,6 +683,8 @@
     "end_date": "2008-09-01",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2008-09-01",
+    "discharge_date": "2008-09-01",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -606,6 +698,8 @@
     "end_date": "2009-08-04",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2009-08-04",
+    "discharge_date": "2009-08-04",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
@@ -619,6 +713,8 @@
     "end_date": "2010-02-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
+    "admission_date": "2010-02-12",
+    "discharge_date": "2010-02-12",
     "length_of_stay": null,
     "admission_source": null,
     "discharge_location": null
