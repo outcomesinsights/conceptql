@@ -326,13 +326,16 @@ module ConceptQL
 
       def wrappers
         @wrappers = {
-          lab_value_as_number: Module.new do
-            def query(db)
-              ds = super(db)
-              return ds if ds.has_auto_column?(:lab_value_as_number)
-              super.from_self(alias: :og)
+          lab_value_as_number: Class.new do
+            def wrap(ds, opts = {})
+              lab_value_column = Sequel.function(
+                :coalesce,
+                Sequel[:og][:lab_value_as_number],
+                Sequel[:joiny][:lab_value_as_number]
+              )
+              ds.from_self(alias: :og)
                 .left_join(join_view_name, join_clause, table_alias: :joiny)
-                .auto_column(:lab_value_as_number, Sequel[:joiny][:lab_value_as_number])
+                .auto_column(:lab_value_as_number, lab_value_column)
             end
 
             def join_view_name
@@ -348,8 +351,8 @@ module ConceptQL
         }
       end
 
-      def wrap(op, opts)
-        op.extend(wrappers[opts[:for]])
+      def wrap(ds, opts)
+        wrappers[opts[:for]].new.wrap(ds)
       end
 
       def make_table_id

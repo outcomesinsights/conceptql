@@ -118,7 +118,7 @@ module ConceptQL
         @vocab_ops ||= self.class.multiple_vocabularies[op_name].map do |op_info|
           op_info[:vocabulary_id].to_s.downcase
         end.map do |name|
-          nodifier.create(name, *arguments)
+          nodifier.create(name, *arguments).tap { |op| op.required_columns = required_columns_for_upstream }
         end
       end
 

@@ -1,3 +1,4 @@
+require "active_support/core_ext/hash/keys"
 require_relative "../behaviors/metadatable"
 
 module ConceptQL
@@ -14,6 +15,7 @@ module ConceptQL
       attr :nodifier, :values, :options, :arguments, :upstreams, :op_name, :id
 
       option :label, type: :string
+      option :uuid, type: :boolean
 
       @validations = []
 
@@ -106,7 +108,7 @@ module ConceptQL
         @op_name = op_name
         @options = {}
         while args.last.is_a?(Hash)
-          @options = @options.merge(ConceptQL::Utils.rekey(args.pop))
+          @options = @options.merge(args.pop.deep_symbolize_keys)
         end
         args.reject!{|arg| arg.nil? || arg == ''}
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operators::Base) }
@@ -129,12 +131,17 @@ module ConceptQL
         ConceptQL::Utils.snakecase(self.class.just_class_name)
       end
 
+      def required_columns=(cols)
+        @required_columns = cols
+        upstreams.each { |u| u.required_columns = required_columns_for_upstream }
+      end
+
       def required_columns
-        cols = self.class.required_columns || []
-        if options[:uuid]
-          cols |= [:uuid]
-        end
-        cols
+        @required_columns
+      end
+
+      def required_columns_for_upstream
+        required_columns
       end
 
       def output_columns
@@ -211,11 +218,24 @@ module ConceptQL
       end
 
       def evaluate(db, opts = {})
-        (opts.fetch(:ds) { query(db) }).auto_select(opts_for_evaluate(opts))
+        apply_uuid(opts[:ds] || query(db))
+          .require_columns(opts[:required_columns] || required_columns)
+          .auto_select(opts_for_evaluate(opts))
+      end
+
+      def apply_uuid(ds)
+        scope.output_columns |= [:uuid] if options[:uuid]
+        ds.auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
+      end
+
+      def op_alias
+        [op_name, options[:id] || id].compact.join("_").to_sym
       end
 
       def opts_for_evaluate(opts = {})
-        {required_columns: scope.query_columns}.merge(options.merge(opts))
+        {
+          alias: op_alias
+        }.merge(options.merge(opts))
       end
 
       def pretty_print(pp)
@@ -332,11 +352,11 @@ module ConceptQL
         type = Scope::COLUMN_TYPES.fetch(column)
         case type
         when String, :String
-          Sequel.cast_string(value).as(column)
+          Sequel.cast_string(value)
         when Date, :Date
-          Sequel.cast(value, type).as(column)
+          Sequel.cast(value, type)
         when Float, :Bigint, :Float
-          Sequel.cast_numeric(value, type).as(column)
+          Sequel.cast_numeric(value, type)
         else
           raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
         end

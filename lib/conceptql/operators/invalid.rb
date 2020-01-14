@@ -22,9 +22,16 @@ module ConceptQL
       end
 
       def annotate(db, opts = {})
-        if options[:left] || options[:right]
-          options[:left] = to_op(options[:left]).annotate(db, opts) if options[:left]
-          options[:right] = to_op(options[:right]).annotate(db, opts) if options[:right]
+        if options[:left]
+          left = to_op(options[:left])
+          left.required_columns = required_columns_for_upstream
+          options[:left] = left.annotate(db, opts)
+        end
+
+        if options[:right]
+          right = to_op(options[:right])
+          right.required_columns = required_columns_for_upstream
+          options[:right] = right.annotate(db, opts)
         end
         super
       end

@@ -10,13 +10,15 @@ module ConceptQL
         default_query_columns
 
         def query(db)
-          prepare_columns
-          lhs(db).left_join(
-            rhs(db),
-            join_clause.inject(&:&),
-            table_alias: :r
-          )
-            .where(where_clause)
+          ds = lhs(db)
+            .left_join(
+              rhs(db),
+              join_clause.inject(&:&),
+              table_alias: :r
+            )
+              .where(where_clause)
+
+          prepare_columns(ds)
         end
 
         def where_clause

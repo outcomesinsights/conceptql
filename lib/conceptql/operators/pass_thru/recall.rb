@@ -44,6 +44,11 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
                         end
         end
 
+        def required_columns=(cols)
+          super
+          original.required_columns = cols
+        end
+
         def original
           nodifier.scope.fetch_operator(source)
         end

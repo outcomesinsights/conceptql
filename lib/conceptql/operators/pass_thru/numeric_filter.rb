@@ -4,17 +4,17 @@ require "active_support/core_ext/object/blank"
 module ConceptQL
   module Operators
     # Filters the incoming stream of events to only those that have a
-    # value_as_number column with a value that matches the specified criteria
+    # lab_value_as_number column with a value that matches the specified criteria
     # are passed through
     #
-    # If an event has NULL for value_as_number, it is filtered out.
+    # If an event has NULL for lab_value_as_number, it is filtered out.
     class NumericFilter < Base
       register __FILE__
 
       desc <<-DESC
-        Filters events to include those with a value_as_number that matches the given criteria.
+        Filters events to include those with a lab_value_as_number that matches the given criteria.
 
-        If value_as_number is NULL, the event is excluded.
+        If lab_value_as_number is NULL, the event is excluded.
       DESC
       option :greater_than_or_equal_to, type: :float
       option :less_than_or_equal_to, type: :float
@@ -22,14 +22,18 @@ module ConceptQL
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
-      require_column :value_as_number
       default_query_columns
 
-      VALUE_COLUMN = Sequel[:value_as_number]
+      VALUE_COLUMN = Sequel[:lab_value_as_number]
 
       def query(db)
-        db.from(stream.evaluate(db))
+        dm.wrap(upstream_query(db), for: :lab_value_as_number)
+          .auto_select(required_columns: required_columns)
           .where(range_criteria)
+      end
+
+      def required_columns
+        super | %i[lab_value_as_number]
       end
 
       private

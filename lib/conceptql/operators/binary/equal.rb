@@ -7,7 +7,6 @@ module ConceptQL
         register __FILE__
 
         desc 'If a result in the left hand results (LHR) has the same value_as_number as a result in the right hand results (RHR), it is passed through.'
-        require_column :lab_value_as_number
 
         def left
           dm.wrap(super, for: :lab_value_as_number)

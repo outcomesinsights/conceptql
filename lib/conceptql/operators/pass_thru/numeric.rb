@@ -34,7 +34,6 @@ Accepts two params:
         validate_at_most_one_upstream
         validate_one_argument
         default_query_columns
-        require_column :lab_value_as_number
 
         def query(db)
           ds = stream.nil? ? as_criterion(db) : upstream_query(db)
@@ -45,10 +44,19 @@ Accepts two params:
           stream.nil? ? [:person] : super
         end
 
+        def required_columns_for_upstream
+          super - %i[lab_value_as_number]
+        end
+
         private
 
         def as_criterion(db)
+          # TODO: This call to auto_column is a hack
+          # This operator acts as a PassThru and a Selection
+          # so we really need to get the Selection part from
+          # Selection::Base
           db[dm.nschema.patients.view.name]
+            .auto_column(:window_id, Sequel.cast_numeric(nil))
         end
 
         def numeric_literal

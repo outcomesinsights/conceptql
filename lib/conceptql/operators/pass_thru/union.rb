@@ -27,19 +27,8 @@ module ConceptQL
           end
 
           queries.inject do |q, query|
-            q.union(query, all: true)
+            q.union(query, all: true, from_self: false)
           end
-        end
-
-        def timeless?
-          !(defined?(@running_combos) && @running_combos)
-        end
-
-        def process_combos
-          @running_combos = true
-          ds = yield
-          @running_combos = false
-          ds
         end
       end
     end

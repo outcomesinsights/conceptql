@@ -16,7 +16,7 @@ module ConceptQL
         def query(db)
           ds = semi_or_inner_join(
             lhs(db),
-            rhs(db, required_columns: rhs_columns, table_alias: :r),
+            rhs(db, table_alias: :r),
             *([*join_clause, where_clause]).compact
           )
           prepare_columns(ds)
@@ -30,12 +30,27 @@ module ConceptQL
           left.code_list(db) + right.code_list(db)
         end
 
+        def required_columns=(cols)
+          raise "required_columns got invalid column: #{cols.inspect}" unless cols.all? { |c| c.is_a?(Symbol) }
+          @required_columns = cols
+          left.required_columns = required_columns_for_upstream if left
+          right.required_columns = rhs_columns if right
+        end
+
+        def required_columns
+          super | join_columns
+        end
+
         attr :left, :right
 
         private
 
+        def lhs_columns
+          join_columns | scope.query_columns
+        end
+
         def rhs_columns
-          join_columns + include_rhs_columns
+          join_columns | include_rhs_columns
         end
 
         def complete_upstreams

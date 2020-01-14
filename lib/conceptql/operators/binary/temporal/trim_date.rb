@@ -53,6 +53,7 @@ is passed through unaffected.
           def rhs(db)
             return super if compare_all?
             occ = to_op([:occurrence, occurrence_number, right])
+            occ.required_columns = [:start_date, :end_date ] | matching_columns
             occ.evaluate(db).from_self(alias: :r)
           end
         end

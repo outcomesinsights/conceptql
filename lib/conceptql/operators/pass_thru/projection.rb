@@ -17,8 +17,12 @@ module ConceptQL
       end
 
       def options
-        new_opts = {required_columns: scope.query_columns + Array(scope.output_columns)}
+        new_opts = {required_columns: required_columns}
         super.merge(new_opts)
+      end
+
+      def required_columns
+        super | scope.query_columns | Array(scope.output_columns)
       end
 
       def apply_joins(ds)
@@ -33,6 +37,7 @@ module ConceptQL
 
       def views
         @views ||= dm.nschema.views_by_column(*scope.output_columns)
+          .compact
           .map
           .with_index { |v, i| ["view#{i}".to_sym, v] }
       end

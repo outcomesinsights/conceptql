@@ -103,7 +103,7 @@ module ConceptQL
         end
       else
         Operators::Invalid.new(nodifier, "invalid", errors: [["invalid root operator", statement.inspect]])
-      end
+      end.tap { |o| o.required_columns = Scope::DEFAULT_COLUMNS.keys}
     end
 
     def code_list(ignored_db = nil)

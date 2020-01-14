@@ -56,7 +56,8 @@ module ConceptQL
 
     COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
 
-    attr_accessor :person_ids
+    attr_accessor :person_ids,
+      :output_columns
 
     attr_reader :known_operators,
       :recall_stack,
@@ -64,7 +65,6 @@ module ConceptQL
       :annotation,
       :opts,
       :query_columns,
-      :output_columns,
       :lexicon
 
     def initialize(opts = {})
@@ -127,7 +127,7 @@ module ConceptQL
     end
 
     def nest(op)
-      add_required_columns(op)
+      #add_required_columns(op)
       add_output_columns(op)
       harvest_person_ids(op)
       return yield unless label = op.is_a?(Operators::PassThru::Recall) ? op.source : op.label

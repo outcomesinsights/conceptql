@@ -5,6 +5,12 @@ module ConceptQL
       class Base < Operators::Base
         include ConceptQL::Behaviors::Windowable
 
+        def null_columns
+          proc do |hash, key|
+            hash[key.to_sym] = cast_column(key)
+          end
+        end
+
         def where_clauses(db)
           [where_clause(db)].compact
         end
@@ -13,7 +19,7 @@ module ConceptQL
           raise NotImplementedError
         end
 
-        def query(db)
+        def query(db, opts = {})
           ds = db[table.name]
           ds = where_clauses(db).inject(ds) do |ds, where_clause|
             ds.where(where_clause)
@@ -29,7 +35,9 @@ module ConceptQL
           names = table.columns.map(&:name)
           ds.auto_columns(names.zip(names).to_h)
             .auto_column(:window_id, Sequel.cast_numeric(nil))
-            .auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
+            .auto_column(:criterion_table, :criterion_table)
+            .auto_column(:criterion_domain, :criterion_domain)
+            .auto_column_default(null_columns)
         end
 
         def table_alias

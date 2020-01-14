@@ -123,6 +123,10 @@ occurrence, this operator returns nothing for that person.
           .from_self
       end
 
+      def required_columns_for_upstream
+        super | %i[criterion_id]
+      end
+
       private
 
       def within_option

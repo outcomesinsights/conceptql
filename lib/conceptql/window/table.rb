@@ -33,6 +33,8 @@ module ConceptQL
           .from_self(alias: :l)
           .join(rhs, expr)
           .auto_column(:window_id, r_table[:window_id])
+          .require_columns(op.required_columns)
+          .auto_select(alias: :windowed)
       end
 
       def get_table_window(query)
@@ -68,6 +70,10 @@ module ConceptQL
 
       def adjust_end
         opts[:adjust_window_end]
+      end
+
+      def required_columns
+        %i[person_id start_date end_date]
       end
     end
   end

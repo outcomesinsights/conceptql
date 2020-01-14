@@ -20,15 +20,13 @@ module ConceptQL
       def fetch_windows(opts)
         windows = []
 
+        windows << person_filter(opts) if use_person_filter?(opts)
+
         windows << date_range_window(opts) if use_date_range?(opts)
 
-        qualifier = Sequel
         if use_table_window?(opts)
-          qualifier = Sequel[:l]
           windows << table_window(opts)
         end
-
-        windows << person_filter({qualifier: qualifier}.merge(opts)) if use_person_filter?(opts)
 
         windows
       end
