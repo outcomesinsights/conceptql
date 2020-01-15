@@ -56,14 +56,14 @@ module ConceptQL
 
     COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
 
-    attr_accessor :person_ids,
-      :output_columns
+    attr_accessor :person_ids
 
     attr_reader :known_operators,
       :recall_stack,
       :recall_dependencies,
       :annotation,
       :opts,
+      :output_columns,
       :query_columns,
       :lexicon
 
@@ -114,6 +114,7 @@ module ConceptQL
     end
 
     def add_output_columns(op)
+      @output_columns |= [:uuid] if op.options[:uuid]
       if op.output_columns
         @output_columns |= op.output_columns
         @output_columns.sort_by! { |qc| COLUMN_TYPES.keys.index(qc) }

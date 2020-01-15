@@ -4,6 +4,7 @@ module ConceptQL
     module Windowable
       def evaluate(db, opts = {})
         ds = super(db, opts.merge(required_columns: required_columns | _required_columns))
+        return ds if skip_windows?
         ds = apply_windows(ds)
         super(db, opts.merge(ds: ds))
       end
@@ -15,6 +16,7 @@ module ConceptQL
       end
 
       def _required_columns
+        return [] if skip_windows?
         scope.windows
           .select { |w| w.respond_to?(:required_columns) }
           .map(&:required_columns)

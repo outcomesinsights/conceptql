@@ -67,9 +67,13 @@ module ConceptQL
 
       def uuid_items(qualifier = nil)
         qualifier ||= Sequel
-        %w(person_id criterion_id criterion_table start_date end_date).map do |column|
-          Sequel.cast_string(qualifier[column.to_sym])
+        uuid_columns.map do |column|
+          Sequel.cast_string(qualifier[column])
         end
+      end
+
+      def uuid_columns
+        %i[person_id criterion_id criterion_table start_date end_date]
       end
     end
   end

@@ -15,6 +15,7 @@ module ConceptQL
       class Numeric < Base
         include ConceptQL::Behaviors::Windowable
         include ConceptQL::Behaviors::Timeless
+        include ConceptQL::Behaviors::Nullish
 
         register __FILE__
 
@@ -36,16 +37,24 @@ Accepts two params:
         default_query_columns
 
         def query(db)
-          ds = stream.nil? ? as_criterion(db) : upstream_query(db)
+          ds = is_selection? ? as_criterion(db) : upstream_query(db)
           ds.auto_column(:lab_value_as_number, numeric_literal)
         end
 
         def domains(db)
-          stream.nil? ? [:person] : super
+          is_selection? ? [:person] : super
         end
 
         def required_columns_for_upstream
           super - %i[lab_value_as_number]
+        end
+
+        def skip_windows?
+          !is_selection?
+        end
+
+        def is_selection?
+          stream.nil?
         end
 
         private
@@ -57,6 +66,8 @@ Accepts two params:
           # Selection::Base
           db[dm.nschema.patients.view.name]
             .auto_column(:window_id, Sequel.cast_numeric(nil))
+            .auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
+            .auto_column_default(null_columns)
         end
 
         def numeric_literal

@@ -170,6 +170,7 @@ module ConceptQL
         res = [op_name, *annotate_values(db, opts)]
 
         if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
+          self.required_columns |= %i[person_id criterion_domain]
           scope.with_ctes(self, db)
             .from_self
             .select_group(:criterion_domain)
@@ -218,14 +219,9 @@ module ConceptQL
       end
 
       def evaluate(db, opts = {})
-        apply_uuid(opts[:ds] || query(db))
+        (opts[:ds] || query(db))
           .require_columns(opts[:required_columns] || required_columns)
           .auto_select(opts_for_evaluate(opts))
-      end
-
-      def apply_uuid(ds)
-        scope.output_columns |= [:uuid] if options[:uuid]
-        ds.auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
       end
 
       def op_alias
