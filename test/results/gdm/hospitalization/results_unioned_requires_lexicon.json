@@ -11,8 +11,10 @@
     "admission_date": "2010-03-12",
     "discharge_date": "2010-03-13",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 2,
@@ -26,8 +28,10 @@
     "admission_date": "2009-04-12",
     "discharge_date": "2009-04-18",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 2,
@@ -41,8 +45,10 @@
     "admission_date": "2009-08-31",
     "discharge_date": "2009-09-02",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 2,
@@ -56,8 +62,10 @@
     "admission_date": "2009-09-17",
     "discharge_date": "2009-09-20",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 2,
@@ -71,8 +79,10 @@
     "admission_date": "2010-06-26",
     "discharge_date": "2010-07-01",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 11,
@@ -86,8 +96,10 @@
     "admission_date": "2008-10-29",
     "discharge_date": "2008-10-29",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 14,
@@ -101,8 +113,10 @@
     "admission_date": "2008-09-12",
     "discharge_date": "2008-09-12",
     "length_of_stay": 1,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 17,
@@ -116,8 +130,10 @@
     "admission_date": "2008-08-25",
     "discharge_date": "2008-08-25",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 17,
@@ -131,8 +147,10 @@
     "admission_date": "2009-04-30",
     "discharge_date": "2009-04-30",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 17,
@@ -146,8 +164,10 @@
     "admission_date": "2008-09-19",
     "discharge_date": "2008-09-22",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 17,
@@ -161,8 +181,10 @@
     "admission_date": "2010-05-22",
     "discharge_date": "2010-06-12",
     "length_of_stay": 22,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 17,
@@ -176,8 +198,10 @@
     "admission_date": "2010-06-02",
     "discharge_date": "2010-06-06",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 17,
@@ -191,8 +215,10 @@
     "admission_date": "2010-06-16",
     "discharge_date": "2010-06-19",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 20,
@@ -206,8 +232,10 @@
     "admission_date": "2009-12-09",
     "discharge_date": "2009-12-13",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 21,
@@ -221,8 +249,10 @@
     "admission_date": "2008-10-15",
     "discharge_date": "2008-10-21",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 25,
@@ -236,8 +266,10 @@
     "admission_date": "2009-09-30",
     "discharge_date": "2009-10-07",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 27,
@@ -251,8 +283,10 @@
     "admission_date": "2009-08-26",
     "discharge_date": "2009-08-29",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 28,
@@ -266,8 +300,10 @@
     "admission_date": "2008-04-21",
     "discharge_date": "2008-04-26",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 28,
@@ -281,8 +317,10 @@
     "admission_date": "2008-04-26",
     "discharge_date": "2008-04-30",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 31,
@@ -296,8 +334,10 @@
     "admission_date": "2009-06-10",
     "discharge_date": "2009-06-15",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 31,
@@ -311,8 +351,10 @@
     "admission_date": "2009-12-07",
     "discharge_date": "2009-12-13",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 32,
@@ -326,8 +368,10 @@
     "admission_date": "2010-08-30",
     "discharge_date": "2010-09-07",
     "length_of_stay": 9,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 35,
@@ -341,8 +385,10 @@
     "admission_date": "2009-06-26",
     "discharge_date": "2009-06-30",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 37,
@@ -356,8 +402,10 @@
     "admission_date": "2008-04-20",
     "discharge_date": "2008-04-23",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 37,
@@ -371,8 +419,10 @@
     "admission_date": "2009-01-19",
     "discharge_date": "2009-01-20",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 38,
@@ -386,8 +436,10 @@
     "admission_date": "2010-02-12",
     "discharge_date": "2010-02-12",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 44,
@@ -401,8 +453,10 @@
     "admission_date": "2009-06-07",
     "discharge_date": "2009-06-08",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 44,
@@ -416,8 +470,10 @@
     "admission_date": "2010-01-14",
     "discharge_date": "2010-01-19",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 44,
@@ -431,8 +487,10 @@
     "admission_date": "2010-03-18",
     "discharge_date": "2010-03-24",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 51,
@@ -446,8 +504,10 @@
     "admission_date": "2008-05-23",
     "discharge_date": "2008-05-26",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 51,
@@ -461,8 +521,10 @@
     "admission_date": "2008-06-21",
     "discharge_date": "2008-06-25",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 51,
@@ -476,8 +538,10 @@
     "admission_date": "2008-06-22",
     "discharge_date": "2008-06-26",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 54,
@@ -491,8 +555,10 @@
     "admission_date": "2008-06-05",
     "discharge_date": "2008-06-05",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 60,
@@ -506,8 +572,10 @@
     "admission_date": "2009-07-19",
     "discharge_date": "2009-07-22",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 60,
@@ -521,8 +589,10 @@
     "admission_date": "2009-07-19",
     "discharge_date": "2009-07-22",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 60,
@@ -536,8 +606,10 @@
     "admission_date": "2010-03-16",
     "discharge_date": "2010-03-19",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 61,
@@ -551,8 +623,10 @@
     "admission_date": "2009-11-09",
     "discharge_date": "2009-11-11",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 63,
@@ -566,8 +640,10 @@
     "admission_date": "2008-07-14",
     "discharge_date": "2008-07-21",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 63,
@@ -581,8 +657,10 @@
     "admission_date": "2009-02-09",
     "discharge_date": "2009-02-15",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 66,
@@ -596,8 +674,10 @@
     "admission_date": "2009-07-25",
     "discharge_date": "2009-07-25",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 66,
@@ -611,8 +691,10 @@
     "admission_date": "2008-12-08",
     "discharge_date": "2008-12-13",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 66,
@@ -626,8 +708,10 @@
     "admission_date": "2009-08-04",
     "discharge_date": "2009-08-06",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 66,
@@ -641,8 +725,10 @@
     "admission_date": "2009-12-29",
     "discharge_date": "2009-12-31",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 68,
@@ -656,8 +742,10 @@
     "admission_date": "2008-04-09",
     "discharge_date": "2008-04-14",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 68,
@@ -671,8 +759,10 @@
     "admission_date": "2008-04-19",
     "discharge_date": "2008-04-23",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 68,
@@ -686,8 +776,10 @@
     "admission_date": "2008-09-15",
     "discharge_date": "2008-09-18",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 68,
@@ -701,8 +793,10 @@
     "admission_date": "2008-11-10",
     "discharge_date": "2008-11-11",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 68,
@@ -716,8 +810,10 @@
     "admission_date": "2009-04-28",
     "discharge_date": "2009-05-03",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 71,
@@ -731,8 +827,10 @@
     "admission_date": "2008-04-07",
     "discharge_date": "2008-04-11",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 72,
@@ -746,8 +844,10 @@
     "admission_date": "2010-08-20",
     "discharge_date": "2010-08-31",
     "length_of_stay": 12,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 73,
@@ -761,8 +861,10 @@
     "admission_date": "2008-11-16",
     "discharge_date": "2008-11-16",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 77,
@@ -776,8 +878,10 @@
     "admission_date": "2010-10-06",
     "discharge_date": "2010-10-06",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 77,
@@ -791,8 +895,10 @@
     "admission_date": "2008-07-30",
     "discharge_date": "2008-08-06",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 77,
@@ -806,8 +912,10 @@
     "admission_date": "2009-07-18",
     "discharge_date": "2009-07-21",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 79,
@@ -821,8 +929,10 @@
     "admission_date": "2009-08-09",
     "discharge_date": "2009-08-24",
     "length_of_stay": 16,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 80,
@@ -836,8 +946,10 @@
     "admission_date": "2009-03-15",
     "discharge_date": "2009-03-27",
     "length_of_stay": 13,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 81,
@@ -851,8 +963,10 @@
     "admission_date": "2009-01-28",
     "discharge_date": "2009-01-30",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 81,
@@ -866,8 +980,10 @@
     "admission_date": "2008-11-30",
     "discharge_date": "2008-12-04",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 81,
@@ -881,8 +997,10 @@
     "admission_date": "2009-01-28",
     "discharge_date": "2009-01-30",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 83,
@@ -896,8 +1014,10 @@
     "admission_date": "2008-03-31",
     "discharge_date": "2008-04-07",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 83,
@@ -911,8 +1031,10 @@
     "admission_date": "2008-12-15",
     "discharge_date": "2008-12-20",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 83,
@@ -926,8 +1048,10 @@
     "admission_date": "2009-01-20",
     "discharge_date": "2009-01-31",
     "length_of_stay": 12,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 85,
@@ -941,8 +1065,10 @@
     "admission_date": "2008-09-25",
     "discharge_date": "2008-09-26",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 86,
@@ -956,8 +1082,10 @@
     "admission_date": "2010-01-13",
     "discharge_date": "2010-01-14",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 87,
@@ -971,8 +1099,10 @@
     "admission_date": "2010-05-14",
     "discharge_date": "2010-06-17",
     "length_of_stay": 35,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 88,
@@ -986,8 +1116,10 @@
     "admission_date": "2009-01-03",
     "discharge_date": "2009-01-09",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 88,
@@ -1001,8 +1133,10 @@
     "admission_date": "2009-05-30",
     "discharge_date": "2009-05-30",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 88,
@@ -1016,8 +1150,10 @@
     "admission_date": "2008-02-05",
     "discharge_date": "2008-02-12",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 88,
@@ -1031,8 +1167,10 @@
     "admission_date": "2008-03-22",
     "discharge_date": "2008-03-24",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 88,
@@ -1046,8 +1184,10 @@
     "admission_date": "2008-03-23",
     "discharge_date": "2008-03-26",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 88,
@@ -1061,8 +1201,10 @@
     "admission_date": "2008-06-13",
     "discharge_date": "2008-06-16",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 88,
@@ -1076,8 +1218,10 @@
     "admission_date": "2009-01-03",
     "discharge_date": "2009-01-09",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 90,
@@ -1091,8 +1235,10 @@
     "admission_date": "2010-05-26",
     "discharge_date": "2010-05-26",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 90,
@@ -1106,8 +1252,10 @@
     "admission_date": "2010-07-03",
     "discharge_date": "2010-07-12",
     "length_of_stay": 10,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 90,
@@ -1121,8 +1269,10 @@
     "admission_date": "2010-07-10",
     "discharge_date": "2010-07-15",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 93,
@@ -1136,8 +1286,10 @@
     "admission_date": "2009-11-08",
     "discharge_date": "2009-11-08",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 94,
@@ -1151,8 +1303,10 @@
     "admission_date": "2008-06-21",
     "discharge_date": "2008-06-27",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 94,
@@ -1166,8 +1320,10 @@
     "admission_date": "2009-01-12",
     "discharge_date": "2009-01-18",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 94,
@@ -1181,8 +1337,10 @@
     "admission_date": "2009-07-07",
     "discharge_date": "2009-07-12",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 95,
@@ -1196,8 +1354,10 @@
     "admission_date": "2008-02-24",
     "discharge_date": "2008-02-26",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 95,
@@ -1211,8 +1371,10 @@
     "admission_date": "2008-08-01",
     "discharge_date": "2008-08-12",
     "length_of_stay": 12,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 95,
@@ -1226,8 +1388,10 @@
     "admission_date": "2008-08-17",
     "discharge_date": "2008-08-22",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 95,
@@ -1241,8 +1405,10 @@
     "admission_date": "2008-08-27",
     "discharge_date": "2008-09-01",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 95,
@@ -1256,8 +1422,10 @@
     "admission_date": "2008-09-03",
     "discharge_date": "2008-09-12",
     "length_of_stay": 10,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 96,
@@ -1271,8 +1439,10 @@
     "admission_date": "2008-09-21",
     "discharge_date": "2008-09-24",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 96,
@@ -1286,8 +1456,10 @@
     "admission_date": "2009-04-14",
     "discharge_date": "2009-04-18",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 96,
@@ -1301,8 +1473,10 @@
     "admission_date": "2009-10-19",
     "discharge_date": "2009-10-27",
     "length_of_stay": 9,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 98,
@@ -1316,8 +1490,10 @@
     "admission_date": "2010-01-25",
     "discharge_date": "2010-01-29",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 106,
@@ -1331,8 +1507,10 @@
     "admission_date": "2009-02-27",
     "discharge_date": "2009-02-27",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 109,
@@ -1346,8 +1524,10 @@
     "admission_date": "2010-07-06",
     "discharge_date": "2010-07-06",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 110,
@@ -1361,8 +1541,10 @@
     "admission_date": "2010-06-27",
     "discharge_date": "2010-06-27",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 123,
@@ -1376,8 +1558,10 @@
     "admission_date": "2008-11-23",
     "discharge_date": "2008-12-28",
     "length_of_stay": 36,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 123,
@@ -1391,8 +1575,10 @@
     "admission_date": "2008-12-28",
     "discharge_date": "2008-12-31",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 131,
@@ -1406,8 +1592,10 @@
     "admission_date": "2008-03-22",
     "discharge_date": "2008-03-23",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 131,
@@ -1421,8 +1609,10 @@
     "admission_date": "2008-02-12",
     "discharge_date": "2008-02-16",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 131,
@@ -1436,8 +1626,10 @@
     "admission_date": "2008-03-21",
     "discharge_date": "2008-03-24",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 131,
@@ -1451,8 +1643,10 @@
     "admission_date": "2008-03-22",
     "discharge_date": "2008-03-23",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 134,
@@ -1466,8 +1660,10 @@
     "admission_date": "2009-11-23",
     "discharge_date": "2009-11-30",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 135,
@@ -1481,8 +1677,10 @@
     "admission_date": "2010-01-21",
     "discharge_date": "2010-01-27",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 135,
@@ -1496,8 +1694,10 @@
     "admission_date": "2010-02-22",
     "discharge_date": "2010-03-02",
     "length_of_stay": 9,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 136,
@@ -1511,8 +1711,10 @@
     "admission_date": "2009-01-14",
     "discharge_date": "2009-01-16",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 138,
@@ -1526,8 +1728,10 @@
     "admission_date": "2008-05-18",
     "discharge_date": "2008-06-05",
     "length_of_stay": 19,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 138,
@@ -1541,8 +1745,10 @@
     "admission_date": "2009-01-21",
     "discharge_date": "2009-02-14",
     "length_of_stay": 25,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 147,
@@ -1556,8 +1762,10 @@
     "admission_date": "2009-10-01",
     "discharge_date": "2009-10-24",
     "length_of_stay": 24,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 148,
@@ -1571,8 +1779,10 @@
     "admission_date": "2010-06-08",
     "discharge_date": "2010-06-12",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 149,
@@ -1586,8 +1796,10 @@
     "admission_date": "2008-04-07",
     "discharge_date": "2008-04-07",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 149,
@@ -1601,8 +1813,10 @@
     "admission_date": "2009-10-31",
     "discharge_date": "2009-11-04",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 152,
@@ -1616,8 +1830,10 @@
     "admission_date": "2008-08-16",
     "discharge_date": "2008-08-16",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 152,
@@ -1631,8 +1847,10 @@
     "admission_date": "2010-11-22",
     "discharge_date": "2010-11-22",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 153,
@@ -1646,8 +1864,10 @@
     "admission_date": "2010-01-29",
     "discharge_date": "2010-02-08",
     "length_of_stay": 11,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 155,
@@ -1661,8 +1881,10 @@
     "admission_date": "2010-07-08",
     "discharge_date": "2010-07-10",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 158,
@@ -1676,8 +1898,10 @@
     "admission_date": "2009-12-20",
     "discharge_date": "2009-12-22",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 161,
@@ -1691,8 +1915,10 @@
     "admission_date": "2009-10-25",
     "discharge_date": "2009-10-29",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 161,
@@ -1706,8 +1932,10 @@
     "admission_date": "2009-10-25",
     "discharge_date": "2009-10-29",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 163,
@@ -1721,8 +1949,10 @@
     "admission_date": "2008-12-24",
     "discharge_date": "2008-12-25",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 163,
@@ -1736,8 +1966,10 @@
     "admission_date": "2008-03-31",
     "discharge_date": "2008-04-01",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 168,
@@ -1751,8 +1983,10 @@
     "admission_date": "2010-02-02",
     "discharge_date": "2010-02-04",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 168,
@@ -1766,8 +2000,10 @@
     "admission_date": "2010-02-14",
     "discharge_date": "2010-02-18",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 172,
@@ -1781,8 +2017,10 @@
     "admission_date": "2009-01-20",
     "discharge_date": "2009-01-20",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 172,
@@ -1796,8 +2034,10 @@
     "admission_date": "2008-11-21",
     "discharge_date": "2008-11-27",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 172,
@@ -1811,8 +2051,10 @@
     "admission_date": "2010-06-02",
     "discharge_date": "2010-06-13",
     "length_of_stay": 12,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 173,
@@ -1826,8 +2068,10 @@
     "admission_date": "2010-01-21",
     "discharge_date": "2010-01-23",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 177,
@@ -1841,8 +2085,10 @@
     "admission_date": "2008-09-23",
     "discharge_date": "2008-09-23",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 177,
@@ -1856,8 +2102,10 @@
     "admission_date": "2009-06-13",
     "discharge_date": "2009-06-16",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 177,
@@ -1871,8 +2119,10 @@
     "admission_date": "2009-06-13",
     "discharge_date": "2009-06-16",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 178,
@@ -1886,8 +2136,10 @@
     "admission_date": "2008-05-17",
     "discharge_date": "2008-05-27",
     "length_of_stay": 11,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 178,
@@ -1901,8 +2153,10 @@
     "admission_date": "2008-11-26",
     "discharge_date": "2008-11-28",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 179,
@@ -1916,8 +2170,10 @@
     "admission_date": "2008-01-18",
     "discharge_date": "2008-01-21",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 179,
@@ -1931,8 +2187,10 @@
     "admission_date": "2008-06-14",
     "discharge_date": "2008-06-22",
     "length_of_stay": 9,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 179,
@@ -1946,8 +2204,10 @@
     "admission_date": "2008-09-18",
     "discharge_date": "2008-09-19",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 179,
@@ -1961,8 +2221,10 @@
     "admission_date": "2009-09-23",
     "discharge_date": "2009-09-25",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 184,
@@ -1976,8 +2238,10 @@
     "admission_date": "2008-01-07",
     "discharge_date": "2008-01-07",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 184,
@@ -1991,8 +2255,10 @@
     "admission_date": "2009-11-22",
     "discharge_date": "2009-11-26",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 187,
@@ -2006,8 +2272,10 @@
     "admission_date": "2009-01-31",
     "discharge_date": "2009-01-31",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 187,
@@ -2021,8 +2289,10 @@
     "admission_date": "2010-12-26",
     "discharge_date": "2010-12-26",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 187,
@@ -2036,8 +2306,10 @@
     "admission_date": "2008-02-17",
     "discharge_date": "2008-02-20",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 187,
@@ -2051,8 +2323,10 @@
     "admission_date": "2008-06-26",
     "discharge_date": "2008-06-29",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 190,
@@ -2066,8 +2340,10 @@
     "admission_date": "2009-04-09",
     "discharge_date": "2009-04-09",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 190,
@@ -2081,8 +2357,10 @@
     "admission_date": "2008-12-02",
     "discharge_date": "2008-12-04",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 191,
@@ -2096,8 +2374,10 @@
     "admission_date": "2009-08-24",
     "discharge_date": "2009-08-31",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 192,
@@ -2111,8 +2391,10 @@
     "admission_date": "2008-03-19",
     "discharge_date": "2008-04-12",
     "length_of_stay": 25,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 195,
@@ -2126,8 +2408,10 @@
     "admission_date": "2008-06-07",
     "discharge_date": "2008-06-08",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 195,
@@ -2141,8 +2425,10 @@
     "admission_date": "2009-03-28",
     "discharge_date": "2009-04-01",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 196,
@@ -2156,8 +2442,10 @@
     "admission_date": "2008-12-23",
     "discharge_date": "2008-12-23",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 196,
@@ -2171,8 +2459,10 @@
     "admission_date": "2010-12-12",
     "discharge_date": "2010-12-13",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 197,
@@ -2186,8 +2476,10 @@
     "admission_date": "2009-05-07",
     "discharge_date": "2009-05-07",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 199,
@@ -2201,8 +2493,10 @@
     "admission_date": "2008-10-30",
     "discharge_date": "2008-11-02",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 199,
@@ -2216,8 +2510,10 @@
     "admission_date": "2010-06-02",
     "discharge_date": "2010-06-08",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 202,
@@ -2231,8 +2527,10 @@
     "admission_date": "2008-07-24",
     "discharge_date": "2008-07-29",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 202,
@@ -2246,8 +2544,10 @@
     "admission_date": "2008-08-18",
     "discharge_date": "2008-08-20",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 204,
@@ -2261,8 +2561,10 @@
     "admission_date": "2010-08-15",
     "discharge_date": "2010-08-30",
     "length_of_stay": 16,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 207,
@@ -2276,8 +2578,10 @@
     "admission_date": "2010-04-28",
     "discharge_date": "2010-05-02",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 212,
@@ -2291,8 +2595,10 @@
     "admission_date": "2009-10-07",
     "discharge_date": "2009-10-07",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 212,
@@ -2306,8 +2612,10 @@
     "admission_date": "2009-10-07",
     "discharge_date": "2009-10-07",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 213,
@@ -2321,8 +2629,10 @@
     "admission_date": "2009-06-07",
     "discharge_date": "2009-06-07",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 213,
@@ -2336,8 +2646,10 @@
     "admission_date": "2010-02-07",
     "discharge_date": "2010-02-07",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 213,
@@ -2351,8 +2663,10 @@
     "admission_date": "2010-04-01",
     "discharge_date": "2010-04-05",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 214,
@@ -2366,8 +2680,10 @@
     "admission_date": "2008-02-17",
     "discharge_date": "2008-02-17",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 214,
@@ -2381,8 +2697,10 @@
     "admission_date": "2009-11-12",
     "discharge_date": "2009-11-12",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 214,
@@ -2396,8 +2714,10 @@
     "admission_date": "2008-09-26",
     "discharge_date": "2008-09-28",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 214,
@@ -2411,8 +2731,10 @@
     "admission_date": "2008-12-30",
     "discharge_date": "2009-01-04",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 214,
@@ -2426,8 +2748,10 @@
     "admission_date": "2009-01-26",
     "discharge_date": "2009-01-27",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 217,
@@ -2441,8 +2765,10 @@
     "admission_date": "2010-06-22",
     "discharge_date": "2010-06-23",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 219,
@@ -2456,8 +2782,10 @@
     "admission_date": "2009-08-18",
     "discharge_date": "2009-08-22",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 220,
@@ -2471,8 +2799,10 @@
     "admission_date": "2008-11-16",
     "discharge_date": "2008-11-20",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 220,
@@ -2486,8 +2816,10 @@
     "admission_date": "2009-10-31",
     "discharge_date": "2009-10-31",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 220,
@@ -2501,8 +2833,10 @@
     "admission_date": "2009-08-15",
     "discharge_date": "2009-08-20",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 223,
@@ -2516,8 +2850,10 @@
     "admission_date": "2008-07-28",
     "discharge_date": "2008-07-28",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 223,
@@ -2531,8 +2867,10 @@
     "admission_date": "2008-10-31",
     "discharge_date": "2008-10-31",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 225,
@@ -2546,8 +2884,10 @@
     "admission_date": "2009-09-04",
     "discharge_date": "2009-09-04",
     "length_of_stay": 1,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 226,
@@ -2561,8 +2901,10 @@
     "admission_date": "2009-11-10",
     "discharge_date": "2009-11-14",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 230,
@@ -2576,8 +2918,10 @@
     "admission_date": "2008-03-14",
     "discharge_date": "2008-03-21",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 230,
@@ -2591,8 +2935,10 @@
     "admission_date": "2008-03-01",
     "discharge_date": "2008-03-06",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 230,
@@ -2606,8 +2952,10 @@
     "admission_date": "2008-03-14",
     "discharge_date": "2008-03-21",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 230,
@@ -2621,8 +2969,10 @@
     "admission_date": "2008-03-26",
     "discharge_date": "2008-04-10",
     "length_of_stay": 16,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 230,
@@ -2636,8 +2986,10 @@
     "admission_date": "2008-03-30",
     "discharge_date": "2008-04-02",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 232,
@@ -2651,8 +3003,10 @@
     "admission_date": "2008-03-24",
     "discharge_date": "2008-03-27",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 234,
@@ -2666,8 +3020,10 @@
     "admission_date": "2008-09-01",
     "discharge_date": "2008-09-01",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 234,
@@ -2681,8 +3037,10 @@
     "admission_date": "2010-01-04",
     "discharge_date": "2010-01-07",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 234,
@@ -2696,8 +3054,10 @@
     "admission_date": "2010-01-14",
     "discharge_date": "2010-01-18",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 237,
@@ -2711,8 +3071,10 @@
     "admission_date": "2008-04-08",
     "discharge_date": "2008-04-12",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 237,
@@ -2726,8 +3088,10 @@
     "admission_date": "2010-07-16",
     "discharge_date": "2010-07-19",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 238,
@@ -2741,8 +3105,10 @@
     "admission_date": "2009-10-28",
     "discharge_date": "2009-10-30",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 239,
@@ -2756,8 +3122,10 @@
     "admission_date": "2009-08-04",
     "discharge_date": "2009-08-04",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 239,
@@ -2771,8 +3139,10 @@
     "admission_date": "2010-02-12",
     "discharge_date": "2010-02-12",
     "length_of_stay": null,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 239,
@@ -2786,8 +3156,10 @@
     "admission_date": "2008-08-04",
     "discharge_date": "2008-08-18",
     "length_of_stay": 15,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 239,
@@ -2801,8 +3173,10 @@
     "admission_date": "2008-11-11",
     "discharge_date": "2008-11-29",
     "length_of_stay": 19,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 239,
@@ -2816,8 +3190,10 @@
     "admission_date": "2008-11-30",
     "discharge_date": "2008-12-07",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 242,
@@ -2831,8 +3207,10 @@
     "admission_date": "2008-11-01",
     "discharge_date": "2008-11-07",
     "length_of_stay": 7,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 243,
@@ -2846,8 +3224,10 @@
     "admission_date": "2009-08-20",
     "discharge_date": "2009-08-23",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2861,8 +3241,10 @@
     "admission_date": "2008-02-07",
     "discharge_date": "2008-02-10",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2876,8 +3258,10 @@
     "admission_date": "2008-02-28",
     "discharge_date": "2008-03-04",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2891,8 +3275,10 @@
     "admission_date": "2008-03-25",
     "discharge_date": "2008-03-29",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2906,8 +3292,10 @@
     "admission_date": "2008-03-29",
     "discharge_date": "2008-03-30",
     "length_of_stay": 2,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2921,8 +3309,10 @@
     "admission_date": "2008-05-14",
     "discharge_date": "2008-05-16",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2936,8 +3326,10 @@
     "admission_date": "2008-06-11",
     "discharge_date": "2008-06-13",
     "length_of_stay": 3,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2951,8 +3343,10 @@
     "admission_date": "2008-07-13",
     "discharge_date": "2008-07-18",
     "length_of_stay": 6,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 247,
@@ -2966,8 +3360,10 @@
     "admission_date": "2008-08-14",
     "discharge_date": "2008-08-21",
     "length_of_stay": 8,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 248,
@@ -2981,8 +3377,10 @@
     "admission_date": "2008-08-15",
     "discharge_date": "2008-08-18",
     "length_of_stay": 4,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 248,
@@ -2996,8 +3394,10 @@
     "admission_date": "2010-01-21",
     "discharge_date": "2010-01-29",
     "length_of_stay": 9,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   },
   {
     "person_id": 249,
@@ -3011,7 +3411,9 @@
     "admission_date": "2009-04-07",
     "discharge_date": "2009-04-11",
     "length_of_stay": 5,
-    "admission_source": null,
-    "discharge_location": null
+    "admission_source_value": null,
+    "admission_source_description": null,
+    "discharge_location_source_value": null,
+    "discharge_location_source_description": null
   }
 ]
