@@ -26,28 +26,29 @@ Common values include 21 (inpatient hospital), 23 (emergency room), and 11 (offi
       allows_one_upstream
       validate_one_upstream
       validate_at_least_one_argument
-      require_column :visit_source_concept_id
       default_query_columns
 
       def query(db)
-        db.from(stream.evaluate(db))
-          .where(visit_source_concept_id: place_of_service_concept_ids(db))
+        upstream_query(db)
+          .from_self(alias: :og)
+          .semi_join(
+            :place_of_service_join_view_v1,
+            {
+              Sequel[:psjv][:criterion_id] => Sequel[:og][:criterion_id],
+              Sequel[:psjv][:criterion_table] => Sequel[:og][:criterion_table],
+              Sequel[:psjv][:pos_concept_id] => place_of_service_concept_ids(db)
+            },
+            table_alias: :psjv
+        )
       end
 
     private
 
       def place_of_service_concept_ids(db)
-        if gdm?
-          db.from(:concepts)
-            .where(vocabulary_id: "Place of Service")
-            .where(concept_code: arguments.map(&:to_s))
-            .select(:id)
-        else
-          db.from(:concept)
-            .where(concept_code: arguments.map(&:to_s))
-            .where(vocabulary_id: 14)
-            .select(:concept_id)
-        end
+        db.from(:concepts)
+          .where(vocabulary_id: "Place of Service")
+          .where(concept_code: arguments.map(&:to_s))
+          .select(:id)
       end
     end
   end

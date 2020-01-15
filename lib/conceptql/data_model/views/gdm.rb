@@ -57,7 +57,7 @@ module ConceptQL
         end
 
         def sql(db, rdbms)
-          @ds_block.call(aliased_primary_table, primary_alias, db, rdbms).select(*selection(db, rdbms)).tap { |o| puts o.sql}
+          @ds_block.call(aliased_primary_table, primary_alias, db, rdbms).select(*selection(db, rdbms))
         end
 
         def new_view_column(name, definition = nil, &def_block)
@@ -195,9 +195,10 @@ module ConceptQL
             v.new_view_column(:lab_range_high, Sequel[:md][:normal_range_high])
           end
 
-          new_view("providers_join_view") do |v|
-            provs_table = Sequel[:practitioners].as(:provs)
+          new_view("provider_join_view") do |v|
             provs_alias = :provs
+            provs_table = Sequel[:practitioners].as(provs_alias)
+
             v.ds do |_, pa, db, rdbms|
               clinical_codes_practitioners = db[provs_table]
                 .join(Sequel[:contexts_practitioners], {Sequel[provs_alias][:id] => Sequel[:con_prov][:practitioner_id]}, table_alias: :con_prov)
@@ -235,6 +236,19 @@ module ConceptQL
             v.new_view_column(:criterion_table, Sequel[:criterion_table])
             v.new_view_column(:provider_id, Sequel[:provider_id])
             v.new_view_column(:specialty_concept_id, Sequel[:specialty_concept_id])
+          end
+
+          new_view("place_of_service_join_view") do |v|
+            cons_alias = :cons
+            cons_table = Sequel[:contexts].as(cons_alias)
+            v.ds do |_, pa, db, rdbms|
+              db[cons_table]
+                .join(Sequel[:clinical_codes], {Sequel[:cc][:context_id] => Sequel[:cons][:id]}, table_alias: :cc)
+            end
+
+            v.new_view_column(:criterion_id, Sequel[:cc][:id])
+            v.new_view_column(:criterion_table, Sequel.cast_string("clinical_codes"))
+            v.new_view_column(:pos_concept_id, Sequel[cons_alias][:pos_concept_id])
           end
         end
 

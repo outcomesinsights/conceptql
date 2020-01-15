@@ -72,6 +72,5 @@ ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
 Pathname.glob(File.dirname(__FILE__) + "/conceptql/operators/**/*.rb")
   .entries
   .map { |e| e.to_s.gsub(File.dirname(__FILE__) + "/", '') }
-  .tap { |e| p e }
   .each{ |filename| require_relative filename if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)}
 ConceptQL::Operators.operators.values.each(&:freeze)
