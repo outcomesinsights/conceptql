@@ -57,7 +57,7 @@ module ConceptQL
         end
 
         def sql(db, rdbms)
-          @ds_block.call(aliased_primary_table, primary_alias, db, rdbms).select(*selection(db, rdbms))
+          @ds_block.call(aliased_primary_table, primary_alias, db, rdbms).select(*selection(db, rdbms)).tap { |o| puts o.sql}
         end
 
         def new_view_column(name, definition = nil, &def_block)
@@ -159,10 +159,10 @@ module ConceptQL
             v.primary_table_alias = :dedcc
 
             v.ds do |aliased_table, pa, db, rdbms|
-             db[aliased_table]
-              .left_join(Sequel[:drug_exposure_details].as(:de), Sequel[pa][:drug_exposure_detail_id] => Sequel[:de][:id])
-              .left_join(Sequel[:concepts].as(:dose_con), Sequel[:de][:dose_unit_concept_id] => Sequel[:dose_con][:id])
-              .left_join(Sequel[:concepts].as(:ing_con), Sequel[pa][:clinical_code_concept_id] => Sequel[:ing_con][:id])
+              db[aliased_table]
+                .left_join(Sequel[:drug_exposure_details].as(:de), Sequel[pa][:drug_exposure_detail_id] => Sequel[:de][:id])
+                .left_join(Sequel[:concepts].as(:dose_con), Sequel[:de][:dose_unit_concept_id] => Sequel[:dose_con][:id])
+                .left_join(Sequel[:concepts].as(:ing_con), Sequel[pa][:clinical_code_concept_id] => Sequel[:ing_con][:id])
             end
 
             v.new_view_column(:criterion_id) { |pa| pa[:id] }
@@ -179,10 +179,10 @@ module ConceptQL
             v.primary_table_alias = :labcc
 
             v.ds do |aliased_table, pa, db, rdbms|
-             db[aliased_table]
-              .left_join(Sequel[:measurement_details].as(:md), Sequel[pa][:measurement_detail_id] => Sequel[:md][:id])
-              .left_join(Sequel[:concepts].as(:unit_con), Sequel[:md][:unit_concept_id] => Sequel[:unit_con][:id])
-              .left_join(Sequel[:concepts].as(:result_con), Sequel[:md][:result_as_concept_id] => Sequel[:result_con][:id])
+              db[aliased_table]
+                .left_join(Sequel[:measurement_details].as(:md), Sequel[pa][:measurement_detail_id] => Sequel[:md][:id])
+                .left_join(Sequel[:concepts].as(:unit_con), Sequel[:md][:unit_concept_id] => Sequel[:unit_con][:id])
+                .left_join(Sequel[:concepts].as(:result_con), Sequel[:md][:result_as_concept_id] => Sequel[:result_con][:id])
             end
 
             v.new_view_column(:criterion_id) { |pa| pa[:id] }
@@ -193,6 +193,48 @@ module ConceptQL
             v.new_view_column(:lab_unit_source_value, Sequel[:unit_con][:concept_text])
             v.new_view_column(:lab_range_low, Sequel[:md][:normal_range_low])
             v.new_view_column(:lab_range_high, Sequel[:md][:normal_range_high])
+          end
+
+          new_view("providers_join_view") do |v|
+            provs_table = Sequel[:practitioners].as(:provs)
+            provs_alias = :provs
+            v.ds do |_, pa, db, rdbms|
+              clinical_codes_practitioners = db[provs_table]
+                .join(Sequel[:contexts_practitioners], {Sequel[provs_alias][:id] => Sequel[:con_prov][:practitioner_id]}, table_alias: :con_prov)
+                .join(Sequel[:clinical_codes], {Sequel[:cc][:context_id] => Sequel[:con_prov][:context_id]}, table_alias: :cc)
+                .select(
+                  Sequel[:cc][:id].as(:criterion_id),
+                  Sequel.cast_string("clinical_codes").as(:criterion_table),
+                  Sequel[provs_alias][:id].as(:provider_id),
+                  Sequel[provs_alias][:id].as(:specialty_concept_id)
+                )
+              deaths_practitioners = db[provs_table]
+                .join(Sequel[:deaths], {Sequel[provs_alias][:id] => Sequel[:death_prov][:practitioner_id]}, table_alias: :death_prov)
+                .select(
+                  Sequel[:death_prov][:id].as(:criterion_id),
+                  Sequel.cast_string("deaths").as(:criterion_table),
+                  Sequel[provs_alias][:id].as(:provider_id),
+                  Sequel[provs_alias][:id].as(:specialty_concept_id)
+                )
+              patients_practitioners = db[provs_table]
+                .join(Sequel[:patients], {Sequel[provs_alias][:id] => Sequel[:patient_prov][:practitioner_id]}, table_alias: :patient_prov)
+                .select(
+                  Sequel[:patient_prov][:id].as(:criterion_id),
+                  Sequel.cast_string("patients").as(:criterion_table),
+                  Sequel[provs_alias][:id].as(:provider_id),
+                  Sequel[provs_alias][:id].as(:specialty_concept_id)
+                )
+
+              clinical_codes_practitioners
+                .union(deaths_practitioners, all: true)
+                .union(patients_practitioners, all: true)
+                .from_self
+            end
+
+            v.new_view_column(:criterion_id, Sequel[:criterion_id])
+            v.new_view_column(:criterion_table, Sequel[:criterion_table])
+            v.new_view_column(:provider_id, Sequel[:provider_id])
+            v.new_view_column(:specialty_concept_id, Sequel[:specialty_concept_id])
           end
         end
 

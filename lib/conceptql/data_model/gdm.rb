@@ -331,10 +331,10 @@ module ConceptQL
               lab_value_column = Sequel.function(
                 :coalesce,
                 Sequel[:og][:lab_value_as_number],
-                Sequel[:joiny][:lab_value_as_number]
+                Sequel[:lvan_join][:lab_value_as_number]
               )
               ds.from_self(alias: :og)
-                .left_join(join_view_name, join_clause, table_alias: :joiny)
+                .left_join(join_view_name, join_clause, table_alias: :lvan_join)
                 .auto_column(:lab_value_as_number, lab_value_column)
             end
 
@@ -344,7 +344,7 @@ module ConceptQL
 
             def join_clause
               %i[criterion_id criterion_table].map do |c|
-                [Sequel[:og][c], Sequel[:joiny][c]]
+                [Sequel[:og][c], Sequel[:lvan_join][c]]
               end.to_h
             end
           end
@@ -352,7 +352,7 @@ module ConceptQL
       end
 
       def wrap(ds, opts)
-        wrappers[opts[:for]].new.wrap(ds)
+        wrappers[opts[:for]].new.wrap(ds, opts)
       end
 
       def make_table_id

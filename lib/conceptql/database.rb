@@ -5,7 +5,17 @@ module ConceptQL
     attr_reader :db, :opts, :dm, :rdbms
     @lexicon_mutex = Mutex.new
 
-    EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove, :null_dataset, :sql_comments, :pg_ctas_explain, :pg_vacuum_table, :coly]
+    EXTENSIONS = [
+      :coly,
+      :date_arithmetic,
+      :error_sql,
+      :null_dataset,
+      :pg_ctas_explain,
+      :pg_vacuum_table,
+      :select_remove,
+      :semi_join,
+      :sql_comments
+    ]
 
     def initialize(db, opts={})
       @db = db
