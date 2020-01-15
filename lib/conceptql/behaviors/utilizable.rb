@@ -16,8 +16,10 @@ module ConceptQL
         require_column :admission_date
         require_column :discharge_date
         require_column :length_of_stay
-        require_column :admission_source
-        require_column :discharge_location
+        require_column :admission_source_value
+        require_column :admission_source_description
+        require_column :discharge_location_source_value
+        require_column :discharge_location_source_description
       end
 
       def query(db)
@@ -68,8 +70,10 @@ module ConceptQL
           admission_date: Sequel[:ad][:admission_date],
           discharge_date: Sequel[:ad][:discharge_date],
           length_of_stay: ((rdbms.days_between(Sequel[:ad][:admission_date], Sequel[:ad][:discharge_date])) + 1).as(:length_of_stay),
-          admission_source: Sequel[:asc][:concept_code].as(:admission_source),
-          discharge_location: Sequel[:dlc][:concept_code].as(:discharge_location),
+          admission_source_value: Sequel[:asc][:concept_code].as(:admission_source_value),
+          admission_source_description: Sequel[:asc][:concept_text].as(:admission_source_description),
+          discharge_location_source_value: Sequel[:dlc][:concept_code].as(:discharge_location_source_value),
+          discharge_location_source_description: Sequel[:dlc][:concept_text].as(:discharge_location_source_description),
           source_value: Sequel[:pcon][:concept_code].as(:source_value),
           source_vocabulary_id: Sequel[:pcon][:vocabulary_id].as(:source_vocabulary_id),
           person_id: Sequel[:cl][:patient_id].as(:person_id),
