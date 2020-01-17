@@ -115,7 +115,7 @@ module ConceptQL
     end
 
     def include_column?(column)
-      nodifier.scope.query_columns.include?(column)
+      operator.required_columns.include?(column)
     end
 
     private

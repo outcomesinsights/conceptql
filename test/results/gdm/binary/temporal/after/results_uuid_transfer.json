@@ -88,7 +88,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "6/74452/clinical_codes/2009-12-21/2009-12-21",
+    "uuid": "6/45743/clinical_codes/2010-02-06/2010-02-06",
     "person_id": 6,
     "criterion_id": 796,
     "criterion_table": "information_periods",
@@ -99,7 +99,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "6/45743/clinical_codes/2010-02-06/2010-02-06",
+    "uuid": "6/74452/clinical_codes/2009-12-21/2009-12-21",
     "person_id": 6,
     "criterion_id": 796,
     "criterion_table": "information_periods",
@@ -220,17 +220,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "8/66679/clinical_codes/2009-01-23/2009-01-23",
-    "person_id": 8,
-    "criterion_id": 25,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "8/50488/clinical_codes/2009-05-13/2009-05-13",
     "person_id": 8,
     "criterion_id": 25,
@@ -244,7 +233,7 @@
   {
     "uuid": "8/66679/clinical_codes/2009-01-23/2009-01-23",
     "person_id": 8,
-    "criterion_id": 26,
+    "criterion_id": 25,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -275,6 +264,28 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "8/66679/clinical_codes/2009-01-23/2009-01-23",
+    "person_id": 8,
+    "criterion_id": 26,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "8/50475/clinical_codes/2008-09-25/2008-09-25",
+    "person_id": 8,
+    "criterion_id": 797,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "8/50488/clinical_codes/2009-05-13/2009-05-13",
     "person_id": 8,
     "criterion_id": 797,
@@ -287,17 +298,6 @@
   },
   {
     "uuid": "8/66679/clinical_codes/2009-01-23/2009-01-23",
-    "person_id": 8,
-    "criterion_id": 797,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "8/50475/clinical_codes/2008-09-25/2008-09-25",
     "person_id": 8,
     "criterion_id": 797,
     "criterion_table": "information_periods",
@@ -484,7 +484,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "13/55128/clinical_codes/2010-07-20/2010-07-20",
+    "uuid": "13/31802/clinical_codes/2010-08-25/2010-08-25",
     "person_id": 13,
     "criterion_id": 43,
     "criterion_table": "information_periods",
@@ -495,7 +495,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "13/31802/clinical_codes/2010-08-25/2010-08-25",
+    "uuid": "13/55128/clinical_codes/2010-07-20/2010-07-20",
     "person_id": 13,
     "criterion_id": 43,
     "criterion_table": "information_periods",
@@ -528,7 +528,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "13/55128/clinical_codes/2010-07-20/2010-07-20",
+    "uuid": "13/31802/clinical_codes/2010-08-25/2010-08-25",
     "person_id": 13,
     "criterion_id": 800,
     "criterion_table": "information_periods",
@@ -539,7 +539,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "13/31802/clinical_codes/2010-08-25/2010-08-25",
+    "uuid": "13/55128/clinical_codes/2010-07-20/2010-07-20",
     "person_id": 13,
     "criterion_id": 800,
     "criterion_table": "information_periods",
@@ -594,17 +594,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "14/93645/clinical_codes/2008-05-24/2008-05-24",
-    "person_id": 14,
-    "criterion_id": 47,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "14/28749/clinical_codes/2009-06-27/2009-06-27",
     "person_id": 14,
     "criterion_id": 47,
@@ -617,6 +606,17 @@
   },
   {
     "uuid": "14/93645/clinical_codes/2008-05-24/2008-05-24",
+    "person_id": 14,
+    "criterion_id": 47,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "14/28749/clinical_codes/2009-06-27/2009-06-27",
     "person_id": 14,
     "criterion_id": 801,
     "criterion_table": "information_periods",
@@ -627,7 +627,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "14/28749/clinical_codes/2009-06-27/2009-06-27",
+    "uuid": "14/93645/clinical_codes/2008-05-24/2008-05-24",
     "person_id": 14,
     "criterion_id": 801,
     "criterion_table": "information_periods",
@@ -660,7 +660,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "17/77706/clinical_codes/2009-09-10/2009-09-10",
+    "uuid": "17/77705/clinical_codes/2009-09-10/2009-09-10",
     "person_id": 17,
     "criterion_id": 54,
     "criterion_table": "information_periods",
@@ -671,7 +671,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "17/77705/clinical_codes/2009-09-10/2009-09-10",
+    "uuid": "17/77706/clinical_codes/2009-09-10/2009-09-10",
     "person_id": 17,
     "criterion_id": 54,
     "criterion_table": "information_periods",
@@ -704,7 +704,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "17/77706/clinical_codes/2009-09-10/2009-09-10",
+    "uuid": "17/77705/clinical_codes/2009-09-10/2009-09-10",
     "person_id": 17,
     "criterion_id": 56,
     "criterion_table": "information_periods",
@@ -715,7 +715,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "17/77705/clinical_codes/2009-09-10/2009-09-10",
+    "uuid": "17/77706/clinical_codes/2009-09-10/2009-09-10",
     "person_id": 17,
     "criterion_id": 56,
     "criterion_table": "information_periods",
@@ -748,7 +748,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "19/92952/clinical_codes/2009-01-21/2009-01-21",
+    "uuid": "19/44130/clinical_codes/2008-09-27/2008-09-27",
     "person_id": 19,
     "criterion_id": 62,
     "criterion_table": "information_periods",
@@ -759,7 +759,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "19/44130/clinical_codes/2008-09-27/2008-09-27",
+    "uuid": "19/92952/clinical_codes/2009-01-21/2009-01-21",
     "person_id": 19,
     "criterion_id": 62,
     "criterion_table": "information_periods",
@@ -847,17 +847,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "27/41318/clinical_codes/2008-11-19/2008-11-19",
-    "person_id": 27,
-    "criterion_id": 86,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "27/37832/clinical_codes/2008-09-16/2008-09-16",
     "person_id": 27,
     "criterion_id": 86,
@@ -871,7 +860,7 @@
   {
     "uuid": "27/41318/clinical_codes/2008-11-19/2008-11-19",
     "person_id": 27,
-    "criterion_id": 87,
+    "criterion_id": 86,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -891,53 +880,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "30/76340/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 96,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76345/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 96,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76344/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 96,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76343/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 96,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76342/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 96,
+    "uuid": "27/41318/clinical_codes/2008-11-19/2008-11-19",
+    "person_id": 27,
+    "criterion_id": 87,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -957,7 +902,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "30/76341/clinical_codes/2009-05-17/2009-05-26",
+    "uuid": "30/76340/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
     "criterion_id": 96,
     "criterion_table": "information_periods",
@@ -970,29 +915,7 @@
   {
     "uuid": "30/76341/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
-    "criterion_id": 97,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76344/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 97,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76343/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 97,
+    "criterion_id": 96,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -1003,7 +926,40 @@
   {
     "uuid": "30/76342/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
-    "criterion_id": 97,
+    "criterion_id": 96,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76343/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 96,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76344/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 96,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76345/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 96,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -1034,6 +990,50 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "30/76341/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 97,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76342/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 97,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76343/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 97,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76344/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 97,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "30/76345/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
     "criterion_id": 97,
@@ -1056,6 +1056,28 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "30/76340/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 98,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76341/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 98,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "30/76342/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
     "criterion_id": 98,
@@ -1078,29 +1100,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "30/76341/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 98,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "30/76344/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 98,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76340/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
     "criterion_id": 98,
     "criterion_table": "information_periods",
@@ -1133,6 +1133,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "30/76340/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 99,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "30/76341/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
     "criterion_id": 99,
@@ -1155,29 +1166,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "30/76344/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 99,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "30/76340/clinical_codes/2009-05-17/2009-05-26",
-    "person_id": 30,
-    "criterion_id": 99,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "30/76343/clinical_codes/2009-05-17/2009-05-26",
+    "person_id": 30,
+    "criterion_id": 99,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "30/76344/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
     "criterion_id": 99,
     "criterion_table": "information_periods",
@@ -1191,6 +1191,17 @@
     "uuid": "30/76345/clinical_codes/2009-05-17/2009-05-26",
     "person_id": 30,
     "criterion_id": 99,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "31/62288/clinical_codes/2009-12-09/2009-12-09",
+    "person_id": 31,
+    "criterion_id": 100,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -1223,7 +1234,7 @@
   {
     "uuid": "31/62288/clinical_codes/2009-12-09/2009-12-09",
     "person_id": 31,
-    "criterion_id": 100,
+    "criterion_id": 101,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -1232,7 +1243,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "31/62288/clinical_codes/2009-12-09/2009-12-09",
+    "uuid": "31/79725/clinical_codes/2008-06-13/2008-06-13",
     "person_id": 31,
     "criterion_id": 101,
     "criterion_table": "information_periods",
@@ -1244,17 +1255,6 @@
   },
   {
     "uuid": "31/84822/clinical_codes/2009-11-05/2009-11-05",
-    "person_id": 31,
-    "criterion_id": 101,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "31/79725/clinical_codes/2008-06-13/2008-06-13",
     "person_id": 31,
     "criterion_id": 101,
     "criterion_table": "information_periods",
@@ -1309,7 +1309,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "31/84822/clinical_codes/2009-11-05/2009-11-05",
+    "uuid": "31/79725/clinical_codes/2008-06-13/2008-06-13",
     "person_id": 31,
     "criterion_id": 808,
     "criterion_table": "information_periods",
@@ -1320,7 +1320,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "31/79725/clinical_codes/2008-06-13/2008-06-13",
+    "uuid": "31/84822/clinical_codes/2009-11-05/2009-11-05",
     "person_id": 31,
     "criterion_id": 808,
     "criterion_table": "information_periods",
@@ -1441,17 +1441,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "44/35935/clinical_codes/2008-02-28/2008-02-28",
-    "person_id": 44,
-    "criterion_id": 143,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "44/29781/clinical_codes/2008-03-09/2008-03-09",
     "person_id": 44,
     "criterion_id": 143,
@@ -1465,7 +1454,7 @@
   {
     "uuid": "44/35935/clinical_codes/2008-02-28/2008-02-28",
     "person_id": 44,
-    "criterion_id": 144,
+    "criterion_id": 143,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -1486,6 +1475,17 @@
   },
   {
     "uuid": "44/35935/clinical_codes/2008-02-28/2008-02-28",
+    "person_id": 44,
+    "criterion_id": 144,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "44/29781/clinical_codes/2008-03-09/2008-03-09",
     "person_id": 44,
     "criterion_id": 145,
     "criterion_table": "information_periods",
@@ -1496,7 +1496,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "44/29781/clinical_codes/2008-03-09/2008-03-09",
+    "uuid": "44/35935/clinical_codes/2008-02-28/2008-02-28",
     "person_id": 44,
     "criterion_id": 145,
     "criterion_table": "information_periods",
@@ -1584,7 +1584,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/73043/clinical_codes/2009-11-15/2009-11-19",
+    "uuid": "51/50600/clinical_codes/2008-03-14/2008-03-14",
     "person_id": 51,
     "criterion_id": 163,
     "criterion_table": "information_periods",
@@ -1595,40 +1595,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/73042/clinical_codes/2009-11-15/2009-11-19",
-    "person_id": 51,
-    "criterion_id": 163,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
-    "person_id": 51,
-    "criterion_id": 163,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/82757/clinical_codes/2009-01-24/2009-01-24",
-    "person_id": 51,
-    "criterion_id": 163,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/66800/clinical_codes/2008-01-03/2008-01-03",
+    "uuid": "51/66798/clinical_codes/2008-01-03/2008-01-03",
     "person_id": 51,
     "criterion_id": 163,
     "criterion_table": "information_periods",
@@ -1650,7 +1617,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/66798/clinical_codes/2008-01-03/2008-01-03",
+    "uuid": "51/66800/clinical_codes/2008-01-03/2008-01-03",
     "person_id": 51,
     "criterion_id": 163,
     "criterion_table": "information_periods",
@@ -1661,7 +1628,40 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/50600/clinical_codes/2008-03-14/2008-03-14",
+    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 163,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/73042/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 163,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/73043/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 163,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/82757/clinical_codes/2009-01-24/2009-01-24",
     "person_id": 51,
     "criterion_id": 163,
     "criterion_table": "information_periods",
@@ -1683,7 +1683,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
+    "uuid": "51/50173/clinical_codes/2009-11-09/2009-11-09",
+    "person_id": 51,
+    "criterion_id": 164,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/50600/clinical_codes/2008-03-14/2008-03-14",
     "person_id": 51,
     "criterion_id": 164,
     "criterion_table": "information_periods",
@@ -1705,6 +1716,50 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "51/66799/clinical_codes/2008-01-03/2008-01-03",
+    "person_id": 51,
+    "criterion_id": 164,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/66800/clinical_codes/2008-01-03/2008-01-03",
+    "person_id": 51,
+    "criterion_id": 164,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 164,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/73042/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 164,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "51/73043/clinical_codes/2009-11-15/2009-11-19",
     "person_id": 51,
     "criterion_id": 164,
@@ -1716,7 +1771,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/50600/clinical_codes/2008-03-14/2008-03-14",
+    "uuid": "51/82757/clinical_codes/2009-01-24/2009-01-24",
     "person_id": 51,
     "criterion_id": 164,
     "criterion_table": "information_periods",
@@ -1740,94 +1795,6 @@
   {
     "uuid": "51/50173/clinical_codes/2009-11-09/2009-11-09",
     "person_id": 51,
-    "criterion_id": 164,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/66799/clinical_codes/2008-01-03/2008-01-03",
-    "person_id": 51,
-    "criterion_id": 164,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/73042/clinical_codes/2009-11-15/2009-11-19",
-    "person_id": 51,
-    "criterion_id": 164,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/66800/clinical_codes/2008-01-03/2008-01-03",
-    "person_id": 51,
-    "criterion_id": 164,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/82757/clinical_codes/2009-01-24/2009-01-24",
-    "person_id": 51,
-    "criterion_id": 164,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/50173/clinical_codes/2009-11-09/2009-11-09",
-    "person_id": 51,
-    "criterion_id": 165,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/66800/clinical_codes/2008-01-03/2008-01-03",
-    "person_id": 51,
-    "criterion_id": 165,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/82757/clinical_codes/2009-01-24/2009-01-24",
-    "person_id": 51,
-    "criterion_id": 165,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
-    "person_id": 51,
     "criterion_id": 165,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -1838,50 +1805,6 @@
   },
   {
     "uuid": "51/50600/clinical_codes/2008-03-14/2008-03-14",
-    "person_id": 51,
-    "criterion_id": 165,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/73042/clinical_codes/2009-11-15/2009-11-19",
-    "person_id": 51,
-    "criterion_id": 165,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/73043/clinical_codes/2009-11-15/2009-11-19",
-    "person_id": 51,
-    "criterion_id": 165,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/90751/clinical_codes/2009-09-21/2009-09-21",
-    "person_id": 51,
-    "criterion_id": 165,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/66799/clinical_codes/2008-01-03/2008-01-03",
     "person_id": 51,
     "criterion_id": 165,
     "criterion_table": "information_periods",
@@ -1903,9 +1826,31 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/73043/clinical_codes/2009-11-15/2009-11-19",
+    "uuid": "51/66799/clinical_codes/2008-01-03/2008-01-03",
     "person_id": 51,
-    "criterion_id": 821,
+    "criterion_id": 165,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/66800/clinical_codes/2008-01-03/2008-01-03",
+    "person_id": 51,
+    "criterion_id": 165,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 165,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -1916,7 +1861,7 @@
   {
     "uuid": "51/73042/clinical_codes/2009-11-15/2009-11-19",
     "person_id": 51,
-    "criterion_id": 821,
+    "criterion_id": 165,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -1925,7 +1870,40 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
+    "uuid": "51/73043/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 165,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/82757/clinical_codes/2009-01-24/2009-01-24",
+    "person_id": 51,
+    "criterion_id": 165,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/90751/clinical_codes/2009-09-21/2009-09-21",
+    "person_id": 51,
+    "criterion_id": 165,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/50173/clinical_codes/2009-11-09/2009-11-09",
     "person_id": 51,
     "criterion_id": 821,
     "criterion_table": "information_periods",
@@ -1937,28 +1915,6 @@
   },
   {
     "uuid": "51/50600/clinical_codes/2008-03-14/2008-03-14",
-    "person_id": 51,
-    "criterion_id": 821,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/90751/clinical_codes/2009-09-21/2009-09-21",
-    "person_id": 51,
-    "criterion_id": 821,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "51/50173/clinical_codes/2009-11-09/2009-11-09",
     "person_id": 51,
     "criterion_id": 821,
     "criterion_table": "information_periods",
@@ -2002,7 +1958,51 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "51/73041/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 821,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/73042/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 821,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/73043/clinical_codes/2009-11-15/2009-11-19",
+    "person_id": 51,
+    "criterion_id": 821,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "51/82757/clinical_codes/2009-01-24/2009-01-24",
+    "person_id": 51,
+    "criterion_id": 821,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "51/90751/clinical_codes/2009-09-21/2009-09-21",
     "person_id": 51,
     "criterion_id": 821,
     "criterion_table": "information_periods",
@@ -2145,17 +2145,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "58/79025/clinical_codes/2008-08-11/2008-08-11",
-    "person_id": 58,
-    "criterion_id": 188,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "58/62303/clinical_codes/2010-08-21/2010-08-21",
     "person_id": 58,
     "criterion_id": 188,
@@ -2169,7 +2158,7 @@
   {
     "uuid": "58/79025/clinical_codes/2008-08-11/2008-08-11",
     "person_id": 58,
-    "criterion_id": 189,
+    "criterion_id": 188,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2190,6 +2179,17 @@
   },
   {
     "uuid": "58/79025/clinical_codes/2008-08-11/2008-08-11",
+    "person_id": 58,
+    "criterion_id": 189,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "58/62303/clinical_codes/2010-08-21/2010-08-21",
     "person_id": 58,
     "criterion_id": 824,
     "criterion_table": "information_periods",
@@ -2200,7 +2200,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "58/62303/clinical_codes/2010-08-21/2010-08-21",
+    "uuid": "58/79025/clinical_codes/2008-08-11/2008-08-11",
     "person_id": 58,
     "criterion_id": 824,
     "criterion_table": "information_periods",
@@ -2288,17 +2288,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "63/83356/clinical_codes/2010-04-20/2010-04-20",
-    "person_id": 63,
-    "criterion_id": 204,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "63/60460/clinical_codes/2010-10-17/2010-10-17",
     "person_id": 63,
     "criterion_id": 204,
@@ -2321,7 +2310,29 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "63/83356/clinical_codes/2010-04-20/2010-04-20",
+    "person_id": 63,
+    "criterion_id": 204,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "63/60460/clinical_codes/2010-10-17/2010-10-17",
+    "person_id": 63,
+    "criterion_id": 205,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "63/63643/clinical_codes/2009-08-20/2009-08-20",
     "person_id": 63,
     "criterion_id": 205,
     "criterion_table": "information_periods",
@@ -2343,18 +2354,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "63/63643/clinical_codes/2009-08-20/2009-08-20",
-    "person_id": 63,
-    "criterion_id": 205,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "63/63643/clinical_codes/2009-08-20/2009-08-20",
+    "uuid": "63/60460/clinical_codes/2010-10-17/2010-10-17",
     "person_id": 63,
     "criterion_id": 206,
     "criterion_table": "information_periods",
@@ -2365,7 +2365,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "63/60460/clinical_codes/2010-10-17/2010-10-17",
+    "uuid": "63/63643/clinical_codes/2009-08-20/2009-08-20",
     "person_id": 63,
     "criterion_id": 206,
     "criterion_table": "information_periods",
@@ -2387,7 +2387,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "63/63643/clinical_codes/2009-08-20/2009-08-20",
+    "uuid": "63/60460/clinical_codes/2010-10-17/2010-10-17",
     "person_id": 63,
     "criterion_id": 207,
     "criterion_table": "information_periods",
@@ -2398,7 +2398,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "63/60460/clinical_codes/2010-10-17/2010-10-17",
+    "uuid": "63/63643/clinical_codes/2009-08-20/2009-08-20",
     "person_id": 63,
     "criterion_id": 207,
     "criterion_table": "information_periods",
@@ -2453,17 +2453,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "68/81282/clinical_codes/2008-04-14/2008-04-14",
-    "person_id": 68,
-    "criterion_id": 221,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "68/61850/clinical_codes/2010-05-20/2010-05-20",
     "person_id": 68,
     "criterion_id": 221,
@@ -2478,6 +2467,28 @@
     "uuid": "68/61851/clinical_codes/2010-05-20/2010-05-20",
     "person_id": 68,
     "criterion_id": 221,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "68/81282/clinical_codes/2008-04-14/2008-04-14",
+    "person_id": 68,
+    "criterion_id": 221,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "68/61850/clinical_codes/2010-05-20/2010-05-20",
+    "person_id": 68,
+    "criterion_id": 222,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2510,7 +2521,18 @@
   {
     "uuid": "68/61850/clinical_codes/2010-05-20/2010-05-20",
     "person_id": 68,
-    "criterion_id": 222,
+    "criterion_id": 223,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "68/61851/clinical_codes/2010-05-20/2010-05-20",
+    "person_id": 68,
+    "criterion_id": 223,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2532,18 +2554,7 @@
   {
     "uuid": "68/61850/clinical_codes/2010-05-20/2010-05-20",
     "person_id": 68,
-    "criterion_id": 223,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "68/61851/clinical_codes/2010-05-20/2010-05-20",
-    "person_id": 68,
-    "criterion_id": 223,
+    "criterion_id": 829,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2574,9 +2585,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "68/61850/clinical_codes/2010-05-20/2010-05-20",
-    "person_id": 68,
-    "criterion_id": 829,
+    "uuid": "72/39198/clinical_codes/2008-06-07/2008-06-07",
+    "person_id": 72,
+    "criterion_id": 231,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2609,17 +2620,6 @@
   {
     "uuid": "72/39198/clinical_codes/2008-06-07/2008-06-07",
     "person_id": 72,
-    "criterion_id": 231,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "72/83086/clinical_codes/2009-12-01/2009-12-01",
-    "person_id": 72,
     "criterion_id": 232,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -2640,9 +2640,20 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "72/39198/clinical_codes/2008-06-07/2008-06-07",
+    "uuid": "72/83086/clinical_codes/2009-12-01/2009-12-01",
     "person_id": 72,
     "criterion_id": 232,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "72/39198/clinical_codes/2008-06-07/2008-06-07",
+    "person_id": 72,
+    "criterion_id": 833,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2673,9 +2684,20 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "72/39198/clinical_codes/2008-06-07/2008-06-07",
-    "person_id": 72,
-    "criterion_id": 833,
+    "uuid": "73/46094/clinical_codes/2010-12-25/2010-12-25",
+    "person_id": 73,
+    "criterion_id": 234,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "73/46095/clinical_codes/2010-12-25/2010-12-25",
+    "person_id": 73,
+    "criterion_id": 234,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2695,7 +2717,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46094/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46097/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
     "criterion_id": 234,
     "criterion_table": "information_periods",
@@ -2706,7 +2728,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46097/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
     "criterion_id": 234,
     "criterion_table": "information_periods",
@@ -2728,9 +2750,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46095/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46094/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
-    "criterion_id": 234,
+    "criterion_id": 235,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2739,9 +2761,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46095/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
-    "criterion_id": 234,
+    "criterion_id": 235,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2751,6 +2773,28 @@
   },
   {
     "uuid": "73/46096/clinical_codes/2010-12-25/2010-12-25",
+    "person_id": 73,
+    "criterion_id": 235,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "73/46097/clinical_codes/2010-12-25/2010-12-25",
+    "person_id": 73,
+    "criterion_id": 235,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
     "criterion_id": 235,
     "criterion_table": "information_periods",
@@ -2772,20 +2816,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46094/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
-    "criterion_id": 235,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "73/46097/clinical_codes/2010-12-25/2010-12-25",
-    "person_id": 73,
-    "criterion_id": 235,
+    "criterion_id": 834,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2796,7 +2829,7 @@
   {
     "uuid": "73/46095/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
-    "criterion_id": 235,
+    "criterion_id": 834,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2805,9 +2838,31 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46094/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46096/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
-    "criterion_id": 235,
+    "criterion_id": 834,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "73/46097/clinical_codes/2010-12-25/2010-12-25",
+    "person_id": 73,
+    "criterion_id": 834,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
+    "person_id": 73,
+    "criterion_id": 834,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -2827,61 +2882,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46096/clinical_codes/2010-12-25/2010-12-25",
-    "person_id": 73,
-    "criterion_id": 834,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "73/46095/clinical_codes/2010-12-25/2010-12-25",
-    "person_id": 73,
-    "criterion_id": 834,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
-    "person_id": 73,
-    "criterion_id": 834,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "73/46097/clinical_codes/2010-12-25/2010-12-25",
-    "person_id": 73,
-    "criterion_id": 834,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "73/46094/clinical_codes/2010-12-25/2010-12-25",
-    "person_id": 73,
-    "criterion_id": 834,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "73/46094/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
     "criterion_id": 236,
@@ -2893,7 +2893,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46095/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
     "criterion_id": 236,
     "criterion_table": "information_periods",
@@ -2926,7 +2926,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "73/46095/clinical_codes/2010-12-25/2010-12-25",
+    "uuid": "73/46098/clinical_codes/2010-12-25/2010-12-25",
     "person_id": 73,
     "criterion_id": 236,
     "criterion_table": "information_periods",
@@ -3003,7 +3003,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "77/88684/clinical_codes/2010-11-25/2010-11-25",
+    "uuid": "77/88006/clinical_codes/2010-04-25/2010-04-25",
     "person_id": 77,
     "criterion_id": 247,
     "criterion_table": "information_periods",
@@ -3014,7 +3014,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "77/88006/clinical_codes/2010-04-25/2010-04-25",
+    "uuid": "77/88684/clinical_codes/2010-11-25/2010-11-25",
     "person_id": 77,
     "criterion_id": 247,
     "criterion_table": "information_periods",
@@ -3135,17 +3135,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "82/52386/clinical_codes/2008-07-28/2008-07-28",
-    "person_id": 82,
-    "criterion_id": 264,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "82/33910/clinical_codes/2008-08-05/2008-08-05",
     "person_id": 82,
     "criterion_id": 264,
@@ -3159,7 +3148,7 @@
   {
     "uuid": "82/52386/clinical_codes/2008-07-28/2008-07-28",
     "person_id": 82,
-    "criterion_id": 265,
+    "criterion_id": 264,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -3181,7 +3170,7 @@
   {
     "uuid": "82/52386/clinical_codes/2008-07-28/2008-07-28",
     "person_id": 82,
-    "criterion_id": 266,
+    "criterion_id": 265,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -3201,7 +3190,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "83/85670/clinical_codes/2009-05-31/2009-06-01",
+    "uuid": "82/52386/clinical_codes/2008-07-28/2008-07-28",
+    "person_id": 82,
+    "criterion_id": 266,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "83/47938/clinical_codes/2010-02-26/2010-02-26",
     "person_id": 83,
     "criterion_id": 267,
     "criterion_table": "information_periods",
@@ -3212,7 +3212,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "83/47938/clinical_codes/2010-02-26/2010-02-26",
+    "uuid": "83/85670/clinical_codes/2009-05-31/2009-06-01",
     "person_id": 83,
     "criterion_id": 267,
     "criterion_table": "information_periods",
@@ -3289,17 +3289,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "85/87788/clinical_codes/2009-05-11/2009-05-11",
-    "person_id": 85,
-    "criterion_id": 273,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "85/71245/clinical_codes/2008-05-03/2008-05-03",
     "person_id": 85,
     "criterion_id": 273,
@@ -3312,6 +3301,17 @@
   },
   {
     "uuid": "85/87788/clinical_codes/2009-05-11/2009-05-11",
+    "person_id": 85,
+    "criterion_id": 273,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "85/71245/clinical_codes/2008-05-03/2008-05-03",
     "person_id": 85,
     "criterion_id": 274,
     "criterion_table": "information_periods",
@@ -3322,7 +3322,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "85/71245/clinical_codes/2008-05-03/2008-05-03",
+    "uuid": "85/87788/clinical_codes/2009-05-11/2009-05-11",
     "person_id": 85,
     "criterion_id": 274,
     "criterion_table": "information_periods",
@@ -3355,17 +3355,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "85/87788/clinical_codes/2009-05-11/2009-05-11",
-    "person_id": 85,
-    "criterion_id": 843,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "85/71245/clinical_codes/2008-05-03/2008-05-03",
     "person_id": 85,
     "criterion_id": 843,
@@ -3377,7 +3366,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "86/82800/clinical_codes/2010-06-16/2010-06-16",
+    "uuid": "85/87788/clinical_codes/2009-05-11/2009-05-11",
+    "person_id": 85,
+    "criterion_id": 843,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "86/60209/clinical_codes/2008-12-23/2008-12-23",
     "person_id": 86,
     "criterion_id": 276,
     "criterion_table": "information_periods",
@@ -3388,7 +3388,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "86/60209/clinical_codes/2008-12-23/2008-12-23",
+    "uuid": "86/82800/clinical_codes/2010-06-16/2010-06-16",
     "person_id": 86,
     "criterion_id": 276,
     "criterion_table": "information_periods",
@@ -3421,17 +3421,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "86/82800/clinical_codes/2010-06-16/2010-06-16",
-    "person_id": 86,
-    "criterion_id": 278,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "86/60209/clinical_codes/2008-12-23/2008-12-23",
     "person_id": 86,
     "criterion_id": 278,
@@ -3445,7 +3434,7 @@
   {
     "uuid": "86/82800/clinical_codes/2010-06-16/2010-06-16",
     "person_id": 86,
-    "criterion_id": 844,
+    "criterion_id": 278,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -3465,7 +3454,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "87/91365/clinical_codes/2010-05-21/2010-05-21",
+    "uuid": "86/82800/clinical_codes/2010-06-16/2010-06-16",
+    "person_id": 86,
+    "criterion_id": 844,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "87/91364/clinical_codes/2010-05-21/2010-05-21",
     "person_id": 87,
     "criterion_id": 279,
     "criterion_table": "information_periods",
@@ -3476,7 +3476,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "87/91364/clinical_codes/2010-05-21/2010-05-21",
+    "uuid": "87/91365/clinical_codes/2010-05-21/2010-05-21",
     "person_id": 87,
     "criterion_id": 279,
     "criterion_table": "information_periods",
@@ -3531,29 +3531,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/32512/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 289,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/82260/clinical_codes/2009-05-30/2009-05-31",
-    "person_id": 90,
-    "criterion_id": 289,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "90/167/clinical_codes/2010-07-10/2010-07-15",
+    "person_id": 90,
+    "criterion_id": 289,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/32512/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 289,
     "criterion_table": "information_periods",
@@ -3575,7 +3564,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/45426/clinical_codes/2008-03-12/2008-03-12",
+    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 289,
     "criterion_table": "information_periods",
@@ -3587,17 +3576,6 @@
   },
   {
     "uuid": "90/32515/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 289,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32518/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 289,
     "criterion_table": "information_periods",
@@ -3630,7 +3608,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
+    "uuid": "90/32518/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 289,
     "criterion_table": "information_periods",
@@ -3641,29 +3619,29 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/32513/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 290,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 290,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "90/45426/clinical_codes/2008-03-12/2008-03-12",
+    "person_id": 90,
+    "criterion_id": 289,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/82260/clinical_codes/2009-05-30/2009-05-31",
+    "person_id": 90,
+    "criterion_id": 289,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/167/clinical_codes/2010-07-10/2010-07-15",
     "person_id": 90,
     "criterion_id": 290,
     "criterion_table": "information_periods",
@@ -3685,7 +3663,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/167/clinical_codes/2010-07-10/2010-07-15",
+    "uuid": "90/32513/clinical_codes/2010-07-24/2010-07-24",
+    "person_id": 90,
+    "criterion_id": 290,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 290,
     "criterion_table": "information_periods",
@@ -3740,6 +3729,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "90/45426/clinical_codes/2008-03-12/2008-03-12",
+    "person_id": 90,
+    "criterion_id": 290,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "90/82260/clinical_codes/2009-05-30/2009-05-31",
     "person_id": 90,
     "criterion_id": 290,
@@ -3751,40 +3751,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/32517/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 291,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32516/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 291,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32518/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 291,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32515/clinical_codes/2010-07-24/2010-07-24",
+    "uuid": "90/167/clinical_codes/2010-07-10/2010-07-15",
     "person_id": 90,
     "criterion_id": 291,
     "criterion_table": "information_periods",
@@ -3806,7 +3773,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/45426/clinical_codes/2008-03-12/2008-03-12",
+    "uuid": "90/32513/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 291,
     "criterion_table": "information_periods",
@@ -3817,7 +3784,62 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/32513/clinical_codes/2010-07-24/2010-07-24",
+    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
+    "person_id": 90,
+    "criterion_id": 291,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/32515/clinical_codes/2010-07-24/2010-07-24",
+    "person_id": 90,
+    "criterion_id": 291,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/32516/clinical_codes/2010-07-24/2010-07-24",
+    "person_id": 90,
+    "criterion_id": 291,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/32517/clinical_codes/2010-07-24/2010-07-24",
+    "person_id": 90,
+    "criterion_id": 291,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/32518/clinical_codes/2010-07-24/2010-07-24",
+    "person_id": 90,
+    "criterion_id": 291,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "90/45426/clinical_codes/2008-03-12/2008-03-12",
     "person_id": 90,
     "criterion_id": 291,
     "criterion_table": "information_periods",
@@ -3841,28 +3863,6 @@
   {
     "uuid": "90/167/clinical_codes/2010-07-10/2010-07-15",
     "person_id": 90,
-    "criterion_id": 291,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 291,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32512/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
     "criterion_id": 846,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -3872,7 +3872,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/32516/clinical_codes/2010-07-24/2010-07-24",
+    "uuid": "90/32512/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 846,
     "criterion_table": "information_periods",
@@ -3894,18 +3894,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/82260/clinical_codes/2009-05-30/2009-05-31",
-    "person_id": 90,
-    "criterion_id": 846,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32518/clinical_codes/2010-07-24/2010-07-24",
+    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 846,
     "criterion_table": "information_periods",
@@ -3927,29 +3916,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "90/45426/clinical_codes/2008-03-12/2008-03-12",
-    "person_id": 90,
-    "criterion_id": 846,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/32514/clinical_codes/2010-07-24/2010-07-24",
-    "person_id": 90,
-    "criterion_id": 846,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "90/167/clinical_codes/2010-07-10/2010-07-15",
+    "uuid": "90/32516/clinical_codes/2010-07-24/2010-07-24",
     "person_id": 90,
     "criterion_id": 846,
     "criterion_table": "information_periods",
@@ -3971,9 +3938,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/31135/clinical_codes/2010-01-07/2010-01-07",
-    "person_id": 92,
-    "criterion_id": 296,
+    "uuid": "90/32518/clinical_codes/2010-07-24/2010-07-24",
+    "person_id": 90,
+    "criterion_id": 846,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -3982,9 +3949,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/31137/clinical_codes/2010-01-07/2010-01-07",
-    "person_id": 92,
-    "criterion_id": 296,
+    "uuid": "90/45426/clinical_codes/2008-03-12/2008-03-12",
+    "person_id": 90,
+    "criterion_id": 846,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -3993,9 +3960,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/31136/clinical_codes/2010-01-07/2010-01-07",
-    "person_id": 92,
-    "criterion_id": 296,
+    "uuid": "90/82260/clinical_codes/2009-05-30/2009-05-31",
+    "person_id": 90,
+    "criterion_id": 846,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4004,7 +3971,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/72850/clinical_codes/2008-06-01/2008-06-01",
+    "uuid": "92/30510/clinical_codes/2009-03-03/2009-03-03",
     "person_id": 92,
     "criterion_id": 296,
     "criterion_table": "information_periods",
@@ -4026,7 +3993,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/30510/clinical_codes/2009-03-03/2009-03-03",
+    "uuid": "92/31135/clinical_codes/2010-01-07/2010-01-07",
+    "person_id": 92,
+    "criterion_id": 296,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "92/31136/clinical_codes/2010-01-07/2010-01-07",
     "person_id": 92,
     "criterion_id": 296,
     "criterion_table": "information_periods",
@@ -4039,7 +4017,18 @@
   {
     "uuid": "92/31137/clinical_codes/2010-01-07/2010-01-07",
     "person_id": 92,
-    "criterion_id": 297,
+    "criterion_id": 296,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "92/72850/clinical_codes/2008-06-01/2008-06-01",
+    "person_id": 92,
+    "criterion_id": 296,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4060,17 +4049,6 @@
   },
   {
     "uuid": "92/31134/clinical_codes/2010-01-07/2010-01-07",
-    "person_id": 92,
-    "criterion_id": 297,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "92/72850/clinical_codes/2008-06-01/2008-06-01",
     "person_id": 92,
     "criterion_id": 297,
     "criterion_table": "information_periods",
@@ -4103,7 +4081,62 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "92/31137/clinical_codes/2010-01-07/2010-01-07",
+    "person_id": 92,
+    "criterion_id": 297,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "92/72850/clinical_codes/2008-06-01/2008-06-01",
+    "person_id": 92,
+    "criterion_id": 297,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "92/30510/clinical_codes/2009-03-03/2009-03-03",
+    "person_id": 92,
+    "criterion_id": 298,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "92/31134/clinical_codes/2010-01-07/2010-01-07",
+    "person_id": 92,
+    "criterion_id": 298,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "92/31135/clinical_codes/2010-01-07/2010-01-07",
+    "person_id": 92,
+    "criterion_id": 298,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "92/31136/clinical_codes/2010-01-07/2010-01-07",
     "person_id": 92,
     "criterion_id": 298,
     "criterion_table": "information_periods",
@@ -4136,20 +4169,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/31135/clinical_codes/2010-01-07/2010-01-07",
+    "uuid": "92/30510/clinical_codes/2009-03-03/2009-03-03",
     "person_id": 92,
-    "criterion_id": 298,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "92/31136/clinical_codes/2010-01-07/2010-01-07",
-    "person_id": 92,
-    "criterion_id": 298,
+    "criterion_id": 847,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4160,7 +4182,7 @@
   {
     "uuid": "92/31134/clinical_codes/2010-01-07/2010-01-07",
     "person_id": 92,
-    "criterion_id": 298,
+    "criterion_id": 847,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4169,7 +4191,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/72850/clinical_codes/2008-06-01/2008-06-01",
+    "uuid": "92/31135/clinical_codes/2010-01-07/2010-01-07",
     "person_id": 92,
     "criterion_id": 847,
     "criterion_table": "information_periods",
@@ -4181,17 +4203,6 @@
   },
   {
     "uuid": "92/31136/clinical_codes/2010-01-07/2010-01-07",
-    "person_id": 92,
-    "criterion_id": 847,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "92/31135/clinical_codes/2010-01-07/2010-01-07",
     "person_id": 92,
     "criterion_id": 847,
     "criterion_table": "information_periods",
@@ -4213,18 +4224,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "92/30510/clinical_codes/2009-03-03/2009-03-03",
-    "person_id": 92,
-    "criterion_id": 847,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "92/31134/clinical_codes/2010-01-07/2010-01-07",
+    "uuid": "92/72850/clinical_codes/2008-06-01/2008-06-01",
     "person_id": 92,
     "criterion_id": 847,
     "criterion_table": "information_periods",
@@ -4257,7 +4257,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "95/85958/clinical_codes/2008-03-29/2008-03-29",
+    "uuid": "95/82357/clinical_codes/2010-03-08/2010-03-08",
     "person_id": 95,
     "criterion_id": 307,
     "criterion_table": "information_periods",
@@ -4268,7 +4268,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "95/82357/clinical_codes/2010-03-08/2010-03-08",
+    "uuid": "95/85958/clinical_codes/2008-03-29/2008-03-29",
     "person_id": 95,
     "criterion_id": 307,
     "criterion_table": "information_periods",
@@ -4315,6 +4315,17 @@
     "uuid": "95/85958/clinical_codes/2008-03-29/2008-03-29",
     "person_id": 95,
     "criterion_id": 849,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "96/25939/clinical_codes/2010-04-10/2010-04-30",
+    "person_id": 96,
+    "criterion_id": 309,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4335,6 +4346,17 @@
   },
   {
     "uuid": "96/46368/clinical_codes/2008-09-13/2008-09-13",
+    "person_id": 96,
+    "criterion_id": 309,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "96/62650/clinical_codes/2008-04-17/2008-04-17",
     "person_id": 96,
     "criterion_id": 309,
     "criterion_table": "information_periods",
@@ -4356,20 +4378,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "96/62650/clinical_codes/2008-04-17/2008-04-17",
-    "person_id": 96,
-    "criterion_id": 309,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "96/25939/clinical_codes/2010-04-10/2010-04-30",
     "person_id": 96,
-    "criterion_id": 309,
+    "criterion_id": 310,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4389,29 +4400,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "96/62650/clinical_codes/2008-04-17/2008-04-17",
-    "person_id": 96,
-    "criterion_id": 310,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "96/25939/clinical_codes/2010-04-10/2010-04-30",
-    "person_id": 96,
-    "criterion_id": 310,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "96/46368/clinical_codes/2008-09-13/2008-09-13",
+    "person_id": 96,
+    "criterion_id": 310,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "96/62650/clinical_codes/2008-04-17/2008-04-17",
     "person_id": 96,
     "criterion_id": 310,
     "criterion_table": "information_periods",
@@ -4477,6 +4477,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "97/74766/clinical_codes/2009-08-30/2009-08-30",
+    "person_id": 97,
+    "criterion_id": 313,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "97/85320/clinical_codes/2009-05-14/2009-05-14",
     "person_id": 97,
     "criterion_id": 313,
@@ -4488,9 +4499,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "97/74766/clinical_codes/2009-08-30/2009-08-30",
+    "uuid": "97/45919/clinical_codes/2009-12-30/2009-12-30",
     "person_id": 97,
-    "criterion_id": 313,
+    "criterion_id": 314,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4523,7 +4534,7 @@
   {
     "uuid": "97/45919/clinical_codes/2009-12-30/2009-12-30",
     "person_id": 97,
-    "criterion_id": 314,
+    "criterion_id": 315,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4555,17 +4566,6 @@
   },
   {
     "uuid": "97/45919/clinical_codes/2009-12-30/2009-12-30",
-    "person_id": 97,
-    "criterion_id": 315,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "97/85320/clinical_codes/2009-05-14/2009-05-14",
     "person_id": 97,
     "criterion_id": 316,
     "criterion_table": "information_periods",
@@ -4587,7 +4587,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "97/45919/clinical_codes/2009-12-30/2009-12-30",
+    "uuid": "97/85320/clinical_codes/2009-05-14/2009-05-14",
     "person_id": 97,
     "criterion_id": 316,
     "criterion_table": "information_periods",
@@ -4653,31 +4653,20 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "99/59960/clinical_codes/2008-05-17/2008-05-17",
+    "person_id": 99,
+    "criterion_id": 320,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "99/81758/clinical_codes/2010-01-19/2010-01-20",
     "person_id": 99,
     "criterion_id": 320,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "99/59960/clinical_codes/2008-05-17/2008-05-17",
-    "person_id": 99,
-    "criterion_id": 320,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "99/59960/clinical_codes/2008-05-17/2008-05-17",
-    "person_id": 99,
-    "criterion_id": 321,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -4697,6 +4686,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "99/59960/clinical_codes/2008-05-17/2008-05-17",
+    "person_id": 99,
+    "criterion_id": 321,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "99/81758/clinical_codes/2010-01-19/2010-01-20",
     "person_id": 99,
     "criterion_id": 321,
@@ -4741,7 +4741,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "99/81758/clinical_codes/2010-01-19/2010-01-20",
+    "uuid": "99/41248/clinical_codes/2009-03-03/2009-03-03",
     "person_id": 99,
     "criterion_id": 322,
     "criterion_table": "information_periods",
@@ -4752,7 +4752,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "99/41248/clinical_codes/2009-03-03/2009-03-03",
+    "uuid": "99/81758/clinical_codes/2010-01-19/2010-01-20",
     "person_id": 99,
     "criterion_id": 322,
     "criterion_table": "information_periods",
@@ -4796,7 +4796,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "104/47428/clinical_codes/2008-06-25/2008-06-25",
+    "uuid": "104/36411/clinical_codes/2009-05-17/2009-05-17",
     "person_id": 104,
     "criterion_id": 335,
     "criterion_table": "information_periods",
@@ -4807,7 +4807,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "104/36411/clinical_codes/2009-05-17/2009-05-17",
+    "uuid": "104/47428/clinical_codes/2008-06-25/2008-06-25",
     "person_id": 104,
     "criterion_id": 335,
     "criterion_table": "information_periods",
@@ -4829,7 +4829,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "104/48433/clinical_codes/2010-02-05/2010-02-05",
+    "uuid": "104/36411/clinical_codes/2009-05-17/2009-05-17",
     "person_id": 104,
     "criterion_id": 336,
     "criterion_table": "information_periods",
@@ -4851,7 +4851,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "104/36411/clinical_codes/2009-05-17/2009-05-17",
+    "uuid": "104/48433/clinical_codes/2010-02-05/2010-02-05",
     "person_id": 104,
     "criterion_id": 336,
     "criterion_table": "information_periods",
@@ -4895,7 +4895,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "104/48433/clinical_codes/2010-02-05/2010-02-05",
+    "uuid": "104/36411/clinical_codes/2009-05-17/2009-05-17",
     "person_id": 104,
     "criterion_id": 855,
     "criterion_table": "information_periods",
@@ -4917,7 +4917,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "104/36411/clinical_codes/2009-05-17/2009-05-17",
+    "uuid": "104/48433/clinical_codes/2010-02-05/2010-02-05",
     "person_id": 104,
     "criterion_id": 855,
     "criterion_table": "information_periods",
@@ -4929,28 +4929,6 @@
   },
   {
     "uuid": "105/34656/clinical_codes/2009-06-08/2009-06-08",
-    "person_id": 105,
-    "criterion_id": 338,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "105/82202/clinical_codes/2010-08-12/2010-08-12",
-    "person_id": 105,
-    "criterion_id": 338,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "105/82031/clinical_codes/2010-06-11/2010-06-11",
     "person_id": 105,
     "criterion_id": 338,
     "criterion_table": "information_periods",
@@ -4994,9 +4972,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "105/82030/clinical_codes/2010-06-11/2010-06-11",
+    "uuid": "105/82031/clinical_codes/2010-06-11/2010-06-11",
     "person_id": 105,
-    "criterion_id": 339,
+    "criterion_id": 338,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5005,7 +4983,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "105/82029/clinical_codes/2010-06-11/2010-06-11",
+    "uuid": "105/82202/clinical_codes/2010-08-12/2010-08-12",
+    "person_id": 105,
+    "criterion_id": 338,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "105/34656/clinical_codes/2009-06-08/2009-06-08",
     "person_id": 105,
     "criterion_id": 339,
     "criterion_table": "information_periods",
@@ -5027,6 +5016,28 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "105/82029/clinical_codes/2010-06-11/2010-06-11",
+    "person_id": 105,
+    "criterion_id": 339,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "105/82030/clinical_codes/2010-06-11/2010-06-11",
+    "person_id": 105,
+    "criterion_id": 339,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "105/82031/clinical_codes/2010-06-11/2010-06-11",
     "person_id": 105,
     "criterion_id": 339,
@@ -5049,18 +5060,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "105/34656/clinical_codes/2009-06-08/2009-06-08",
-    "person_id": 105,
-    "criterion_id": 339,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "105/82202/clinical_codes/2010-08-12/2010-08-12",
+    "uuid": "105/82029/clinical_codes/2010-06-11/2010-06-11",
     "person_id": 105,
     "criterion_id": 340,
     "criterion_table": "information_periods",
@@ -5082,29 +5082,29 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "105/82031/clinical_codes/2010-06-11/2010-06-11",
+    "person_id": 105,
+    "criterion_id": 340,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2010-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "105/82202/clinical_codes/2010-08-12/2010-08-12",
+    "person_id": 105,
+    "criterion_id": 340,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2010-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "105/82029/clinical_codes/2010-06-11/2010-06-11",
-    "person_id": 105,
-    "criterion_id": 340,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2010-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "105/82031/clinical_codes/2010-06-11/2010-06-11",
-    "person_id": 105,
-    "criterion_id": 340,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2010-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "105/82031/clinical_codes/2010-06-11/2010-06-11",
     "person_id": 105,
     "criterion_id": 341,
     "criterion_table": "information_periods",
@@ -5126,7 +5126,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "105/82202/clinical_codes/2010-08-12/2010-08-12",
+    "uuid": "105/82031/clinical_codes/2010-06-11/2010-06-11",
     "person_id": 105,
     "criterion_id": 341,
     "criterion_table": "information_periods",
@@ -5137,7 +5137,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "105/82029/clinical_codes/2010-06-11/2010-06-11",
+    "uuid": "105/82202/clinical_codes/2010-08-12/2010-08-12",
     "person_id": 105,
     "criterion_id": 341,
     "criterion_table": "information_periods",
@@ -5159,40 +5159,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "108/36652/clinical_codes/2009-04-27/2009-05-01",
-    "person_id": 108,
-    "criterion_id": 350,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "108/36650/clinical_codes/2009-04-27/2009-05-01",
-    "person_id": 108,
-    "criterion_id": 350,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "108/88995/clinical_codes/2008-05-08/2008-05-08",
-    "person_id": 108,
-    "criterion_id": 350,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "108/59840/clinical_codes/2010-10-11/2010-10-11",
     "person_id": 108,
     "criterion_id": 350,
     "criterion_table": "information_periods",
@@ -5214,9 +5181,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "108/36650/clinical_codes/2009-04-27/2009-05-01",
+    "uuid": "108/36652/clinical_codes/2009-04-27/2009-05-01",
     "person_id": 108,
-    "criterion_id": 351,
+    "criterion_id": 350,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5227,7 +5194,7 @@
   {
     "uuid": "108/59840/clinical_codes/2010-10-11/2010-10-11",
     "person_id": 108,
-    "criterion_id": 351,
+    "criterion_id": 350,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5236,7 +5203,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "108/36652/clinical_codes/2009-04-27/2009-05-01",
+    "uuid": "108/88995/clinical_codes/2008-05-08/2008-05-08",
+    "person_id": 108,
+    "criterion_id": 350,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "108/36650/clinical_codes/2009-04-27/2009-05-01",
     "person_id": 108,
     "criterion_id": 351,
     "criterion_table": "information_periods",
@@ -5258,7 +5236,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "108/88995/clinical_codes/2008-05-08/2008-05-08",
+    "uuid": "108/36652/clinical_codes/2009-04-27/2009-05-01",
     "person_id": 108,
     "criterion_id": 351,
     "criterion_table": "information_periods",
@@ -5270,6 +5248,28 @@
   },
   {
     "uuid": "108/59840/clinical_codes/2010-10-11/2010-10-11",
+    "person_id": 108,
+    "criterion_id": 351,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "108/88995/clinical_codes/2008-05-08/2008-05-08",
+    "person_id": 108,
+    "criterion_id": 351,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "108/36650/clinical_codes/2009-04-27/2009-05-01",
     "person_id": 108,
     "criterion_id": 352,
     "criterion_table": "information_periods",
@@ -5302,7 +5302,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "108/36650/clinical_codes/2009-04-27/2009-05-01",
+    "uuid": "108/59840/clinical_codes/2010-10-11/2010-10-11",
     "person_id": 108,
     "criterion_id": 352,
     "criterion_table": "information_periods",
@@ -5316,6 +5316,17 @@
     "uuid": "108/88995/clinical_codes/2008-05-08/2008-05-08",
     "person_id": 108,
     "criterion_id": 352,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "110/51906/clinical_codes/2008-05-14/2008-05-14",
+    "person_id": 110,
+    "criterion_id": 356,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5348,17 +5359,6 @@
   {
     "uuid": "110/51906/clinical_codes/2008-05-14/2008-05-14",
     "person_id": 110,
-    "criterion_id": 356,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "110/64287/clinical_codes/2010-05-20/2010-05-20",
-    "person_id": 110,
     "criterion_id": 357,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -5379,20 +5379,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "110/51906/clinical_codes/2008-05-14/2008-05-14",
-    "person_id": 110,
-    "criterion_id": 357,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "110/64287/clinical_codes/2010-05-20/2010-05-20",
     "person_id": 110,
-    "criterion_id": 358,
+    "criterion_id": 357,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5423,9 +5412,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "110/51906/clinical_codes/2008-05-14/2008-05-14",
+    "uuid": "110/64287/clinical_codes/2010-05-20/2010-05-20",
     "person_id": 110,
-    "criterion_id": 359,
+    "criterion_id": 358,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5434,7 +5423,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "110/64287/clinical_codes/2010-05-20/2010-05-20",
+    "uuid": "110/51906/clinical_codes/2008-05-14/2008-05-14",
     "person_id": 110,
     "criterion_id": 359,
     "criterion_table": "information_periods",
@@ -5456,9 +5445,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "114/85463/clinical_codes/2009-12-28/2009-12-28",
-    "person_id": 114,
-    "criterion_id": 369,
+    "uuid": "110/64287/clinical_codes/2010-05-20/2010-05-20",
+    "person_id": 110,
+    "criterion_id": 359,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5491,7 +5480,7 @@
   {
     "uuid": "114/85463/clinical_codes/2009-12-28/2009-12-28",
     "person_id": 114,
-    "criterion_id": 370,
+    "criterion_id": 369,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5524,7 +5513,7 @@
   {
     "uuid": "114/85463/clinical_codes/2009-12-28/2009-12-28",
     "person_id": 114,
-    "criterion_id": 861,
+    "criterion_id": 370,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5545,6 +5534,17 @@
   },
   {
     "uuid": "114/66840/clinical_codes/2009-08-03/2009-08-03",
+    "person_id": 114,
+    "criterion_id": 861,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "114/85463/clinical_codes/2009-12-28/2009-12-28",
     "person_id": 114,
     "criterion_id": 861,
     "criterion_table": "information_periods",
@@ -5654,17 +5654,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "124/88791/clinical_codes/2010-11-05/2010-11-05",
-    "person_id": 124,
-    "criterion_id": 398,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "124/64331/clinical_codes/2010-04-07/2010-04-07",
     "person_id": 124,
     "criterion_id": 398,
@@ -5687,6 +5676,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "124/88791/clinical_codes/2010-11-05/2010-11-05",
+    "person_id": 124,
+    "criterion_id": 398,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "124/64331/clinical_codes/2010-04-07/2010-04-07",
     "person_id": 124,
     "criterion_id": 868,
@@ -5698,7 +5698,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "124/88791/clinical_codes/2010-11-05/2010-11-05",
+    "uuid": "124/84022/clinical_codes/2008-10-15/2008-10-15",
     "person_id": 124,
     "criterion_id": 868,
     "criterion_table": "information_periods",
@@ -5709,7 +5709,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "124/84022/clinical_codes/2008-10-15/2008-10-15",
+    "uuid": "124/88791/clinical_codes/2010-11-05/2010-11-05",
     "person_id": 124,
     "criterion_id": 868,
     "criterion_table": "information_periods",
@@ -5940,17 +5940,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "131/93693/clinical_codes/2009-11-14/2009-11-14",
-    "person_id": 131,
-    "criterion_id": 418,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "131/35687/clinical_codes/2008-12-11/2008-12-11",
     "person_id": 131,
     "criterion_id": 418,
@@ -5964,18 +5953,7 @@
   {
     "uuid": "131/93693/clinical_codes/2009-11-14/2009-11-14",
     "person_id": 131,
-    "criterion_id": 419,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "131/35687/clinical_codes/2008-12-11/2008-12-11",
-    "person_id": 131,
-    "criterion_id": 419,
+    "criterion_id": 418,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -5995,7 +5973,29 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "131/35687/clinical_codes/2008-12-11/2008-12-11",
+    "person_id": 131,
+    "criterion_id": 419,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "131/93693/clinical_codes/2009-11-14/2009-11-14",
+    "person_id": 131,
+    "criterion_id": 419,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "131/28064/clinical_codes/2010-08-12/2010-08-12",
     "person_id": 131,
     "criterion_id": 874,
     "criterion_table": "information_periods",
@@ -6017,7 +6017,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "131/28064/clinical_codes/2010-08-12/2010-08-12",
+    "uuid": "131/93693/clinical_codes/2009-11-14/2009-11-14",
     "person_id": 131,
     "criterion_id": 874,
     "criterion_table": "information_periods",
@@ -6105,17 +6105,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "136/94023/clinical_codes/2010-03-30/2010-03-30",
-    "person_id": 136,
-    "criterion_id": 434,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "136/49752/clinical_codes/2009-10-26/2009-10-26",
     "person_id": 136,
     "criterion_id": 434,
@@ -6130,6 +6119,28 @@
     "uuid": "136/58214/clinical_codes/2009-12-31/2009-12-31",
     "person_id": 136,
     "criterion_id": 434,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "136/94023/clinical_codes/2010-03-30/2010-03-30",
+    "person_id": 136,
+    "criterion_id": 434,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "136/49752/clinical_codes/2009-10-26/2009-10-26",
+    "person_id": 136,
+    "criterion_id": 435,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -6162,17 +6173,6 @@
   {
     "uuid": "136/49752/clinical_codes/2009-10-26/2009-10-26",
     "person_id": 136,
-    "criterion_id": 435,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "136/94023/clinical_codes/2010-03-30/2010-03-30",
-    "person_id": 136,
     "criterion_id": 877,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -6193,12 +6193,23 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "136/49752/clinical_codes/2009-10-26/2009-10-26",
+    "uuid": "136/94023/clinical_codes/2010-03-30/2010-03-30",
     "person_id": 136,
     "criterion_id": 877,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "136/49752/clinical_codes/2009-10-26/2009-10-26",
+    "person_id": 136,
+    "criterion_id": 436,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2009-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
     "source_vocabulary_id": null
@@ -6216,17 +6227,6 @@
   },
   {
     "uuid": "136/94023/clinical_codes/2010-03-30/2010-03-30",
-    "person_id": 136,
-    "criterion_id": 436,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2009-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "136/49752/clinical_codes/2009-10-26/2009-10-26",
     "person_id": 136,
     "criterion_id": 436,
     "criterion_table": "information_periods",
@@ -6281,7 +6281,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "141/61844/clinical_codes/2009-05-07/2009-05-07",
+    "uuid": "141/61843/clinical_codes/2009-05-07/2009-05-07",
     "person_id": 141,
     "criterion_id": 450,
     "criterion_table": "information_periods",
@@ -6292,7 +6292,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "141/61843/clinical_codes/2009-05-07/2009-05-07",
+    "uuid": "141/61844/clinical_codes/2009-05-07/2009-05-07",
     "person_id": 141,
     "criterion_id": 450,
     "criterion_table": "information_periods",
@@ -6369,7 +6369,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "142/88077/clinical_codes/2009-01-04/2009-01-04",
+    "uuid": "142/44859/clinical_codes/2008-07-03/2008-07-03",
     "person_id": 142,
     "criterion_id": 453,
     "criterion_table": "information_periods",
@@ -6380,7 +6380,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "142/44859/clinical_codes/2008-07-03/2008-07-03",
+    "uuid": "142/88077/clinical_codes/2009-01-04/2009-01-04",
     "person_id": 142,
     "criterion_id": 453,
     "criterion_table": "information_periods",
@@ -6413,7 +6413,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "142/88077/clinical_codes/2009-01-04/2009-01-04",
+    "uuid": "142/44859/clinical_codes/2008-07-03/2008-07-03",
     "person_id": 142,
     "criterion_id": 881,
     "criterion_table": "information_periods",
@@ -6424,7 +6424,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "142/44859/clinical_codes/2008-07-03/2008-07-03",
+    "uuid": "142/88077/clinical_codes/2009-01-04/2009-01-04",
     "person_id": 142,
     "criterion_id": 881,
     "criterion_table": "information_periods",
@@ -6600,7 +6600,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "147/51940/clinical_codes/2008-05-17/2008-05-17",
+    "uuid": "147/51939/clinical_codes/2008-05-17/2008-05-17",
     "person_id": 147,
     "criterion_id": 467,
     "criterion_table": "information_periods",
@@ -6611,7 +6611,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "147/51939/clinical_codes/2008-05-17/2008-05-17",
+    "uuid": "147/51940/clinical_codes/2008-05-17/2008-05-17",
     "person_id": 147,
     "criterion_id": 467,
     "criterion_table": "information_periods",
@@ -6625,6 +6625,17 @@
     "uuid": "147/59324/clinical_codes/2008-09-21/2008-09-21",
     "person_id": 147,
     "criterion_id": 467,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "147/51939/clinical_codes/2008-05-17/2008-05-17",
+    "person_id": 147,
+    "criterion_id": 468,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -6657,28 +6668,6 @@
   {
     "uuid": "147/51939/clinical_codes/2008-05-17/2008-05-17",
     "person_id": 147,
-    "criterion_id": 468,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "147/51939/clinical_codes/2008-05-17/2008-05-17",
-    "person_id": 147,
-    "criterion_id": 469,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "147/59324/clinical_codes/2008-09-21/2008-09-21",
-    "person_id": 147,
     "criterion_id": 469,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -6701,7 +6690,7 @@
   {
     "uuid": "147/59324/clinical_codes/2008-09-21/2008-09-21",
     "person_id": 147,
-    "criterion_id": 470,
+    "criterion_id": 469,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -6722,6 +6711,17 @@
   },
   {
     "uuid": "147/51940/clinical_codes/2008-05-17/2008-05-17",
+    "person_id": 147,
+    "criterion_id": 470,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "147/59324/clinical_codes/2008-09-21/2008-09-21",
     "person_id": 147,
     "criterion_id": 470,
     "criterion_table": "information_periods",
@@ -6776,7 +6776,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "149/91916/clinical_codes/2009-05-01/2009-05-01",
+    "uuid": "149/38299/clinical_codes/2009-07-27/2009-07-27",
     "person_id": 149,
     "criterion_id": 475,
     "criterion_table": "information_periods",
@@ -6787,7 +6787,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "149/38299/clinical_codes/2009-07-27/2009-07-27",
+    "uuid": "149/91916/clinical_codes/2009-05-01/2009-05-01",
     "person_id": 149,
     "criterion_id": 475,
     "criterion_table": "information_periods",
@@ -6820,7 +6820,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "149/91916/clinical_codes/2009-05-01/2009-05-01",
+    "uuid": "149/38299/clinical_codes/2009-07-27/2009-07-27",
     "person_id": 149,
     "criterion_id": 477,
     "criterion_table": "information_periods",
@@ -6831,7 +6831,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "149/38299/clinical_codes/2009-07-27/2009-07-27",
+    "uuid": "149/91916/clinical_codes/2009-05-01/2009-05-01",
     "person_id": 149,
     "criterion_id": 477,
     "criterion_table": "information_periods",
@@ -6952,17 +6952,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "152/55159/clinical_codes/2008-07-26/2008-07-26",
-    "person_id": 152,
-    "criterion_id": 486,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "152/55158/clinical_codes/2008-07-26/2008-07-26",
     "person_id": 152,
     "criterion_id": 486,
@@ -6976,7 +6965,7 @@
   {
     "uuid": "152/55159/clinical_codes/2008-07-26/2008-07-26",
     "person_id": 152,
-    "criterion_id": 487,
+    "criterion_id": 486,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -6997,6 +6986,17 @@
   },
   {
     "uuid": "152/55159/clinical_codes/2008-07-26/2008-07-26",
+    "person_id": 152,
+    "criterion_id": 487,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "152/55158/clinical_codes/2008-07-26/2008-07-26",
     "person_id": 152,
     "criterion_id": 488,
     "criterion_table": "information_periods",
@@ -7007,7 +7007,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "152/55158/clinical_codes/2008-07-26/2008-07-26",
+    "uuid": "152/55159/clinical_codes/2008-07-26/2008-07-26",
     "person_id": 152,
     "criterion_id": 488,
     "criterion_table": "information_periods",
@@ -7227,6 +7227,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "167/14696/clinical_codes/2008-08-18/2008-08-18",
+    "person_id": 167,
+    "criterion_id": 534,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "167/40376/clinical_codes/2008-11-25/2008-11-25",
     "person_id": 167,
     "criterion_id": 534,
@@ -7251,28 +7262,6 @@
   {
     "uuid": "167/14696/clinical_codes/2008-08-18/2008-08-18",
     "person_id": 167,
-    "criterion_id": 534,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "167/14696/clinical_codes/2008-08-18/2008-08-18",
-    "person_id": 167,
-    "criterion_id": 535,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "167/40754/clinical_codes/2009-05-10/2009-05-10",
-    "person_id": 167,
     "criterion_id": 535,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -7294,6 +7283,17 @@
   },
   {
     "uuid": "167/40754/clinical_codes/2009-05-10/2009-05-10",
+    "person_id": 167,
+    "criterion_id": 535,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "167/14696/clinical_codes/2008-08-18/2008-08-18",
     "person_id": 167,
     "criterion_id": 536,
     "criterion_table": "information_periods",
@@ -7315,7 +7315,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "167/14696/clinical_codes/2008-08-18/2008-08-18",
+    "uuid": "167/40754/clinical_codes/2009-05-10/2009-05-10",
     "person_id": 167,
     "criterion_id": 536,
     "criterion_table": "information_periods",
@@ -7370,7 +7370,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "169/81215/clinical_codes/2009-05-08/2009-05-08",
+    "uuid": "169/58853/clinical_codes/2010-01-20/2010-01-20",
     "person_id": 169,
     "criterion_id": 541,
     "criterion_table": "information_periods",
@@ -7381,7 +7381,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "169/58853/clinical_codes/2010-01-20/2010-01-20",
+    "uuid": "169/81215/clinical_codes/2009-05-08/2009-05-08",
     "person_id": 169,
     "criterion_id": 541,
     "criterion_table": "information_periods",
@@ -7414,6 +7414,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "169/81215/clinical_codes/2009-05-08/2009-05-08",
+    "person_id": 169,
+    "criterion_id": 542,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "169/85974/clinical_codes/2008-07-06/2008-07-06",
     "person_id": 169,
     "criterion_id": 542,
@@ -7425,18 +7436,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "169/81215/clinical_codes/2009-05-08/2009-05-08",
-    "person_id": 169,
-    "criterion_id": 542,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "169/81215/clinical_codes/2009-05-08/2009-05-08",
+    "uuid": "169/58853/clinical_codes/2010-01-20/2010-01-20",
     "person_id": 169,
     "criterion_id": 897,
     "criterion_table": "information_periods",
@@ -7447,7 +7447,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "169/58853/clinical_codes/2010-01-20/2010-01-20",
+    "uuid": "169/81215/clinical_codes/2009-05-08/2009-05-08",
     "person_id": 169,
     "criterion_id": 897,
     "criterion_table": "information_periods",
@@ -7513,17 +7513,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "178/89892/clinical_codes/2008-12-28/2008-12-28",
-    "person_id": 178,
-    "criterion_id": 568,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "178/74000/clinical_codes/2008-12-24/2008-12-24",
     "person_id": 178,
     "criterion_id": 568,
@@ -7536,6 +7525,17 @@
   },
   {
     "uuid": "178/89892/clinical_codes/2008-12-28/2008-12-28",
+    "person_id": 178,
+    "criterion_id": 568,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "178/74000/clinical_codes/2008-12-24/2008-12-24",
     "person_id": 178,
     "criterion_id": 569,
     "criterion_table": "information_periods",
@@ -7546,7 +7546,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "178/74000/clinical_codes/2008-12-24/2008-12-24",
+    "uuid": "178/89892/clinical_codes/2008-12-28/2008-12-28",
     "person_id": 178,
     "criterion_id": 569,
     "criterion_table": "information_periods",
@@ -7579,7 +7579,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "178/89892/clinical_codes/2008-12-28/2008-12-28",
+    "uuid": "178/74000/clinical_codes/2008-12-24/2008-12-24",
     "person_id": 178,
     "criterion_id": 571,
     "criterion_table": "information_periods",
@@ -7590,7 +7590,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "178/74000/clinical_codes/2008-12-24/2008-12-24",
+    "uuid": "178/89892/clinical_codes/2008-12-28/2008-12-28",
     "person_id": 178,
     "criterion_id": 571,
     "criterion_table": "information_periods",
@@ -7689,7 +7689,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "183/84533/clinical_codes/2008-08-04/2008-08-04",
+    "uuid": "183/69569/clinical_codes/2010-06-03/2010-06-03",
     "person_id": 183,
     "criterion_id": 587,
     "criterion_table": "information_periods",
@@ -7711,7 +7711,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "183/69569/clinical_codes/2010-06-03/2010-06-03",
+    "uuid": "183/84533/clinical_codes/2008-08-04/2008-08-04",
     "person_id": 183,
     "criterion_id": 587,
     "criterion_table": "information_periods",
@@ -7723,17 +7723,6 @@
   },
   {
     "uuid": "183/69569/clinical_codes/2010-06-03/2010-06-03",
-    "person_id": 183,
-    "criterion_id": 588,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "183/84533/clinical_codes/2008-08-04/2008-08-04",
     "person_id": 183,
     "criterion_id": 588,
     "criterion_table": "information_periods",
@@ -7757,7 +7746,7 @@
   {
     "uuid": "183/84533/clinical_codes/2008-08-04/2008-08-04",
     "person_id": 183,
-    "criterion_id": 589,
+    "criterion_id": 588,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -7790,7 +7779,7 @@
   {
     "uuid": "183/84533/clinical_codes/2008-08-04/2008-08-04",
     "person_id": 183,
-    "criterion_id": 590,
+    "criterion_id": 589,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -7811,6 +7800,17 @@
   },
   {
     "uuid": "183/80631/clinical_codes/2008-06-10/2008-06-10",
+    "person_id": 183,
+    "criterion_id": 590,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "183/84533/clinical_codes/2008-08-04/2008-08-04",
     "person_id": 183,
     "criterion_id": 590,
     "criterion_table": "information_periods",
@@ -7865,7 +7865,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "187/77182/clinical_codes/2008-10-12/2008-10-15",
+    "uuid": "187/22279/clinical_codes/2008-03-27/2008-03-28",
     "person_id": 187,
     "criterion_id": 601,
     "criterion_table": "information_periods",
@@ -7887,7 +7887,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "187/22279/clinical_codes/2008-03-27/2008-03-28",
+    "uuid": "187/77182/clinical_codes/2008-10-12/2008-10-15",
     "person_id": 187,
     "criterion_id": 601,
     "criterion_table": "information_periods",
@@ -7909,6 +7909,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "187/33860/clinical_codes/2009-04-08/2009-04-08",
+    "person_id": 187,
+    "criterion_id": 602,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "187/77182/clinical_codes/2008-10-12/2008-10-15",
     "person_id": 187,
     "criterion_id": 602,
@@ -7920,9 +7931,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "187/33860/clinical_codes/2009-04-08/2009-04-08",
+    "uuid": "187/22279/clinical_codes/2008-03-27/2008-03-28",
     "person_id": 187,
-    "criterion_id": 602,
+    "criterion_id": 905,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -7943,17 +7954,6 @@
   },
   {
     "uuid": "187/77182/clinical_codes/2008-10-12/2008-10-15",
-    "person_id": 187,
-    "criterion_id": 905,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "187/22279/clinical_codes/2008-03-27/2008-03-28",
     "person_id": 187,
     "criterion_id": 905,
     "criterion_table": "information_periods",
@@ -8140,7 +8140,29 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "195/31339/clinical_codes/2008-01-27/2008-01-27",
+    "person_id": 195,
+    "criterion_id": 627,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "195/31476/clinical_codes/2008-10-03/2008-10-03",
+    "person_id": 195,
+    "criterion_id": 627,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
     "person_id": 195,
     "criterion_id": 627,
     "criterion_table": "information_periods",
@@ -8154,39 +8176,6 @@
     "uuid": "195/85169/clinical_codes/2010-10-31/2010-10-31",
     "person_id": 195,
     "criterion_id": 627,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
-    "person_id": 195,
-    "criterion_id": 627,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "195/31339/clinical_codes/2008-01-27/2008-01-27",
-    "person_id": 195,
-    "criterion_id": 627,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
-    "person_id": 195,
-    "criterion_id": 628,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -8217,7 +8206,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "195/85169/clinical_codes/2010-10-31/2010-10-31",
+    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
     "person_id": 195,
     "criterion_id": 628,
     "criterion_table": "information_periods",
@@ -8230,7 +8219,7 @@
   {
     "uuid": "195/85169/clinical_codes/2010-10-31/2010-10-31",
     "person_id": 195,
-    "criterion_id": 911,
+    "criterion_id": 628,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -8239,7 +8228,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
+    "uuid": "195/31339/clinical_codes/2008-01-27/2008-01-27",
     "person_id": 195,
     "criterion_id": 911,
     "criterion_table": "information_periods",
@@ -8261,7 +8250,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "195/31339/clinical_codes/2008-01-27/2008-01-27",
+    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
     "person_id": 195,
     "criterion_id": 911,
     "criterion_table": "information_periods",
@@ -8273,6 +8262,17 @@
   },
   {
     "uuid": "195/85169/clinical_codes/2010-10-31/2010-10-31",
+    "person_id": 195,
+    "criterion_id": 911,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
     "person_id": 195,
     "criterion_id": 629,
     "criterion_table": "information_periods",
@@ -8283,7 +8283,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "195/53890/clinical_codes/2010-04-03/2010-04-03",
+    "uuid": "195/85169/clinical_codes/2010-10-31/2010-10-31",
     "person_id": 195,
     "criterion_id": 629,
     "criterion_table": "information_periods",
@@ -8316,17 +8316,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "196/32752/clinical_codes/2008-06-09/2008-06-09",
-    "person_id": 196,
-    "criterion_id": 631,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "196/21838/clinical_codes/2010-03-12/2010-03-12",
     "person_id": 196,
     "criterion_id": 631,
@@ -8339,6 +8328,17 @@
   },
   {
     "uuid": "196/32752/clinical_codes/2008-06-09/2008-06-09",
+    "person_id": 196,
+    "criterion_id": 631,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "196/21838/clinical_codes/2010-03-12/2010-03-12",
     "person_id": 196,
     "criterion_id": 632,
     "criterion_table": "information_periods",
@@ -8349,7 +8349,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "196/21838/clinical_codes/2010-03-12/2010-03-12",
+    "uuid": "196/32752/clinical_codes/2008-06-09/2008-06-09",
     "person_id": 196,
     "criterion_id": 632,
     "criterion_table": "information_periods",
@@ -8514,17 +8514,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "205/50097/clinical_codes/2009-03-25/2009-03-25",
-    "person_id": 205,
-    "criterion_id": 656,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "205/44275/clinical_codes/2009-08-09/2009-08-09",
     "person_id": 205,
     "criterion_id": 656,
@@ -8538,7 +8527,7 @@
   {
     "uuid": "205/50097/clinical_codes/2009-03-25/2009-03-25",
     "person_id": 205,
-    "criterion_id": 657,
+    "criterion_id": 656,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -8560,7 +8549,7 @@
   {
     "uuid": "205/50097/clinical_codes/2009-03-25/2009-03-25",
     "person_id": 205,
-    "criterion_id": 658,
+    "criterion_id": 657,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -8580,7 +8569,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "207/57354/clinical_codes/2009-01-13/2009-01-13",
+    "uuid": "205/50097/clinical_codes/2009-03-25/2009-03-25",
+    "person_id": 205,
+    "criterion_id": 658,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "207/54517/clinical_codes/2010-08-12/2010-08-12",
     "person_id": 207,
     "criterion_id": 660,
     "criterion_table": "information_periods",
@@ -8591,7 +8591,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "207/54517/clinical_codes/2010-08-12/2010-08-12",
+    "uuid": "207/57354/clinical_codes/2009-01-13/2009-01-13",
     "person_id": 207,
     "criterion_id": 660,
     "criterion_table": "information_periods",
@@ -8613,17 +8613,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "207/64171/clinical_codes/2008-09-10/2008-09-10",
-    "person_id": 207,
-    "criterion_id": 661,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "207/54517/clinical_codes/2010-08-12/2010-08-12",
     "person_id": 207,
     "criterion_id": 661,
@@ -8646,7 +8635,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "207/57354/clinical_codes/2009-01-13/2009-01-13",
+    "uuid": "207/64171/clinical_codes/2008-09-10/2008-09-10",
+    "person_id": 207,
+    "criterion_id": 661,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "207/54517/clinical_codes/2010-08-12/2010-08-12",
     "person_id": 207,
     "criterion_id": 921,
     "criterion_table": "information_periods",
@@ -8657,7 +8657,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "207/54517/clinical_codes/2010-08-12/2010-08-12",
+    "uuid": "207/57354/clinical_codes/2009-01-13/2009-01-13",
     "person_id": 207,
     "criterion_id": 921,
     "criterion_table": "information_periods",
@@ -8679,7 +8679,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "207/57354/clinical_codes/2009-01-13/2009-01-13",
+    "uuid": "207/54517/clinical_codes/2010-08-12/2010-08-12",
     "person_id": 207,
     "criterion_id": 662,
     "criterion_table": "information_periods",
@@ -8690,7 +8690,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "207/54517/clinical_codes/2010-08-12/2010-08-12",
+    "uuid": "207/57354/clinical_codes/2009-01-13/2009-01-13",
     "person_id": 207,
     "criterion_id": 662,
     "criterion_table": "information_periods",
@@ -8866,7 +8866,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "213/80517/clinical_codes/2009-01-29/2009-01-29",
+    "uuid": "213/27262/clinical_codes/2009-12-09/2009-12-09",
     "person_id": 213,
     "criterion_id": 679,
     "criterion_table": "information_periods",
@@ -8877,7 +8877,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "213/27262/clinical_codes/2009-12-09/2009-12-09",
+    "uuid": "213/80517/clinical_codes/2009-01-29/2009-01-29",
     "person_id": 213,
     "criterion_id": 679,
     "criterion_table": "information_periods",
@@ -8910,17 +8910,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "213/80517/clinical_codes/2009-01-29/2009-01-29",
-    "person_id": 213,
-    "criterion_id": 681,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "213/27262/clinical_codes/2009-12-09/2009-12-09",
     "person_id": 213,
     "criterion_id": 681,
@@ -8934,7 +8923,7 @@
   {
     "uuid": "213/80517/clinical_codes/2009-01-29/2009-01-29",
     "person_id": 213,
-    "criterion_id": 926,
+    "criterion_id": 681,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -8954,20 +8943,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "214/89465/clinical_codes/2008-02-17/2008-02-17",
-    "person_id": 214,
-    "criterion_id": 682,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "214/62585/clinical_codes/2010-01-11/2010-01-11",
-    "person_id": 214,
-    "criterion_id": 682,
+    "uuid": "213/80517/clinical_codes/2009-01-29/2009-01-29",
+    "person_id": 213,
+    "criterion_id": 926,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -8989,6 +8967,39 @@
   {
     "uuid": "214/62585/clinical_codes/2010-01-11/2010-01-11",
     "person_id": 214,
+    "criterion_id": 682,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "214/89465/clinical_codes/2008-02-17/2008-02-17",
+    "person_id": 214,
+    "criterion_id": 682,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "214/41065/clinical_codes/2010-08-09/2010-08-09",
+    "person_id": 214,
+    "criterion_id": 683,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "214/62585/clinical_codes/2010-01-11/2010-01-11",
+    "person_id": 214,
     "criterion_id": 683,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -9011,7 +9022,7 @@
   {
     "uuid": "214/41065/clinical_codes/2010-08-09/2010-08-09",
     "person_id": 214,
-    "criterion_id": 683,
+    "criterion_id": 927,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -9032,17 +9043,6 @@
   },
   {
     "uuid": "214/89465/clinical_codes/2008-02-17/2008-02-17",
-    "person_id": 214,
-    "criterion_id": 927,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "214/41065/clinical_codes/2010-08-09/2010-08-09",
     "person_id": 214,
     "criterion_id": 927,
     "criterion_table": "information_periods",
@@ -9075,6 +9075,28 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "216/31657/clinical_codes/2010-04-25/2010-04-25",
+    "person_id": 216,
+    "criterion_id": 688,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "216/31658/clinical_codes/2010-04-25/2010-04-25",
+    "person_id": 216,
+    "criterion_id": 688,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "216/37513/clinical_codes/2010-11-04/2010-11-04",
     "person_id": 216,
     "criterion_id": 688,
@@ -9108,20 +9130,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "216/31658/clinical_codes/2010-04-25/2010-04-25",
-    "person_id": 216,
-    "criterion_id": 688,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "216/31657/clinical_codes/2010-04-25/2010-04-25",
     "person_id": 216,
-    "criterion_id": 688,
+    "criterion_id": 689,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -9130,7 +9141,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "216/74290/clinical_codes/2010-05-22/2010-05-22",
+    "uuid": "216/31658/clinical_codes/2010-04-25/2010-04-25",
+    "person_id": 216,
+    "criterion_id": 689,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "216/37513/clinical_codes/2010-11-04/2010-11-04",
     "person_id": 216,
     "criterion_id": 689,
     "criterion_table": "information_periods",
@@ -9152,7 +9174,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "216/37513/clinical_codes/2010-11-04/2010-11-04",
+    "uuid": "216/74290/clinical_codes/2010-05-22/2010-05-22",
     "person_id": 216,
     "criterion_id": 689,
     "criterion_table": "information_periods",
@@ -9165,7 +9187,7 @@
   {
     "uuid": "216/31657/clinical_codes/2010-04-25/2010-04-25",
     "person_id": 216,
-    "criterion_id": 689,
+    "criterion_id": 690,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -9176,7 +9198,7 @@
   {
     "uuid": "216/31658/clinical_codes/2010-04-25/2010-04-25",
     "person_id": 216,
-    "criterion_id": 689,
+    "criterion_id": 690,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -9185,7 +9207,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "216/31658/clinical_codes/2010-04-25/2010-04-25",
+    "uuid": "216/37513/clinical_codes/2010-11-04/2010-11-04",
+    "person_id": 216,
+    "criterion_id": 690,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "216/56675/clinical_codes/2009-01-23/2009-01-23",
     "person_id": 216,
     "criterion_id": 690,
     "criterion_table": "information_periods",
@@ -9208,39 +9241,6 @@
   },
   {
     "uuid": "216/31657/clinical_codes/2010-04-25/2010-04-25",
-    "person_id": 216,
-    "criterion_id": 690,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "216/56675/clinical_codes/2009-01-23/2009-01-23",
-    "person_id": 216,
-    "criterion_id": 690,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "216/37513/clinical_codes/2010-11-04/2010-11-04",
-    "person_id": 216,
-    "criterion_id": 690,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "216/37513/clinical_codes/2010-11-04/2010-11-04",
     "person_id": 216,
     "criterion_id": 929,
     "criterion_table": "information_periods",
@@ -9251,7 +9251,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "216/31657/clinical_codes/2010-04-25/2010-04-25",
+    "uuid": "216/31658/clinical_codes/2010-04-25/2010-04-25",
+    "person_id": 216,
+    "criterion_id": 929,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "216/37513/clinical_codes/2010-11-04/2010-11-04",
     "person_id": 216,
     "criterion_id": 929,
     "criterion_table": "information_periods",
@@ -9274,17 +9285,6 @@
   },
   {
     "uuid": "216/74290/clinical_codes/2010-05-22/2010-05-22",
-    "person_id": 216,
-    "criterion_id": 929,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "216/31658/clinical_codes/2010-04-25/2010-04-25",
     "person_id": 216,
     "criterion_id": 929,
     "criterion_table": "information_periods",
@@ -9394,6 +9394,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "220/34251/clinical_codes/2008-01-21/2008-01-21",
+    "person_id": 220,
+    "criterion_id": 700,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "220/56344/clinical_codes/2008-12-09/2008-12-09",
     "person_id": 220,
     "criterion_id": 700,
@@ -9405,7 +9416,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "220/34251/clinical_codes/2008-01-21/2008-01-21",
+    "uuid": "220/67665/clinical_codes/2009-10-08/2009-10-08",
     "person_id": 220,
     "criterion_id": 700,
     "criterion_table": "information_periods",
@@ -9427,29 +9438,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "220/67665/clinical_codes/2009-10-08/2009-10-08",
-    "person_id": 220,
-    "criterion_id": 700,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "220/56344/clinical_codes/2008-12-09/2008-12-09",
-    "person_id": 220,
-    "criterion_id": 701,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "220/67665/clinical_codes/2009-10-08/2009-10-08",
+    "uuid": "220/21651/clinical_codes/2010-09-29/2010-09-29",
     "person_id": 220,
     "criterion_id": 701,
     "criterion_table": "information_periods",
@@ -9471,7 +9460,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "220/21651/clinical_codes/2010-09-29/2010-09-29",
+    "uuid": "220/56344/clinical_codes/2008-12-09/2008-12-09",
+    "person_id": 220,
+    "criterion_id": 701,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "220/67665/clinical_codes/2009-10-08/2009-10-08",
     "person_id": 220,
     "criterion_id": 701,
     "criterion_table": "information_periods",
@@ -9494,17 +9494,6 @@
   },
   {
     "uuid": "220/21651/clinical_codes/2010-09-29/2010-09-29",
-    "person_id": 220,
-    "criterion_id": 702,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2009-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "220/73461/clinical_codes/2010-08-29/2010-08-29",
     "person_id": 220,
     "criterion_id": 702,
     "criterion_table": "information_periods",
@@ -9528,10 +9517,10 @@
   {
     "uuid": "220/73461/clinical_codes/2010-08-29/2010-08-29",
     "person_id": 220,
-    "criterion_id": 703,
+    "criterion_id": 702,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
-    "start_date": "2010-01-01",
+    "start_date": "2009-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
     "source_vocabulary_id": null
@@ -9548,7 +9537,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "222/94045/clinical_codes/2009-09-30/2009-09-30",
+    "uuid": "220/73461/clinical_codes/2010-08-29/2010-08-29",
+    "person_id": 220,
+    "criterion_id": 703,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2010-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "222/67289/clinical_codes/2010-08-23/2010-08-23",
     "person_id": 222,
     "criterion_id": 707,
     "criterion_table": "information_periods",
@@ -9559,7 +9559,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "222/67289/clinical_codes/2010-08-23/2010-08-23",
+    "uuid": "222/94045/clinical_codes/2009-09-30/2009-09-30",
     "person_id": 222,
     "criterion_id": 707,
     "criterion_table": "information_periods",
@@ -9592,7 +9592,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "222/94045/clinical_codes/2009-09-30/2009-09-30",
+    "uuid": "222/67289/clinical_codes/2010-08-23/2010-08-23",
     "person_id": 222,
     "criterion_id": 932,
     "criterion_table": "information_periods",
@@ -9603,7 +9603,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "222/67289/clinical_codes/2010-08-23/2010-08-23",
+    "uuid": "222/94045/clinical_codes/2009-09-30/2009-09-30",
     "person_id": 222,
     "criterion_id": 932,
     "criterion_table": "information_periods",
@@ -9636,7 +9636,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "223/35629/clinical_codes/2009-03-27/2009-03-27",
+    "uuid": "223/33840/clinical_codes/2008-08-29/2008-08-29",
     "person_id": 223,
     "criterion_id": 710,
     "criterion_table": "information_periods",
@@ -9647,7 +9647,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "223/33840/clinical_codes/2008-08-29/2008-08-29",
+    "uuid": "223/35629/clinical_codes/2009-03-27/2009-03-27",
     "person_id": 223,
     "criterion_id": 710,
     "criterion_table": "information_periods",
@@ -9680,6 +9680,39 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "223/33840/clinical_codes/2008-08-29/2008-08-29",
+    "person_id": 223,
+    "criterion_id": 711,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "223/35629/clinical_codes/2009-03-27/2009-03-27",
+    "person_id": 223,
+    "criterion_id": 711,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "223/36487/clinical_codes/2009-01-11/2009-01-11",
+    "person_id": 223,
+    "criterion_id": 711,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "223/66945/clinical_codes/2008-09-20/2008-09-20",
     "person_id": 223,
     "criterion_id": 711,
@@ -9693,21 +9726,10 @@
   {
     "uuid": "223/35629/clinical_codes/2009-03-27/2009-03-27",
     "person_id": 223,
-    "criterion_id": 711,
+    "criterion_id": 712,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "223/33840/clinical_codes/2008-08-29/2008-08-29",
-    "person_id": 223,
-    "criterion_id": 711,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
+    "start_date": "2009-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
     "source_vocabulary_id": null
@@ -9715,38 +9737,16 @@
   {
     "uuid": "223/36487/clinical_codes/2009-01-11/2009-01-11",
     "person_id": 223,
-    "criterion_id": 711,
+    "criterion_id": 712,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
+    "start_date": "2009-01-01",
     "end_date": "2010-12-31",
     "source_value": null,
     "source_vocabulary_id": null
   },
   {
     "uuid": "223/35629/clinical_codes/2009-03-27/2009-03-27",
-    "person_id": 223,
-    "criterion_id": 712,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2009-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "223/36487/clinical_codes/2009-01-11/2009-01-11",
-    "person_id": 223,
-    "criterion_id": 712,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2009-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "223/36487/clinical_codes/2009-01-11/2009-01-11",
     "person_id": 223,
     "criterion_id": 713,
     "criterion_table": "information_periods",
@@ -9757,7 +9757,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "223/35629/clinical_codes/2009-03-27/2009-03-27",
+    "uuid": "223/36487/clinical_codes/2009-01-11/2009-01-11",
     "person_id": 223,
     "criterion_id": 713,
     "criterion_table": "information_periods",
@@ -9845,17 +9845,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "230/86403/clinical_codes/2008-05-29/2008-05-29",
-    "person_id": 230,
-    "criterion_id": 732,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "230/50899/clinical_codes/2009-03-01/2009-03-01",
     "person_id": 230,
     "criterion_id": 732,
@@ -9868,17 +9857,6 @@
   },
   {
     "uuid": "230/50900/clinical_codes/2009-03-01/2009-03-01",
-    "person_id": 230,
-    "criterion_id": 732,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "230/91586/clinical_codes/2008-12-20/2008-12-20",
     "person_id": 230,
     "criterion_id": 732,
     "criterion_table": "information_periods",
@@ -9902,6 +9880,39 @@
   {
     "uuid": "230/86403/clinical_codes/2008-05-29/2008-05-29",
     "person_id": 230,
+    "criterion_id": 732,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "230/91586/clinical_codes/2008-12-20/2008-12-20",
+    "person_id": 230,
+    "criterion_id": 732,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "230/50899/clinical_codes/2009-03-01/2009-03-01",
+    "person_id": 230,
+    "criterion_id": 733,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "230/50900/clinical_codes/2009-03-01/2009-03-01",
+    "person_id": 230,
     "criterion_id": 733,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -9922,7 +9933,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "230/50900/clinical_codes/2009-03-01/2009-03-01",
+    "uuid": "230/86403/clinical_codes/2008-05-29/2008-05-29",
     "person_id": 230,
     "criterion_id": 733,
     "criterion_table": "information_periods",
@@ -9946,7 +9957,7 @@
   {
     "uuid": "230/50899/clinical_codes/2009-03-01/2009-03-01",
     "person_id": 230,
-    "criterion_id": 733,
+    "criterion_id": 734,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -9955,7 +9966,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "230/50899/clinical_codes/2009-03-01/2009-03-01",
+    "uuid": "230/50900/clinical_codes/2009-03-01/2009-03-01",
+    "person_id": 230,
+    "criterion_id": 734,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "230/74325/clinical_codes/2008-04-25/2008-04-25",
     "person_id": 230,
     "criterion_id": 734,
     "criterion_table": "information_periods",
@@ -9977,29 +9999,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "230/74325/clinical_codes/2008-04-25/2008-04-25",
-    "person_id": 230,
-    "criterion_id": 734,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "230/91586/clinical_codes/2008-12-20/2008-12-20",
-    "person_id": 230,
-    "criterion_id": 734,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "230/50900/clinical_codes/2009-03-01/2009-03-01",
     "person_id": 230,
     "criterion_id": 734,
     "criterion_table": "information_periods",
@@ -10021,7 +10021,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "230/91586/clinical_codes/2008-12-20/2008-12-20",
+    "uuid": "230/50900/clinical_codes/2009-03-01/2009-03-01",
+    "person_id": 230,
+    "criterion_id": 735,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "230/74325/clinical_codes/2008-04-25/2008-04-25",
     "person_id": 230,
     "criterion_id": 735,
     "criterion_table": "information_periods",
@@ -10043,18 +10054,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "230/50900/clinical_codes/2009-03-01/2009-03-01",
-    "person_id": 230,
-    "criterion_id": 735,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "230/74325/clinical_codes/2008-04-25/2008-04-25",
+    "uuid": "230/91586/clinical_codes/2008-12-20/2008-12-20",
     "person_id": 230,
     "criterion_id": 735,
     "criterion_table": "information_periods",
@@ -10076,31 +10076,20 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
+    "person_id": 234,
+    "criterion_id": 742,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "234/77630/clinical_codes/2010-08-09/2010-08-09",
     "person_id": 234,
     "criterion_id": 742,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
-    "person_id": 234,
-    "criterion_id": 742,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
-    "person_id": 234,
-    "criterion_id": 743,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10120,7 +10109,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "234/77630/clinical_codes/2010-08-09/2010-08-09",
+    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
     "person_id": 234,
     "criterion_id": 743,
     "criterion_table": "information_periods",
@@ -10131,9 +10120,9 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
+    "uuid": "234/77630/clinical_codes/2010-08-09/2010-08-09",
     "person_id": 234,
-    "criterion_id": 744,
+    "criterion_id": 743,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10153,6 +10142,17 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
+    "person_id": 234,
+    "criterion_id": 744,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "234/77630/clinical_codes/2010-08-09/2010-08-09",
     "person_id": 234,
     "criterion_id": 744,
@@ -10164,7 +10164,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
+    "uuid": "234/63878/clinical_codes/2010-11-25/2010-11-25",
     "person_id": 234,
     "criterion_id": 938,
     "criterion_table": "information_periods",
@@ -10175,7 +10175,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "234/63878/clinical_codes/2010-11-25/2010-11-25",
+    "uuid": "234/76952/clinical_codes/2009-08-08/2009-08-08",
     "person_id": 234,
     "criterion_id": 938,
     "criterion_table": "information_periods",
@@ -10318,31 +10318,20 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "243/84256/clinical_codes/2008-09-24/2008-09-24",
+    "person_id": 243,
+    "criterion_id": 772,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "243/94153/clinical_codes/2009-08-11/2009-08-11",
     "person_id": 243,
     "criterion_id": 772,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "243/84256/clinical_codes/2008-09-24/2008-09-24",
-    "person_id": 243,
-    "criterion_id": 772,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "243/84256/clinical_codes/2008-09-24/2008-09-24",
-    "person_id": 243,
-    "criterion_id": 773,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10362,9 +10351,31 @@
     "source_vocabulary_id": null
   },
   {
+    "uuid": "243/84256/clinical_codes/2008-09-24/2008-09-24",
+    "person_id": 243,
+    "criterion_id": 773,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
     "uuid": "243/94153/clinical_codes/2009-08-11/2009-08-11",
     "person_id": 243,
     "criterion_id": 773,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "243/21055/clinical_codes/2010-07-04/2010-07-04",
+    "person_id": 243,
+    "criterion_id": 942,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10385,17 +10396,6 @@
   },
   {
     "uuid": "243/94153/clinical_codes/2009-08-11/2009-08-11",
-    "person_id": 243,
-    "criterion_id": 942,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "243/21055/clinical_codes/2010-07-04/2010-07-04",
     "person_id": 243,
     "criterion_id": 942,
     "criterion_table": "information_periods",
@@ -10428,17 +10428,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "247/91582/clinical_codes/2008-07-30/2008-07-30",
-    "person_id": 247,
-    "criterion_id": 783,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "247/75005/clinical_codes/2008-05-18/2008-05-18",
     "person_id": 247,
     "criterion_id": 783,
@@ -10452,7 +10441,7 @@
   {
     "uuid": "247/91582/clinical_codes/2008-07-30/2008-07-30",
     "person_id": 247,
-    "criterion_id": 784,
+    "criterion_id": 783,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10475,6 +10464,28 @@
     "uuid": "247/75005/clinical_codes/2008-05-18/2008-05-18",
     "person_id": 247,
     "criterion_id": 784,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "247/91582/clinical_codes/2008-07-30/2008-07-30",
+    "person_id": 247,
+    "criterion_id": 784,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "247/52741/clinical_codes/2008-08-19/2008-08-24",
+    "person_id": 247,
+    "criterion_id": 785,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10507,28 +10518,6 @@
   {
     "uuid": "247/52741/clinical_codes/2008-08-19/2008-08-24",
     "person_id": 247,
-    "criterion_id": 785,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "247/91582/clinical_codes/2008-07-30/2008-07-30",
-    "person_id": 247,
-    "criterion_id": 786,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "247/52741/clinical_codes/2008-08-19/2008-08-24",
-    "person_id": 247,
     "criterion_id": 786,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
@@ -10549,7 +10538,18 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "248/84672/clinical_codes/2008-10-28/2008-10-28",
+    "uuid": "247/91582/clinical_codes/2008-07-30/2008-07-30",
+    "person_id": 247,
+    "criterion_id": 786,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "248/39995/clinical_codes/2009-01-15/2009-01-15",
     "person_id": 248,
     "criterion_id": 787,
     "criterion_table": "information_periods",
@@ -10571,7 +10571,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "248/39995/clinical_codes/2009-01-15/2009-01-15",
+    "uuid": "248/84672/clinical_codes/2008-10-28/2008-10-28",
     "person_id": 248,
     "criterion_id": 787,
     "criterion_table": "information_periods",
@@ -10582,7 +10582,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "248/84672/clinical_codes/2008-10-28/2008-10-28",
+    "uuid": "248/39995/clinical_codes/2009-01-15/2009-01-15",
     "person_id": 248,
     "criterion_id": 788,
     "criterion_table": "information_periods",
@@ -10604,7 +10604,7 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "248/39995/clinical_codes/2009-01-15/2009-01-15",
+    "uuid": "248/84672/clinical_codes/2008-10-28/2008-10-28",
     "person_id": 248,
     "criterion_id": 788,
     "criterion_table": "information_periods",
@@ -10681,17 +10681,6 @@
     "source_vocabulary_id": null
   },
   {
-    "uuid": "249/58937/clinical_codes/2010-06-15/2010-06-15",
-    "person_id": 249,
-    "criterion_id": 790,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
     "uuid": "249/58936/clinical_codes/2010-06-15/2010-06-15",
     "person_id": 249,
     "criterion_id": 790,
@@ -10705,7 +10694,7 @@
   {
     "uuid": "249/58937/clinical_codes/2010-06-15/2010-06-15",
     "person_id": 249,
-    "criterion_id": 791,
+    "criterion_id": 790,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10738,7 +10727,7 @@
   {
     "uuid": "249/58937/clinical_codes/2010-06-15/2010-06-15",
     "person_id": 249,
-    "criterion_id": 792,
+    "criterion_id": 791,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10761,6 +10750,28 @@
     "uuid": "249/58936/clinical_codes/2010-06-15/2010-06-15",
     "person_id": 249,
     "criterion_id": 792,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "249/58937/clinical_codes/2010-06-15/2010-06-15",
+    "person_id": 249,
+    "criterion_id": 792,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null
+  },
+  {
+    "uuid": "249/54933/clinical_codes/2009-03-08/2009-03-08",
+    "person_id": 249,
+    "criterion_id": 946,
     "criterion_table": "information_periods",
     "criterion_domain": "information_period",
     "start_date": "2008-01-01",
@@ -10781,17 +10792,6 @@
   },
   {
     "uuid": "249/58937/clinical_codes/2010-06-15/2010-06-15",
-    "person_id": 249,
-    "criterion_id": 946,
-    "criterion_table": "information_periods",
-    "criterion_domain": "information_period",
-    "start_date": "2008-01-01",
-    "end_date": "2010-12-31",
-    "source_value": null,
-    "source_vocabulary_id": null
-  },
-  {
-    "uuid": "249/54933/clinical_codes/2009-03-08/2009-03-08",
     "person_id": 249,
     "criterion_id": 946,
     "criterion_table": "information_periods",

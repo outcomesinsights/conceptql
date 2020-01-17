@@ -160,7 +160,7 @@ module ConceptQL
       def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
-        scope_key = options[:id] || qualifier
+        scope_key = options[:id] || op_name
         annotation = {}
         counts = (annotation[:counts] ||= {})
         metadata = {:annotation=>annotation}
