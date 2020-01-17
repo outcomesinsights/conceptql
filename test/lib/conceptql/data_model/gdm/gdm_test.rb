@@ -2,7 +2,7 @@ require_relative "../../../../db_helper"
 
 describe ConceptQL::DataModel::Gdm do
   let(:dm) do
-    ConceptQL::DataModel::Gdm.new(nil, nil)
+    ConceptQL::DataModel::Gdm.new(rdbms: nil, lexicon: nil)
   end
 
   describe "#concept_id" do

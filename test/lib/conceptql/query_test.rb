@@ -35,7 +35,7 @@ describe ConceptQL::Query do
 
   describe "#sql(:formatted)" do
     let :cdb do
-      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: false)
+      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm, force_temp_tables: false)
     end
 
     it "should produce formatted SQL" do
@@ -48,7 +48,7 @@ describe ConceptQL::Query do
 
     describe "with temp tables" do
       let :cdb do
-        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: true, scratch_database: "scratch")
+        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm, force_temp_tables: true, scratch_database: "scratch")
       end
 
       it "should use CREATE TABLE statements" do
@@ -58,7 +58,7 @@ describe ConceptQL::Query do
 
     describe "without temp tables" do
       let :cdb do
-        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: false)
+        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm, force_temp_tables: false)
       end
 
       it "should use WITH statements" do

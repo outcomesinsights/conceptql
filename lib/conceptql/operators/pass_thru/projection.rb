@@ -20,6 +20,10 @@ module ConceptQL
         (scope.query_columns | scope.output_columns) - projection_columns
       end
 
+      def annotate(db, opts = {})
+        stream.annotate(db, opts)
+      end
+
       def apply_joins(ds)
         count = 0
         views.reduce(ds) do |ds, (table_alias, view)|

@@ -27,7 +27,7 @@ module ConceptQL
       end
 
       def get_omopv4_plus_klass
-        return nil unless entry.belongs_in_omopv4_plus?
+        return nil
 
         get_klass do
           include Behaviors::Omopish

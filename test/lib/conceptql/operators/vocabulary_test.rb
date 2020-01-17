@@ -36,15 +36,21 @@ describe ConceptQL::Operators::Selection::Vocabulary do
     end
 
     it "should produce correct SQL" do
-      _(cdb.query(["admsrce", "12"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ADMSRCE') AND (\"concept_code\" IN ('12')))))) AS \"t1\") AS \"t1\""
+      sql = cdb.query(["admsrce", "12"]).sql
+      ['"concepts" WHERE', "person_id", "clinical_codes_cql_view", "12", "admsrce"].each do |matchy|
+        _(sql).must_match(matchy)
+      end
     end
 
     it "should produce correct SQL for older selection operators" do
-      _(cdb.query(["icd9", "412"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ICD9CM') AND (\"concept_code\" IN ('412')))))) AS \"t1\") AS \"t1\""
+      sql = cdb.query(["icd9", "412"]).sql
+      ['"concepts" WHERE', "person_id", "clinical_codes_cql_view", "ICD9CM", "412"].each do |matchy|
+        _(sql).must_match(matchy)
+      end
     end
 
     it "should produce correct SQL for select all" do
-      _(cdb.query(["atc", "*"]).sql).must_match %Q{"clinical_code_vocabulary_id" = 'ATC'}
+      _(cdb.query(["atc", "*"]).sql).must_match %Q{"clinical_code_vocabulary_id" IN ('ATC')}
     end
 
   end
@@ -103,7 +109,7 @@ describe ConceptQL::Operators::Selection::Vocabulary do
     it "should use proper case sensitivity for dynamic vocabularies" do
       cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
       lexicon = ConceptQL::Lexicon.new(db)
-      ConceptQL::Operators.stub(:operators, {gdm: {}, omopv4_plus: {}}) do
+      ConceptQL::Operators.stub(:operators, {gdm: {"projection" => ConceptQL::Operators::Projection}}) do
         ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
           cdb.stub(:lexicon, lexicon) do
             ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators

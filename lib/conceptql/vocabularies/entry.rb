@@ -177,7 +177,7 @@ module ConceptQL
       end
 
       def is_labish?
-        hash[:domain] =~ /observation|measurement/i
+        hash[:domain] =~ /observation|measurement/i || %w[Read].include?(omopv5_id)
       end
 
       def is_drugish?

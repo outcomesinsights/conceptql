@@ -3,7 +3,7 @@ require_relative "../behaviors/metadatable"
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4_plus=>{}, :gdm=>{}}.freeze
+    OPERATORS = {:gdm=>{}}.freeze
 
     def self.operators
       OPERATORS
