@@ -1,10 +1,12 @@
-require_relative "./db_helper"
 
 file_regexps = nil
 argv = ARGV.reject { |f| f.start_with?('-') }
 if !argv.empty?
   file_regexps = argv.map { |f| /#{f}/ }
+  ENV["CONCEPTQL_PRINT_SQL"] = "1"
 end
+
+require_relative "./db_helper"
 
 def my_time_it(name, &block)
   start_time = Time.now

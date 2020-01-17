@@ -137,8 +137,8 @@ module ConceptQL
       end
     end
 
-    def format(sql)
-      SqlFormatters.format(sql, rdbms)
+    def format(sql, opts = {})
+      SqlFormatters.format(sql, {rdbms: rdbms}.merge(opts))
     end
   end
 end

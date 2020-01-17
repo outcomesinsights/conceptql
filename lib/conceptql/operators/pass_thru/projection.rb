@@ -38,7 +38,17 @@ module ConceptQL
       end
 
       def projection_columns
-        views.map(&:last).map(&:columns).flatten
+        views.map(&:last).map(&:columns).flatten - possibly_upstream_columns
+      end
+
+      def possibly_upstream_columns
+        %i[lab_value_as_number admission_date discharge_date]
+      end
+
+      def upstream_auto_columns(ds)
+        possibly_upstream_columns.map do |col|
+          [col, Sequel.function(:coalesce, Sequel[:proj][col], ds.opts[:auto_columns][col])]
+        end.to_h
       end
 
       def add_columns(ds)
@@ -57,7 +67,7 @@ module ConceptQL
             ds = ds.auto_column(col, Sequel[table_alias][col])
           end
         end
-        ds
+        ds.auto_columns(upstream_auto_columns(ds))
       end
     end
   end

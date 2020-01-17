@@ -4,6 +4,7 @@ module ConceptQL
   module Operators
     module PassThru
       class Episode < Base
+        include ConceptQL::Behaviors::Nullish
         register __FILE__
 
         desc <<-EOF
@@ -69,20 +70,19 @@ Groups all incoming results into episodes by person allowing for there to be a g
 
           grp_cols = ids_plus_episode.map{|c| e[c]}
 
-          episode_summary = episode_summary.select_group(*grp_cols).select_append(
-            Sequel.function(:min, :episode_start_date).as(:start_date),
-            Sequel.function(:max, :episode_end_date).as(:end_date)
-          )
+          episode_summary = episode_summary
+            .select_group(*grp_cols)
+            .auto_columns(
+              start_date: Sequel.function(:min, :episode_start_date),
+              end_date: Sequel.function(:max, :episode_end_date),
+              criterion_id: Sequel[0].cast_numeric,
+              criterion_table: Sequel.cast_string("episode"),
+              criterion_domain: Sequel.cast_string("episode"),
+              person_id: :person_id
+            ).auto_column_default(null_columns)
 
           # Episodes streams return null for criterion_id,table, and domain which messes up uuid generation so we had to add constants to these values
-          episode_summary = episode_summary.from_self.select_append(
-            Sequel[0].cast_numeric.as(:criterion_id),
-            Sequel.cast_string("episode").as(:criterion_table),
-            Sequel.cast_string("episode").as(:criterion_domain)
-          )
-
-          episode_query_cols = partition_vars + [:start_date, :end_date, :criterion_id, :criterion_table, :criterion_domain]
-          return dm.selectify(episode_summary.from_self, {query_columns: episode_query_cols.zip(episode_query_cols).to_h})
+          episode_summary
         end
 
         def get_episode_gap

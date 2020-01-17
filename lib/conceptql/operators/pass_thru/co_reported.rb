@@ -12,19 +12,8 @@ module ConceptQL
         default_query_columns
         validate_at_least_one_upstream
         validate_no_arguments
-        require_column :visit_occurrence_id
-
 
         def query(db)
-          if gdm?
-            gdm(db)
-          else
-            events_with_common_visits(db).inject { |q, query| q.union(query, all: true) }
-          end
-        end
-
-        def gdm(db)
-
           contexteds = upstreams.map do |stream|
             contextify(db, stream)
           end
@@ -45,7 +34,7 @@ module ConceptQL
           end
 
           shared_events = contexteds.map do |contexted|
-            contexted.where(context_id: context_id_ds).select(*query_cols)
+            contexted.where(context_id: context_id_ds)
           end
 
           ds = shared_events.inject do |q, shared_event|
@@ -65,26 +54,6 @@ module ConceptQL
             .select_all(:s)
             .select_append(Sequel[:c][:context_id].as(:context_id))
             .from_self
-        end
-
-        private
-
-        def visit_occurrence_ids_in_common(db)
-          @visit_occurrence_ids_in_common ||= upstream_queries(db).map { |q| q.select(:visit_occurrence_id) }.inject do |q, query|
-            q.from_self(alias: :tab1)
-              .join(query.as(:tab2), visit_occurrence_id: :visit_occurrence_id)
-              .select(Sequel[:tab1][:visit_occurrence_id].as(:visit_occurrence_id))
-          end
-        end
-
-        def events_with_common_visits(db)
-          upstream_queries(db).map { |q| q.where(visit_occurrence_id: visit_occurrence_ids_in_common(db)).from_self }
-        end
-
-        def upstream_queries(db)
-          @upstream_queries ||= upstreams.map do |expression|
-            expression.evaluate(db).select(*query_cols).from_self
-          end
         end
       end
     end

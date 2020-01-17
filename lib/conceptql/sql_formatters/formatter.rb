@@ -5,8 +5,8 @@ module ConceptQL
         installed?(program)
       end
 
-      def format(sql)
-        sql = ConceptQL::Utils.timed_capture(command, stdin_data: sql, timeout: 10)
+      def format(sql, opts = {})
+        sql = ConceptQL::Utils.timed_capture(command, stdin_data: sql, timeout: opts[:timeout] || 10)
         return sql
       rescue
         return sql

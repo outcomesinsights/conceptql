@@ -34,7 +34,7 @@ Enter numeric concept id(s), or the corresponding text label(s):
       include ConceptQL::Provenanceable
 
       def query(db)
-        db.from(stream.evaluate(db)).where(build_where_from_codes(arguments))
+        limit_to_provenance(upstream_query(db), arguments)
       end
 
     private
@@ -59,19 +59,9 @@ Enter numeric concept id(s), or the corresponding text label(s):
           h << code_type if !code_type.to_i.zero?
         }
 
-        # TODO: we're using ActiveSupport now, so remove this Utils stuff
-        if ConceptQL::Utils.present?(bad_keywords[:file])
-          add_error("unrecognized file type keywords", *bad_keywords[:file].uniq)
-        end
-
-        if ConceptQL::Utils.present?(bad_keywords[:code])
-          add_error("unrecognized code type keywords", *bad_keywords[:code].uniq)
-        end
-
-        if ConceptQL::Utils.present?(warn_keywords)
-          add_warning("concept ids are not checked", *warn_keywords)
-        end
-
+        add_error("unrecognized file type keywords", *bad_keywords[:file].uniq) if bad_keywords[:file].present?
+        add_error("unrecognized code type keywords", *bad_keywords[:code].uniq) if bad_keywords[:code].present?
+        add_warning("concept ids are not checked", *warn_keywords) if warn_keywords.present?
       end
     end
   end

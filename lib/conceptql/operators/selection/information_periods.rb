@@ -10,7 +10,7 @@ module ConceptQL
         include ConceptQL::Behaviors::Timeless
 
         desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming result set.'
-        domains :observation_period
+        domains :information_period
         category "Get Related Data"
         basic_type :selection
         validate_no_upstreams

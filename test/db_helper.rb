@@ -16,6 +16,10 @@ DB.logger = ConceptQL.logger
 PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
 
 ENV["CONCEPTQL_IN_TEST_MODE"] = "I'm so sorry I did this"
+if ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
+  puts "You're sure you want to overwrite test results?"
+  exit 1 unless STDIN.gets.chomp == "yes"
+end
 
 class Minitest::Spec
   def annotate(test_name, statement=nil)
@@ -114,7 +118,7 @@ class Minitest::Spec
   end
 
   def numeric_values(test_name, statement=nil)
-    load_check(test_name, statement){|stmt| hash_groups(stmt, :criterion_domain, :value_as_number)}
+    load_check(test_name, statement){|stmt| hash_groups(stmt, :criterion_domain, :lab_value_as_number)}
   end
 
   def criteria_counts(test_name, statement=nil)
@@ -190,7 +194,7 @@ class Minitest::Spec
     end
   rescue
     if $!.respond_to?(:sql) 
-      sql = ConceptQL::SqlFormatters.format($!.sql)
+      sql = ConceptQL::SqlFormatters.format($!.sql, timeout: 10)
       puts sql
       if ENV["CONCEPTQL_STOP_ON_ERROR"]
         file = "/tmp/error.sql"

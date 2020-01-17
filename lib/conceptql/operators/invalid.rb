@@ -13,10 +13,6 @@ module ConceptQL
         @errors = @options.delete(:errors)
       end
 
-      def operator_name
-        @operator_name ||= arguments.shift.to_s || "invalid"
-      end
-
       def query(db)
         raise "Invalid#query called.  #{errors}"
       end

@@ -8,6 +8,7 @@ require "pathname"
     require_relative file
   end
 end
+require 'active_support/core_ext/object/blank'
 require "conceptql/version"
 require "conceptql/logger"
 require "conceptql/paths"

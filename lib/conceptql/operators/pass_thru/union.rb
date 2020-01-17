@@ -22,7 +22,7 @@ module ConceptQL
             expression.evaluate(db)
           end
 
-          if (combined = combinables.inject(&:unionize))
+          if (combined = combinables.map(&:dup).inject(&:unionize))
             queries << combined.evaluate(db)
           end
 

@@ -46,7 +46,7 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
 
         def required_columns=(cols)
           super
-          original.required_columns = cols
+          original.required_columns |= cols if original
         end
 
         def original

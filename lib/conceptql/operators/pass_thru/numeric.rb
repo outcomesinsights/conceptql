@@ -35,6 +35,7 @@ Accepts two params:
         validate_at_most_one_upstream
         validate_one_argument
         default_query_columns
+        output_column :lab_value_as_number
 
         def query(db)
           ds = is_selection? ? as_criterion(db) : upstream_query(db)
@@ -67,7 +68,13 @@ Accepts two params:
           db[dm.nschema.patients.view.name]
             .auto_column(:window_id, Sequel.cast_numeric(nil))
             .auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
+            .auto_columns(default_columns)
             .auto_column_default(null_columns)
+        end
+
+        def default_columns
+          cols = Scope::DEFAULT_COLUMNS.keys
+          cols.zip(cols).to_h
         end
 
         def numeric_literal

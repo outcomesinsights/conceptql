@@ -61,7 +61,7 @@ module ConceptQL
       options ||= {}
       options = options.merge(errors: [error_args])
       values << options
-      Operators::Invalid.new(self, id, operator, *values)
+      Operators::Invalid.new(self, operator, id, *values)
     end
 
     def id

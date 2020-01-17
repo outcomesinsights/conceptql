@@ -1,15 +1,22 @@
 module ConceptQL
   module Provenanceable
 
-    def self.included(base)
-      base.require_column :file_provenance_type
-      base.require_column :code_provenance_type
-    end
-
     FILE_PROVENANCE_TYPES_VOCAB = "JIGSAW_FILE_PROVENANCE_TYPE"
     CODE_PROVENANCE_TYPES_VOCAB = "JIGSAW_CODE_PROVENANCE_TYPE"
 
     CODE_SEPARATOR = ":"
+
+    def limit_to_provenance(ds, arguments)
+      ds.from_self(alias: :og)
+        .semi_join(
+          :provenance_join_view_v1,
+          Sequel.expr({
+            Sequel[:og][:criterion_id] => Sequel[:pjv][:criterion_id],
+            Sequel[:og][:criterion_table] => Sequel[:pjv][:criterion_table]
+          }).&(build_where_from_codes(arguments)),
+          table_alias: :pjv
+      )
+    end
 
     # Creates hash of provenance type concept codes by vocabulary_id (JIGSAW_FILE_PROVENANCE_TYPE, JIGSAW_CODE_PROVENANCE_TYPE)
     #
@@ -243,27 +250,6 @@ module ConceptQL
 
       return code_split[1] if code_split.length == 2 && !code_split[1].empty?
       return nil
-    end
-
-    def available_join_tables
-      super + [ provenance_context_join ]
-    end
-
-    def provenance_context_join
-      JoinTableInfo.new(
-        type: :left,
-        table: :contexts,
-        alias: :provcon,
-        join_criteria: { Sequel[:tab][:context_id] => Sequel[:provcon][:id] },
-        for_columns: [ :file_provenance_type ]
-      )
-    end
-
-    def available_columns
-      super.merge(
-        file_provenance_type: Sequel[:provcon][:source_type_concept_id],
-        code_provenance_type: Sequel[:tab][:provenance_concept_id]
-      )
     end
   end
 end

@@ -9,14 +9,14 @@ module ConceptQL
         true
       end
 
-      def format(sql)
+      def format(sql, opts = {})
         sql
       end
     end
 
     class << self
-      def format(sql, rdbms = nil)
-        formatters(rdbms).map(&:new).detect(&:available?).format(sql)
+      def format(sql, opts = {})
+        formatters(opts[:rdbms]).map(&:new).detect(&:available?).format(sql, opts)
       end
 
       def formatters(rdbms)

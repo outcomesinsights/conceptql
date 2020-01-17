@@ -101,7 +101,7 @@ module ConceptQL
 
     def add_counts(key, domain, counts)
       # Ignore counts of secret Projection operator
-      return if key == "projection"
+      return if key.to_s == /^projection/
       c = @counts[key] ||= {}
       c[domain] = counts
     end

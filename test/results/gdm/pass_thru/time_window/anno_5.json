@@ -20,7 +20,7 @@
     {
       "annotation": {
         "counts": {
-          "observation_period": {
+          "information_period": {
             "rows": 946,
             "n": 249
           }
@@ -38,7 +38,7 @@
           "rows": 0,
           "n": 0
         },
-        "observation_period": {
+        "information_period": {
           "rows": 0,
           "n": 0
         }

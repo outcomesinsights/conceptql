@@ -8,8 +8,6 @@
     "end_date": "2009-04-15",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-04-15",
     "discharge_date": "2009-04-15"
   },
@@ -22,8 +20,6 @@
     "end_date": "2009-07-12",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-07-12",
     "discharge_date": "2009-07-12"
   },
@@ -36,8 +32,6 @@
     "end_date": "2008-10-23",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-10-23",
     "discharge_date": "2008-10-23"
   },
@@ -50,8 +44,6 @@
     "end_date": "2009-10-20",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-10-19",
     "discharge_date": "2009-10-20"
   },
@@ -64,8 +56,6 @@
     "end_date": "2010-09-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-09-08",
     "discharge_date": "2010-09-08"
   },
@@ -78,8 +68,6 @@
     "end_date": "2009-06-05",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-06-05",
     "discharge_date": "2009-06-05"
   },
@@ -92,8 +80,6 @@
     "end_date": "2010-09-01",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-09-01",
     "discharge_date": "2010-09-01"
   },
@@ -106,8 +92,6 @@
     "end_date": "2009-11-29",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-11-29",
     "discharge_date": "2009-11-29"
   },
@@ -120,8 +104,6 @@
     "end_date": "2008-04-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-04-19",
     "discharge_date": "2008-04-19"
   },
@@ -134,8 +116,6 @@
     "end_date": "2009-10-07",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-10-07",
     "discharge_date": "2009-10-07"
   },
@@ -148,8 +128,6 @@
     "end_date": "2008-04-13",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-04-13",
     "discharge_date": "2008-04-13"
   },
@@ -162,8 +140,6 @@
     "end_date": "2010-04-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-04-26",
     "discharge_date": "2010-04-26"
   },
@@ -176,8 +152,6 @@
     "end_date": "2009-05-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-05-18",
     "discharge_date": "2009-05-18"
   },
@@ -190,8 +164,6 @@
     "end_date": "2009-03-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-03-08",
     "discharge_date": "2009-03-08"
   },
@@ -204,8 +176,6 @@
     "end_date": "2009-06-12",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-06-12",
     "discharge_date": "2009-06-12"
   },
@@ -218,8 +188,6 @@
     "end_date": "2008-12-27",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-12-27",
     "discharge_date": "2008-12-27"
   },
@@ -232,8 +200,6 @@
     "end_date": "2010-02-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-02-25",
     "discharge_date": "2010-02-25"
   },
@@ -246,8 +212,6 @@
     "end_date": "2010-07-17",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-07-17",
     "discharge_date": "2010-07-17"
   },
@@ -260,8 +224,6 @@
     "end_date": "2009-06-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-06-08",
     "discharge_date": "2009-06-08"
   },
@@ -274,8 +236,6 @@
     "end_date": "2009-02-15",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-02-09",
     "discharge_date": "2009-02-15"
   },
@@ -288,8 +248,6 @@
     "end_date": "2008-11-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-11-26",
     "discharge_date": "2008-11-26"
   },
@@ -302,8 +260,6 @@
     "end_date": "2009-08-06",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-08-04",
     "discharge_date": "2009-08-06"
   },
@@ -316,8 +272,6 @@
     "end_date": "2010-02-05",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-02-05",
     "discharge_date": "2010-02-05"
   },
@@ -330,8 +284,6 @@
     "end_date": "2008-04-14",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-04-09",
     "discharge_date": "2008-04-14"
   },
@@ -344,8 +296,6 @@
     "end_date": "2009-10-15",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-10-15",
     "discharge_date": "2009-10-15"
   },
@@ -358,8 +308,6 @@
     "end_date": "2008-06-23",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-06-23",
     "discharge_date": "2008-06-23"
   },
@@ -372,8 +320,6 @@
     "end_date": "2008-04-12",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-04-12",
     "discharge_date": "2008-04-12"
   },
@@ -386,8 +332,6 @@
     "end_date": "2010-10-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-10-26",
     "discharge_date": "2010-10-26"
   },
@@ -400,8 +344,6 @@
     "end_date": "2008-08-02",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-08-02",
     "discharge_date": "2008-08-02"
   },
@@ -414,8 +356,6 @@
     "end_date": "2008-03-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-03-23",
     "discharge_date": "2008-03-26"
   },
@@ -428,8 +368,6 @@
     "end_date": "2009-01-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-01-11",
     "discharge_date": "2009-01-11"
   },
@@ -442,8 +380,6 @@
     "end_date": "2009-05-09",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-05-09",
     "discharge_date": "2009-05-09"
   },
@@ -456,8 +392,6 @@
     "end_date": "2008-09-12",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-09-03",
     "discharge_date": "2008-09-12"
   },
@@ -470,8 +404,6 @@
     "end_date": "2009-07-12",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-07-12",
     "discharge_date": "2009-07-12"
   },
@@ -484,8 +416,6 @@
     "end_date": "2010-08-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-08-11",
     "discharge_date": "2010-08-11"
   },
@@ -498,8 +428,6 @@
     "end_date": "2009-08-07",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-08-07",
     "discharge_date": "2009-08-07"
   },
@@ -512,8 +440,6 @@
     "end_date": "2009-08-28",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-08-28",
     "discharge_date": "2009-08-28"
   },
@@ -526,8 +452,6 @@
     "end_date": "2009-08-10",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-08-10",
     "discharge_date": "2009-08-10"
   },
@@ -540,8 +464,6 @@
     "end_date": "2008-04-14",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-04-14",
     "discharge_date": "2008-04-14"
   },
@@ -554,8 +476,6 @@
     "end_date": "2010-05-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-05-22",
     "discharge_date": "2010-05-26"
   },
@@ -568,8 +488,6 @@
     "end_date": "2009-09-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-09-03",
     "discharge_date": "2009-09-03"
   },
@@ -582,8 +500,6 @@
     "end_date": "2010-02-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-02-14",
     "discharge_date": "2010-02-19"
   },
@@ -596,8 +512,6 @@
     "end_date": "2008-12-29",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-12-29",
     "discharge_date": "2008-12-29"
   },
@@ -610,8 +524,6 @@
     "end_date": "2008-02-16",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-02-12",
     "discharge_date": "2008-02-16"
   },
@@ -624,8 +536,6 @@
     "end_date": "2009-11-30",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-11-23",
     "discharge_date": "2009-11-30"
   },
@@ -638,8 +548,6 @@
     "end_date": "2009-12-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-12-25",
     "discharge_date": "2009-12-25"
   },
@@ -652,8 +560,6 @@
     "end_date": "2009-01-16",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-01-14",
     "discharge_date": "2009-01-16"
   },
@@ -666,8 +572,6 @@
     "end_date": "2008-10-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-10-19",
     "discharge_date": "2008-10-19"
   },
@@ -680,8 +584,6 @@
     "end_date": "2009-11-23",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-11-23",
     "discharge_date": "2009-11-23"
   },
@@ -694,8 +596,6 @@
     "end_date": "2008-06-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-06-18",
     "discharge_date": "2008-06-18"
   },
@@ -708,8 +608,6 @@
     "end_date": "2009-09-22",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-09-22",
     "discharge_date": "2009-09-22"
   },
@@ -722,8 +620,6 @@
     "end_date": "2009-02-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-02-08",
     "discharge_date": "2009-02-08"
   },
@@ -736,8 +632,6 @@
     "end_date": "2008-04-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-04-11",
     "discharge_date": "2008-04-11"
   },
@@ -750,8 +644,6 @@
     "end_date": "2008-10-05",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-10-05",
     "discharge_date": "2008-10-05"
   },
@@ -764,8 +656,6 @@
     "end_date": "2009-07-06",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-07-06",
     "discharge_date": "2009-07-06"
   },
@@ -778,8 +668,6 @@
     "end_date": "2009-06-10",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-06-10",
     "discharge_date": "2009-06-10"
   },
@@ -792,8 +680,6 @@
     "end_date": "2009-10-29",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-10-29",
     "discharge_date": "2009-10-29"
   },
@@ -806,8 +692,6 @@
     "end_date": "2009-03-27",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-03-27",
     "discharge_date": "2009-03-27"
   },
@@ -820,8 +704,6 @@
     "end_date": "2009-01-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-01-26",
     "discharge_date": "2009-01-26"
   },
@@ -834,8 +716,6 @@
     "end_date": "2009-03-26",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-03-26",
     "discharge_date": "2009-03-26"
   },
@@ -848,8 +728,6 @@
     "end_date": "2010-02-18",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-02-14",
     "discharge_date": "2010-02-18"
   },
@@ -862,8 +740,6 @@
     "end_date": "2008-08-05",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-08-05",
     "discharge_date": "2008-08-05"
   },
@@ -876,8 +752,6 @@
     "end_date": "2009-10-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-10-19",
     "discharge_date": "2009-10-19"
   },
@@ -890,8 +764,6 @@
     "end_date": "2008-03-11",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-03-11",
     "discharge_date": "2008-03-11"
   },
@@ -904,8 +776,6 @@
     "end_date": "2008-08-16",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-08-16",
     "discharge_date": "2008-08-16"
   },
@@ -918,8 +788,6 @@
     "end_date": "2010-09-10",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-09-10",
     "discharge_date": "2010-09-10"
   },
@@ -932,8 +800,6 @@
     "end_date": "2008-11-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-11-25",
     "discharge_date": "2008-11-25"
   },
@@ -946,8 +812,6 @@
     "end_date": "2008-12-04",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-12-02",
     "discharge_date": "2008-12-04"
   },
@@ -960,8 +824,6 @@
     "end_date": "2009-04-01",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-03-28",
     "discharge_date": "2009-04-01"
   },
@@ -974,8 +836,6 @@
     "end_date": "2009-06-08",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-06-08",
     "discharge_date": "2009-06-08"
   },
@@ -988,8 +848,6 @@
     "end_date": "2010-08-01",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-08-01",
     "discharge_date": "2010-08-01"
   },
@@ -1002,8 +860,6 @@
     "end_date": "2008-08-27",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-08-27",
     "discharge_date": "2008-08-27"
   },
@@ -1016,8 +872,6 @@
     "end_date": "2010-05-04",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-05-04",
     "discharge_date": "2010-05-04"
   },
@@ -1030,8 +884,6 @@
     "end_date": "2009-11-19",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-11-19",
     "discharge_date": "2009-11-19"
   },
@@ -1044,8 +896,6 @@
     "end_date": "2009-11-04",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-11-04",
     "discharge_date": "2009-11-04"
   },
@@ -1058,8 +908,6 @@
     "end_date": "2008-12-23",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-12-23",
     "discharge_date": "2008-12-23"
   },
@@ -1072,8 +920,6 @@
     "end_date": "2009-10-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-10-03",
     "discharge_date": "2009-10-03"
   },
@@ -1086,8 +932,6 @@
     "end_date": "2009-08-22",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000060,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-08-18",
     "discharge_date": "2009-08-22"
   },
@@ -1100,8 +944,6 @@
     "end_date": "2008-11-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-11-03",
     "discharge_date": "2008-11-03"
   },
@@ -1114,8 +956,6 @@
     "end_date": "2010-12-25",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-12-25",
     "discharge_date": "2010-12-25"
   },
@@ -1128,8 +968,6 @@
     "end_date": "2008-07-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-07-03",
     "discharge_date": "2008-07-03"
   },
@@ -1142,8 +980,6 @@
     "end_date": "2008-11-02",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-11-02",
     "discharge_date": "2008-11-02"
   },
@@ -1156,8 +992,6 @@
     "end_date": "2009-08-01",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-08-01",
     "discharge_date": "2009-08-01"
   },
@@ -1170,8 +1004,6 @@
     "end_date": "2009-07-23",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-07-23",
     "discharge_date": "2009-07-23"
   },
@@ -1184,8 +1016,6 @@
     "end_date": "2009-10-30",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-10-30",
     "discharge_date": "2009-10-30"
   },
@@ -1198,8 +1028,6 @@
     "end_date": "2008-11-03",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-11-03",
     "discharge_date": "2008-11-03"
   },
@@ -1212,8 +1040,6 @@
     "end_date": "2009-06-22",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000061,
-    "code_provenance_type": 100000075,
     "admission_date": "2009-06-22",
     "discharge_date": "2009-06-22"
   },
@@ -1226,8 +1052,6 @@
     "end_date": "2010-06-02",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2010-06-02",
     "discharge_date": "2010-06-02"
   },
@@ -1240,8 +1064,6 @@
     "end_date": "2008-05-29",
     "source_value": "2449",
     "source_vocabulary_id": "ICD9CM",
-    "file_provenance_type": 100000062,
-    "code_provenance_type": 100000075,
     "admission_date": "2008-05-29",
     "discharge_date": "2008-05-29"
   }

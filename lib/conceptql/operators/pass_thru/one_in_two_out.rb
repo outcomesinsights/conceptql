@@ -27,51 +27,68 @@ twice in an outpatient setting with a 30-day gap.
       default_query_columns
 
       include ConceptQL::Provenanceable
-
-      require_column :admission_date
-      require_column :discharge_date
+      output_column :admission_date
+      output_column :discharge_date
 
       attr_reader :db
 
       def query(db)
         @db = db
-        first_valid_event.from_self
+        first_valid_event
+      end
+
+      def required_columns
+        super | %i[criterion_domain start_date end_date]
       end
 
       private
 
       def condition_events
-        db[stream.evaluate(db)]
+        upstream_query(db)
           .where(criterion_domain: 'condition_occurrence')
           .from_self
       end
 
       def all_inpatient_events
-        condition_events
-          .where(build_where_from_codes(["inpatient"]))
+        limit_to_provenance(condition_events, %w(inpatient))
           .from_self
       end
 
       def valid_inpatient_events
         q = all_inpatient_events
+          .from_self(alias: :og)
+          .left_join(
+            :admission_join_view_v1,
+            {
+              Sequel[:ajv][:criterion_id] => Sequel[:og][:criterion_id],
+              Sequel[:ajv][:criterion_table] => Sequel[:og][:criterion_table]
+            },
+            table_alias: :ajv
+          )
+          .auto_columns(
+            admission_date: Sequel[:ajv][:admission_date],
+            discharge_date: Sequel[:ajv][:discharge_date]
+          )
+          .require_columns(required_columns)
+          .require_columns(:admission_date, :discharge_date)
+          .auto_select
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
           q = q.where{ |o| rdbms.days_between(o.admission_date, o.discharge_date) > options[:inpatient_length_of_stay].to_i }
         end
 
-        q = q.select(*(query_cols - [:start_date, :end_date]))
+        date_to_report = if options[:inpatient_return_date] == 'Admit Date'
+                           Sequel[:admission_date]
+                         else
+                           Sequel[:discharge_date]
+                         end
 
-        q = if options[:inpatient_return_date] == 'Admit Date'
-              q.select_append(Sequel[:admission_date].as(:start_date), Sequel[:admission_date].as(:end_date))
-            else
-              q.select_append(Sequel[:discharge_date].as(:start_date), Sequel[:discharge_date].as(:end_date))
-            end
-
-        q.from_self.select(*dynamic_columns).from_self
+        q.require_columns(required_columns)
+          .auto_columns(start_date: date_to_report, end_date: date_to_report)
+          .auto_select(alias: :valid_inpatient_events)
       end
 
       def outpatient_events
-        condition_events
-          .where(build_where_from_codes(["carrier_claim","outpatient"]))
+        limit_to_provenance(condition_events, %w(carrier_claim outpatient))
           .from_self
       end
 
@@ -101,18 +118,23 @@ twice in an outpatient setting with a 30-day gap.
         sub_select = sub_select.exclude(confirm[:start_date] < initial[:start_date])
 
 
-        if ConceptQL::Utils.present?(min_gap)
+        if min_gap.present?
           sub_select = sub_select.where(Sequel.expr(confirm[:start_date]) >= DateAdjuster.new(self, min_gap).adjust(initial[:start_date]))
         end
 
-        if ConceptQL::Utils.present?(max_gap)
+        if max_gap.present?
           sub_select = sub_select.where(Sequel.expr(confirm[:start_date]) <= DateAdjuster.new(self, max_gap).adjust(initial[:start_date]))
         end
 
         q = outpatient_events.from_self(alias: outer_table)
               .where(sub_select.exists)
 
-        q.from_self.select(*dynamic_columns).from_self
+        q.require_columns(required_columns)
+          .auto_columns(
+            admission_date: :start_date,
+            discharge_date: :end_date
+          )
+          .auto_select(alias: :valid_outpatient_events)
       end
 
       def all_valid_events
@@ -121,7 +143,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def first_valid_event
         all_valid_events
-          .select_append { |o| o.row_number.function.over(partition: matching_columns , order: [ rdbms.partition_fix(:start_date), :criterion_id ]).as(:rn) }
+          .select_append { |o| o.row_number.function.over(partition: matching_columns , order: [:start_date, :criterion_id]).as(:rn) }
           .from_self
           .where(rn: 1)
       end

@@ -140,7 +140,7 @@ module ConceptQL
           end
 
           wheres.unify(op.wheres)
-          self.options.merge!(op.options)
+          @options = @options.merge(op.options)
           self.required_columns |= op.required_columns
           self
         end

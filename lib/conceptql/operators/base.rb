@@ -113,6 +113,7 @@ module ConceptQL
         args.reject!{|arg| arg.nil? || arg == ''}
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operators::Base) }
         @values = args
+        @required_columns = []
 
         scope.nest(self) do
           create_upstreams
@@ -159,7 +160,7 @@ module ConceptQL
       def annotate(db, opts = {})
         return @annotation if defined?(@annotation)
 
-        scope_key = options[:id] || op_name
+        scope_key = options[:id] || qualifier
         annotation = {}
         counts = (annotation[:counts] ||= {})
         metadata = {:annotation=>annotation}
@@ -183,6 +184,7 @@ module ConceptQL
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
         end
+
         domains(db).each do |domain|
           cur_counts = counts[domain] ||= {:rows=>0, :n=>0}
           scope.add_counts(scope_key, domain, cur_counts)
