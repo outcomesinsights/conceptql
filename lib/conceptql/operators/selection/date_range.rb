@@ -69,13 +69,11 @@ module ConceptQL
         end
 
         def period_start_date(db)
-          dm.start_date_column(db, period_table)
-          dm.nschema.information_periods.start_date.name
+          period_table.start_date.name
         end
 
         def period_end_date(db)
-          dm.end_date_column(db, period_table)
-          dm.nschema.information_periods.end_date.name
+          period_table.end_date.name
         end
       end
     end

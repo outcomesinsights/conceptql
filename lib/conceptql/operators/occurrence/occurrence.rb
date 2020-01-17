@@ -168,7 +168,7 @@ occurrence, this operator returns nothing for that person.
 
       def ordered_columns(opts={})
         qualifier = opts[:qualify]
-        start_date = rdbms.partition_fix(qualify_with(qualifier, :start_date), qualifier)
+        start_date = qualify_with(qualifier, :start_date)
         unless opts[:global]
           start_date = Sequel.send(asc_or_desc, start_date)
         end

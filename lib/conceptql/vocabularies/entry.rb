@@ -26,79 +26,6 @@ module ConceptQL
         predominant_domains
       )
 
-      STANDARD_VOCABS = %w(
-        ABMS
-        AMT
-        APC
-        CDM
-        CDT
-        CMS Place of Service
-        CPT4
-        CVX
-        Condition Type
-        Cost
-        Cost Type
-        Currency
-        DRG
-        Death Type
-        Device Type
-        Drug Type
-        Episode
-        Episode Type
-        Ethnicity
-        GGR
-        Gemscript
-        Gender
-        HCPCS
-        HES Specialty
-        HemOnc
-        ICD10PCS
-        ICD9Proc
-        ICDO3
-        JMDC
-        LOINC
-        MDC
-        MMI
-        Meas Type
-        Medicare Specialty
-        NAACCR
-        NUCC
-        Note Type
-        OPCS4
-        OSM
-        Obs Period Type
-        Observation Type
-        PCORNet
-        PHDSC
-        PPI
-        Plan
-        Plan Stop Reason
-        Procedure Type
-        Provider
-        Race
-        Relationship
-        Revenue Code
-        RxNorm
-        RxNorm Extension
-        SNOMED
-        SNOMED Veterinary
-        Specimen Type
-        Sponsor
-        Supplier
-        UB04 Pri Typ of Adm
-        UB04 Typ bill
-        UCUM
-        US Census
-        Visit
-        Visit Type
-        dm+d
-      )
-
-      COST_RELATED_VOCABS = [
-        'Revenue Code',
-        'DRG'
-      ]
-
       def initialize(hash)
         @hash = hash
         @hash[:omopv5_vocabulary_id] ||= @hash[:id]
@@ -118,20 +45,6 @@ module ConceptQL
 
       def merge(other_entry)
         self.class.new(hash.merge(other_entry.hash))
-      end
-
-      def belongs_in_omopv4_plus?
-        @belongs_in_omopv4_plus ||= (!from_lexicon? || from_csv?) \
-          && has_domain? \
-          && visible?
-      end
-
-      def is_standard?
-        belongs_in_omopv4_plus? && STANDARD_VOCABS.include?(omopv5_vocabulary_id)
-      end
-
-      def is_source?
-        belongs_in_omopv4_plus? && !is_standard?
       end
 
       def to_hash
@@ -182,10 +95,6 @@ module ConceptQL
 
       def is_drugish?
         hash[:domain] =~ /drug_exposure/i
-      end
-
-      def is_costish?
-        belongs_in_omopv4_plus? && COST_RELATED_VOCABS.include?(omopv5_vocabulary_id)
       end
 
       def visible?

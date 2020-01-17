@@ -1,7 +1,4 @@
 require_relative "behaviors/gdmish"
-require_relative "behaviors/omopish"
-require_relative "behaviors/sourcish"
-require_relative "behaviors/costish"
 require_relative "../operators/selection/vocabulary"
 
 module ConceptQL
@@ -16,29 +13,12 @@ module ConceptQL
       def get_klasses
         {
           gdm: get_gdm_klass,
-          omopv4_plus: get_omopv4_plus_klass
         }.compact
       end
 
       def get_gdm_klass
         get_klass do
           include Behaviors::Gdmish
-        end
-      end
-
-      def get_omopv4_plus_klass
-        return nil
-
-        get_klass do
-          include Behaviors::Omopish
-
-          if entry.is_source?
-            include Behaviors::Sourcish
-          end
-
-          if entry.is_costish?
-            include Behaviors::Costish
-          end
         end
       end
 

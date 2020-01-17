@@ -9,24 +9,19 @@ run_spec = lambda do |data_model|
   sh "CONCEPTQL_DATA_MODEL=#{data_model} #{FileUtils::RUBY} test/all.rb"
 end
 
-desc "Run tests with omopv4_plus data model"
-task :test_omopv4_plus do
-  run_spec.call(:omopv4_plus)
-end
-
 desc "Run tests with gdm data model"
 task :test_gdm do
   run_spec.call(:gdm)
 end
 
-desc "Run tests with omopv4 data model with coverage"
+desc "Run tests with gdm data model with coverage"
 task :test_cov do
   ENV['COVERAGE'] = '1'
-  run_spec.call(:omopv4_plus)
+  run_spec.call(:gdm)
 end
 
-desc "Run tests with omopv4 data model"
-task :default => :test_omopv4_plus
+desc "Run tests with gdm data model"
+task :default => :test_gdm
 
 desc "Ingests client's CSV file for custom vocabularies"
 task :make_vocabs_csv, [:csv_path] do |t, args|

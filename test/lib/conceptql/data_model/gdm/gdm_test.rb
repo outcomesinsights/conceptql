@@ -5,11 +5,6 @@ describe ConceptQL::DataModel::Gdm do
     ConceptQL::DataModel::Gdm.new(rdbms: nil, lexicon: nil)
   end
 
-  describe "#concept_id" do
-    it "should return correct column for clinical_codes" do
-      _(dm.concept_id(:clinical_codes)).must_equal :clinical_code_concept_id
-    end
-  end
   describe "#related_concept_ids" do
     let(:db) do
       Sequel.sqlite
