@@ -7,7 +7,7 @@ sudo: false
 gemfile: ".ci.Gemfile"
 env:
   global:
-    - LEXICON_URL=postgres://postgres@localhost/lexicon CONCEPTQL_DATA_MODEL=gdm SEQUELIZER_URI="postgres://localhost/test_data_for_chisel?username=postgres"
+    - LEXICON_URL=postgres://postgres@localhost/lexicon CONCEPTQL_DATA_MODEL=gdm SEQUELIZER_URI="postgres://localhost/postgres?username=postgres"
 addons:
   postgresql: '9.6'
   apt:
