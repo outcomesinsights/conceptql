@@ -1,12 +1,6 @@
-require "active_support/core_ext/object/blank"
 require "csv"
 require_relative "entry"
 require_relative "../database"
-
-module ConceptQL
-  module Vocabularies
-  end
-end
 
 module ConceptQL
   module Vocabularies

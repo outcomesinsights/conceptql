@@ -1,7 +1,7 @@
 require_relative "../../../helper"
 require "conceptql"
 
-describe ConceptQL::Operators::InformationPeriods do
+describe ConceptQL::Operators::Selection::InformationPeriods do
   it "should appear for both GDM" do
     _(ConceptQL::Operators.operators[:gdm]["information_periods"]).must_equal ConceptQL::Operators::InformationPeriods
   end
