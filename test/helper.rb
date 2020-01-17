@@ -39,4 +39,10 @@ class Minitest::Spec
       end
     end)
   end
+
+  def sql_matches(sql, *matches)
+    matches.each do |matchy|
+      _(sql).must_match(matchy)
+    end
+  end
 end

@@ -36,23 +36,16 @@ describe ConceptQL::Operators::Selection::Vocabulary do
     end
 
     it "should produce correct SQL" do
-      sql = cdb.query(["admsrce", "12"]).sql
-      ['"concepts" WHERE', "person_id", "clinical_codes_cql_view", "12", "admsrce"].each do |matchy|
-        _(sql).must_match(matchy)
-      end
+      sql_matches(cdb.query(["admsrce", "12"]).sql, '"concepts" WHERE', "person_id", "clinical_codes_cql_view", "12", "admsrce")
     end
 
     it "should produce correct SQL for older selection operators" do
-      sql = cdb.query(["icd9", "412"]).sql
-      ['"concepts" WHERE', "person_id", "clinical_codes_cql_view", "ICD9CM", "412"].each do |matchy|
-        _(sql).must_match(matchy)
-      end
+      sql_matches(cdb.query(["icd9", "412"]).sql, '"concepts" WHERE', "person_id", "clinical_codes_cql_view", "ICD9CM", "412")
     end
 
     it "should produce correct SQL for select all" do
-      _(cdb.query(["atc", "*"]).sql).must_match %Q{"clinical_code_vocabulary_id" IN ('ATC')}
+      sql_matches(cdb.query(["atc", "*"]).sql, %Q{"clinical_code_vocabulary_id" IN ('ATC')})
     end
-
   end
 
   it "should read operators from a custom file" do

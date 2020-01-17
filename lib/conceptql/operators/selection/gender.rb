@@ -22,8 +22,10 @@ module ConceptQL
             when /^f/i
               Sequel.expr(table[:gender_concept_id].name => female_ids(db))
             else
-              Sequel.expr(table[:gender_concept_id].name => nil) \
-                | Sequel.~(table[:gender_concept_id].name => male_ids(db) + female_ids(db))
+              Sequel.|(
+                Sequel.expr(table[:gender_concept_id].name => nil),
+                Sequel.~(table[:gender_concept_id].name => male_ids(db).union(female_ids(db)))
+              )
             end
           end.inject(&:|)
         end
