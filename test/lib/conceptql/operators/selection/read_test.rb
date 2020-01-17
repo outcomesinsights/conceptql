@@ -1,4 +1,4 @@
-require_relative "../../../helper"
+require_relative "../../../../helper"
 require "conceptql"
 
 describe ConceptQL::Operators::Selection::Vocabulary do

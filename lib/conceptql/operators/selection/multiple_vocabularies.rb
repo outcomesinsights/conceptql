@@ -51,13 +51,7 @@ module ConceptQL
       validate_at_least_one_argument
 
       def query(db)
-        # TODO: A much-more efficient method would be to find all those vocabs
-        # sharing a common table and feed them into a single single query,
-        # but I think this would require some revamping of Vocabulary, and I'm
-        # just not interested in taking that on right now.
-        vocab_ops.map { |vo| vo.evaluate(db) }.inject do |union, q|
-          union.union(q)
-        end
+        vocab_ops.inject(&:unionize).evaluate(db)
       end
 
       def domains(db)

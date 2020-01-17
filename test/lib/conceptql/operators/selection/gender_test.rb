@@ -1,4 +1,4 @@
-require_relative "../../../helper"
+require_relative "../../../../helper"
 
 describe ConceptQL::Operators::Selection::Gender do
   it "be present in list of operators" do
