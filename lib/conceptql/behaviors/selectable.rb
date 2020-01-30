@@ -1,17 +1,23 @@
 module ConceptQL
   module Behaviors
     module Selectable
-=begin
-      def default_columns_proc
+      def null_columns
         proc do |hash, key|
-          hash[key] = rdbms.cast_it(key, nil)
+          hash[key.to_sym] = cast_column(key)
         end
       end
 
-      def available_columns
-        super.merge(dm.columns_by_table(table, schema: table_alias, criterion_domain: domain))
+      def make_selectable(ds)
+        ds.auto_column(:window_id, Sequel.cast_numeric(nil))
+          .auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
+          .auto_columns(default_columns)
+          .auto_column_default(null_columns)
       end
-=end
+
+      def default_columns
+        cols = Scope::DEFAULT_COLUMNS.keys
+        cols.zip(cols).to_h
+      end
     end
   end
 end

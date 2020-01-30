@@ -114,7 +114,7 @@ module ConceptQL
     end
 
     def add_output_columns(op)
-      @output_columns |= [:uuid] if op.options[:uuid]
+      @output_columns |= [:uuid] if op.include_uuid?
       if op.output_columns
         @output_columns |= op.output_columns
         @output_columns.sort_by! { |qc| COLUMN_TYPES.keys.index(qc) }

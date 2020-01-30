@@ -4,7 +4,7 @@ module ConceptQL
   module Operators
     module PassThru
       class Episode < Base
-        include ConceptQL::Behaviors::Nullish
+        include ConceptQL::Behaviors::Selectable
         register __FILE__
 
         desc <<-EOF
@@ -70,18 +70,19 @@ Groups all incoming results into episodes by person allowing for there to be a g
 
           grp_cols = ids_plus_episode.map{|c| e[c]}
 
-          episode_summary = episode_summary
-            .select_group(*grp_cols)
-            .auto_columns(
+          episode_summary = make_selectable(episode_summary
+                .select_group(*grp_cols))
+
+          # Episodes streams return null for criterion_id,table, and domain which messes up uuid generation so we had to add constants to these values
+          episode_summary = episode_summary.auto_columns(
               start_date: Sequel.function(:min, :episode_start_date),
               end_date: Sequel.function(:max, :episode_end_date),
               criterion_id: Sequel[0].cast_numeric,
               criterion_table: Sequel.cast_string("episode"),
               criterion_domain: Sequel.cast_string("episode"),
               person_id: :person_id
-            ).auto_column_default(null_columns)
+            )
 
-          # Episodes streams return null for criterion_id,table, and domain which messes up uuid generation so we had to add constants to these values
           episode_summary
         end
 

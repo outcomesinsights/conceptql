@@ -3,9 +3,9 @@ require_relative "base"
 module ConceptQL
   module Operators
     class From < Base
-      include ConceptQL::Behaviors::Timeless
+      include ConceptQL::Behaviors::Selectable
       include ConceptQL::Behaviors::Windowable
-
+      include ConceptQL::Behaviors::Timeless
 
       register __FILE__
       basic_type :selection
@@ -16,7 +16,9 @@ module ConceptQL
       validate_one_argument
 
       def query(db)
-        db.from(table_name)
+        ds = make_selectable(db[table_name])
+        ds = ds.auto_column(:uuid, :uuid) if known_columns.include?(:uuid)
+        apply_known_columns(ds)
       end
 
       def domains(db)
@@ -33,30 +35,41 @@ module ConceptQL
       end
 
       def table_name
-        return @table_name if @table_name
-        name = values.first
-        if name.is_a?(String)
+        @table_name ||= get_table_name
+      end
+
+      def apply_known_columns(ds)
+        ds.auto_columns(known_columns.zip(known_columns).to_h)
+      end
+
+      def get_table_name
+        table = column = nil
+        name = arguments.first
+        case name
+        when String
           table, column = name.split('__', 2)
-          if column
-            name = Sequel.qualify(table, column)
-          else
-            name = name.to_sym
-          end
+          name = name.to_sym
+        when nil
+          table, column = *(options.values_at(:table, :column))
         end
-        @table_name = name
+
+        if column
+          name = Sequel.qualify(table, column)
+        end
+
+        name
       end
 
-      def required_columns
-        override_columns.keys
+      def output_columns
+        known_columns - scope.query_columns
       end
 
-      def query_cols
-        required_columns
+      def known_columns
+        (options[:query_cols] || scope.query_columns).map(&:to_sym)
       end
 
-      def override_columns
-        cols = (options[:query_cols] || dynamic_columns).map(&:to_sym)
-        Hash[cols.zip(cols)]
+      def include_uuid?
+        super || known_columns.include?(:uuid)
       end
     end
   end

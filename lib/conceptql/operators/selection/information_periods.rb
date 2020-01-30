@@ -5,6 +5,7 @@ module ConceptQL
     module Selection
       class InformationPeriods < Base
         register __FILE__
+        register "observation_period"
 
         include ConceptQL::Behaviors::Windowable
         include ConceptQL::Behaviors::Timeless

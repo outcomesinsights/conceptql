@@ -15,7 +15,7 @@ module ConceptQL
       class Numeric < Base
         include ConceptQL::Behaviors::Windowable
         include ConceptQL::Behaviors::Timeless
-        include ConceptQL::Behaviors::Nullish
+        include ConceptQL::Behaviors::Selectable
 
         register __FILE__
 
@@ -65,16 +65,7 @@ Accepts two params:
           # This operator acts as a PassThru and a Selection
           # so we really need to get the Selection part from
           # Selection::Base
-          db[dm.nschema.patients.view.name]
-            .auto_column(:window_id, Sequel.cast_numeric(nil))
-            .auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
-            .auto_columns(default_columns)
-            .auto_column_default(null_columns)
-        end
-
-        def default_columns
-          cols = Scope::DEFAULT_COLUMNS.keys
-          cols.zip(cols).to_h
+          make_selectable(db[dm.nschema.patients.view.name])
         end
 
         def numeric_literal

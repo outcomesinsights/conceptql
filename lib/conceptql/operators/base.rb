@@ -296,6 +296,10 @@ module ConceptQL
         q
       end
 
+      def include_uuid?
+        options[:uuid] || scope.output_columns.include?(:uuid)
+      end
+
       def comments?
         ENV["CONCEPTQL_ENABLE_COMMENTS"] == "true"
       end

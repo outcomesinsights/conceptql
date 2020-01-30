@@ -7,6 +7,9 @@ require_relative 'sql_formatters'
 
 module ConceptQL
   class Query
+    class QueryError < StandardError
+    end
+
     extend Forwardable
     def_delegators :query, :all, :count, :execute, :order, :profile
     def_delegators :cdb, :db, :rdbms, :dm
@@ -71,8 +74,8 @@ module ConceptQL
     rescue
       #puts $!.message
       #puts $!.backtrace.join("\n")
-      return { query: "SQL unavailable for this statement\n#{$!.message}\n#{$!.backtrace.join("\n")}" }
-      #raise
+      
+      raise QueryError.new("Failed to generate SQL for: #{stmts.inspect}")
     end
 
     def annotate(opts = {})

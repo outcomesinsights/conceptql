@@ -4,7 +4,7 @@ module ConceptQL
     module Selection
       class Base < Operators::Base
         include ConceptQL::Behaviors::Windowable
-        include ConceptQL::Behaviors::Nullish
+        include ConceptQL::Behaviors::Selectable
 
         def where_clauses(db)
           [where_clause(db)].compact
@@ -28,12 +28,8 @@ module ConceptQL
 
         def prepare_columns(ds, opts = {})
           names = table.columns.map(&:name)
-          ds.auto_columns(names.zip(names).to_h)
-            .auto_column(:window_id, Sequel.cast_numeric(nil))
-            .auto_column(:criterion_table, :criterion_table)
-            .auto_column(:criterion_domain, :criterion_domain)
-            .auto_column(:uuid, proc { |qualifier| rdbms.uuid(qualifier) })
-            .auto_column_default(null_columns)
+          make_selectable(ds)
+            .auto_columns(names.zip(names).to_h)
         end
 
         def table_alias
@@ -43,4 +39,3 @@ module ConceptQL
     end
   end
 end
-

@@ -63,7 +63,7 @@ module ConceptQL
         end
 
         def join_columns
-          (options[:join_columns] || []) | matching_columns
+          (options[:join_columns] || []).map(&:to_sym) | matching_columns
         end
 
         def prepare_columns(ds, opts = {})

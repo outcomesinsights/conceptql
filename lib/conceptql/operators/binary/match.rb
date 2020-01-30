@@ -23,7 +23,7 @@ module ConceptQL
         end
 
         def determine_columns
-          columns = scope.query_columns
+          columns = scope.query_columns | scope.output_columns
           columns &= options[:only_columns].map(&:to_sym) if options[:only_columns]
           columns -= options[:except_columns].map(&:to_sym) if options[:except_columns]
           columns
