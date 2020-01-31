@@ -80,8 +80,11 @@ Groups all incoming results into episodes by person allowing for there to be a g
               criterion_id: Sequel[0].cast_numeric,
               criterion_table: Sequel.cast_string("episode"),
               criterion_domain: Sequel.cast_string("episode"),
-              person_id: :person_id
+              person_id: :person_id,
+              source_value: cast_column(:source_value),
+              source_vocabulary_id: cast_column(:source_vocabulary_id)
             )
+            .auto_column_default(null_columns)
 
           episode_summary
         end

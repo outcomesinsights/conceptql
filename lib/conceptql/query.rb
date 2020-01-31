@@ -8,6 +8,9 @@ require_relative 'sql_formatters'
 module ConceptQL
   class Query
     class QueryError < StandardError
+      def message
+        [super, "OG ERROR:", cause.full_message].join("\n")
+      end
     end
 
     extend Forwardable
@@ -70,12 +73,8 @@ module ConceptQL
         end
       end
       Hash[stmts]
-      # TODO: throw a reasonable error here
     rescue
-      #puts $!.message
-      #puts $!.backtrace.join("\n")
-      
-      raise QueryError.new("Failed to generate SQL for: #{stmts.inspect}")
+      raise QueryError.new("Failed to generate SQL for: #{statement.inspect}")
     end
 
     def annotate(opts = {})
