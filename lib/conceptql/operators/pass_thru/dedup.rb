@@ -17,7 +17,7 @@ module ConceptQL
         end
 
         def query_cols
-          dynamic_columns
+          scope.query_columns
         end
 
         def unioned(db)

@@ -171,6 +171,10 @@ module ConceptQL
           @table_name ||= make_table_name(table)
         end
 
+        def make_table_name(table)
+          Sequel.as(table, :tab)
+        end
+
         def table_concept_column
           Sequel.qualify(:tab, concept_column)
         end

@@ -41,7 +41,7 @@ module ConceptQL
     end
 
     def query_cols(opts = {})
-      cols = operator.dynamic_columns
+      cols = operator.scope.query_columns
       if opts[:cast]
         cols = query_cols.each_with_object({}) do |column, h|
           h[column] = operator.cast_column(column)
@@ -71,11 +71,6 @@ module ConceptQL
       end
       Hash[stmts]
       # TODO: throw a reasonable error here
-    rescue
-      #puts $!.message
-      #puts $!.backtrace.join("\n")
-      
-      raise QueryError.new("Failed to generate SQL for: #{stmts.inspect}")
     end
 
     def annotate(opts = {})

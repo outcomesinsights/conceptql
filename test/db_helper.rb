@@ -170,9 +170,13 @@ class Minitest::Spec
     end
 
     unless SKIP_SQL_GENERATION_TEST
-      query(statement).sql(:create_tables)
-      query(["window", statement, {'window_table' => [ 'date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' } ] } ]).sql(:create_tables)
-      query(["window", statement, { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' } ]).sql(:create_tables)
+      if test_name =~ /expect_sql_error/
+        _(proc { query(statement).sql(:create_tables) }).must_raise(Error)
+      else
+        query(statement).sql(:create_tables)
+        query(["window", statement, {'window_table' => [ 'date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' } ] } ]).sql(:create_tables)
+        query(["window", statement, { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' } ]).sql(:create_tables)
+      end
     end
 
     if PERFORMANCE_TEST_TIMES > 0

@@ -51,10 +51,6 @@ occurrence, this operator returns nothing for that person.
       option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
       option :group_by_date, type: :boolean, instructions: 'Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence'
 
-      def query_cols
-        dynamic_columns + [:rn]
-      end
-
       def occurrence
         @occurrence ||= arguments.first
       end
