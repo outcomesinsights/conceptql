@@ -24,8 +24,8 @@ module ConceptQL
         register __FILE__
 
         desc 'Adjusts the start_date and end_date to create a new window of time for each result.'
-        option :start, type: :string
-        option :end, type: :string
+        option :start, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.'
+        option :end, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.'
         allows_one_upstream
         validate_one_upstream
         validate_no_arguments

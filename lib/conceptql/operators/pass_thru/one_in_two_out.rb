@@ -18,8 +18,8 @@ twice in an outpatient setting with a 30-day gap.
 
       option :inpatient_length_of_stay, type: :integer, min: 0, default: 0, desc: 'Minimum length of inpatient stay (in days) required for inpatient event to be valid', label: 'Inpatient Length of Stay (Days)'
       option :inpatient_return_date, type: :string, options: ['Admit Date', 'Discharge Date'], default: 'Discharge Date', desc: 'Which date to pass downstream in both the start_date and end_date fields'
-      option :outpatient_minimum_gap, type: :string, default: '30d', desc: 'Minimum number of days between outpatient events for the event to be valid'
-      option :outpatient_maximum_gap, type: :string, desc: 'Maximum number of days between outpatient events for the event to be valid'
+      option :outpatient_minimum_gap, type: :string, default: '30d', instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
+      option :outpatient_maximum_gap, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
       option :outpatient_event_to_return, type: :string, options: ['Initial Event', 'Confirming Event'], default: 'Initial Event', desc: 'Which event to pass downstream'
 
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap

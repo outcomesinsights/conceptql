@@ -14,9 +14,13 @@ module ConceptQL
         validate_no_upstreams
         validate_no_arguments
 
+        output_column :admission_date
+        output_column :discharge_date
         output_column :length_of_stay
-        output_column :admission_source
-        output_column :discharge_location
+        output_column :admission_source_value
+        output_column :admission_source_description
+        output_column :discharge_location_source_value
+        output_column :discharge_location_source_description
       end
 
       def query(db)
@@ -28,12 +32,12 @@ module ConceptQL
         dm.nschema[table_name]
       end
 
-      def table_name
-        "#{collection_type.downcase}_utilizations_v1".to_sym
-      end
-
       def collection_type
         raise NotImplementedError
+      end
+
+      def table_name
+        "#{collection_type.downcase}_utilizations_v1".to_sym
       end
     end
   end

@@ -120,6 +120,7 @@ module ConceptQL
               v.ds do |aliased_table, pa, db, rdbms|
                 lexicon = new_lexicon(db)
 
+=begin
                 ancestor_ids = lexicon.concepts("JIGSAW_FILE_PROVENANCE_TYPE", collection_type).select(:id)
                 descendant_ids = lexicon.descendants_of(ancestor_ids).select(:descendant_id)
                 primary_ids = lexicon.concepts("JIGSAW_CODE_PROVENANCE_TYPE", "primary").select(:id)
@@ -138,8 +139,35 @@ module ConceptQL
                   .left_join(:concepts, { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
                   .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[pa][:id] }, table_alias: :pcon)
                   .where(Sequel[:cn][:source_type_concept_id] => descendant_ids)
+=end
+        source_type_id = lexicon.concepts("JIGSAW_FILE_PROVENANCE_TYPE", collection_type).select_map(:id)
+        all_source_type_ids = lexicon.descendants_of(source_type_id).select_map(:descendant_id)
+        primary_id = lexicon.concepts("JIGSAW_CODE_PROVENANCE_TYPE", "primary").select_map(:id)
+        all_primary_ids = lexicon.descendants_of(primary_id).select_map(:descendant_id)
+        condition_domains = lexicon.lexicon_db[:vocabularies].where(domain: 'condition_occurrence').select_map(:id)
+
+        # Get primary diagnosis codes
+        primary_concepts = db[Sequel[:clinical_codes].as(:pcc)]
+          .where(provenance_concept_id: all_primary_ids, Sequel[:pcc][:clinical_code_vocabulary_id] => condition_domains)
+          .select(
+            Sequel[:pcc][:collection_id].as(:collection_id),
+            Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
+            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id))
+          .order(Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id])
+          .from_self
+          .distinct(:collection_id)
+
+
+        db[:collections].from_self(alias: :cl)
+          .join(:admission_details, { Sequel[:ad][:id] => Sequel[:cl][:admission_detail_id] }, table_alias: :ad)
+          .left_join(:contexts, { Sequel[:cn][:collection_id] => Sequel[:cl][:id] }, table_alias: :cn)
+          .left_join(:concepts, { Sequel[:ad][:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
+          .left_join(:concepts, { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
+          .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[:cl][:id] }, table_alias: :pcon)
+          .where(Sequel[:cn][:source_type_concept_id] => all_source_type_ids)
               end
 
+=begin
               v.new_view_column(:person_id) { |pa| pa[:patient_id] }
               v.new_view_column(:criterion_id) { |pa| pa[:id] }
               v.new_view_column(:criterion_table, Sequel.cast_string("collections"))
@@ -151,6 +179,23 @@ module ConceptQL
               v.new_view_column(:discharge_location, Sequel[:dlc][:concept_code])
               v.new_view_column(:source_value, Sequel[:pcon][:concept_code])
               v.new_view_column(:source_vocabulary_id, Sequel[:pcon][:vocabulary_id])
+=end
+
+              v.new_view_column(:start_date, Sequel[:cl][:start_date])
+              v.new_view_column(:end_date, Sequel[:cl][:end_date])
+              v.new_view_column(:admission_date, Sequel[:ad][:admission_date])
+              v.new_view_column(:discharge_date, Sequel[:ad][:discharge_date])
+              v.new_view_column(:length_of_stay) { |pa, db, rdbms| ((rdbms.days_between(Sequel[:ad][:admission_date], Sequel[:ad][:discharge_date])) + 1) }
+              v.new_view_column(:admission_source_value, Sequel[:asc][:concept_code])
+              v.new_view_column(:admission_source_description, Sequel[:asc][:concept_text])
+              v.new_view_column(:discharge_location_source_value, Sequel[:dlc][:concept_code])
+              v.new_view_column(:discharge_location_source_description, Sequel[:dlc][:concept_text])
+              v.new_view_column(:source_value, Sequel[:pcon][:concept_code])
+              v.new_view_column(:source_vocabulary_id, Sequel[:pcon][:vocabulary_id])
+              v.new_view_column(:person_id, Sequel[:cl][:patient_id])
+              v.new_view_column(:criterion_id, Sequel[:cl][:id])
+              v.new_view_column(:criterion_table, Sequel.cast_string("collections"))
+              v.new_view_column(:criterion_domain, Sequel.cast_string("condition_occurrence"))
             end
           end
 
