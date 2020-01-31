@@ -45,7 +45,7 @@ module ConceptQL
   def self.metadata(opts = {})
     {
       categories: categories,
-      operators: ConceptQL::Nodifier.new.to_metadata(opts)
+      operators: ConceptQL::Database.new(nil).query(["icd9", "412"]).send(:nodifier).to_metadata(opts)
     }
   end
 

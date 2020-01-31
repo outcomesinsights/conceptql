@@ -4,6 +4,8 @@ module ConceptQL
   module Operators
     class Projection < Base
       register __FILE__
+
+      no_desc
       allows_one_upstream
       validate_one_upstream
       category "Filter Single Stream"
