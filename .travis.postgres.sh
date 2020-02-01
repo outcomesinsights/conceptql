@@ -4,7 +4,8 @@ set -x
 
 echo "${SEQUELIZER_URI}" | grep -i postgres || exit 0
 
-time curl -sSL "http://chisel.test_data.jsaw.io" | pigz -dc | psql postgres://postgres@localhost/postgres > /tmp/restore.log 2>&1 || cat /tmp/restore.log
+create_db test_data_for_chisel
+time curl -sSL "http://chisel.test_data.jsaw.io" | pigz -dc | psql postgres://postgres@localhost/test_data_for_chisel > /tmp/restore.log 2>&1 || cat /tmp/restore.log
 
 # Spot check OMOPv4+
 #for table in person condition_occurrence procedure_occurrence observation observation period; do
