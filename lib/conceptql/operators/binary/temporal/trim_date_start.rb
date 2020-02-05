@@ -33,7 +33,7 @@ is passed through unaffected.
           allows_one_upstream
 
           def replacement_columns
-            { start_date: Sequel.function(:greatest, l_start_date, Sequel.function(:coalesce, within_end, l_start_date)) }
+            { start_date: Sequel.function(rdbms.greatest_function, l_start_date, Sequel.function(:coalesce, within_end, l_start_date)) }
           end
 
           private
