@@ -12,7 +12,8 @@ module ConceptQL
       end
 
       def days_between(from_column, to_column)
-        cast_date(to_column) - cast_date(from_column)
+        expr = Sequel.function(:julianday, to_column) - Sequel.function(:julianday, from_column)
+        Sequel.cast(expr, Integer)
       end
 
       def create_options(scope, ds)
