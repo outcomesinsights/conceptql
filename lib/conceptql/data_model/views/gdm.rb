@@ -278,6 +278,21 @@ module ConceptQL
             v.new_view_column(:file_provenance_type, Sequel[cons_alias][:source_type_concept_id])
             v.new_view_column(:code_provenance_type, Sequel[:cc][:provenance_concept_id])
           end
+
+          new_view("admission_join_view") do |v|
+            adm_alias = :adm
+            adm_table = Sequel[:admission_details].as(adm_alias)
+            v.ds do |_, pa, db, rdbms|
+              db[adm_table]
+                .join(:collections, {Sequel[adm_alias][:id] => Sequel[:co][:admission_detail_id]}, table_alias: :co)
+                .join(:clinical_codes, {Sequel[:co][:id] => Sequel[:cc][:collection_id]}, table_alias: :cc)
+            end
+
+            v.new_view_column(:criterion_id, Sequel[:cc][:id])
+            v.new_view_column(:criterion_table, Sequel.cast_string("clinical_codes"))
+            v.new_view_column(:admission_date, Sequel[adm_alias][:admission_date])
+            v.new_view_column(:discharge_date, Sequel[adm_alias][:discharge_date])
+          end
         end
 
         def new_lexicon(db)

@@ -58,7 +58,7 @@ twice in an outpatient setting with a 30-day gap.
         q = all_inpatient_events
           .from_self(alias: :og)
           .left_join(
-            :admission_details_cql_view_v1,
+            :admission_join_view_v1,
             {
               Sequel[:ajv][:criterion_id] => Sequel[:og][:criterion_id],
               Sequel[:ajv][:criterion_table] => Sequel[:og][:criterion_table]
