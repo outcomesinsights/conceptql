@@ -1,10 +1,5 @@
 ---
-language: ruby
-rvm:
-  - 2.4
-dist: trusty
-sudo: false
-gemfile: ".ci.Gemfile"
+language: minimal
 env:
   matrix:
     - SEQUELIZER_URL=sqlite:///data/gdm_250.db
@@ -23,7 +18,7 @@ before_install:
   - docker-compose up -d lexicon test_data
 
 script:
-  - docker-compose run conceptql sh -c "bundle install && sleep 10 && bundle exec ruby test/all.rb"
+  - docker-compose run conceptql sh -c "bundle install && sleep 20 && bundle exec ruby test/all.rb"
 
 notifications:
   slack:

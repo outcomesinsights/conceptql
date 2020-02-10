@@ -12,7 +12,6 @@ ShellB.alias_command("compose" "docker-compose")
 ShellB.def_system_command("zstd")
 
 def sqlitify(yaml)
-  p yaml
   yaml["services"]["conceptql"]["depends_on"] |= %w[test_data]
   yaml["services"]["conceptql"]["volumes"] += %w[data:/data/]
   yaml["services"]["test_data"] = {
