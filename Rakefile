@@ -55,7 +55,7 @@ end
 
 
 task :prep_compose do |t, _args|
-  compose = YAML.load_file("dockers/base_compose.yml")
+  compose = Psych.load_file("dockers/base_compose.yml")
   new_yaml =if postgres?
               postgresify(compose)
             else
