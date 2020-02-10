@@ -69,7 +69,19 @@ end
 # First, require vocabulary operator.  It will establish operators for all
 # vocabularies found in Lexicon.  Then other operators might override
 # some of those dynamically generated operators
-ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
+retries = 0
+begin
+  ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
+rescue Sequel::DatabaseConnectionError => e
+  if (retries += 1) <= 3
+    timeout = retries * 5
+    puts "Timeout (#{e.message.chomp}), retrying in #{timeout} second(s)..."
+    sleep(timeout)
+    retry
+  else
+    raise
+  end
+end
 Pathname.glob(File.dirname(__FILE__) + "/conceptql/operators/**/*.rb")
   .entries
   .map { |e| e.to_s.gsub(File.dirname(__FILE__) + "/", '') }
