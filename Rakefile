@@ -3,7 +3,6 @@ begin
 rescue LoadError
 end
 
-require "conceptql"
 require "psych"
 require "shellb"
 
@@ -13,12 +12,11 @@ ShellB.alias_command("compose" "docker-compose")
 ShellB.def_system_command("zstd")
 
 def sqlitify(yaml)
-  p yaml
   yaml["services"]["conceptql"]["depends_on"] |= %w[test_data]
   yaml["services"]["conceptql"]["volumes"] += %w[data:/data/]
   yaml["services"]["test_data"] = {
     "image" => "outcomesinsights/misc:test_data.chisel.sqlite.latest",
-    "command" => "cp gdm_250.db /data/",
+    "command" => "sleep infinity",
     "volumes" => %w[data:/data/]
   }
   yaml["volumes"] = {"data" => nil}
@@ -33,7 +31,7 @@ def postgresify(yaml)
   yaml
 end
 
-ENV['CONCEPTQL_DATA_MODEL'] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
+ENV['CONCEPTQL_DATA_MODEL'] ||= "gdm"
 
 def postgres?
   ENV["SEQUELIZER_URL"] =~ /postgres/
@@ -56,7 +54,7 @@ end
 
 
 task :prep_compose do |t, _args|
-  compose = YAML.load_file("dockers/base_compose.yml")
+  compose = Psych.load_file("dockers/base_compose.yml")
   new_yaml =if postgres?
               postgresify(compose)
             else
