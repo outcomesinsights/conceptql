@@ -3,14 +3,48 @@ begin
 rescue LoadError
 end
 
+require "conceptql"
+require "psych"
+require "shellb"
+
+ShellB.def_system_command("curl")
+ShellB.def_system_command("docker")
+ShellB.alias_command("compose" "docker-compose")
+ShellB.def_system_command("zstd")
+
+def sqlitify(yaml)
+  p yaml
+  yaml["services"]["conceptql"]["depends_on"] |= %w[test_data]
+  yaml["services"]["conceptql"]["volumes"] += %w[data:/data/]
+  yaml["services"]["test_data"] = {
+    "image" => "outcomesinsights/misc:test_data.chisel.sqlite.latest",
+    "command" => "cp gdm_250.db /data/",
+    "volumes" => %w[data:/data/]
+  }
+  yaml["volumes"] = {"data" => nil}
+  yaml
+end
+
+def postgresify(yaml)
+  yaml["services"]["conceptql"]["depends_on"] += %w[test_data]
+  yaml["services"]["test_data"] = {
+    "image" => "outcomesinsights/misc:test_data.chisel.postgres.latest",
+  }
+  yaml
+end
+
 ENV['CONCEPTQL_DATA_MODEL'] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
 
+def postgres?
+  ENV["SEQUELIZER_URL"] =~ /postgres/
+end
+
 run_spec = lambda do |data_model|
-  sh "CONCEPTQL_DATA_MODEL=#{data_model} #{FileUtils::RUBY} test/all.rb"
+  sh "CONCEPTQL_DATA_MODEL=#{data_model} docker-compose run conceptql bundle exec ruby test/all.rb"
 end
 
 desc "Run tests with gdm data model"
-task :test_gdm do
+task test_gdm: [:prep_compose] do
   run_spec.call(:gdm)
 end
 
@@ -18,6 +52,17 @@ desc "Run tests with gdm data model with coverage"
 task :test_cov do
   ENV['COVERAGE'] = '1'
   run_spec.call(:gdm)
+end
+
+
+task :prep_compose do |t, _args|
+  compose = YAML.load_file("dockers/base_compose.yml")
+  new_yaml =if postgres?
+              postgresify(compose)
+            else
+              sqlitify(compose)
+            end
+  File.write("docker-compose.yml", new_yaml.to_yaml)
 end
 
 desc "Run tests with gdm data model"

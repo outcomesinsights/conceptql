@@ -63,7 +63,9 @@ module ConceptQL
           columns.transform_values! { |v| v << view_alias }
         end
 
-        columns = columns.map do |col_name, views|
+        columns = columns
+          .select { |name, views| !views.blank?}
+          .map do |col_name, views|
           cols = views.map { |v| Sequel[v][col_name] }
           cols = if cols.length > 1
                    Sequel.function(:coalesce, *cols) 
