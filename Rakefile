@@ -3,7 +3,6 @@ begin
 rescue LoadError
 end
 
-require "conceptql"
 require "psych"
 require "shellb"
 
@@ -33,7 +32,7 @@ def postgresify(yaml)
   yaml
 end
 
-ENV['CONCEPTQL_DATA_MODEL'] ||= ConceptQL::DEFAULT_DATA_MODEL.to_s
+ENV['CONCEPTQL_DATA_MODEL'] ||= "gdm"
 
 def postgres?
   ENV["SEQUELIZER_URL"] =~ /postgres/
