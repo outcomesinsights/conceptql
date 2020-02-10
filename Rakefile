@@ -16,7 +16,7 @@ def sqlitify(yaml)
   yaml["services"]["conceptql"]["volumes"] += %w[data:/data/]
   yaml["services"]["test_data"] = {
     "image" => "outcomesinsights/misc:test_data.chisel.sqlite.latest",
-    "command" => "cp gdm_250.db /data/",
+    "command" => "sleep infinity",
     "volumes" => %w[data:/data/]
   }
   yaml["volumes"] = {"data" => nil}
