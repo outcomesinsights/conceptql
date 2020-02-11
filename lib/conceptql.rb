@@ -1,4 +1,5 @@
 require "pathname"
+require "sequel"
 %w(
   /../lib/conceptql/query_modifiers/**/*.rb
   /../lib/conceptql/behaviors/*.rb
@@ -27,10 +28,12 @@ require "conceptql/data_model"
 
 # byebug is only required during development
 begin
-  require "byebug" unless ENV["CONCEPTQL_PRY_RESCUE"]
-  require "pry"
-rescue LoadError
-  nil
+  unless ENV["CONCEPTQL_PRY_RESCUE"]
+    require "byebug"
+    require "pry-byebug"
+  end
+rescue LoadError => e
+  puts e.message
 end
 
 require "conceptql/vocabularies/dynamic_vocabularies"
@@ -64,12 +67,26 @@ module ConceptQL
   end
 end
 
+Sequel::Database.extension(:retry)
+
 # Require all operator subclasses eagerly
 #
 # First, require vocabulary operator.  It will establish operators for all
 # vocabularies found in Lexicon.  Then other operators might override
 # some of those dynamically generated operators
-ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
+retries = 0
+begin
+  ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
+rescue Sequel::DatabaseConnectionError => e
+  if (retries += 1) <= 3
+    timeout = retries * 5
+    puts "Timeout (#{e.message.chomp}), retrying in #{timeout} second(s)..."
+    sleep(timeout)
+    retry
+  else
+    raise
+  end
+end
 Pathname.glob(File.dirname(__FILE__) + "/conceptql/operators/**/*.rb")
   .entries
   .map { |e| e.to_s.gsub(File.dirname(__FILE__) + "/", '') }
