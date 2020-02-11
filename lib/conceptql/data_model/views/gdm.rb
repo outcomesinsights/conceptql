@@ -135,6 +135,10 @@ module ConceptQL
                   .order(Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id])
                   .from_self
                   .select_group(:collection_id)
+                  .select_append(
+                    Sequel.function(:min, :concept_code).as(:concept_code),
+                    Sequel.function(:min, :vocabulary_id).as(:vocabulary_id)
+                  )
 
 
                 db[:collections].from_self(alias: :cl)

@@ -1,36 +1,36 @@
 ---
-language: ruby
-rvm:
-  - 2.4
-dist: trusty
-sudo: false
-gemfile: ".ci.Gemfile"
+language: minimal
 env:
+  matrix:
+    - SEQUELIZER_URL=sqlite:///data/gdm_250.db
+    - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data_for_chisel
   global:
-    - LEXICON_URL=postgres://postgres@localhost/lexicon CONCEPTQL_DATA_MODEL=gdm SEQUELIZER_URI="postgres://localhost/test_data_for_chisel?username=postgres"
-addons:
-  postgresql: '9.6'
-  apt:
-    packages:
-      - python-pip
-      - pigz
+    - LEXICON_URL=postgres://ryan:r@lexicon/lexicon
 
 services:
-  - postgresql
+  - docker
 
 before_install:
-  - sudo mount -o remount,size=60% /var/ramfs
-  - pip install --user pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse
-  - sqlite3 --version
-  - psql -c "create database lexicon;" -U postgres
-  - curl -sSL "http://chisel.lexicon.jsaw.io" | pigz -dc | psql postgres://postgres@localhost/lexicon > /tmp/restore.log 2>&1 || cat /tmp/restore.log
-  - gem update --system && gem install bundler tping
+  - docker login --username "${DOCKER_HUB_USER}" --password "${DOCKER_HUB_PASSWORD}"
+  - cp dockers/base_compose.yml docker-compose.yml
+  - docker-compose pull conceptql || docker-compose build conceptql
+  - docker-compose run conceptql sh -c "bundle exec rake prep_compose"
+  - docker-compose run test_data sh -c "cp gdm_250.db /data/ || exit 0"
+  - docker-compose up -d lexicon
 
 script:
-  - travis_wait 45 bash .travis.postgres.sh
-  - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo jigsaw-diagram-editor --pro --branch $TRAVIS_BRANCH
-  - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo t_shank --pro --branch $TRAVIS_BRANCH
+  - docker-compose run conceptql sh -c "bundle install && sleep 20 && bundle exec ruby test/all.rb"
 
 notifications:
   slack:
     secure: YrvvLrIOgRIzqb01GbektA0YZXCieghuhaU3O4vBW/otrz26twb/0zeB/HHqKS3P2re0R127wGw6nAUAG9ieEHPYMKcpZZWzvnPrqQ/5ASbIZWX85fps0svFEeQTqRjK8TdHC/0ZJoy3P7i6wgBoWcs434aSR4K6KgisdWJATk0=
+
+jobs:
+  include:
+    - stage: deploy
+      if: type != pull_request
+      before_install:
+      - gem update --system && gem install bundler tping
+      script: 
+      - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo jigsaw-diagram-editor --pro --branch $TRAVIS_BRANCH
+      - tping --token $TRAVIS_PRO_TOKEN --user outcomesinsights --repo t_shank --pro --branch $TRAVIS_BRANCH

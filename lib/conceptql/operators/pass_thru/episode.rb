@@ -41,7 +41,7 @@ Groups all incoming results into episodes by person allowing for there to be a g
           cond_gap_lt_start = (gap_check < Sequel[:episode_end_date]) | (nil)
 
           dt2 = dt1.from_self.select_append(
-            gap_of.as(:gap_of),
+            Sequel[gap_of].as(:gap_of),
             cond_gap_lt_start.as(:step) # True if new episode else null
           )
 
@@ -55,7 +55,7 @@ Groups all incoming results into episodes by person allowing for there to be a g
           last_dispensing = tmp_episode_summary.from_self.select(*ids_plus_episode).
             select_append(
               :gap_of,
-              datediff(db, Sequel[:episode_start_date], Sequel.function(:lag, :episode_end_date).over(partition: partition_vars + [:episode], order: :start_date)).as(:LEpisodeGap),
+              (rdbms.days_between(Sequel[:episode_start_date], Sequel.function(:lag, :episode_end_date).over(partition: partition_vars + [:episode], order: :start_date))).as(:LEpisodeGap),
               Sequel.function(:row_number).over(partition: ids_plus_episode, order: [Sequel.desc(:start_date)]).as(:event_number)
           )
 
@@ -91,8 +91,8 @@ Groups all incoming results into episodes by person allowing for there to be a g
 
         def get_episode_gap
           # If Create treatment episodes get episode gap otherwise allow only 0 gap
-          return Sequel[options[:gap_of]].cast_numeric unless options[:gap_of].nil?
-          return Sequel[0].cast_numeric
+          return options[:gap_of].to_i
+          return Sequel[options[:gap_of].to_i].cast_numeric
         end
 
         def unioned(db)
@@ -105,28 +105,8 @@ Groups all incoming results into episodes by person allowing for there to be a g
           return matching_columns
         end
 
-        ##
-        # Method to generate Impala/PostgreSQL specific sequel to add a particular timeframe (days, months, etc) to a date
-        #
-
         def date_adjust_add(db, from, by, timeframe)
-          if db.database_type == :postgres
-            Sequel.cast(from + Sequel.lit("(? * INTERVAL '1' ?)", by, Sequel.lit(timeframe.sub(/s\z/, ''))), Date)
-          else
-            from + Sequel.lit("INTERVAL ? ?", by, Sequel.lit(timeframe))
-          end
-        end
-
-        ##
-        # Method to generate Impala/PostgreSQL specific sequel to subtract two dates
-        #
-
-        def datediff(db, from, to)
-          if db.database_type == :postgres
-            Sequel.extract(:days, Sequel.cast(from, Time) - Sequel.cast(to, Time))
-          else
-            Sequel.function(:datediff, from, to)
-          end
+          DateAdjuster.new(self, "#{by}#{timeframe.chars.first}").adjust(from)
         end
       end
     end

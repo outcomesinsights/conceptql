@@ -41,6 +41,7 @@ class Minitest::Spec
 
       order_columns = [:person_id, :criterion_table, :criterion_domain, :start_date, :criterion_id]
       order_columns << :uuid if q.include_column?(:uuid)
+      order_columns << :window_id if q.include_column?(:window_id)
       ds = ds.order(*order_columns)
 
       results = ds.all
@@ -203,10 +204,17 @@ class Minitest::Spec
       if ENV["CONCEPTQL_STOP_ON_ERROR"]
         file = "/tmp/error.sql"
         File.write(file, sql)
-        Shell.def_system_command("psql")
+        url = Sequelizer.options[:url]
+        cmd = if DB.database_type == :sqlite
+                url = url.sub("sqlite://", "")
+                :sqlite3
+              else
+                :psql
+              end
+        Shell.def_system_command(cmd)
         sh = Shell.new
         sh.out do
-          cat(file) | psql(Sequelizer.options[:url])
+          cat(file) | send(cmd, url)
         end
       end
     end

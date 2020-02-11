@@ -2,7 +2,20 @@ require_relative "generic"
 
 module ConceptQL
   module Rdbms
-    class Postgres < Generic
+    class Sqlite < Generic
+      def least_function
+        :min
+      end
+
+      def greatest_function
+        :max
+      end
+
+      def days_between(from_column, to_column)
+        expr = Sequel.function(:julianday, to_column) - Sequel.function(:julianday, from_column)
+        Sequel.cast(expr, Integer)
+      end
+
       def create_options(scope, ds)
         opts = {}
         opts[:analyze] = opts[:explain] = explain_temp_tables?
@@ -31,4 +44,5 @@ module ConceptQL
     end
   end
 end
+
 

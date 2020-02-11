@@ -1,6 +1,18 @@
 module ConceptQL
   module Rdbms
     class Generic
+      def days_between(from_column, to_column)
+        cast_date(to_column) - cast_date(from_column)
+      end
+
+      def least_function
+        :least
+      end
+
+      def greatest_function
+        :greatest
+      end
+
       def process(column, value = nil)
         cast_it(column, value).as(column)
       end

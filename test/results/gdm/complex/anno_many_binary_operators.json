@@ -1,0 +1,319 @@
+[
+  "time_window",
+  [
+    "union",
+    [
+      "except",
+      {
+        "left": [
+          "visit_occurrence",
+          [
+            "intersect",
+            [
+              "icd9",
+              "100",
+              {
+                "label": "BC ICD9 Dx",
+                "annotation": {
+                  "counts": {
+                    "condition_occurrence": {
+                      "rows": 0,
+                      "n": 0
+                    }
+                  }
+                },
+                "name": "ICD-9 CM"
+              }
+            ],
+            [
+              "condition_type",
+              "inpatient",
+              {
+                "annotation": {
+                  "counts": {
+                    "condition_occurrence": {
+                      "rows": 0,
+                      "n": 0
+                    }
+                  },
+                  "warnings": [
+                    [
+                      "unknown code(s)",
+                      "inpatient"
+                    ]
+                  ]
+                },
+                "name": "OMOP Condition Occurrence Type"
+              }
+            ],
+            {
+              "label": "Inpatient BC Dx",
+              "annotation": {
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 0,
+                    "n": 0
+                  }
+                },
+                "errors": [
+                  [
+                    "invalid operator",
+                    "intersect"
+                  ]
+                ]
+              },
+              "name": "Invalid"
+            }
+          ],
+          {
+            "label": "Inp Visit for BC Dx",
+            "annotation": {
+              "counts": {
+                "condition_occurrence": {
+                  "rows": 0,
+                  "n": 0
+                }
+              },
+              "errors": [
+                [
+                  "invalid operator",
+                  "visit_occurrence"
+                ]
+              ]
+            },
+            "name": "Invalid"
+          }
+        ],
+        "right": [
+          "union",
+          [
+            "overlaps",
+            {
+              "left": [
+                "recall",
+                "Inp Visit for BC Dx",
+                {
+                  "annotation": {
+                    "counts": {
+                      "invalid": {
+                        "rows": 0,
+                        "n": 0
+                      }
+                    },
+                    "errors": [
+                      [
+                        "no matching label",
+                        "Inp Visit for BC Dx"
+                      ]
+                    ]
+                  },
+                  "name": "Recall"
+                }
+              ],
+              "right": [
+                "recall",
+                "Inp Visit for BC Dx",
+                {
+                  "annotation": {
+                    "counts": {
+                      "invalid": {
+                        "rows": 0,
+                        "n": 0
+                      }
+                    },
+                    "errors": [
+                      [
+                        "no matching label",
+                        "Inp Visit for BC Dx"
+                      ]
+                    ]
+                  },
+                  "name": "Recall"
+                }
+              ],
+              "annotation": {
+                "counts": {
+                  "invalid": {
+                    "rows": 0,
+                    "n": 0
+                  }
+                },
+                "errors": [
+                  [
+                    "invalid operator",
+                    "overlaps"
+                  ]
+                ]
+              },
+              "name": "Invalid"
+            }
+          ],
+          [
+            "during",
+            {
+              "left": [
+                "recall",
+                "Inp Visit for BC Dx",
+                {
+                  "annotation": {
+                    "counts": {
+                      "invalid": {
+                        "rows": 0,
+                        "n": 0
+                      }
+                    },
+                    "errors": [
+                      [
+                        "no matching label",
+                        "Inp Visit for BC Dx"
+                      ]
+                    ]
+                  },
+                  "name": "Recall"
+                }
+              ],
+              "right": [
+                "recall",
+                "Inp Visit for BC Dx",
+                {
+                  "annotation": {
+                    "counts": {
+                      "invalid": {
+                        "rows": 0,
+                        "n": 0
+                      }
+                    },
+                    "errors": [
+                      [
+                        "no matching label",
+                        "Inp Visit for BC Dx"
+                      ]
+                    ]
+                  },
+                  "name": "Recall"
+                }
+              ],
+              "annotation": {
+                "counts": {
+                  "invalid": {
+                    "rows": 0,
+                    "n": 0
+                  }
+                }
+              },
+              "name": "During"
+            }
+          ],
+          {
+            "annotation": {
+              "counts": {
+                "invalid": {
+                  "rows": 0,
+                  "n": 0
+                }
+              }
+            },
+            "name": "Union"
+          }
+        ],
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 0,
+              "n": 0
+            }
+          }
+        },
+        "name": "Except"
+      }
+    ],
+    [
+      "equal",
+      {
+        "left": [
+          "recall",
+          "Inp Visit for BC Dx",
+          {
+            "annotation": {
+              "counts": {
+                "invalid": {
+                  "rows": 0,
+                  "n": 0
+                }
+              },
+              "errors": [
+                [
+                  "no matching label",
+                  "Inp Visit for BC Dx"
+                ]
+              ]
+            },
+            "name": "Recall"
+          }
+        ],
+        "right": [
+          "recall",
+          "Inp Visit for BC Dx",
+          {
+            "annotation": {
+              "counts": {
+                "invalid": {
+                  "rows": 0,
+                  "n": 0
+                }
+              },
+              "errors": [
+                [
+                  "no matching label",
+                  "Inp Visit for BC Dx"
+                ]
+              ]
+            },
+            "name": "Recall"
+          }
+        ],
+        "annotation": {
+          "counts": {
+            "invalid": {
+              "rows": 0,
+              "n": 0
+            }
+          }
+        },
+        "name": "Equal"
+      }
+    ],
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 0,
+            "n": 0
+          },
+          "invalid": {
+            "rows": 0,
+            "n": 0
+          }
+        }
+      },
+      "name": "Union"
+    }
+  ],
+  {
+    "start": "END",
+    "label": "End date is start date",
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        },
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    },
+    "name": "Time Window"
+  }
+]

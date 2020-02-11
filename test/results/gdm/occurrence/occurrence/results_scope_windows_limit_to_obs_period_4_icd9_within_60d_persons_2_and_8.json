@@ -8,7 +8,7 @@
     "end_date": "2009-04-15",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 3
+    "window_id": 2
   },
   {
     "person_id": 2,
@@ -19,17 +19,6 @@
     "end_date": "2009-04-15",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 2
-  },
-  {
-    "person_id": 2,
-    "criterion_id": 89752,
-    "criterion_table": "clinical_codes",
-    "criterion_domain": "condition_occurrence",
-    "start_date": "2009-05-11",
-    "end_date": "2009-05-11",
-    "source_value": "25000",
-    "source_vocabulary_id": "ICD9CM",
     "window_id": 3
   },
   {
@@ -45,11 +34,11 @@
   },
   {
     "person_id": 2,
-    "criterion_id": 57897,
+    "criterion_id": 89752,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
-    "start_date": "2009-05-16",
-    "end_date": "2009-05-16",
+    "start_date": "2009-05-11",
+    "end_date": "2009-05-11",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
     "window_id": 3
@@ -64,6 +53,17 @@
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
     "window_id": 2
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 57897,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-05-16",
+    "end_date": "2009-05-16",
+    "source_value": "25000",
+    "source_vocabulary_id": "ICD9CM",
+    "window_id": 3
   },
   {
     "person_id": 2,
@@ -140,7 +140,7 @@
     "end_date": "2010-01-23",
     "source_value": "45981",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 3
+    "window_id": 2
   },
   {
     "person_id": 2,
@@ -151,7 +151,7 @@
     "end_date": "2010-01-23",
     "source_value": "45981",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 2
+    "window_id": 3
   },
   {
     "person_id": 2,
@@ -206,7 +206,7 @@
     "end_date": "2009-03-03",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 13
+    "window_id": 12
   },
   {
     "person_id": 8,
@@ -217,17 +217,6 @@
     "end_date": "2009-03-03",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 12
-  },
-  {
-    "person_id": 8,
-    "criterion_id": 90544,
-    "criterion_table": "clinical_codes",
-    "criterion_domain": "condition_occurrence",
-    "start_date": "2009-03-01",
-    "end_date": "2009-03-03",
-    "source_value": "4019",
-    "source_vocabulary_id": "ICD9CM",
     "window_id": 13
   },
   {
@@ -243,7 +232,7 @@
   },
   {
     "person_id": 8,
-    "criterion_id": 90545,
+    "criterion_id": 90544,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-01",
@@ -265,7 +254,7 @@
   },
   {
     "person_id": 8,
-    "criterion_id": 90546,
+    "criterion_id": 90545,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-01",
@@ -284,6 +273,17 @@
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
     "window_id": 12
+  },
+  {
+    "person_id": 8,
+    "criterion_id": 90546,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-03-01",
+    "end_date": "2009-03-03",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM",
+    "window_id": 13
   },
   {
     "person_id": 8,
@@ -316,7 +316,7 @@
     "end_date": "2009-04-02",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 13
+    "window_id": 12
   },
   {
     "person_id": 8,
@@ -327,17 +327,6 @@
     "end_date": "2009-04-02",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 12
-  },
-  {
-    "person_id": 8,
-    "criterion_id": 23049,
-    "criterion_table": "clinical_codes",
-    "criterion_domain": "condition_occurrence",
-    "start_date": "2009-04-02",
-    "end_date": "2009-04-02",
-    "source_value": "4019",
-    "source_vocabulary_id": "ICD9CM",
     "window_id": 13
   },
   {
@@ -353,11 +342,11 @@
   },
   {
     "person_id": 8,
-    "criterion_id": 47058,
+    "criterion_id": 23049,
     "criterion_table": "clinical_codes",
     "criterion_domain": "condition_occurrence",
-    "start_date": "2009-11-22",
-    "end_date": "2009-11-22",
+    "start_date": "2009-04-02",
+    "end_date": "2009-04-02",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
     "window_id": 13
@@ -372,6 +361,17 @@
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
     "window_id": 12
+  },
+  {
+    "person_id": 8,
+    "criterion_id": 47058,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2009-11-22",
+    "end_date": "2009-11-22",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM",
+    "window_id": 13
   },
   {
     "person_id": 8,
@@ -404,7 +404,7 @@
     "end_date": "2009-11-22",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 13
+    "window_id": 12
   },
   {
     "person_id": 8,
@@ -415,7 +415,7 @@
     "end_date": "2009-11-22",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "window_id": 12
+    "window_id": 13
   },
   {
     "person_id": 8,

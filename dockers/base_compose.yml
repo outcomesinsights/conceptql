@@ -1,0 +1,25 @@
+version: "3"
+services:
+  conceptql:
+    depends_on:
+      - lexicon
+    environment:
+      - CONCEPTQL_DATA_MODEL
+      - CONCEPTQL_ENABLE_COMMENTS
+      - CONCEPTQL_OVERWRITE_TEST_RESULTS
+      - CONCEPTQL_PRINT_SQL
+      - CONCEPTQL_STOP_ON_ERROR
+      - LEXICON_URL
+      - SEQUELIZER_URL
+      - SEQUELIZER_RETRIES=12
+      - SEQUELIZER_RETRY_DELAY=5
+    image: outcomesinsights/misc:conceptql.chisel.latest
+    build:
+      context: .
+      dockerfile: dockers/sqlite/Dockerfile
+    command: sh -c "bundle && bundle exec ruby test/all.rb"
+    volumes:
+      - "${PWD}:/home/conceptql"
+
+  lexicon:
+    image: outcomesinsights/lexicon:chisel.latest
