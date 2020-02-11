@@ -67,6 +67,8 @@ module ConceptQL
   end
 end
 
+Sequel::Database.extension(:retry)
+
 # Require all operator subclasses eagerly
 #
 # First, require vocabulary operator.  It will establish operators for all
