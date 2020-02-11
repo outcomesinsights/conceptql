@@ -67,7 +67,10 @@ module ConceptQL
       end
 
       def make_lexicon_db
-        db_opts = {retries: 5, retry_delay: 5}
+        db_opts = {
+          retries: ENV["SEQUELIZER_RETRIES"],
+          retry_delay: ENV["SEQUELIZER_RETRY_DELAY"]
+        }.compact
         if ENV["CONCEPTQL_LOG_LEXICON"]
           log_path = Pathname.new("log") + "conceptql_lexicon.log"
           log_path.dirname.mkpath
