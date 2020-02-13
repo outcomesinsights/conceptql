@@ -22,7 +22,11 @@ module ConceptQL
       end
 
       def remake_views!(db)
-        views.each { |v| v.remake!(db, dm) }
+        remake_views(db, force: true)
+      end
+
+      def remake_views(db, opts = {})
+        views.each { |v| v.remake(db, dm, opts) }
       end
 
       def tables_by_column(*column_names)
@@ -135,9 +139,11 @@ module ConceptQL
         sprintf("%s_%s_%03d", name, op.op_name, counter).downcase
       end
 
-      def remake!(db, dm)
-        db.drop_view(name, if_exists: true)
-        db.create_view(name, db[source_table.name].select(*columns_as_sql(dm)))
+      def remake(db, dm, opts = {})
+        unless opts[:force]
+          return if db.table_exists?(name)
+        end
+        db.create_or_replace_view(name, db[source_table.name].select(*columns_as_sql(dm)))
       end
 
       def null_column(name, type = :String)

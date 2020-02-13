@@ -79,8 +79,14 @@ module ConceptQL
         end
 
         def remake!(db, dm)
-          db.drop_view(name, if_exists: true)
-          db.create_view(name, sql(db, dm.rdbms))
+          remake(db, dm, force: true)
+        end
+
+        def remake(db, dm, opts = {})
+          unless opts[:force]
+            return if db.table_exists?(name)
+          end
+          db.create_or_replace_view(name, sql(db, dm.rdbms))
         end
 
         def to_h
@@ -103,10 +109,6 @@ module ConceptQL
 
         def new_view(name, opts = {}, &block)
           views << View.new(name, opts, &block)
-        end
-
-        def make(db, rdbms, opts = {})
-          views.each { |v| v.remake!(db, rdbms, opts) }
         end
 
         def make_views
