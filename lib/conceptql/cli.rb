@@ -126,6 +126,12 @@ module ConceptQL
       end
     end
 
+    desc "views", "Applies all views to a given database"
+    def views(url)
+      _db = new_db(url: url)
+      ConceptQL::Database.new(_db).dm.nschema.remake_views!(_db)
+    end
+
     private
 
     def criteria_from_file(file)
