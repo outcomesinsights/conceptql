@@ -32,7 +32,7 @@ module ConceptQL
           end
 
           preferred_name entry.preferred_name
-          argument :codes, type: :codelist
+          argument :codes, type: :codelist, vocab: entry.omopv5_id
           aliases entry.aliases
           predominant_domains entry.predominant_domains
           short_name entry.short_name
