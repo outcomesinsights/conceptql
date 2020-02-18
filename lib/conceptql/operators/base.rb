@@ -15,7 +15,7 @@ module ConceptQL
       attr :nodifier, :values, :options, :arguments, :upstreams, :op_name, :id
 
       option :label, type: :string
-      option :uuid, type: :boolean
+      option :uuid, type: :boolean, hidden: true
 
       @validations = []
 
