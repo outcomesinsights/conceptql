@@ -45,4 +45,10 @@ class Minitest::Spec
       _(sql).must_match(matchy)
     end
   end
+
+  def sql_doesnt_match(sql, *matches)
+    matches.each do |matchy|
+      _(sql).wont_match(matchy)
+    end
+  end
 end

@@ -1,8 +1,12 @@
+require_relative "base"
+
 module ConceptQL
   module Operators
+  module Selection
     class MultipleVocabularies < Base
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::CodeLister
+      include ConceptQL::Behaviors::Unionable
 
       class << self
         def multiple_vocabularies
@@ -50,28 +54,24 @@ module ConceptQL
       validate_no_upstreams
       validate_at_least_one_argument
 
-      def query(db)
-        vocab_ops.inject(&:unionize).evaluate(db)
-      end
-
       def domains(db)
         vocab_ops.map(&:domain).uniq
       end
 
       def source_table
-        nil
+        domains(nil)
       end
 
       def table
-        nil
+        dm.nschema.cc_cql
       end
 
       def domain
-        nil
+        domains(nil)
       end
 
-      def tables
-        []
+      def vocabulary_id
+        vocab_ops.map(&:vocabulary_id)
       end
 
       def additional_validation(db, opts = {})
@@ -121,4 +121,5 @@ module ConceptQL
       end
     end
   end
+end
 end
