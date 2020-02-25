@@ -6,6 +6,10 @@ module ConceptQL
         include ConceptQL::Behaviors::Windowable
         include ConceptQL::Behaviors::Selectable
 
+        def select_all?
+          arguments.include?("*")
+        end
+
         def where_clauses(db)
           [where_clause(db)].compact
         end
