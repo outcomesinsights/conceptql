@@ -22,7 +22,6 @@ Must be surrounded by the same Let operator as surrounds the corresponding Defin
         basic_type :selection
         validate_no_upstreams
         validate_one_argument
-        default_query_columns
 
         def query(db)
           scope.from(db, source)

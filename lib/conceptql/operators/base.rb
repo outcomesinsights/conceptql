@@ -30,18 +30,6 @@ module ConceptQL
           end
         end
 
-        def query_columns(*tables)
-          define_method(:query_cols) do
-            dm.table_columns(*tables)
-          end
-        end
-
-        def default_query_columns
-          define_method(:query_cols) do
-            dynamic_columns
-          end
-        end
-
         def require_column(column)
           @required_columns ||= []
           @required_columns << column
@@ -147,10 +135,6 @@ module ConceptQL
 
       def output_columns
         self.class.output_columns
-      end
-
-      def dynamic_columns
-        scope.query_columns
       end
 
       def cte_name(name)
@@ -275,30 +259,6 @@ module ConceptQL
         false
       end
 
-      def select_it(query, opts = {})
-        specific_table = opts[:specific_table]
-        specific_table ||= dm.determine_table(:source_table)
-        specific_table ||= dm.determine_table(:table)
-        specific_table ||= dm.determine_table(:domain)
-
-        dom = opts[:domain] || domain rescue nil
-
-        opts = {
-          table: specific_table,
-          criterion_domain: dom,
-          query_columns: override_columns,
-          uuid: opts[:uuid] || options[:uuid]
-        }
-
-        if comments?
-          query = query.comment(comment)
-        end
-
-        q = dm.selectify(query, opts)
-
-        q
-      end
-
       def include_uuid?
         options[:uuid] || scope.output_columns.include?(:uuid)
       end
@@ -399,77 +359,6 @@ module ConceptQL
 
       def make_table_name(table)
         Sequel.as(table, :tab)
-      end
-
-      def query_columns(query)
-        dm.query_columns(query)
-      end
-
-      def additional_columns(query, table)
-        special_columns = {
-          code_provenance_type: Proc.new { code_provenance_type(query, table) },
-          file_provenance_type: Proc.new { file_provenance_type(query, table) },
-          provider_id: Proc.new { provider_id(query, table) },
-          visit_source_concept_id: Proc.new { dm.place_of_service_concept_id(query, table) }
-        }
-
-        additional_cols = special_columns.each_with_object([]) do |(column, proc_obj), columns|
-          columns << proc_obj.call if dynamic_columns.include?(column)
-        end
-
-        standard_columns = dynamic_columns - Scope::DEFAULT_COLUMNS.keys
-        standard_columns -= special_columns.keys
-
-        standard_columns.each do |column|
-          additional_cols << if query_columns(query).include?(column)
-            column
-          else
-            cast_column(column)
-          end
-        end
-
-        additional_cols
-      end
-
-      def source_value(query, table)
-        return :source_value if query_columns(query).include?(:source_value)
-        cast_column(:source_value, dm.source_value_column(query, table))
-      end
-
-      def source_vocabulary_id(query, table)
-        return :source_vocabulary_id if query_columns(query).include?(:source_vocabulary_id)
-        cast_column(:source_vocabulary_id, dm.source_vocabulary_id(query, table))
-      end
-
-      def code_provenance_type(query, table)
-        return :code_provenance_type if query_columns(query).include?(:code_provenance_type)
-        cast_column(:code_provenance_type, dm.provenance_type_column(query, table))
-      end
-
-      def file_provenance_type(query, table)
-        return :file_provenance_type if query_columns(query).include?(:file_provenance_type)
-        cast_column(:file_provenance_type, dm.provenance_type_column(query, table))
-      end
-
-      def provider_id(query, table)
-        return :provider_id if query_columns(query).include?(:provider_id)
-        cast_column(:provider_id, dm.provider_id_column(query, table))
-      end
-
-      def modify_query(query, table)
-        {
-          visit_source_concept_id: dm.query_modifier_for(:visit_source_concept_id),
-          drug_name: dm.query_modifier_for(:drug_name)
-        }.each do |column, klass|
-          #p [table, column, table, join_id, source_column]
-          #p dynamic_columns
-          #p query_cols
-          next if table.nil?
-          next unless dynamic_columns.include?(column)
-          query = klass.new(query, self).modified_query
-        end
-
-        query
       end
 
       def determine_tables

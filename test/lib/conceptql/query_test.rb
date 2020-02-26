@@ -9,10 +9,10 @@ describe ConceptQL::Query do
     )
   end
 
-  it "should handle query_cols for non-CDM tables" do
+  it "should handle query_columns for non-CDM tables" do
     _(query(
       [:from, "other_table"]
-    ).query_cols).must_equal(ConceptQL::Scope::DEFAULT_COLUMNS.keys)
+    ).query_columns).must_equal(ConceptQL::Scope::DEFAULT_COLUMNS.keys)
   end
 
   it "should raise error if attempting to execute invalid recall" do
@@ -86,6 +86,38 @@ describe ConceptQL::Query do
           "CPT 99214",
           "ICD-9 CM 250.00",
           "ICD-9 CM 250.02"
+        ]
+      end
+      _(query.code_list.map(&:to_s)).must_equal(expected)
+    end
+
+    it "should handle a single read operator" do
+      db = ConceptQL::Database.new(nil)
+      query = db.query([["read","44P6.00"]])
+      expected = if ENV["LEXICON_URL"]
+        [
+          "NHS UK Read Codes Version 2 (HSCIC) 44P6.00: Serum LDL cholesterol level"
+        ]
+      else
+        [
+          "CPT 99214"
+        ]
+      end
+      _(query.code_list.map(&:to_s)).must_equal(expected)
+    end
+
+    it "should handle a co_reported read operator" do
+      db = ConceptQL::Database.new(nil)
+      query = db.query( ["co_reported", ["read", "44P6.00"], ["cprd_test_entity", "177"]] )
+      expected = if ENV["LEXICON_URL"]
+        [
+          "NHS UK Read Codes Version 2 (HSCIC) 44P6.00: Serum LDL cholesterol level",
+          "CPRD Entity Types for Test Filetype 177: Low density lipoprotein"
+        ]
+      else
+        [
+          "Read 44P6.00",
+          "CPRD Test Entity 177"
         ]
       end
       _(query.code_list.map(&:to_s)).must_equal(expected)

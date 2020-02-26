@@ -22,7 +22,6 @@ module ConceptQL
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
-      default_query_columns
 
       VALUE_COLUMN = Sequel[:lab_value_as_number]
 

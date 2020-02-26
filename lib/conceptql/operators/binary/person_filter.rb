@@ -7,7 +7,6 @@ module ConceptQL
         register __FILE__
 
         desc 'If a result in the left hand results (LHR) matches a person in the right hand results (RHR), it is passed through.'
-        default_query_columns
 
         def query(db)
           db.from(left.evaluate(db))

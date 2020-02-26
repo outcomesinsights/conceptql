@@ -34,7 +34,6 @@ Accepts two params:
         allows_one_upstream
         validate_at_most_one_upstream
         validate_one_argument
-        default_query_columns
         output_column :lab_value_as_number
 
         def query(db)

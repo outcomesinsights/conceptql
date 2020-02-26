@@ -8,7 +8,6 @@ module ConceptQL
 
         desc "Assigns a UUID to each result that passes through"
         allows_one_upstream
-        default_query_columns
         validate_one_upstream
         validate_no_arguments
         require_column :uuid

@@ -26,7 +26,6 @@ Common values include 21 (inpatient hospital), 23 (emergency room), and 11 (offi
       allows_one_upstream
       validate_one_upstream
       validate_at_least_one_argument
-      default_query_columns
 
       def query(db)
         upstream_query(db)

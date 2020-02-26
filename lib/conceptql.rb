@@ -1,7 +1,6 @@
 require "pathname"
 require "sequel"
 %w(
-  /../lib/conceptql/query_modifiers/**/*.rb
   /../lib/conceptql/behaviors/*.rb
   /../lib/conceptql/data_model/views/*.rb
 ).each do |globby|

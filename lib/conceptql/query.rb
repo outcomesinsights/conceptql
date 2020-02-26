@@ -43,10 +43,10 @@ module ConceptQL
       nodifier.scope.with_ctes(operator, db, opts)#.tap { |o| pp o.opts ; binding.pry }
     end
 
-    def query_cols(opts = {})
-      cols = operator.dynamic_columns
+    def query_columns(opts = {})
+      cols = operator.scope.query_columns
       if opts[:cast]
-        cols = query_cols.each_with_object({}) do |column, h|
+        cols = query_columns.each_with_object({}) do |column, h|
           h[column] = operator.cast_column(column)
         end
       end

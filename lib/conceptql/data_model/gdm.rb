@@ -228,17 +228,6 @@ module ConceptQL
   module DataModel
 
     class Gdm < Base
-      def query_modifier_for(column)
-        {
-          visit_source_concept_id: ConceptQL::QueryModifiers::Gdm::PoSQueryModifier,
-          provider_id: ConceptQL::QueryModifiers::Gdm::ProviderQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::Gdm::DrugQueryModifier,
-          admission_date: ConceptQL::QueryModifiers::Gdm::AdmissionDateQueryModifier,
-          provenance_type: ConceptQL::QueryModifiers::Gdm::ProvenanceQueryModifier,
-          value_as_number: ConceptQL::QueryModifiers::Gdm::LabQueryModifier,
-        }[column]
-      end
-
       def views
         @views ||= Views::Gdm.new
       end
@@ -376,14 +365,6 @@ module ConceptQL
 
       def table_is_missing?(db)
         !db.table_exists?(:concepts)
-      end
-
-      def code_provenance_type(query, domain)
-        :provenance_concept_id
-      end
-
-      def file_provenance_type(query, domain)
-        :source_type_concept_id
       end
 
       def concepts_ds(db, vocabulary_id, codes)

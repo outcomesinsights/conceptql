@@ -12,7 +12,6 @@ module ConceptQL
         class Base < Binary::Base
           reset_categories
           category "Filter by Comparing"
-          default_query_columns
 
           option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
 

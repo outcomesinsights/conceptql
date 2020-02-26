@@ -6,7 +6,6 @@ module ConceptQL
       register __FILE__
 
       no_desc
-      default_query_columns
 
       def initialize(*args)
         super

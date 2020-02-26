@@ -14,7 +14,6 @@ module ConceptQL
       allows_one_upstream
       validate_one_upstream
       validate_required_options :specialties
-      default_query_columns
 
       # TODO: Use specialty field in contexts_practitioners
       def query(db)

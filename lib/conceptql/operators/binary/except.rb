@@ -7,7 +7,6 @@ module ConceptQL
         register __FILE__
 
         desc 'If a result in the left hand results (LHR) appears in the right hand results (RHR), it is removed from the output result set.'
-        default_query_columns
 
         def query(db)
           ds = lhs(db)

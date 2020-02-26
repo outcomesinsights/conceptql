@@ -14,7 +14,6 @@ module ConceptQL
       validate_option DateAdjuster::VALID_INPUT, :start, :end
       category "Combine Streams"
       basic_type :set
-      default_query_columns
 
       def query(db)
         datasets = upstreams.map do |stream|

@@ -7,7 +7,6 @@ module ConceptQL
         register __FILE__
 
         desc 'If a result in the left hand results (LHR) has a corresponding result in the right hand results (RHR) with the same person, criterion_id, and criterion_domain, it is passed through.'
-        default_query_columns
 
         def join_columns
           determine_columns.map{|c| [Sequel[:l][c], Sequel[:r][c]]}

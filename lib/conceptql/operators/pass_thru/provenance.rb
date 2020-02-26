@@ -29,7 +29,6 @@ Enter numeric concept id(s), or the corresponding text label(s):
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
-      default_query_columns
 
       include ConceptQL::Provenanceable
 

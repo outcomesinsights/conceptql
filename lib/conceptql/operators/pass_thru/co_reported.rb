@@ -9,7 +9,6 @@ module ConceptQL
         desc 'Passes through all events that were co-reported in a database. For OMOP CDM, an event is considered to be "co-reported" if it shares the same visit_occurrence as another event.'
         allows_many_upstreams
         category "Combine Streams"
-        default_query_columns
         validate_at_least_one_upstream
         validate_no_arguments
 

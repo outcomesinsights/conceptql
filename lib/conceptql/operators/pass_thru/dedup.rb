@@ -16,10 +16,6 @@ module ConceptQL
             .from_self
         end
 
-        def query_cols
-          dynamic_columns
-        end
-
         def unioned(db)
           upstreams.map { |c| c.evaluate(db) }.inject do |uni, q|
             uni.union(q)
@@ -28,7 +24,7 @@ module ConceptQL
 
         def desired_columns
           return options[:query_columns] if options[:query_columns]
-          columns = query_cols
+          columns = scope.query_columns
 
           columns &= options[:only_columns] if options[:only_columns]
           columns -= options[:except_columns] if options[:except_columns]
