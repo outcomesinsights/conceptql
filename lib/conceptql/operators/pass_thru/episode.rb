@@ -70,21 +70,23 @@ Groups all incoming results into episodes by person allowing for there to be a g
 
           grp_cols = ids_plus_episode.map{|c| e[c]}
 
-          episode_summary = make_selectable(episode_summary
-                .select_group(*grp_cols))
+          episode_summary = make_selectable(
+            episode_summary
+              .select_group(*grp_cols)
+              .select_append(
+                Sequel.function(:min, :episode_start_date).as(:start_date),
+                Sequel.function(:max, :episode_end_date).as(:end_date),
+                Sequel[0].cast_numeric.as(:criterion_id),
+                Sequel.cast_string("episode").as(:criterion_table),
+                Sequel.cast_string("episode").as(:criterion_domain),
+                cast_column(:source_value).as(:source_value),
+                cast_column(:source_vocabulary_id).as(:source_vocabulary_id)
+              )
+              .from_self
+          )
 
           # Episodes streams return null for criterion_id,table, and domain which messes up uuid generation so we had to add constants to these values
-          episode_summary = episode_summary.auto_columns(
-              start_date: Sequel.function(:min, :episode_start_date),
-              end_date: Sequel.function(:max, :episode_end_date),
-              criterion_id: Sequel[0].cast_numeric,
-              criterion_table: Sequel.cast_string("episode"),
-              criterion_domain: Sequel.cast_string("episode"),
-              person_id: :person_id,
-              source_value: cast_column(:source_value),
-              source_vocabulary_id: cast_column(:source_vocabulary_id)
-            )
-            .auto_column_default(null_columns)
+          episode_summary = episode_summary.auto_column_default(null_columns)
 
           episode_summary
         end
