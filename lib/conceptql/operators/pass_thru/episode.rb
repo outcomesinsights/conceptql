@@ -86,7 +86,9 @@ Groups all incoming results into episodes by person allowing for there to be a g
           )
 
           # Episodes streams return null for criterion_id,table, and domain which messes up uuid generation so we had to add constants to these values
-          episode_summary = episode_summary.auto_column_default(null_columns)
+          episode_summary = episode_summary
+            .auto_column(:window_id, :window_id)
+            .auto_column_default(null_columns)
 
           episode_summary
         end

@@ -1,0 +1,18 @@
+[
+  "window",
+  ["any_overlap", {
+    "left": ["information_periods"],
+    "right": [
+      "episode",
+      [
+        "icd9","401.0","244.9","493.90","V58.49"
+      ],
+      {"gap_of":"40"}
+    ]
+  }
+  ],
+  {
+    "window_table": ["information_periods"],
+    "person_ids": [2]
+  }
+]
