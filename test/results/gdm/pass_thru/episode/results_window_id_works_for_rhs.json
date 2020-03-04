@@ -1,3 +1,90 @@
-{
-  "fail": true
-}
+[
+  {
+    "person_id": 2,
+    "criterion_id": 5,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 2
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 5,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 3
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 6,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 2
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 6,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 3
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 793,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 2
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 793,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2008-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 3
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 7,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2009-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 2
+  },
+  {
+    "person_id": 2,
+    "criterion_id": 7,
+    "criterion_table": "information_periods",
+    "criterion_domain": "information_period",
+    "start_date": "2009-01-01",
+    "end_date": "2010-12-31",
+    "source_value": null,
+    "source_vocabulary_id": null,
+    "window_id": 3
+  }
+]
