@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'pry-rescue'
   spec.add_development_dependency 'pry-stack_explorer'
-  spec.add_development_dependency 'rake', '~> 10'
+  spec.add_development_dependency 'rake', '~> 12'
   spec.add_development_dependency 'shellb'
   spec.add_development_dependency 'simplecov', '~> 0.11'
   spec.add_development_dependency 'sqlite3', '~> 1.3'
