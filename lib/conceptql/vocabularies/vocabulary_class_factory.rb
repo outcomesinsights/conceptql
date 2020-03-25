@@ -52,13 +52,6 @@ module ConceptQL
             "ConceptQL::Operator::#{entry.id}"
           end
 
-          def available_columns
-            dom = domain rescue "condition_occurrence"
-            super.merge(dm.columns_by_table(:clinical_codes, schema: :tab).merge(
-              criterion_domain: Sequel.cast_string(dom.to_s)
-            ))
-          end
-
           if entry.is_labish?
             include ConceptQL::Behaviors::Labish
           end
@@ -75,5 +68,4 @@ module ConceptQL
     end
   end
 end
-
 
