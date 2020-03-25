@@ -16,7 +16,7 @@ before_install:
   - docker login --username "${DOCKER_HUB_USER}" --password "${DOCKER_HUB_PASSWORD}"
   - cp dockers/base_compose.yml docker-compose.yml
   - docker-compose pull conceptql || docker-compose build conceptql
-  - docker-compose run conceptql sh -c "bundle exec rake prep_compose"
+  - docker-compose run conceptql sh -c "bundle install && bundle exec rake prep_compose"
   - docker-compose run test_data sh -c "cp gdm_250.db /data/ || exit 0"
   - docker-compose up -d lexicon
 
