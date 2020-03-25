@@ -6,6 +6,11 @@ module ConceptQL
 
     CODE_SEPARATOR = ":"
 
+    def self.included(base)
+      base.output_column :file_provenance_type
+      base.output_column :code_provenance_type
+    end
+
     def limit_to_provenance(ds, arguments)
       ds.from_self(alias: :og)
         .semi_join(
