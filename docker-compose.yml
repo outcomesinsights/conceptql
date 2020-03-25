@@ -23,6 +23,6 @@ services:
     volumes:
     - "${PWD}:/home/conceptql"
   lexicon:
-    image: outcomesinsights/lexicon:master.latest
+    image: outcomesinsights/lexicon:chisel.latest
   test_data:
-    image: outcomesinsights/misc:test_data.master.postgres.latest
+    image: outcomesinsights/misc:test_data.chisel.postgres.latest
