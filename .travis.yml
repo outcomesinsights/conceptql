@@ -1,7 +1,9 @@
 ---
-language: minimal
+os: linux
+dist: xenial
+language: shell
 env:
-  matrix:
+  jobs:
     - SEQUELIZER_URL=sqlite:///data/gdm_250.db
     - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data_for_chisel
   global:
