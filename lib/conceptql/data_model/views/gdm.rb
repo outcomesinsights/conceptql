@@ -86,7 +86,8 @@ module ConceptQL
           unless opts[:force]
             return if db.table_exists?(name)
           end
-          db.create_or_replace_view(name, sql(db, dm.rdbms))
+          db.drop_view(name, if_exists: true)
+          db.create_view(name, sql(db, dm.rdbms))
         end
 
         def to_h
