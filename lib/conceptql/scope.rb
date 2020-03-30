@@ -41,6 +41,7 @@ module ConceptQL
       lab_range_high: :Float,
       lab_range_low: :Float,
       lab_unit_source_value: :String,
+      lab_value_as_concept_name: :String,
       lab_value_as_concept_id: :Bigint,
       lab_value_as_number: :Float,
       lab_value_as_string: :String,
