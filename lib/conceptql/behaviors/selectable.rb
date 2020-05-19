@@ -1,6 +1,16 @@
 module ConceptQL
   module Behaviors
     module Selectable
+      module ClassMethods
+        def no_default_columns
+          define_method(:default_columns) { Hash.new }
+        end
+      end
+
+      def self.included(base)
+        base.extend(ClassMethods)
+      end
+
       def null_columns
         proc do |hash, key|
           hash[key.to_sym] = cast_column(key)

@@ -14,11 +14,11 @@ module ConceptQL
       no_desc
       validate_no_upstreams
       validate_one_argument
+      no_default_columns
 
       def query(db)
         ds = make_selectable(db[table_name])
-        ds = ds.auto_column(:uuid, :uuid) if known_columns.include?(:uuid)
-        apply_known_columns(ds)
+        apply_known_columns(db, ds)
       end
 
       def domains(db)
@@ -38,7 +38,12 @@ module ConceptQL
         @table_name ||= get_table_name
       end
 
-      def apply_known_columns(ds)
+      def apply_known_columns(db, ds)
+        unless no_db?(db)
+          @known_columns = ds.columns
+          # Force #output_columns to recompute now that we've updated @known_columns
+          @output_columns = nil
+        end
         ds.auto_columns(known_columns.zip(known_columns).to_h)
       end
 
@@ -60,12 +65,15 @@ module ConceptQL
         name
       end
 
+      # Watch out for this method
+      # We set @output_columns in apply_known_columns
+      # So this can sometimes change what it returns :-(
       def output_columns
-        known_columns - scope.query_columns
+        @output_columns ||= known_columns - scope.query_columns
       end
 
       def known_columns
-        (options[:query_cols] || scope.query_columns).map(&:to_sym)
+        @known_columns ||= (options[:query_cols] || scope.query_columns).map(&:to_sym)
       end
 
       def include_uuid?
