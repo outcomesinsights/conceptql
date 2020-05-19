@@ -18,11 +18,11 @@ module ConceptQL
           end
 
           queries = individuals.map do |expression|
-            expression.evaluate(db)
+            expression.evaluate(db, required_columns: required_columns_for_upstream)
           end
 
           if (combined = combinables.map(&:dup).inject(&:unionize))
-            queries << combined.evaluate(db)
+            queries << combined.evaluate(db, required_columns: required_columns_for_upstream)
           end
 
           queries.inject do |q, query|

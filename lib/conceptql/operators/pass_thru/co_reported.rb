@@ -47,6 +47,10 @@ module ConceptQL
           ds
         end
 
+        def required_columns_for_upstream
+          super | %i[criterion_id]
+        end
+
         def contextify(db, stream)
           stream.evaluate(db).from_self(alias: :s)
             .join(Sequel[:clinical_codes].as(:c), id: :criterion_id)

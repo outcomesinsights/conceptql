@@ -23,6 +23,10 @@ module ConceptQL
             end
           end
 
+          def required_columns
+            super | %i[start_date end_date]
+          end
+
           def rhs_columns
             super | %i[start_date end_date]
           end

@@ -37,7 +37,7 @@ twice in an outpatient setting with a 30-day gap.
       end
 
       def required_columns
-        super | %i[criterion_domain start_date end_date]
+        super | %i[criterion_id criterion_table criterion_domain start_date end_date]
       end
 
       private

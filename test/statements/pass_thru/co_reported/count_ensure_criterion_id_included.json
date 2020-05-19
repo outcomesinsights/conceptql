@@ -1,0 +1,26 @@
+[
+  "any_overlap",
+  {
+    "left": [
+      "time_window",
+      [
+        "icd9",
+        "412"
+      ],
+      {
+        "start": "ER1y"
+      }
+    ],
+    "right": [
+      "co_reported",
+      [
+        "icd9",
+        "412"
+      ],
+      [
+        "icd9",
+        "410.00"
+      ]
+    ]
+  }
+]

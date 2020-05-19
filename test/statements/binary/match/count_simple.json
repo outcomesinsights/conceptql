@@ -15,7 +15,7 @@
         "uuid": true
       }
     ],
-    "join_columns": [
+    "only_columns": [
       "uuid"
     ]
   }

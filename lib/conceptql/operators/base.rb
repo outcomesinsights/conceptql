@@ -208,9 +208,11 @@ module ConceptQL
       end
 
       def evaluate(db, opts = {})
-        (opts[:ds] || query(db))
+        ds = (opts[:ds] || query(db))
           .require_columns(opts[:required_columns] || required_columns)
           .auto_select(opts_for_evaluate(opts))
+        ds = ds.comment(comment) if comments?
+        ds
       end
 
       def op_alias

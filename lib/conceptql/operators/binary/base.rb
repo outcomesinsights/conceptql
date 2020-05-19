@@ -50,8 +50,7 @@ module ConceptQL
         end
 
         def rhs_columns
-          cols = join_columns | include_rhs_columns | (required_columns - scope.query_columns)
-          cols |= rdbms.uuid_columns
+          join_columns | include_rhs_columns | (required_columns - scope.query_columns)
         end
 
         def complete_upstreams
