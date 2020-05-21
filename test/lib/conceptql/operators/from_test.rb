@@ -51,7 +51,7 @@ describe ConceptQL::Operators::From do
     it "should handle QualifiedIdentifiers" do
       sql = CDB.query(stmt).sql
       _(sql).must_match(/test_from_table/)
-      _(sql).must_match(/"test_from_table"."uuid"/)
+      _(sql).must_match(/[`"]test_from_table[`"].[`"]uuid[`"]/)
     end
   end
 end
