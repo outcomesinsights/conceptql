@@ -15,6 +15,7 @@ services:
 before_install:
   - docker login --username "${DOCKER_HUB_USER}" --password "${DOCKER_HUB_PASSWORD}"
   - cp dockers/base_compose.yml docker-compose.yml
+  - cat docker-compose.yml
   - docker-compose pull conceptql || docker-compose build conceptql
   - docker-compose run conceptql sh -c "bundle install && bundle exec rake prep_compose"
   - docker-compose config
