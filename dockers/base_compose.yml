@@ -13,7 +13,7 @@ services:
       - SEQUELIZER_URL
       - SEQUELIZER_RETRIES=12
       - SEQUELIZER_RETRY_DELAY=5
-    image: outcomesinsights/misc:conceptql.chisel.latest
+    image: outcomesinsights/misc:conceptql.master.latest
     build:
       context: .
       dockerfile: dockers/sqlite/Dockerfile
