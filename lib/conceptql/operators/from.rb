@@ -18,6 +18,7 @@ module ConceptQL
 
       def query(db)
         ds = make_selectable(db[table_name])
+              .auto_qualify(table_name)
         apply_known_columns(db, ds)
       end
 
