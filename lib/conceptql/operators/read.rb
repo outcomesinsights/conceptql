@@ -5,6 +5,7 @@ require_relative '../behaviors/labish'
 module ConceptQL
   module Operators
     class Read < Operator
+      include ConceptQL::Behaviors::CodeLister
       register __FILE__
 
       preferred_name "READ"
@@ -50,6 +51,10 @@ module ConceptQL
           end
         end
       end
+      def describe_codes(db, codes)
+        ops.flat_map { |op| op.describe_codes(db, codes) }
+      end
+
 
       def codes_by_domain(db)
         if no_db?(db)
