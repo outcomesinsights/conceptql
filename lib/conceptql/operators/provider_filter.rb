@@ -26,9 +26,14 @@ module ConceptQL
     private
       def matching_provider_ids(db)
         specialty_concept_ids = options[:specialties].split(/\s*,\s*/).map(&:to_i)
-        db.from(dm.table_by_domain(:provider))
+        q_practitioners = db.from(dm.table_by_domain(:provider))
           .where(specialty_concept_id: specialty_concept_ids)
           .select(dm.pk_by_domain(:provider))
+        q_contexts = db.from(:contexts_practitioners)
+                        .where(specialty_type_concept_id: specialty_concept_ids)
+                        .select(:practitioner_id)
+
+        q_practitioners.union(q_contexts, all: true)
       end
     end
   end
