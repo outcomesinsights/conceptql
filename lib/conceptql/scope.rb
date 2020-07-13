@@ -34,6 +34,7 @@ module ConceptQL
       file_provenance_type: :Bigint,
       code_provenance_type: :Bigint,
       provider_id: :Bigint,
+      specialty_concept_id: :Bigint,
       visit_source_concept_id: :Bigint,
       range_low: :Float,
       range_high: :Float,

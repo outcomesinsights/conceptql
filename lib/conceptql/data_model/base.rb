@@ -173,6 +173,7 @@ module ConceptQL
         {
           visit_source_concept_id: query_modifier_for(:visit_source_concept_id),
           provider_id: query_modifier_for(:provider_id),
+          specialty_concept_id: query_modifier_for(:specialty_concept_id),
           drug_name: query_modifier_for(:drug_name),
           file_provenance_type: query_modifier_for(:provenance_type),
           admission_date: query_modifier_for(:admission_date),
