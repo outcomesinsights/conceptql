@@ -73,6 +73,16 @@ module ConceptQL
       operator.annotate(db, opts)
     end
 
+    def accept(visitor, opts = {})
+      operator.accept(visitor)
+    end
+
+    def extract_metadata
+      visitor = ConceptQL::Visitors::MetadataExtractor.new
+      operator.accept(visitor)
+      visitor.results
+    end
+
     def scope_annotate(opts = {})
       annotate(opts)
       nodifier.scope.annotation

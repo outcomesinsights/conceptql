@@ -22,9 +22,19 @@ module ConceptQL
 
       attr :left, :right
 
+      def accept(visitor, opts = {})
+        visitor.visit(self)
+        left.accept(visitor, opts)
+        right.accept(visitor, opts) unless opts[:avoid_rhs]
+      end
+
+      def all_upstreams
+        [left, right]
+      end
+
       private
 
-      def complete_upstreams
+      def pp_upstreams
         { left: left, right: right }
       end
 

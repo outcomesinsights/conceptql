@@ -87,6 +87,13 @@ module ConceptQL
       end
     end
 
+    desc 'extract_metadata', 'test visiting'
+    def simple_visit(statement_file)
+      visitor = ConceptQL::Visitors::MetadataExtractor.new
+      ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file)).accept(visitor)
+      pp visitor.results
+    end
+
     desc 'selection_operators', 'Generates a TSV of all the selection operators'
     def selection_operators
       require 'csv'

@@ -217,16 +217,16 @@ module ConceptQL
 
       def pretty_print(pp)
         pp.object_group self do
-          unless complete_upstreams.empty?
+          unless pp_upstreams.empty?
             pp.breakable
             pp.text "@upstreams="
-            pp.pp complete_upstreams
+            pp.pp pp_upstreams
             unless arguments.empty?
               pp.comma_breakable
             end
           end
           unless arguments.empty?
-            if complete_upstreams.empty?
+            if pp_upstreams.empty?
               pp.breakable
             end
             pp.text "@arguments="
@@ -235,7 +235,11 @@ module ConceptQL
         end
       end
 
-      def complete_upstreams
+      def pp_upstreams
+        upstreams
+      end
+
+      def all_upstreams
         upstreams
       end
 
@@ -410,6 +414,11 @@ module ConceptQL
 
       def same_table?(table)
         false
+      end
+
+      def accept(visitor, opts = {})
+        visitor.visit(self)
+        upstreams.each { |u| u.accept(visitor, opts) }
       end
 
       private
