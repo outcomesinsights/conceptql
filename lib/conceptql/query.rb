@@ -9,7 +9,12 @@ module ConceptQL
   class Query
     class QueryError < StandardError
       def message
-        [super, "OG ERROR:", cause.full_message].join("\n")
+        og_message = if cause.respond_to?(:full_message)
+                       cause.full_message
+                     else
+                       (cause.message + cause.backtrace).join("\n")
+                     end
+        [super, "OG ERROR:", og_message].join("\n")
       end
     end
 
