@@ -25,7 +25,7 @@ module ConceptQL
             query
               .select_all
               .select_append(Sequel[:practitioner_id].as(:provider_id))
-              .select_append(Sequel[nil].as(:provider_id))
+              .select_append(Sequel[nil].as(:specialty_concept_id))
           end.from_self
         end
 
