@@ -45,12 +45,17 @@ module ConceptQL
 
     def known_codes(vocabulary_id, codes)
       return codes if lexicon_db_is_mock?
+      return codes if vocabulary_is_empty?(vocabulary_id)
       concepts(vocabulary_id, codes).select_map(:concept_code)
     end
 
     def concepts(vocabulary_id, codes)
       lexicon_db[:concepts]
         .where(vocabulary_id: translate_vocab_id(vocabulary_id), Sequel.function(:lower, :concept_code) => Array(codes).map(&:downcase))
+    end
+
+    def vocabulary_is_empty?(vocabulary_id)
+      lexicon_db[:concepts].where(vocabulary_id: translate_vocab_id(vocabulary_id)).count.zero?
     end
 
     def translate_vocab_id(vocabulary_id)

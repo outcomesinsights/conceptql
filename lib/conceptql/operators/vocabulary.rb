@@ -44,7 +44,7 @@ module ConceptQL
               missing_args = args - lexicon.known_codes(vocabulary_id, args)
             end
           else
-            missing_args = args - dm.concepts_ds(db, vocabulary_id, args).select_map(:concept_code) rescue []
+            missing_args = args - dm.known_codes(db, vocabulary_id, args)
           end
 
           unless missing_args.empty?

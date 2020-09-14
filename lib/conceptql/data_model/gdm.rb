@@ -140,6 +140,17 @@ module ConceptQL
         :source_type_concept_id
       end
 
+      def known_codes(db, vocabulary_id, codes)
+        return codes if vocabulary_is_empty?(db, vocabulary_id)
+        concepts_ds(db, vocabulary_id, codes).select_map(:concept_code)
+      rescue Sequel::DatabaseError
+        []
+      end
+
+      def vocabulary_is_empty?(db, vocabulary_id)
+        db[:concepts].where(vocabulary_id: vocabulary_id).count.zero?
+      end
+
       def concepts_ds(db, vocabulary_id, codes)
         db[:concepts]
           .where(vocabulary_id: vocabulary_id, concept_code: codes)
