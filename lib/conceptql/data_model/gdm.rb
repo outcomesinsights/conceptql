@@ -123,7 +123,6 @@ module ConceptQL
       # The mappings table will tell us what other concepts have been directly
       # mapped to the concepts passed in
       def related_concept_ids(db, *ids)
-
         ids = ids.flatten
         other_ids = db[:mappings].where(concept_2_id: ids).where{Sequel.function(:lower, :relationship_id) =~ 'is_a'}.select_map(:concept_1_id)
         other_ids + ids
