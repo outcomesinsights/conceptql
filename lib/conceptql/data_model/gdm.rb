@@ -143,7 +143,8 @@ module ConceptQL
         unless opts[:force]
           return if db.table_exists?(name)
         end
-        db.create_or_replace_view(name, db[source_table.name].select(*columns_as_sql(dm)))
+        db.drop_view(name)
+        db.create_view(name, db[source_table.name].select(*columns_as_sql(dm)))
       end
 
       def null_column(name, type = :String)
@@ -171,7 +172,7 @@ module ConceptQL
       end
 
       def criterion_domain_column(dm)
-        if source_table.name == :clinical_codes
+        if %i[clinical_codes considerable_codes].include?(source_table.name)
           lexicon = dm.lexicon
           vocabs_to_domains = lexicon.vocabularies_query
             .select_hash_groups(:domain, :id)
@@ -283,6 +284,18 @@ module ConceptQL
         schema.clinical_codes.clinical_code_source_value.mapped_to << :source_value
         schema.clinical_codes.clinical_code_vocabulary_id.mapped_to << :source_vocabulary_id
 
+        schema.considerable_codes.clinical_code_concept_id.mapped_to << :concept_id
+        schema.considerable_codes.clinical_code_source_value.mapped_to << :source_value
+        schema.considerable_codes.clinical_code_vocabulary_id.mapped_to << :source_vocabulary_id
+        schema.considerable_codes.provenance_concept_id.mapped_to << :code_provenance_type
+        schema.considerable_codes.source_type_concept_id.mapped_to << :file_provenance_type
+        schema.considerable_codes.matching_columns(/(\b|_)date\Z/).each do |column|
+          column.mapped_to = column.mapped_to - %i[start_date end_date]
+        end
+        schema.considerable_codes.clinical_code_start_date.mapped_to << :start_date
+        schema.considerable_codes.clinical_code_end_date.mapped_to << :end_date
+
+
         schema.patients.view.null_column(:source_value)
         schema.patients.view.null_column(:source_vocabulary_id)
 
@@ -307,7 +320,8 @@ module ConceptQL
 
         schema.update_relations!
 
-        schema.clinical_codes_cql_view_v1.aliaz = :cc_cql
+        #schema.clinical_codes_cql_view_v1.aliaz = :cc_cql
+        schema.considerable_codes_cql_view_v1.aliaz = :cc_cql
         schema.deaths_cql_view_v1.aliaz = :deaths_cql
         schema.patients_cql_view_v1.aliaz = :people_cql
 

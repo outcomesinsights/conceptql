@@ -43,7 +43,7 @@ module ConceptQL
           cdb.query(table_window).query
         when String
           tables = table_window.split(".")
-          tables.length == 2 ? Sequel.qualify(*tables) : Sequel.identifier(table_window)
+          tables.length >= 2 ? Sequel.qualify(*tables) : Sequel.identifier(table_window)
         when Symbol
           Sequel[table_window]
         else

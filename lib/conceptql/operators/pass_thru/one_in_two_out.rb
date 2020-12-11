@@ -37,7 +37,7 @@ twice in an outpatient setting with a 30-day gap.
       end
 
       def required_columns
-        super | %i[criterion_id criterion_table criterion_domain start_date end_date]
+        super | %i[criterion_id criterion_table criterion_domain start_date end_date admission_date discharge_date file_provenance_type code_provenance_type]
       end
 
       private
@@ -55,19 +55,6 @@ twice in an outpatient setting with a 30-day gap.
 
       def valid_inpatient_events
         q = all_inpatient_events
-          .from_self(alias: :og)
-          .left_join(
-            :admission_join_view_v1,
-            {
-              Sequel[:ajv][:criterion_id] => Sequel[:og][:criterion_id],
-              Sequel[:ajv][:criterion_table] => Sequel[:og][:criterion_table]
-            },
-            table_alias: :ajv
-          )
-          .auto_columns(
-            admission_date: Sequel[:ajv][:admission_date],
-            discharge_date: Sequel[:ajv][:discharge_date]
-          )
           .require_columns(required_columns)
           .require_columns(:admission_date, :discharge_date)
           .auto_select

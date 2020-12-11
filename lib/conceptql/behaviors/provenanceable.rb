@@ -12,15 +12,16 @@ module ConceptQL
     end
 
     def limit_to_provenance(ds, arguments)
-      ds.from_self(alias: :og)
-        .semi_join(
-          :provenance_join_view_v1,
-          Sequel.expr({
-            Sequel[:og][:criterion_id] => Sequel[:pjv][:criterion_id],
-            Sequel[:og][:criterion_table] => Sequel[:pjv][:criterion_table]
-          }).&(build_where_from_codes(arguments)),
-          table_alias: :pjv
-      )
+      #ds.from_self(alias: :og)
+      #  .semi_join(
+      #    :provenance_join_view_v1,
+      #    Sequel.expr({
+      #      Sequel[:og][:criterion_id] => Sequel[:pjv][:criterion_id],
+      #      Sequel[:og][:criterion_table] => Sequel[:pjv][:criterion_table]
+      #    }).&(build_where_from_codes(arguments)),
+      #    table_alias: :pjv
+      #)
+      ds.where(build_where_from_codes(arguments))
     end
 
     # Creates hash of provenance type concept codes by vocabulary_id (JIGSAW_FILE_PROVENANCE_TYPE, JIGSAW_CODE_PROVENANCE_TYPE)

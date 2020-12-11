@@ -169,6 +169,245 @@
     :type: :Bigint
     :comment: A foreign key to the address of the location of the facility
     :foreign_key: addresses
+- :name: :considerable_codes
+  :columns:
+    - :name: :id
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    - :name: :patient_id
+      :type: :Bigint
+      :comment: FK to reference to [patients](#patients) table
+      :foreign_key: patients
+      :null: false
+    - :name: :collection_start_date
+      :type: Date
+      :comment: Start date of record (yyyy-mm-dd)
+      :null: false
+    - :name: :collection_end_date
+      :type: Date
+      :comment: End date of record (yyyy-mm-dd)
+      :null: false
+    - :name: :duration
+      :type: Float
+      :comment: Duration of collection. (e.g. hospitalization length of stay)
+    - :name: :duration_unit_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the unit
+        of duration (hours, days, weeks etc.)
+    - :name: :collection_facility_id
+      :type: :Bigint
+      :comment: FK reference to [facilities](#facilities) table
+      :foreign_key: facilities
+    - :name: :admission_detail_id
+      :type: :Bigint
+      :comment: FK reference to [admission_details](#admission_details) table
+      :foreign_key: admission_details
+    - :name: :collection_type_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the type
+        of collection this record represents
+      :foreign_key: concepts
+    - :name: :collection_id
+      :type: :Bigint
+      :comment: FK reference to [collections](#collections) table
+      :foreign_key: collections
+      :null: false
+    - :name: :context_start_date
+      :type: Date
+      :comment: Start date of record (yyyy-mm-dd)
+      :null: false
+    - :name: :context_end_date
+      :type: Date
+      :comment: End date of record (yyyy-mm-dd)
+    - :name: :context_facility_id
+      :type: :Bigint
+      :comment: FK reference to [facilities](#facilities) table
+      :foreign_key: facilities
+    - :name: :care_site_type_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the care
+        site type within the facility
+      :foreign_key: concepts
+    - :name: :pos_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the place
+        of service associated with this record
+      :foreign_key: concepts
+    - :name: :source_type_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the file
+        name (e.g MEDPAR). If data represents a subset of a file, concatenate the
+        name of the file used and subset  (e.g MEDPAR_SNF)
+      :foreign_key: concepts
+      :null: false
+    - :name: :service_specialty_type_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the specialty
+        type for the services/diagnoses associated with this record
+      :foreign_key: concepts
+    - :name: :record_type_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the type
+        of [contexts](#contexts) the record represents (line, claim, etc.)
+      :foreign_key: concepts
+      :null: false
+    - :name: :context_id
+      :type: :Bigint
+      :comment: FK reference to [contexts](#contexts) table
+      :foreign_key: contexts
+      :null: false
+    - :name: :patient_id
+      :type: :Bigint
+      :comment: FK reference to [patients](#patients) table
+      :foreign_key: patients
+      :null: false
+    - :name: :clinical_code_start_date
+      :type: Date
+      :comment: Start date of record (yyyy-mm-dd)
+      :null: false
+    - :name: :clinical_code_end_date
+      :type: Date
+      :comment: End date of record (yyyy-mm-dd)
+      :null: false
+    - :name: :clinical_code_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the code assigned
+        to the record
+      :foreign_key: concepts
+      :null: false
+    - :name: :quantity
+      :type: :Bigint
+      :comment: Quantity, if available (e.g., procedures)
+    - :name: :seq_num
+      :type: Integer
+      :comment: The sequence number for the variable assigned (e.g. dx3 gets sequence
+        number 3)
+    - :name: :provenance_concept_id
+      :type: :Bigint
+      :comment: 'Additional type information (ex: primary, admitting, problem list,
+        etc)'
+      :foreign_key: concepts
+    - :name: :clinical_code_source_value
+      :type: String
+      :comment: Source code from raw data
+      :null: false
+    - :name: :clinical_code_vocabulary_id
+      :type: String
+      :comment: FK reference to the vocabulary the clinical code comes from
+      :foreign_key: vocabularies
+      :null: false
+    - :name: :measurement_detail_id
+      :type: :Bigint
+      :comment: FK reference to [measurement_details](#measurement_details) table
+      :foreign_key: measurement_details
+    - :name: :drug_exposure_detail_id
+      :type: :Bigint
+      :comment: FK reference to [drug_exposure_details](#drug_exposure_details) table
+      :foreign_key: drug_exposure_details
+    - :name: :result_as_number
+      :type: Float
+      :comment: The observation result stored as a number, applicable to observations
+        where the result is expressed as a numeric value
+    - :name: :result_as_string
+      :type: String
+      :comment: The observation result stored as a string, applicable to observations
+        where the result is expressed as verbatim text
+    - :name: :result_as_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the result associated
+        with the detail_concept_id (e.g., positive/negative, present/absent, low/high,
+        etc.)
+      :foreign_key: concepts
+    - :name: :result_modifier_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for result modifier (=,
+        <, >, etc.)
+      :foreign_key: concepts
+    - :name: :unit_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the measurement units
+        (e.g., mmol/L, mg/dL, etc.)
+      :foreign_key: concepts
+    - :name: :normal_range_low
+      :type: Float
+      :comment: Lower bound of the normal reference range assigned by the laboratory
+    - :name: :normal_range_high
+      :type: Float
+      :comment: Upper bound of the normal reference range assigned by the laboratory
+    - :name: :normal_range_low_modifier_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for result modifier (=,
+        <, >, etc.)
+      :foreign_key: concepts
+    - :name: :normal_range_high_modifier_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for result modifier (=,
+        <, >, etc.)
+      :foreign_key: concepts
+    - :name: :refills
+      :type: Integer
+      :comment: The number of refills after the initial prescription; the initial
+        prescription is not counted (i.e., values start with 0)
+    - :name: :days_supply
+      :type: Integer
+      :comment: The number of days of supply as recorded in the original prescription
+        or dispensing record
+    - :name: :number_per_day
+      :type: Float
+      :comment: The number of pills taken per day
+    - :name: :dose_form_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the form of the drug
+        (capsule, injection, etc.)
+      :foreign_key: concepts
+    - :name: :dose_unit_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the units in which
+        the dose_value is expressed
+      :foreign_key: concepts
+    - :name: :route_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for route in which drug
+        is given
+      :foreign_key: concepts
+    - :name: :dose_value
+      :type: Float
+      :comment: Numeric value for the dose of the drug
+    - :name: :strength_source_value
+      :type: String
+      :comment: Drug strength as reported in the raw data. This can include both dose
+        value and units
+    - :name: :ingredient_source_value
+      :type: String
+      :comment: Ingredient/Generic name of drug as reported in the raw data
+    - :name: :drug_name_source_value
+      :type: String
+      :comment: Product/Brand name of drug as reported in the raw data
+    - :name: :admission_date
+      :type: Date
+      :comment: Date of admission (yyyy-mm-dd)
+      :null: false
+    - :name: :discharge_date
+      :type: Date
+      :comment: Date of discharge (yyyy-mm-dd)
+      :null: false
+    - :name: :admit_source_concept_id
+      :type: :Bigint
+      :comment: Database specific code indicating source of admission (e.g., ER visit,
+        transfer, etc.)
+      :foreign_key: concepts
+    - :name: :discharge_location_concept_id
+      :type: :Bigint
+      :comment: Database specific code indicating discharge location (e.g., death,
+        home, transfer, long-term care, etc.)
+      :foreign_key: concepts
+    - :name: :admission_type_concept_id
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the type
+        of admission the record is (Emergency, Elective, etc.)
+      :foreign_key: concepts
 - :name: :collections
   :columns:
   - :name: :id

@@ -17,7 +17,7 @@ module ConceptQL
       end
 
       def schema
-        SCHEMAS[data_model]
+        SCHEMAS[data_model].tap {|o| p o }
       end
 
       def data_model

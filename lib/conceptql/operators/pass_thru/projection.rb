@@ -15,7 +15,7 @@ module ConceptQL
 
       def query(db)
         ds = stream.evaluate(db)
-        return ds if scope.output_columns.empty?
+        return ds #if scope.output_columns.empty?
         apply_joins(ds)
       end
 

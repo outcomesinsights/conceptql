@@ -26,3 +26,5 @@ services:
     image: outcomesinsights/lexicon:chisel.latest
   test_data:
     image: outcomesinsights/misc:test_data.chisel.postgres.latest
+    ports:
+      - "54321:5432"
