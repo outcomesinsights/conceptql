@@ -71,15 +71,27 @@ describe ConceptQL::Operators::Vocabulary do
   end
 
   describe "with example vocabularies" do
-    let(:db) { Sequel.connect("sqlite:/") }
+    let(:db) do 
+      db = Sequel.connect("sqlite:/")
+      ConceptQL.db_extensions(db)
+      # It took me 2 hours to determine that I need to wrap the Sequel::Database
+      # instance in a proc because it responds to #call which
+      # causes Minitest's mock framework to call it with no arguments
+      # to produce an error with no strack trace that looks like:
+      # ArgumentError: wrong number of arguments (given 0, expected 1..2)
+      #   /usr/lib/ruby/gems/2.7.0/gems/sequel-5.40.0/lib/sequel/database/query.rb:35:in `call'
+      # But we avoid this issue if we wrap the instance in a proc...UGH
+      proc { db }
+    end
 
     before do
-      db.create_table!(:vocabularies) do
+      db.call.create_table!(:vocabularies) do
         String :id
         String :vocabulary_name
         String :domain
       end
-      db[:vocabularies].multi_insert([
+
+      db.call[:vocabularies].multi_insert([
         { id: "EXAMPLE", vocabulary_name: "Example Vocabulary", domain: "measurement" }
       ])
     end
@@ -89,10 +101,13 @@ describe ConceptQL::Operators::Vocabulary do
         entry.id == "example"
       end)
 
-      ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
-        refute_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+      ConceptQL.stub(:make_lexicon_db, db) do
+        dv = ConceptQL::Vocabularies::DynamicVocabularies.new
+        av = dv.all_vocabs
+        example_vocabs = av.select do |_, entry|
           entry.id == "example"
-        end)
+        end 
+        refute_empty(example_vocabs)
       end
 
       assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
@@ -102,14 +117,11 @@ describe ConceptQL::Operators::Vocabulary do
 
     it "should use proper case sensitivity for dynamic vocabularies" do
       cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-      lexicon = ConceptQL::Lexicon.new(db)
       ConceptQL::Operators.stub(:operators, {gdm: {}, omopv4_plus: {}}) do
-        ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
-          cdb.stub(:lexicon, lexicon) do
-            ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
-            q = cdb.query([ "example", "12" ])
-            assert_match(/EXAMPLE/, q.sql)
-          end
+        ConceptQL.stub(:make_lexicon_db, db) do
+          ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
+          q = cdb.query([ "example", "12" ])
+          assert_match(/EXAMPLE/, q.sql)
         end
       end
     end

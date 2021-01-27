@@ -35,13 +35,13 @@ Enter numeric concept id(s), or the corresponding text label(s):
       include ConceptQL::Provenanceable
 
       def query(db)
-        db.from(stream.evaluate(db)).where(build_where_from_codes(arguments))
+        db.from(stream.evaluate(db)).where(build_where_from_codes(db, arguments))
       end
 
     private
 
       def additional_validation(db, opts = {})
-        build_std_code_concept_ids(arguments)
+        build_std_code_concept_ids(db, arguments)
 
         bad_keywords = arguments.each_with_object({file: [], code: []}){|c,h|
 

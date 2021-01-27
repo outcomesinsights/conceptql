@@ -58,9 +58,11 @@ module ConceptQL
 
       def codes_by_domain(db)
         if no_db?(db)
-          if lexicon
-            @no_db_codes_by_domain ||= lexicon.codes_by_domain(arguments, "READ")
-            return @no_db_codes_by_domain
+          ConceptQL.with_lexicon(db) do |lexicon|
+            if lexicon
+              @no_db_codes_by_domain ||= lexicon.codes_by_domain(arguments, "READ")
+              return @no_db_codes_by_domain
+            end
           end
           return { observation: arguments }
         end

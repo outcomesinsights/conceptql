@@ -40,8 +40,10 @@ module ConceptQL
           missing_args = []
 
           if no_db?(db, opts)
-            if lexicon
-              missing_args = args - lexicon.known_codes(vocabulary_id, args)
+            ConceptQL.with_lexicon(db) do |lexicon|
+              if lexicon
+                missing_args = args - lexicon.known_codes(vocabulary_id, args)
+              end
             end
           else
             missing_args = args - dm.known_codes(db, vocabulary_id, args)
@@ -56,8 +58,11 @@ module ConceptQL
       def describe_codes(db, codes)
         return [["*", "ALL CODES"]] if select_all?
         if no_db?(db)
-          if lexicon
-            found_codes = lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
+          found_codes = []
+          ConceptQL.with_lexicon(db) do |lexicon|
+            if lexicon
+              found_codes = lexicon.concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
+            end
           end
           return found_codes + (codes - found_codes.map(&:first)).zip([])
         end

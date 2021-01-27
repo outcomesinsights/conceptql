@@ -42,11 +42,13 @@ module ConceptQL
       end
 
       def lexicon_vocabularies
-        lexicon ? lexicon.vocabularies : []
-      end
-
-      def lexicon
-        @lexicon || ConceptQL::Database.lexicon
+        ConceptQL.with_lexicon do |lexicon|
+          if lexicon 
+            lexicon.vocabularies 
+          else 
+            []
+          end
+        end
       end
     end
   end

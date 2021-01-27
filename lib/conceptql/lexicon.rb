@@ -84,6 +84,9 @@ module ConceptQL
       lexicon_db.is_a?(Sequel::Mock::Database)
     end
 
+    def with_db
+      db.synchronize { yield db }
+    end
     def db
       if dataset_db && db_has_all_vocabulary_tables?(dataset_db) && !dataset_db.is_a?(Sequel::Mock::Database)
         dataset_db

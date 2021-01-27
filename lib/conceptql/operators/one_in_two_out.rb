@@ -51,7 +51,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def all_inpatient_events
         condition_events
-          .where(build_where_from_codes(["inpatient"]))
+          .where(build_where_from_codes(db, ["inpatient"]))
           .from_self
       end
 
@@ -74,7 +74,7 @@ twice in an outpatient setting with a 30-day gap.
 
       def outpatient_events
         condition_events
-          .where(build_where_from_codes(["carrier_claim","outpatient"]))
+          .where(build_where_from_codes(db, ["carrier_claim","outpatient"]))
           .from_self
       end
 

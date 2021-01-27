@@ -16,8 +16,12 @@ module ConceptQL
     # == Returns:
     # Hash with provenance type concept_codes by vocabulary_id
     #
-    def provenance_types
-      @provenance_types ||= lexicon.db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
+    def provenance_types(db)
+      @provenance_types ||= ConceptQL.with_lexicon(db) do |lexicon|
+        lexicon.with_db do |ldb|
+          ldb[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
+        end
+      end
     end
 
     def base_file_provenance_types
@@ -26,21 +30,6 @@ module ConceptQL
 
     def base_code_provenance_types
       @base_code_provenance_types ||= provenance_types[CODE_PROVENANCE_TYPES_VOCAB].to_h
-    end
-
-    # Creates hash of mixed provenance type codes (ex: inpatient_primary) with the key set to the code and the value a hash that splits out the file type code and code type code
-    #
-    # Makes all combinations of base file provenance type and base code provenance type into new codes of the form <file prov code>_<code prov code>
-    #
-    # == Returns:
-    # Hash with code as key and value hash with code split into file_type and code_type
-    #
-    # {
-    #  inpatient_primary: {file_type: "inpatient", code_type: "primary" },
-    #  outpatient_primary: {file_type: "outpatient", code_type: "primary" }
-    # }
-    def mixed_provenance_types
-      @mixed_provenance_types ||= base_file_provenance_types.keys.product(base_code_provenance_types.keys).map{|c| [c.join(CODE_SEPARATOR),{file_type: c[0], code_type: c[1]}] }.to_h
     end
 
     # Creates array of all unique file provenance codes
@@ -79,11 +68,11 @@ module ConceptQL
     # == Returns:
     # A ruby Sequel or statement
     #
-    def build_where_from_codes(codes)
+    def build_where_from_codes(db, codes)
 
       codes = codes
 
-      build_std_code_concept_ids(codes)
+      build_std_code_concept_ids(db, codes)
 
       w = []
 
@@ -154,8 +143,8 @@ module ConceptQL
       }.to_h
     end
 
-    def build_std_code_concept_ids(codes)
-      @std_code_concept_ids = get_related_concept_ids_by_codes(codes)
+    def build_std_code_concept_ids(db, codes)
+      @std_code_concept_ids = get_related_concept_ids_by_codes(db, codes)
     end
 
     def std_code_concept_ids
@@ -181,7 +170,7 @@ module ConceptQL
     #  }
     # }
     #
-    def get_related_concept_ids_by_codes(codes)
+    def get_related_concept_ids_by_codes(db, codes)
 
       # Get all character based codes
       file_type_codes = codes.map{|code| file_provenance_part_from_code(code)}.select{|c| !c.nil? && c.to_i.zero?}.uniq
@@ -191,21 +180,32 @@ module ConceptQL
       conditions << {vocabulary_id: FILE_PROVENANCE_TYPES_VOCAB, concept_code: file_type_codes} unless file_type_codes.to_a.empty?
       conditions << {vocabulary_id: CODE_PROVENANCE_TYPES_VOCAB, concept_code: code_type_codes} unless code_type_codes.to_a.empty?
 
+      res = {FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}
       if !conditions.empty?
-        q = lexicon.db[:concepts]
+        ConceptQL.with_lexicon(db) do |lexicon|
+          lexicon.with_db do |ldb|
+            q = ldb[:concepts]
 
-        q = q.where(Sequel.|(*conditions))
+            q = q.where(Sequel.|(*conditions))
 
-        q = q.from_self(alias: :c).join(lexicon.db[:ancestors], {ancestor_id: :id}, table_alias: :ancestors)
+            q = q.from_self(alias: :c).join(ldb[:ancestors], {ancestor_id: :id}, table_alias: :ancestors)
 
-        res = q.select_hash_groups([Sequel[:c][:vocabulary_id], Sequel[:c][:concept_code]], [Sequel[:ancestors][:ancestor_id], Sequel[:ancestors][:descendant_id]])
+            ConceptQL.logger.debug("x"*80)
+            ConceptQL.logger.debug({
+              thread: Thread.current,
+              conditions: conditions,
+              ancestors: ldb[:ancestors].count,
+              concepts: ldb[:concepts].count,
+            }.pretty_inspect)
 
-        res = res.each_with_object({FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}){|c,h|
-          h[c[0][0]].merge!( [[c[0][1],c[1].flatten]].to_h){|key,new_v,old_v| (new_v.flatten + old_v.flatten).uniq}
-        }
+            res = q.select_hash_groups([Sequel[:c][:vocabulary_id], Sequel[:c][:concept_code]], [Sequel[:ancestors][:ancestor_id], Sequel[:ancestors][:descendant_id]])
 
-      else
-        res = {FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}
+            ConceptQL.logger.debug(res.pretty_inspect)
+            res = res.each_with_object({FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}){|c,h|
+              h[c[0][0]].merge!( [[c[0][1],c[1].flatten]].to_h){|key,new_v,old_v| (new_v.flatten + old_v.flatten).uniq}
+            }
+          end
+        end
       end
 
       return res

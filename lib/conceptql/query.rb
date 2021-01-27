@@ -20,19 +20,17 @@ module ConceptQL
 
     extend Forwardable
     def_delegators :query, :all, :count, :execute, :order, :profile
-    def_delegators :cdb, :db
-    def_delegators :db, :profile_for
 
     attr :statement
     def initialize(cdb, statement, opts={})
       @cdb = cdb
       @statement, opts = extract_statement(statement, opts.dup)
       opts[:algorithm_fetcher] ||= proc do |alg|
-        statement, description = db[:concepts].where(concept_id: alg).get([:statement, :label])
+        statement, description = with_db { |db| db[:concepts].where(concept_id: alg).get([:statement, :label]) }
         statement = JSON.parse(statement) if statement.is_a?(String)
         [statement, description]
       end
-      @nodifier = opts[:nodifier] || Nodifier.new({ database_type: db ? db.database_type : nil }.merge(opts))
+      @nodifier = opts[:nodifier] || Nodifier.new({ database_type: cdb.db ? cdb.db.database_type : nil }.merge(opts))
     end
 
     def analyze
@@ -40,7 +38,13 @@ module ConceptQL
     end
 
     def query(opts = {})
-      nodifier.scope.with_ctes(operator, db, opts)
+      with_db do |db|
+        nodifier.scope.with_ctes(operator, db, opts)
+      end
+    end
+
+    def profile_for(*args)
+      with_db { |db| db.profile_for(*args) }
     end
 
     def query_cols(opts = {})
@@ -58,27 +62,31 @@ module ConceptQL
     end
 
     def sql_statements(*args)
-      stmts = query.sql_statements
+      with_db do |db|
+        begin
+          stmts = query.sql_statements
 
-      if args.include?(:create_tables)
-        sql = stmts.delete(:query)
-        stmts = stmts.map do |name, sql|
-          [name, db.send(:create_table_as_sql, name, sql, {})]
-        end.push([:query, sql])
-      end
+          if args.include?(:create_tables)
+            sql = stmts.delete(:query)
+            stmts = stmts.map do |name, sql|
+              [name, db.send(:create_table_as_sql, name, sql, {})]
+            end.push([:query, sql])
+          end
 
-      if args.include?(:formatted)
-        stmts = stmts.map do |name, sql|
-          [name, format(sql)]
+          if args.include?(:formatted)
+            stmts = stmts.map do |name, sql|
+              [name, format(sql)]
+            end
+          end
+          Hash[stmts]
+        rescue
+          raise QueryError.new("Failed to generate SQL for #{stmts.inspect}")
         end
       end
-      Hash[stmts]
-    rescue
-      raise QueryError.new("Failed to generate SQL for #{stmts.inspect}")
     end
 
     def annotate(opts = {})
-      operator.annotate(db, opts)
+      with_db { |db| operator.annotate(db, opts) }
     end
 
     def accept(visitor, opts = {})
@@ -103,7 +111,7 @@ module ConceptQL
     end
 
     def domains
-      operator.domains(db)
+      with_db { |db| operator.domains(db) }
     end
 
     def operator
@@ -123,7 +131,7 @@ module ConceptQL
     end
 
     def code_list(ignored_db = nil)
-      operator.code_list(db).uniq
+      with_db { |db| operator.code_list(db).uniq }
     end
 
     def drop_temp_tables(opts = {})
@@ -151,6 +159,10 @@ module ConceptQL
 
     def format(sql)
       SqlFormatters.format(sql, rdbms)
+    end
+
+    def with_db
+      cdb.with_db { |db| yield db }
     end
   end
 end

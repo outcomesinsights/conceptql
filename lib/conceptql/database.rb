@@ -78,5 +78,13 @@ module ConceptQL
     def lexicon
       @lexicon ||= Lexicon.new(self.class.lexicon_db, db)
     end
+
+    def with_db
+      if db
+        db.synchronize { |conn| yield db }
+      else
+        yield nil
+      end
+    end
   end
 end

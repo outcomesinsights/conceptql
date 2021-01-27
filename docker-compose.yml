@@ -19,7 +19,7 @@ services:
     build:
       context: "."
       dockerfile: dockers/sqlite/Dockerfile
-    command: sh -c "bundle && bundle exec ruby test/all.rb"
+    command: sh -c "bundle && sleep 10 && bundle exec ruby test/all.rb"
     volumes:
     - "${PWD}:/home/conceptql"
   lexicon:

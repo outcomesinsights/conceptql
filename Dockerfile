@@ -5,7 +5,7 @@ WORKDIR /app
 ENV PATH="/root/.local/bin:${PATH}"
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-  libpq-dev python-pip python-setuptools git krb5-user krb5-config \
+  libpq-dev python-pip python-setuptools git krb5-user krb5-config build-essentials \
   && pip install wheel \
   && pip install --user \
   wheel pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse

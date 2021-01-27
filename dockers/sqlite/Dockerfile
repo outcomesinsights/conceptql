@@ -14,8 +14,6 @@ RUN apk add --no-cache curl gcc build-base abuild zstd ruby-dev ruby-bundler git
   && git clone https://github.com/darold/pgFormatter.git \
   && cd pgFormatter \
   && perl Makefile.PL \
-  && make install \
-  && cd /home/conceptql \
-  && bundle install \
-  && apk del --purge --no-cache gcc build-base abuild
+  && make install
 WORKDIR /home/conceptql
+RUN bundle install

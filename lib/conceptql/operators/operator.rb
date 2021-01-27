@@ -408,10 +408,6 @@ module ConceptQL
         raise NotImplementedError, self
       end
 
-      def lexicon
-        scope.lexicon
-      end
-
       def same_table?(table)
         false
       end
@@ -624,7 +620,9 @@ module ConceptQL
       end
 
       def add_warnings?(db, opts = {})
-        @errors.empty? && (!no_db?(db, opts) || !lexicon.nil?)
+        ConceptQL.with_lexicon(db) do |lexicon|
+          @errors.empty? && (!no_db?(db, opts) || !lexicon.nil?)
+        end
       end
 
       def add_error(*args)

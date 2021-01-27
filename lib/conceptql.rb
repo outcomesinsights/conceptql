@@ -2,6 +2,7 @@ require "conceptql/version"
 require "conceptql/logger"
 require "conceptql/paths"
 require "conceptql/utils"
+require "conceptql/lexicon_maker"
 require "conceptql/operators/operator"
 require "conceptql/behaviors/code_lister"
 require "conceptql/behaviors/timeless"
@@ -34,6 +35,7 @@ end
 
 module ConceptQL
   DEFAULT_DATA_MODEL = :gdm
+  DB_EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove, :null_dataset, :sql_comments, :pg_ctas_explain, :pg_vacuum_table]
 
   def self.avoid_ctes?
     ENV['CONCEPTQL_AVOID_CTES'] == 'true'
@@ -57,6 +59,13 @@ module ConceptQL
       "Filter Single Stream",
     ].map.with_index do |name, priority|
       { name: name, priority: priority }
+    end
+  end
+
+  def self.db_extensions(db)
+    return unless db
+    DB_EXTENSIONS.each do |extension|
+      db.extension extension
     end
   end
 end
