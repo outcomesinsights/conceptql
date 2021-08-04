@@ -25,13 +25,18 @@ module ConceptQL
         order_cols = order_columns(op)
 
         rhs = query.db[get_table_window(query)]
-        rhs = remove_window_id(rhs)
-        rhs = rhs
-              .select_group(:person_id, :start_date, :end_date)
-              .select_append do
-                row_number.function.over(order: order_cols)
-                          .as(:window_id)
-              end.as(:r)
+
+        if (!opts[:precalculated_window_id])
+          rhs = remove_window_id(rhs)
+          rhs = rhs
+                .select_group(:person_id, :start_date, :end_date)
+                .select_append do
+                  row_number.function.over(order: order_cols)
+                            .as(:window_id)
+                end
+        end
+
+        rhs = rhs.as(:r)
 
         remove_window_id(query)
           .from_self(alias: :l)
