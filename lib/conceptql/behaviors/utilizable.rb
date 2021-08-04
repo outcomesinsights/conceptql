@@ -49,14 +49,16 @@ module ConceptQL
           .from_self
           .distinct(:collection_id)
 
+        relevant_contexts = db[Sequel[:contexts].as(:cn)]
+          .where(Sequel[:cn][:source_type_concept_id] => all_source_type_ids)
+          .select(:collection_id)
 
         db[:collections].from_self(alias: :cl)
           .join(:admission_details, { Sequel[:ad][:id] => Sequel[:cl][:admission_detail_id] }, table_alias: :ad)
-          .left_join(:contexts, { Sequel[:cn][:collection_id] => Sequel[:cl][:id] }, table_alias: :cn)
           .left_join(:concepts, { Sequel[:ad][:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
           .left_join(:concepts, { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
           .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[:cl][:id] }, table_alias: :pcon)
-          .where(Sequel[:cn][:source_type_concept_id] => all_source_type_ids)
+          .where(Sequel[:cl][:id] => relevant_contexts)
       end
 
       def table
