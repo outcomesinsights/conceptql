@@ -11,6 +11,7 @@ module ConceptQL
             :drug_amount,
             :drug_amount_units,
             :drug_quantity,
+            :drug_strength_source_value,
             :drug_days_supply
           ]
         end
@@ -33,6 +34,7 @@ module ConceptQL
             .select_append(Sequel[:dose_con][:concept_text].as(:drug_amount_units))
             .select_append(Sequel[:ing_con][:concept_text].as(:drug_name))
             .select_append(Sequel[:de][:days_supply].as(:drug_days_supply))
+            .select_append(Sequel[:de][:strength_source_value].as(:drug_strength_source_value))
             .select_append(Sequel[:cc][:quantity].as(:drug_quantity))
             .from_self
         end

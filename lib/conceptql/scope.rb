@@ -41,6 +41,7 @@ module ConceptQL
       drug_name: :String,
       drug_amount: :Float,
       drug_amount_units: :String,
+      drug_strength_source_value: :String,
       drug_days_supply: :Bigint,
       drug_quantity: :Float,
       admission_date: :Date,
