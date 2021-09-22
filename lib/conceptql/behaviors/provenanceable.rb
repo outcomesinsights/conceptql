@@ -1,3 +1,4 @@
+require 'pry-byebug'
 module ConceptQL
   module Provenanceable
 
@@ -17,7 +18,10 @@ module ConceptQL
     # Hash with provenance type concept_codes by vocabulary_id
     #
     def provenance_types
-      @provenance_types ||= lexicon.db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
+      @provenance_types ||= 
+        with_lexicon do |lexicon|
+          lexicon.db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
+        end
     end
 
     def base_file_provenance_types
@@ -87,7 +91,7 @@ module ConceptQL
 
       w = []
 
-      w = concept_ids_by_code(codes).each_with_object([]){|code, arr|
+      w = concept_ids_by_code(codes).each_with_object([]) do |code, arr|
         file_prov_concept_ids = code[1][FILE_PROVENANCE_TYPES_VOCAB].to_a.map(&:to_i)
         code_prov_concept_ids = code[1][CODE_PROVENANCE_TYPES_VOCAB].to_a.map(&:to_i)
 
@@ -105,7 +109,7 @@ module ConceptQL
           end
           arr << res
         end
-      }
+      end
 
       return Sequel.|(*w) unless w.empty?
       return Sequel.lit("0=1")
@@ -125,7 +129,7 @@ module ConceptQL
     # }
     #
     def concept_ids_by_code(codes)
-      codes.map{|code|
+      codes.map do |code|
         code = code.to_s
 
         file_type = file_provenance_part_from_code(code)
@@ -151,7 +155,7 @@ module ConceptQL
         h[CODE_PROVENANCE_TYPES_VOCAB] = h[CODE_PROVENANCE_TYPES_VOCAB].uniq unless h[CODE_PROVENANCE_TYPES_VOCAB].nil?
 
         [code, h]
-      }.to_h
+      end.to_h
     end
 
     def build_std_code_concept_ids(codes)
@@ -191,21 +195,32 @@ module ConceptQL
       conditions << {vocabulary_id: FILE_PROVENANCE_TYPES_VOCAB, concept_code: file_type_codes} unless file_type_codes.to_a.empty?
       conditions << {vocabulary_id: CODE_PROVENANCE_TYPES_VOCAB, concept_code: code_type_codes} unless code_type_codes.to_a.empty?
 
+      res = empty_hash = {
+        FILE_PROVENANCE_TYPES_VOCAB => {},
+        CODE_PROVENANCE_TYPES_VOCAB => {}
+      }
+
       if !conditions.empty?
-        q = lexicon.db[:concepts]
+        with_lexicon do |lexicon|
+          q = lexicon.db[:concepts]
 
-        q = q.where(Sequel.|(*conditions))
+          q = q.where(Sequel.|(*conditions))
 
-        q = q.from_self(alias: :c).join(lexicon.db[:ancestors], {ancestor_id: :id}, table_alias: :ancestors)
+          q = q.from_self(alias: :c).join(lexicon.db[:ancestors], {ancestor_id: :id}, table_alias: :ancestors)
 
-        res = q.select_hash_groups([Sequel[:c][:vocabulary_id], Sequel[:c][:concept_code]], [Sequel[:ancestors][:ancestor_id], Sequel[:ancestors][:descendant_id]])
+          res = q.select_hash_groups([Sequel[:c][:vocabulary_id], Sequel[:c][:concept_code]], [Sequel[:ancestors][:ancestor_id], Sequel[:ancestors][:descendant_id]])
+          ConceptQL.logger.info(res.pretty_inspect)
 
-        res = res.each_with_object({FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}){|c,h|
-          h[c[0][0]].merge!( [[c[0][1],c[1].flatten]].to_h){|key,new_v,old_v| (new_v.flatten + old_v.flatten).uniq}
-        }
-
-      else
-        res = {FILE_PROVENANCE_TYPES_VOCAB => {}, CODE_PROVENANCE_TYPES_VOCAB => {}}
+          res = res.each_with_object(empty_hash) do |c,h|
+            raise("#{q.sql} failed to find results and returned #{res.pretty_inspect} from #{lexicon.db[:concepts].db.opts.pretty_inspect}") if c[0].nil? || c[0][0].nil?
+            vocab_name = c[0][0]
+            concept_code = c[0][1]
+            concept_ids = c[1].flatten
+            h[vocab_name].merge!([[concept_code, concept_ids]].to_h) do |key, new_v, old_v|
+              (new_v.flatten + old_v.flatten).uniq
+            end
+          end
+        end
       end
 
       return res

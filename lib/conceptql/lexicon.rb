@@ -1,10 +1,12 @@
 module ConceptQL
   class Lexicon
-    attr_reader :lexicon_db, :dataset_db, :tables
+    attr_reader :lexicon_db, :dataset_db, :tables, :db_lock
+    @@db_lock = Mutex.new
 
     def initialize(lexicon_db, dataset_db = nil)
       @lexicon_db = lexicon_db
       @dataset_db = dataset_db
+      @db_lock = Mutex.new
       @tables = {}
     end
 
@@ -89,6 +91,13 @@ module ConceptQL
         dataset_db
       else
         lexicon_db
+      end
+    end
+
+    def with_db
+      @@db_lock.synchronize do
+        _db = db
+        _db.synchronize { yield _db }
       end
     end
 

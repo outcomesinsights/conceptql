@@ -12,6 +12,7 @@
     "drug_amount": null,
     "drug_amount_units": null,
     "drug_quantity": 30,
+    "drug_strength_source_value": null,
     "drug_days_supply": 30
   },
   {
@@ -27,6 +28,7 @@
     "drug_amount": null,
     "drug_amount_units": null,
     "drug_quantity": 90,
+    "drug_strength_source_value": null,
     "drug_days_supply": 30
   },
   {
@@ -42,6 +44,7 @@
     "drug_amount": null,
     "drug_amount_units": null,
     "drug_quantity": 30,
+    "drug_strength_source_value": null,
     "drug_days_supply": 30
   }
 ]

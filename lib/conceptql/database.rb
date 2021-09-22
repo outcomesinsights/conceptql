@@ -78,5 +78,16 @@ module ConceptQL
     def lexicon
       @lexicon ||= Lexicon.new(self.class.lexicon_db, db)
     end
+
+    def with_lexicon(db)
+      @lexicon_mutex.synchronize do
+        db.synchronize do
+          ldb = lexicon_db
+          ldb.synchronize do
+            yield Lexicon.new(ldb, db)
+          end
+        end
+      end
+    end
   end
 end

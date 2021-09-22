@@ -61,7 +61,7 @@ module ConceptQL
 
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns, :lexicon
+    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
 
     def initialize(opts = {})
       @known_operators = {}
@@ -75,7 +75,6 @@ module ConceptQL
       @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
       @query_columns << :window_id if opts.dig(:window_opts, :window_table)
-      @lexicon = opts[:lexicon]
 
       @i = 0
       @mutex = Mutex.new
@@ -84,6 +83,19 @@ module ConceptQL
       if force_temp_tables? && ConceptQL::Utils.blank?(scratch_database)
         raise ArgumentError, "You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable"
       end
+    end
+
+    def with_lexicon(db = nil)
+      ldb = Sequel.connect(ENV["LEXICON_URL"])
+      ldb.synchronize do
+        if db
+          db.synchronize { yield Lexicon.new(ldb, db) }
+        else
+          yield Lexicon.new(ldb, db)
+        end
+      end
+    ensure
+      ldb.disconnect
     end
 
     def add_errors(key, errors)

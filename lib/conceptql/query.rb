@@ -12,7 +12,7 @@ module ConceptQL
         og_message = if cause.respond_to?(:full_message)
                        cause.full_message
                      else
-                       (cause.message + cause.backtrace).join("\n")
+                       ([cause.message] + cause.backtrace).join("\n")
                      end
         [super, "OG ERROR:", og_message].join("\n")
       end
@@ -74,7 +74,7 @@ module ConceptQL
       end
       Hash[stmts]
     rescue
-      raise QueryError.new("Failed to generate SQL for #{stmts.inspect}")
+      raise QueryError.new("Failed to generate SQL for #{statement.inspect}")
     end
 
     def annotate(opts = {})
