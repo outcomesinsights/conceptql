@@ -1,4 +1,5 @@
 require_relative 'pass_thru'
+require "pry-byebug"
 
 module ConceptQL
   module Operators
@@ -25,16 +26,17 @@ module ConceptQL
       def gdm(db)
 
         contexteds = upstreams.map do |stream|
-          contextify(db, stream)
-        end
+          [stream.cte_name(:contextified), contextify(db, stream)]
+        end.to_h
 
         # Get all context_id's that are in all streams and do not share the same critierion_id
-        first, *rest = *contexteds
-        shared_context_ids = rest.inject(first.from_self(alias: :first)) do |q, shared_event|
-            q.join(shared_event.select(:context_id, :criterion_id), context_id: :context_id) do |a,b|
-            ~(Sequel.qualify(a,:criterion_id) =~ Sequel.qualify(b,:criterion_id) )
-          end.select(Sequel[:first][:context_id]).distinct
-        end.from_self
+        first, *rest = *contexteds.keys
+        shared_context_ids = rest.inject(db[first].select(:context_id)) { |q, next_cte| q.intersect(db[next_cte].select(:context_id)) }
+        #shared_context_ids = rest.inject(first.from_self(alias: :first)) do |q, shared_event|
+        #    q.join(shared_event.select(:context_id, :criterion_id), context_id: :context_id) do |a,b|
+        #    ~(Sequel.qualify(a,:criterion_id) =~ Sequel.qualify(b,:criterion_id) )
+        #  end.select(Sequel[:first][:context_id]).distinct
+        #end.from_self
 
         if ConceptQL.avoid_ctes?
           context_id_ds = shared_context_ids
@@ -43,14 +45,17 @@ module ConceptQL
           context_id_ds = db[name]
         end
 
-        shared_events = contexteds.map do |contexted|
-          contexted.where(context_id: context_id_ds).select(*query_cols)
+        shared_events = contexteds.keys.map do |contexted|
+          db[contexted].where(context_id: context_id_ds).select(*query_cols)
         end
 
         ds = shared_events.inject do |q, shared_event|
           q.union(shared_event)
         end
 
+        contexteds.each do |name, query|
+          ds = ds.with(name, query)
+        end
         if name
           ds = ds.with(name, shared_context_ids)
         end
