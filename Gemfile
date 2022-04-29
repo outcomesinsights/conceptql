@@ -5,6 +5,4 @@ gemspec
 gem "pg"
 
 group :test, :development do
-  gem "pry"
-  gem "pry-byebug"
 end
