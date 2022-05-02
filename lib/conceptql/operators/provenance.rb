@@ -34,13 +34,23 @@ Enter numeric concept id(s), or the corresponding text label(s):
 
       include ConceptQL::Provenanceable
 
+      attr_reader :db
+
       def query(db)
+        @db = db
         db.from(stream.evaluate(db)).where(build_where_from_codes(arguments))
       end
 
     private
 
       def additional_validation(db, opts = {})
+        bad_keywords = find_bad_keywords(arguments)
+        if bad_keywords.present?
+          add_error("unrecognized keywords", *(bad_keywords.uniq))
+        end
+      end
+
+=begin
         build_std_code_concept_ids(arguments)
 
         bad_keywords = arguments.each_with_object({file: [], code: []}){|c,h|
@@ -74,6 +84,7 @@ Enter numeric concept id(s), or the corresponding text label(s):
         end
 
       end
+=end
     end
   end
 end

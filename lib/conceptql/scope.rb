@@ -89,7 +89,9 @@ module ConceptQL
       ldb = Sequel.connect(ENV["LEXICON_URL"])
       ldb.synchronize do
         if db
-          db.synchronize { yield Lexicon.new(ldb, db) }
+          db.synchronize do 
+            yield Lexicon.new(ldb, db)
+          end
         else
           yield Lexicon.new(ldb, db)
         end

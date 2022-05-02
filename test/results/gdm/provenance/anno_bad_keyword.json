@@ -28,7 +28,7 @@
       },
       "errors": [
         [
-          "unrecognized file type keywords",
+          "unrecognized keywords",
           "carrier",
           "garbage",
           "other"

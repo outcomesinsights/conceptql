@@ -10,6 +10,31 @@ module ConceptQL
     FILE_PROVENANCE_TYPES_VOCAB = "JIGSAW_FILE_PROVENANCE_TYPE"
     CODE_PROVENANCE_TYPES_VOCAB = "JIGSAW_CODE_PROVENANCE_TYPE"
 
+    def prov_of(ancestors)
+      with_lexicon(db) do |lexicon|
+        ancestor_ids = lexicon.concepts([FILE_PROVENANCE_TYPES_VOCAB, CODE_PROVENANCE_TYPES_VOCAB], ancestors)
+          .select_map(:id)
+
+        lexicon.db[:ancestors]
+          .where(ancestor_id: ancestor_ids)
+          .order(:descendant_id)
+          .select_map(:descendant_id)
+      end
+    end
+
+    def build_where_from_codes(codes)
+      Sequel.|(
+        {file_provenance_type: prov_of(codes)}, {code_provenance_type: prov_of(codes)}
+      )
+    end
+
+    def find_bad_keywords(codes) 
+      with_lexicon(db) do |lexicon|
+        codes - lexicon.db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB, CODE_PROVENANCE_TYPES_VOCAB]).select_map(:concept_code)
+      end
+    end
+
+=begin
     CODE_SEPARATOR = ":"
 
     # Creates hash of provenance type concept codes by vocabulary_id (JIGSAW_FILE_PROVENANCE_TYPE, JIGSAW_CODE_PROVENANCE_TYPE)
@@ -19,7 +44,7 @@ module ConceptQL
     #
     def provenance_types
       @provenance_types ||= 
-        with_lexicon do |lexicon|
+        with_lexicon(db) do |lexicon|
           lexicon.db[:concepts].where(vocabulary_id: [FILE_PROVENANCE_TYPES_VOCAB,CODE_PROVENANCE_TYPES_VOCAB]).select_hash_groups(:vocabulary_id, [:concept_code, :id])
         end
     end
@@ -111,8 +136,13 @@ module ConceptQL
         end
       end
 
-      return Sequel.|(*w) unless w.empty?
-      return Sequel.lit("0=1")
+      if w.length > 1
+        return Sequel.|(*w) unless w.empty?
+      elsif w.length == 1
+        return(Sequel.expr(w.first))
+      else
+        return Sequel.lit("0=1")
+      end
     end
 
     # Takes list of codes (inpatient, outpatient_primary, etc) and returns hash of related concepts ids by code and provenance type
@@ -201,7 +231,7 @@ module ConceptQL
       }
 
       if !conditions.empty?
-        with_lexicon do |lexicon|
+        with_lexicon(db) do |lexicon|
           q = lexicon.db[:concepts]
 
           q = q.where(Sequel.|(*conditions))
@@ -259,5 +289,6 @@ module ConceptQL
       return code_split[1] if code_split.length == 2 && !code_split[1].empty?
       return nil
     end
+=end
   end
 end
