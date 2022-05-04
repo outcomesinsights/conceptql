@@ -32,7 +32,7 @@ module ConceptQL
       end
 
       def gdm_it(db)
-        with_lexicon do |lexicon|
+        with_lexicon(db) do |lexicon|
           source_type_id = lexicon.concepts("JIGSAW_FILE_PROVENANCE_TYPE", collection_type).select_map(:id)
           all_source_type_ids = lexicon.descendants_of(source_type_id).select_map(:descendant_id)
           primary_id = lexicon.concepts("JIGSAW_CODE_PROVENANCE_TYPE", "primary").select_map(:id)
