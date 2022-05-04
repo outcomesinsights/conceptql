@@ -212,7 +212,9 @@ module ConceptQL
       end
 
       def evaluate(db)
-        select_it(query(db))
+        q = select_it(query(db))
+        name = cte_name(op_name)
+        db[name].with(name, q, materialized: true)
       end
 
       def pretty_print(pp)
