@@ -7,7 +7,6 @@
 .yardoc
 .idea
 .env
-Gemfile.lock
 InstalledFiles
 _yardoc
 coverage
