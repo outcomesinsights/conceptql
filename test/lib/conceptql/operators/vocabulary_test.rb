@@ -36,15 +36,15 @@ describe ConceptQL::Operators::Vocabulary do
     end
 
     it "should produce correct SQL" do
-      _(cdb.query(["admsrce", "12"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ADMSRCE') AND (\"concept_code\" IN ('12')))))) AS \"t1\") AS \"t1\""
+      check_sequel(cdb.query(["admsrce", "12"]), :vocabulary, :correct_sql)
     end
 
     it "should produce correct SQL for older selection operators" do
-      _(cdb.query(["icd9", "412"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"patient_id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('clinical_codes' AS text) AS \"criterion_table\", CAST('condition_occurrence' AS text) AS \"criterion_domain\", \"start_date\", \"end_date\", CAST(\"clinical_code_source_value\" AS text) AS \"source_value\", CAST(\"clinical_code_vocabulary_id\" AS text) AS \"source_vocabulary_id\" FROM \"clinical_codes\" WHERE (\"clinical_code_concept_id\" IN (SELECT \"id\" FROM \"concepts\" WHERE ((\"vocabulary_id\" = 'ICD9CM') AND (\"concept_code\" IN ('412')))))) AS \"t1\") AS \"t1\""
+      check_sequel(cdb.query(["icd9", "412"]), :vocabulary, :older_operators)
     end
 
     it "should produce correct SQL for select all" do
-      _(cdb.query(["atc", "*"]).sql).must_match %Q{"clinical_code_vocabulary_id" = 'ATC'}
+      check_sequel(cdb.query(["atc", "*"]), :vocabulary, :select_all)
     end
 
   end

@@ -11,19 +11,19 @@ describe ConceptQL::Operators::Gender do
     end
 
     it "should work with male" do
-      _(db.query(["gender", "male"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('patients' AS text) AS \"criterion_table\", CAST('person' AS text) AS \"criterion_domain\", CAST(\"birth_date\" AS date) AS \"start_date\", CAST(coalesce(\"birth_date\", \"birth_date\") AS date) AS \"end_date\", CAST(\"patient_id_source_value\" AS text) AS \"source_value\", CAST(NULL AS text) AS \"source_vocabulary_id\" FROM \"patients\" WHERE (\"gender_concept_id\" IN (8507))) AS \"t1\") AS \"t1\""
+      check_sequel(db.query(["gender", "male"]), :gender, :with_male)
     end
 
     it "should work with female" do
-      _(db.query(["gender", "female"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('patients' AS text) AS \"criterion_table\", CAST('person' AS text) AS \"criterion_domain\", CAST(\"birth_date\" AS date) AS \"start_date\", CAST(coalesce(\"birth_date\", \"birth_date\") AS date) AS \"end_date\", CAST(\"patient_id_source_value\" AS text) AS \"source_value\", CAST(NULL AS text) AS \"source_vocabulary_id\" FROM \"patients\" WHERE (\"gender_concept_id\" IN (8532))) AS \"t1\") AS \"t1\""
+      check_sequel(db.query(["gender", "female"]), :gender, :with_female)
     end
 
     it "should work with unknown" do
-      _(db.query(["gender", "unknown"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('patients' AS text) AS \"criterion_table\", CAST('person' AS text) AS \"criterion_domain\", CAST(\"birth_date\" AS date) AS \"start_date\", CAST(coalesce(\"birth_date\", \"birth_date\") AS date) AS \"end_date\", CAST(\"patient_id_source_value\" AS text) AS \"source_value\", CAST(NULL AS text) AS \"source_vocabulary_id\" FROM \"patients\" WHERE ((\"gender_concept_id\" IS NULL) OR (\"gender_concept_id\" NOT IN (8507, 8532)))) AS \"t1\") AS \"t1\""
+      check_sequel(db.query(["gender", "unknown"]), :gender, :with_unknown)
     end
 
     it "should work with all" do
-      _(db.query(["gender", "male", "female", "unknown"]).sql).must_equal "SELECT * FROM (SELECT * FROM (SELECT \"id\" AS \"person_id\", \"id\" AS \"criterion_id\", CAST('patients' AS text) AS \"criterion_table\", CAST('person' AS text) AS \"criterion_domain\", CAST(\"birth_date\" AS date) AS \"start_date\", CAST(coalesce(\"birth_date\", \"birth_date\") AS date) AS \"end_date\", CAST(\"patient_id_source_value\" AS text) AS \"source_value\", CAST(NULL AS text) AS \"source_vocabulary_id\" FROM \"patients\" WHERE ((\"gender_concept_id\" IN (8507)) OR (\"gender_concept_id\" IN (8532)) OR (\"gender_concept_id\" IS NULL) OR (\"gender_concept_id\" NOT IN (8507, 8532)))) AS \"t1\") AS \"t1\""
+      check_sequel(db.query(["gender", "male", "female", "unknown"]), :gender, :with_all)
     end
   end
 end
