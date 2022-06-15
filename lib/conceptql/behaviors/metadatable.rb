@@ -219,10 +219,11 @@ module ConceptQL
     end
 
     def standard_description
-      table = (!@domains.nil? && @domains.first)
-      table ||= (!predominant_domains.nil? && predominant_domains.first)
-      raise "Can't create description for #{pref_name}" unless table
+      table = (!@domains.nil? && @domains)
+      table ||= (!predominant_domains.nil? && predominant_domains)
+      raise "Can't create description for #{pref_name}" unless table.present?
 
+      table = Array(table).flatten.first.to_s
       "Selects results from the #{table} table where #{table}'s source value matches the given #{pref_name} codes."
     end
 
