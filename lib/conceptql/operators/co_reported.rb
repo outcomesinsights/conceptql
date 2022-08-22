@@ -6,7 +6,7 @@ module ConceptQL
     class CoReported < PassThru
       register __FILE__
 
-      desc 'Passes through all events that were co-reported in a database. For OMOP CDM, an event is considered to be "co-reported" if it shares the same visit_occurrence as another event.'
+      desc 'Passes through all events that were co-reported in a database. For GDM, an event is considered to be "co-reported" if it shares the same context_id as another event.'
       allows_many_upstreams
       category "Combine Streams"
       default_query_columns
@@ -93,4 +93,3 @@ module ConceptQL
     end
   end
 end
-
