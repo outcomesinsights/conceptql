@@ -3,6 +3,7 @@ on: [push]
 jobs:
   Run-Tests:
     runs-on: ubuntu-latest
+    environment: Test Secrets
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
