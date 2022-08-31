@@ -6,13 +6,13 @@ services:
     - lexicon
     - test_data
     environment:
-    - CONCEPTQL_DATA_MODEL
+    - CONCEPTQL_DATA_MODEL=gdm
     - CONCEPTQL_ENABLE_COMMENTS
     - CONCEPTQL_OVERWRITE_TEST_RESULTS
     - CONCEPTQL_PRINT_SQL
     - CONCEPTQL_STOP_ON_ERROR
-    - LEXICON_URL
-    - SEQUELIZER_URL
+    - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data_for_chisel
+    - LEXICON_URL=postgres://ryan:r@lexicon/lexicon
     - SEQUELIZER_RETRIES=12
     - SEQUELIZER_RETRY_DELAY=5
     image: outcomesinsights/misc:conceptql.master.latest
@@ -23,8 +23,10 @@ services:
     volumes:
     - "${PWD}:/home/conceptql"
   lexicon:
-    image: outcomesinsights/lexicon:chisel.latest
+    image: outcomesinsights/lexicon:forge.latest
+    expose:
+      - 5432
   test_data:
-    image: outcomesinsights/misc:test_data.chisel.postgres.latest
-    ports:
-      - "54321:5432"
+    image: outcomesinsights/misc:test_data.main.postgres.latest
+    expose:
+      - 5432
