@@ -18,7 +18,7 @@ services:
     image: outcomesinsights/misc:conceptql.master.latest
     build:
       context: "."
-      dockerfile: dockers/sqlite/Dockerfile
+      dockerfile: dockers/standard/Dockerfile
     command: sh -c "bundle && bundle exec ruby test/all.rb"
     volumes:
     - "${PWD}:/home/conceptql"
