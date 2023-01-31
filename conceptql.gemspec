@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sequelizer', '~> 0.1.3'
   spec.add_dependency 'thor', '~> 1.0'
   spec.add_dependency 'sequel', '~> 5.34'
-  spec.add_dependency 'activesupport', '~> 6'
+  spec.add_dependency 'activesupport', '>= 6', '< 8'
   spec.add_dependency 'bigdecimal'
   spec.add_dependency 'json'
   spec.add_development_dependency 'bundler', '~> 2.0'
