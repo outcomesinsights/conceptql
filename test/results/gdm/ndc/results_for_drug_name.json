@@ -8,6 +8,7 @@
     "end_date": "2008-08-11",
     "source_value": "00002021008",
     "source_vocabulary_id": "NDC",
+    "label": null,
     "drug_name": "60 ACTUAT exenatide 0.01 MG/ACTUAT Prefilled Syringe [Byetta]",
     "drug_amount": null,
     "drug_amount_units": null,

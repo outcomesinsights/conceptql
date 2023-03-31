@@ -22,7 +22,8 @@ module ConceptQL
       start_date: :Date,
       end_date: :Date,
       source_value: :String,
-      source_vocabulary_id: :String
+      source_vocabulary_id: :String,
+      label: :String
     }.freeze
 
     ADDITIONAL_COLUMNS = {

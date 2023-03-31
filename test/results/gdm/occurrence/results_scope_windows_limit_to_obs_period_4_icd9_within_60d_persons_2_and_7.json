@@ -8,6 +8,7 @@
     "end_date": "2009-04-15",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -19,6 +20,7 @@
     "end_date": "2009-05-11",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -30,6 +32,7 @@
     "end_date": "2009-05-16",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -41,6 +44,7 @@
     "end_date": "2009-05-16",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -52,6 +56,7 @@
     "end_date": "2009-06-23",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -63,6 +68,7 @@
     "end_date": "2010-01-23",
     "source_value": "3558",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -74,6 +80,7 @@
     "end_date": "2010-01-23",
     "source_value": "45981",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -85,6 +92,7 @@
     "end_date": "2010-02-23",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -96,6 +104,7 @@
     "end_date": "2010-02-23",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 2
   },
   {
@@ -107,6 +116,7 @@
     "end_date": "2008-06-09",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -118,6 +128,7 @@
     "end_date": "2008-10-02",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -129,6 +140,7 @@
     "end_date": "2008-10-02",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -140,6 +152,7 @@
     "end_date": "2008-10-02",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -151,6 +164,7 @@
     "end_date": "2008-10-02",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -162,6 +176,7 @@
     "end_date": "2008-10-02",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -173,6 +188,7 @@
     "end_date": "2008-11-30",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -184,6 +200,7 @@
     "end_date": "2008-11-30",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -195,6 +212,7 @@
     "end_date": "2009-01-27",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -206,6 +224,7 @@
     "end_date": "2010-07-18",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -217,6 +236,7 @@
     "end_date": "2010-08-20",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -228,6 +248,7 @@
     "end_date": "2010-08-20",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -239,6 +260,7 @@
     "end_date": "2010-08-20",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -250,6 +272,7 @@
     "end_date": "2010-08-20",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   },
   {
@@ -261,6 +284,7 @@
     "end_date": "2010-08-20",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
+    "label": null,
     "window_id": 7
   }
 ]

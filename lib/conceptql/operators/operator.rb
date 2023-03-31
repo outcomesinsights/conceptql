@@ -272,6 +272,10 @@ module ConceptQL
           uuid: opts[:uuid] || options[:uuid]
         }
 
+        if label
+          opts[:replace] = { label: label }
+        end
+
         if comments?
           query = query.comment(comment)
         end
@@ -311,35 +315,7 @@ module ConceptQL
       end
 
       def columns(table = nil)
-        #p table
-        return dm.columns(table: table)
-
-        cols = unless table
-          dynamic_columns
-        else
-          dm.columns_for_table(table, dynamic_columns)
-        end
-        return cols
-
-        criterion_table = :criterion_table
-        criterion_domain = :criterion_domain
-        if local_table
-          criterion_table = Sequel.cast_string(local_table.to_s).as(:criterion_table)
-          if gdm?
-            criterion_domain = Sequel.cast_string(domains(db).first.to_s).as(:criterion_domain)
-          else
-            criterion_domain = Sequel.cast_string(local_table.to_s).as(:criterion_domain)
-          end
-        end
-
-        columns = [dm.person_id_column(query),
-                   dm.table_id(local_table),
-                   criterion_table,
-                   criterion_domain]
-        columns += dm.date_columns(query, local_table)
-        columns += [ source_value(query, local_table) ]
-        columns += additional_columns(query, local_table)
-        columns
+        dm.columns(table: table)
       end
 
       def label

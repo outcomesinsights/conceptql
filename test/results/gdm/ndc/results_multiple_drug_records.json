@@ -8,6 +8,7 @@
     "end_date": "2009-08-04",
     "source_value": "00049254066",
     "source_vocabulary_id": "NDC",
+    "label": null,
     "drug_name": "Ephedrine sulfate 25 MG / Hydroxyzine Hydrochloride 10 MG / Theophylline 130 MG Oral Tablet [Marax]",
     "drug_amount": null,
     "drug_amount_units": null,

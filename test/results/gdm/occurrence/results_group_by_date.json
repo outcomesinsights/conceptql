@@ -7,6 +7,7 @@
     "start_date": "2009-04-12",
     "end_date": "2009-04-18",
     "source_value": "4019",
-    "source_vocabulary_id": "ICD9CM"
+    "source_vocabulary_id": "ICD9CM",
+    "label": null
   }
 ]
