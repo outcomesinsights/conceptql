@@ -6,7 +6,7 @@ BETOS,1000002,BETOS,,,,,
 Clinical Code Type,1000004,Clinical Code Type,,,,,
 Concept Class,68,OMOP Concept Class,,,Y,,
 Condition Type,37,OMOP Condition Occurrence Type,,condition_occurrence,Y,,
-CPT4,4,Current Procedural Terminology version 4 (AMA),CPT,procedure_occurrence,,"^\w{5}$",cpt
+CPT4,4,Current Procedural Terminology version 4 (AMA),CPT,procedure_occurrence,,"^\d{4}\w$",cpt
 CS_Schema,1000003,CS_Schema,,,,,
 Currency,65,International Currency Symbol (ISO 4217),,,Y,,
 Death Type,45,OMOP Death Type,,death,Y,,
@@ -21,15 +21,15 @@ Gemscript,56,,Gemscript,drug_exposure,,"^\d{8}$",
 Gender,12,OMOP Gender,,person,Y,,
 HCFASPEC,1000006,HCFASPEC,,,,,
 HCFATYPE,1000007,HCFATYPE,,,,,
-HCPCS,5,Healthcare Common Procedure Coding System (CMS),HCPCS,procedure_occurrence,,"^\w{5}$",
+HCPCS,5,Healthcare Common Procedure Coding System (CMS),HCPCS,procedure_occurrence,,"^\w\d{4}$",
 ICD03_Morphology,1000008,ICD03_Morphology,,,,,
 ICD03_Topography,1000009,ICD03_Topography,,,,,
-ICD10,34,"International Classification of Diseases, Tenth Revision (WHO)",ICD-10 WHO,condition_occurrence,,"^\w\d\w($|.\w{1,4})$",
+ICD10,34,"International Classification of Diseases, Tenth Revision (WHO)",ICD-10 WHO,condition_occurrence,,"^\w\d\w(.\w{1,4})?$",
 ICD10PCS,35,"ICD-10 Procedure Coding System (CMS)",ICD-10 PCS,procedure_occurrence,,"^\w{7}$",icd10_pcs
 ICD10CM,70,"International Classification of Diseases, Tenth Revision, Clinical Modification (NCHS)",ICD-10 CM,condition_occurrence,,"^\w\d\w($|.\w{1,4})$",
 ICD9CM,2,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS)",ICD-9 CM,condition_occurrence,,"^(V\d{2}(\.\d{1,2})?|\d{3}(\.\d{1,2})?|E\d{3}(\.\d)?)$",icd9
 ICD9Proc,3,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 3 (NCHS)",ICD-9 Proc,procedure_occurrence,,"^\d{2}(.\d{1,2})?$",icd9_procedure
-LOINC,6,Logical Observation Identifiers Names and Codes (Regenstrief Institute),,observation,,"^\w{5}-\w$",
+LOINC,6,Logical Observation Identifiers Names and Codes (Regenstrief Institute),,observation,,"^\w{3,7}-\w$",
 Meas Type,64,OMOP Measurement Type,,observation,Y,,
 NDC,9,National Drug Code (FDA and manufacturers),,drug_exposure,,,
 Note Type,58,OMOP Note Type,,,Y,,
