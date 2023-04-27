@@ -2,8 +2,7 @@
   "trim_date_end",
   {
     "left": [
-      "observation_period",
-      true
+      "information_periods"
     ],
     "right": [
       "time_window",

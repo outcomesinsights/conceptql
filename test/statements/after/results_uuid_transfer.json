@@ -2,7 +2,7 @@
   "contains",
   {
     "left": [
-      "observation_period"
+      "information_periods"
     ],
     "right": [
       "icd9",
