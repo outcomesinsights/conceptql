@@ -5,11 +5,7 @@ module ConceptQL
     class Before < TemporalOperator
       register __FILE__
 
-      desc <<-EOF
-Compares all records on a person-by-person basis between the left hand records (LHR) and the right hand records (RHR).
-Any record in the LHR with an end_date that occurs before the most recent start_date of the RHR is passed through.
-All other records are discarded, including all records in the RHR.
-      EOF
+      desc "Compares records on a person-by-person basis, passes along left hand records with an end_date that occurs before the most recent start_date of a right hand record."
 
       allows_at_least_option
       within_skip :before

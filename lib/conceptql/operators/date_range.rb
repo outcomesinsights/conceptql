@@ -16,7 +16,7 @@ module ConceptQL
 
       DATE_FORMAT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/])}\z/
 
-      desc "Used to represent a date literal.  Dates must be in the format YYYY-MM-DD"
+      desc "Creates a set of all person records with the given start_date and end_date."
       option :start, type: :string
       option :end, type: :string
       category "Select by Property"

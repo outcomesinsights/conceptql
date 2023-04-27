@@ -11,11 +11,8 @@ module ConceptQL
     class NumericFilter < Operator
       register __FILE__
 
-      desc <<-DESC
-        Filters records to include those with a value_as_number that matches the given criteria.
+      desc 'Includes records with a value_as_number that matches the given criteria.  Excludes records where value_as_number is NULL.'
 
-        If value_as_number is NULL, the record is excluded.
-      DESC
       option :greater_than_or_equal_to, type: :float
       option :less_than_or_equal_to, type: :float
       category "Filter Single Stream"

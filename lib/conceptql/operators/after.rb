@@ -5,15 +5,7 @@ module ConceptQL
     class After < TemporalOperator
       register __FILE__
 
-      desc <<-EOF
-Compares all records on a person-by-person basis between the left hand records (LHR) and the right hand records (RHR).
-Any record in the LHR with a start_date that occurs after the earliest end_date in the RHR is passed through.
-All other records are discarded, including all records in the RHR.
-L-------N-------L
-R-----R
-   R-----R
-        L-----Y----L
-      EOF
+      desc "Compares records on a person-by-person basis, passes along left hand records with a start_date that occurs after the earliest end_date of a right hand record."
 
       allows_at_least_option
       within_skip :after

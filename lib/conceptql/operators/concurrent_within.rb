@@ -6,7 +6,7 @@ module ConceptQL
     class ConcurrentWithin < Operator
       register __FILE__
 
-      desc 'Filters each upstream to only include rows where there are matching entries in each of the other upstreams.'
+      desc "Filters each upstream to only include records where other upstreams' date ranges overlap"
       option :start, type: :string
       option :end, type: :string
       allows_many_upstreams

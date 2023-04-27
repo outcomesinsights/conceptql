@@ -15,11 +15,8 @@ module ConceptQL
     class PlaceOfServiceFilter < Operator
       register __FILE__
 
-      desc <<-EOF
-Filters records to include only those that match one or more of the Medicare Place Of Service values.
+      desc "Passes along records that match one or more of the Medicare Place Of Service values."
 
-Common values include 21 (inpatient hospital), 23 (emergency room), and 11 (office).
-      EOF
       argument :places_of_service, type: :codelist, vocab: 'Place of Service'
       category "Filter Single Stream"
       basic_type :temporal

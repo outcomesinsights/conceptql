@@ -5,7 +5,7 @@ module ConceptQL
     class Ethnicity < Operator
       register __FILE__
 
-      desc "Generates all person records that match the given set of Race codes."
+      desc "Selects person records that match the given set of Ethnicity codes."
       domains :person
       category "Select by Property"
       basic_type :selection

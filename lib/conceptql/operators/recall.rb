@@ -12,10 +12,8 @@ module ConceptQL
     class Recall < Operator
       register __FILE__
 
-      desc <<-EOF
-Recalls a set of named records that were previously stored using the Define operator.
-Must be surrounded by the same Let operator as surrounds the corresponding Define operator.
-      EOF
+      desc "Recalls a set of records from a labeled operator in the statement"
+
       argument :name, type: :string
       category "Get Related Data"
       basic_type :selection

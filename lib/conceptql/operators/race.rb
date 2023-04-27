@@ -15,7 +15,7 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc 'Generates all person records that match the given set of Race codes.'
+      desc "Selects person records that match the given set of Race codes."
       argument :races, type: :codelist, vocab: 'Race'
       domains :person
       category "Select by Property"

@@ -5,7 +5,7 @@ module ConceptQL
     class Filter < BinaryOperatorOperator
       register __FILE__
 
-      desc 'If a record in the left hand records (LHR) has a corresponding record in the right hand records (RHR) with the same person, criterion_id, and criterion_domain, it is passed through.'
+      desc "Keeps left hand records that share the same person, criterion_id, and criterion_domain with a right hand side record."
       default_query_columns
 
       def query(db)

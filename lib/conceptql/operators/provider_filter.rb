@@ -7,7 +7,7 @@ module ConceptQL
     class ProviderFilter < Operator
       register __FILE__
 
-      desc "Filters incoming records to only those that match the associated providers based on provider specialty concept_ids."
+      desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids."
       option :specialties, type: :string
       category "Filter Single Stream"
       basic_type :temporal
@@ -21,7 +21,7 @@ module ConceptQL
         ds = stream.evaluate(db).from_self(alias: :upstream)
 
         specialty_concept_ids = options[:specialties].split(/\s*,\s*/)
-            
+
         unless specialty_concept_ids.include?('*')
           ds = ds.where(specialty_concept_id: specialty_concept_ids.map(&:to_i))
         end

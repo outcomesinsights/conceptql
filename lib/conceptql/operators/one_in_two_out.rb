@@ -1,5 +1,4 @@
 require_relative 'operator'
-require_relative 'visit_occurrence'
 require_relative '../date_adjuster'
 require_relative '../behaviors/provenanceable'
 
@@ -9,9 +8,9 @@ module ConceptQL
       register __FILE__
 
       desc <<-EOF
-Represents a common pattern in research algorithms: searching for an event
+Applies a common pattern in research algorithms by searching for an event
 that appears either once in an inpatient setting or
-twice in an outpatient setting with a 30-day gap.
+twice in an outpatient setting with a specified gap.
       EOF
       allows_one_upstream
       validate_one_upstream

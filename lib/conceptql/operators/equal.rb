@@ -5,7 +5,7 @@ module ConceptQL
     class Equal < TemporalOperator
       register __FILE__
 
-      desc 'If a record in the left hand records (LHR) has the same value_as_number as a record in the right hand records (RHR), it is passed through.'
+      desc 'Compares records on a person-by-person basis and passes along left hand records that have the same value_as_number as a right hand record.'
       require_column :value_as_number
 
       def where_clause

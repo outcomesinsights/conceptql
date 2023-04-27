@@ -8,7 +8,7 @@ module ConceptQL
 
       register __FILE__
 
-      desc 'Generates all person records, or, if fed a stream, fetches all person records for the people represented in the incoming record set.'
+      desc "Selects all person records."
       allows_one_upstream
       domains :person
 

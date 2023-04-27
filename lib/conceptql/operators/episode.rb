@@ -5,9 +5,8 @@ module ConceptQL
     class Episode < PassThru
       register __FILE__
 
-      desc <<-EOF
-Groups all incoming results into episodes by person allowing for there to be a gap, defined by "Gap Of", between the end date of an event and the start date of the next one to be considered the same episode.
-      EOF
+      desc "Groups each person's records into episodes, allowing for a gap between the end_date of one record and the start_date of the next."
+
       allows_one_upstream
       validate_one_upstream
       option :gap_of, type: :integer, instructions: 'Allowed gap in days between end date of one event and start date of the next to consider them the same episode'
