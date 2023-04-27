@@ -27,14 +27,14 @@ module ConceptQL
       preferred_name 'Nth Occurrence'
 
       desc <<-EOF
-Groups all results by person, then orders by start_date and finds the nth occurrence (can be positive or negative).
+Groups all records by person, then orders by start_date and finds the nth occurrence (can be positive or negative).
 1 => first
 2 => second
 ...
 -1 => last
 -2 => second-to-last
 
-If two results have the same start_date, their relative order
+If two records have the same start_date, their relative order
 is arbitrary.
 
 If we ask for the second occurrence of something and a person has only one

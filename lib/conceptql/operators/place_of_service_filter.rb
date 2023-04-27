@@ -2,13 +2,13 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # Filters the incoming stream of events to only those that have a
+    # Filters the incoming stream of records to only those that have a
     # an associated visit_occurrence with the matching place_of_service
     #
     # Provenance related concepts are the ones found in the xxx_type_concept_id
     # field.
     #
-    # If the event has NULL for the provenance-related field, they are filtered
+    # If the record has NULL for the provenance-related field, they are filtered
     # out.
     #
     # Multiple provenances can be specified at once

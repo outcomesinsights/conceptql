@@ -5,7 +5,7 @@ module ConceptQL
     class Match < BinaryOperatorOperator
       register __FILE__
 
-      desc 'If a result in the left hand results (LHR) has a corresponding result in the right hand results (RHR) with the same person, criterion_id, and criterion_domain, it is passed through.'
+      desc 'If a record in the left hand records (LHR) has a corresponding record in the right hand records (RHR) with the same person, criterion_id, and criterion_domain, it is passed through.'
       default_query_columns
 
       def query(db)

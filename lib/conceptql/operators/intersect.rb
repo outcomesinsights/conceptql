@@ -5,7 +5,7 @@ module ConceptQL
     class Intersect < PassThru
       register __FILE__
 
-      desc 'Passes through any result that appears in all incoming result sets.'
+      desc 'Passes through any record that appears in all incoming record sets.'
       allows_many_upstreams
       category "Combine Streams"
       default_query_columns

@@ -8,12 +8,12 @@ module ConceptQL
     # that complex concept into a set of sub-concepts to better understand it.
     #
     # This operator will look for a sub-concept that has been created through the
-    # "define" operator and will fetch the results cached in the corresponding table
+    # "define" operator and will fetch the records cached in the corresponding table
     class Recall < Operator
       register __FILE__
 
       desc <<-EOF
-Recalls a set of named results that were previously stored using the Define operator.
+Recalls a set of named records that were previously stored using the Define operator.
 Must be surrounded by the same Let operator as surrounds the corresponding Define operator.
       EOF
       argument :name, type: :string

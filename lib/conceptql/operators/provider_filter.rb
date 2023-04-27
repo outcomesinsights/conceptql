@@ -2,12 +2,12 @@ require_relative 'operator'
 
 module ConceptQL
   module Operators
-    # Filters incoming events to only those that have been associated with
+    # Filters incoming records to only those that have been associated with
     # providers matching the given criteria.
     class ProviderFilter < Operator
       register __FILE__
 
-      desc "Filters incoming events to only those that match the associated providers based on provider specialty concept_ids."
+      desc "Filters incoming records to only those that match the associated providers based on provider specialty concept_ids."
       option :specialties, type: :string
       category "Filter Single Stream"
       basic_type :temporal

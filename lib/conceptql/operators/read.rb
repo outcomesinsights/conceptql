@@ -9,7 +9,7 @@ module ConceptQL
       register __FILE__
 
       preferred_name "READ"
-      desc "Selects results from the the condition_occurrence, procedure_occurrence, drug_exposure, and observation tables based on the READ codes provided."
+      desc "Selects records from the the condition_occurrence, procedure_occurrence, drug_exposure, and observation tables based on the READ codes provided."
       argument :read_codes, type: :codelist, vocab: "Read"
       basic_type :selection
       category "Select by Clinical Codes"

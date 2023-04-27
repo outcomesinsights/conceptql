@@ -21,7 +21,7 @@ module ConceptQL
     # put :procedure_cost in procedure_occurrence's these_point_at_me array
     #
     # Also, if a casting operator is passed no streams, it will return all the
-    # rows in its table as results.
+    # rows in its table as records.
     class CastingOperator < Operator
       category "Get Related Data"
       basic_type :cast

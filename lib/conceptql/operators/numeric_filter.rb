@@ -3,18 +3,18 @@ require "active_support/core_ext/object/blank"
 
 module ConceptQL
   module Operators
-    # Filters the incoming stream of events to only those that have a
+    # Filters the incoming stream of records to only those that have a
     # value_as_number column with a value that matches the specified criteria
     # are passed through
     #
-    # If an event has NULL for value_as_number, it is filtered out.
+    # If an record has NULL for value_as_number, it is filtered out.
     class NumericFilter < Operator
       register __FILE__
 
       desc <<-DESC
-        Filters events to include those with a value_as_number that matches the given criteria.
+        Filters records to include those with a value_as_number that matches the given criteria.
 
-        If value_as_number is NULL, the event is excluded.
+        If value_as_number is NULL, the record is excluded.
       DESC
       option :greater_than_or_equal_to, type: :float
       option :less_than_or_equal_to, type: :float

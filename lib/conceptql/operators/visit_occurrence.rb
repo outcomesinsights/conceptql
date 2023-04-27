@@ -7,7 +7,7 @@ module ConceptQL
 
       register __FILE__
 
-      desc 'Generates all visit_occurrence records, or, if fed a stream, fetches all visit_occurrence records for the people represented in the incoming result set.'
+      desc 'Generates all visit_occurrence records, or, if fed a stream, fetches all visit_occurrence records for the people represented in the incoming record set.'
       allows_one_upstream
       domains :visit_occurrence
       deprecated replaced_by: "Place Of Service"

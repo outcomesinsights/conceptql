@@ -4,7 +4,7 @@ module ConceptQL
   module Operators
     # Represents a operator that will either:
     # - create a value_as_number value for every person in the database
-    # - change the value_as_number value for every every result passed in
+    # - change the value_as_number value for every every record passed in
     #   - either to a number
     #   - or a value from a column in the origin row
     #
@@ -17,7 +17,7 @@ module ConceptQL
       desc <<-EOF
 Represents an operator that will either:
 - Create a value_as_number value for every person in the database
-- Change the value_as_number value for every result passed in
+- Change the value_as_number value for every record passed in
   - Either to a number
   - Or a value from a column in the origin row
 

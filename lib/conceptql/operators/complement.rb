@@ -7,7 +7,7 @@ module ConceptQL
 
       include ConceptQL::Behaviors::Windowable
 
-      desc 'Splits up the incoming result set by domain and passes through all results for each domain that are NOT in the current set.'
+      desc 'Splits up the incoming record set by domain and passes through all records for each domain that are NOT in the current set.'
       allows_one_upstream
       category "Filter Single Stream"
       basic_type :temporal

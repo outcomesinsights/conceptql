@@ -7,7 +7,7 @@ module ConceptQL
 
       register __FILE__
 
-      desc 'Generates all death records, or, if fed a stream, fetches all death records for the people represented in the incoming result set.'
+      desc 'Generates all death records, or, if fed a stream, fetches all death records for the people represented in the incoming record set.'
       domains :death
       allows_one_upstream
 

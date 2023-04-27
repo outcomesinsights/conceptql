@@ -6,9 +6,9 @@ module ConceptQL
       register __FILE__
 
       desc <<-EOF
-Compares all results on a person-by-person basis between the left hand results (LHR) and the right hand results (RHR).
-Any result in the LHR with an end_date that occurs before the most recent start_date of the RHR is passed through.
-All other results are discarded, including all results in the RHR.
+Compares all records on a person-by-person basis between the left hand records (LHR) and the right hand records (RHR).
+Any record in the LHR with an end_date that occurs before the most recent start_date of the RHR is passed through.
+All other records are discarded, including all records in the RHR.
       EOF
 
       allows_at_least_option

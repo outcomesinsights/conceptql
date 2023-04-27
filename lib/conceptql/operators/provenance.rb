@@ -3,13 +3,13 @@ require_relative '../behaviors/provenanceable'
 
 module ConceptQL
   module Operators
-    # Filters the incoming stream of events to only those that have a
+    # Filters the incoming stream of records to only those that have a
     # provenance-related concept_id.
     #
     # Provenance related concepts are the ones found in the xxx_type_concept_id
     # field.
     #
-    # If the event has NULL for the provenance-related field, they are filtered
+    # If the record has NULL for the provenance-related field, they are filtered
     # out.
     #
     # Multiple provenances can be specified at once
@@ -17,7 +17,7 @@ module ConceptQL
       register __FILE__
 
       desc <<-EOF
-Filters incoming events to those with the indicated provenance.
+Filters incoming records to those with the indicated provenance.
 
 Enter numeric concept id(s), or the corresponding text label(s):
 - Inpatient: inpatient, inpatient_detail, inpatient_header, inpatient_primary, inpatient_primary_or_first

@@ -5,7 +5,7 @@ module ConceptQL
     class PersonFilter < BinaryOperatorOperator
       register __FILE__
 
-      desc 'If a result in the left hand results (LHR) matches a person in the right hand results (RHR), it is passed through.'
+      desc 'If a record in the left hand records (LHR) matches a person in the right hand records (RHR), it is passed through.'
       default_query_columns
 
       def query(db)

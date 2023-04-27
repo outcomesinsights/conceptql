@@ -6,7 +6,7 @@ module ConceptQL
       register __FILE__
 
       desc <<-EOF
-If a result in the left hand results (LHR) has a start_date on or before and an end_date on or after a result in the right hand results (RHR), it is passed through.
+If a record in the left hand records (LHR) has a start_date on or before and an end_date on or after a record in the right hand records (RHR), it is passed through.
 L--X-L
 R-----R
 L------Y--------L

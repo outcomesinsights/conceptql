@@ -5,7 +5,7 @@ module ConceptQL
     class Count < PassThru
       register __FILE__
 
-      desc 'Counts the number of results that exactly match across all columns.'
+      desc 'Counts the number of records that exactly match across all columns.'
       allows_one_upstream
       validate_one_upstream
       validate_no_arguments
