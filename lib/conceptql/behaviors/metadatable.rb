@@ -219,7 +219,7 @@ module ConceptQL
     end
 
     def standard_description
-      "Selects results from the clinical_codes table where the source value matches the given #{pref_name} codes."
+      "Selects records based on the #{pref_name} vocabulary."
     end
 
     def no_desc
