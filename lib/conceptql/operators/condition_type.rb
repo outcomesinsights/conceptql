@@ -14,7 +14,7 @@ module ConceptQL
 
       include ConceptQL::Behaviors::Windowable
 
-      desc 'Returns all conditions that match the given set of Condition Types.'
+      desc 'Selects all conditions that match the given set of Condition Types.'
       argument :condition_types, type: :codelist, vocab: 'Condition Type'
       category "Select by Property"
       basic_type :selection

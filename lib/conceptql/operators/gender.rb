@@ -8,7 +8,7 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Returns all person records that match the selected gender."
+      desc "Selects all person records that match the selected gender."
       argument :gender, type: :string, options: ["Male", "Female", "Unknown"]
       domains :person
       category "Select by Property"

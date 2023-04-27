@@ -6,7 +6,7 @@ module ConceptQL
       register __FILE__
       include ConceptQL::Behaviors::Utilizable
 
-      desc "Returns admission records of type 'inpatient'"
+      desc "Selects admission records of type 'inpatient'"
 
       def collection_type
         "inpatient"

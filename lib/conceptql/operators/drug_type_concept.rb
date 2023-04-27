@@ -6,7 +6,7 @@ module ConceptQL
     class DrugTypeConcept < Operator
       register __FILE__
 
-      desc 'Returns all drug_exposures that match the given set of Drug Type concept IDs.'
+      desc 'Selects all drug_exposures that match the given set of Drug Type concept IDs.'
       argument :concept_ids, type: :codelist, vocab: 'Drug Type'
       domains :drug_exposure
       query_columns :drug_exposure

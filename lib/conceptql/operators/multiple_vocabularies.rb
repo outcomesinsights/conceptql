@@ -43,7 +43,7 @@ module ConceptQL
 
       register_many
 
-      desc 'Returns all records that match the given codes for the given vocabulary'
+      desc 'Selects records based on the given vocabularies.'
       argument :codes, type: :codelist
       basic_type :selection
       category "Select by Clinical Codes"

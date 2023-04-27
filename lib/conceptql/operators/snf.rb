@@ -6,7 +6,7 @@ module ConceptQL
       register __FILE__
       include ConceptQL::Behaviors::Utilizable
 
-      desc "Returns admission records of type 'SNF'"
+      desc "Selects admission records of type 'SNF'"
 
       def collection_type
         "SNF"

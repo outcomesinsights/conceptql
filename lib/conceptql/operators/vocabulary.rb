@@ -8,7 +8,7 @@ module ConceptQL
 
       category "Select by Clinical Codes"
       basic_type :selection
-      desc 'Returns all records that match the given codes for the given vocabulary'
+      desc 'Selects records based on the given vocabulary.'
       validate_no_upstreams
       validate_at_least_one_argument
       validate_codes_match
