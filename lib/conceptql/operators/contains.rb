@@ -5,7 +5,7 @@ module ConceptQL
     class Contains < TemporalOperator
       register __FILE__
 
-      desc "Compares records on a person-by-person basis and passes along left hand records with a start_date and end_date contained within a right hand record's start_date and end_date."
+      desc "For each person, passes along left hand records with a start_date and end_date containing a right hand record's start_date and end_date."
 
       def where_clause
         (within_start <= r_start_date) & (r_end_date <= within_end)

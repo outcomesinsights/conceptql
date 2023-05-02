@@ -27,7 +27,7 @@ module ConceptQL
         end
       end
 
-      desc 'Pools sets of incoming records into a single large set of records.'
+      desc 'Combines sets of incoming records into a single large set of records.'
       allows_many_upstreams
       category "Combine Streams"
       default_query_columns

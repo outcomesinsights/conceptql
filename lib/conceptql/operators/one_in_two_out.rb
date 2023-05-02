@@ -7,11 +7,8 @@ module ConceptQL
     class OneInTwoOut < Operator
       register __FILE__
 
-      desc <<-EOF
-Applies a common pattern in research algorithms by searching for an event
-that appears either once in an inpatient setting or
-twice in an outpatient setting with a specified gap.
-      EOF
+      desc 'Identifies an event that appears either once in an inpatient setting or twice within a specified interval in an outpatient setting.'
+
       allows_one_upstream
       validate_one_upstream
       validate_no_arguments

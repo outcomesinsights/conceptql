@@ -5,7 +5,7 @@ module ConceptQL
     class Before < TemporalOperator
       register __FILE__
 
-      desc "Compares records on a person-by-person basis, passes along left hand records with an end_date that occurs before the most recent start_date of a right hand record."
+      desc "For each person, passes along left hand records with an end_date that occurs before the most recent start_date of a right hand record."
 
       allows_at_least_option
       within_skip :before

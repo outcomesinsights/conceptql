@@ -15,7 +15,7 @@ module ConceptQL
     class TrimDateEnd < TrimDate
       register __FILE__
 
-      desc "Trims, on a person-by-person basis, the end_date of all left hand records by the earliest start_date in the right hand records."
+      desc "For each person, trims the end_date of all left hand records by the earliest start_date in the right hand records."
 
       allows_one_upstream
 

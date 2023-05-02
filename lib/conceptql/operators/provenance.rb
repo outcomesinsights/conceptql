@@ -16,7 +16,7 @@ module ConceptQL
     class Provenance < Operator
       register __FILE__
 
-      desc "Passes along records with the indicated provenance."
+      desc "Passes along records with the indicated provenance (e.g. inpatient, outpatient, file type)."
 
       argument :provenance_types, label: 'Provenance Types', type: :codelist
       category "Filter Single Stream"

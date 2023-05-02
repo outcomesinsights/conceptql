@@ -17,7 +17,7 @@ module ConceptQL
     class First < Occurrence
       register __FILE__
 
-      desc "Passes along, per person, the record with the earliest start_date."
+      desc "For each person, passes along the record with the earliest start_date."
 
       def occurrence
         1

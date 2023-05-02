@@ -8,7 +8,8 @@ module ConceptQL
 
       register __FILE__
 
-      desc "Selects all person records."
+      desc "Selects all records in the person table."
+
       allows_one_upstream
       domains :person
 

@@ -17,7 +17,7 @@ module ConceptQL
     class Last < Occurrence
       register __FILE__
 
-      desc "Passes along, per person, the record with the most recent start_date."
+      desc "For each person, passes along the record with the most recent start_date."
 
       def occurrence
         -1
