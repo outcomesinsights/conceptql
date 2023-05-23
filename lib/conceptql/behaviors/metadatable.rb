@@ -25,6 +25,11 @@ module ConceptQL
       @long_name = value
     end
 
+    def conceptql_spec_id(value = nil)
+      return @conceptql_spec_id unless value
+      @conceptql_spec_id = value
+    end
+
     def predominant_domains(*values)
       return @predominant_domains if values.empty?
       @predominant_domains = values
@@ -111,6 +116,10 @@ module ConceptQL
       @preferred_name || humanized_class_name
     end
 
+    def spec_id
+      "#{@conceptql_spec_id || pref_name} operator".gsub(/\s+/, '-').downcase
+    end
+
     def to_metadata(name, opts = {})
       derive_metadata_from_validations
       warn_about_missing_metadata if opts[:warn]
@@ -130,7 +139,8 @@ module ConceptQL
         basic_type: @basic_type,
         deprecated: @deprecated,
         arity: arity,
-        aliases: @aliases
+        aliases: @aliases,
+        spec_id: spec_id
       }
     end
 

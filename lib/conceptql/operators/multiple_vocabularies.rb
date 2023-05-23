@@ -49,6 +49,7 @@ module ConceptQL
       category "Select by Clinical Codes"
       validate_no_upstreams
       validate_at_least_one_argument
+      conceptql_spec_id "vocabulary"
 
       def query(db)
         # TODO: A much-more efficient method would be to find all those vocabs

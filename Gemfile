@@ -5,4 +5,5 @@ gemspec
 gem "pg"
 
 group :test, :development do
+  gem "nokogiri"
 end

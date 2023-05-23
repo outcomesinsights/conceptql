@@ -13,6 +13,7 @@ module ConceptQL
       argument :read_codes, type: :codelist, vocab: "Read"
       basic_type :selection
       category "Select by Clinical Codes"
+      conceptql_spec_id "vocabulary"
 
       def query(db)
         gdm? ? gdm(db) : omopv4(db)

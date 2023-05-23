@@ -59,6 +59,7 @@ module ConceptQL
           predominant_domains entry.predominant_domains
           short_name entry.short_name
           long_name entry.long_name
+          conceptql_spec_id "vocabulary"
 
           klass.class_eval(&block)
 
