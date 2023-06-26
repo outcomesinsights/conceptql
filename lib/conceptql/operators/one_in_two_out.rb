@@ -51,18 +51,6 @@ module ConceptQL
           .from_self
       end
 
-      def prov_of(ancestors)
-        with_lexicon(db) do |lexicon|
-          ancestor_ids = lexicon.concepts(["JIGSAW_FILE_PROVENANCE_TYPE", "JIGSAW_CODE_PROVENANCE_TYPE"], ancestors)
-            .select_map(:id)
-
-          lexicon.db[:ancestors]
-            .where(ancestor_id: ancestor_ids)
-            .order(:descendant_id)
-            .select_map(:descendant_id)
-        end
-      end
-
       def build_where_from_codes(codes)
         Sequel.|(
           {file_provenance_type: prov_of(codes)}, {code_provenance_type: prov_of(codes)}

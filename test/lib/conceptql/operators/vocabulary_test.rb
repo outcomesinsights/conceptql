@@ -79,6 +79,10 @@ describe ConceptQL::Operators::Vocabulary do
         String :vocabulary_name
         String :domain
       end
+      # These are needed to fake out Lexicon
+      db.create_table!(:ancestors) { String :column }
+      db.create_table!(:concepts) { String :column }
+      db.create_table!(:mappings) { String :column }
       db[:vocabularies].multi_insert([
         { id: "EXAMPLE", vocabulary_name: "Example Vocabulary", domain: "measurement" }
       ])

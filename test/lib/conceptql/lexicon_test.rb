@@ -39,13 +39,13 @@ describe ConceptQL::Lexicon do
     it "should find passed in concept_id and descendants of concept_id" do
       make_ancestor_row(ldb, 1, 2)
 
-      _(get_descendants_of(1)).must_equal([1, 2])
+      _(get_descendants_of([1])).must_equal([1, 2])
     end
 
     it "should find passed in concept_id even if no descendants" do
       make_ancestor_row(ldb, 1, 2)
 
-      _(get_descendants_of(3)).must_equal([3])
+      _(get_descendants_of([3])).must_equal([3])
     end
 
     it "should handle Sequel::Dataset as concepts to look for" do
