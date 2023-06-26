@@ -1,5 +1,4 @@
 require_relative 'pass_thru'
-require "pry-byebug"
 
 module ConceptQL
   module Operators
