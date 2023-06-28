@@ -1,13 +1,13 @@
 require_relative "lexicon_strategy"
 
 module ConceptQL
-  class LexiconGDM < LexiconStrategy
-    FILE_PROVENANCE_TYPES_VOCAB = "JIGSAW_FILE_PROVENANCE_TYPE"
-    CODE_PROVENANCE_TYPES_VOCAB = "JIGSAW_CODE_PROVENANCE_TYPE"
+  class LexiconOhdsi < LexiconStrategy
+    FILE_PROVENANCE_TYPES_VOCAB = "JS_FILE_PROV_TYPE"
+    CODE_PROVENANCE_TYPES_VOCAB = "JS_CODE_PROV_TYPE"
 
     class << self
       def db_has_all_vocabulary_tables?(db)
-        %i(ancestors concepts mappings vocabularies).all?{|t| db.table_exists?(t)}
+        %i(concept_ancestor concept concept_relationship vocabulary).all?{|t| db.table_exists?(t)}
       end
     end
 
@@ -17,23 +17,23 @@ module ConceptQL
     # We also return back all concept_ids that were passed in.  That way,
     # if a concept_id isn't in our ancestors table, we still look for that
     # concept and don't secretly drop it
-    def descendants_of(concept_ids_or_ds)
+    def descendants_of(*concept_ids_or_ds)
       where_values = Array(concept_ids_or_ds).flatten.dup
 
-      descendants = db[:ancestors]
-        .where(ancestor_id: where_values)
-        .select(:descendant_id)
+      descendants = db[:concept_ancestor]
+        .where(ancestor_concept_id: where_values)
+        .select(:descendant_concept_id)
 
       unless where_values.empty?
         union_clause = db.values(where_values.map { |v| [v] })
         descendants = descendants.union(union_clause).distinct
       end
 
-      descendants
+      descendants.select_map(:descendant_concept_id)
     end
 
     def codes_by_domain(codes, vocabulary_id)
-      domains_and_codes = db[:concepts]
+      domains_and_codes = db[:concept]
         .where(concept_code: codes, vocabulary_id: translate_vocab_id(vocabulary_id))
         .to_hash_groups(:domain_id, :concept_code)
 
@@ -52,17 +52,17 @@ module ConceptQL
     end
 
     def concepts(vocabulary_id, codes = [])
-      ds = db[:concepts].where(vocabulary_id: translate_vocab_id(vocabulary_id))
+      ds = db[:concept].where(vocabulary_id: translate_vocab_id(vocabulary_id))
       ds = ds.where(Sequel.function(:lower, :concept_code) => Array(codes).map(&:downcase)) unless codes.blank?
       ds
     end
 
     def concept_ids(vocabulary_id, codes = [])
-      concepts(vocabulary_id, codes).select_map(:id)
+      concepts(vocabulary_id, codes).select_map(:concept_id)
     end
 
     def vocabulary_is_empty?(vocabulary_id)
-      db[:concepts].where(vocabulary_id: translate_vocab_id(vocabulary_id)).count.zero?
+      db[:concept].where(vocabulary_id: translate_vocab_id(vocabulary_id)).count.zero?
     end
 
     def translate_vocab_id(vocabulary_id)
@@ -70,13 +70,14 @@ module ConceptQL
     end
 
     def vocabularies_query
-      db[:vocabularies]
-        .select(Sequel[:id].as(:id),
-                Sequel[:id].as(:omopv5_vocabulary_id),
+      db[:vocabulary]
+        .select(Sequel[:vocabulary_id].as(:id),
+                Sequel[:vocabulary_id].as(:omopv5_vocabulary_id),
                 Sequel[:vocabulary_name].as(:vocabulary_short_name),
                 Sequel[:vocabulary_name].as(:vocabulary_full_name),
-                Sequel[:domain],
+                Sequel[nil].as(:domain),
                 Sequel.expr(1).as(:from_lexicon))
+        .from_self
     end
 
     def vocabularies

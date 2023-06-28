@@ -45,17 +45,7 @@ describe ConceptQL::Lexicon do
     it "should find passed in concept_id even if no descendants" do
       make_ancestor_row(ldb, 1, 2)
 
-      _(get_descendants_of([3])).must_equal([3])
-    end
-
-    it "should handle Sequel::Dataset as concepts to look for" do
-      make_ancestor_row(ldb, 1, 2)
-      make_vocabulary_row(ldb, "vocab")
-      make_concept_row(ldb, 1, "vocab", "EXAMPLE")
-
-      ds = lexicon.concepts("vocab", "example").select(:id)
-
-      _(get_descendants_of(ds)).must_equal([1, 2])
+      _(get_descendants_of(3)).must_equal([3])
     end
   end
 end

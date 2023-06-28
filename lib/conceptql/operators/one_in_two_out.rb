@@ -51,12 +51,6 @@ module ConceptQL
           .from_self
       end
 
-      def build_where_from_codes(codes)
-        Sequel.|(
-          {file_provenance_type: prov_of(codes)}, {code_provenance_type: prov_of(codes)}
-        )
-      end
-
       def valid_inpatient_events
         q = all_inpatient_events
         unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?

@@ -6,12 +6,9 @@ module ConceptQL
       base.require_column :code_provenance_type
     end
 
-    FILE_PROVENANCE_TYPES_VOCAB = "JIGSAW_FILE_PROVENANCE_TYPE"
-    CODE_PROVENANCE_TYPES_VOCAB = "JIGSAW_CODE_PROVENANCE_TYPE"
-
     def prov_of(ancestors)
       with_lexicon(db) do |lexicon|
-        lexicon.descendants_of(lexicon.concept_ids([FILE_PROVENANCE_TYPES_VOCAB, CODE_PROVENANCE_TYPES_VOCAB], ancestors))
+        lexicon.descendants_of(lexicon.concept_ids([lexicon.file_provenance_types_vocab, lexicon.code_provenance_types_vocab], ancestors))
       end
     end
 
@@ -23,7 +20,7 @@ module ConceptQL
 
     def find_bad_keywords(codes) 
       with_lexicon(db) do |lexicon|
-        codes - lexicon.concepts([FILE_PROVENANCE_TYPES_VOCAB, CODE_PROVENANCE_TYPES_VOCAB]).select_map(:concept_code)
+        codes - lexicon.concepts([lexicon.file_provenance_types_vocab, lexicon.code_provenance_types_vocab]).select_map(:concept_code)
       end
     end
   end
