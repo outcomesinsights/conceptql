@@ -58,33 +58,10 @@ module ConceptQL
 
 
       def codes_by_domain(db)
-        if no_db?(db)
-          with_lexicon do |lexicon|
-            @no_db_codes_by_domain ||= lexicon.codes_by_domain(arguments, "READ")
-            return @no_db_codes_by_domain
-          end
-          return { observation: arguments }
+        with_lexicon(db) do |lexicon|
+          @no_db_codes_by_domain ||= lexicon.codes_by_domain(arguments, "READ")
+          return @no_db_codes_by_domain
         end
-        @codes_by_domain ||= get_codes_by_domain(db)
-      end
-
-      def get_codes_by_domain(db)
-        codes_and_mapping_types = db[:source_to_concept_map]
-          .where(source_code: arguments, source_vocabulary_id: 17)
-          .select_map([:source_code, :mapping_type])
-
-        doms_and_codes = codes_and_mapping_types.group_by(&:last).each_with_object({}) do |(mapping_type, codes_and_maps), doms|
-          dom = mapping_type_to_domain(mapping_type)
-          doms[dom] ||= []
-          doms[dom] += codes_and_maps.map(&:first)
-        end
-
-        leftovers = arguments - doms_and_codes.flat_map { |k, v| v }
-        unless leftovers.empty?
-          doms_and_codes[:observation] ||= []
-          doms_and_codes[:observation] += leftovers
-        end
-        doms_and_codes
       end
 
       def mapping_type_to_domain(mapping_type)

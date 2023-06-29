@@ -29,7 +29,7 @@ module ConceptQL
         descendants = descendants.union(union_clause).distinct
       end
 
-      descendants
+      descendants.select_map(:descendant_id)
     end
 
     def codes_by_domain(codes, vocabulary_id)
@@ -49,6 +49,10 @@ module ConceptQL
       return codes if db_is_mock?
       return codes if vocabulary_is_empty?(vocabulary_id)
       concepts(vocabulary_id, codes).select_map(:concept_code)
+    end
+
+    def concepts_to_codes(vocabulary_id, codes = [])
+      concepts(vocabulary_id, codes).select_map([:concept_code, :concept_text])
     end
 
     def concepts(vocabulary_id, codes = [])

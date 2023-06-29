@@ -51,6 +51,10 @@ module ConceptQL
       concepts(vocabulary_id, codes).select_map(:concept_code)
     end
 
+    def concepts_to_codes(vocabulary_id, codes = [])
+      concepts(vocabulary_id, codes).select_map([:concept_code, :concept_name])
+    end
+
     def concepts(vocabulary_id, codes = [])
       ds = db[:concept].where(vocabulary_id: translate_vocab_id(vocabulary_id))
       ds = ds.where(Sequel.function(:lower, :concept_code) => Array(codes).map(&:downcase)) unless codes.blank?

@@ -74,16 +74,16 @@ describe ConceptQL::Query do
   describe "#code_list" do
     it "should handle nil for a DB" do
       db = ConceptQL::Database.new(nil)
-      query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
+      query = db.query(["union",["cpt","80230"],["icd9", "250.00", "250.02"]])
       expected = if ENV["LEXICON_URL"]
         [
-          "CPT 99214: Office or other outpatient visit for the evaluation and management of an established patient, which requires at least 2 of these 3 key components: A detailed history; A detailed examination; Medical decision making of moderate complexity. Counseling and/o",
+          "CPT 80230: Infliximab",
           "ICD-9 CM 250.00: Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled",
           "ICD-9 CM 250.02: Diabetes mellitus without mention of complication, type II or unspecified type, uncontrolled"
         ]
       else
         [
-          "CPT 99214",
+          "CPT 80230",
           "ICD-9 CM 250.00",
           "ICD-9 CM 250.02"
         ]
@@ -102,16 +102,16 @@ describe ConceptQL::Query do
     it "should return codes even if database search_path is bad" do
       seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
       db = ConceptQL::Database.new(seq_db)
-      query = db.query(["union",["cpt","99214"],["icd9", "250.00", "250.02"]])
+      query = db.query(["union",["cpt","80230"],["icd9", "250.00", "250.02"]])
       expected = if ENV["LEXICON_URL"]
         [
-          "CPT 99214: Office or other outpatient visit for the evaluation and management of an established patient, which requires at least 2 of these 3 key components: A detailed history; A detailed examination; Medical decision making of moderate complexity. Counseling and/o",
+          "CPT 80230: Infliximab",
           "ICD-9 CM 250.00: Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled",
           "ICD-9 CM 250.02: Diabetes mellitus without mention of complication, type II or unspecified type, uncontrolled"
         ]
       else
         [
-          "CPT 99214",
+          "CPT 80230",
           "ICD-9 CM 250.00",
           "ICD-9 CM 250.02"
         ]
@@ -131,16 +131,16 @@ describe ConceptQL::Query do
 
     it "should return codes from vocabulary-based operators even with no db" do
       db = ConceptQL::Database.new(nil)
-      query = db.query(["union", ["cpt_or_hcpcs","99214"], ["ATC", "*"]])
+      query = db.query(["union", ["cpt_or_hcpcs","80230"], ["ATC", "*"]])
       _(query.code_list(nil).map(&:to_s)).must_equal([
-				"CPT or HCPCS 99214: Office or other outpatient visit for the evaluation and management of an established patient, which requires at least 2 of these 3 key components: A detailed history; A detailed examination; Medical decision making of moderate complexity. Counseling and/o",
+        "CPT or HCPCS 80230: Infliximab",
 				"WHO ATC *: ALL CODES"
       ])
     end
 
     it "should return codes even if the code doesn't exist in the database" do
       query = CDB.query(["hcpcs", "A0000", "A0021"])
-      _(query.code_list.map(&:code)).must_equal(["A0000", "A0021"])
+      _(query.code_list.map(&:code).sort).must_equal(["A0000", "A0021"])
     end
   end
 end

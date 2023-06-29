@@ -70,49 +70,51 @@ describe ConceptQL::Operators::Vocabulary do
     end)
   end
 
-  describe "with example vocabularies" do
-    let(:db) { Sequel.connect("sqlite:/") }
+  unless ENV["CONCEPTQL_LEXICON_OHDSI_ONLY"]
+    describe "with example GDM vocabularies" do
+      let(:db) { Sequel.connect("sqlite:/") }
 
-    before do
-      db.create_table!(:vocabularies) do
-        String :id
-        String :vocabulary_name
-        String :domain
+      before do
+        db.create_table!(:vocabularies) do
+          String :id
+          String :vocabulary_name
+          String :domain
+        end
+        # These are needed to fake out Lexicon
+        db.create_table!(:ancestors) { String :column }
+        db.create_table!(:concepts) { String :column }
+        db.create_table!(:mappings) { String :column }
+        db[:vocabularies].multi_insert([
+          { id: "EXAMPLE", vocabulary_name: "Example Vocabulary", domain: "measurement" }
+        ])
       end
-      # These are needed to fake out Lexicon
-      db.create_table!(:ancestors) { String :column }
-      db.create_table!(:concepts) { String :column }
-      db.create_table!(:mappings) { String :column }
-      db[:vocabularies].multi_insert([
-        { id: "EXAMPLE", vocabulary_name: "Example Vocabulary", domain: "measurement" }
-      ])
-    end
 
-    it "should read from lexicon" do
-      assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
-        entry.id == "example"
-      end)
+      it "should read from lexicon" do
+        assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+          entry.id == "example"
+        end)
 
-      ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
-        refute_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+        ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
+          refute_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
+            entry.id == "example"
+          end)
+        end
+
+        assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
           entry.id == "example"
         end)
       end
 
-      assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
-        entry.id == "example"
-      end)
-    end
-
-    it "should use proper case sensitivity for dynamic vocabularies" do
-      cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-      lexicon = ConceptQL::Lexicon.new(db)
-      ConceptQL::Operators.stub(:operators, {gdm: {}, omopv4_plus: {}}) do
-        ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
-          cdb.stub(:lexicon, lexicon) do
-            ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
-            q = cdb.query([ "example", "12" ])
-            assert_match(/EXAMPLE/, q.sql)
+      it "should use proper case sensitivity for dynamic vocabularies" do
+        cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
+        lexicon = ConceptQL::Lexicon.new(db)
+        ConceptQL::Operators.stub(:operators, {gdm: {}, omopv4_plus: {}}) do
+          ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
+            cdb.stub(:lexicon, lexicon) do
+              ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
+              q = cdb.query([ "example", "12" ])
+              assert_match(/EXAMPLE/, q.sql)
+            end
           end
         end
       end
