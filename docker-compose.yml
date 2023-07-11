@@ -3,7 +3,6 @@ version: '3'
 services:
   conceptql:
     depends_on:
-    - lexicon
     - test_data
     environment:
     - CONCEPTQL_DATA_MODEL=gdm
@@ -11,10 +10,12 @@ services:
     - CONCEPTQL_OVERWRITE_TEST_RESULTS
     - CONCEPTQL_PRINT_SQL
     - CONCEPTQL_STOP_ON_ERROR
-    - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data_for_chisel
-    - LEXICON_URL=postgres://ryan:r@lexicon/lexicon
+    - LEXICON_GDM_ONLY
+    - LEXICON_OHDSI_ONLY
+    - LEXICON_URL=postgres://ryan:r@test_data/test_data
     - SEQUELIZER_RETRIES=12
     - SEQUELIZER_RETRY_DELAY=5
+    - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data
     image: outcomesinsights/misc:conceptql.master.latest
     build:
       context: "."
@@ -22,11 +23,7 @@ services:
     command: sh -c "bundle && bundle exec ruby test/all.rb"
     volumes:
     - "${PWD}:/home/conceptql"
-  lexicon:
-    image: outcomesinsights/lexicon:forge.latest
-    expose:
-      - 5432
   test_data:
-    image: outcomesinsights/misc:test_data.main.postgres.latest
+    image: outcomesinsights/misc:test_data.hammer
     expose:
       - 5432
