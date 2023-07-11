@@ -1,9 +1,27 @@
 name: Run Tests
 on: [push]
 jobs:
-  Run-Tests:
+  Run-GDM-Tests:
     runs-on: ubuntu-latest
     environment: Test Secrets
+    env:
+      LEXICON_GDM_ONLY: 1
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - 
+        name: Log into DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Run Tests
+        run: docker-compose run conceptql
+  Run-OHDSI-Tests:
+    runs-on: ubuntu-latest
+    environment: Test Secrets
+    env:
+      LEXICON_OHDSI_ONLY: 1
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
