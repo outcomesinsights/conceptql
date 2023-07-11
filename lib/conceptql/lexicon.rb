@@ -31,6 +31,7 @@ module ConceptQL
         end
         break if @strategy
       end
+      raise "Could not find vocabulary tables for GDM or OHDSI in SEQUELIZER_URL: #{ENV['SEQUELIZER_URL']} or LEXICON_URL: #{ENV['LEXICON_URL']}" unless @strategy
     end
 
     def lexicon_classes
