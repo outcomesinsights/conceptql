@@ -15,6 +15,7 @@ module ConceptQL
       :descendants_of,
       :file_provenance_types_vocab,
       :known_codes,
+      :strategy,
       :vocabularies,
       :vocabularies_query
 

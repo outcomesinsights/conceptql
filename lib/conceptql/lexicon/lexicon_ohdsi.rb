@@ -95,5 +95,9 @@ module ConceptQL
     def code_provenance_types_vocab
       CODE_PROVENANCE_TYPES_VOCAB
     end
+
+    def strategy
+      :ohdsi
+    end
   end
 end
