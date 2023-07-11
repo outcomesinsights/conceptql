@@ -1,53 +1,42 @@
 require "sequelizer"
 require_relative "../../helper"
 
-unless ENV["CONCEPTQL_LEXICON_OHDSI_ONLY"]
-  describe ConceptQL::Lexicon do
-    include Sequelizer
-    let(:ldb) { new_db }
-    let(:ddb) { new_db }
-    let(:lexicon) { ConceptQL::Lexicon.new(ldb, ddb) }
+describe ConceptQL::Lexicon do
+  include Sequelizer
 
-    describe "#descendants_of" do
-      def make_ancestor_row(db, a_id, d_id)
+  let(:lexicon) { ConceptQL::Lexicon.new(nil, new_db) }
+
+  describe "#descendants_of" do
+    def make_ancestor_row(lexicon, a_id, d_id)
+      if lexicon.strategy == :gdm
         db.create_table?(:ancestors, temp: true) do
           Integer :ancestor_id
           Integer :descendant_id
         end
         db[:ancestors].insert([a_id, d_id])
-      end
-
-      def get_descendants_of(ids_or_ds)
-        lexicon.descendants_of(ids_or_ds).sort
-      end
-
-      def make_concept_row(db, id, vocab_id, code)
-        db.create_table?(:concepts, temp: true) do
-          Integer :id
-          String :vocabulary_id
-          String :concept_code
+      else
+        db.create_table?(:concept_ancestor, temp: true) do
+          Integer :ancestor_concept_id
+          Integer :descendant_concept_id
         end
-        db[:concepts].insert([id, vocab_id, code])
+        db[:concept_ancestor].insert([a_id, d_id])
       end
+    end
 
-      def make_vocabulary_row(db, id)
-        db.create_table?(:vocabularies, temp: true) do
-          String :id
-        end
-        db[:vocabularies].insert([id])
-      end
+    def get_descendants_of(ids_or_ds)
+      lexicon.descendants_of(ids_or_ds).sort
+    end
 
-      it "should find passed in concept_id and descendants of concept_id" do
-        make_ancestor_row(ldb, 1, 2)
+    it "should find passed in concept_id and descendants of concept_id" do
+      make_ancestor_row(lexicon, 1, 2)
 
-        _(get_descendants_of([1])).must_equal([1, 2])
-      end
+      _(get_descendants_of(1)).must_equal([1, 2])
+    end
 
-      it "should find passed in concept_id even if no descendants" do
-        make_ancestor_row(ldb, 1, 2)
+    it "should find passed in concept_id even if no descendants" do
+      make_ancestor_row(lexicon, 1, 2)
 
-        _(get_descendants_of(3)).must_equal([3])
-      end
+      _(get_descendants_of(3)).must_equal([3])
     end
   end
 end

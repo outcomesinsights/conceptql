@@ -36,8 +36,8 @@ module ConceptQL
 
     def lexicon_classes
       classes = []
-      classes << LexiconOhdsi unless ENV["CONCEPTQL_LEXICON_GDM_ONLY"]
-      classes << LexiconGDM unless ENV["CONCEPTQL_LEXICON_OHDSI_ONLY"]
+      classes << LexiconOhdsi unless ENV["LEXICON_GDM_ONLY"]
+      classes << LexiconGDM unless ENV["LEXICON_OHDSI_ONLY"]
       classes
     end
   end
