@@ -36,14 +36,26 @@ module ConceptQL
           end.select(Sequel[:first][:context_id]).distinct
         end.from_self
 
-        name = cte_name(:shared_context_ids)
-        shared_events = contexteds.map do |contexted|
-          contexted.where(context_id: db[name]).select(*query_cols)
+        if ConceptQL.avoid_ctes?
+          context_id_ds = shared_context_ids
+        else
+          name = cte_name(:shared_context_ids)
+          context_id_ds = db[name]
         end
 
-        shared_events.inject do |q, shared_event|
+        shared_events = contexteds.map do |contexted|
+          contexted.where(context_id: context_id_ds).select(*query_cols)
+        end
+
+        ds = shared_events.inject do |q, shared_event|
           q.union(shared_event)
-        end.with(name, shared_context_ids)
+        end
+
+        if name
+          ds = ds.with(name, shared_context_ids)
+        end
+
+        ds
       end
 
       def contextify(db, stream)
