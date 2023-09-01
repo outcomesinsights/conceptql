@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Test Secrets
     env:
-      LEXICON_GDM_ONLY: 1
+      SEQUELIZER_SEARCH_PATH: public,gdm_vocabs
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Test Secrets
     env:
-      LEXICON_OHDSI_ONLY: 1
+      SEQUELIZER_SEARCH_PATH: public,ohdsi_vocabs
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3

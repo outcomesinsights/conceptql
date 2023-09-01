@@ -30,7 +30,7 @@ module ConceptQL
       end
 
       def domains(db)
-        gdm? ? ops.first.domains(db) : codes_by_domain(db).keys
+        ops.first.domains(db)
       end
 
       def query_cols
@@ -44,25 +44,13 @@ module ConceptQL
       private
 
       def ops(db = nil)
-        if gdm?
-          [ReadGDM.new(self.nodifier, "read_condition_occurrence", *arguments)]
-        else
-          codes_by_domain(db).map do |domain, codes|
-            klasses[domain].new(self.nodifier, "read_#{domain}", *codes)
-          end
-        end
+        [ReadGDM.new(self.nodifier, "read_condition_occurrence", *arguments)]
       end
+
       def describe_codes(db, codes)
         ops.flat_map { |op| op.describe_codes(db, codes) }
       end
 
-
-      def codes_by_domain(db)
-        with_lexicon(db) do |lexicon|
-          @no_db_codes_by_domain ||= lexicon.codes_by_domain(arguments, "READ")
-          return @no_db_codes_by_domain
-        end
-      end
 
       def mapping_type_to_domain(mapping_type)
         case mapping_type.to_s

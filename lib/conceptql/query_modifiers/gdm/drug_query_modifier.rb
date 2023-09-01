@@ -27,8 +27,8 @@ module ConceptQL
           #TODO: Determine what actual columns to include for drug exposures under
           query.from_self(alias: :cc)
             .left_join(Sequel[:drug_exposure_details].as(:de), Sequel[:cc][:drug_exposure_detail_id] => Sequel[:de][:id])
-            .left_join(Sequel[:concepts].as(:dose_con), Sequel[:de][:dose_unit_concept_id] => Sequel[:dose_con][:id])
-            .left_join(Sequel[:concepts].as(:ing_con), Sequel[:cc][:clinical_code_concept_id] => Sequel[:ing_con][:id])
+            .left_join(dm.concepts_table(query.db).as(:dose_con), Sequel[:de][:dose_unit_concept_id] => Sequel[:dose_con][:id])
+            .left_join(dm.concepts_table(query.db).as(:ing_con), Sequel[:cc][:clinical_code_concept_id] => Sequel[:ing_con][:id])
             .select_all(:cc)
             .select_append(Sequel[:de][:dose_value].as(:drug_amount))
             .select_append(Sequel[:dose_con][:concept_text].as(:drug_amount_units))

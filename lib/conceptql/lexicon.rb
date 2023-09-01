@@ -7,14 +7,6 @@ module ConceptQL
     extend Forwardable
     attr_reader :strategy
     def_delegators :@strategy,
-      :code_provenance_types_vocab,
-      :codes_by_domain,
-      :concept_ids,
-      :concepts,
-      :concepts_to_codes,
-      :descendants_of,
-      :file_provenance_types_vocab,
-      :known_codes,
       :strategy,
       :vocabularies,
       :vocabularies_query

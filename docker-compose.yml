@@ -10,11 +10,10 @@ services:
     - CONCEPTQL_OVERWRITE_TEST_RESULTS
     - CONCEPTQL_PRINT_SQL
     - CONCEPTQL_STOP_ON_ERROR
-    - LEXICON_GDM_ONLY
-    - LEXICON_OHDSI_ONLY
     - LEXICON_URL=postgres://ryan:r@test_data/test_data
     - SEQUELIZER_RETRIES=12
     - SEQUELIZER_RETRY_DELAY=5
+    - SEQUELIZER_SEARCH_PATH
     - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data
     image: outcomesinsights/misc:conceptql.master.latest
     build:

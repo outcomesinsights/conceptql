@@ -28,27 +28,8 @@ describe ConceptQL::Scope do
 
       it "should limit selection by date range under gdm" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["ADMSRCE", "12"], opts), :scope, :postgres_date_range_under_gdm)
-      end
-
-      it "should limit selection by date range under omopv4_plus for source vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        check_sequel(db.query(["icd9", "412"], opts), :scope, :postgres_date_range_under_omopv4_plus_source_vocab)
-      end
-
-      it "should limit selection by date range under gdm with old source vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["icd9", "412"], opts), :scope, :postgres_date_range_under_gdm_source_vocab)
-      end
-
-      it "should limit selection by date range under omopv4_plus for standard vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        check_sequel(db.query(["cpt", "99214"], opts), :scope, :postgres_date_range_under_omopv4_plus_standard_vocab)
-      end
-
-      it "should limit selection by date range under gdm with old standard vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["cpt", "99214"], opts), :scope, :postgres_date_range_under_gdm_standard_vocab)
+        cql_sql = db.query(["ADMSRCE", "12"], opts).sql
+        assert_match(/WHERE \(\(CAST\('2001-01-01' AS date\) <= "start_date"\) AND \("start_date" <= CAST\('2001-12-31' AS date\)\)\)\)/, cql_sql)
       end
     end
 
@@ -59,57 +40,10 @@ describe ConceptQL::Scope do
 
       it "should limit selection by date range under gdm" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["ADMSRCE", "12"], opts), :scope, :postgres_window_table_under_gdm)
-      end
-
-      it "should limit selection by date range under omopv4_plus for source vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        check_sequel(db.query(["icd9", "412"], opts), :scope, :postgres_window_table_under_omopv4_plus_source_vocab)
-      end
-
-      it "should limit selection by date range under gdm with old source vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["icd9", "412"], opts), :scope, :postgres_window_table_under_gdm_source_vocab)
-      end
-
-      it "should limit selection by date range under omopv4_plus for standard vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        check_sequel(db.query(["cpt", "99214"], opts), :scope, :postgres_window_table_under_omopv4_plus_standard_vocab)
-      end
-
-      it "should limit selection by date range under gdm with old standard vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["cpt", "99214"], opts), :scope, :postgres_window_table_under_gdm_standard_vocab)
-      end
-
-      it "should not limit selection on person table" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        _(db.query(["person", true], opts).sql).wont_match(/EXISTS/)
-      end
-
-      it "should limit selection on condition_occurrence table" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        _(db.query(["icd9", "412"], opts).sql).must_match(/inner join/i)
-      end
-
-      it "should not apply to inner query of revenue code operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        _(db.query(["revenue_code", "0450"], opts).sql.downcase.scan(/inner join/i).count).must_equal 1
-      end
-
-      it "should have revenue code search revenue_code_source_value" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        _(db.query(["revenue_code", "0450"], opts).sql.downcase).must_match(/revenue_code_source_value/i)
-      end
-
-      it "should not apply to inner query of drg operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        _(db.query(["drg", "829"], opts).sql.downcase.scan(/inner join/i).count).must_equal 1
-      end
-
-      it "should have drg code search disease_class_source_value" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        _(db.query(["drg", "829"], opts).sql.downcase).must_match(/disease_class_source_value/i)
+        cql_sql = db.query(["ADMSRCE", "12"], opts).sql
+        assert_match(/FROM "jtemp"/, cql_sql)
+        assert_match(/"r"."start_date" <= "l"."start_date"/, cql_sql)
+        assert_match(/"l"."start_date" <= "r"."end_date"/, cql_sql)
       end
     end
 
@@ -120,27 +54,10 @@ describe ConceptQL::Scope do
 
       it "should limit selection by date range under gdm" do
         db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["ADMSRCE", "12"], opts), :scope, :postgres_window_table_with_adjustments_under_gdm)
-      end
-
-      it "should limit selection by date range under omopv4_plus for source vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        check_sequel(db.query(["icd9", "412"], opts), :scope, :postgres_window_table_with_adjustments_under_omopv4_plus_source_vocab)
-      end
-
-      it "should limit selection by date range under gdm with old source vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["icd9", "412"], opts), :scope, :postgres_window_table_with_adjustments_under_gdm_source_vocab)
-      end
-
-      it "should limit selection by date range under omopv4_plus for standard vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :omopv4_plus)
-        check_sequel(db.query(["cpt", "99214"], opts), :scope, :postgres_window_table_with_adjustments_under_omopv4_plus_standard_vocab)
-      end
-
-      it "should limit selection by date range under gdm with old standard vocab operator" do
-        db = ConceptQL::Database.new(Sequel.mock(host: host), data_model: :gdm)
-        check_sequel(db.query(["cpt", "99214"], opts), :scope, :postgres_window_table_with_adjustments_under_gdm_standard_vocab)
+        cql_sql = db.query(["ADMSRCE", "12"], opts).sql
+        assert_match(/FROM "jtemp"/, cql_sql)
+        assert_match(/make_interval\(days := -30\)/, cql_sql)
+        assert_match(/make_interval\(months := 1\)/, cql_sql)
       end
     end
   end

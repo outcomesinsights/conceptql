@@ -47,7 +47,7 @@ module ConceptQL
 
       def all_inpatient_events
         condition_events
-          .where(build_where_from_codes(["inpatient"]))
+          .where(build_where_from_codes(db, ["inpatient"]))
           .from_self
       end
 
@@ -70,7 +70,7 @@ module ConceptQL
 
       def outpatient_events
         condition_events
-          .where(build_where_from_codes(["carrier_claim","outpatient"]))
+          .where(build_where_from_codes(db, ["carrier_claim","outpatient"]))
           .from_self
       end
 

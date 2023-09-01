@@ -36,15 +36,16 @@ describe ConceptQL::Operators::Vocabulary do
     end
 
     it "should produce correct SQL" do
-      check_sequel(cdb.query(["admsrce", "12"]), :vocabulary, :correct_sql)
-    end
-
-    it "should produce correct SQL for older selection operators" do
-      check_sequel(cdb.query(["icd9", "412"]), :vocabulary, :older_operators)
+      cql_sql = cdb.query(["admsrce", "12"]).sql
+      assert_match(/lower\("concept_code"\) IN \('12'\)/, cql_sql)
+      assert_match(/"vocabulary_id" = 'ADMSRCE'/, cql_sql)
+      assert_match(/"clinical_code_concept_id" IN \(SELECT/, cql_sql)
     end
 
     it "should produce correct SQL for select all" do
-      check_sequel(cdb.query(["atc", "*"]), :vocabulary, :select_all)
+      cql_sql = cdb.query(["atc", "*"]).sql
+      assert_match(/"clinical_code_vocabulary_id" = 'ATC'/, cql_sql)
+      assert_match(/"clinical_code_concept_id" != 0/, cql_sql)
     end
 
   end
