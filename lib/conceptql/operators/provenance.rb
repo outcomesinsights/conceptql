@@ -31,53 +31,17 @@ module ConceptQL
 
       def query(db)
         @db = db
-        db.from(stream.evaluate(db)).where(build_where_from_codes(arguments))
+        db.from(stream.evaluate(db)).where(build_where_from_codes(db, arguments))
       end
 
     private
 
       def additional_validation(db, opts = {})
-        bad_keywords = find_bad_keywords(arguments)
+        bad_keywords = find_bad_keywords(db, arguments)
         if bad_keywords.present?
           add_error("unrecognized keywords", *(bad_keywords.uniq))
         end
       end
-
-=begin
-        build_std_code_concept_ids(arguments)
-
-        bad_keywords = arguments.each_with_object({file: [], code: []}){|c,h|
-
-          file_type = file_provenance_part_from_code(c)
-          code_type = code_provenance_part_from_code(c)
-
-          h[:file] << file_type if file_type.to_i.zero? && !file_type.nil? && !allowed_file_provenance_types.include?(file_type)
-          h[:code] << code_type if code_type.to_i.zero? && !code_type.nil? && !allowed_code_provenance_types.include?(code_type)
-        }
-
-        warn_keywords = arguments.each_with_object([]){|c,h|
-          file_type = file_provenance_part_from_code(c)
-          code_type = code_provenance_part_from_code(c)
-
-          h << file_type if !file_type.to_i.zero?
-          h << code_type if !code_type.to_i.zero?
-        }
-
-        # TODO: we're using ActiveSupport now, so remove this Utils stuff
-        if ConceptQL::Utils.present?(bad_keywords[:file])
-          add_error("unrecognized file type keywords", *bad_keywords[:file].uniq)
-        end
-
-        if ConceptQL::Utils.present?(bad_keywords[:code])
-          add_error("unrecognized code type keywords", *bad_keywords[:code].uniq)
-        end
-
-        if ConceptQL::Utils.present?(warn_keywords)
-          add_warning("concept ids are not checked", *warn_keywords)
-        end
-
-      end
-=end
     end
   end
 end

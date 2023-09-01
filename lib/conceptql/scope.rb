@@ -86,20 +86,6 @@ module ConceptQL
       end
     end
 
-    def with_lexicon(db = nil)
-      ldb = Sequel.connect(ENV["LEXICON_URL"])
-      ldb.synchronize do
-        if db
-          db.synchronize do 
-            yield Lexicon.new(ldb, db)
-          end
-        else
-          yield Lexicon.new(ldb, db)
-        end
-      end
-    ensure
-      ldb.disconnect
-    end
 
     def add_errors(key, errors)
       @errors[key] = errors

@@ -46,19 +46,11 @@ module ConceptQL
       def query(db)
         words = arguments - actual_ids
 
-        concept_ids = if gdm?
-          db[:concepts]
-            .where(Sequel.function(:lower, :concept_text) => words.map(&:downcase))
-            .select(Sequel[:id].as(:concept_id))
-        else
-          db[:concept]
-            .where(Sequel.function(:lower, :concept_name) => words.map(&:downcase))
-            .select(:concept_id)
-        end
+        concept_ids = dm.concepts_by_name(db, words).select_map(:id)
 
-        c_ids = (concept_ids.from_self.select_map(:concept_id) + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
+        c_ids = (concept_ids + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
 
-        c_ids = dm.related_concept_ids(db,c_ids) if gdm?
+        c_ids = dm.related_concept_ids(db, c_ids) if gdm?
 
         q = db.from(source_table)
         if words.any? { |w| w.match(/unknown/i) }

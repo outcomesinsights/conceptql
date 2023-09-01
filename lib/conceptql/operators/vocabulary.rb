@@ -39,9 +39,7 @@ module ConceptQL
           args -= bad_arguments
           missing_args = []
 
-          with_lexicon(db) do |lexicon|
-            missing_args = args - lexicon.known_codes(vocabulary_id, args)
-          end
+          missing_args = args - dm.known_codes(db, vocabulary_id, args)
 
           unless missing_args.empty?
             add_warning("unknown code(s)", *missing_args)
@@ -51,11 +49,7 @@ module ConceptQL
 
       def describe_codes(db, codes)
         return [["*", "ALL CODES"]] if select_all?
-        found_codes = []
-
-        with_lexicon(db) do |lexicon|
-          found_codes = lexicon.concepts_to_codes(vocabulary_id, codes)
-        end
+        found_codes = dm.concepts_to_codes(db, vocabulary_id, codes)
 
         found_codes + (codes - found_codes.map(&:first)).zip([])
       end
@@ -113,9 +107,7 @@ module ConceptQL
       def where_clause(db)
         return { clinical_code_vocabulary_id: vocabulary_id } if select_all?
 
-        where_conds = {vocabulary_id: vocabulary_id}
-        where_conds[:concept_code] = arguments
-        concept_ids = db[:concepts].where(where_conds).select(:id)
+        concept_ids = dm.concepts(db, vocabulary_id, arguments).select(:id)
 
         { clinical_code_concept_id: concept_ids }
       end

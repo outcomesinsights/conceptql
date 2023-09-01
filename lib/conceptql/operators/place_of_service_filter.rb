@@ -34,17 +34,7 @@ module ConceptQL
     private
 
       def place_of_service_concept_ids(db)
-        if gdm?
-          db.from(:concepts)
-            .where(vocabulary_id: "Place of Service")
-            .where(concept_code: arguments.map(&:to_s))
-            .select(:id)
-        else
-          db.from(:concept)
-            .where(concept_code: arguments.map(&:to_s))
-            .where(vocabulary_id: 14)
-            .select(:concept_id)
-        end
+        dm.concept_ids(db, "Place of Service", arguments.map(&:to_s))
       end
     end
   end

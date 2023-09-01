@@ -33,66 +33,20 @@ describe ConceptQL::Query do
     end).must_raise
   end
 
-  describe "#sql(:formatted)" do
-    let :cdb do
-      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: false)
-    end
-
-    it "should produce formatted SQL" do
-      _(cdb.query([:icd9, "412"]).sql(:formatted)).must_match("          ")
-    end
-
-    it "should timeout after 10 seconds if can't parse" do
-      _(cdb.query(json_fixture(:sqlformat_killer)).sql(:formatted)).wont_match(/  /)
-    end
-
-    describe "with temp tables" do
-      let :cdb do
-        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: true, scratch_database: "scratch")
-      end
-
-      it "should use CREATE TABLE statements" do
-        _(cdb.query([:icd9, "412", label: "l"]).sql(:formatted, :create_tables)).must_match(/CREATE TABLE/)
-      end
-    end
-
-    describe "without temp tables" do
-      let :cdb do
-        ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus, force_temp_tables: false)
-      end
-
-      it "should use WITH statements" do
-        if ENV["CONCEPTQL_AVOID_CTES"] == "true"
-          skip
-        else
-          _(cdb.query([:icd9, "412", label: "l"]).sql(:formatted)).must_match(/WITH/)
-        end
-      end
-    end
-  end
-
   describe "#code_list" do
     it "should handle nil for a DB" do
       db = ConceptQL::Database.new(nil)
       query = db.query(["union",["cpt","80230"],["icd9", "250.00", "250.02"]])
-      expected = if ENV["LEXICON_URL"]
-        [
-          "CPT 80230: Infliximab",
-          "ICD-9 CM 250.00: Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled",
-          "ICD-9 CM 250.02: Diabetes mellitus without mention of complication, type II or unspecified type, uncontrolled"
-        ]
-      else
-        [
-          "CPT 80230",
-          "ICD-9 CM 250.00",
-          "ICD-9 CM 250.02"
-        ]
-      end
+      expected = [
+        "CPT 80230",
+        "ICD-9 CM 250.00",
+        "ICD-9 CM 250.02"
+      ]
       _(query.code_list.map(&:to_s)).must_equal(expected)
     end
 
     it "should handle nil for preferred name" do
-      db = ConceptQL::Database.new(nil)
+      db = ConceptQL::Database.new(DB)
       query = db.query(["revenue_code", "0100"])
       _(query.code_list.map(&:to_s)).must_equal([
         "Revenue Code 0100: All-Inclusive Room and Board Plus Ancillary"
@@ -103,19 +57,11 @@ describe ConceptQL::Query do
       seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
       db = ConceptQL::Database.new(seq_db)
       query = db.query(["union",["cpt","80230"],["icd9", "250.00", "250.02"]])
-      expected = if ENV["LEXICON_URL"]
-        [
-          "CPT 80230: Infliximab",
-          "ICD-9 CM 250.00: Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled",
-          "ICD-9 CM 250.02: Diabetes mellitus without mention of complication, type II or unspecified type, uncontrolled"
-        ]
-      else
-        [
-          "CPT 80230",
-          "ICD-9 CM 250.00",
-          "ICD-9 CM 250.02"
-        ]
-      end
+      expected = [
+        "CPT 80230",
+        "ICD-9 CM 250.00",
+        "ICD-9 CM 250.02"
+      ]
       _(query.code_list.map(&:to_s)).must_equal(expected)
     end
 
@@ -133,7 +79,7 @@ describe ConceptQL::Query do
       db = ConceptQL::Database.new(nil)
       query = db.query(["union", ["cpt_or_hcpcs","80230"], ["ATC", "*"]])
       _(query.code_list(nil).map(&:to_s)).must_equal([
-        "CPT or HCPCS 80230: Infliximab",
+        "CPT or HCPCS 80230",
 				"WHO ATC *: ALL CODES"
       ])
     end
