@@ -1,5 +1,6 @@
 require "active_support/core_ext/object/blank"
 require "csv"
+require "sequelizer"
 require_relative "entry"
 require_relative "../database"
 
@@ -11,6 +12,8 @@ end
 module ConceptQL
   module Vocabularies
     class DynamicVocabularies
+      include Sequelizer
+
       def register_operators
         all_vocabs.each do |name, entry|
           klasses = entry.dup.get_klasses.each do |data_model, klass|
@@ -46,7 +49,7 @@ module ConceptQL
       end
 
       def lexicon
-        @lexicon || ConceptQL::Database.lexicon
+        @lexicon || ConceptQL::Database.lexicon(db)
       end
     end
   end

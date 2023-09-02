@@ -54,8 +54,8 @@ module ConceptQL
         @lexicon_db
       end
 
-      def lexicon
-        @lexicon ||= Lexicon.new(lexicon_db)
+      def lexicon(db = nil)
+        @lexicon ||= Lexicon.new(lexicon_db, db)
       end
 
       def make_lexicon_db
@@ -68,7 +68,7 @@ module ConceptQL
         lexicon_db = if ENV["LEXICON_URL"]
                        Sequel.connect(ENV["LEXICON_URL"], db_opts)
                      else
-                       Sequel.mock(host: :postgres)
+                       Sequel.sqlite
                      end
         db_extensions(lexicon_db)
         lexicon_db
