@@ -1,5 +1,6 @@
 require "forwardable"
 require_relative "lexicon/lexicon_gdm"
+require_relative "lexicon/lexicon_no_db"
 require_relative "lexicon/lexicon_ohdsi"
 
 module ConceptQL
@@ -11,19 +12,17 @@ module ConceptQL
       :vocabularies,
       :vocabularies_query
 
-    @@db_lock = Mutex.new
-
     def initialize(lexicon_db, dataset_db = nil)
       lexicon_classes.each do |klass|
         [dataset_db, lexicon_db].compact.each do |db|
           if (klass.db_has_all_vocabulary_tables?(db))
-            @strategy = klass.new(db, @@db_lock)
+            @strategy = klass.new(db)
             break
           end
         end
         break if @strategy
       end
-      raise "Could not find vocabulary tables for GDM or OHDSI in SEQUELIZER_URL: #{ENV['SEQUELIZER_URL']} or LEXICON_URL: #{ENV['LEXICON_URL']}" unless @strategy
+      @strategy ||= LexiconNoDB.new(Sequel.mock(host: :postgres))
     end
 
     def lexicon_classes
