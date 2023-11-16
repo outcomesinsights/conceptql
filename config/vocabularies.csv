@@ -30,6 +30,10 @@ ICD10CM,70,"International Classification of Diseases, Tenth Revision, Clinical M
 ICD9CM,2,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS)",ICD-9 CM,condition_occurrence,,"^(V\d{2}(\.\d{1,2})?|\d{3}(\.\d{1,2})?|E\d{3}(\.\d)?)$",icd9
 ICD9Proc,3,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 3 (NCHS)",ICD-9 Proc,procedure_occurrence,,"^\d{2}(.\d{1,2})?$",icd9_procedure
 LOINC,6,Logical Observation Identifiers Names and Codes (Regenstrief Institute),,observation,,"^\w{3,7}-\w$",
+GDM_CEN_TRACT_MEAS,0,Census Tract Measures from SEER,,observation,,,
+SEER_YOST_ACS_06_10,0,SEER's Yost Index calculated from ACS 2006-2010,,observation,,,
+SEER_YOST_ACS_10_14,0,SEER's Yost Index calculated from ACS 2010-2014,,observation,,,
+SEER_YOST_ACS_13_17,0,SEER's Yost Index calculated from ACS 2013-2017,,observation,,,
 Meas Type,64,OMOP Measurement Type,,observation,Y,,
 NDC,9,National Drug Code (FDA and manufacturers),,drug_exposure,,,
 Note Type,58,OMOP Note Type,,,Y,,
