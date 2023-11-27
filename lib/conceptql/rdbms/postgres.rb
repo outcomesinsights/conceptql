@@ -32,10 +32,6 @@ module ConceptQL
       def explain_temp_tables?
         ENV["CONCEPTQL_PG_EXPLAIN_TEMP_TABLES"] == "true"
       end
-
-      def preferred_formatter
-        SqlFormatters::PgFormat
-      end
     end
   end
 end
