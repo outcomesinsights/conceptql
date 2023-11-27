@@ -59,6 +59,10 @@ module ConceptQL
           Sequel.cast_string(column.to_sym)
         end
       end
+
+      def supports_materialized?
+        false
+      end
     end
   end
 end

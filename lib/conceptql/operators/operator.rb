@@ -214,7 +214,11 @@ module ConceptQL
       def evaluate(db)
         q = select_it(query(db))
         name = cte_name(op_name)
-        db[name].with(name, q, materialized: true)
+        opts = {}
+        if rdbms.supports_materialized?
+          opts[:materialized] = true
+        end
+        db[name].with(name, q, opts)
       end
 
       def pretty_print(pp)

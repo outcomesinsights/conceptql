@@ -32,6 +32,10 @@ module ConceptQL
       def explain_temp_tables?
         ENV["CONCEPTQL_PG_EXPLAIN_TEMP_TABLES"] == "true"
       end
+
+      def supports_materialized?
+        true
+      end
     end
   end
 end
