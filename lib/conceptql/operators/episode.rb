@@ -85,8 +85,8 @@ module ConceptQL
 
       def get_episode_gap
         # If Create treatment episodes get episode gap otherwise allow only 0 gap
-        return Sequel[options[:gap_of]].cast_numeric unless options[:gap_of].nil?
-        return Sequel[0].cast_numeric
+        return Sequel[options[:gap_of].to_i] unless options[:gap_of].nil?
+        return Sequel[0]
       end
 
       def unioned(db)
