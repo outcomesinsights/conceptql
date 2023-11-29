@@ -31,6 +31,7 @@ class Minitest::Spec
 
       order_columns = [:person_id, :criterion_table, :criterion_domain, :start_date, :criterion_id]
       order_columns << :uuid if ds.columns.include?(:uuid)
+      order_columns << :window_id if ds.columns.include?(:window_id)
       ds = ds.order(*order_columns)
 
       results = ds.all
