@@ -39,16 +39,7 @@ module ConceptQL
         #condition_vocabularies = dm.vocabularies_query.where(domain: 'condition_occurrence').select_map(:id)
 
         # Get primary diagnosis codes
-        primary_concepts = db[Sequel[:clinical_codes].as(:pcc)]
-          #.where(provenance_concept_id: all_primary_ids, Sequel[:pcc][:clinical_code_vocabulary_id] => condition_vocabularies)
-          .where(provenance_concept_id: all_primary_ids)
-          .select(
-            Sequel[:pcc][:collection_id].as(:collection_id),
-            Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
-            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id))
-          .order(Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id])
-          .from_self
-          .distinct(:collection_id)
+        primary_concepts = rdbms.primary_concepts(db, all_primary_ids)
 
         relevant_contexts = db[Sequel[:contexts].as(:cn)]
           .where(Sequel[:cn][:source_type_concept_id] => all_source_type_ids)

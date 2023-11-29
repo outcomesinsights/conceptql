@@ -25,6 +25,18 @@ module ConceptQL
         SqlFormatters::PgFormat
       end
 
+      def primary_concepts(db, all_primary_ids)
+        db[Sequel[:clinical_codes].as(:pcc)]
+          .where(provenance_concept_id: all_primary_ids)
+          .select(
+            Sequel[:pcc][:collection_id].as(:collection_id),
+            Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
+            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id))
+          .order(Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id])
+          .from_self
+          .distinct(:collection_id) # This generates DISTINCT ON which is PostgreSQL-specific
+      end
+
       def analyze_temp_tables?
         ENV["CONCEPTQL_PG_ANALYZE_TEMP_TABLES"] == "true"
       end
