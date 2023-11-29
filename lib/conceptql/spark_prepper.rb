@@ -20,5 +20,9 @@ class SparkPrepper
         db.create_view(table_name, temp: true, if_not_exists: true, using: 'org.apache.spark.sql.parquet', options: { path: parquet_file.expand_path })
       end
     end
+    if ENV["CI"].present?
+      # Broadcast joins are running out of memory in GitHub Actions
+      db.run("SET spark.sql.autoBroadcastJoinThreshold=-1")
+    end
   end
 end
