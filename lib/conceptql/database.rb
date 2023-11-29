@@ -1,4 +1,5 @@
 require_relative "lexicon"
+require_relative "spark_prepper"
 
 module ConceptQL
   class Database
@@ -9,10 +10,14 @@ module ConceptQL
 
     def initialize(db, opts={})
       @db = db
-      db_type = :postgres
+      db_type = db ? db.database_type.to_sym : :postgres
       if db
         self.class.db_extensions(db)
         db_type = db.database_type.to_sym
+      end
+
+      if db_type == :spark && ENV["CONCEPTQL_PARQUET_TEST_DIR"].present?
+        SparkPrepper.new(db, ENV["CONCEPTQL_PARQUET_TEST_DIR"]).prep
       end
 
       # Symbolize all keys and values

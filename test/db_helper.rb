@@ -1,6 +1,5 @@
 require_relative "helper"
 require_relative "db"
-require_relative "spark_prepper"
 
 require "logger"
 require "pp"
@@ -8,11 +7,6 @@ require "fileutils"
 
 CDB = ConceptQL::Database.new(DB, :data_model=>(ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym)
 DB.extension :error_sql
-
-if DB.database_type.to_sym == :spark
-  SparkPrepper.new(DB, ENV["CONCEPTQL_PARQUET_TEST_DIR"]).prep
-end
-
 
 PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
 
