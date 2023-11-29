@@ -2,7 +2,7 @@ require_relative "../../../db_helper"
 
 describe ConceptQL::Operators::From do
   it "should handle QualifiedIdentifiers" do
-    DB.create_table!(:test_from_table, as: CDB.query(["icd9", "412"]).query, temp: true)
+    DB.create_view(:test_from_table, CDB.query(["icd9", "412"]).query, replace: true, temp: true)
 
     qi = Sequel.qualify(:test_from_schema, :test_from_table)
     stmt = [:after, {
@@ -15,5 +15,3 @@ describe ConceptQL::Operators::From do
     _(sql).must_match(/test_from_table/)
   end
 end
-
-
