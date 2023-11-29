@@ -22,7 +22,7 @@ class SparkPrepper
     end
     if ENV["CI"].present?
       # Broadcast joins are running out of memory in GitHub Actions
-      db.run("SET spark.sql.autoBroadcastJoinThreshold=5242880")
+      db.run("SET spark.sql.autoBroadcastJoinThreshold=7864320")
     end
   end
 end
