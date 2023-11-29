@@ -38,6 +38,7 @@ jobs:
     env:
       SPARK_VERSION: 3.5.0
       CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/ohdsi
+      CONCEPTQL_DATA_MODEL: gdm
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
