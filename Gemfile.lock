@@ -1,5 +1,6 @@
-PATH
-  remote: ../sequel-hexspace
+GIT
+  remote: https://github.com/outcomesinsights/sequel-hexspace.git
+  revision: a6cddba0a45283581a8bf3e1a4580a146ea4eb1c
   specs:
     sequel-hexspace (1.0.0)
       hexspace
