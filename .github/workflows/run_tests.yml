@@ -57,6 +57,7 @@ jobs:
           wget -q https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz
           tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
           mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark
+          echo "spark.executor.cores             1" >> ~/spark/conf/spark-defaults.conf
 
       - uses: actions/cache@v3
         with:
