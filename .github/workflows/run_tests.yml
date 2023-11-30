@@ -34,7 +34,7 @@ jobs:
       - name: Run Tests
         run: docker-compose run conceptql
   Run-OHDSI-Spark-Tests:
-    runs-on: ubuntu-22.04-4core
+    runs-on: ubuntu-22.04-8core
     env:
       SPARK_VERSION: 3.5.0
       CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/ohdsi
