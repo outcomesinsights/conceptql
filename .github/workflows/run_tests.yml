@@ -1,39 +1,39 @@
 name: Run Tests
 on: [push]
 jobs:
-  #Run-GDM-Tests:
-  #  runs-on: ubuntu-latest
-  #  environment: Test Secrets
-  #  env:
-  #    SEQUELIZER_SEARCH_PATH: public,gdm_vocabs
-  #  steps:
-  #    - name: Check out repository code
-  #      uses: actions/checkout@v3
-  #    - 
-  #      name: Log into DockerHub
-  #      uses: docker/login-action@v2
-  #      with:
-  #        username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #        password: ${{ secrets.DOCKERHUB_TOKEN }}
-  #    - name: Run Tests
-  #      run: docker-compose run conceptql
-  #Run-OHDSI-Tests:
-  #  runs-on: ubuntu-latest
-  #  environment: Test Secrets
-  #  env:
-  #    SEQUELIZER_SEARCH_PATH: public,ohdsi_vocabs
-  #  steps:
-  #    - name: Check out repository code
-  #      uses: actions/checkout@v3
-  #    - 
-  #      name: Log into DockerHub
-  #      uses: docker/login-action@v2
-  #      with:
-  #        username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #        password: ${{ secrets.DOCKERHUB_TOKEN }}
-  #    - name: Run Tests
-  #      run: docker-compose run conceptql
-  Run-SI-Spark-Tests:
+  Run-GDM-Tests:
+    runs-on: ubuntu-latest
+    environment: Test Secrets
+    env:
+      SEQUELIZER_SEARCH_PATH: public,gdm_vocabs
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - 
+        name: Log into DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Run Tests
+        run: docker-compose run conceptql
+  Run-OHDSI-Tests:
+    runs-on: ubuntu-latest
+    environment: Test Secrets
+    env:
+      SEQUELIZER_SEARCH_PATH: public,ohdsi_vocabs
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - 
+        name: Log into DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Run Tests
+        run: docker-compose run conceptql
+  Run-Spark-Tests:
     strategy:
       matrix:
         include:
@@ -75,7 +75,7 @@ jobs:
           tar xzf synpuf_test_data.tgz
 
       - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
-      - run: bundle exec ruby test/all.rb || cat /home/runner/spark/logs/spark-runner-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-runner.out
+      - run: bundle exec ruby test/all.rb
         env:
           CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocab }}
           SEQUELIZER_URL: hexspace://localhost:10000/default
