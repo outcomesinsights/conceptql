@@ -34,7 +34,7 @@ jobs:
   #    - name: Run Tests
   #      run: docker-compose run conceptql
   Run-OHDSI-Spark-Tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04-4core
     env:
       SPARK_VERSION: 3.5.0
       CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/ohdsi
@@ -70,7 +70,7 @@ jobs:
           curl -sSL "https://www.dropbox.com/scl/fi/hha5zjm9d5ezkk8bfvtnc/synpuf_test_data.tgz?rlkey=lythw2s6342609ave66cam2ms&dl=1" > synpuf_test_data.tgz 
           tar xzf synpuf_test_data.tgz
 
-      - run: ~/spark/sbin/start-thriftserver.sh --driver-mem 5G && sleep 20
+      - run: ~/spark/sbin/start-thriftserver.sh --driver-mem 2G && sleep 20
       - run: bundle exec ruby test/all.rb
         env:
           CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/ohdsi
