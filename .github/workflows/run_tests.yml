@@ -33,11 +33,15 @@ jobs:
   #        password: ${{ secrets.DOCKERHUB_TOKEN }}
   #    - name: Run Tests
   #      run: docker-compose run conceptql
-  Run-OHDSI-Spark-Tests:
+  Run-SI-Spark-Tests:
+    strategy:
+      matrix:
+        include:
+          - vocab: gdm
+          - vocab: ohdsi
     runs-on: ubuntu-22.04
     env:
       SPARK_VERSION: 3.5.0
-      CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/ohdsi
       CONCEPTQL_DATA_MODEL: gdm
     steps:
       - uses: actions/checkout@v3
@@ -73,5 +77,5 @@ jobs:
       - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
       - run: bundle exec ruby test/all.rb || cat /home/runner/spark/logs/spark-runner-org.apache.spark.sql.hive.thriftserver.HiveThriftServer2-1-runner.out
         env:
-          CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/ohdsi
+          CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocab }}
           SEQUELIZER_URL: hexspace://localhost:10000/default
