@@ -37,11 +37,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - vocab: gdm
-          - vocab: ohdsi
+          - vocab: [gdm, ohdsi]
+          - spark_version: [3.5.0, 3.3.2]
     runs-on: ubuntu-22.04
     env:
-      SPARK_VERSION: 3.5.0
+      SPARK_VERSION: ${{ matrix.spark_version }}
       CONCEPTQL_DATA_MODEL: gdm
     steps:
       - uses: actions/checkout@v3
