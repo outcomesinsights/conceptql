@@ -16,10 +16,6 @@ module ConceptQL
         db_type = db.database_type.to_sym
       end
 
-      if db_type == :spark && ENV["CONCEPTQL_PARQUET_TEST_DIR"].present?
-        SparkPrepper.new(db, ENV["CONCEPTQL_PARQUET_TEST_DIR"]).prep
-      end
-
       # Symbolize all keys and values
       @opts = ConceptQL::Utils.rekey(opts, rekey_values: true)
 
