@@ -12,6 +12,9 @@ module ConceptQL
 
       @db = db
       @files_dir = Pathname.new(files_dir)
+      unless @files_dir.exist?
+        raise "Could not find #{files_dir} for Parquet files"
+      end
     end
 
     def prep(schema_name = nil)
