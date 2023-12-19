@@ -78,6 +78,7 @@ module ConceptQL
       @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
       @query_columns << :window_id if opts.dig(:window_opts, :window_table)
+      @query_columns << :uuid if opts[:uuid]
 
       @i = 0
       @mutex = Mutex.new

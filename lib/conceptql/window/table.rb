@@ -21,13 +21,12 @@ module ConceptQL
         end
         expr = exprs.inject(&:&)
 
-
         order_cols = order_columns(op)
 
         rhs = query.db[get_table_window(query)]
 
         if (!opts[:precalculated_window_id])
-          rhs = remove_window_id(rhs)
+          #rhs = remove_window_id(rhs)
           rhs = rhs
                 .select_group(:person_id, :start_date, :end_date)
                 .select_append do
@@ -38,7 +37,8 @@ module ConceptQL
 
         rhs = rhs.as(:r)
 
-        remove_window_id(query)
+        #remove_window_id(query)
+        query.from_self.select(*(op.columns - [:window_id]))
           .from_self(alias: :l)
           .join(rhs, expr)
           .select_all(:l)
@@ -55,7 +55,7 @@ module ConceptQL
 
       def remove_window_id(ds)
         if (cols = selected_columns(ds)) && cols.all? { |s| s.is_a?(Symbol) }
-          ds.select(*(cols - [:window_id]))
+          ds.select(*(cols - [:window_id])).from_self
         else
           ds.select_remove(:window_id)
         end
