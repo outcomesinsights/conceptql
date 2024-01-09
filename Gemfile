@@ -4,7 +4,3 @@ source 'https://rubygems.org'
 gemspec
 gem "pg"
 gem "sequel-hexspace", github: "outcomesinsights/sequel-hexspace"
-
-group :test, :development do
-  gem "nokogiri"
-end

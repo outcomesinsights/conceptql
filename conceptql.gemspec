@@ -30,4 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry-byebug', '~> 3'
   spec.add_development_dependency 'simplecov', '~> 0.11'
   spec.add_development_dependency 'sqlite3', '~> 1.3'
+  spec.add_development_dependency 'nokogiri', '~> 1.14'
+  spec.add_development_dependency 'watir', '~> 7.3'
+  spec.add_development_dependency 'webdrivers', '~> 5.2'
 end

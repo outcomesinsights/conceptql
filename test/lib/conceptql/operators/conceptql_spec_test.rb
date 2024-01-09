@@ -1,14 +1,13 @@
 require_relative "../../../helper"
 require "conceptql"
 require "nokogiri"
-require "open-uri"
+require "watir"
 
 describe "ConceptQL Spec" do
-  $known_ids ||= Nokogiri::HTML(
-      URI.open(
-        ENV.fetch("CONCEPTQL_SPEC_URL", "https://github.com/outcomesinsights/conceptql_spec")
-      )
-    )
+  $browser = Watir::Browser.new(:chrome, options: { args: %w(--no-sandbox --headless --disable-dev-shm-usage) }) 
+  $browser.goto(ENV.fetch("CONCEPTQL_SPEC_URL", "https://github.com/outcomesinsights/conceptql_spec"))
+  $readme_doc = $browser.element(css: "article.markdown-body").wait_until(&:present?)
+  $known_ids ||= Nokogiri::HTML($readme_doc.inner_html)
     .css("[href]")
     .map { |a| a.attr("href") }
     .select { |href| href =~ /^#/ && href =~ /operator$/ }
