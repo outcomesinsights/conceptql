@@ -4,7 +4,7 @@ require "nokogiri"
 require "watir"
 
 describe "ConceptQL Spec" do
-  $browser = Watir::Browser.new(:chrome, options: { args: %w(--no-sandbox --headless --disable-dev-shm-usage) }) 
+  $browser = Watir::Browser.new(:chrome, options: { args: %w(no-sandbox headless disable-dev-shm-usage disable-gpu disable-software-rasterizer) }) 
   $browser.goto(ENV.fetch("CONCEPTQL_SPEC_URL", "https://github.com/outcomesinsights/conceptql_spec"))
   $readme_doc = $browser.element(css: "article.markdown-body").wait_until(&:present?)
   $known_ids ||= Nokogiri::HTML($readme_doc.inner_html)
