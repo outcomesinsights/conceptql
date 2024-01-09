@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: 1a6ea0b9980cccc6977ad1aafa3f8b729ec415de
+  revision: d041282798332227bbdf0a48a07c0494b2b54931
   specs:
     sequel-hexspace (1.0.0)
       hexspace
@@ -65,7 +65,7 @@ GEM
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     sqlite3 (1.4.2)
-    thor (1.2.1)
+    thor (1.3.0)
     thrift (0.19.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -86,4 +86,4 @@ DEPENDENCIES
   sqlite3 (~> 1.3)
 
 BUNDLED WITH
-   2.1.4
+   2.5.4
