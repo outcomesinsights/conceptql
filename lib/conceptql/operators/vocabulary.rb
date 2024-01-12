@@ -105,11 +105,18 @@ module ConceptQL
       end
 
       def where_clause(db)
-        return { clinical_code_vocabulary_id: vocabulary_id } if select_all?
+        # We're probably going to partition the observations table by clinical_code_vocabulary_id,
+        # for Spark, so this will create queries that leverage that partitioning
+        # and it shouldn't hurt for PostgreSQL performance
+        wheres = { clinical_code_vocabulary_id: vocabulary_id }
 
-        concept_ids = dm.concepts(db, vocabulary_id, arguments).select(:id)
+        if !select_all?
+          concept_ids = dm.concepts(db, vocabulary_id, arguments).select(:id)
 
-        { clinical_code_concept_id: concept_ids }
+          wheres = wheres.merge({ clinical_code_concept_id: concept_ids })
+        end
+
+        wheres
       end
 
       def query_cols
