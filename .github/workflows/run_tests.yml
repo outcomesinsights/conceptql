@@ -30,9 +30,12 @@ jobs:
   Run-Spark-Tests:
     strategy:
       matrix:
-        vocabs: [ohdsi]
         spark_version: [3.5.0, 3.3.2]
-        data_model: [gdm, gdm_wide]
+        include:
+          - vocabs: ohdsi
+            data_model: gdm
+          - vocabs: ohdsi_wide
+            data_model: gdm_wide
     runs-on: ubuntu-22.04
     env:
       SPARK_VERSION: ${{ matrix.spark_version }}
