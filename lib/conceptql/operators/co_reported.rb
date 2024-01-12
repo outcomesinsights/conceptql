@@ -12,7 +12,7 @@ module ConceptQL
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments
-      require_column :visit_occurrence_id
+      require_column :context_id
 
 
       def query(db)
@@ -65,10 +65,10 @@ module ConceptQL
 
       def contextify(db, stream)
         stream.evaluate(db).from_self(alias: :s)
-          .join(Sequel[:clinical_codes].as(:c), id: :criterion_id)
-          .select_all(:s)
-          .select_append(Sequel[:c][:context_id].as(:context_id))
-          .from_self
+          #.join(Sequel[:clinical_codes].as(:c), id: :criterion_id)
+          #.select_all(:s)
+          #.select_append(Sequel[:c][:context_id].as(:context_id))
+          #.from_self
       end
 
       private

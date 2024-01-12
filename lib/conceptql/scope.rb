@@ -33,6 +33,7 @@ module ConceptQL
       value_as_concept: :String,
       unit_concept_id: :Bigint,
       unit_concept: :String,
+      context_id: :Bigint,
       visit_occurrence_id: :Bigint,
       file_provenance_type: :Bigint,
       code_provenance_type: :Bigint,

@@ -18,6 +18,7 @@ module ConceptQL
       def get_klasses
         {
           gdm: get_gdm_klass,
+          gdm_wide: get_gdm_klass,
           omopv4_plus: get_omopv4_plus_klass
         }.compact
       end
