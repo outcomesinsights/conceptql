@@ -35,7 +35,7 @@ module ConceptQL
             db.run("ANALYZE TABLE `#{opts[:schema]}`.`#{table_name}` COMPUTE STATISTICS FOR ALL COLUMNS")
           end
           if table_opts[:cache]
-            db.run("CACHE TABLE `#{opts[:schema]}`.`#{table_name}` OPTIONS ( 'storageLevel' = 'MEMORY_ONLY' )")
+            db.run("CACHE LAZY TABLE `#{opts[:schema]}`.`#{table_name}` OPTIONS ( 'storageLevel' = 'MEMORY_ONLY' )")
           end
           db.drop_view(table_name, if_exists: true)
         end
