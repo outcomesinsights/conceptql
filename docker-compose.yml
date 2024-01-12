@@ -5,7 +5,7 @@ services:
     depends_on:
     - test_data
     environment:
-    - CONCEPTQL_DATA_MODEL=gdm
+    - CONCEPTQL_DATA_MODEL
     - CONCEPTQL_ENABLE_COMMENTS
     - CONCEPTQL_OVERWRITE_TEST_RESULTS
     - CONCEPTQL_PRINT_SQL
@@ -22,6 +22,6 @@ services:
     volumes:
     - "${PWD}:/home/conceptql"
   test_data:
-    image: outcomesinsights/misc:test_data.hammer
+    image: outcomesinsights/misc:test_data.ignitor
     expose:
       - 5432

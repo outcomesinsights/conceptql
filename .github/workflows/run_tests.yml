@@ -1,27 +1,21 @@
 name: Run Tests
 on: [push]
 jobs:
-  Run-GDM-Tests:
+  Run-PostgreSQL-Tests:
+    strategy:
+      matrix:
+        include:
+          - search_path: public,gdm_vocabs
+            data_model: gdm
+          - search_path: public,ohdsi_vocabs
+            data_model: gdm
+          - search_path: wide,ohdsi_vocabs
+            data_model: gdm_wide
     runs-on: ubuntu-latest
     environment: Test Secrets
     env:
-      SEQUELIZER_SEARCH_PATH: public,gdm_vocabs
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - 
-        name: Log into DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Run Tests
-        run: docker-compose run conceptql
-  Run-OHDSI-Tests:
-    runs-on: ubuntu-latest
-    environment: Test Secrets
-    env:
-      SEQUELIZER_SEARCH_PATH: public,ohdsi_vocabs
+      SEQUELIZER_SEARCH_PATH: ${{ matrix.search_path }}
+      CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -36,12 +30,13 @@ jobs:
   Run-Spark-Tests:
     strategy:
       matrix:
-        vocab: [gdm, ohdsi]
+        vocabs: [ohdsi]
         spark_version: [3.5.0, 3.3.2]
+        data_model: [gdm, gdm_wide]
     runs-on: ubuntu-22.04
     env:
       SPARK_VERSION: ${{ matrix.spark_version }}
-      CONCEPTQL_DATA_MODEL: gdm
+      CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
@@ -76,5 +71,5 @@ jobs:
       - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
       - run: bundle exec ruby test/all.rb
         env:
-          CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocab }}
+          CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocabs }}
           SEQUELIZER_URL: hexspace://localhost:10000/default
