@@ -55,6 +55,10 @@ module ConceptQL
         :id
       end
 
+      def base
+        :gdm
+      end
+
       def table_by_domain(table)
         return nil unless table
         case table

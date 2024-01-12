@@ -80,7 +80,25 @@ class Minitest::Spec
   end
 
   def check_output(test_name, results, statement, has_windows = false)
-    path = "test/results/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name}"
+    path = "test/results/#{CDB.base_data_model}/#{test_name}"
+
+    if CDB.data_model.data_model == :gdm_wide
+      if results.is_a?(Array)
+        if results[0].is_a?(Hash)
+          if results[0][:criterion_table].present?
+            results = results.map do |result|
+              if result[:criterion_table] == "observations"
+                result[:criterion_table] = "clinical_codes"
+              end
+              if result[:uuid].present?
+                result[:uuid] = result[:uuid].gsub(/observations/, "clinical_codes")
+              end
+              result
+            end
+          end
+        end
+      end
+    end
 
     if ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
       save_results(path, results)
@@ -179,7 +197,7 @@ class Minitest::Spec
       end
       avg_time = times.sum/times.length
 
-      path = "test/performance/#{ENV["CONCEPTQL_DATA_MODEL"]}/#{test_name.sub(/\.json\z/, '.csv')}"
+      path = "test/performance/#{CDB.base_data_model}/#{test_name.sub(/\.json\z/, '.csv')}"
       sha1 = `git rev-parse HEAD`.chomp
       adapter = "#{DB.adapter_scheme}/#{DB.database_type}"
 

@@ -4,7 +4,7 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = {:omopv4_plus=>{}, :gdm=>{}}.freeze
+    OPERATORS = {:omopv4_plus=>{}, :gdm=>{}, :gdm_wide=>{}}.freeze
 
     SELECTED_COLUMNS = [:person_id,
                         :criterion_id,
@@ -375,7 +375,11 @@ module ConceptQL
       end
 
       def gdm?
-        data_model == :gdm
+        %i(gdm gdm_wide).include?(data_model)
+      end
+
+      def wide?
+        %i(gdm_wide).include?(data_model)
       end
 
       def dm

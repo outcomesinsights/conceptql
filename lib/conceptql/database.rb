@@ -38,6 +38,10 @@ module ConceptQL
       @data_model ||= DataModel.get(opts[:data_model])
     end
 
+    def base_data_model
+      data_model.base
+    end
+
     class << self
       def db_extensions(db)
         return unless db

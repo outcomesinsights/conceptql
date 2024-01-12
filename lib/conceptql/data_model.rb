@@ -1,5 +1,6 @@
-require_relative "data_model/omopv4_plus"
 require_relative "data_model/gdm"
+require_relative "data_model/gdm_wide"
+require_relative "data_model/omopv4_plus"
 require_relative "rdbms"
 
 module ConceptQL
@@ -11,6 +12,8 @@ module ConceptQL
       case data_model
       when :gdm
         Gdm.new(operator, nodifier)
+      when :gdm_wide
+        GdmWide.new(operator, nodifier)
       when :omopv4_plus
         Omopv4Plus.new(operator, nodifier)
       else

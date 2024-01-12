@@ -113,7 +113,7 @@ module ConceptQL
       end
 
       def query_cols
-        dm.table_columns(:clinical_codes)
+        dm.table_columns(source_table)
       end
 
       def select_all?

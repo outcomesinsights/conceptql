@@ -122,7 +122,7 @@ describe ConceptQL::Operators::Vocabulary do
     it "should use proper case sensitivity for dynamic vocabularies" do
       cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
       lexicon = ConceptQL::Lexicon.new(db)
-      ConceptQL::Operators.stub(:operators, {gdm: {}, omopv4_plus: {}}) do
+      ConceptQL::Operators.stub(:operators, {gdm: {}, omopv4_plus: {}, gdm_wide: {}}) do
         ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
           cdb.stub(:lexicon, lexicon) do
             ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators

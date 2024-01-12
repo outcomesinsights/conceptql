@@ -1,0 +1,690 @@
+---
+:patients:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :gender_concept_id:
+      :type: :Bigint
+      :comment: FK reference to the [concepts](#concepts) table for the unique gender
+        of the patient
+      :foreign_key: concepts
+    :birth_date:
+      :type: Date
+      :comment: Date of birth (yyyy-mm-dd)
+    :race_concept_id:
+      :type: :Bigint
+      :comment: FK reference to the [concepts](#concepts) table for the unique race
+        of the patient
+      :foreign_key: concepts
+    :ethnicity_concept_id:
+      :type: :Bigint
+      :comment: FK reference to the [concepts](#concepts) table for the ethnicity
+        of the patient
+      :foreign_key: concepts
+    :address_id:
+      :type: :Bigint
+      :comment: FK reference to the place of residency for the patient in the location
+        table, where the detailed address information is stored
+      :foreign_key: addresses
+    :practitioner_id:
+      :type: :Bigint
+      :comment: FK reference to the primary care practitioner the patient is seeing
+        in the [practitioners](#practitioners) table
+      :foreign_key: practitioners
+    :patient_id_source_value:
+      :type: String
+      :comment: Originial patient identifier defined in the source data
+      :null: false
+:practitioners:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :practitioner_name:
+      :type: String
+      :comment: Practitioner's name, if available
+    :primary_identifier:
+      :type: String
+      :comment: Primary practitioner identifier
+      :null: false
+    :primary_identifier_type:
+      :type: String
+      :comment: Type of identifier specified in primary identifier field (UPIN, NPI,
+        etc)
+      :null: false
+    :secondary_identifier:
+      :type: String
+      :comment: Secondary practitioner identifier (Optional)
+    :secondary_identifier_type:
+      :type: String
+      :comment: Type of identifier specified in secondary identifier field (UPIN,
+        NPI, etc)
+    :specialty_concept_id:
+      :type: :Bigint
+      :comment: FK reference to an identifier in the [concepts](#concepts) table for
+        specialty
+      :foreign_key: concepts
+    :address_id:
+      :type: :Bigint
+      :comment: FK reference to the address of the location where the practitioner
+        is practicing
+      :foreign_key: addresses
+    :birth_date:
+      :type: Date
+      :comment: Date of birth (yyyy-mm-dd)
+    :gender_concept_id:
+      :type: :Bigint
+      :comment: FK reference to an identifier in the [concepts](#concepts) table for
+        the unique gender of the practitioner
+      :foreign_key: concepts
+:facilities:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :facility_name:
+      :type: String
+      :comment: Facility name, if available
+    :primary_identifier:
+      :type: String
+      :comment: Primary facility identifier
+      :null: false
+    :primary_identifier_type:
+      :type: String
+      :comment: Type of identifier specified in primary identifier field (UPIN, NPI,
+        etc)
+      :null: false
+    :secondary_identifier:
+      :type: String
+      :comment: Secondary facility identifier (Optional)
+    :secondary_identifier_type:
+      :type: String
+      :comment: Type of identifier specified in secondary identifier field (UPIN,
+        NPI, etc)
+    :facility_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the facility
+        type
+      :foreign_key: concepts
+    :specialty_concept_id:
+      :type: :Bigint
+      :comment: A foreign key to an identifier in the [concepts](#concepts) table
+        for specialty
+      :foreign_key: concepts
+    :address_id:
+      :type: :Bigint
+      :comment: A foreign key to the address of the location of the facility
+      :foreign_key: addresses
+:contexts_practitioners:
+  :columns:
+    :context_id:
+      :type: :Bigint
+      :comment: FK reference to [contexts](#contexts) table
+      :foreign_key: contexts
+      :null: false
+    :practitioner_id:
+      :type: :Bigint
+      :comment: FK reference to [practitioners](#practitioners) table
+      :foreign_key: practitioners
+      :null: false
+    :role_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to the [concepts](#concepts) table representing roles
+        [practitioners](#practitioners) can play in an encounter
+      :foreign_key: concepts
+    :specialty_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the practitioner's
+        specialty type for the services/diagnoses associated with this record
+      :foreign_key: concepts
+:observations:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :context_id:
+      :type: :Bigint
+      :comment: FK reference to [contexts](#contexts) table
+      :foreign_key: contexts
+      :null: false
+    :patient_id:
+      :type: :Bigint
+      :comment: FK reference to [patients](#patients) table
+      :foreign_key: patients
+      :null: false
+    :start_date:
+      :type: Date
+      :comment: Start date of record (yyyy-mm-dd)
+      :null: false
+    :end_date:
+      :type: Date
+      :comment: End date of record (yyyy-mm-dd)
+      :null: false
+    :clinical_code_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the code assigned
+        to the record
+      :foreign_key: concepts
+      :null: false
+    :quantity:
+      :type: :Bigint
+      :comment: Quantity, if available (e.g., procedures)
+    :seq_num:
+      :type: Integer
+      :comment: The sequence number for the variable assigned (e.g. dx3 gets sequence
+        number 3)
+    :provenance_concept_id:
+      :type: :Bigint
+      :comment: 'Additional type information (ex: primary, admitting, problem list,
+        etc)'
+      :foreign_key: concepts
+    :clinical_code_source_value:
+      :type: String
+      :comment: Source code from raw data
+      :null: false
+    :clinical_code_vocabulary_id:
+      :type: String
+      :comment: FK reference to the vocabulary the clinical code comes from
+      :foreign_key: vocabularies
+      :null: false
+    :measurement_detail_id:
+      :type: :Bigint
+      :comment: FK reference to [measurement_details](#measurement_details) table
+      :foreign_key: measurement_details
+    :drug_exposure_detail_id:
+      :type: :Bigint
+      :comment: FK reference to [drug_exposure_details](#drug_exposure_details) table
+      :foreign_key: drug_exposure_details
+    :context_start_date:
+      :type: Date
+      :comment: Start date of record (yyyy-mm-dd)
+      :null: false
+    :context_end_date:
+      :type: Date
+      :comment: End date of record (yyyy-mm-dd)
+    :context_facility_id:
+      :type: :Bigint
+      :comment: FK reference to [facilities](#facilities) table
+      :foreign_key: facilities
+    :care_site_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the care
+        site type within the facility
+      :foreign_key: concepts
+    :pos_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the place
+        of service associated with this record
+      :foreign_key: concepts
+    :source_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the file
+        name (e.g MEDPAR). If data represents a subset of a file, concatenate the
+        name of the file used and subset  (e.g MEDPAR_SNF)
+      :foreign_key: concepts
+      :null: false
+    :service_specialty_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the specialty
+        type for the services/diagnoses associated with this record
+      :foreign_key: concepts
+    :record_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the type
+        of [contexts](#contexts) the record represents (line, claim, etc.)
+      :foreign_key: concepts
+      :null: false
+    :collection_start_date:
+      :type: Date
+      :comment: Start date of record (yyyy-mm-dd)
+      :null: false
+    :collection_end_date:
+      :type: Date
+      :comment: End date of record (yyyy-mm-dd)
+      :null: false
+    :duration:
+      :type: Float
+      :comment: Duration of collection. (e.g. hospitalization length of stay)
+    :duration_unit_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the unit
+        of duration (hours, days, weeks etc.)
+    :collection_facility_id:
+      :type: :Bigint
+      :comment: FK reference to [facilities](#facilities) table
+      :foreign_key: facilities
+    :collection_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the type
+        of collection this record represents
+      :foreign_key: concepts
+    :refills:
+      :type: Integer
+      :comment: The number of refills after the initial prescription; the initial
+        prescription is not counted (i.e., values start with 0)
+    :days_supply:
+      :type: Integer
+      :comment: The number of days of supply as recorded in the original prescription
+        or dispensing record
+    :number_per_day:
+      :type: Float
+      :comment: The number of pills taken per day
+    :dose_form_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the form of the drug
+        (capsule, injection, etc.)
+      :foreign_key: concepts
+    :dose_unit_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the units in which
+        the dose_value is expressed
+      :foreign_key: concepts
+    :route_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for route in which drug
+        is given
+      :foreign_key: concepts
+    :dose_value:
+      :type: Float
+      :comment: Numeric value for the dose of the drug
+    :strength_source_value:
+      :type: String
+      :comment: Drug strength as reported in the raw data. This can include both dose
+        value and units
+    :ingredient_source_value:
+      :type: String
+      :comment: Ingredient/Generic name of drug as reported in the raw data
+    :drug_name_source_value:
+      :type: String
+      :comment: Product/Brand name of drug as reported in the raw data
+    :admit_admission_date:
+      :type: Date
+      :comment: Date of admission (yyyy-mm-dd)
+      :null: false
+    :admit_discharge_date:
+      :type: Date
+      :comment: Date of discharge (yyyy-mm-dd)
+      :null: false
+    :admit_source_concept_id:
+      :type: :Bigint
+      :comment: Database specific code indicating source of admission (e.g., ER visit,
+        transfer, etc.)
+    :discharge_location_concept_id:
+      :type: :Bigint
+      :comment: Database specific code indicating discharge location (e.g., death,
+        home, transfer, long-term care, etc.)
+    :admission_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the type
+        of admission the record is (Emergency, Elective, etc.)
+      :foreign_key: concepts
+    :result_as_number:
+      :type: Float
+      :comment: The observation result stored as a number, applicable to observations
+        where the result is expressed as a numeric value
+    :result_as_string:
+      :type: String
+      :comment: The observation result stored as a string, applicable to observations
+        where the result is expressed as verbatim text
+    :result_as_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the result associated
+        with the detail_concept_id (e.g., positive/negative, present/absent, low/high,
+        etc.)
+      :foreign_key: concepts
+    :result_modifier_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for result modifier (=,
+        <, >, etc.)
+      :foreign_key: concepts
+    :unit_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the measurement units
+        (e.g., mmol/L, mg/dL, etc.)
+      :foreign_key: concepts
+    :normal_range_low:
+      :type: Float
+      :comment: Lower bound of the normal reference range assigned by the laboratory
+    :normal_range_high:
+      :type: Float
+      :comment: Upper bound of the normal reference range assigned by the laboratory
+    :normal_range_low_modifier_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for result modifier (=,
+        <, >, etc.)
+      :foreign_key: concepts
+    :normal_range_high_modifier_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for result modifier (=,
+        <, >, etc.)
+      :foreign_key: concepts
+:payer_reimbursements:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+    :context_id:
+      :type: :Bigint
+      :comment: FK reference to context table
+      :foreign_key: contexts
+      :null: false
+    :patient_id:
+      :type: :Bigint
+      :comment: FK to reference to [patients](#patients) table
+      :foreign_key: patients
+      :null: false
+    :clinical_code_id:
+      :type: :Bigint
+      :comment: FK reference to [clinical_codes](#clinical_codes) table to be used
+        if a specific code is the direct cause for the reimbursement
+      :foreign_key: clinical_codes
+    :currency_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the 3-letter code
+        used to delineate international currencies (e.g., USD = US Dollar)
+      :foreign_key: concepts
+      :null: false
+    :total_charged:
+      :type: Float
+      :comment: The total amount charged by the provider of the good/service (e.g.
+        hospital, physician pharmacy, dme provider) billed to a payer. This information
+        is usually provided in claims data.
+    :total_paid:
+      :type: Float
+      :comment: 'The total amount paid from all payers for the expenses of the service/device/drug.
+        This field is calculated using the following formula: paid_by_payer + paid_by_patient
+        + paid_by_primary. In claims data, this field is considered the calculated
+        field the payer expects the provider to get reimbursed for the service/device/drug
+        from the payer and from the patient, based on the payer''s contractual obligations.'
+    :paid_by_payer:
+      :type: Float
+      :comment: 'The amount paid by the Payer for the service/device/drug. In claims
+        data, generally there is one field representing the total payment from the
+        payer for the service/device/drug. However, this field could be a calculated
+        field if the source data provides separate payment information for the ingredient
+        cost and the dispensing fee. If the paid_ingredient_cost or paid_dispensing_fee
+        fields are populated with nonzero values, the paid_by_payer field is calculated
+        using the following formula: paid_ingredient_cost + paid_dispensing_fee. If
+        there is more than one Payer in the source data, several cost records indicate
+        that fact. The Payer reporting this reimbursement should be indicated under
+        the payer_plan_id field.'
+    :paid_by_patient:
+      :type: Float
+      :comment: 'The total amount paid by the patient as a share of the expenses.
+        This field is most often used in claims data to report the contracted amount
+        the patient is responsible for reimbursing the provider for said service/device/drug.
+        This is a calculated field using the following formula: paid_patient_copay
+        + paid_patient_coinsurance + paid_patient_deductible. If the source data has
+        actual patient payments (e.g. the patient payment is not a derivative of the
+        payer claim and there is verification the patient paid an amount to the provider),
+        then the patient payment should have it''s own cost record with a payer_plan_id
+        set to 0 to indicate the payer is actually the patient, and the actual patient
+        payment should be noted under the total_paid field. The paid_by_patient field
+        is only used for reporting a patient''s responsibility reported on an insurance
+        claim.'
+    :paid_patient_copay:
+      :type: Float
+      :comment: The amount paid by the patient as a fixed contribution to the expenses.
+        paid_patient_copay does contribute to the paid_by_patient variable. The paid_patient_copay
+        field is only used for reporting a patient's copay amount reported on an insurance
+        claim.
+    :paid_patient_coinsurance:
+      :type: Float
+      :comment: The amount paid by the patient as a joint assumption of risk. Typically,
+        this is a percentage of the expenses defined by the Payer Plan after the patient's
+        deductible is exceeded. paid_patient_coinsurance does contribute to the paid_by_patient
+        variable. The paid_patient_coinsurance field is only used for reporting a
+        patient's coinsurance amount reported on an insurance claim.
+    :paid_patient_deductible:
+      :type: Float
+      :comment: The amount paid by the patient that is counted toward the deductible
+        defined by the Payer Plan. paid_patient_deductible does contribute to the
+        paid_by_patient variable. The paid_patient_deductible field is only used for
+        reporting a patient's deductible amount reported on an insurance claim.
+    :paid_by_primary:
+      :type: Float
+      :comment: The amount paid by a primary Payer through the coordination of benefits.
+        paid_by_primary does contribute to the total_paid variable. The paid_by_primary
+        field is only used for reporting a patient's primary insurance payment amount
+        reported on the secondary payer insurance claim. If the source data has actual
+        primary insurance payments (e.g. the primary insurance payment is not a derivative
+        of the payer claim and there is verification another insurance company paid
+        an amount to the provider), then the primary insurance payment should have
+        it's own cost record with a payer_plan_id set to the applicable payer, and
+        the actual primary insurance payment should be noted under the paid_by_payer
+        field.
+    :paid_ingredient_cost:
+      :type: Float
+      :comment: The amount paid by the Payer to a pharmacy for the drug, excluding
+        the amount paid for dispensing the drug. paid_ingredient_cost contributes
+        to the paid_by_payer field if this field is populated with a nonzero value.
+    :paid_dispensing_fee:
+      :type: Float
+      :comment: The amount paid by the Payer to a pharmacy for dispensing a drug,
+        excluding the amount paid for the drug ingredient. paid_dispensing_fee contributes
+        to the paid_by_payer field if this field is populated with a nonzero value.
+    :information_period_id:
+      :type: :Bigint
+      :comment: FK reference to the [information_periods](#information_periods) table
+    :amount_allowed:
+      :type: Float
+      :comment: 'The contracted amount agreed between the payer and provider. This
+        information is generally available in claims data. This is similar to the
+        total_paid amount in that it shows what the payer expects the provider to
+        be reimbursed after the payer and patient pay. This differs from the total_paid
+        amount in that it is not a calculated field, but a field available directly
+        in claims data. Use case: This will capture non-covered services. Non-covered
+        services are indicated by an amount allowed and patient responsibility variables
+        (copay, coinsurance, deductible) will be equal $0 in the source data. This
+        means the patient is responsible for the total_charged value. The amount_allowed
+        field is payer specific and the payer should be indicated by the payer_plan_id
+        field.'
+:costs:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :context_id:
+      :type: :Bigint
+      :comment: FK reference to context table
+      :foreign_key: contexts
+      :null: false
+    :patient_id:
+      :type: :Bigint
+      :comment: FK reference to [patients](#patients) table
+      :foreign_key: patients
+      :null: false
+    :clinical_code_id:
+      :type: :Bigint
+      :comment: FK reference to [clinical_codes](#clinical_codes) table to be used
+        if a specific code is the direct cause for the reimbursement
+      :foreign_key: clinical_codes
+    :currency_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the 3-letter code
+        used to delineate international currencies (e.g., USD = US Dollar)
+      :foreign_key: concepts
+      :null: false
+    :cost_base:
+      :type: String
+      :comment: Defines the basis for the cost in the table (e.g., 2013 for a specific
+        cost-to-charge ratio, or a specific cost from an external cost
+      :null: false
+    :value:
+      :type: Float
+      :comment: Cost value
+      :null: false
+    :value_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table to concept that defines
+        the type of economic information in the value field (e.g., cost-to-charge
+        ratio, calculated cost, reported cost)
+      :foreign_key: concepts
+      :null: false
+:addresses:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :address_1:
+      :type: String
+      :comment: Typically used for street address
+    :address_2:
+      :type: String
+      :comment: Typically used for additional detail such as building, suite, floor,
+        etc.
+    :city:
+      :type: String
+      :comment: The city field as it appears in the source data
+    :state:
+      :type: String
+      :comment: The state field as it appears in the source data
+    :zip:
+      :type: String
+      :comment: The zip or postal code
+    :county:
+      :type: String
+      :comment: The county, if available
+    :census_tract:
+      :type: String
+      :comment: The census tract if available
+    :hsa:
+      :type: String
+      :comment: The Health Service Area, if available (originally defined by the National
+        Center for Health Statistics)
+    :country:
+      :type: String
+      :comment: The country if necessary
+:deaths:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :patient_id:
+      :type: :Bigint
+      :comment: FK reference to [patients](#patients) table
+      :foreign_key: patients
+      :null: false
+    :date:
+      :type: Date
+      :comment: Date of death (yyyy-mm-dd)
+      :null: false
+    :cause_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for cause of death (typically
+        ICD-9 or ICD-10 code)
+      :foreign_key: concepts
+    :cause_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the type of cause
+        of death (e.g. primary, secondary, etc. )
+      :foreign_key: concepts
+    :practitioner_id:
+      :type: :Bigint
+      :comment: FK reference to [practitioners](#practitioners) table
+      :foreign_key: practitioners
+:information_periods:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record
+      :null: false
+    :patient_id:
+      :type: :Bigint
+      :comment: FK reference to [patients](#patients) table
+      :foreign_key: patients
+      :null: false
+    :start_date:
+      :type: Date
+      :comment: Start date of record (yyyy-mm-dd)
+      :null: false
+    :end_date:
+      :type: Date
+      :comment: End date of record (yyyy-mm-dd)
+      :null: false
+    :information_type_concept_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table representing the information
+        type (e.g., insurance coverage, hospital data, up-to-standard date)
+      :foreign_key: concepts
+      :null: false
+:concepts:
+  :columns:
+    :id:
+      :type: :Bigint
+      :primary_key: true
+      :comment: Surrogate key for record (this is the concept_id)
+      :null: false
+    :vocabulary_id:
+      :type: String
+      :comment: FK reference to the vocabularies table for the vocabulary associated
+        with the concept (see OMOP or UMLS)
+      :foreign_key: vocabularies
+      :null: false
+    :concept_code:
+      :type: String
+      :comment: Actual code as text string from the source vocabulary (e.g., "410.00"
+        for ICD-9)
+      :null: false
+    :concept_text:
+      :type: String
+      :comment: Text descriptor associated with the concept_code
+      :null: false
+:vocabularies:
+  :columns:
+    :id:
+      :type: String
+      :primary_key: true
+      :comment: Short name of the vocabulary which acts as a natural key for record
+      :null: false
+    :omopv4_vocabulary_id:
+      :type: Integer
+      :comment: Old ID used in OMOPv4
+      :null: false
+    :vocabulary_name:
+      :type: String
+      :comment: Full name of the vocabulary
+      :null: false
+    :domain:
+      :type: String
+      :comment: Domain to which the majority of the vocabulary is assigned
+    :concepts_count:
+      :type: Integer
+      :comment: Number of row in the [concepts](#concepts) table assigned to this
+        vocabulary
+    :is_clinical_vocabulary:
+      :type: TrueClass
+      :comment: Are concepts from this vocabulary stored in [clinical_codes](#clinical_codes)?
+:mappings:
+  :columns:
+    :concept_1_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the source concept
+      :foreign_key: concepts
+      :null: false
+    :relationship_id:
+      :type: String
+      :comment: The type or nature of the relationship (e.g., "is_a")
+      :null: false
+    :concept_2_id:
+      :type: :Bigint
+      :comment: FK reference to [concepts](#concepts) table for the destination concept
+      :foreign_key: concepts
+      :null: false
