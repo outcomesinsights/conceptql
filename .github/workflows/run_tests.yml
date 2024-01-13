@@ -31,6 +31,7 @@ jobs:
     strategy:
       matrix:
         spark_version: [3.5.0, 3.3.2]
+        vocabs: [ohdsi, ohdsi_wide]
         include:
           - vocabs: ohdsi
             data_model: gdm

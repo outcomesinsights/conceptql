@@ -24,6 +24,6 @@ services:
   test_data:
     image: outcomesinsights/misc:test_data.ignitor
     command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c work_mem=4GB -c shared_buffers=6GB -c effective_cache_size=6GB
-    shm_size: 4g
+    shm_size: 6g
     expose:
       - 5432
