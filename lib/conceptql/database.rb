@@ -1,12 +1,11 @@
 require_relative "lexicon"
-require_relative "spark_prepper"
 
 module ConceptQL
   class Database
     attr :db, :opts
     @lexicon_mutex = Mutex.new
 
-    EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove, :null_dataset, :sql_comments, :pg_ctas_explain, :pg_vacuum_table]
+    EXTENSIONS = [:date_arithmetic, :error_sql, :select_remove, :null_dataset, :sql_comments, :pg_ctas_explain, :pg_vacuum_table, :usable, :make_readyable]
 
     def initialize(db, opts={})
       @db = db

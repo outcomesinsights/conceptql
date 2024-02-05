@@ -4,3 +4,4 @@ source 'https://rubygems.org'
 gemspec
 gem "pg"
 gem "sequel-hexspace", github: "outcomesinsights/sequel-hexspace"
+gem "sequelizer", github: "outcomesinsights/sequelizer", branch: "ignitor"

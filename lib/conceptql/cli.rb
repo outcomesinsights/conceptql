@@ -149,7 +149,12 @@ module ConceptQL
     end
 
     def cdb(options)
-      ConceptQL::Database.new(db(options))
+      _db = db(options)
+      cdb = ConceptQL::Database.new(_db)
+      if ENV["CONCEPTQL_PARQUET_TEST_DIR"]
+        _db.make_ready(search_paths: Pathname.new(ENV["CONCEPTQL_PARQUET_TEST_DIR"].glob("*.parquet")))
+      end
+      cdb
     end
   end
 end
