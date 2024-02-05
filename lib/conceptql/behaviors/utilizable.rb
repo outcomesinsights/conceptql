@@ -39,20 +39,7 @@ module ConceptQL
         #condition_vocabularies = dm.vocabularies_query.where(domain: 'condition_occurrence').select_map(:id)
 
         if wide?
-          return db[:observations]
-            .where({
-              provenance_concept_id: all_primary_ids,
-              source_type_concept_id: all_source_type_ids
-            })
-            .left_join(dm.concepts_table(db), { Sequel[:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
-            .left_join(dm.concepts_table(db), { Sequel[:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
-            .select_append(
-              Sequel[:asc][:concept_code].as(:admission_source_value),
-              Sequel[:asc][:concept_text].as(:admission_source_description),
-              Sequel[:dlc][:concept_code].as(:discharge_location_source_value),
-              Sequel[:dlc][:concept_text].as(:discharge_location_source_description)
-            )
-            .from_self
+          return gdm_wide_it(db, all_primary_ids, all_source_type_ids)
         end
 
         # Get primary diagnosis codes
@@ -68,6 +55,44 @@ module ConceptQL
           .left_join(dm.concepts_table(db), { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
           .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[:cl][:id] }, table_alias: :pcon)
           .where(Sequel[:cl][:id] => relevant_contexts)
+      end
+
+      def gdm_wide_it(db, all_primary_ids, all_source_type_ids)
+        # TODO: Reinstate the original, less clunky version of this change once we stop
+        # supporting Spark 3.3.x
+        primary_cases = {}
+        all_primary_ids.each do |primary_id|
+          primary_cases[Sequel[:provenance_concept_id] => primary_id] = 1
+        end
+
+        is_primary = Sequel.case(primary_cases, 0)
+
+        db[:observations]
+          .where({
+            source_type_concept_id: all_source_type_ids
+          })
+          .select_append(
+            is_primary.as(:is_primary)
+          )
+          .from_self
+          .select_append(Sequel[:ROW_NUMBER].function.over(
+            partition: :collection_id, 
+            order: [Sequel[:collection_id], Sequel[:is_primary].desc, Sequel[:clinical_code_concept_id]]
+          ).as(:nummy))
+          .from_self
+          .where(nummy: 1)
+          .from_self
+          .left_join(dm.concepts_table(db), { Sequel[:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
+          .left_join(dm.concepts_table(db), { Sequel[:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
+          .select_append(
+            Sequel[:asc][:concept_code].as(:admission_source_value),
+            Sequel[:asc][:concept_text].as(:admission_source_description),
+            Sequel[:dlc][:concept_code].as(:discharge_location_source_value),
+            Sequel[:dlc][:concept_text].as(:discharge_location_source_description),
+            Sequel.case({ 1 => :clinical_code_source_value }, nil, :is_primary).as(:source_value),
+            Sequel.case({ 1 => :clinical_code_vocabulary_id }, nil, :is_primary).as(:source_vocabulary_id)
+          )
+          .from_self
       end
 
       def table
@@ -86,7 +111,13 @@ module ConceptQL
               discharge_location_source_value: Sequel[:discharge_location_source_value],
               discharge_location_source_description: Sequel[:discharge_location_source_description],
               admission_date: Sequel[:admission_date],
-              discharge_date: Sequel[:discharge_date]
+              discharge_date: Sequel[:discharge_date],
+              person_id: Sequel[:patient_id].as(:person_id),
+              criterion_id: Sequel[:collection_id].as(:criterion_id),
+              start_date: Sequel[:collection_start_date].as(:start_date),
+              end_date: Sequel[:collection_end_date].as(:end_date),
+              source_value: Sequel[:source_value].as(:source_value),
+              source_vocabulary_id: Sequel[:source_vocabulary_id].as(:source_vocabulary_id)
             }
           else
             {
