@@ -57,7 +57,9 @@ module ConceptQL
           ds = ds.with(name, query)
         end
         if name
-          ds = ds.with(name, shared_context_ids)
+          opts = {}
+          opts[:materialized] = true if rdbms.supports_materialized?
+          ds = ds.with(name, shared_context_ids, opts)
         end
 
         ds
