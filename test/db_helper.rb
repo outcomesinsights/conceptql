@@ -1,6 +1,5 @@
 require_relative "helper"
 require_relative "db"
-require "conceptql/spark_prepper"
 
 require "logger"
 require "pp"
@@ -10,7 +9,7 @@ CDB = ConceptQL::Database.new(DB, :data_model=>(ENV["CONCEPTQL_DATA_MODEL"] || C
 DB.extension :error_sql
 
 if DB.database_type.to_sym == :spark && ENV["CONCEPTQL_PARQUET_TEST_DIR"].present?
-  ConceptQL::SparkPrepper.new(DB, ENV["CONCEPTQL_PARQUET_TEST_DIR"]).prep
+  DB.make_ready(search_path: Pathname.new(ENV["CONCEPTQL_PARQUET_TEST_DIR"]).glob("*.parquet"))
 end
 
 PRINT_CONCEPTQL = ENV["CONCEPTQL_PRINT_SQL"]
