@@ -9,8 +9,8 @@ describe ConceptQL::Operators::MultipleVocabularies do
   it "should produce correct SQL under gdm" do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
     sql = _(db.query(["cpt_or_hcpcs", "99214"]).sql)
-    sql.must_match /"vocabulary_id" = 'HCPCS'/
-    sql.must_match /"vocabulary_id" = 'CPT4'/
+    sql.must_match /"clinical_code_vocabulary_id" = 'HCPCS'/
+    sql.must_match /"clinical_code_vocabulary_id" = 'CPT4'/
   end
 
   it "should produce correct SQL under omopv4_plus" do
