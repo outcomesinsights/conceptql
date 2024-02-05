@@ -34,6 +34,24 @@ class Minitest::Spec
     load_check(test_name, statement) do |stmt, remove_window|
       ds = dataset(query(stmt)).from_self
 
+      if CDB.data_model.data_model == :gdm_wide
+        cols = ds.columns
+        if (cols.include?(:criterion_table))
+          ds = ds.select(*(cols - [:criterion_table]))
+            .select_append(Sequel.case({ 'observations' => 'clinical_codes' }, :criterion_table, :criterion_table).as(:criterion_table))
+            .from_self
+            .select(*cols) # Preserve the original column order
+            .from_self
+        end
+        if (cols.include?(:uuid))
+          ds = ds.select(*(cols - [:uuid]))
+            .select_append(Sequel.function(:regexp_replace, :uuid, 'observations', 'clinical_codes').as(:uuid))
+            .from_self
+            .select(*cols) # Preserve the original column order
+            .from_self
+        end
+      end
+
       order_columns = [:person_id, :criterion_table, :criterion_domain, :start_date, :criterion_id]
       order_columns << :uuid if ds.columns.include?(:uuid)
       order_columns << :window_id if ds.columns.include?(:window_id)
@@ -81,24 +99,6 @@ class Minitest::Spec
 
   def check_output(test_name, results, statement, has_windows = false)
     path = "test/results/#{CDB.base_data_model}/#{test_name}"
-
-    if CDB.data_model.data_model == :gdm_wide
-      if results.is_a?(Array)
-        if results[0].is_a?(Hash)
-          if results[0][:criterion_table].present?
-            results = results.map do |result|
-              if result[:criterion_table] == "observations"
-                result[:criterion_table] = "clinical_codes"
-              end
-              if result[:uuid].present?
-                result[:uuid] = result[:uuid].gsub(/observations/, "clinical_codes")
-              end
-              result
-            end
-          end
-        end
-      end
-    end
 
     if ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
       save_results(path, results)
@@ -158,10 +158,6 @@ class Minitest::Spec
   PERFORMANCE_TEST_TIMES = ENV["CONCEPTQL_PERFORMANCE_TEST_TIMES"].to_i
   SKIP_SQL_GENERATION_TEST = ENV["CONCEPTQL_SKIP_SQL_GENERATION_TEST"]
   def load_check(test_name, statement)
-    if test_name =~ /requires_lexicon/i && ENV["LEXICON_URL"].nil?
-      skip
-      return
-    end
     statement = load_statement(test_name, statement)
 
     # Check without scope windows
