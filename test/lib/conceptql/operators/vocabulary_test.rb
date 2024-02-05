@@ -37,9 +37,7 @@ describe ConceptQL::Operators::Vocabulary do
 
     it "should produce correct SQL" do
       cql_sql = cdb.query(["admsrce", "12"]).sql
-      assert_match(/lower\("concept_code"\) IN \('12'\)/, cql_sql)
-      assert_match(/"vocabulary_id" = 'ADMSRCE'/, cql_sql)
-      assert_match(/"clinical_code_concept_id" IN \(SELECT/, cql_sql)
+      assert_match(/"clinical_code_vocabulary_id" = 'ADMSRCE'/, cql_sql)
     end
 
     it "should produce correct SQL for select all" do
