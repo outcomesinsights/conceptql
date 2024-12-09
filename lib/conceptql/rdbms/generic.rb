@@ -4,20 +4,16 @@ module ConceptQL
       def process(column, value = nil)
         type = Scope::COLUMN_TYPES.fetch(column)
         new_column = case type
-        when String, :String
-          Sequel.cast_string(value)
-        when Date, :Date
-          cast_date(value)
-        when Float, :Bigint, :Float
-          Sequel.cast_numeric(value, type)
-        else
-          raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
-        end
+                     when String, :String
+                       Sequel.cast_string(value)
+                     when Date, :Date
+                       cast_date(value)
+                     when Float, :Bigint, :Float
+                       Sequel.cast_numeric(value, type)
+                     else
+                       raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
+                     end
         new_column.as(column)
-      end
-
-      def preferred_formatter
-        nil
       end
 
       def semi_join(ds, table, *exprs)
@@ -27,8 +23,7 @@ module ConceptQL
         ds.from_self(alias: :l).where(ds.db[table.as(:r)]
           .select(1)
           .where(expr)
-          .exists
-        ).from_self
+          .exists).from_self
       end
 
       def cast_date(date)
@@ -42,7 +37,7 @@ module ConceptQL
       #
       # So, by default, return the name of the column and in the Impala adapter
       # we'll return something funky to trick Impala into allowing a constant
-      def partition_fix(column, qualifier=nil)
+      def partition_fix(column, qualifier = nil)
         column
       end
 
@@ -55,15 +50,43 @@ module ConceptQL
       end
 
       def uuid_items
-        %w(person_id criterion_id criterion_table start_date end_date).map do |column|
+        %w[person_id criterion_id criterion_table start_date end_date].map do |column|
           Sequel.cast_string(column.to_sym)
         end
+      end
+
+      def preferred_formatter
+        SqlFormatters::SqlFormatter
+      end
+
+      def datediff(db, from, to)
+        Sequel.function(:datediff, from, to)
+      end
+
+      def analyze_temp_tables?
+        false
+      end
+
+      def explain_temp_tables?
+        false
       end
 
       def supports_materialized?
         false
       end
+
+      def create_options(scope, ds)
+        opts = {}
+        opts[:analyze] = opts[:explain] = explain_temp_tables?
+        opts
+      end
+
+      def drop_options
+        {}
+      end
+
+      def post_create(db, table_name)
+      end
     end
   end
 end
-

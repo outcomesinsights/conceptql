@@ -1,5 +1,6 @@
-require_relative "rdbms/postgres"
-require_relative "rdbms/spark"
+require_relative 'rdbms/postgres'
+require_relative 'rdbms/presto'
+require_relative 'rdbms/spark'
 
 module ConceptQL
   module Rdbms
@@ -7,6 +8,8 @@ module ConceptQL
       case database_type.to_sym
       when :postgres
         ConceptQL::Rdbms::Postgres.new
+      when :presto
+        ConceptQL::Rdbms::Presto.new
       when :spark
         ConceptQL::Rdbms::Spark.new
       else
