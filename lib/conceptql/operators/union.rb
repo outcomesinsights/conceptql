@@ -21,7 +21,7 @@ module ConceptQL
 
             table = combos.first.criterion_table
             ds = db[table]
-                  .where(criteria)
+                 .where(criteria)
             combos.first.select_it(ds, specific_table: table, domain: domain, uuid: include_uuid)
           end
         end
@@ -29,7 +29,7 @@ module ConceptQL
 
       desc 'Combines sets of incoming records into a single large set of records.'
       allows_many_upstreams
-      category "Combine Streams"
+      category 'Combine Streams'
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments
@@ -43,7 +43,7 @@ module ConceptQL
 
         queries += Combiner.new(combinables).queries(db)
 
-        queries.map!{|ds| ds.from_self.select(*query_cols).from_self}
+        queries.map! { |ds| ds.from_self.select(*query_cols).from_self }
         queries.inject do |q, query|
           q.union(query, all: true)
         end

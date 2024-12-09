@@ -1,8 +1,8 @@
-require "active_support/core_ext/object/blank"
-require "csv"
-require "sequelizer"
-require_relative "entry"
-require_relative "../database"
+require 'active_support/core_ext/object/blank'
+require 'csv'
+require 'sequelizer'
+require_relative 'entry'
+require_relative '../database'
 
 module ConceptQL
   module Vocabularies
@@ -37,9 +37,12 @@ module ConceptQL
       end
 
       def get_all_vocabs
-        vocabs = [ConceptQL.vocabularies_file_path, ConceptQL.custom_vocabularies_file_path].select(&:exist?).map do |path|
-          CSV.foreach(path, headers: true, header_converters: :symbol).to_a
-        end.inject(:+).each { |v| v[:from_csv] = true }
+        vocabs = [ConceptQL.vocabularies_file_path,
+                  ConceptQL.custom_vocabularies_file_path].select(&:exist?).map do |path|
+                   CSV.foreach(path, headers: true, header_converters: :symbol).to_a
+                 end.inject(:+).each do |v|
+          v[:from_csv] = true
+        end
 
         lexicon_vocabularies + vocabs
       end

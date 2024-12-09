@@ -1,9 +1,8 @@
-require_relative "base"
+require_relative 'base'
 
 module ConceptQL
   module DataModel
     class Gdm < Base
-
       def query_modifier_for(column)
         {
           visit_source_concept_id: ConceptQL::QueryModifiers::Gdm::PoSQueryModifier,
@@ -12,7 +11,7 @@ module ConceptQL
           drug_name: ConceptQL::QueryModifiers::Gdm::DrugQueryModifier,
           admission_date: ConceptQL::QueryModifiers::Gdm::AdmissionDateQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::Gdm::ProvenanceQueryModifier,
-          value_as_number: ConceptQL::QueryModifiers::Gdm::LabQueryModifier,
+          value_as_number: ConceptQL::QueryModifiers::Gdm::LabQueryModifier
         }[column]
       end
 
@@ -22,6 +21,7 @@ module ConceptQL
 
       def person_id(table = nil)
         return :id if table == :patients
+
         :patient_id
       end
 
@@ -39,6 +39,7 @@ module ConceptQL
 
       def table_id(table = nil)
         return :criterion_id if table.nil?
+
         Sequel.expr(make_table_id(table)).as(:criterion_id)
       end
 
@@ -48,7 +49,7 @@ module ConceptQL
 
       def fk_by_domain(domain)
         table = table_by_domain(domain)
-        (table.to_s.gsub(/_id/, "").chomp("s") + "_id").to_sym
+        (table.to_s.gsub(/_id/, '').chomp('s') + '_id').to_sym
       end
 
       def pk_by_domain(domain)
@@ -61,6 +62,7 @@ module ConceptQL
 
       def table_by_domain(table)
         return nil unless table
+
         case table
         when :person, :patients
           :patients
@@ -88,10 +90,10 @@ module ConceptQL
 
       def person_id_column(table)
         col = if table.to_sym == :patients
-          :id
-        else
-          :patient_id
-        end
+                :id
+              else
+                :patient_id
+              end
         Sequel.identifier(col).as(:person_id)
       end
 
@@ -117,8 +119,9 @@ module ConceptQL
 
       def source_vocabulary_ids
         @source_vocabulary_ids = assign_column_to_table do |table, columns|
-          next if %w(patients death).any? { |tn| table.to_s =~ /#{tn}/ }
-          reggy = /#{table.to_s.split("_").first}_vocabulary_id/
+          next if %w[patients death].any? { |tn| table.to_s =~ /#{tn}/ }
+
+          reggy = /#{table.to_s.split('_').first}_vocabulary_id/
           column = columns.select { |k| k =~ reggy }.first
           column ||= columns.select { |k| k =~ /_vocabulary_id/ }.first
         end
@@ -127,7 +130,7 @@ module ConceptQL
       def concepts(db, vocabulary_id, codes = [])
         ds = concepts_table(db)
 
-        ds = ds.where(vocabulary_id: vocabulary_id) unless vocabulary_id == "*"
+        ds = ds.where(vocabulary_id: vocabulary_id) unless vocabulary_id == '*'
         ds = ds.where(Sequel.function(:lower, :concept_code) => Array(codes).map(&:downcase)) unless codes.blank?
 
         ds
@@ -136,17 +139,15 @@ module ConceptQL
       def concepts_by_name(db, names = [])
         ds = concepts_table(db)
 
-        ds = ds.where(Sequel.function(:lower, :concept_text) => Array(names).map(&:downcase))
-
-        ds
+        ds.where(Sequel.function(:lower, :concept_text) => Array(names).map(&:downcase))
       end
 
       def descendants_of(db, concept_ids_or_ds)
         where_values = Array(concept_ids_or_ds).flatten.dup
 
         descendants = ancestors_table(db)
-          .where(ancestor_id: where_values)
-          .select(:descendant_id)
+                      .where(ancestor_id: where_values)
+                      .select(:descendant_id)
 
         unless where_values.empty?
           union_clause = db.values(where_values.map { |v| [v] })
@@ -170,9 +171,9 @@ module ConceptQL
 
       def is_a_relationships(some_db)
         if some_db.table_exists?(:concept_relationship)
-          concept_relationship_to_mappings(some_db).where{Sequel.function(:lower, :relationship_id) =~ 'is a'}
+          concept_relationship_to_mappings(some_db).where { Sequel.function(:lower, :relationship_id) =~ 'is a' }
         else
-          some_db[:mappings].where{Sequel.function(:lower, :relationship_id) =~ 'is_a'}
+          some_db[:mappings].where { Sequel.function(:lower, :relationship_id) =~ 'is_a' }
         end
       end
 
@@ -207,9 +208,7 @@ module ConceptQL
       def concept_to_concepts_table(some_db, some_schema = nil)
         table_name = :concept
 
-        if some_schema
-          table_name = Sequel.qualify(some_schema, table_name)
-        end
+        table_name = Sequel.qualify(some_schema, table_name) if some_schema
 
         some_db[table_name].select(
           Sequel[:concept_id].as(:id),
@@ -222,9 +221,7 @@ module ConceptQL
       def concepts_to_concepts_table(some_db, some_schema = nil)
         table_name = :concepts
 
-        if some_schema
-          table_name = Sequel.qualify(some_schema, table_name)
-        end
+        table_name = Sequel.qualify(some_schema, table_name) if some_schema
 
         some_db[table_name]
       end
@@ -248,16 +245,16 @@ module ConceptQL
       def known_codes(db, vocabulary_id, codes)
         return codes if db_is_mock?(db)
         return codes if vocabulary_is_empty?(db, vocabulary_id)
+
         concepts_ds(db, vocabulary_id, codes).select_map(:concept_code)
       rescue Sequel::DatabaseError
         []
       end
 
       def concepts_to_codes(db, vocabulary_id, codes = [])
-        if db.nil? || table_is_missing?(db)
-          return codes.map { |code| [code, nil]}
-        end
-        concepts(db, vocabulary_id, codes).select_map([:concept_code, :concept_text])
+        return codes.map { |code| [code, nil] } if db.nil? || table_is_missing?(db)
+
+        concepts(db, vocabulary_id, codes).select_map(%i[concept_code concept_text])
       end
 
       def vocabulary_is_empty?(db, vocabulary_id)
@@ -273,15 +270,16 @@ module ConceptQL
 
       def information_period_where_clause(arguments)
         return if arguments.empty?
+
         { information_type_concept_id: arguments.map(&:to_i) }
       end
 
       def file_provenance_types_vocab
-        ["JIGSAW_FILE_PROVENANCE_TYPE", "JS_FILE_PROV_TYPE"]
+        %w[JIGSAW_FILE_PROVENANCE_TYPE JS_FILE_PROV_TYPE]
       end
 
       def code_provenance_types_vocab
-        ["JIGSAW_CODE_PROVENANCE_TYPE", "JS_CODE_PROV_TYPE"]
+        %w[JIGSAW_CODE_PROVENANCE_TYPE JS_CODE_PROV_TYPE]
       end
     end
   end

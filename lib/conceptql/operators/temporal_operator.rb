@@ -9,26 +9,28 @@ module ConceptQL
     # a Sequel expression to use for filtering.
     class TemporalOperator < BinaryOperatorOperator
       reset_categories
-      category "Filter by Comparing"
+      category 'Filter by Comparing'
       default_query_columns
 
-      option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :within, type: :string,
+                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
 
       validate_option DateAdjuster::VALID_INPUT, :within, :at_least
 
       class << self
         def allows_at_least_option
-          option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+          option :at_least, type: :string,
+                            instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
         end
       end
 
       def self.within_skip(type)
-        define_method(:"within_check_#{type}?"){false}
+        define_method(:"within_check_#{type}?") { false }
       end
 
       def query(db)
         right_stream = apply_selectors(right_stream_query(db), function: rhs_function).from_self(alias: :r)
-        ds = semi_or_inner_join(left_stream(db), right_stream, *[*join_columns, where_clause])
+        ds = semi_or_inner_join(left_stream(db), right_stream, *join_columns, where_clause)
 
         ds = apply_selectors(ds, qualifier: :r)
 
@@ -54,12 +56,14 @@ module ConceptQL
       def within_option
         return unless v = options[:within]
         return if v.strip.empty?
+
         v
       end
 
       def at_least_option
         return unless v = options[:at_least]
         return if v.strip.empty?
+
         v
       end
 
@@ -73,17 +77,13 @@ module ConceptQL
 
       def within_start
         within_start = within_source_table[:start_date]
-        if within_option
-          within_start = adjust_date(within_option, within_start, true)
-        end
+        within_start = adjust_date(within_option, within_start, true) if within_option
         within_start
       end
 
       def within_end
         within_end = within_source_table[:end_date]
-        if within_option
-          within_end = adjust_date(within_option, within_end)
-        end
+        within_end = adjust_date(within_option, within_end) if within_option
         within_end
       end
 
@@ -92,16 +92,17 @@ module ConceptQL
         adjuster.adjust(column, reverse)
       end
 
-
       def apply_selectors(ds, opts = {})
         return ds unless include_rhs_columns
-        ds = ds.select_remove(*include_rhs_columns).select_append(*(rhs_columns(opts))) if include_rhs_columns
+
+        ds = ds.select_remove(*include_rhs_columns).select_append(*rhs_columns(opts)) if include_rhs_columns
         ds
       end
 
       def rhs_columns(opts)
         cols = include_rhs_columns
         return cols if opts.empty?
+
         cols = cols.map { |c| Sequel.function(opts[:function], c).as(c) } if opts[:function]
         cols = cols.map { |c| Sequel[opts[:qualifier]][c].as(c) } if opts[:qualifier]
         cols
@@ -129,5 +130,3 @@ module ConceptQL
     end
   end
 end
-
-

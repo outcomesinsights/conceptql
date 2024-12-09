@@ -10,7 +10,8 @@ module ConceptQL
         end
 
         def get_multiple_vocabularies
-          [ConceptQL.multiple_vocabularies_file_path, ConceptQL.custom_multiple_vocabularies_file_path].select(&:exist?).map do |path|
+          [ConceptQL.multiple_vocabularies_file_path,
+           ConceptQL.custom_multiple_vocabularies_file_path].select(&:exist?).map do |path|
             CSV.foreach(path, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
               (h[operator_symbol(row[:operator])] ||= []) << row.to_hash
             end
@@ -46,10 +47,10 @@ module ConceptQL
       desc 'Selects records based on the given vocabularies.'
       argument :codes, type: :codelist
       basic_type :selection
-      category "Select by Clinical Codes"
+      category 'Select by Clinical Codes'
       validate_no_upstreams
       validate_at_least_one_argument
-      conceptql_spec_id "vocabulary"
+      conceptql_spec_id 'vocabulary'
 
       def query(db)
         # TODO: A much-more efficient method would be to find all those vocabs
@@ -57,7 +58,7 @@ module ConceptQL
         # but I think this would require some revamping of Vocabulary, and I'm
         # just not interested in taking that on right now.
         vocab_ops.map { |vo| vo.evaluate(db) }.inject do |union, q|
-          union.union(q)
+          union.union(q.from_self)
         end
       end
 

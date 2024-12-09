@@ -1,13 +1,14 @@
-require "psych"
+require 'psych'
 
 module ConceptQL
   module DataModel
     class Base
-      SCHEMAS = Dir.glob(ConceptQL.schemas_dir + "*.yml").each_with_object({}) do |schema_file, schemas|
-        schemas[File.basename(schema_file, ".*").to_sym] = Psych.load_file(schema_file)
+      SCHEMAS = Dir.glob(ConceptQL.schemas_dir + '*.yml').each_with_object({}) do |schema_file, schemas|
+        schemas[File.basename(schema_file, '.*').to_sym] = Psych.load_file(schema_file)
       end
 
-      attr :operator, :nodifier
+      attr_reader :operator, :nodifier
+
       def initialize(operator, nodifier)
         @operator = operator
         @nodifier = nodifier
@@ -23,7 +24,7 @@ module ConceptQL
           provider_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
           drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier,
           admission_date: ConceptQL::QueryModifiers::Omopv4Plus::AdmissionDateQueryModifier,
-          provenance_type: ConceptQL::QueryModifiers::Omopv4Plus::ProvenanceQueryModifier,
+          provenance_type: ConceptQL::QueryModifiers::Omopv4Plus::ProvenanceQueryModifier
         }[column]
       end
 
@@ -33,7 +34,8 @@ module ConceptQL
 
       def table_id(table = nil)
         return :person_id if table.to_sym == :death
-        return :criterion_id if table.nil?
+
+        :criterion_id if table.nil?
       end
 
       def person_table
@@ -100,7 +102,8 @@ module ConceptQL
         cols_hash = if table.nil? && opts[:query_columns].nil?
                       query_columns
                     else
-                      columns_in_table(table, opts).merge(modifier_columns(table, opts)).merge(nullified_columns(table, opts))
+                      columns_in_table(table,
+                                       opts).merge(modifier_columns(table, opts)).merge(nullified_columns(table, opts))
                     end.dup
 
         except_keys = opts[:except] || []
@@ -125,12 +128,14 @@ module ConceptQL
 
       def modifier_columns(table, opts = {})
         return {} if table.nil? && opts[:query_columns].nil?
+
         remainder = query_columns.keys - (opts[:query_columns] ? opts[:query_columns].keys : columns_in_table(table).keys)
         Hash[remainder.zip(remainder)]
       end
 
       def nullified_columns(table, opts = {})
         return {} if table.nil? && opts[:query_columns].nil?
+
         remainder = query_columns.keys
         if opts[:query_columns]
           remainder -= opts[:query_columns].keys
@@ -145,9 +150,7 @@ module ConceptQL
 
       def selectify(query, opts = {})
         ds = modify_query(query, get_table(opts)).select(*columns(opts))
-        if opts[:uuid]
-          ds = ds.from_self.select_append(rdbms.uuid.as(:uuid))
-        end
+        ds = ds.from_self.select_append(rdbms.uuid.as(:uuid)) if opts[:uuid]
         ds.from_self
       end
 
@@ -166,7 +169,9 @@ module ConceptQL
       end
 
       def applicable_query_modifiers(table)
-        query_modifiers.values_at(*query_columns.keys).compact.select { |klass| klass.has_required_columns?(table_cols(table)) }
+        query_modifiers.values_at(*query_columns.keys).compact.select do |klass|
+          klass.has_required_columns?(table_cols(table))
+        end
       end
 
       def query_modifiers
@@ -177,12 +182,13 @@ module ConceptQL
           drug_name: query_modifier_for(:drug_name),
           file_provenance_type: query_modifier_for(:provenance_type),
           admission_date: query_modifier_for(:admission_date),
-          value_as_number:  query_modifier_for(:value_as_number)
+          value_as_number: query_modifier_for(:value_as_number)
         }
       end
 
       def columns_in_table(table, opts = {})
         return opts[:query_columns] unless opts[:query_columns].nil?
+
         start_date, end_date = *date_columns(nil, table)
         {
           person_id: Sequel.expr(person_id(table)).as(:person_id),
@@ -202,6 +208,7 @@ module ConceptQL
 
       def replace(replace_hash)
         return {} unless replace_hash
+
         replace_hash.each_with_object({}) do |(column, value), h|
           h[column] = rdbms.process(column, value)
         end
@@ -213,8 +220,9 @@ module ConceptQL
 
       def determine_table(table_method)
         return nil unless operator.respond_to?(table_method)
+
         table = table_by_domain(operator.send(table_method))
-        return table if schema.keys.include?(table)
+        table if schema.keys.include?(table)
       end
 
       def assign_column_to_table
@@ -249,7 +257,7 @@ module ConceptQL
 
       def source_value_columns
         @source_value_columns ||= assign_column_to_table do |table, columns|
-          reggy = /#{table.to_s.split("_").first}_source_value$/
+          reggy = /#{table.to_s.split('_').first}_source_value$/
           column = columns.select { |k| k =~ reggy }.first
           column ||= columns.select { |k| k =~ /source_value$/ }.first
         end
@@ -257,8 +265,9 @@ module ConceptQL
 
       def source_vocabulary_ids
         @source_vocabulary_ids = assign_column_to_table do |table, columns|
-          next if %w(person death).any? { |tn| table.to_s =~ /#{tn}/ }
-          reggy = /#{table.to_s.split("_").first}_source_vocabulary_id/
+          next if %w[person death].any? { |tn| table.to_s =~ /#{tn}/ }
+
+          reggy = /#{table.to_s.split('_').first}_source_vocabulary_id/
           column = columns.select { |k| k =~ reggy }.first
           column ||= columns.select { |k| k =~ /_source_vocabulary_id/ }.first
         end
@@ -266,7 +275,7 @@ module ConceptQL
 
       def id_columns
         @id_columns ||= assign_column_to_table do |table, columns|
-          reggy = /#{table.to_s}_id/
+          reggy = /#{table}_id/
           columns.select { |k| k =~ reggy }.first
         end
       end
@@ -336,7 +345,8 @@ module ConceptQL
       def place_of_service_concept_id_column(query, domain)
         return nil if domain.nil?
         return Sequel.cast(:visit_source_concept_id, :Bigint) if table_cols(domain).include?(pos_table_fk)
-        return nil
+
+        nil
       end
 
       def pos_table_fk
@@ -344,14 +354,18 @@ module ConceptQL
       end
 
       def person_date_of_birth(query)
-        rdbms.cast_date(ConceptQL::Utils.assemble_date(:year_of_birth, :month_of_birth, :day_of_birth, database_type: nodifier.database_type))
+        rdbms.cast_date(ConceptQL::Utils.assemble_date(:year_of_birth, :month_of_birth, :day_of_birth,
+                                                       database_type: nodifier.database_type))
       end
 
       def date_columns(query, table = nil)
         sd = start_date_column(query, table)
         sd = rdbms.cast_date(Sequel.expr(sd)).as(:start_date) unless sd == :start_date
         ed = end_date_column(query, table)
-        ed = rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed), start_date_column(query, table))).as(:end_date) unless ed == :end_date
+        unless ed == :end_date
+          ed = rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed),
+                                               start_date_column(query, table))).as(:end_date)
+        end
         [sd, ed]
       end
 
@@ -371,12 +385,14 @@ module ConceptQL
 
       def table_cols(table)
         table = table_to_sym(table)
-        cols = schema.fetch(table)[:columns].keys
-        cols
+        schema.fetch(table)[:columns].keys
       end
 
       def table_columns(*tables)
-        tables.map { |t| table_cols(t) }.flatten.tap { |o| p o; p tables}
+        tables.map { |t| table_cols(t) }.flatten.tap do |o|
+          p o
+          p tables
+        end
       end
 
       def table_source_value(table)
@@ -403,12 +419,12 @@ module ConceptQL
           col = col.to_s
           next unless col =~ /concept_id/
 
-          table_parts = table.to_s.chomp("s").to_s.split("_")
+          table_parts = table.to_s.chomp('s').to_s.split('_')
 
-          possible_names = ["concept_id"]
+          possible_names = ['concept_id']
 
           until table_parts.empty?
-            possible_names.unshift([table_parts.join("_"), possible_names.last].join("_"))
+            possible_names.unshift([table_parts.join('_'), possible_names.last].join('_'))
             table_parts.pop
           end
 
@@ -420,21 +436,24 @@ module ConceptQL
 
       def concepts_ds(db, vocabulary_id, codes)
         standards = db[:concept]
-          .where(vocabulary_id: vocabulary_id, concept_code: codes)
-          .select(:vocabulary_id, :concept_code, Sequel[:concept_name].as(:concept_text))
-          .from_self
+                    .where(vocabulary_id: vocabulary_id, concept_code: codes)
+                    .select(:vocabulary_id, :concept_code, Sequel[:concept_name].as(:concept_text))
+                    .from_self
         sources = db[:source_to_concept_map]
-          .where(source_vocabulary_id: vocabulary_id, source_code: codes)
-          .select(Sequel[:source_vocabulary_id].as(:vocabulary_id), Sequel[:source_code].as(:concept_code), Sequel[:source_code_description].as(:concept_text))
-          .from_self
-        standards.union(sources).order(:concept_code, :concept_text).from_self.select_group(:vocabulary_id, :concept_code).select_append(Sequel.function(:min, :concept_text).as(:concept_text)).from_self
+                  .where(source_vocabulary_id: vocabulary_id, source_code: codes)
+                  .select(Sequel[:source_vocabulary_id].as(:vocabulary_id), Sequel[:source_code].as(:concept_code), Sequel[:source_code_description].as(:concept_text))
+                  .from_self
+        standards.union(sources).order(:concept_code, :concept_text).from_self.select_group(:vocabulary_id,
+                                                                                            :concept_code).select_append(Sequel.function(
+                                                                                              :min, :concept_text
+                                                                                            ).as(:concept_text)).from_self
       end
 
       def information_period_where_clause(arguments)
         return if arguments.empty?
+
         { plan_source_value: arguments }
       end
     end
   end
 end
-
