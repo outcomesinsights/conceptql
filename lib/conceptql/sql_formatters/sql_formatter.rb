@@ -2,10 +2,11 @@ require_relative 'formatter'
 
 module ConceptQL
   module SqlFormatters
-    class PgFormat < Formatter
+    class SqlFormatter < Formatter
       def program
-        'pg_format'
+        'sql-formatter'
       end
     end
   end
 end
+

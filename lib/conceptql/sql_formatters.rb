@@ -1,6 +1,9 @@
-require_relative "sql_formatters/formatter"
-require_relative "sql_formatters/sqlformat"
-require_relative "sql_formatters/pg_format"
+require_relative 'sql_formatters/formatter'
+require_relative 'sql_formatters/pg_format'
+require_relative 'sql_formatters/postgres_formatter'
+require_relative 'sql_formatters/sql_formatter'
+require_relative 'sql_formatters/presto_formatter'
+require_relative 'sql_formatters/sqlformat'
 
 module ConceptQL
   module SqlFormatters
@@ -22,6 +25,7 @@ module ConceptQL
       def formatters(rdbms)
         [
           rdbms.preferred_formatter,
+          SqlFormatter,
           Sqlformat,
           PgFormat,
           None
