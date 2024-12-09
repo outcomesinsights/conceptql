@@ -1,0 +1,143 @@
+---
+:concept:
+  :columns:
+    :concept_id:
+      :type: :integer
+    :concept_name:
+      :type: :string
+    :domain_id:
+      :type: :string
+    :vocabulary_id:
+      :type: :string
+    :concept_class_id:
+      :type: :string
+    :standard_concept:
+      :type: :string
+    :concept_code:
+      :type: :string
+    :valid_start_date:
+      :type: :date
+    :valid_end_date:
+      :type: :date
+    :invalid_reason:
+      :type: :string
+:concept_ancestor:
+  :columns:
+    :ancestor_concept_id:
+      :type: :integer
+    :descendant_concept_id:
+      :type: :integer
+    :min_levels_of_separation:
+      :type: :integer
+    :max_levels_of_separation:
+      :type: :integer
+:concept_class:
+  :columns:
+    :concept_class_id:
+      :type: :string
+    :concept_class_name:
+      :type: :string
+    :concept_class_concept_id:
+      :type: :integer
+:concept_relationship:
+  :columns:
+    :concept_id_1:
+      :type: :integer
+    :concept_id_2:
+      :type: :integer
+    :relationship_id:
+      :type: :string
+    :valid_start_date:
+      :type: :date
+    :valid_end_date:
+      :type: :date
+    :invalid_reason:
+      :type: :string
+:concept_synonym:
+  :columns:
+    :concept_id:
+      :type: :integer
+    :concept_synonym_name:
+      :type: :string
+    :language_concept_id:
+      :type: :integer
+:domain:
+  :columns:
+    :domain_id:
+      :type: :string
+    :domain_name:
+      :type: :string
+    :domain_concept_id:
+      :type: :integer
+:drug_strength:
+  :columns:
+    :drug_concept_id:
+      :type: :integer
+    :ingredient_concept_id:
+      :type: :integer
+    :amount_value:
+      :type: :decimal
+    :amount_unit_concept_id:
+      :type: :integer
+    :numerator_value:
+      :type: :decimal
+    :numerator_unit_concept_id:
+      :type: :integer
+    :denominator_value:
+      :type: :decimal
+    :denominator_unit_concept_id:
+      :type: :integer
+    :box_size:
+      :type: :integer
+    :valid_start_date:
+      :type: :date
+    :valid_end_date:
+      :type: :date
+    :invalid_reason:
+      :type: :string
+:relationship:
+  :columns:
+    :relationship_id:
+      :type: :string
+    :relationship_name:
+      :type: :string
+    :is_hierarchical:
+      :type: :string
+    :defines_ancestry:
+      :type: :string
+    :reverse_relationship_id:
+      :type: :string
+    :relationship_concept_id:
+      :type: :integer
+:source_to_concept_map:
+  :columns:
+    :source_code:
+      :type: :string
+    :source_concept_id:
+      :type: :integer
+    :source_vocabulary_id:
+      :type: :string
+    :source_code_description:
+      :type: :string
+    :target_concept_id:
+      :type: :integer
+    :target_vocabulary_id:
+      :type: :string
+    :valid_start_date:
+      :type: :date
+    :valid_end_date:
+      :type: :date
+    :invalid_reason:
+      :type: :string
+:vocabulary:
+  :columns:
+    :vocabulary_id:
+      :type: :string
+    :vocabulary_name:
+      :type: :string
+    :vocabulary_reference:
+      :type: :string
+    :vocabulary_version:
+      :type: :string
+    :vocabulary_concept_id:
+      :type: :integer

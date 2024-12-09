@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/conceptql/utils_cli'
+
+ConceptQL::UtilsCLI.start(ARGV)
