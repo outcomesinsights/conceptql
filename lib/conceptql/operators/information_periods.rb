@@ -1,4 +1,6 @@
-require_relative "operator"
+# frozen_string_literal: true
+
+require_relative 'operator'
 
 module ConceptQL
   module Operators
@@ -10,7 +12,7 @@ module ConceptQL
 
       desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming record set.'
       domains :observation_period
-      category "Get Related Data"
+      category 'Get Related Data'
       basic_type :selection
       validate_no_upstreams
 
@@ -22,9 +24,7 @@ module ConceptQL
 
       def source_table
         tab = dm.table_by_domain(domain)
-        if tab == :observation_period && ConceptQL::Utils.present?(arguments)
-          tab = :payer_plan_period
-        end
+        tab = :payer_plan_period if tab == :observation_period && ConceptQL::Utils.present?(arguments)
         tab
       end
 
@@ -34,4 +34,3 @@ module ConceptQL
     end
   end
 end
-

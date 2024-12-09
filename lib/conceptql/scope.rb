@@ -1,6 +1,9 @@
-require_relative "window"
-require "securerandom"
-require "sequel"
+# frozen_string_literal: true
+
+require 'English'
+require_relative 'window'
+require 'securerandom'
+require 'sequel'
 
 module ConceptQL
   # Scope coordinates the creation of any common table expressions that might
@@ -61,11 +64,11 @@ module ConceptQL
       window_id: :Bigint
     }.freeze
 
-    COLUMN_TYPES = (DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS)).freeze
+    COLUMN_TYPES = DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS).freeze
 
     attr_accessor :person_ids
 
-    attr :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
+    attr_reader :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
 
     def initialize(opts = {})
       @known_operators = {}
@@ -82,13 +85,13 @@ module ConceptQL
 
       @i = 0
       @mutex = Mutex.new
-      @cte_name_next = lambda{@mutex.synchronize{@i+=1}}
+      @cte_name_next = -> { @mutex.synchronize { @i += 1 } }
 
-      if force_temp_tables? && ConceptQL::Utils.blank?(scratch_database)
-        raise ArgumentError, "You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable"
-      end
+      return unless force_temp_tables? && ConceptQL::Utils.blank?(scratch_database)
+
+      raise ArgumentError,
+            'You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable'
     end
-
 
     def add_errors(key, errors)
       @errors[key] = errors
@@ -104,13 +107,11 @@ module ConceptQL
     end
 
     def add_required_columns(op)
-      if op.required_columns
-        @query_columns |= op.required_columns
-      end
+      @query_columns |= op.required_columns if op.required_columns
     end
 
     def harvest_person_ids(op)
-      if person_ids = op.options[:person_ids]
+      if (person_ids = op.options[:person_ids])
         opts[:person_ids] = person_ids
       end
     end
@@ -118,12 +119,12 @@ module ConceptQL
     def nest(op)
       add_required_columns(op)
       harvest_person_ids(op)
-      return yield unless label = op.is_a?(Operators::Recall) ? op.source : op.label
+      return yield unless (label = op.is_a?(Operators::Recall) ? op.source : op.label)
 
       unless label.is_a?(String)
         op.instance_eval do
           @errors = []
-          add_error("invalid label")
+          add_error('invalid label')
         end
         return
       end
@@ -133,7 +134,7 @@ module ConceptQL
       if nested_recall?(label)
         op.instance_eval do
           @errors = []
-          add_error("nested recall")
+          add_error('nested recall')
         end
         return
       end
@@ -141,11 +142,11 @@ module ConceptQL
       if duplicate_label?(label) && !op.is_a?(Operators::Recall)
         op.instance_eval do
           @errors = []
-          add_error("duplicate label")
+          add_error('duplicate label')
         end
       end
 
-      if last = recall_stack.last
+      if (last = recall_stack.last)
         recall_dependencies[last] << label
       end
 
@@ -195,17 +196,15 @@ module ConceptQL
 
     def domains(label, db)
       fetch_operator(label).domains(db)
-    rescue
+    rescue StandardError
       [:invalid]
     end
 
     def sort_ctes(sorted, unsorted, deps)
-      if unsorted.empty?
-        return sorted
-      end
+      return sorted if unsorted.empty?
 
       add, unsorted = unsorted.partition do |label, _|
-        deps[label].length == 0
+        deps[label].empty?
       end
 
       sorted += add
@@ -220,9 +219,7 @@ module ConceptQL
 
     def valid?
       recall_dependencies.each_value do |deps|
-        unless (deps - known_operators.keys).empty?
-          return false
-        end
+        return false unless (deps - known_operators.keys).empty?
       end
       true
     end
@@ -260,40 +257,42 @@ module ConceptQL
     end
 
     def recursive_extract_ctes(query, ctes)
-      #puts
-      #p [:rec, ctes, query.opts]
+      # puts
+      # p [:rec, ctes, query.opts]
 
-      if from = query.opts[:from]
-        query = query.clone(:from=>from.map{|t| recursive_extract_cte_expr(t, ctes)})
-        #p [:rec_from, ctes.map(&:first), from]
+      if (from = query.opts[:from])
+        query = query.clone(from: from.map { |t| recursive_extract_cte_expr(t, ctes) })
+        # p [:rec_from, ctes.map(&:first), from]
       end
 
-      if joins = query.opts[:join]
-        query = query.clone(:join=>joins.map{|jc| jc.class.new(jc.on, jc.join_type, recursive_extract_cte_expr(jc.table_expr, ctes))})
-        #p [:rec_join, ctes.map(&:first), joins]
+      if (joins = query.opts[:join])
+        query = query.clone(join: joins.map do |jc|
+          jc.class.new(jc.on, jc.join_type, recursive_extract_cte_expr(jc.table_expr, ctes))
+        end)
+        # p [:rec_join, ctes.map(&:first), joins]
       end
 
-      if compounds = query.opts[:compounds]
-        query = query.clone(:compounds=>compounds.map{|t,ds,a| [t, recursive_extract_ctes(ds, ctes),a]})
-        #p [:rec_compounds, ctes.map(&:first), compounds]
+      if (compounds = query.opts[:compounds])
+        query = query.clone(compounds: compounds.map { |t, ds, a| [t, recursive_extract_ctes(ds, ctes), a] })
+        # p [:rec_compounds, ctes.map(&:first), compounds]
       end
 
-      if where = query.opts[:where]
-        query = query.clone(:where=>CteExtractor.new(self, ctes).transform(where))
+      if (where = query.opts[:where])
+        query = query.clone(where: CteExtractor.new(self, ctes).transform(where))
       end
 
-      if with = query.opts[:with]
-        keep, remove = with.partition{|w| w[:no_temp_table]}
-        ctes.concat(remove.map{|w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)]})
-        #p [:rec_with, ctes.map(&:first), with]
-        query = query.clone(:with=>keep.empty? ? nil : keep)
+      if (with = query.opts[:with])
+        keep, remove = with.partition { |w| w[:no_temp_table] }
+        ctes.concat(remove.map { |w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)] })
+        # p [:rec_with, ctes.map(&:first), with]
+        query = query.clone(with: keep.empty? ? nil : keep)
       end
 
       query
     end
 
     def with_ctes(op, db, options = {})
-      raise "recall operator use without matching label" unless valid?
+      raise 'recall operator use without matching label' unless valid?
 
       query = op.evaluate(db)
       rdbms = op.rdbms
@@ -314,7 +313,7 @@ module ConceptQL
           # when sequel_pg is not in use, it is probably safe to override just each.
           # There are other methods that may need to be overridden in order to handle
           # all cases when sequel_pg is in use.
-          [:each, :to_hash_groups, :to_hash].each do |meth|
+          %i[each to_hash_groups to_hash].each do |meth|
             define_method(meth) do |*args, &block|
               if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
                 begin
@@ -323,7 +322,7 @@ module ConceptQL
                     rdbms.post_create(db, table_name)
                   end
 
-                  clone(:conceptql_temp_tables_created=>true).send(meth, *args, &block)
+                  clone(conceptql_temp_tables_created: true).send(meth, *args, &block)
                 ensure
                   drop_temp_tables
                 end
@@ -395,11 +394,10 @@ module ConceptQL
     end
 
     def cte_name(name)
-      name = Sequel.identifier("#{opts[:table_prefix]}#{name.to_s.gsub(/\W+/, "_")}_#{$$}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
+      name = Sequel.identifier("#{opts[:table_prefix]}#{name.to_s.gsub(/\W+/,
+                                                                       '_')}_#{$PROCESS_ID}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
 
-      if force_temp_tables? && scratch_database
-        name = name.qualify(scratch_database)
-      end
+      name = name.qualify(scratch_database) if force_temp_tables? && scratch_database
 
       name
     end

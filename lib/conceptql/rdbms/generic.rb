@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Rdbms
     class Generic
@@ -37,7 +39,7 @@ module ConceptQL
       #
       # So, by default, return the name of the column and in the Impala adapter
       # we'll return something funky to trick Impala into allowing a constant
-      def partition_fix(column, qualifier = nil)
+      def partition_fix(column, _qualifier = nil)
         column
       end
 
@@ -59,7 +61,7 @@ module ConceptQL
         SqlFormatters::SqlFormatter
       end
 
-      def datediff(db, from, to)
+      def datediff(_db, from, to)
         Sequel.function(:datediff, from, to)
       end
 
@@ -75,7 +77,7 @@ module ConceptQL
         false
       end
 
-      def create_options(scope, ds)
+      def create_options(_scope, _ds)
         opts = {}
         opts[:analyze] = opts[:explain] = explain_temp_tables?
         opts
@@ -85,8 +87,7 @@ module ConceptQL
         {}
       end
 
-      def post_create(db, table_name)
-      end
+      def post_create(db, table_name); end
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'binary_operator_operator'
 
 module ConceptQL
@@ -5,7 +7,7 @@ module ConceptQL
     class Match < BinaryOperatorOperator
       register __FILE__
 
-      desc "Keeps left hand records that share the same person, criterion_id, and criterion_domain with a right hand side record."
+      desc 'Keeps left hand records that share the same person, criterion_id, and criterion_domain with a right hand side record.'
       default_query_columns
 
       def query(db)
@@ -15,8 +17,8 @@ module ConceptQL
 
         join_check = join_columns.inject(&:&)
         sub_select = rhs.from_self(alias: :r)
-                      .select(1)
-                      .where(join_check)
+                        .select(1)
+                        .where(join_check)
 
         query.send(where_method(:where), sub_select.exists).select_all(:l)
       end
@@ -38,6 +40,7 @@ module ConceptQL
 
       def where_method(meth)
         return meth unless invert_match
+
         meth == :where ? :exclude : :where
       end
 
@@ -47,4 +50,3 @@ module ConceptQL
     end
   end
 end
-

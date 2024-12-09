@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Window
     # Base class for classes apply scope windows to incoming Datasets

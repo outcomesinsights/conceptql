@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'casting_operator'
 
 module ConceptQL
@@ -8,7 +10,7 @@ module ConceptQL
 
       register __FILE__
 
-      desc "Selects all records in the person table."
+      desc 'Selects all records in the person table.'
 
       allows_one_upstream
       domains :person

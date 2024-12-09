@@ -1,22 +1,24 @@
+# frozen_string_literal: true
+
 module ConceptQL
   class NullQuery
     def query
       nil
     end
 
-    def query_cols(opts = {})
+    def query_cols(_opts = {})
       []
     end
 
     def sql
-      "Cannot generate SQL for empty statement"
+      'Cannot generate SQL for empty statement'
     end
 
-    def annotate(opts = {})
+    def annotate(_opts = {})
       []
     end
 
-    def scope_annotate(opts = {})
+    def scope_annotate(_opts = {})
       {}
     end
 
@@ -29,12 +31,11 @@ module ConceptQL
     end
 
     def operator
-      Operators::Invalid.new(nodifier, "invalid", errors: [["statement is empy", statement.inspect]])
+      Operators::Invalid.new(nodifier, 'invalid', errors: [['statement is empy', statement.inspect]])
     end
 
-    def code_list(db)
+    def code_list(_db)
       []
     end
   end
 end
-

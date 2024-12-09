@@ -1,4 +1,6 @@
-require_relative "base"
+# frozen_string_literal: true
+
+require_relative 'base'
 
 module ConceptQL
   module Window
@@ -21,12 +23,11 @@ module ConceptQL
         end
         expr = exprs.inject(&:&)
 
-
         order_cols = order_columns(op)
 
         rhs = query.db[get_table_window(query)]
 
-        if (!opts[:precalculated_window_id])
+        unless opts[:precalculated_window_id]
           rhs = remove_window_id(rhs)
           rhs = rhs
                 .select_group(:person_id, :start_date, :end_date)
@@ -63,19 +64,19 @@ module ConceptQL
 
       def selected_columns(ds)
         opts = ds.opts
-        if select = opts[:select]
+        if (select = opts[:select])
           select
         elsif (from = opts[:from].first).is_a?(Sequel::Dataset)
           selected_columns(from)
         end
       end
 
-      def get_table_window(query)
+      def get_table_window(_query)
         case table_window
         when Array
           cdb.query(table_window).query
         when String
-          tables = table_window.split(".")
+          tables = table_window.split('.')
           tables.length == 2 ? Sequel.qualify(*tables) : Sequel.identifier(table_window)
         when Symbol
           Sequel[table_window]
@@ -86,6 +87,7 @@ module ConceptQL
 
       def apply_adjustments(op, column, adjustment)
         return column unless adjustment
+
         DateAdjuster.new(op, adjustment).adjust(column)
       end
 

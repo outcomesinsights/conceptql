@@ -9,13 +9,13 @@ module Sequel
     end
 
     def vacuum_table_sql(table_name, opts)
-      dataset.with_sql(vacuum_operations(opts).join(" "), table_name).sql
+      dataset.with_sql(vacuum_operations(opts).join(' '), table_name).sql
     end
 
     def vacuum_operations(opts)
-      operations = ["VACUUM"]
-      operations << "ANALYZE" if opts[:analyze]
-      operations << "?"
+      operations = ['VACUUM']
+      operations << 'ANALYZE' if opts[:analyze]
+      operations << '?'
     end
   end
 

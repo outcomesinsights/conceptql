@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 require 'date'
 
@@ -14,12 +16,12 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      DATE_FORMAT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/])}\z/
+      DATE_FORMAT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/])}\z/.freeze
 
-      desc "Creates a set of all person records with the given start_date and end_date."
+      desc 'Creates a set of all person records with the given start_date and end_date.'
       option :start, type: :string
       option :end, type: :string
-      category "Select by Property"
+      category 'Select by Property'
       basic_type :selection
       validate_no_upstreams
       validate_no_arguments
@@ -28,15 +30,15 @@ module ConceptQL
 
       def query(db)
         replace = {
-          start_date:  start_date(db),
-          end_date:  end_date(db)
+          start_date: start_date(db),
+          end_date: end_date(db)
         }
         db.from(source_table)
           .select(*dm.columns(table: source_table, replace: replace))
           .from_self
       end
 
-      def domains(db)
+      def domains(_db)
         [:person]
       end
 
@@ -59,7 +61,8 @@ module ConceptQL
       def date_from(db, str)
         return db.from(period_table).get { |o| o.min(period_start_date(db)) } if str.upcase == 'START'
         return db.from(period_table).get { |o| o.max(period_end_date(db)) } if str.upcase == 'END'
-        return str
+
+        str
       end
 
       def period_table
@@ -76,4 +79,3 @@ module ConceptQL
     end
   end
 end
-

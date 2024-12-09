@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'sql_formatters/formatter'
 require_relative 'sql_formatters/pg_format'
 require_relative 'sql_formatters/postgres_formatter'

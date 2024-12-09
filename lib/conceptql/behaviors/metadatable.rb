@@ -1,37 +1,46 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Metadatable
     def preferred_name(value = nil)
       return @preferred_name unless value
+
       @preferred_name = value
     end
 
     def aliases(value = nil)
       return @aliases unless value
+
       @aliases = value
     end
 
     def desc(value = nil)
       return @desc unless value
+
       @desc = value
     end
 
     def short_name(value = nil)
       return @short_name unless value
+
       @short_name = value
     end
 
     def long_name(value = nil)
       return @long_name unless value
+
       @long_name = value
     end
 
     def conceptql_spec_id(value = nil)
       return @conceptql_spec_id unless value
+
       @conceptql_spec_id = value
     end
 
     def predominant_domains(*values)
       return @predominant_domains if values.empty?
+
       @predominant_domains = values
     end
 
@@ -48,23 +57,25 @@ module ConceptQL
     def auto_label(name, opts = {})
       return opts if opts[:label]
       return opts.merge(label: name.to_s.split('_').map(&:capitalize).join(' ')) unless opts[:type] == :codelist
-      opts.merge(label: pref_name + " Codes")
+
+      opts.merge(label: "#{pref_name} Codes")
     end
 
     def domains(*domain_list)
       @domains = domain_list
-      define_method(:domains) do |db|
+      define_method(:domains) do |_db|
         domain_list
       end
-      if domain_list.length == 1
-        define_method(:domain) do
-          domain_list.first
-        end
+      return unless domain_list.length == 1
+
+      define_method(:domain) do
+        domain_list.first
       end
     end
 
     def basic_type(value = nil)
       return @basic_type unless value
+
       @basic_type = value
     end
 
@@ -77,7 +88,7 @@ module ConceptQL
     end
 
     def just_class_name
-      self.to_s.split('::').last
+      to_s.split('::').last
     end
 
     def humanized_class_name
@@ -155,30 +166,32 @@ module ConceptQL
       when :filter
         2
       else
-        raise "#{self.name} has unknown basic_type: #{basic_type.pretty_inspect}"
+        raise "#{name} has unknown basic_type: #{basic_type.pretty_inspect}"
       end
     end
 
     def get_desc
-      @desc ||= standard_description
+      @get_desc ||= standard_description
     end
 
     def deprecated(opts = {})
       @deprecated = true
-      message = ["This operator will no longer be available in a future version of Jigsaw."]
-      message << "Please use #{ConceptQL::Utils.to_sentence(Array(opts[:replaced_by]), last_word_connector: ", or ")} instead." if opts[:replaced_by]
-      define_method(:deprecation_warning) do |*args|
-        add_warning(message.join(" "))
+      message = ['This operator will no longer be available in a future version of Jigsaw.']
+      if opts[:replaced_by]
+        message << "Please use #{ConceptQL::Utils.to_sentence(Array(opts[:replaced_by]),
+                                                              last_word_connector: ', or ')} instead."
+      end
+      define_method(:deprecation_warning) do |*_args|
+        add_warning(message.join(' '))
       end
       validations << [:deprecation_warning, []]
     end
 
     def process_options(options)
       return {} if options.nil? || options.empty?
+
       options.each_with_object({}) do |(k, v), h|
-        if v && v.respond_to?(:[]) && v[:options].respond_to?(:call)
-          v[:options] = v[:options].call
-        end
+        v[:options] = v[:options].call if v.respond_to?(:[]) && v[:options].respond_to?(:call)
         h[k] = v
       end
     end
@@ -188,37 +201,37 @@ module ConceptQL
       missing << :categories if (@categories || []).empty?
       missing << :desc if get_desc.empty?
       missing << :basic_type unless @basic_type
-      puts "#{just_class_name} is missing #{missing.join(", ")}" unless missing.empty?
+      puts "#{just_class_name} is missing #{missing.join(', ')}" unless missing.empty?
     end
 
     def derive_metadata_from_validations
       instance_variable_get(:@validations).each do |meth, args|
-        meth = meth.to_s + "_to_metadata"
+        meth = "#{meth}_to_metadata"
         send(meth, args) if respond_to?(meth)
       end
     end
 
-    def validate_no_upstreams_to_metadata(*args)
+    def validate_no_upstreams_to_metadata(*_args)
       @min_upstreams = 0
       @max_upstreams = 0
     end
 
-    def validate_one_upstream_to_metadata(*args)
+    def validate_one_upstream_to_metadata(*_args)
       @min_upstreams = 1
       @max_upstreams = 1
     end
 
-    def validate_at_least_one_upstream_to_metadata(*args)
+    def validate_at_least_one_upstream_to_metadata(*_args)
       @min_upstreams = 1
       @max_upstreams = 99
     end
 
-    def validate_at_most_one_upstream_to_metadata(*args)
+    def validate_at_most_one_upstream_to_metadata(*_args)
       @min_upstreams = 0
       @max_upstreams = 1
     end
 
-    def validate_no_arguments_to_metadata(*args)
+    def validate_no_arguments_to_metadata(*_args)
       @arguments = []
     end
 

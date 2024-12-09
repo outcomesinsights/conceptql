@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 begin
   require 'bundler/gem_tasks'
 rescue LoadError
@@ -114,7 +116,6 @@ end
 desc 'Dump a set of diagnostics'
 task :diagnostics do
   require 'sequelizer'
-  require 'pp'
   puts '*' * 80
   puts 'Free Space'
   pp `df -h`
@@ -132,7 +133,7 @@ task :diagnostics do
 end
 
 def cdb
-  @_cdb ||= ConceptQL::Database.new(db, database_type: :presto)
+  @cdb ||= ConceptQL::Database.new(db, database_type: :presto)
 end
 
 def convert(from_file, to_file)
@@ -228,7 +229,7 @@ namespace :schemas do
     file 'schemas/ohdsi_vocabs.yml' do |t|
       File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'ohdsi_vocabs')))
     end
-    #task all: ['schemas/gdm.yml', 'schemas/gdm_wide.yml']
+    # task all: ['schemas/gdm.yml', 'schemas/gdm_wide.yml']
     task all: ['schemas/ohdsi_vocabs.yml']
   end
 end

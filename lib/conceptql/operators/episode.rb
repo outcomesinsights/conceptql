@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'pass_thru'
 
 module ConceptQL
@@ -21,7 +23,7 @@ module ConceptQL
       def query(db)
         ds = unioned(db)
 
-        ids_plus_episode = (partition_vars + [:episode])
+        partition_vars
 
         dt1 = ds.select(*partition_vars).select_append(
           :start_date,
@@ -73,7 +75,7 @@ module ConceptQL
         episode_summary = tmp_episode_summary.from_self(alias: :e).join(last_dispensing, join_hash,
                                                                         table_alias: :o)
         e = Sequel[:e]
-        o = Sequel[:o]
+        Sequel[:o]
 
         grp_cols = ids_plus_episode.map { |c| e[c] }
 

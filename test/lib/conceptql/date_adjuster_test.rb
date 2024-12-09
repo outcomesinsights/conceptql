@@ -1,8 +1,9 @@
-require_relative "../../helper"
-require "pp"
+# frozen_string_literal: true
+
+require_relative '../../helper'
 
 describe ConceptQL::DateAdjuster do
-  describe ".adjust" do
+  describe '.adjust' do
     let(:op) do
       op = Minitest::Mock.new
       op.expect :rdbms, rdbms
@@ -27,84 +28,84 @@ describe ConceptQL::DateAdjuster do
       Sequel.mock(host: :postgres)
     end
 
-    describe "with nothing" do
+    describe 'with nothing' do
       let(:str) { nil }
 
-      it "should work with nothing" do
-        _(da.adjust(:start_date).value).must_equal("start_date")
+      it 'should work with nothing' do
+        _(da.adjust(:start_date).value).must_equal('start_date')
       end
     end
 
-    describe "with days" do
-      let(:str) { "6d" }
+    describe 'with days' do
+      let(:str) { '6d' }
 
-      it "should work with days" do
-        _(da.adjust(:start_date).interval).must_equal({days: 6})
+      it 'should work with days' do
+        _(da.adjust(:start_date).interval).must_equal({ days: 6 })
       end
     end
 
-    describe "with weeks" do
-      let(:str) { "6w" }
+    describe 'with weeks' do
+      let(:str) { '6w' }
 
-      it "should work with weeks" do
-        _(da.adjust(:start_date).interval).must_equal({days: 42})
+      it 'should work with weeks' do
+        _(da.adjust(:start_date).interval).must_equal({ days: 42 })
       end
     end
 
-    describe "with months" do
-      let(:str) { "6m" }
+    describe 'with months' do
+      let(:str) { '6m' }
 
-      it "should work with months" do
-        _(da.adjust(:start_date).interval).must_equal({months: 6})
+      it 'should work with months' do
+        _(da.adjust(:start_date).interval).must_equal({ months: 6 })
       end
     end
 
-    describe "with years" do
-      let(:str) { "6y" }
+    describe 'with years' do
+      let(:str) { '6y' }
 
-      it "should work with years" do
-        _(da.adjust(:start_date).interval).must_equal({years: 6})
+      it 'should work with years' do
+        _(da.adjust(:start_date).interval).must_equal({ years: 6 })
       end
     end
 
-    describe "with start_date specified as part of end_date adjustment" do
-      let(:str) { "S-6y" }
+    describe 'with start_date specified as part of end_date adjustment' do
+      let(:str) { 'S-6y' }
 
-      it "should work" do
+      it 'should work' do
         adj = da.adjust(:end_date)
-        _(adj.expr.value).must_equal("start_date")
+        _(adj.expr.value).must_equal('start_date')
         _(adj.interval).must_equal(years: -6)
       end
     end
 
-    describe "with end_date specified as part of start_date adjustment" do
-      let(:str) { "E6y" }
+    describe 'with end_date specified as part of start_date adjustment' do
+      let(:str) { 'E6y' }
 
-      it "should work" do
+      it 'should work' do
         adj = da.adjust(:start_date)
-        _(adj.expr.value).must_equal("end_date")
+        _(adj.expr.value).must_equal('end_date')
         _(adj.interval).must_equal(years: 6)
       end
     end
 
-    describe "with end_date specified as part of a QualifiedIdentifier adjustment" do
-      let(:str) { "ER6y" }
+    describe 'with end_date specified as part of a QualifiedIdentifier adjustment' do
+      let(:str) { 'ER6y' }
 
-      it "should work" do
+      it 'should work' do
         adj = da.adjust(Sequel.qualify(:table, :start_date))
         _(adj.expr.table).must_equal(:table)
         _(adj.expr.column).must_equal(:end_date)
         _(adj.interval).must_equal(years: -6)
       end
 
-      it "should work with Sequel Identifier" do
+      it 'should work with Sequel Identifier' do
         adj = da.adjust(Sequel[:table][:start_date])
         _(adj.expr.table).must_equal(:table)
         _(adj.expr.column).must_equal(:end_date)
         _(adj.interval).must_equal(years: -6)
       end
 
-      it "should preserve with original string" do
+      it 'should preserve with original string' do
         adj = da.adjust(Sequel[:table][:start_date])
         _(adj.expr.table).must_equal(:table)
         _(adj.expr.column).must_equal(:end_date)
@@ -118,80 +119,78 @@ describe ConceptQL::DateAdjuster do
       end
     end
 
-    describe "with no digit" do
-      let(:str) { "dwmy" }
+    describe 'with no digit' do
+      let(:str) { 'dwmy' }
 
-      it "should pick out each interval" do
+      it 'should pick out each interval' do
         _(da.adjustments).must_equal([[:days, 1], [:weeks, 1], [:months, 1], [:years, 1]])
       end
     end
 
-    describe "with minuses and no digit" do
-      let(:str) { "-dw-my" }
+    describe 'with minuses and no digit' do
+      let(:str) { '-dw-my' }
 
-      it "should only subtract days and months" do
+      it 'should only subtract days and months' do
         _(da.adjustments).must_equal([[:days, -1], [:weeks, 1], [:months, -1], [:years, 1]])
       end
     end
 
-    describe "with repeated characters" do
-      let(:str) { "ddd" }
+    describe 'with repeated characters' do
+      let(:str) { 'ddd' }
 
-      it "should add 3 days" do
+      it 'should add 3 days' do
         _(da.adjustments).must_equal([[:days, 1], [:days, 1], [:days, 1]])
       end
     end
 
-    describe "with YYYY-MM-DD" do
-      let(:str) { "2001-01-01" }
+    describe 'with YYYY-MM-DD' do
+      let(:str) { '2001-01-01' }
 
-      it "should use date literal" do
+      it 'should use date literal' do
         _(da.adjust(:end_date)).must_equal(str)
       end
     end
 
-    describe "with Date" do
-      let(:str) { Date.parse("2001-01-01") }
+    describe 'with Date' do
+      let(:str) { Date.parse('2001-01-01') }
 
-      it "should use date literal" do
-        _(da.adjust(:end_date)).must_equal(str.strftime("%Y-%m-%d"))
+      it 'should use date literal' do
+        _(da.adjust(:end_date)).must_equal(str.strftime('%Y-%m-%d'))
       end
     end
 
-    describe "with START" do
-      let(:str) { "START" }
+    describe 'with START' do
+      let(:str) { 'START' }
 
-      it "should use start_date column" do
+      it 'should use start_date column' do
         _(da.adjust(:end_date)).must_equal(Sequel[:start_date])
       end
     end
 
-    describe "with END" do
-      let(:str) { "END" }
+    describe 'with END' do
+      let(:str) { 'END' }
 
-      it "should use end_date column" do
+      it 'should use end_date column' do
         _(da.adjust(:start_date)).must_equal(Sequel[:end_date])
       end
     end
 
-    describe "with R as prefix" do
-      let(:str) { "rddd" }
+    describe 'with R as prefix' do
+      let(:str) { 'rddd' }
 
-      it "should reverse the adjustments" do
+      it 'should reverse the adjustments' do
         da.adjust(:end_date)
         _(da.adjustments).must_equal([[:days, -1], [:days, -1], [:days, -1]])
       end
     end
 
-    describe "with ER as prefix" do
-      let(:str) { "erddd" }
+    describe 'with ER as prefix' do
+      let(:str) { 'erddd' }
 
-      it "should reverse the adjustments" do
+      it 'should reverse the adjustments' do
         da.adjust(:end_date)
         _(da.adjustments).must_equal([[:days, -1], [:days, -1], [:days, -1]])
       end
     end
   end
 end
-
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../query_modifier'
 
 module ConceptQL
@@ -15,10 +17,10 @@ module ConceptQL
         def modified_query
           col = self.class.has_required_columns?(dm.table_cols(source_table))
           return query if col.nil? || col.to_sym == :provider_id
+
           query.select_append(Sequel[col].as(:provider_id)).from_self
         end
       end
     end
   end
 end
-

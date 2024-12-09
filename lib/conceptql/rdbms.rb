@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'rdbms/postgres'
 require_relative 'rdbms/presto'
 require_relative 'rdbms/spark'

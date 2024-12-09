@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 
 module ConceptQL
@@ -8,10 +10,10 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Selects all person records that match the selected gender."
-      argument :gender, type: :string, options: ["Male", "Female", "Unknown"]
+      desc 'Selects all person records that match the selected gender.'
+      argument :gender, type: :string, options: %w[Male Female Unknown]
       domains :person
-      category "Select by Property"
+      category 'Select by Property'
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument

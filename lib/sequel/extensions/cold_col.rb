@@ -26,7 +26,7 @@ module Sequel
     end
 
     def columns_search(opts_chain = nil)
-      if cols = _columns
+      if (cols = _columns)
         return cols
       end
 
@@ -59,7 +59,7 @@ module Sequel
         (from_stars + cols.map { |c| probable_column_name(c) }).flatten
       else
         froms = opts[:from] || []
-        joins = (opts[:join] || []).map { |jc| jc.table_expr }
+        joins = (opts[:join] || []).map(&:table_expr)
         (froms + joins).flat_map { |from| fetch_columns(from, opts_chain) }
       end
     end

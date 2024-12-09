@@ -1,14 +1,15 @@
+# frozen_string_literal: true
+
 require_relative '../query_modifier'
 
 module ConceptQL
   module QueryModifiers
     module Omopv4Plus
       class AdmissionDateQueryModifier < QueryModifier
-
         def self.provided_columns
-          [
-            :admission_date,
-            :discharge_date
+          %i[
+            admission_date
+            discharge_date
           ]
         end
 
@@ -24,16 +25,19 @@ module ConceptQL
           end_col = cols.find { |col| col =~ /end_date/i }.to_sym
 
           query.from_self(alias: :t)
-            .select_all(:t)
-            .select_append(Sequel[:t][start_col].as(:admission_date))
-            .select_append(Sequel.function(:coalesce, Sequel[:t][end_col], Sequel[:t][start_col]).as(:discharge_date))
-            .from_self
+               .select_all(:t)
+               .select_append(Sequel[:t][start_col].as(:admission_date))
+               .select_append(Sequel.function(:coalesce, Sequel[:t][end_col],
+                                              Sequel[:t][start_col]).as(:discharge_date))
+               .from_self
         end
 
         private
 
         def domain
-          op.domain rescue nil
+          op.domain
+        rescue StandardError
+          nil
         end
       end
     end

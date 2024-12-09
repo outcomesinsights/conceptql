@@ -1,23 +1,25 @@
+# frozen_string_literal: true
+
 require_relative '../query_modifier'
 
 module ConceptQL
   module QueryModifiers
     module Omopv4Plus
       class ProvenanceQueryModifier < QueryModifier
-        RELATED_COLUMNS = %w(
+        RELATED_COLUMNS = %w[
           condition_type_concept_id
           procedure_type_concept_id
           death_type_concept_id
           observation_type_concept_id
           drug_type_concept_id
-        ).sort.map(&:to_sym)
+        ].sort.map(&:to_sym)
 
-        attr :db
+        attr_reader :db
 
         def self.provided_columns
-          [
-            :file_provenance_type,
-            :code_provenance_type
+          %i[
+            file_provenance_type
+            code_provenance_type
           ]
         end
 
@@ -32,11 +34,12 @@ module ConceptQL
 
         def modified_query
           return query unless self.class.has_required_columns?(dm.table_cols(source_table))
-          query.select_append(Sequel[dm.file_provenance_type_column(query, source_table)].as(:file_provenance_type), Sequel[dm.code_provenance_type_column(query, source_table)].as(:code_provenance_type)).from_self
+
+          query.select_append(Sequel[dm.file_provenance_type_column(query, source_table)].as(:file_provenance_type),
+                              Sequel[dm.code_provenance_type_column(query,
+                                                                    source_table)].as(:code_provenance_type)).from_self
         end
       end
     end
   end
 end
-
-

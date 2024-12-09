@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 
 module ConceptQL
@@ -5,11 +7,11 @@ module ConceptQL
     class Ethnicity < Operator
       register __FILE__
 
-      desc "Selects person records that match the given set of Ethnicity codes."
+      desc 'Selects person records that match the given set of Ethnicity codes.'
       domains :person
-      category "Select by Property"
+      category 'Select by Property'
       basic_type :selection
-      argument :ethnicity, type: :string, options: ["Hispanic or Latino", "Not Hispanic or Latino"]
+      argument :ethnicity, type: :string, options: ['Hispanic or Latino', 'Not Hispanic or Latino']
       validate_no_upstreams
       validate_at_least_one_argument
 
@@ -34,9 +36,9 @@ module ConceptQL
         arguments.map do |words|
           case words
           when /^Not Hispanic/i
-            38003564
+            38_003_564
           when /^Hispanic/i
-            38003563
+            38_003_563
           when /unknown/i
             [0, nil]
           end
@@ -45,4 +47,3 @@ module ConceptQL
     end
   end
 end
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sequel'
 require 'sequel/adapters/mock'
 require_relative '../behaviors/labish'
@@ -8,12 +10,12 @@ module ConceptQL
       include ConceptQL::Behaviors::CodeLister
       register __FILE__
 
-      preferred_name "READ"
-      desc "Selects records based on the Read vocabulary."
-      argument :read_codes, type: :codelist, vocab: "Read"
+      preferred_name 'READ'
+      desc 'Selects records based on the Read vocabulary.'
+      argument :read_codes, type: :codelist, vocab: 'Read'
       basic_type :selection
-      category "Select by Clinical Codes"
-      conceptql_spec_id "vocabulary"
+      category 'Select by Clinical Codes'
+      conceptql_spec_id 'vocabulary'
 
       def query(db)
         gdm? ? gdm(db) : omopv4(db)
@@ -43,14 +45,13 @@ module ConceptQL
 
       private
 
-      def ops(db = nil)
-        [ReadGDM.new(self.nodifier, "read_condition_occurrence", *arguments)]
+      def ops(_db = nil)
+        [ReadGDM.new(nodifier, 'read_condition_occurrence', *arguments)]
       end
 
       def describe_codes(db, codes)
         ops.flat_map { |op| op.describe_codes(db, codes) }
       end
-
 
       def mapping_type_to_domain(mapping_type)
         case mapping_type.to_s
@@ -75,8 +76,8 @@ module ConceptQL
       end
 
       class ReadBase < ConceptQL::Operators::Vocabulary
-        preferred_name "READ"
-        argument :read_codes, type: :codelist, vocab: "Read"
+        preferred_name 'READ'
+        argument :read_codes, type: :codelist, vocab: 'Read'
       end
 
       class ReadOmopBase < ReadBase
@@ -95,7 +96,7 @@ module ConceptQL
           table
         end
 
-        def domains(db)
+        def domains(_db)
           Array(domain)
         end
       end
@@ -105,14 +106,14 @@ module ConceptQL
         include ConceptQL::Behaviors::Labish
 
         def vocabulary_id
-          "Read"
+          'Read'
         end
 
-        def domain_map(v_id)
+        def domain_map(_v_id)
           :condition_occurrence
         end
 
-        def domains(db)
+        def domains(_db)
           [:condition_occurrence]
         end
       end

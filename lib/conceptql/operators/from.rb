@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Operators
     class From < Operator
@@ -16,10 +18,10 @@ module ConceptQL
         db.from(table_name)
       end
 
-      def domains(db)
+      def domains(_db)
         doms = options[:domains]
         if doms.nil? || doms.empty?
-          if dm.schema.has_key?(table_name)
+          if dm.schema.key?(table_name)
             [table_name]
           else
             [:invalid]
@@ -31,14 +33,15 @@ module ConceptQL
 
       def table_name
         return @table_name if @table_name
+
         name = values.first
         if name.is_a?(String)
           table, column = name.split('__', 2)
-          if column
-            name = Sequel.qualify(table, column)
-          else
-            name = name.to_sym
-          end
+          name = if column
+                   Sequel.qualify(table, column)
+                 else
+                   name.to_sym
+                 end
         end
         @table_name = name
       end

@@ -1,44 +1,45 @@
-require_relative "./db_helper"
+# frozen_string_literal: true
+
+require_relative './db_helper'
 
 file_regexps = nil
 argv = ARGV.reject { |f| f.start_with?('-') }
-if !argv.empty?
-  file_regexps = argv.map { |f| /#{f}/ }
-end
+file_regexps = argv.map { |f| /#{f}/ } unless argv.empty?
 
-def my_time_it(name, &block)
+def my_time_it(name)
   start_time = Time.now
   yield
-  return unless ENV["CONCEPTQL_TIME_IT"]
+  return unless ENV['CONCEPTQL_TIME_IT']
+
   end_time = Time.now
-  CSV.open("/tmp/conceptql_times.csv", "a") do |csv|
+  CSV.open('/tmp/conceptql_times.csv', 'a') do |csv|
     csv << [name, start_time, end_time, end_time - start_time]
   end
 end
 
 def run_test(f, basename)
-  test_type = basename.split("_").first
+  test_type = basename.split('_').first
 
   case test_type
-  when "crit"
+  when 'crit'
     criteria_ids(f)
-  when "anno"
+  when 'anno'
     annotate(f)
-  when "count"
+  when 'count'
     criteria_counts(f)
-  when "optcc"
+  when 'optcc'
     optimized_criteria_counts(f)
-  when "scanno"
+  when 'scanno'
     scope_annotate(f)
-  when "domains"
+  when 'domains'
     domains(f)
-  when "cc"
+  when 'cc'
     criteria_counts(f)
-  when "num"
+  when 'num'
     numeric_values(f)
-  when "codes"
+  when 'codes'
     code_check(f)
-  when "results"
+  when 'results'
     results(f)
   else
     raise "Invalid operation test prefix: #{test_type}"
@@ -46,10 +47,10 @@ def run_test(f, basename)
 end
 
 describe ConceptQL::Operators do
-
   Dir['./test/statements/**/*'].each do |f|
     next if File.directory? f
     next unless file_regexps.nil? || file_regexps.any? { |r| f =~ r }
+
     f.slice! './test/statements/'
     basename = File.basename(f)
 

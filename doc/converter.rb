@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require_relative '../lib/conceptql'
-require 'pp'
 require 'json'
 
 $converter = ConceptQL::Converter.new
 def my_pp(obj)
-  #PP.pp(obj, ''.dup, 10)
+  # PP.pp(obj, ''.dup, 10)
   JSON.pretty_generate(obj)
 end
 
@@ -12,11 +13,11 @@ def convert(cql)
   header = []
   header << cql.shift while cql.first =~ /^[`#]/
   footer = [cql.pop]
-  if cql.first =~ /^\[/
-    cql = my_pp(eval(cql.join))
-  else
-    cql = my_pp($converter.convert(eval(cql.join)))
-  end
+  cql = if cql.first =~ /^\[/
+          my_pp(eval(cql.join))
+        else
+          my_pp($converter.convert(eval(cql.join)))
+        end
   [header, cql, "\n", footer].flatten
 end
 
@@ -28,6 +29,6 @@ puts chunks.count
 outputs += chunks.map do |chunk|
   cql, *remainder = chunk.slice_after { |l| l =~ /^```\n$/ }.to_a
   cql = convert(cql)
-  [cql, remainder].flatten#.tap { |arr| pp arr; gets }
+  [cql, remainder].flatten # .tap { |arr| pp arr; gets }
 end.flatten
 File.write('/tmp/test.md', outputs.join)

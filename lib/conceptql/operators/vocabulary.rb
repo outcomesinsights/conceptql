@@ -1,4 +1,6 @@
-require_relative "operator"
+# frozen_string_literal: true
+
+require_relative 'operator'
 
 module ConceptQL
   module Operators
@@ -6,7 +8,7 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::CodeLister
 
-      category "Select by Clinical Codes"
+      category 'Select by Clinical Codes'
       basic_type :selection
       desc 'Selects records based on the given vocabulary.'
       validate_no_upstreams
@@ -14,7 +16,7 @@ module ConceptQL
       validate_codes_match
 
       def select_all?
-        arguments.include?("*")
+        arguments.include?('*')
       end
 
       def source_table
@@ -29,26 +31,26 @@ module ConceptQL
         domain_map(op_name)
       end
 
-      def domains(db)
+      def domains(_db)
         vocab_entry.predominant_domains.map(&:to_sym)
       end
 
       def additional_validation(db, opts = {})
-        if add_warnings?(db, opts) && !select_all?
-          args = arguments.dup
-          args -= bad_arguments
-          missing_args = []
+        return unless add_warnings?(db, opts) && !select_all?
 
-          missing_args = args - dm.known_codes(db, vocabulary_id, args)
+        args = arguments.dup
+        args -= bad_arguments
 
-          unless missing_args.empty?
-            add_warning("unknown code(s)", *missing_args)
-          end
-        end
+        missing_args = args - dm.known_codes(db, vocabulary_id, args)
+
+        return if missing_args.empty?
+
+        add_warning('unknown code(s)', *missing_args)
       end
 
       def describe_codes(db, codes)
-        return [["*", "ALL CODES"]] if select_all?
+        return [['*', 'ALL CODES']] if select_all?
+
         found_codes = dm.concepts_to_codes(db, vocabulary_id, codes)
 
         found_codes + (codes - found_codes.map(&:first)).zip([])
@@ -57,7 +59,7 @@ module ConceptQL
       def filter_clause(db)
         filter_clause = Sequel[where_clause(db)]
         if (ex_clause = exclusion_clause(db)).present?
-          filter_clause = filter_clause.&(~Sequel[ex_clause])
+          filter_clause &= ~Sequel[ex_clause]
         end
         filter_clause
       end
@@ -96,11 +98,11 @@ module ConceptQL
         ds
       end
 
-      def exclusion_clause(db)
+      def exclusion_clause(_db)
         {}
       end
 
-      def additional_columns(db)
+      def additional_columns(_db)
         []
       end
 
@@ -110,7 +112,7 @@ module ConceptQL
         # and it shouldn't hurt for PostgreSQL performance
         wheres = { clinical_code_vocabulary_id: vocabulary_id }
 
-        if !select_all?
+        unless select_all?
           concept_ids = dm.concepts(db, vocabulary_id, arguments).select_map(:id)
 
           wheres = wheres.merge({ clinical_code_concept_id: concept_ids })
@@ -124,7 +126,7 @@ module ConceptQL
       end
 
       def select_all?
-        arguments.include?("*")
+        arguments.include?('*')
       end
 
       def preferred_name
@@ -136,7 +138,7 @@ module ConceptQL
         unless defined?(@code_regexp)
           @code_regexp = nil
 
-          if reg_str = vocab_entry.format_regexp
+          if (reg_str = vocab_entry.format_regexp)
             @code_regexp = Regexp.union(Regexp.new(reg_str, Regexp::IGNORECASE), /\A\*\Z/)
           end
         end
@@ -154,10 +156,11 @@ module ConceptQL
       def translate_to_old(v_id)
         v = self.class.v5_vocab_to_v4_vocab[v_id.to_s.downcase]
         return v.to_i if v
+
         v
       end
 
-      def domain_map(v_id)
+      def domain_map(_v_id)
         (vocab_entry.domain || :condition_occurrence).to_sym
       end
 
@@ -167,5 +170,3 @@ module ConceptQL
     end
   end
 end
-
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'temporal_operator'
 
 module ConceptQL
@@ -13,17 +15,17 @@ module ConceptQL
     # If the RHS record's start_date is later than the LHS end_date, the LHS
     # record is passed thru unaffected.
     class TrimDate < TemporalOperator
-      desc <<-EOF
-Trims the end_date of the left hand records (LHR) by the earliest
-start_date (per person) in the right hand records (RHR)
-If the RHR contains a start_date that comes before the start_date in the LHR
-that record in the LHR is completely discarded.
+      desc <<~EOF
+        Trims the end_date of the left hand records (LHR) by the earliest
+        start_date (per person) in the right hand records (RHR)
+        If the RHR contains a start_date that comes before the start_date in the LHR
+        that record in the LHR is completely discarded.
 
-If there is no record in the RHR for a record in the LHR, the record in the LHR is passed
-through unaffected.
+        If there is no record in the RHR for a record in the LHR, the record in the LHR is passed
+        through unaffected.
 
-If the start_date of the record in the RHR is later than the end_date of the record in the LHR, the record in the LHR
-is passed through unaffected.
+        If the start_date of the record in the RHR is later than the end_date of the record in the LHR, the record in the LHR
+        is passed through unaffected.
       EOF
 
       allows_one_upstream
@@ -33,8 +35,8 @@ is passed through unaffected.
         # the entire LHS date range is truncated, which implies the row itself
         # is ineligible to pass thru
         ds = db.from(left_stream(db)).from_self(alias: :l)
-              .left_join(Sequel.as(right_stream_query(db), :r), join_columns.inject(&:&))
-              .where(where_criteria)
+               .left_join(Sequel.as(right_stream_query(db), :r), join_columns.inject(&:&))
+               .where(where_criteria)
 
         ds = dm.selectify(ds, qualifier: :l, replace: replacement_columns)
 
@@ -55,11 +57,11 @@ is passed through unaffected.
 
       def right_stream_query(db)
         rh = if compare_all?
-          super
-        else
-          occ = to_op([:occurrence, occurrence_number, right])
-          rh = occ.evaluate(db)
-        end
+               super
+             else
+               occ = to_op([:occurrence, occurrence_number, right])
+               occ.evaluate(db)
+             end
         columnizer.apply(rh)
       end
 
@@ -71,5 +73,3 @@ is passed through unaffected.
     end
   end
 end
-
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'lexicon'
 
 module ConceptQL
@@ -17,7 +19,7 @@ module ConceptQL
       select_remove
       sql_comments
       usable
-    ]
+    ].freeze
 
     def initialize(db, opts = {})
       @db = db
@@ -80,7 +82,7 @@ module ConceptQL
       def make_lexicon_db
         db_opts = {}
         if ENV['CONCEPTQL_LOG_LEXICON']
-          log_path = Pathname.new('log') + 'conceptql_lexicon.log'
+          log_path = Pathname.new('log') / 'conceptql_lexicon.log'
           log_path.dirname.mkpath
           db_opts[:logger] = Logger.new(log_path)
         end

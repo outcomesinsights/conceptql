@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 
 module ConceptQL
@@ -9,7 +11,7 @@ module ConceptQL
       validate_no_arguments
       validate_option Array, :left, :right
       validate_required_options :left, :right
-      category "Filter by Comparing"
+      category 'Filter by Comparing'
       basic_type :filter
 
       def upstreams
@@ -20,7 +22,7 @@ module ConceptQL
         left.code_list(db) + right.code_list(db)
       end
 
-      attr :left, :right
+      attr_reader :left, :right
 
       def accept(visitor, opts = {})
         visitor.visit(self)
@@ -39,7 +41,7 @@ module ConceptQL
       end
 
       def join_columns(opts = {})
-        join_columns_option.map{ |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
+        join_columns_option.map { |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
       end
 
       def join_columns_option

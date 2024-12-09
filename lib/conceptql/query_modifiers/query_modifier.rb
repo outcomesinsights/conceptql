@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module QueryModifiers
     class QueryModifier
-      attr :query, :op, :source_table, :dm
+      attr_reader :query, :op, :source_table, :dm
 
       def initialize(query, op, table, dm)
         @query = query

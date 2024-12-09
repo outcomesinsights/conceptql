@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Operators
     class MultipleVocabularies < Operator
@@ -19,7 +21,7 @@ module ConceptQL
         end
 
         def register_many
-          multiple_vocabularies.keys.each do |operator_sym|
+          multiple_vocabularies.each_key do |operator_sym|
             register(operator_sym)
           end
         end
@@ -62,7 +64,7 @@ module ConceptQL
         end
       end
 
-      def domains(db)
+      def domains(_db)
         vocab_ops.map(&:domain).uniq
       end
 

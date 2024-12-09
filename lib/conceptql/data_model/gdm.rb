@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'base'
 
 module ConceptQL
@@ -43,16 +45,16 @@ module ConceptQL
         Sequel.expr(make_table_id(table)).as(:criterion_id)
       end
 
-      def make_table_id(table)
+      def make_table_id(_table)
         :id
       end
 
       def fk_by_domain(domain)
         table = table_by_domain(domain)
-        (table.to_s.gsub(/_id/, '').chomp('s') + '_id').to_sym
+        "#{table.to_s.gsub(/_id/, '').chomp('s')}_id".to_sym
       end
 
-      def pk_by_domain(domain)
+      def pk_by_domain(_domain)
         :id
       end
 
@@ -101,15 +103,15 @@ module ConceptQL
         :gdm
       end
 
-      def start_date_column(query, domain)
+      def start_date_column(_query, domain)
         start_date_columns[domain]
       end
 
-      def end_date_column(query, domain)
+      def end_date_column(_query, domain)
         end_date_columns[domain]
       end
 
-      def id_column(table)
+      def id_column(_table)
         :id
       end
 
@@ -234,11 +236,11 @@ module ConceptQL
         db.is_a?(Sequel::Mock::Database)
       end
 
-      def code_provenance_type(query, domain)
+      def code_provenance_type(_query, _domain)
         :provenance_concept_id
       end
 
-      def file_provenance_type(query, domain)
+      def file_provenance_type(_query, _domain)
         :source_type_concept_id
       end
 

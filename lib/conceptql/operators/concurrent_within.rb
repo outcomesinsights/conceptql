@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 require_relative '../date_adjuster'
 
@@ -13,7 +15,7 @@ module ConceptQL
       validate_at_least_one_upstream
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
-      category "Combine Streams"
+      category 'Combine Streams'
       basic_type :set
       default_query_columns
 
@@ -28,16 +30,18 @@ module ConceptQL
         adjusted_end_date = DateAdjuster.new(self, options[:end]).adjust(Sequel[:l][:end_date])
 
         datasets = datasets.map do |ds|
-          matching = ds.from_self(:alias=>:l)
+          matching = ds.from_self(alias: :l)
 
           (datasets - [ds]).each do |other|
             other = other
-              .from_self(:alias=>:r)
-              .where(adjusted_start_date <= Sequel[:r][:start_date])
-              .where(adjusted_end_date >= Sequel[:r][:end_date])
-              .select(*matching_columns)
+                    .from_self(alias: :r)
+                    .where(adjusted_start_date <= Sequel[:r][:start_date])
+                    .where(adjusted_end_date >= Sequel[:r][:end_date])
+                    .select(*matching_columns)
 
-            matching = matching.where(other.where(matching_columns.map{|x| [Sequel.qualify(:l, x), Sequel.qualify(:r, x)]}).exists)
+            matching = matching.where(other.where(matching_columns.map do |x|
+              [Sequel.qualify(:l, x), Sequel.qualify(:r, x)]
+            end).exists)
           end
 
           matching
@@ -45,7 +49,7 @@ module ConceptQL
 
         ds, *rest = datasets
         rest.each do |other|
-          ds = ds.union(other, :from_self=>nil)
+          ds = ds.union(other, from_self: nil)
         end
 
         ds.from_self
@@ -53,5 +57,3 @@ module ConceptQL
     end
   end
 end
-
-

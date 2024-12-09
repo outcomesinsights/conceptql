@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 
 module ConceptQL
@@ -9,7 +11,7 @@ module ConceptQL
 
       desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids."
       option :specialties, type: :string
-      category "Filter Single Stream"
+      category 'Filter Single Stream'
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
@@ -35,5 +37,3 @@ module ConceptQL
     end
   end
 end
-
-

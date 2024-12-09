@@ -1,10 +1,12 @@
-require_relative "lexicon_strategy"
+# frozen_string_literal: true
+
+require_relative 'lexicon_strategy'
 
 module ConceptQL
   class LexiconGDM < LexiconStrategy
     class << self
       def db_has_all_vocabulary_tables?(db)
-        %i(ancestors concepts mappings vocabularies).all?{|t| db.table_exists?(t)}
+        %i[ancestors concepts mappings vocabularies].all? { |t| db.table_exists?(t) }
       end
     end
 

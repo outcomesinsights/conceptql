@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'pass_thru'
 
 module ConceptQL
@@ -27,6 +29,7 @@ module ConceptQL
 
       def desired_columns
         return options[:query_columns] if options[:query_columns]
+
         columns = query_cols
 
         columns &= options[:only_columns] if options[:only_columns]
@@ -36,5 +39,3 @@ module ConceptQL
     end
   end
 end
-
-

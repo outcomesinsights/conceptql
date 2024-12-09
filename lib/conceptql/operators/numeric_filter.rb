@@ -1,5 +1,7 @@
-require_relative "operator"
-require "active_support/core_ext/object/blank"
+# frozen_string_literal: true
+
+require_relative 'operator'
+require 'active_support/core_ext/object/blank'
 
 module ConceptQL
   module Operators
@@ -11,11 +13,11 @@ module ConceptQL
     class NumericFilter < Operator
       register __FILE__
 
-      desc "Includes records with a value_as_number that match the given criteria."
+      desc 'Includes records with a value_as_number that match the given criteria.'
 
       option :greater_than_or_equal_to, type: :float
       option :less_than_or_equal_to, type: :float
-      category "Filter Single Stream"
+      category 'Filter Single Stream'
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
@@ -60,7 +62,7 @@ module ConceptQL
       end
 
       def lte_criteria
-        VALUE_COLUMN <= lte_literal
+        lte_literal >= VALUE_COLUMN
       end
     end
   end

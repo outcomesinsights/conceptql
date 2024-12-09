@@ -1,10 +1,12 @@
-require_relative "../behaviors/drugish"
-require_relative "../behaviors/labish"
-require_relative "behaviors/gdmish"
-require_relative "behaviors/omopish"
-require_relative "behaviors/sourcish"
-require_relative "behaviors/costish"
-require_relative "../operators/vocabulary"
+# frozen_string_literal: true
+
+require_relative '../behaviors/drugish'
+require_relative '../behaviors/labish'
+require_relative 'behaviors/gdmish'
+require_relative 'behaviors/omopish'
+require_relative 'behaviors/sourcish'
+require_relative 'behaviors/costish'
+require_relative '../operators/vocabulary'
 
 module ConceptQL
   module Vocabularies
@@ -35,13 +37,9 @@ module ConceptQL
         get_klass do
           include Behaviors::Omopish
 
-          if entry.is_source?
-            include Behaviors::Sourcish
-          end
+          include Behaviors::Sourcish if entry.is_source?
 
-          if entry.is_costish?
-            include Behaviors::Costish
-          end
+          include Behaviors::Costish if entry.is_costish?
         end
       end
 
@@ -50,8 +48,8 @@ module ConceptQL
         Class.new(ConceptQL::Operators::Vocabulary) do |klass|
           @entry = ventry
 
-          def self.entry
-            @entry
+          class << self
+            attr_reader :entry
           end
 
           preferred_name entry.preferred_name
@@ -60,7 +58,7 @@ module ConceptQL
           predominant_domains entry.predominant_domains
           short_name entry.short_name
           long_name entry.long_name
-          conceptql_spec_id "vocabulary"
+          conceptql_spec_id 'vocabulary'
 
           klass.class_eval(&block)
 
@@ -76,13 +74,9 @@ module ConceptQL
             "ConceptQL::Operator::#{entry.id}"
           end
 
-          if entry.is_labish?
-            include ConceptQL::Behaviors::Labish
-          end
+          include ConceptQL::Behaviors::Labish if entry.is_labish?
 
-          if entry.is_drugish?
-            include ConceptQL::Behaviors::Drugish
-          end
+          include ConceptQL::Behaviors::Drugish if entry.is_drugish?
 
           def vocab_entry
             self.class.entry
@@ -92,5 +86,3 @@ module ConceptQL
     end
   end
 end
-
-

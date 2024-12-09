@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'generic'
 
 module ConceptQL
@@ -11,7 +13,7 @@ module ConceptQL
         Sequel.extract(:days, Sequel.cast(from, Time) - Sequel.cast(to, Time))
       end
 
-      def create_options(scope, ds)
+      def create_options(_scope, _ds)
         opts = {}
         opts[:analyze] = opts[:explain] = explain_temp_tables?
         opts

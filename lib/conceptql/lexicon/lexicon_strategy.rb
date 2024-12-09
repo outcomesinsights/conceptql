@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   class LexiconStrategy
     attr_reader :db

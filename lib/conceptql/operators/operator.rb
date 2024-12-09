@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'zlib'
 require_relative '../behaviors/metadatable'
 require 'forwardable'
@@ -151,7 +153,7 @@ module ConceptQL
       end
 
       def annotate(db, opts = {})
-        return @annotation if defined?(@annotation)
+        return @annotate if defined?(@annotate)
 
         scope_key = options[:id] || op_name
         annotation = {}
@@ -192,7 +194,7 @@ module ConceptQL
           res << metadata
         end
 
-        @annotation = res
+        @annotate = res
       end
 
       def code_list(db)
@@ -560,7 +562,7 @@ module ConceptQL
 
       def validate_option(format, *opts)
         opts.each do |opt|
-          next unless options.has_key?(opt)
+          next unless options.key?(opt)
 
           add_error('wrong option format', opt.to_s, options[opt]) unless format === options[opt]
         end
@@ -568,7 +570,7 @@ module ConceptQL
 
       def validate_required_options(*opts)
         opts.each do |opt|
-          add_error('required option not present', opt.to_s) unless options.has_key?(opt)
+          add_error('required option not present', opt.to_s) unless options.key?(opt)
         end
       end
 

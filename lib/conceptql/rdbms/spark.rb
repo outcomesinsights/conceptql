@@ -1,4 +1,6 @@
-require_relative "generic"
+# frozen_string_literal: true
+
+require_relative 'generic'
 
 module ConceptQL
   module Rdbms
@@ -17,9 +19,10 @@ module ConceptQL
           .select(
             Sequel[:pcc][:collection_id].as(:collection_id),
             Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
-            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id))
+            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id)
+          )
           .select_append(Sequel[:ROW_NUMBER].function.over(
-            partition: :collection_id, 
+            partition: :collection_id,
             order: [Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id]]
           ).as(:nummy))
           .from_self

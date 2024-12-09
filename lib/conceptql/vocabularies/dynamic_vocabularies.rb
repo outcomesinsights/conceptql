@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/object/blank'
 require 'csv'
 require 'sequelizer'
@@ -16,7 +18,7 @@ module ConceptQL
 
       def register_operators
         all_vocabs.each do |name, entry|
-          klasses = entry.dup.get_klasses.each do |data_model, klass|
+          entry.dup.get_klasses.each do |data_model, klass|
             klass.register(name, data_model)
           end
         end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'occurrence'
 
 module ConceptQL
@@ -17,7 +19,7 @@ module ConceptQL
     class First < Occurrence
       register __FILE__
 
-      desc "For each person, passes along the record with the earliest start_date."
+      desc 'For each person, passes along the record with the earliest start_date.'
 
       def occurrence
         1
@@ -25,4 +27,3 @@ module ConceptQL
     end
   end
 end
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 
 module ConceptQL
@@ -23,12 +25,12 @@ module ConceptQL
     # Also, if a casting operator is passed no streams, it will return all the
     # rows in its table as records.
     class CastingOperator < Operator
-      category "Get Related Data"
+      category 'Get Related Data'
       basic_type :cast
       validate_at_most_one_upstream
       validate_no_arguments
 
-      def domains(db)
+      def domains(_db)
         [domain]
       end
 
@@ -42,6 +44,7 @@ module ConceptQL
 
       def query(db)
         return db.from(table) if stream.nil?
+
         base_query(db, stream.evaluate(db))
       end
 
@@ -69,8 +72,8 @@ module ConceptQL
           # isn't castable so we'll just return all rows for
           # all people in each uncastable stream
           uncastable_person_ids = db.from(stream_query)
-            .where(criterion_domain: uncastable_domains.map(&:to_s))
-            .select_group(:person_id)
+                                    .where(criterion_domain: uncastable_domains.map(&:to_s))
+                                    .select_group(:person_id)
           wheres << Sequel.expr(dm.person_id(table) => uncastable_person_ids)
         end
 
@@ -82,8 +85,8 @@ module ConceptQL
           # them from the source table
           castable_domain_query = to_me_domains.map do |source_domain|
             source_ids = db.from(stream_query)
-              .where(criterion_domain: source_domain.to_s)
-              .select_group(:criterion_id)
+                           .where(criterion_domain: source_domain.to_s)
+                           .select_group(:criterion_id)
             source_table = make_table_name(source_domain)
             source_domain_id = dm.make_fk_id(source_domain)
 

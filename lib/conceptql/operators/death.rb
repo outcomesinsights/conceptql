@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'casting_operator'
 
 module ConceptQL
@@ -20,7 +22,7 @@ module ConceptQL
       end
 
       def i_point_at
-        [ :person ]
+        [:person]
       end
 
       def these_point_at_me

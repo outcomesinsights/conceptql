@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Operators
     class Invalid < Operator
@@ -12,10 +14,10 @@ module ConceptQL
       end
 
       def operator_name
-        @operator_name ||= arguments.shift.to_s || "invalid"
+        @operator_name ||= arguments.shift.to_s || 'invalid'
       end
 
-      def query(db)
+      def query(_db)
         raise "Invalid#query called.  #{errors}"
       end
 
@@ -27,9 +29,7 @@ module ConceptQL
         super
       end
 
-      def validate(db, opts = {})
-      end
+      def validate(db, opts = {}); end
     end
   end
 end
-

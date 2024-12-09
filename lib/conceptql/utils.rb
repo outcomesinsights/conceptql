@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'timeout'
 require 'pry-byebug'
@@ -58,7 +60,7 @@ module ConceptQL
         when 0
           ''
         when 1
-          "#{array[0]}"
+          (array[0]).to_s
         when 2
           "#{array[0]}#{options[:two_words_connector]}#{array[1]}"
         else
@@ -101,7 +103,7 @@ module ConceptQL
         stdout.close
 
         if wait_thread[:timed_out]
-          raise Timeout::Error.new("Command #{commands} failed to complete after #{timeout} seconds")
+          raise Timeout::Error, "Command #{commands} failed to complete after #{timeout} seconds"
         end
 
         out

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'pass_thru'
 
 module ConceptQL

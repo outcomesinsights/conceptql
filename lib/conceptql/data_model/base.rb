@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'psych'
 
 module ConceptQL
   module DataModel
     class Base
-      SCHEMAS = Dir.glob(ConceptQL.schemas_dir + '*.yml').each_with_object({}) do |schema_file, schemas|
-        schemas[File.basename(schema_file, '.*').to_sym] = Psych.load_file(schema_file)
+      SCHEMAS = ConceptQL.schemas_dir.glob('*.yml').each_with_object({}) do |schema_file, schemas|
+        schemas[schema_file.basename('.*').to_s.to_sym] = Psych.load_file(schema_file)
       end
 
       attr_reader :operator, :nodifier
@@ -43,7 +45,7 @@ module ConceptQL
       end
 
       def make_table_id(table)
-        (table.to_s + '_id').to_sym
+        "#{table}_id".to_sym
       end
 
       def make_fk_id(table)
@@ -63,7 +65,7 @@ module ConceptQL
         end
       end
 
-      def person_id_column(query)
+      def person_id_column(_query)
         :person_id
       end
 
@@ -103,11 +105,12 @@ module ConceptQL
                       query_columns
                     else
                       columns_in_table(table,
-                                       opts).merge(modifier_columns(table, opts)).merge(nullified_columns(table, opts))
+                                       opts).merge(modifier_columns(table,
+                                                                    opts)).merge(nullified_columns(table, opts))
                     end.dup
 
         except_keys = opts[:except] || []
-        if cols_hash.has_key?(:uuid)
+        if cols_hash.key?(:uuid)
           if opts[:uuid]
             except_keys << :uuid
           elsif table
@@ -118,8 +121,8 @@ module ConceptQL
         col_keys -= except_keys
         col_keys &= opts[:only] if opts[:only]
 
-        if qualifier = opts[:qualifier]
-          cols_hash = Hash[cols_hash.map { |k, c| [k, Sequel.qualify(qualifier, c)] }]
+        if (qualifier = opts[:qualifier])
+          cols_hash = cols_hash.transform_values { |c| Sequel.qualify(qualifier, c) }
         end
 
         cols_hash.merge!(replace(opts[:replace]))
@@ -234,14 +237,14 @@ module ConceptQL
       end
 
       def start_date_columns
-        @start_date_columns ||= assign_column_to_table do |table, columns|
+        @start_date_columns ||= assign_column_to_table do |_table, columns|
           column = columns.select { |k| k =~ /start_date$/ }.first
           column ||= columns.select { |k| k =~ /date$/ }.first
         end
       end
 
       def end_date_columns
-        @end_date_columns ||= assign_column_to_table do |table, columns|
+        @end_date_columns ||= assign_column_to_table do |_table, columns|
           column = columns.select { |k| k =~ /end_date$/ }.first
           column ||= columns.select { |k| k =~ /date$/ }.first
         end
@@ -285,7 +288,7 @@ module ConceptQL
       end
 
       def type_concept_id_columns
-        @type_concept_id_columns ||= assign_column_to_table do |table, columns|
+        @type_concept_id_columns ||= assign_column_to_table do |_table, columns|
           columns.select { |c| c =~ /_type_concept_id$/ }.first
         end
       end
@@ -310,7 +313,7 @@ module ConceptQL
         source_value_columns[table]
       end
 
-      def code_provenance_type_column(query, domain)
+      def code_provenance_type_column(_query, domain)
         {
           condition_occurrence: :condition_type_concept_id,
           death: :death_type_concept_id,
@@ -320,7 +323,7 @@ module ConceptQL
         }[domain]
       end
 
-      def file_provenance_type_column(query, domain)
+      def file_provenance_type_column(_query, domain)
         {
           condition_occurrence: :condition_type_concept_id,
           death: :death_type_concept_id,
@@ -330,7 +333,7 @@ module ConceptQL
         }[domain]
       end
 
-      def provider_id_column(query, domain)
+      def provider_id_column(_query, domain)
         {
           condition_occurrence: :associated_provider_id,
           death: :death_type_concept_id,
@@ -342,7 +345,7 @@ module ConceptQL
         }[domain]
       end
 
-      def place_of_service_concept_id_column(query, domain)
+      def place_of_service_concept_id_column(_query, domain)
         return nil if domain.nil?
         return Sequel.cast(:visit_source_concept_id, :Bigint) if table_cols(domain).include?(pos_table_fk)
 
@@ -353,7 +356,7 @@ module ConceptQL
         :visit_occurrence_id
       end
 
-      def person_date_of_birth(query)
+      def person_date_of_birth(_query)
         rdbms.cast_date(ConceptQL::Utils.assemble_date(:year_of_birth, :month_of_birth, :day_of_birth,
                                                        database_type: nodifier.database_type))
       end
@@ -410,7 +413,7 @@ module ConceptQL
       # For now, we'll return only the ids we're given as I'm not sure
       # we want to expand the search for concepts outside those specified
       # for OMOPv4.5+
-      def related_concept_ids(db, *ids)
+      def related_concept_ids(_db, *ids)
         ids
       end
 

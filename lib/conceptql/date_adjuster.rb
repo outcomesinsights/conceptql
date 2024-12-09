@@ -1,21 +1,25 @@
+# frozen_string_literal: true
+
 require_relative '../conceptql'
 
 module ConceptQL
   # Used to translate a string of terse date adjustments into a set of adjustments that are compatible with most RDBMSs
   class DateAdjuster
+    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /[ers]*([-+]?[\ddwmy]+)+/i,
+                                     /\s*/])}\z/.freeze
 
-    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /[ers]*([-+]?[\ddwmy]+)+/i, /\s*/])}\z/
+    attr_reader :op, :str, :manipulator
 
-    attr :op, :str, :manipulator
     def initialize(op, str, opts = {})
-      str = str.strftime("%Y-%m-%d") if str.respond_to?(:strftime)
+      str = str.strftime('%Y-%m-%d') if str.respond_to?(:strftime)
       raise "Invalid adjustment string: #{str.pretty_inspect}" unless str.nil? || str =~ VALID_INPUT
+
       @op = op
-      @str = str || ""
+      @str = str || ''
       @manipulator = opts[:manipulator] || Sequel
     end
 
-    def adjust(column, reverse=false)
+    def adjust(column, reverse = false)
       return Sequel.expr(:end_date) if str.downcase == 'end'
       return Sequel.expr(:start_date) if str.downcase == 'start'
       return op.rdbms.cast_date(Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
@@ -40,7 +44,7 @@ module ConceptQL
           quantity *= 7
         end
 
-        if quantity > 0
+        if quantity.positive?
           manipulator.date_add(sql, units => quantity)
         else
           manipulator.date_sub(sql, units => quantity.abs)
@@ -68,16 +72,15 @@ module ConceptQL
     def parse(str, reverse)
       return [] if str.nil? || str.empty?
       return [[lookup['d'], str.to_i]] if str.match(/^[-+]?\d+$/)
+
       str.downcase.scan(/([-+]?\d*[dwmy])/).map do |adjustment|
         adjustment = adjustment.first
 
         quantity = 1
         if adjustment.match(/\d/)
           quantity = adjustment.to_i
-        else
-          if adjustment.chars.first == '-'
-            quantity = -1
-          end
+        elsif adjustment.chars.first == '-'
+          quantity = -1
         end
         quantity *= -1 if reverse
 

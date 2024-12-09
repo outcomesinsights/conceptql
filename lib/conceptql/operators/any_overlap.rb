@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'temporal_operator'
 
 module ConceptQL
@@ -13,4 +15,3 @@ module ConceptQL
     end
   end
 end
-

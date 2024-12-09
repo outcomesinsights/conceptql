@@ -1,4 +1,6 @@
-require_relative "gdm"
+# frozen_string_literal: true
+
+require_relative 'gdm'
 
 module ConceptQL
   module DataModel
@@ -11,15 +13,13 @@ module ConceptQL
           drug_name: ConceptQL::QueryModifiers::GdmWide::DrugQueryModifier,
           admission_date: ConceptQL::QueryModifiers::GdmWide::AdmissionDateQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::GdmWide::ProvenanceQueryModifier,
-          value_as_number: ConceptQL::QueryModifiers::GdmWide::LabQueryModifier,
+          value_as_number: ConceptQL::QueryModifiers::GdmWide::LabQueryModifier
         }[column]
       end
 
       def table_by_domain(table)
         tab = super(table)
-        if %i(clinical_codes collections).include?(tab)
-          tab = :observations
-        end
+        tab = :observations if %i[clinical_codes collections].include?(tab)
         tab
       end
 

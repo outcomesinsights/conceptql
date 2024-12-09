@@ -1,11 +1,13 @@
-require_relative "vocabulary_class_factory"
+# frozen_string_literal: true
+
+require_relative 'vocabulary_class_factory'
 
 module ConceptQL
   module Vocabularies
     class Entry
-      attr :hash
+      attr_reader :hash
 
-      METHODS = %i(
+      METHODS = %i[
         id
         omopv4_vocabulary_id
         omopv5_vocabulary_id
@@ -13,7 +15,7 @@ module ConceptQL
         vocabulary_short_name
         vocabulary_long_name
         format_regexp
-      )
+      ].freeze
 
       METHODS.each do |meth|
         define_method(meth) do
@@ -21,12 +23,12 @@ module ConceptQL
         end
       end
 
-      METADATA_METHODS = METHODS + %i(
+      METADATA_METHODS = METHODS + %i[
         preferred_name
         predominant_domains
-      )
+      ]
 
-      STANDARD_VOCABS = %w(
+      STANDARD_VOCABS = %w[
         ABMS
         AMT
         APC
@@ -92,27 +94,27 @@ module ConceptQL
         Visit
         Visit Type
         dm+d
-      )
+      ].freeze
 
       COST_RELATED_VOCABS = [
         'Revenue Code',
         'DRG'
-      ]
+      ].freeze
 
       def initialize(hash)
         @hash = hash
         @hash[:omopv5_vocabulary_id] ||= @hash[:id]
         @hash[:aliases_arr] ||= []
-        @hash[:aliases_arr] |= (@hash[:aliases] || "").split(";")
+        @hash[:aliases_arr] |= (@hash[:aliases] || '').split(';')
         @hash[:id] = @hash[:id].to_s.downcase
         @hash[:aliases_arr] << @hash[:id] if @hash[:id] =~ /\s/
-        @hash[:id] = translate_id(@hash[:id].gsub(/\W+/, "_"))
+        @hash[:id] = translate_id(@hash[:id].gsub(/\W+/, '_'))
         @hash[:aliases_arr] -= [@hash[:id]]
       end
 
       def translate_id(id)
         {
-          "icd10" => "icd10who"
+          'icd10' => 'icd10who'
         }[id] || id
       end
 
@@ -206,4 +208,3 @@ module ConceptQL
     end
   end
 end
-

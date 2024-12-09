@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'formatter'
 
 module ConceptQL
@@ -9,4 +11,3 @@ module ConceptQL
     end
   end
 end
-

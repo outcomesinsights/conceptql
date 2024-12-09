@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
-require "yaml"
+require 'yaml'
 
 module ConceptQL
   module Operators
@@ -15,10 +17,10 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Selects person records that match the given set of Race codes."
+      desc 'Selects person records that match the given set of Race codes.'
       argument :races, type: :codelist, vocab: 'Race'
       domains :person
-      category "Select by Property"
+      category 'Select by Property'
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument

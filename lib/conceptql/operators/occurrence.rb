@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'operator'
 
 module ConceptQL
@@ -29,14 +31,17 @@ module ConceptQL
       desc "Groups all records by person, then orders by start_date and finds the nth occurrence. Can be positive or negative, e.g 2 means 'second' and -3 means 'third from last'."
 
       argument :occurrence, type: :integer
-      category "Filter Single Stream"
+      category 'Filter Single Stream'
       basic_type :temporal
       allows_one_upstream
       validate_at_least_one_upstream
 
-      option :at_least, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
-      option :within, type: :string, instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
-      option :group_by_date, type: :boolean, instructions: 'Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence'
+      option :at_least, type: :string,
+                        instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :within, type: :string,
+                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+      option :group_by_date, type: :boolean,
+                             instructions: 'Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence'
 
       def query_cols
         dynamic_columns + [:rn]
@@ -52,10 +57,10 @@ module ConceptQL
 
       def query(db)
         ds = if at_least_option || within_option
-          query_complex(db)
-        else
-          query_simple(db)
-        end
+               query_complex(db)
+             else
+               query_simple(db)
+             end
 
         ds.where(rn: occurrence.abs)
       end
@@ -72,33 +77,32 @@ module ConceptQL
         # Give a global row number to all rows, so that the self joined dataset can partition based on
         # the global row number when ordering
         input_ds = stream.evaluate(db)
-          .select_append(Sequel[:ROW_NUMBER].function.over(partition: matching_columns, order: ordered_columns(:global=>true)).as(:global_rn))
+                         .select_append(Sequel[:ROW_NUMBER].function.over(partition: matching_columns,
+                                                                          order: ordered_columns(global: true)).as(:global_rn))
 
         first = Sequel[:first]
         rest = Sequel[:rest]
         base_input_ds = input_name ? Sequel[input_name] : input_ds
         joined_ds = db[base_input_ds.as(:first)]
-          .join(base_input_ds.as(:rest), matching_columns.map{|c| [c,c]}) do
-            cond = rest[:global_rn] > first[:global_rn]
-            if at_least_option
-              cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date])
-            end
-            if within_option
-              cond &= rest[:start_date] <= adjust_date(within_option, first[:end_date])
-            end
-            cond | {rest[:global_rn] => first[:global_rn]}
-          end
+                    .join(base_input_ds.as(:rest), matching_columns.map { |c| [c, c] }) do
+          cond = rest[:global_rn] > first[:global_rn]
+          cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date]) if at_least_option
+          cond &= rest[:start_date] <= adjust_date(within_option, first[:end_date]) if within_option
+          cond | { rest[:global_rn] => first[:global_rn] }
+        end
           .select_all(:rest)
           .select_append(first[:global_rn].as(:initial_rn))
-          .select_append(Sequel[rank_function].function.over(partition: matching_columns.map{|c| first[c]} + [first[:global_rn]], order: ordered_columns(:qualify=>:rest)).as(:rn))
+          .select_append(Sequel[rank_function].function.over(partition: matching_columns.map { |c|
+                           first[c]
+                         } + [first[:global_rn]], order: ordered_columns(qualify: :rest)).as(:rn))
 
-        if joined_name
-          joined_ds = db[joined_name]
-            .with(input_name, input_ds)
-            .with(joined_name, joined_ds)
-        else
-          joined_ds = joined_ds.from_self
-        end
+        joined_ds = if joined_name
+                      db[joined_name]
+                        .with(input_name, input_ds)
+                        .with(joined_name, joined_ds)
+                    else
+                      joined_ds.from_self
+                    end
 
         joined_ds.order(:global_rn)
       end
@@ -106,21 +110,24 @@ module ConceptQL
       # Without at_least or within option, only return the first occurrence for each person, if any.
       def query_simple(db)
         stream.evaluate(db)
-          .select_append(Sequel[rank_function].function.over(partition: matching_columns, order: ordered_columns).as(:rn))
-          .from_self
+              .select_append(Sequel[rank_function].function.over(partition: matching_columns,
+                                                                 order: ordered_columns).as(:rn))
+              .from_self
       end
 
       private
 
       def within_option
-        return unless v = options[:within]
+        return unless (v = options[:within])
         return if v.strip.empty?
+
         v
       end
 
       def at_least_option
-        return unless v = options[:at_least]
+        return unless (v = options[:at_least])
         return if v.strip.empty?
+
         v
       end
 
@@ -129,8 +136,8 @@ module ConceptQL
         adjuster.adjust(column, reverse)
       end
 
-      def additional_validation(db, opts = {})
-        if self.class == Occurrence
+      def additional_validation(_db, _opts = {})
+        if instance_of?(Occurrence)
           validate_one_argument
         else
           validate_no_arguments
@@ -138,7 +145,7 @@ module ConceptQL
       end
 
       def asc_or_desc
-        occurrence < 0 ? :desc : :asc
+        occurrence.negative? ? :desc : :asc
       end
 
       def qualify_with(qualifier, col)
@@ -149,19 +156,15 @@ module ConceptQL
         end
       end
 
-      def ordered_columns(opts={})
+      def ordered_columns(opts = {})
         qualifier = opts[:qualify]
         start_date = rdbms.partition_fix(qualify_with(qualifier, :start_date), qualifier)
-        unless opts[:global]
-          start_date = Sequel.send(asc_or_desc, start_date)
-        end
+        start_date = Sequel.send(asc_or_desc, start_date) unless opts[:global]
 
         order = [start_date]
         unless options[:group_by_date]
           criterion_id = qualify_with(qualifier, :criterion_id)
-          unless opts[:global]
-            criterion_id = Sequel.send(asc_or_desc, criterion_id)
-          end
+          criterion_id = Sequel.send(asc_or_desc, criterion_id) unless opts[:global]
           order << criterion_id
         end
         order
@@ -169,4 +172,3 @@ module ConceptQL
     end
   end
 end
-

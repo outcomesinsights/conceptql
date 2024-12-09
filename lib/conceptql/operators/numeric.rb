@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'pass_thru'
 
 module ConceptQL
@@ -14,16 +16,16 @@ module ConceptQL
     class Numeric < PassThru
       register __FILE__
 
-      desc <<-EOF
-Represents an operator that will either:
-- Create a value_as_number value for every person in the database
-- Change the value_as_number value for every record passed in
-  - Either to a number
-  - Or a value from a column in the origin row
+      desc <<~EOF
+        Represents an operator that will either:
+        - Create a value_as_number value for every person in the database
+        - Change the value_as_number value for every record passed in
+          - Either to a number
+          - Or a value from a column in the origin row
 
-Accepts two params:
-- Either a number value or a symbol representing a column name
-- An optional stream
+        Accepts two params:
+        - Either a number value or a symbol representing a column name
+        - An optional stream
       EOF
       argument :value, type: :float
       allows_one_upstream
@@ -41,12 +43,14 @@ Accepts two params:
       end
 
       private
+
       def with_kids(db)
         dm.selectify(db.from(stream.evaluate(db)), replace: { value_as_number: first_argument })
       end
 
       def as_criterion(db)
-        dm.selectify(db.from(dm.table_by_domain(:person)), domain: :person, replace: { value_as_number: first_argument})
+        dm.selectify(db.from(dm.table_by_domain(:person)), domain: :person,
+                                                           replace: { value_as_number: first_argument })
       end
 
       def first_argument
@@ -65,4 +69,3 @@ Accepts two params:
     end
   end
 end
-

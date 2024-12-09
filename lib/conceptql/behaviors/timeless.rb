@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Behaviors
     module Timeless
@@ -7,4 +9,3 @@ module ConceptQL
     end
   end
 end
-

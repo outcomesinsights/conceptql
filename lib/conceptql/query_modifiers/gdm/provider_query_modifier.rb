@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../query_modifier'
 
 module ConceptQL
@@ -5,11 +7,11 @@ module ConceptQL
     module Gdm
       class ProviderQueryModifier < QueryModifier
         def self.provided_columns
-          [:provider_id, :specialty_concept_id]
+          %i[provider_id specialty_concept_id]
         end
 
         def self.has_required_columns?(cols)
-          needed = [:practitioner_id, :context_id].sort
+          needed = %i[practitioner_id context_id].sort
           found = needed & cols
           !found.empty?
         end
@@ -17,10 +19,10 @@ module ConceptQL
         def modified_query
           if dm.table_cols(source_table).include?(:context_id)
             query.from_self(alias: :c)
-              .join(Sequel[:contexts_practitioners].as(:cp), context_id: :context_id)
-              .select_all(:c)
-              .select_append(Sequel[:cp][:practitioner_id].as(:provider_id))
-              .select_append(Sequel[:cp][:specialty_type_concept_id].as(:specialty_concept_id))
+                 .join(Sequel[:contexts_practitioners].as(:cp), context_id: :context_id)
+                 .select_all(:c)
+                 .select_append(Sequel[:cp][:practitioner_id].as(:provider_id))
+                 .select_append(Sequel[:cp][:specialty_type_concept_id].as(:specialty_concept_id))
           else
             query
               .select_all
@@ -28,9 +30,7 @@ module ConceptQL
               .select_append(Sequel.cast(nil, :Bigint).as(:specialty_concept_id))
           end.from_self
         end
-
       end
     end
   end
 end
-

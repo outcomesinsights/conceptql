@@ -1,5 +1,7 @@
-require_relative "window/table"
-require_relative "window/date_range"
+# frozen_string_literal: true
+
+require_relative 'window/table'
+require_relative 'window/date_range'
 
 module ConceptQL
   # Provides a singleton method which will return a series of scope windows
@@ -58,6 +60,7 @@ module ConceptQL
       def prep_options(opts)
         scope_by = opts.fetch(:scope_by, :start_date).to_sym
         raise "Unknown scope_by value #{scope_by.inspect}" unless EVENT_DATE_COLUMNS.key?(scope_by)
+
         start_col, end_col = *(EVENT_DATE_COLUMNS[scope_by])
         opts.merge(
           event_start_date_column: start_col,

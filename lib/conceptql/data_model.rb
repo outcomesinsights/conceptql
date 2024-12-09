@@ -1,7 +1,9 @@
-require_relative "data_model/gdm"
-require_relative "data_model/gdm_wide"
-require_relative "data_model/omopv4_plus"
-require_relative "rdbms"
+# frozen_string_literal: true
+
+require_relative 'data_model/gdm'
+require_relative 'data_model/gdm_wide'
+require_relative 'data_model/omopv4_plus'
+require_relative 'rdbms'
 
 module ConceptQL
   module DataModel

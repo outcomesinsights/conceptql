@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+require 'English'
 module ConceptQL
   module SqlFormatters
     class Formatter
@@ -13,7 +16,7 @@ module ConceptQL
 
       def installed?(name)
         `which #{name} > /dev/null 2>&1`
-        $?.success?
+        $CHILD_STATUS.success?
       end
 
       def arguments

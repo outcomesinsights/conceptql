@@ -1,9 +1,10 @@
-$: << 'lib'
+# frozen_string_literal: true
+
+$LOAD_PATH << 'lib'
 
 require 'thor'
 require 'sequelizer'
 require 'json'
-require 'pp'
 require 'csv'
 require 'conceptql'
 require_relative 'query'
@@ -52,7 +53,7 @@ module ConceptQL
       q = cdb(options).query(criteria_from_file(statement_file))
       puts JSON.pretty_generate(q.statement)
       puts q.sql(:formatted, :create_tables)
-      q.db.logger = db.loggers + [Logger.new(STDOUT).tap { |l| l.level = Logger::INFO }]
+      q.db.logger = db.loggers + [Logger.new($stdout).tap { |l| l.level = Logger::INFO }]
       puts q.analyze
     end
 
@@ -124,7 +125,7 @@ module ConceptQL
     def dumpit(path)
       path = Pathname.new(path)
       path.mkpath unless path.exist?
-      headers_path = path + 'headers'
+      headers_path = path / 'headers'
       headers_path.mkpath unless headers_path.exist?
       db.tables.each do |table|
         puts "Dumping #{table}..."

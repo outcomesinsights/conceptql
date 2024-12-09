@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConceptQL
   module Vocabularies
     module Behaviors
@@ -7,7 +9,7 @@ module ConceptQL
           domains
         end
 
-        def where_clause(db)
+        def where_clause(_db)
           conds = { dm.source_vocabulary_id(domain) => vocabulary_id.to_i }
           conds[dm.source_value_column(domain)] = arguments unless select_all?
           conds
@@ -24,4 +26,3 @@ module ConceptQL
     end
   end
 end
-

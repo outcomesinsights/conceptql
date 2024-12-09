@@ -1,40 +1,44 @@
+# frozen_string_literal: true
+
 require_relative 'operators/operator'
 
 module ConceptQL
   class Nodifier
-    attr :scope, :data_model, :database_type, :algorithm_fetcher
+    attr_reader :scope, :data_model, :database_type, :algorithm_fetcher
 
-    def initialize(opts={})
+    def initialize(opts = {})
       @scope = opts[:scope] || Scope.new(opts.delete(:scope_opts) || {})
       @data_model = get_data_model(opts)
       @database_type = opts[:database_type] || ConceptQL::DEFAULT_DATA_MODEL
-      @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |alg|
+      @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |_alg|
         nil
       end)
     end
 
     def get_data_model(opts)
-      (opts[:data_model] || ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
+      (opts[:data_model] || ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
     end
 
     def create(operator, *values)
       operator = operator.to_s.downcase
       if operator == 'algorithm'
-        statement, desc = algorithm_fetcher.call(values.first)
+        statement, = algorithm_fetcher.call(values.first)
         if statement
           create(*statement)
         else
-          invalid_op(operator, values, "invalid algorithm", values.first)
+          invalid_op(operator, values, 'invalid algorithm', values.first)
         end
       elsif (klass = fetch_op(operator))
         klass.new(self, operator, *values)
       else
-        invalid_op(operator, values, "invalid operator", operator)
+        invalid_op(operator, values, 'invalid operator', operator)
       end
     end
 
     def to_metadata(opts = {})
-      Hash[operators.map { |k, v| [k, v.to_metadata(k, opts)]}.select { |k, v| !v[:categories].empty? }.sort_by { |k, v| v[:name] }]
+      Hash[operators.map do |k, v|
+        [k, v.to_metadata(k, opts)]
+      end.reject { |_k, v| v[:categories].empty? }.sort_by { |_k, v| v[:name] }]
     end
 
     private
@@ -54,6 +58,7 @@ module ConceptQL
     def operator_aliases
       @operator_aliases ||= operators.flat_map do |id, klass|
         next unless klass.aliases.present?
+
         klass.aliases.map { |klass_alias| [klass_alias, id] }
       end.compact.to_h
     end

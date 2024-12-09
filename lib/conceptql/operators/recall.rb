@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'pass_thru'
 
 module ConceptQL
@@ -12,10 +14,10 @@ module ConceptQL
     class Recall < Operator
       register __FILE__
 
-      desc "Recalls a set of records from a labeled operator in the statement"
+      desc 'Recalls a set of records from a labeled operator in the statement'
 
       argument :name, type: :string
-      category "Get Related Data"
+      category 'Get Related Data'
       basic_type :selection
       validate_no_upstreams
       validate_one_argument
@@ -35,10 +37,10 @@ module ConceptQL
 
       def annotate(db, opts = {})
         @annotate ||= if valid?(db) && replaced?
-          original.annotate(db, opts)
-        else
-          super
-        end
+                        original.annotate(db, opts)
+                      else
+                        super
+                      end
       end
 
       def original
@@ -51,17 +53,15 @@ module ConceptQL
 
       private
 
-      def additional_validation(db, opts = {})
-        if arguments.length == 1
-          if scope.fetch_operator(source)
-            scope.recall_dependencies[source].each do |d|
-              if scope.recall_dependencies[d].include?(source)
-                add_error("mutually referential recalls", d)
-              end
-            end
-          else
-            add_error("no matching label", source)
+      def additional_validation(_db, _opts = {})
+        return unless arguments.length == 1
+
+        if scope.fetch_operator(source)
+          scope.recall_dependencies[source].each do |d|
+            add_error('mutually referential recalls', d) if scope.recall_dependencies[d].include?(source)
           end
+        else
+          add_error('no matching label', source)
         end
       end
 
@@ -71,4 +71,3 @@ module ConceptQL
     end
   end
 end
-

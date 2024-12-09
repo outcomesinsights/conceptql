@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'open3'
 require 'forwardable'
@@ -75,14 +77,14 @@ module ConceptQL
       end
       Hash[stmts]
     rescue StandardError
-      raise QueryError.new("Failed to generate SQL for #{statement.inspect}")
+      raise QueryError, "Failed to generate SQL for #{statement.inspect}"
     end
 
     def annotate(opts = {})
       operator.annotate(db, opts)
     end
 
-    def accept(visitor, opts = {})
+    def accept(visitor, _opts = {})
       operator.accept(visitor)
     end
 
@@ -124,7 +126,7 @@ module ConceptQL
       operator.rdbms
     end
 
-    def code_list(ignored_db = nil)
+    def code_list(_ignored_db = nil)
       operator.code_list(db).uniq
     end
 

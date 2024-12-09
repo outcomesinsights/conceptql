@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'binary_operator_operator'
 require_relative '../date_adjuster'
 
@@ -54,14 +56,14 @@ module ConceptQL
       end
 
       def within_option
-        return unless v = options[:within]
+        return unless (v = options[:within])
         return if v.strip.empty?
 
         v
       end
 
       def at_least_option
-        return unless v = options[:at_least]
+        return unless (v = options[:at_least])
         return if v.strip.empty?
 
         v
@@ -117,7 +119,7 @@ module ConceptQL
       end
 
       def include_rhs_columns
-        options[:include_rhs_columns] ? options[:include_rhs_columns].map(&:to_sym) : nil
+        options[:include_rhs_columns]&.map(&:to_sym)
       end
 
       def rhs_function
