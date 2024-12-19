@@ -29,7 +29,6 @@ module ConceptQL
         [lexicon_db, dataset_db].compact.each do |db|
           next unless klass.db_has_all_vocabulary_tables?(db)
 
-          puts "Checking #{klass}"
           @strategy = klass.new(db)
           break
         end
