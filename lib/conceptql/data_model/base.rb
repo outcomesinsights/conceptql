@@ -1,10 +1,25 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require 'psych'
 
 module ConceptQL
   module DataModel
     class Base
+      extend Forwardable
+      def_delegators :nodifier, :cdb
+      def_delegators :cdb, :lexicon
+      def_delegators :lexicon,
+                     :concept_ids,
+                     :concepts,
+                     :concepts_table,
+                     :concepts_by_name,
+                     :concepts_ds,
+                     :concepts_to_codes,
+                     :descendants_of,
+                     :known_codes,
+                     :related_concept_ids
+
       SCHEMAS = ConceptQL.schemas_dir.glob('*.yml').each_with_object({}) do |schema_file, schemas|
         schemas[schema_file.basename('.*').to_s.to_sym] = Psych.load_file(schema_file)
       end
@@ -410,13 +425,6 @@ module ConceptQL
         !(db.table_exists?(:concept) && db.table_exists?(:source_to_concept_map))
       end
 
-      # For now, we'll return only the ids we're given as I'm not sure
-      # we want to expand the search for concepts outside those specified
-      # for OMOPv4.5+
-      def related_concept_ids(_db, *ids)
-        ids
-      end
-
       def concept_id(table)
         table_cols(table).find do |col|
           col = col.to_s
@@ -435,21 +443,6 @@ module ConceptQL
             col == name
           end
         end
-      end
-
-      def concepts_ds(db, vocabulary_id, codes)
-        standards = db[:concept]
-                    .where(vocabulary_id: vocabulary_id, concept_code: codes)
-                    .select(:vocabulary_id, :concept_code, Sequel[:concept_name].as(:concept_text))
-                    .from_self
-        sources = db[:source_to_concept_map]
-                  .where(source_vocabulary_id: vocabulary_id, source_code: codes)
-                  .select(Sequel[:source_vocabulary_id].as(:vocabulary_id), Sequel[:source_code].as(:concept_code), Sequel[:source_code_description].as(:concept_text))
-                  .from_self
-        standards.union(sources).order(:concept_code, :concept_text).from_self.select_group(:vocabulary_id,
-                                                                                            :concept_code).select_append(Sequel.function(
-                                                                                              :min, :concept_text
-                                                                                            ).as(:concept_text)).from_self
       end
 
       def information_period_where_clause(arguments)

@@ -178,6 +178,25 @@ end
 
 Rake.application.options.trace_rules = true
 
+namespace :schemas do
+  require 'sequelizer'
+  require_relative 'lib/conceptql/utils'
+  include Sequelizer
+  namespace :dump do
+    file 'schemas/gdm_wide.yml' do |t|
+      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,wide,ohdsi_vocabs,gdm_vocabs')))
+    end
+    file 'schemas/gdm.yml' do |t|
+      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,ohdsi_vocabs,gdm_vocabs')))
+    end
+    file 'schemas/ohdsi_vocabs.yml' do |t|
+      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'ohdsi_vocabs')))
+    end
+    # task all: ['schemas/gdm.yml', 'schemas/gdm_wide.yml']
+    task all: ['schemas/ohdsi_vocabs.yml']
+  end
+end
+
 namespace :test_script do
   require 'rake/clean'
 
@@ -215,21 +234,61 @@ namespace :test_script do
   CLEAN.include(sql_files, ALL_SQL, ALL_PRESTO_SQL)
 end
 
-namespace :schemas do
-  require 'sequelizer'
-  require_relative 'lib/conceptql/utils'
-  include Sequelizer
-  namespace :dump do
-    file 'schemas/gdm_wide.yml' do |t|
-      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,wide,ohdsi_vocabs,gdm_vocabs')))
+namespace :driftr_script do
+  require_relative 'lib/conceptql'
+  require_relative 'test/statement_tests'
+  require 'json'
+
+  DRIFTR_SCRIPT = '/tmp/synpuf250_driftr.json'
+  task default: DRIFTR_SCRIPT
+  file DRIFTR_SCRIPT do |t|
+    connection_info = {
+      adapter_name: 'presto',
+      args: {
+        host: 'presto.titan.jsaw.io',
+        port: 80,
+        catalog: 'hive',
+        schema: 'default',
+        user: 'whoever'
+      }
+    }
+    tests_h = {}
+    ConceptQL::StatementFileTest.all(cdb).each do |file_test|
+      file_test.each_test do |results|
+        unless results.pure_sql?
+          puts "Skip #{results.message}"
+          next
+        end
+
+        puts "Make #{results.message}"
+
+        sql = results.prep.sql
+
+        view_name = results.message.gsub(/\W+/, '_')
+        tests_h[results.message] = {
+          sql: [
+            cdb.db.send(
+              :create_view_sql,
+              view_name.to_sym,
+              prestofy(sql),
+              replace: true
+            )
+          ],
+          expectations: {
+            view_name => {
+              type: 'json',
+              contents: JSON.parse(results.expected)
+            }
+          }
+        }
+      end
     end
-    file 'schemas/gdm.yml' do |t|
-      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,ohdsi_vocabs,gdm_vocabs')))
-    end
-    file 'schemas/ohdsi_vocabs.yml' do |t|
-      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'ohdsi_vocabs')))
-    end
-    # task all: ['schemas/gdm.yml', 'schemas/gdm_wide.yml']
-    task all: ['schemas/ohdsi_vocabs.yml']
+
+    h = {
+      connection_info: connection_info,
+      tests: tests_h
+    }
+
+    File.write(t.name, JSON.pretty_generate(h))
   end
 end

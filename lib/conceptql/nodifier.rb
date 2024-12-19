@@ -4,9 +4,10 @@ require_relative 'operators/operator'
 
 module ConceptQL
   class Nodifier
-    attr_reader :scope, :data_model, :database_type, :algorithm_fetcher
+    attr_reader :cdb, :scope, :data_model, :database_type, :algorithm_fetcher
 
-    def initialize(opts = {})
+    def initialize(cdb, opts = {})
+      @cdb = cdb
       @scope = opts[:scope] || Scope.new(opts.delete(:scope_opts) || {})
       @data_model = get_data_model(opts)
       @database_type = opts[:database_type] || ConceptQL::DEFAULT_DATA_MODEL

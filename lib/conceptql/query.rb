@@ -35,7 +35,7 @@ module ConceptQL
         statement = JSON.parse(statement) if statement.is_a?(String)
         [statement, description]
       end
-      @nodifier = opts[:nodifier] || Nodifier.new({ database_type: cdb.database_type }.merge(opts))
+      @nodifier = opts[:nodifier] || Nodifier.new(cdb, { database_type: cdb.database_type }.merge(opts))
     end
 
     def analyze

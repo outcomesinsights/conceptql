@@ -24,6 +24,22 @@ module ConceptQL
       vocabularies_query.all
     end
 
+    def is_a_relationships(_data_db)
+      db[:mappings].where { Sequel.function(:lower, :relationship_id) =~ 'is_a' }
+    end
+
+    def ancestors_table(_data_db)
+      db[:ancestors]
+    end
+
+    def concepts_table(_data_db, some_schema = nil)
+      db[:concepts]
+    end
+
+    def table_is_missing?(_data_db)
+      !db.table_exists?(:concepts)
+    end
+
     def strategy
       :gdm
     end

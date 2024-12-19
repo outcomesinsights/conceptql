@@ -12,16 +12,26 @@ module ConceptQL
 
     def_delegators :@strategy,
                    :strategy,
+                   :concept_ids,
+                   :concepts,
+                   :concepts_table,
+                   :concepts_by_name,
+                   :concepts_ds,
+                   :concepts_to_codes,
+                   :descendants_of,
+                   :known_codes,
+                   :related_concept_ids,
                    :vocabularies,
                    :vocabularies_query
 
     def initialize(lexicon_db, dataset_db = nil)
       lexicon_classes.each do |klass|
-        [dataset_db, lexicon_db].compact.each do |db|
-          if klass.db_has_all_vocabulary_tables?(db)
-            @strategy = klass.new(db)
-            break
-          end
+        [lexicon_db, dataset_db].compact.each do |db|
+          next unless klass.db_has_all_vocabulary_tables?(db)
+
+          puts "Checking #{klass}"
+          @strategy = klass.new(db)
+          break
         end
         break if @strategy
       end
