@@ -28,9 +28,10 @@ end
 describe ConceptQL::Operators do
   ConceptQL::StatementFileTest.all(CDB, file_regexps).each do |file_test|
     it "should produce correct results for #{file_test.test_name}" do
-      file_test.each_test do |results, expected, name, message|
-        my_time_it([name, message].join(' -- ')) do
-          _(JSON.parse(results.fetch.to_json)).must_equal(JSON.parse(expected), message)
+      file_test.each_test do |results|
+        my_time_it(results.message) do
+          debugger if JSON.parse(results.fetch.to_json) != JSON.parse(results.expected)
+          _(JSON.parse(results.fetch.to_json)).must_equal(JSON.parse(results.expected), results.message)
         end
       end
     end

@@ -33,6 +33,7 @@ module ConceptQL
 
     extend Forwardable
     attr_reader :cdb, :statement, :remove_window_id
+    attr_accessor :expected, :test_name, :message_part
 
     def_delegators :cdb, :query
 
@@ -42,13 +43,16 @@ module ConceptQL
       @remove_window_id = remove_window_id
     end
 
+    def message
+      [test_name, message_part].compact.join(' -- ')
+    end
+
     def cql_query
       query(statement)
     end
 
     def dataset
       stmt = query(statement) unless statement.is_a?(ConceptQL::Query)
-      puts stmt.sql if PRINT_CONCEPTQL
       stmt.query
     end
 
@@ -112,7 +116,6 @@ module ConceptQL
   class CriteriaCountsResults < StatementResults
     def prep
       cq = cql_query
-      puts cq.sql if PRINT_CONCEPTQL
       cq.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain)
     end
 
@@ -221,7 +224,6 @@ module ConceptQL
     def yield_a_test(results, expected, expect_message = nil, &block)
       message_parts = [test_name]
       message_parts << expect_message if expect_message
-      message_parts << PP.pp(statement, ''.dup, 10) if PRINT_CONCEPTQL
 
       block.call(results, expected, test_name, message_parts.join(' '))
       results
@@ -234,21 +236,31 @@ module ConceptQL
     def load_check(&block)
       basic_results = result_from(statement, false)
       expected_results = get_expected_results(basic_results)
+      basic_results.expected = expected_results
+      basic_results.test_name = test_name
 
-      # Check without scope windows
-      yield_a_test(basic_results, expected_results, &block)
+      tests = [basic_results]
 
       # Check with scope windows, unless the test is already a scope window test
       unless statement.first == 'window'
         sw_statement = ['window', statement,
                         { 'window_table' => ['date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' }] }]
-        yield_a_test(result_from(sw_statement, true), expected_results, ' (with window table)', &block)
+        sw = result_from(sw_statement, true)
+        sw.expected = expected_results
+        sw.test_name = test_name
+        sw.message_part = ' (with window table date range)'
+        tests << sw
 
         sw_statement = ['window', statement, { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' }]
-        yield_a_test(result_from(sw_statement, true), expected_results, ' (with window table)', &block)
+        sw = result_from(sw_statement, true)
+        sw.expected = expected_results
+        sw.test_name = test_name
+        sw.message_part = ' (with window table)'
+        tests << sw
       end
+      tests.each(&block)
 
-      unless SKIP_SQL_GENERATION_TEST
+      unless defined?(SKIP_SQL_GENERATION_TEST) && SKIP_SQL_GENERATION_TEST
         begin
           query(statement).sql(:create_tables)
           query(['window', statement,
@@ -260,7 +272,7 @@ module ConceptQL
         end
       end
 
-      if PERFORMANCE_TEST_TIMES.positive?
+      if defined?(PERFORMANCE_TEST_TIMES) && PERFORMANCE_TEST_TIMES.positive?
         times = PERFORMANCE_TEST_TIMES.times.map do
           before = clock_time
           yield(statement, false)
@@ -280,10 +292,6 @@ module ConceptQL
     rescue StandardError
       puts $ERROR_INFO.sql if $ERROR_INFO.respond_to?(:sql)
       raise
-    end
-
-    def pure_sql?
-      true
     end
   end
 end
