@@ -10,7 +10,7 @@ module ConceptQL
       end
 
       def datediff(from, to)
-        Sequel.function(:date_diff, 'days', from, to)
+        Sequel.function(:date_diff, 'day', from, to)
       end
 
       def primary_concepts(db, all_primary_ids)
