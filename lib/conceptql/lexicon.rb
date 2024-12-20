@@ -24,17 +24,19 @@ module ConceptQL
                    :vocabularies,
                    :vocabularies_query
 
-    def initialize(lexicon_db, dataset_db = nil)
+    def initialize(lexicon_db, dataset_db = nil, strategy: nil)
+      @strategy = strategy || determine_strategy(lexicon_db, dataset_db)
+    end
+
+    def determine_strategy(lexicon_db, dataset_db)
       lexicon_classes.each do |klass|
         [lexicon_db, dataset_db].compact.each do |db|
           next unless klass.db_has_all_vocabulary_tables?(db)
 
-          @strategy = klass.new(db)
-          break
+          return(klass.new(db))
         end
-        break if @strategy
       end
-      @strategy ||= LexiconNoDB.new(Sequel.mock(host: :postgres))
+      LexiconNoDB.new(Sequel.mock(host: :postgres))
     end
 
     def lexicon_classes

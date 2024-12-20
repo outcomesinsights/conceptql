@@ -94,7 +94,12 @@ describe ConceptQL::Operators::Vocabulary do
         end
         # These are needed to fake out Lexicon
         db.create_table!(:concept_ancestor) { String :column }
-        db.create_table!(:concept) { String :column }
+        db.create_table!(:concept) do
+          Integer :concept_id
+          String :concept_code
+          String :concept_name
+          String :vocabulary_id
+        end
         db.create_table!(:concept_relationship) { String :column }
         db[:vocabulary].multi_insert([
                                        { vocabulary_id: 'EXAMPLE', vocabulary_name: 'Example Vocabulary' }

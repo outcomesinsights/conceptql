@@ -36,10 +36,10 @@ module ConceptQL
     ENV['CONCEPTQL_AVOID_CTES'] == 'true'
   end
 
-  def self.metadata(opts = {})
+  def self.metadata(cdb, opts = {})
     {
       categories: categories,
-      operators: ConceptQL::Nodifier.new.to_metadata(opts)
+      operators: ConceptQL::Nodifier.new(cdb).to_metadata(opts)
     }
   end
 

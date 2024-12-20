@@ -4,7 +4,7 @@ require_relative '../../db_helper'
 
 describe ConceptQL::Query do
   it 'should handle errors in the root operator' do
-    _(query(
+    _(CDB.query(
       [:foo]
     ).annotate).must_equal(
       ['foo',
@@ -14,7 +14,7 @@ describe ConceptQL::Query do
   end
 
   it 'should handle query_cols for non-CDM tables' do
-    _(query(
+    _(CDB.query(
       [:from, 'other_table']
     ).query_cols).must_equal(ConceptQL::Scope::DEFAULT_COLUMNS.keys)
   end

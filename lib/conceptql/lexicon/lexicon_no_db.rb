@@ -12,6 +12,10 @@ module ConceptQL
       []
     end
 
+    def table_is_missing?(_db)
+      true
+    end
+
     def strategy
       :no_db
     end

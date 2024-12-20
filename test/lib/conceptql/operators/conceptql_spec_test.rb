@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../../helper'
+require_relative '../../../db_helper'
 require 'conceptql'
 require 'nokogiri'
 require 'watir'
@@ -18,7 +19,7 @@ describe 'ConceptQL Spec' do
                          .map { |href| href.sub('#', '') }
                          .uniq
 
-  $known_operators = ConceptQL.metadata[:operators]
+  $known_operators = ConceptQL.metadata(CDB)[:operators]
                               .values
                               .map { |operator_metadata| operator_metadata[:spec_id] }
                               .uniq

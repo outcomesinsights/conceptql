@@ -3,14 +3,17 @@
 require_relative '../../../../db_helper'
 
 describe ConceptQL::DataModel::Gdm do
+  let(:cdb) { CDB }
   let(:dm) do
-    ConceptQL::DataModel::Gdm.new(nil, nil)
+    @dm ||= ConceptQL::DataModel::Gdm.new(nil, ConceptQL::Nodifier.new(cdb))
+  end
+  let(:db) do
+    Sequel.sqlite
   end
 
   describe '#descendants_of' do
-    let(:db) do
-      Sequel.sqlite
-    end
+    let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconGDM.new(db)) }
+    let(:cdb) { ConceptQL::Database.new(db, lexicon: lexicon) }
 
     def get_descendants_of(ids_or_ds)
       dm.descendants_of(db, ids_or_ds).sort
@@ -39,6 +42,7 @@ describe ConceptQL::DataModel::Gdm do
     end
 
     describe 'using OHDSI vocab tables' do
+      let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconOhdsi.new(db)) }
       def make_ancestor_row(a_id, d_id)
         db.create_table?(:concept_ancestor, temp: true) do
           Integer :ancestor_concept_id
@@ -67,9 +71,8 @@ describe ConceptQL::DataModel::Gdm do
     end
   end
   describe '#related_concept_ids' do
-    let(:db) do
-      Sequel.sqlite
-    end
+    let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconGDM.new(db)) }
+    let(:cdb) { ConceptQL::Database.new(db, lexicon: lexicon) }
 
     it 'should find concept IDs related to standard concept ids' do
       db.create_table(:mappings) do

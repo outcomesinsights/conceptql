@@ -34,6 +34,8 @@ module ConceptQL
         db_type = db.database_type.to_sym
       end
 
+      @lexicon = opts[:lexicon]
+
       @opts[:database_type] ||= (ENV['CONCEPTQL_DATABASE_TYPE'] || db_type).to_sym
       @opts[:scope_opts] = {
         force_temp_tables: opts.fetch(:force_temp_tables, ENV['CONCEPTQL_FORCE_TEMP_TABLES'] == 'true'),
