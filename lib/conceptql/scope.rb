@@ -303,7 +303,7 @@ module ConceptQL
         temp_tables << [label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables)]
       end
 
-      if force_temp_tables?
+      if force_temp_tables?(options)
         scope = self
         query = recursive_extract_ctes(query, temp_tables).with_extend do
           # Create temp tables for each CTE
@@ -385,19 +385,19 @@ module ConceptQL
       @windows ||= Window.from(opts.merge(opts[:window_opts] || {}))
     end
 
-    def force_temp_tables?
-      opts[:force_temp_tables]
+    def force_temp_tables?(opts = {})
+      opts.fetch(:force_temp_tables, opts[:force_temp_tables])
     end
 
     def scratch_database
       opts[:scratch_database]
     end
 
-    def cte_name(name)
+    def cte_name(name, opts = {})
       name = Sequel.identifier("#{opts[:table_prefix]}#{name.to_s.gsub(/\W+/,
                                                                        '_')}_#{$PROCESS_ID}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
 
-      name = name.qualify(scratch_database) if force_temp_tables? && scratch_database
+      name = name.qualify(scratch_database) if force_temp_tables?(opts) && scratch_database
 
       name
     end

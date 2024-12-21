@@ -74,7 +74,7 @@ module ConceptQL
       def get_table_window(_query)
         case table_window
         when Array
-          cdb.query(table_window).query
+          cdb.query(table_window).query(force_temp_tables: false)
         when String
           tables = table_window.split('.')
           tables.length == 2 ? Sequel.qualify(*tables) : Sequel.identifier(table_window)
