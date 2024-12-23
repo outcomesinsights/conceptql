@@ -250,9 +250,13 @@ namespace :driftr_script do
         catalog: 'hive',
         schema: 'default',
         user: 'whoever'
-      }
+      },
+      preamble: [
+        'CREATE SCHEMA IF NOT EXISTS jtemp'
+      ]
     }
     tests_h = {}
+    # ConceptQL::StatementFileTest.all(cdb, %r{icd9/crit_1.json}).each do |file_test|
     ConceptQL::StatementFileTest.all(cdb).each do |file_test|
       file_test.each_test do |results|
         unless results.pure_sql?
@@ -262,18 +266,19 @@ namespace :driftr_script do
 
         puts "Make #{results.message}"
 
-        sql = results.prep.sql
-
         view_name = results.message.gsub(/\W+/, '_')
+        from_view = cdb.db.send(
+          :create_view_sql,
+          view_name.to_sym,
+          results.prep.sql,
+          replace: true,
+          dont_record: true
+        )
+        sqls = results.cql_query.sql_statements(:drop_tables, :create_tables).merge(query: from_view)
+        sqls = sqls.values.map { |sql| prestofy(sql) }
+
         tests_h[results.message] = {
-          sql: [
-            cdb.db.send(
-              :create_view_sql,
-              view_name.to_sym,
-              prestofy(sql),
-              replace: true
-            )
-          ],
+          sql: sqls,
           expectations: {
             view_name => {
               type: 'json',
