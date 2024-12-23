@@ -9,7 +9,8 @@ describe Sequel::ColdColDatabase do
     @db.instance_variable_set(:@schemas, {
                                 Sequel.lit('tab1') => [[:col1]],
                                 Sequel.lit('tab2') => [[:col2]],
-                                Sequel.lit('tab3') => [[:col3], [:col4]]
+                                Sequel.lit('tab3') => [[:col3], [:col4]],
+                                Sequel.lit('q.tab4') => [[:col5]]
                               })
     @db.extend_datasets do
       def supports_cte?
@@ -82,11 +83,56 @@ describe Sequel::ColdColDatabase do
     expect_columns(ds, :col1)
   end
 
-  it 'should know columns from an aliased select_all JOIN' do
+  it 'should know columns from an aliased select_all and added rhs column JOIN' do
     ds = db[:tab1].from_self(alias: :l)
                   .join(db[:tab2], { col3: :col1 }, table_alias: :r)
                   .select_all(:l)
                   .select_append(Sequel[:r][:col4])
     expect_columns(ds, :col1, :col4)
+  end
+
+  it 'should know columns from an aliased select_all rhs JOIN' do
+    ds = db[:tab1].from_self(alias: :l)
+                  .join(db[:tab2], { col3: :col1 }, table_alias: :r)
+                  .select_all(:r)
+    expect_columns(ds, :col2)
+  end
+
+  it 'should know columns from a directly aliased select_all rhs JOIN' do
+    ds = db[:tab1].from_self(alias: :l)
+                  .join(:tab2, { col3: :col1 }, table_alias: :r)
+                  .select_all(:r)
+    expect_columns(ds, :col2)
+  end
+
+  it 'should know columns from a a qualified JOIN' do
+    ds = db[:tab1].from_self(alias: :l)
+                  .join(Sequel[:q][:tab4], { col3: :col1 }, table_alias: :r)
+                  .select_all(:r)
+    expect_columns(ds, :col5)
+  end
+  it 'should remember columns from ctas' do
+    db.create_table(:ctas_table, as: db.select(Sequel[1].as(:a)))
+    ds = db[:ctas_table]
+    expect_columns(ds, :a)
+  end
+
+  it 'should remember columns from create table' do
+    db.create_table(:ddl_table) do
+      String :a
+    end
+    ds = db[:ddl_table]
+    expect_columns(ds, :a)
+  end
+
+  it 'should remember columns from view' do
+    db.create_view(:ctas_view, db.select(Sequel[1].as(:a)))
+    ds = db[:ctas_view]
+    expect_columns(ds, :a)
+  end
+
+  it 'should ignore columns when asked, thus avoiding an issue with string-only SQL' do
+    assert_raises { db.create_view(:ctas_view, 'SELECT 1 AS A') }
+    db.create_view(:ctas_view, 'SELECT 1 AS A', dont_record: true)
   end
 end

@@ -1,9 +1,12 @@
+require 'active_support/core_ext/object/try'
 # frozen-string-literal: true
 
 module Sequel
   module ColdColDatabase
     def self.extended(db)
       db.extend_datasets(ColdColDataset)
+      db.instance_variable_set(:@created_tables, {})
+      db.instance_variable_set(:@created_views, {})
     end
 
     def load_schema(path)
@@ -17,6 +20,44 @@ module Sequel
 
     def add_table_schema(name, info)
       instance_variable_get(:@schemas)[literal(name)] = info
+    end
+
+    def create_table_as(name, sql, options = {})
+      super.tap do |o|
+        record_table(name, columns_from_sql(sql))
+      end
+    end
+
+    def create_table_sql(name, generator, options)
+      super.tap do |o|
+        record_table(name, columns_from_generator(generator))
+      end
+    end
+
+    def create_view_sql(name, source, options)
+      super.tap do |o|
+        record_view(name, columns_from_sql(source)) unless options[:dont_record]
+      end
+    end
+
+    def record_table(name, columns)
+      name = literal(name)
+      # puts "recording table #{name}"
+      Sequel.synchronize { @created_tables[name] = columns }
+    end
+
+    def record_view(name, columns)
+      name = literal(name)
+      # puts "recording view #{name}"
+      Sequel.synchronize { @created_views[name] = columns }
+    end
+
+    def columns_from_sql(sql)
+      sql.columns
+    end
+
+    def columns_from_generator(generator)
+      generator.columns.map { |c| [c[:name], c] }
     end
   end
 
@@ -71,8 +112,6 @@ module Sequel
     end
 
     def from_named_sources(name, opts_chain)
-      schemas = db.instance_variable_get(:@schemas)
-
       current_opts = opts_chain
 
       from = (opts[:from] || [])
@@ -88,20 +127,28 @@ module Sequel
         current_opts = current_opts[:parent_opts]
       end
 
-      # if (join = (opts[:join] || []).detect { |jc| literal(jc.alias) == literal(name) })
-      #  jc.table_expr.columns
-      # els
-
       return with[:dataset].columns_search(opts_chain) if with
 
-      if schemas && (table = literal(name)) && (sch = Sequel.synchronize { schemas[table] })
-        return sch.map { |c, _| c }
+      if (join = (opts[:join] || []).detect { |jc| literal(jc.table_expr.try(:alias)) == literal(name) })
+        join_expr = join.table_expr.expression
+        return join_expr.columns_search(opts_chain) if join_expr.is_a?(Sequel::Dataset)
+
+        name = join_expr
+      end
+
+      created_views = db.instance_variable_get(:@created_views) || {}
+      created_tables = db.instance_variable_get(:@created_tables) || {}
+      schemas = db.instance_variable_get(:@schemas)
+      [created_views, created_tables, schemas].each do |known_columns|
+        if known_columns && (table = literal(name)) && (sch = Sequel.synchronize { known_columns[table] })
+          return sch.map { |c, _| c }
+        end
       end
 
       pp name
       pp opts_chain
       pp sql
-      raise("Failed to find columns for #{name}")
+      raise("Failed to find columns for #{literal(name)}")
     end
 
     def fetch_columns(from, opts_chain)
