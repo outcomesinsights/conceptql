@@ -3,12 +3,15 @@
 require 'json'
 require 'open3'
 require 'forwardable'
+require 'memo_wise'
 require_relative 'scope'
 require_relative 'nodifier'
 require_relative 'sql_formatters'
 
 module ConceptQL
   class Query
+    prepend MemoWise
+
     class QueryError < StandardError
       def message
         og_message = if cause.respond_to?(:full_message)
@@ -45,6 +48,7 @@ module ConceptQL
     def query(opts = {})
       nodifier.scope.with_ctes(operator, db, opts)
     end
+    memo_wise :query
 
     def query_cols(opts = {})
       cols = operator.dynamic_columns
@@ -65,9 +69,17 @@ module ConceptQL
 
       if args.include?(:create_tables)
         sql = stmts.delete(:query)
-        stmts = stmts.map do |name, sql|
+        drop_stmts = []
+        if args.include?(:drop_tables)
+          drop_stmts = stmts.map do |name, _|
+            [['drop', name].join('_'), db.send(:drop_table_sql, name, if_exists: true)]
+          end
+        end
+        create_stmts = stmts.map do |name, sql|
           [name, db.send(:create_table_as_sql, name, sql, {})]
-        end.push([:query, sql])
+        end
+        stmts = drop_stmts + create_stmts
+        stmts.push([:query, sql])
       end
 
       if args.include?(:formatted)

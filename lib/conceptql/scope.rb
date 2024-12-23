@@ -332,6 +332,15 @@ module ConceptQL
             end
           end
 
+          define_method(:columns) do
+            if self.db.respond_to?(:record_table)
+              temp_tables.uniq(&:first).each do |table_name, ds|
+                self.db.record_table(table_name, self.db.columns_from_sql(ds))
+              end
+            end
+            super()
+          end
+
           define_method(:sql_statements) do |*args, &block|
             sql_statements = temp_tables.map do |table_name, ds|
               [table_name, ds.sql]
@@ -385,19 +394,27 @@ module ConceptQL
       @windows ||= Window.from(opts.merge(opts[:window_opts] || {}))
     end
 
-    def force_temp_tables?(opts = {})
-      opts.fetch(:force_temp_tables, opts[:force_temp_tables])
+    def force_temp_tables?(options = {})
+      # opts.fetch(:force_temp_tables, opts[:force_temp_tables])
+      options.fetch(:force_temp_tables, opts[:force_temp_tables])
     end
 
     def scratch_database
       opts[:scratch_database]
     end
 
-    def cte_name(name, opts = {})
-      name = Sequel.identifier("#{opts[:table_prefix]}#{name.to_s.gsub(/\W+/,
-                                                                       '_')}_#{$PROCESS_ID}_#{@cte_name_next.call}_#{SecureRandom.hex(16)}")
+    def cte_name(name, options = {})
+      cte_parts = [
+        opts[:table_prefix],
+        name.to_s.gsub(/\W+/, '_'),
+        $PROCESS_ID,
+        @cte_name_next.call,
+        SecureRandom.hex(16)
+      ].compact
 
-      name = name.qualify(scratch_database) if force_temp_tables?(opts) && scratch_database
+      name = Sequel.identifier(cte_parts.join('_'))
+
+      name = name.qualify(scratch_database) if force_temp_tables?(options) && scratch_database
 
       name
     end

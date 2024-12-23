@@ -50,6 +50,7 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
+    memo_wise (1.10.0)
     method_source (1.0.0)
     mini_portile2 (2.8.2)
     minitest (5.15.0)
@@ -121,6 +122,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.0)
   conceptql!
+  memo_wise (~> 1.10)
   minitest (~> 5.0)
   nokogiri (~> 1.14)
   pg
