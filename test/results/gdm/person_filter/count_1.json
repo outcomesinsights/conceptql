@@ -1,4 +1,10 @@
-{
-  "condition_occurrence": 28,
-  "procedure_occurrence": 536
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "count": 28
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "count": 536
+  }
+]

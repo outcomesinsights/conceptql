@@ -1,10 +1,26 @@
-{
-  "person": [
-    16,
-    65,
-    181,
-    190,
-    191,
-    201
-  ]
-}
+[
+  {
+    "criterion_domain": "person",
+    "criterion_id": 16
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 65
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 181
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 190
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 191
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 201
+  }
+]

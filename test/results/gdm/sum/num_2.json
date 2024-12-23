@@ -1,5 +1,6 @@
-{
-  "procedure_occurrence": [
-    null
-  ]
-}
+[
+  {
+    "criterion_domain": "procedure_occurrence",
+    "value_as_number": null
+  }
+]

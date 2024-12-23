@@ -1,8 +1,18 @@
-{
-  "condition_occurrence": [
-    24281,
-    74606,
-    82614,
-    89463
-  ]
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 24281
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 74606
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 82614
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 89463
+  }
+]

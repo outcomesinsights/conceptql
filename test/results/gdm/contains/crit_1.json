@@ -1,5 +1,6 @@
-{
-  "condition_occurrence": [
-    523
-  ]
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 523
+  }
+]

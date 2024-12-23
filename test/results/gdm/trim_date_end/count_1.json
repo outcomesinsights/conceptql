@@ -1,3 +1,6 @@
-{
-  "observation_period": 864
-}
+[
+  {
+    "criterion_domain": "observation_period",
+    "count": 864
+  }
+]

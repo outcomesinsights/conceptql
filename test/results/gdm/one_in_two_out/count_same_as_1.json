@@ -1,3 +1,6 @@
-{
-  "condition_occurrence": 15
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "count": 15
+  }
+]

@@ -1,3 +1,6 @@
-{
-  "procedure_occurrence": 1076
-}
+[
+  {
+    "criterion_domain": "procedure_occurrence",
+    "count": 1076
+  }
+]

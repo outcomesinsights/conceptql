@@ -1,4 +1,10 @@
-{
-  "condition_occurrence": 7,
-  "person": 249
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "count": 7
+  },
+  {
+    "criterion_domain": "person",
+    "count": 249
+  }
+]

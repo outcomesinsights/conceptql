@@ -1,11 +1,30 @@
-{
-  "condition_occurrence": [
-    963,
-    16171,
-    20748,
-    49718,
-    61423,
-    83257,
-    90638
-  ]
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 963
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 16171
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 20748
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 49718
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 61423
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 83257
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 90638
+  }
+]

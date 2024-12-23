@@ -1,5 +1,14 @@
-{
-  "condition_occurrence": 48,
-  "person": 27,
-  "procedure_occurrence": 1073
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "count": 48
+  },
+  {
+    "criterion_domain": "person",
+    "count": 27
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "count": 1073
+  }
+]

@@ -1,15 +1,46 @@
-{
-  "condition_occurrence": [
-    794,
-    1670,
-    52081,
-    61570,
-    63177,
-    64045,
-    69783,
-    70007,
-    73438,
-    77022,
-    81354
-  ]
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 794
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1670
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 52081
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 61570
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 63177
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 64045
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 69783
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 70007
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 73438
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 77022
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 81354
+  }
+]

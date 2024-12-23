@@ -1,41 +1,150 @@
-{
-  "person": [
-    11,
-    17,
-    38,
-    54,
-    60,
-    66,
-    73,
-    77,
-    81,
-    88,
-    90,
-    93,
-    96,
-    106,
-    109,
-    110,
-    131,
-    149,
-    152,
-    161,
-    163,
-    172,
-    177,
-    184,
-    187,
-    190,
-    196,
-    197,
-    212,
-    213,
-    214,
-    217,
-    220,
-    223,
-    230,
-    234,
-    239
-  ]
-}
+[
+  {
+    "criterion_domain": "person",
+    "criterion_id": 11
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 17
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 38
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 54
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 60
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 66
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 73
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 77
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 81
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 88
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 90
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 93
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 96
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 106
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 109
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 110
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 131
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 149
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 152
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 161
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 163
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 172
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 177
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 184
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 187
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 190
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 196
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 197
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 212
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 213
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 214
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 217
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 220
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 223
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 230
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 234
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 239
+  }
+]

@@ -35,8 +35,6 @@ module ConceptQL
     attr_reader :cdb, :statement, :remove_window_id
     attr_accessor :expected, :test_name, :message_part
 
-    def_delegators :cdb, :query
-
     def initialize(cdb, statement, remove_window_id)
       @cdb = cdb
       @statement = statement
@@ -48,23 +46,26 @@ module ConceptQL
     end
 
     def cql_query
-      query(statement)
+      @cql_query ||= if statement.is_a?(ConceptQL::Query)
+                       statement
+                     else
+                       cdb.query(statement)
+                     end
     end
 
-    def dataset
-      stmt = query(statement) unless statement.is_a?(ConceptQL::Query)
-      stmt.query
+    def query
+      cql_query.query
     end
 
-    def hash_groups(key, value)
-      dataset.from_self.distinct.order(key, *value).to_hash_groups(key, value)
-    rescue StandardError
-      puts $ERROR_INFO.sql if $ERROR_INFO.respond_to?(:sql)
-      raise
+    def hash_groups_prep(key, *values)
+      query
+        .select(key, *values)
+        .from_self
+        .order(key, *values)
     end
 
     def fetch
-      prep
+      pure_sql? ? prep.all : prep
     end
 
     def save(path, to_save = nil)
@@ -96,8 +97,12 @@ module ConceptQL
   end
 
   class CriteriaIdsResults < StatementResults
-    def fetch
-      hash_groups(:criterion_domain, :criterion_id)
+    def pure_sql?
+      true
+    end
+
+    def prep
+      hash_groups_prep(:criterion_domain, :criterion_id)
     end
   end
 
@@ -108,19 +113,22 @@ module ConceptQL
   end
 
   class NumericValuesResults < StatementResults
-    def fetch
-      hash_groups(:criterion_domain, :value_as_number)
+    def pure_sql?
+      true
+    end
+
+    def prep
+      hash_groups_prep(:criterion_domain, :value_as_number)
     end
   end
 
   class CriteriaCountsResults < StatementResults
-    def prep
-      cq = cql_query
-      cq.query.from_self.group_and_count(:criterion_domain).order(:criterion_domain)
+    def pure_sql?
+      true
     end
 
-    def fetch
-      prep.to_hash(:criterion_domain, :count)
+    def prep
+      query.from_self.group_and_count(:criterion_domain).order(:criterion_domain)
     end
   end
 
@@ -132,7 +140,7 @@ module ConceptQL
 
   class ResultsResults < StatementResults
     def prep
-      ds = dataset.from_self
+      ds = query.from_self
 
       if cdb.data_model.data_model == :gdm_wide
         cols = ds.columns
@@ -178,7 +186,7 @@ module ConceptQL
     class << self
       def all(cdb, file_regexps = nil)
         Pathname.glob('./test/statements/**/*').reject do |f|
-          f.directory? || (file_regexps.present? && file_regexps.none? { |r| f.to_s =~ r })
+          f.directory? || (file_regexps.present? && Array(file_regexps).none? { |r| f.to_s =~ r })
         end.map { |f| ConceptQL::StatementFileTest.new(cdb, f) }
       end
     end

@@ -1,14 +1,42 @@
-{
-  "condition_occurrence": [
-    15005,
-    33940,
-    40556,
-    49718,
-    56467,
-    58165,
-    62592,
-    84298,
-    87583,
-    89334
-  ]
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 15005
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 33940
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 40556
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 49718
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 56467
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 58165
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 62592
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 84298
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 87583
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 89334
+  }
+]

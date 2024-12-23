@@ -1,11 +1,22 @@
-{
-  "condition_occurrence": [
-    523,
-    58165,
-    84298
-  ],
-  "procedure_occurrence": [
-    84300,
-    94365
-  ]
-}
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 523
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 58165
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 84298
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 84300
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 94365
+  }
+]

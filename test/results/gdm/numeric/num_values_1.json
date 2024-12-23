@@ -1,253 +1,998 @@
-{
-  "person": [
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0
-  ]
-}
+[
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  }
+]

@@ -1,3 +1,6 @@
-{
-  "person": 249
-}
+[
+  {
+    "criterion_domain": "person",
+    "count": 249
+  }
+]

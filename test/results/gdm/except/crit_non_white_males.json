@@ -1,31 +1,110 @@
-{
-  "person": [
-    4,
-    6,
-    21,
-    22,
-    50,
-    68,
-    69,
-    71,
-    72,
-    75,
-    96,
-    108,
-    111,
-    115,
-    117,
-    120,
-    125,
-    132,
-    151,
-    162,
-    167,
-    181,
-    186,
-    190,
-    201,
-    205,
-    238
-  ]
-}
+[
+  {
+    "criterion_domain": "person",
+    "criterion_id": 4
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 6
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 21
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 22
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 50
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 68
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 69
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 71
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 72
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 75
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 96
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 108
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 111
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 115
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 117
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 120
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 125
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 132
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 151
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 162
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 167
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 181
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 186
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 190
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 201
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 205
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 238
+  }
+]

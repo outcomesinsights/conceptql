@@ -1,5 +1,6 @@
-{
-  "procedure_occurrence": [
-    334
-  ]
-}
+[
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 334
+  }
+]

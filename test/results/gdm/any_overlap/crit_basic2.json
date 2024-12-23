@@ -1,14 +1,42 @@
-{
-  "person": [
-    38,
-    77,
-    90,
-    109,
-    110,
-    152,
-    187,
-    213,
-    217,
-    239
-  ]
-}
+[
+  {
+    "criterion_domain": "person",
+    "criterion_id": 38
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 77
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 90
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 109
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 110
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 152
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 187
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 213
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 217
+  },
+  {
+    "criterion_domain": "person",
+    "criterion_id": 239
+  }
+]

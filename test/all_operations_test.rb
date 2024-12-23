@@ -26,11 +26,12 @@ def my_time_it(name)
 end
 
 describe ConceptQL::Operators do
+  # CDB.db.loggers << Logger.new(STDOUT)
   ConceptQL::StatementFileTest.all(CDB, file_regexps).each do |file_test|
     it "should produce correct results for #{file_test.test_name}" do
       file_test.each_test do |results|
         my_time_it(results.message) do
-          debugger if JSON.parse(results.fetch.to_json) != JSON.parse(results.expected)
+          # debugger if JSON.parse(results.fetch.to_json) != JSON.parse(results.expected)
           _(JSON.parse(results.fetch.to_json)).must_equal(JSON.parse(results.expected), results.message)
         end
       end
