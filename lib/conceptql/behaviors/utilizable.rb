@@ -73,14 +73,15 @@ module ConceptQL
         db[:observations]
           .where({
                    source_type_concept_id: all_source_type_ids
-                 })
+                 }).
+                 exclude(admit_admission_date: nil)
           .select_append(
             is_primary.as(:is_primary)
           )
           .from_self
           .select_append(Sequel[:ROW_NUMBER].function.over(
-            partition: :collection_id,
-            order: [Sequel[:collection_id], Sequel[:is_primary].desc, Sequel[:clinical_code_concept_id]]
+            partition: [:patient_id, :admit_admission_date, :admit_discharge_date],
+            order: [Sequel[:is_primary].desc, Sequel[:collection_id], Sequel[:clinical_code_concept_id]]
           ).as(:nummy))
           .from_self
           .where(nummy: 1)
