@@ -5,11 +5,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - search_path: public,gdm_vocabs
+          - search_path: slim,gdm_vocabs
             data_model: gdm
-          - search_path: public,ohdsi_vocabs
+          - search_path: slim,ohdsi_vocabs
             data_model: gdm
-          - search_path: wide,ohdsi_vocabs
+          - search_path: wide,slim,ohdsi_vocabs
             data_model: gdm_wide
     runs-on: ubuntu-latest
     environment: Test Secrets
