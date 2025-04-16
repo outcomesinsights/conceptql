@@ -7,5 +7,3 @@ gemspec
 gem 'pg'
 gem 'sequel-hexspace', github: 'outcomesinsights/sequel-hexspace'
 gem 'sequelizer', github: 'outcomesinsights/sequelizer', branch: 'ignitor'
-
-gem "memo_wise", "~> 1.10"

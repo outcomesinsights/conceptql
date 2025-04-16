@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '>= 6'
   spec.add_dependency 'bigdecimal'
   spec.add_dependency 'json'
+  spec.add_dependency 'memo_wise', '~> 1.10'
   spec.add_dependency 'sequel', '~> 5.66'
   spec.add_dependency 'sequelizer', '~> 0.1.3'
   spec.add_dependency 'thor', '~> 1.0'
