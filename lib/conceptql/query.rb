@@ -60,6 +60,10 @@ module ConceptQL
       cols
     end
 
+    def column_names
+      query_cols.is_a?(Hash) ? query_cols.keys : query_cols
+    end
+
     def sql(*args)
       sql_statements(*args).values.join(";\n")
     end
