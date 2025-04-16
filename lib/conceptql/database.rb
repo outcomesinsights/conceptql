@@ -9,7 +9,6 @@ module ConceptQL
     @lexicon_mutex = Mutex.new
 
     EXTENSIONS = %i[
-      cold_col
       date_arithmetic
       error_sql
       make_readyable
@@ -30,7 +29,7 @@ module ConceptQL
 
       db_type = db ? db.database_type.to_sym : :postgres
       if db
-        self.class.db_extensions(db, @opts[:data_model])
+        self.class.db_extensions(db, @opts[:data_model], @opts[:use_cold_col])
         db_type = db.database_type.to_sym
       end
 
@@ -59,13 +58,17 @@ module ConceptQL
     end
 
     class << self
-      def db_extensions(db, data_model)
+      def db_extensions(db, data_model, use_cold_col)
         return unless db
 
         EXTENSIONS.each do |extension|
           db.extension extension
         end
 
+        use_cold_col = db.is_a?(Sequel::Mock) if use_cold_col.nil?
+        return unless use_cold_col
+
+        db.extension(:cold_col)
         db.load_schema("schemas/#{data_model}.yml")
         db.load_schema('schemas/ohdsi_vocabs.yml')
       end
