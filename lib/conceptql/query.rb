@@ -32,7 +32,7 @@ module ConceptQL
 
     def initialize(cdb, statement, opts = {})
       @cdb = cdb
-      @statement, opts = extract_statement(statement, opts.dup)
+      @statement, opts = extract_statement(statement, opts)
       opts[:algorithm_fetcher] ||= proc do |alg|
         statement, description = db[:concepts].where(concept_id: alg).get(%i[statement label])
         statement = JSON.parse(statement) if statement.is_a?(String)
@@ -163,7 +163,7 @@ module ConceptQL
           raise 'window operator needs a ConceptQL statement followed by a hash as the last item of the array.'
         end
 
-        opts[:scope_opts] = (opts[:scope_opts] || {}).dup
+        opts[:scope_opts] = (opts[:scope_opts] || {})
         opts[:scope_opts].merge!(window_opts: stmt.last.merge(cdb: cdb))
         extract_statement(stmt[1], opts)
       elsif stmt.length == 1 && stmt.first.is_a?(Array)
