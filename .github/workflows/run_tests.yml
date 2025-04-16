@@ -19,14 +19,14 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - 
+      -
         name: Log into DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Run Tests
-        run: docker-compose run conceptql
+        run: docker compose run conceptql
   Run-Spark-Tests:
     strategy:
       matrix:
@@ -70,7 +70,7 @@ jobs:
         if: steps.cache-synpuf-test-data.outputs.cache-hit != 'true'
         run: |
           cd /tmp
-          curl -sSL "https://www.dropbox.com/scl/fi/hha5zjm9d5ezkk8bfvtnc/synpuf_test_data.tgz?rlkey=lythw2s6342609ave66cam2ms&dl=1" > synpuf_test_data.tgz 
+          curl -sSL "https://www.dropbox.com/scl/fi/hha5zjm9d5ezkk8bfvtnc/synpuf_test_data.tgz?rlkey=lythw2s6342609ave66cam2ms&dl=1" > synpuf_test_data.tgz
           tar xzf synpuf_test_data.tgz
 
       - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
