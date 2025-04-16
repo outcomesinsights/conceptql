@@ -19,6 +19,14 @@ describe ConceptQL::Query do
     ).query_cols).must_equal(ConceptQL::Scope::DEFAULT_COLUMNS.keys)
   end
 
+  it 'should not alter the Database instance when called' do
+    og_opts = CDB.opts.dup
+    _(CDB.query(
+      [:from, 'other_table'], scope_opts: { window_opts: { window_table: :some_table } }
+    ).query_cols)
+    _(CDB.opts).must_equal(og_opts)
+  end
+
   it 'should raise error if attempting to execute invalid recall' do
     _(proc do
       criteria_ids(
