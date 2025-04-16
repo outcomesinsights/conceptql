@@ -23,26 +23,32 @@ module Sequel
     end
 
     def create_table_as(name, sql, options = {})
-      super.tap do |o|
+      super.tap do |_|
         record_table(name, columns_from_sql(sql))
       end
     end
 
+    def create_table_from_generator(name, generator, options)
+      super.tap do |_|
+        record_table(name, columns_from_generator(generator))
+      end
+    end
+
     def create_table_sql(name, generator, options)
-      super.tap do |o|
+      super.tap do |_|
         record_table(name, columns_from_generator(generator))
       end
     end
 
     def create_view_sql(name, source, options)
-      super.tap do |o|
+      super.tap do |_|
         record_view(name, columns_from_sql(source)) unless options[:dont_record]
       end
     end
 
     def record_table(name, columns)
       name = literal(name)
-      # puts "recording table #{name}"
+      puts "recording table #{name}"
       Sequel.synchronize { @created_tables[name] = columns }
     end
 
@@ -93,7 +99,7 @@ module Sequel
 
         from_stars += cols
                       .select { |c| c.is_a?(Sequel::SQL::ColumnAll) }
-                      .flat_map { |c| from_named_sources(c.table.to_sym, opts_chain) }
+                      .flat_map { |c| from_named_sources(c.table, opts_chain) }
 
         cols = cols.reject { |c| c.is_a?(Sequel::SQL::ColumnAll) }
 
