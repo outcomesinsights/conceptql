@@ -1,26 +1,25 @@
 ---
-version: '3'
 services:
   conceptql:
     depends_on:
-    - test_data
+      - test_data
     environment:
-    - CONCEPTQL_DATA_MODEL
-    - CONCEPTQL_ENABLE_COMMENTS
-    - CONCEPTQL_OVERWRITE_TEST_RESULTS
-    - CONCEPTQL_PRINT_SQL
-    - CONCEPTQL_STOP_ON_ERROR
-    - SEQUELIZER_RETRIES=12
-    - SEQUELIZER_RETRY_DELAY=5
-    - SEQUELIZER_SEARCH_PATH
-    - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data
+      - CONCEPTQL_DATA_MODEL
+      - CONCEPTQL_ENABLE_COMMENTS
+      - CONCEPTQL_OVERWRITE_TEST_RESULTS
+      - CONCEPTQL_PRINT_SQL
+      - CONCEPTQL_STOP_ON_ERROR
+      - SEQUELIZER_RETRIES=12
+      - SEQUELIZER_RETRY_DELAY=5
+      - SEQUELIZER_SEARCH_PATH
+      - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data
     image: outcomesinsights/misc:conceptql.master.latest
     build:
       context: "."
       dockerfile: dockers/standard/Dockerfile
     command: sh -c "bundle && bundle exec ruby test/all.rb"
     volumes:
-    - "${PWD}:/home/conceptql"
+      - "${PWD}:/home/conceptql"
   test_data:
     image: outcomesinsights/misc:test_data.ignitor
     command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c work_mem=4GB -c shared_buffers=6GB -c effective_cache_size=6GB -c max_parallel_workers_per_gather=0

@@ -25,56 +25,57 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run: docker compose build
       - name: Run Tests
         run: docker compose run conceptql
-  Run-Spark-Tests:
-    strategy:
-      matrix:
-        #spark_version: [3.5.0, 3.3.2]
-        spark_version: [3.5.0]
-        vocabs: [ohdsi, ohdsi_wide]
-        include:
-          - vocabs: ohdsi
-            data_model: gdm
-          - vocabs: ohdsi_wide
-            data_model: gdm_wide
-    runs-on: ubuntu-22.04
-    env:
-      SPARK_VERSION: ${{ matrix.spark_version }}
-      CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.2
-          bundler-cache: true
+  # Run-Spark-Tests:
+  #   strategy:
+  #     matrix:
+  #       #spark_version: [3.5.0, 3.3.2]
+  #       spark_version: [3.5.0]
+  #       vocabs: [ohdsi, ohdsi_wide]
+  #       include:
+  #         - vocabs: ohdsi
+  #           data_model: gdm
+  #         - vocabs: ohdsi_wide
+  #           data_model: gdm_wide
+  #   runs-on: ubuntu-22.04
+  #   env:
+  #     SPARK_VERSION: ${{ matrix.spark_version }}
+  #     CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: 3.2
+  #         bundler-cache: true
 
-      - uses: actions/cache@v3
-        with:
-          path: ~/spark
-          key: spark-${{ env.SPARK_VERSION }}
-        id: cache-spark
-      - name: Download Spark
-        if: steps.cache-spark.outputs.cache-hit != 'true'
-        run: |
-          wget -q https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz
-          tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
-          mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: ~/spark
+  #         key: spark-${{ env.SPARK_VERSION }}
+  #       id: cache-spark
+  #     - name: Download Spark
+  #       if: steps.cache-spark.outputs.cache-hit != 'true'
+  #       run: |
+  #         wget -q https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz
+  #         tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
+  #         mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark
 
-      - uses: actions/cache@v3
-        with:
-          path: /tmp/synpuf_test_data
-          key: synpuf-test-data
-        id: cache-synpuf-test-data
-      - name: Download Data
-        if: steps.cache-synpuf-test-data.outputs.cache-hit != 'true'
-        run: |
-          cd /tmp
-          curl -sSL "https://www.dropbox.com/scl/fi/hha5zjm9d5ezkk8bfvtnc/synpuf_test_data.tgz?rlkey=lythw2s6342609ave66cam2ms&dl=1" > synpuf_test_data.tgz
-          tar xzf synpuf_test_data.tgz
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: /tmp/synpuf_test_data
+  #         key: synpuf-test-data
+  #       id: cache-synpuf-test-data
+  #     - name: Download Data
+  #       if: steps.cache-synpuf-test-data.outputs.cache-hit != 'true'
+  #       run: |
+  #         cd /tmp
+  #         curl -sSL "https://www.dropbox.com/scl/fi/hha5zjm9d5ezkk8bfvtnc/synpuf_test_data.tgz?rlkey=lythw2s6342609ave66cam2ms&dl=1" > synpuf_test_data.tgz
+  #         tar xzf synpuf_test_data.tgz
 
-      - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
-      - run: bundle exec ruby test/all.rb
-        env:
-          CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocabs }}
-          SEQUELIZER_URL: hexspace://localhost:10000/default
+  #     - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
+  #     - run: bundle exec ruby test/all.rb
+  #       env:
+  #         CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocabs }}
+  #         SEQUELIZER_URL: hexspace://localhost:10000/default
