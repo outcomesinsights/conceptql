@@ -150,6 +150,10 @@ module ConceptQL
       def code_provenance_types_vocab
         %w[JIGSAW_CODE_PROVENANCE_TYPE JS_CODE_PROV_TYPE]
       end
+
+      def table_is_missing?(db)
+        !(db.table_exists?(:patients) && db.table_exists?(:clinical_codes))
+      end
     end
   end
 end

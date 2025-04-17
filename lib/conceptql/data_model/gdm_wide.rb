@@ -26,6 +26,10 @@ module ConceptQL
       def data_model
         :gdm_wide
       end
+
+      def table_is_missing?(db)
+        !db.table_exists?(:observations)
+      end
     end
   end
 end

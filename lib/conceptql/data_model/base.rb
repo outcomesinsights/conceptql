@@ -422,7 +422,7 @@ module ConceptQL
       end
 
       def table_is_missing?(db)
-        !(db.table_exists?(:concept) && db.table_exists?(:source_to_concept_map))
+        !(db.table_exists?(:observation_period) && db.table_exists?(:condition_occurrence))
       end
 
       def concept_id(table)
