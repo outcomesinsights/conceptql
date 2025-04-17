@@ -45,8 +45,8 @@ module ConceptQL
 
     def query(statement, opts = {})
       NullQuery.new if statement.nil? || statement.empty?
-      opts[:scope_opts] = (opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
-      Query.new(self, ConceptQL::Utils.rekey(statement), opts.merge(opts))
+      opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
+      Query.new(self, ConceptQL::Utils.rekey(statement), @opts.merge(opts))
     end
 
     def data_model
@@ -65,12 +65,12 @@ module ConceptQL
           db.extension extension
         end
 
-        use_cold_col = db.is_a?(Sequel::Mock) if use_cold_col.nil?
+        use_cold_col = db.is_a?(Sequel::Mock::Database) if use_cold_col.nil?
         return unless use_cold_col
 
         db.extension(:cold_col)
-        db.load_schema("schemas/#{data_model}.yml")
-        db.load_schema('schemas/ohdsi_vocabs.yml')
+        db.load_schema(ConceptQL.schemas_dir / "#{data_model}.yml")
+        db.load_schema(ConceptQL.schemas_dir / 'ohdsi_vocabs.yml')
       end
 
       def lexicon_db
