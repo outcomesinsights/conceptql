@@ -48,7 +48,6 @@ module Sequel
 
     def record_table(name, columns)
       name = literal(name)
-      puts "recording table #{name}"
       Sequel.synchronize { @created_tables[name] = columns }
     end
 
