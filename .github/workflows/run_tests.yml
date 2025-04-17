@@ -74,7 +74,6 @@ jobs:
           tar xzf synpuf_test_data.tgz
 
       - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
-      - run: bundle add sequel-hexspace --github outcomesinsights/sequel-hexspace
       - run: bundle exec ruby test/all.rb
         env:
           CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocabs }}
