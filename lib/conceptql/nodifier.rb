@@ -10,14 +10,14 @@ module ConceptQL
       @cdb = cdb
       @scope = opts[:scope] || Scope.new(opts.delete(:scope_opts) || {})
       @data_model = get_data_model(opts)
-      @database_type = opts[:database_type] || ConceptQL::DEFAULT_DATA_MODEL
+      @database_type = opts[:database_type] || cdb.database_type
       @algorithm_fetcher = opts[:algorithm_fetcher] || (proc do |_alg|
         nil
       end)
     end
 
     def get_data_model(opts)
-      (opts[:data_model] || ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
+      (opts[:data_model] || cdb.opts[:data_model] || ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
     end
 
     def create(operator, *values)

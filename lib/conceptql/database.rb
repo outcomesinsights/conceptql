@@ -50,7 +50,11 @@ module ConceptQL
     end
 
     def data_model
-      @data_model ||= DataModel.get(opts[:data_model])
+      @data_model ||= DataModel.get(opts[:data_model], nodifier: nodifier)
+    end
+
+    def nodifier
+      @nodifier ||= Nodifier.new(self)
     end
 
     def base_data_model
