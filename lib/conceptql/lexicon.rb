@@ -29,8 +29,8 @@ module ConceptQL
     end
 
     def determine_strategy(lexicon_db, dataset_db)
-      lexicon_classes.each do |klass|
-        [lexicon_db, dataset_db].compact.each do |db|
+      [dataset_db, lexicon_db].compact.each do |db|
+        lexicon_classes.each do |klass|
           next unless klass.db_has_all_vocabulary_tables?(db)
 
           return(klass.new(db))
