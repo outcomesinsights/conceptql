@@ -61,7 +61,7 @@ module ConceptQL
         SqlFormatters::SqlFormatter
       end
 
-      def datediff(_db, from, to)
+      def datediff(from, to)
         Sequel.function(:datediff, from, to)
       end
 
