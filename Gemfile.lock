@@ -8,10 +8,10 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: e209fa0667de1dcc50f7256fa10676c642881fd7
-  branch: ignitor
+  revision: a09936ef69fa986f9ca7a084402df8a69a2f8543
+  branch: main
   specs:
-    sequelizer (0.1.3)
+    sequelizer (0.1.5)
       dotenv (~> 2.1)
       hashie (~> 3.2)
       sequel (~> 5.0)
