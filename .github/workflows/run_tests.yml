@@ -35,8 +35,10 @@ jobs:
         vocabs: [ohdsi, ohdsi_wide]
         include:
           - vocabs: ohdsi
+            search_path: slim,ohdsi_vocabs
             data_model: gdm
           - vocabs: ohdsi_wide
+            search_path: wide,slim,ohdsi_vocabs
             data_model: gdm_wide
     runs-on: ubuntu-22.04
     env:
@@ -64,7 +66,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: /tmp/synpuf_test_data
-          key: synpuf-test-data
+          key: synpuf-test-data-v2
         id: cache-synpuf-test-data
       - name: Download Data
         if: steps.cache-synpuf-test-data.outputs.cache-hit != 'true'
@@ -76,5 +78,5 @@ jobs:
       - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
       - run: bundle exec ruby test/all.rb
         env:
-          CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.vocabs }}
+          CONCEPTQL_PARQUET_TEST_DIR: /tmp/synpuf_test_data/${{ matrix.search_path }}
           SEQUELIZER_URL: hexspace://localhost:10000/default
