@@ -51,40 +51,50 @@ module ConceptQL
         @occurrence ||= arguments.first
       end
 
-      def rank_function
-        options[:group_by_date] ? :DENSE_RANK : :ROW_NUMBER
-      end
-
       def query(db)
-        ds = if at_least_option || within_option
-               query_complex(db)
-             else
-               query_simple(db)
-             end
+        ds = stream.evaluate(db)
+        additional_matching_columns = []
+        additional_matching_columns << :start_date if grouped?
 
-        ds.where(rn: occurrence.abs)
-      end
+        ds = ds.select_append(
+          Sequel[:ROW_NUMBER].function.over(
+            partition: matching_columns_plus(*additional_matching_columns),
+            order: ordered_columns(:criterion_id)
+          ).as(:rn)
+        )
+        ds = ds.from_self
+        return ds.where(rn: occurrence.abs) unless timed? || grouped?
 
-      # With at_least or within option, return all matching occurrences that meet the date criteria by doing a self join.
-      # If within is specified, assume an at_least of everything after the current event to not pick
-      # prior occurrences when doing the self join.
-      def query_complex(db)
-        unless ConceptQL.avoid_ctes?
-          input_name = cte_name(:occurrence_input)
-          joined_name = cte_name(:occurrence_joined)
+        additional_order_columns = []
+
+        if grouped?
+          one_date_ds = ds.from_self.where(rn: 1).from_self.select_remove(:rn)
+          ds = one_date_ds.select_append(
+            Sequel[:ROW_NUMBER].function.over(
+              partition: matching_columns_plus,
+              order: ordered_columns
+            ).as(:rn)
+          ).from_self
         end
+        return ds.where(rn: occurrence.abs) unless timed?
 
-        # Give a global row number to all rows, so that the self joined dataset can partition based on
-        # the global row number when ordering
-        input_ds = stream.evaluate(db)
-                         .select_append(Sequel[:ROW_NUMBER].function.over(partition: matching_columns,
-                                                                          order: ordered_columns(global: true)).as(:global_rn))
+        additional_order_columns << :criterion_id
 
+        input_name = cte_name(:occurrence_input)
+        joined_name = cte_name(:occurrence_joined)
+
+        input_ds = ds.select_append(
+          Sequel[:ROW_NUMBER].function.over(
+            partition: matching_columns_plus,
+            order: ordered_columns(*additional_order_columns, allow_reverse: false)
+          ).as(:global_rn)
+        )
+
+        first_ds = db[input_name].from_self(alias: :first)
         first = Sequel[:first]
         rest = Sequel[:rest]
-        base_input_ds = input_name ? Sequel[input_name] : input_ds
-        joined_ds = db[base_input_ds.as(:first)]
-                    .join(base_input_ds.as(:rest), matching_columns.map { |c| [c, c] }) do
+
+        joined_ds = first_ds.join(input_name, matching_columns_plus.map { |c| [c, c] }, table_alias: :rest) do
           cond = rest[:global_rn] > first[:global_rn]
           cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date]) if at_least_option
           cond &= rest[:start_date] <= adjust_date(within_option, first[:end_date]) if within_option
@@ -92,27 +102,29 @@ module ConceptQL
         end
           .select_all(:rest)
           .select_append(first[:global_rn].as(:initial_rn))
-          .select_append(Sequel[rank_function].function.over(partition: matching_columns.map { |c|
-                           first[c]
-                         } + [first[:global_rn]], order: ordered_columns(qualify: :rest)).as(:rn))
+          .select_append(
+            Sequel[:ROW_NUMBER].function.over(
+              partition: matching_columns_plus(:global_rn).map { |c| first[c] },
+              order: ordered_columns(*additional_order_columns, qualifier: :rest)
+            ).as(:timed_rn)
+          )
 
-        joined_ds = if joined_name
-                      db[joined_name]
-                        .with(input_name, input_ds)
-                        .with(joined_name, joined_ds)
-                    else
-                      joined_ds.from_self
-                    end
-
-        joined_ds.order(:global_rn)
+        db[joined_name]
+          .with(input_name, input_ds)
+          .with(joined_name, joined_ds)
+          .where(timed_rn: occurrence.abs)
       end
 
-      # Without at_least or within option, only return the first occurrence for each person, if any.
-      def query_simple(db)
-        stream.evaluate(db)
-              .select_append(Sequel[rank_function].function.over(partition: matching_columns,
-                                                                 order: ordered_columns).as(:rn))
-              .from_self
+      def grouped?
+        options[:group_by_date]
+      end
+
+      def timed?
+        options[:at_least] || options[:within]
+      end
+
+      def matching_columns_plus(*columns)
+        matching_columns + columns
       end
 
       private
@@ -156,16 +168,14 @@ module ConceptQL
         end
       end
 
-      def ordered_columns(opts = {})
-        qualifier = opts[:qualify]
-        start_date = rdbms.partition_fix(qualify_with(qualifier, :start_date), qualifier)
-        start_date = Sequel.send(asc_or_desc, start_date) unless opts[:global]
-
+      def ordered_columns(*columns, qualifier: nil, allow_reverse: true)
+        start_date = qualify_with(qualifier, :start_date)
+        start_date = Sequel.send(asc_or_desc, start_date) if allow_reverse
         order = [start_date]
-        unless options[:group_by_date]
-          criterion_id = qualify_with(qualifier, :criterion_id)
-          criterion_id = Sequel.send(asc_or_desc, criterion_id) unless opts[:global]
-          order << criterion_id
+        order += columns.map do |c|
+          c = qualify_with(qualifier, c)
+          c = Sequel.send(asc_or_desc, c) if allow_reverse
+          c
         end
         order
       end
