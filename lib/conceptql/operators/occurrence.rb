@@ -61,8 +61,16 @@ module ConceptQL
              else
                query_simple(db)
              end
+             .where(rn: occurrence.abs)
 
-        ds.where(rn: occurrence.abs)
+        return ds unless options[:group_by_date]
+
+        ds = ds.from_self
+               .select_append(
+                 Sequel[rank_function]
+                 .function.over(partition: matching_columns,
+                                order: ordered_columns(needs_criterion_id: false)).as(:tie_breaking_rn)
+               ).from_self.where(tie_breaking_rn: 1)
       end
 
       # With at_least or within option, return all matching occurrences that meet the date criteria by doing a self join.
@@ -157,12 +165,13 @@ module ConceptQL
       end
 
       def ordered_columns(opts = {})
+        opts = { needs_criterion_id: options[:group_by_date] }.merge(opts)
         qualifier = opts[:qualify]
         start_date = rdbms.partition_fix(qualify_with(qualifier, :start_date), qualifier)
         start_date = Sequel.send(asc_or_desc, start_date) unless opts[:global]
 
         order = [start_date]
-        unless options[:group_by_date]
+        unless opts[:needs_criterion_id]
           criterion_id = qualify_with(qualifier, :criterion_id)
           criterion_id = Sequel.send(asc_or_desc, criterion_id) unless opts[:global]
           order << criterion_id
