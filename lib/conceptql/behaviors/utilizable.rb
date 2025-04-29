@@ -59,22 +59,21 @@ module ConceptQL
       end
 
       def gdm_wide_it(db, all_primary_ids, all_source_type_ids)
-        # TODO: Reinstate the original, less clunky version of this change once we stop
-        # supporting Spark 3.3.x
+        # TODO: Reinstate the original, less clunky version of this change once
+        # we stop supporting Spark 3.3.x
         primary_cases = {}
         all_primary_ids.each do |primary_id|
-          primary_cases[Sequel[:provenance_concept_id] => primary_id] = 1
+          primary_cases[{ Sequel[:provenance_concept_id] => primary_id }] = 1
         end
 
-        # This generates some gnarly SQL if there are no primary cases (like when we run a statement without a database to grab concepts from)
+        # This generates some gnarly SQL if there are no primary cases (like
+        # when we run a statement without a database to grab concepts from)
         is_primary = Sequel[0]
         is_primary = Sequel.case(primary_cases, 0) unless primary_cases.empty?
 
         db[:observations]
-          .where({
-                   source_type_concept_id: all_source_type_ids
-                 }).
-                 exclude(admit_admission_date: nil)
+          .where(source_type_concept_id: all_source_type_ids)
+          .exclude(admit_admission_date: nil)
           .select_append(
             is_primary.as(:is_primary)
           )
