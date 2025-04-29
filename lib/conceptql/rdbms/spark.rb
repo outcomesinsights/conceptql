@@ -19,7 +19,8 @@ module ConceptQL
           .select(
             Sequel[:pcc][:collection_id].as(:collection_id),
             Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
-            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id)
+            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id),
+            Sequel[true].as(:is_primary)
           )
           .select_append(Sequel[:ROW_NUMBER].function.over(
             partition: :collection_id,

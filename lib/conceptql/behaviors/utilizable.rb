@@ -56,6 +56,30 @@ module ConceptQL
                         .left_join(dm.concepts_table(db), { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
                         .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[:cl][:id] }, table_alias: :pcon)
                         .where(Sequel[:cl][:id] => relevant_contexts)
+                        .select(
+                          Sequel[:cl][:start_date].as(:collection_start_date),
+                          Sequel[:cl][:end_date].as(:collection_end_date),
+                          Sequel[:ad][:admission_date].as(:admission_date),
+                          Sequel[:ad][:discharge_date].as(:discharge_date),
+                          Sequel[:asc][:concept_code].as(:admission_source_value),
+                          Sequel[:asc][:concept_text].as(:admission_source_description),
+                          Sequel[:dlc][:concept_code].as(:discharge_location_source_value),
+                          Sequel[:dlc][:concept_text].as(:discharge_location_source_description),
+                          Sequel[:pcon][:concept_code].as(:source_value),
+                          Sequel[:pcon][:vocabulary_id].as(:source_vocabulary_id),
+                          Sequel[:cl][:patient_id].as(:patient_id),
+                          Sequel[:cl][:id].as(:collection_id)
+                        )
+                        .select_append(Sequel[:ROW_NUMBER].function.over(
+                          partition: [:admission_detail_id],
+                          order: [
+                            Sequel[:pcon][:is_primary].desc,
+                            Sequel[:cl][:id],
+                            Sequel[:pcon][:concept_code]
+                          ]
+                        ).as(:nummy))
+                        .from_self
+                        .where(nummy: 1)
       end
 
       def gdm_wide_it(db, all_primary_ids, all_source_type_ids)
@@ -79,7 +103,7 @@ module ConceptQL
           )
           .from_self
           .select_append(Sequel[:ROW_NUMBER].function.over(
-            partition: [:patient_id, :admit_admission_date, :admit_discharge_date],
+            partition: [:admission_detail_id],
             order: [Sequel[:is_primary].desc, Sequel[:collection_id], Sequel[:clinical_code_concept_id]]
           ).as(:nummy))
           .from_self
@@ -105,45 +129,24 @@ module ConceptQL
       def override_columns
         return unless gdm?
 
-        if wide?
-          {
-            length_of_stay: (rdbms.days_between(Sequel[:admit_admission_date],
-                                                Sequel[:admit_discharge_date]) + 1).as(:length_of_stay),
-            criterion_table: Sequel.cast_string('collections').as(:criterion_table),
-            criterion_domain: Sequel.cast_string('condition_occurrence').as(:criterion_domain),
-            admission_source_value: Sequel[:admission_source_value],
-            admission_source_description: Sequel[:admission_source_description],
-            discharge_location_source_value: Sequel[:discharge_location_source_value],
-            discharge_location_source_description: Sequel[:discharge_location_source_description],
-            admission_date: Sequel[:admission_date],
-            discharge_date: Sequel[:discharge_date],
-            person_id: Sequel[:patient_id].as(:person_id),
-            criterion_id: Sequel[:collection_id].as(:criterion_id),
-            start_date: Sequel[:collection_start_date].as(:start_date),
-            end_date: Sequel[:collection_end_date].as(:end_date),
-            source_value: Sequel[:source_value].as(:source_value),
-            source_vocabulary_id: Sequel[:source_vocabulary_id].as(:source_vocabulary_id)
-          }
-        else
-          {
-            start_date: Sequel[:cl][:start_date].as(:start_date),
-            end_date: Sequel[:cl][:end_date].as(:end_date),
-            admission_date: Sequel[:ad][:admission_date],
-            discharge_date: Sequel[:ad][:discharge_date],
-            length_of_stay: (rdbms.days_between(Sequel[:ad][:admission_date],
-                                                Sequel[:ad][:discharge_date]) + 1).as(:length_of_stay),
-            admission_source_value: Sequel[:asc][:concept_code].as(:admission_source_value),
-            admission_source_description: Sequel[:asc][:concept_text].as(:admission_source_description),
-            discharge_location_source_value: Sequel[:dlc][:concept_code].as(:discharge_location_source_value),
-            discharge_location_source_description: Sequel[:dlc][:concept_text].as(:discharge_location_source_description),
-            source_value: Sequel[:pcon][:concept_code].as(:source_value),
-            source_vocabulary_id: Sequel[:pcon][:vocabulary_id].as(:source_vocabulary_id),
-            person_id: Sequel[:cl][:patient_id].as(:person_id),
-            criterion_id: Sequel[:cl][:id].as(:criterion_id),
-            criterion_table: Sequel.cast_string('collections').as(:criterion_table),
-            criterion_domain: Sequel.cast_string('condition_occurrence').as(:criterion_domain)
-          }
-        end
+        {
+          length_of_stay: (rdbms.days_between(Sequel[:admission_date],
+                                              Sequel[:discharge_date]) + 1).as(:length_of_stay),
+          criterion_table: Sequel.cast_string('collections').as(:criterion_table),
+          criterion_domain: Sequel.cast_string('condition_occurrence').as(:criterion_domain),
+          admission_source_value: Sequel[:admission_source_value],
+          admission_source_description: Sequel[:admission_source_description],
+          discharge_location_source_value: Sequel[:discharge_location_source_value],
+          discharge_location_source_description: Sequel[:discharge_location_source_description],
+          admission_date: Sequel[:admission_date],
+          discharge_date: Sequel[:discharge_date],
+          person_id: Sequel[:patient_id].as(:person_id),
+          criterion_id: Sequel[:collection_id].as(:criterion_id),
+          start_date: Sequel[:collection_start_date].as(:start_date),
+          end_date: Sequel[:collection_end_date].as(:end_date),
+          source_value: Sequel[:source_value].as(:source_value),
+          source_vocabulary_id: Sequel[:source_vocabulary_id].as(:source_vocabulary_id)
+        }
       end
     end
   end

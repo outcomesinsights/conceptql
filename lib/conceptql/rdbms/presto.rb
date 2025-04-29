@@ -19,7 +19,8 @@ module ConceptQL
           .select(
             Sequel[:pcc][:collection_id].as(:collection_id),
             Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
-            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id)
+            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id),
+            Sequel[true].as(:is_primary)
           )
           .order(Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id])
           .from_self
