@@ -18,6 +18,7 @@ module ConceptQL
           .where(provenance_concept_id: all_primary_ids)
           .select(
             Sequel[:pcc][:collection_id].as(:collection_id),
+            Sequel[:pcc][:clinical_code_concept_id].as(:concept_id),
             Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
             Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id),
             Sequel[true].as(:is_primary)

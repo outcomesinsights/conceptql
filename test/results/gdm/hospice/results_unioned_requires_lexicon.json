@@ -15,7 +15,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 17,
@@ -33,7 +34,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 17,
@@ -51,7 +53,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 38,
@@ -69,7 +72,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 54,
@@ -87,7 +91,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 60,
@@ -105,7 +110,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 66,
@@ -123,7 +129,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 73,
@@ -141,7 +148,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 77,
@@ -159,7 +167,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 81,
@@ -177,7 +186,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 88,
@@ -195,7 +205,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 88,
@@ -213,7 +224,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 90,
@@ -231,7 +243,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 93,
@@ -249,7 +262,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 96,
@@ -267,7 +281,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 106,
@@ -285,7 +300,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 109,
@@ -303,7 +319,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 110,
@@ -321,7 +338,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 131,
@@ -339,7 +357,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 149,
@@ -357,7 +376,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 152,
@@ -375,7 +395,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 152,
@@ -393,7 +414,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 161,
@@ -411,7 +433,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 163,
@@ -429,7 +452,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 172,
@@ -447,7 +471,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 177,
@@ -465,7 +490,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 177,
@@ -483,7 +509,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 184,
@@ -501,7 +528,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 187,
@@ -519,7 +547,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 187,
@@ -537,7 +566,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 190,
@@ -555,7 +585,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 196,
@@ -573,7 +604,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 197,
@@ -591,7 +623,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 212,
@@ -609,7 +642,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 212,
@@ -627,7 +661,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 213,
@@ -645,7 +680,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 213,
@@ -663,7 +699,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 214,
@@ -681,7 +718,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 214,
@@ -699,7 +737,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 217,
@@ -717,7 +756,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 220,
@@ -735,7 +775,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 220,
@@ -753,7 +794,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 223,
@@ -771,7 +813,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 223,
@@ -789,7 +832,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 230,
@@ -807,7 +851,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 234,
@@ -825,7 +870,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 239,
@@ -843,7 +889,8 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   },
   {
     "person_id": 239,
@@ -861,6 +908,7 @@
     "admission_source_value": null,
     "admission_source_description": null,
     "discharge_location_source_value": null,
-    "discharge_location_source_description": null
+    "discharge_location_source_description": null,
+    "primary_concept_id": null
   }
 ]

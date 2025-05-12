@@ -22,6 +22,7 @@ module ConceptQL
         require_column :admission_source_description
         require_column :discharge_location_source_value
         require_column :discharge_location_source_description
+        require_column :primary_concept_id
       end
 
       def query(db)
@@ -65,6 +66,7 @@ module ConceptQL
                           Sequel[:asc][:concept_text].as(:admission_source_description),
                           Sequel[:dlc][:concept_code].as(:discharge_location_source_value),
                           Sequel[:dlc][:concept_text].as(:discharge_location_source_description),
+                          Sequel[:pcon][:concept_id].as(:primary_concept_id),
                           Sequel[:pcon][:concept_code].as(:source_value),
                           Sequel[:pcon][:vocabulary_id].as(:source_vocabulary_id),
                           Sequel[:cl][:patient_id].as(:patient_id),
@@ -116,6 +118,7 @@ module ConceptQL
             Sequel[:asc][:concept_text].as(:admission_source_description),
             Sequel[:dlc][:concept_code].as(:discharge_location_source_value),
             Sequel[:dlc][:concept_text].as(:discharge_location_source_description),
+            Sequel.case({ 1 => :clinical_code_concept_id }, nil, :is_primary).as(:primary_concept_id),
             Sequel.case({ 1 => :clinical_code_source_value }, nil, :is_primary).as(:source_value),
             Sequel.case({ 1 => :clinical_code_vocabulary_id }, nil, :is_primary).as(:source_vocabulary_id)
           )
@@ -144,6 +147,7 @@ module ConceptQL
           criterion_id: Sequel[:collection_id].as(:criterion_id),
           start_date: Sequel[:collection_start_date].as(:start_date),
           end_date: Sequel[:collection_end_date].as(:end_date),
+          primary_concept_id: Sequel[:primary_concept_id],
           source_value: Sequel[:source_value].as(:source_value),
           source_vocabulary_id: Sequel[:source_vocabulary_id].as(:source_vocabulary_id)
         }

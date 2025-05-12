@@ -58,6 +58,7 @@ module ConceptQL
       admission_source_description: :String,
       discharge_location_source_value: :String,
       discharge_location_source_description: :String,
+      primary_concept_id: :Bigint,
       primary_diagnosis_code: :String,
       primary_diagnosis_vocabulary: :String,
       uuid: :String,
