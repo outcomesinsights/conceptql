@@ -6,7 +6,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-03-12",
     "end_date": "2010-03-13",
-    "source_value": "E9330",
+    "source_value": "V4501",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-03-12",
@@ -16,7 +16,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44831870
+    "primary_concept_id": 44823830
   },
   {
     "person_id": 2,
@@ -25,7 +25,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-12",
     "end_date": "2009-04-18",
-    "source_value": "71590",
+    "source_value": "2724",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-04-12",
@@ -35,7 +35,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44831489
+    "primary_concept_id": 44827629
   },
   {
     "person_id": 2,
@@ -44,7 +44,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-08-31",
     "end_date": "2009-09-02",
-    "source_value": "V5866",
+    "source_value": "7092",
     "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2009-08-31",
@@ -54,7 +54,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 2004643
   },
   {
     "person_id": 2,
@@ -63,7 +63,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-09-17",
     "end_date": "2009-09-20",
-    "source_value": "30390",
+    "source_value": "32723",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-09-17",
@@ -73,7 +73,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44831100
+    "primary_concept_id": 44825323
   },
   {
     "person_id": 2,
@@ -82,7 +82,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-26",
     "end_date": "2010-07-01",
-    "source_value": "3569",
+    "source_value": "7856",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-06-26",
@@ -92,7 +92,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826563
+    "primary_concept_id": 44833920
   },
   {
     "person_id": 11,
@@ -120,7 +120,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-12",
     "end_date": "2008-09-12",
-    "source_value": "3004",
+    "source_value": "2724",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-09-12",
@@ -130,7 +130,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44836972
+    "primary_concept_id": 44827629
   },
   {
     "person_id": 17,
@@ -177,8 +177,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-19",
     "end_date": "2008-09-22",
-    "source_value": "951",
-    "source_vocabulary_id": "DRG",
+    "source_value": "33811",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-09-19",
     "discharge_date": "2008-09-22",
@@ -187,7 +187,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 38001614
+    "primary_concept_id": 44831127
   },
   {
     "person_id": 17,
@@ -196,7 +196,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-05-22",
     "end_date": "2010-06-12",
-    "source_value": "4019",
+    "source_value": "5845",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-05-22",
@@ -206,7 +206,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44833659
   },
   {
     "person_id": 17,
@@ -215,7 +215,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-02",
     "end_date": "2010-06-06",
-    "source_value": "49121",
+    "source_value": "4280",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-06-02",
@@ -225,7 +225,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821986
+    "primary_concept_id": 44826642
   },
   {
     "person_id": 17,
@@ -234,7 +234,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-06-16",
     "end_date": "2010-06-19",
-    "source_value": "2720",
+    "source_value": "V4365",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-06-16",
@@ -244,7 +244,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834564
+    "primary_concept_id": 44834274
   },
   {
     "person_id": 20,
@@ -272,7 +272,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-15",
     "end_date": "2008-10-21",
-    "source_value": "99591",
+    "source_value": "2720",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-10-15",
@@ -282,7 +282,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44820254
+    "primary_concept_id": 44834564
   },
   {
     "person_id": 25,
@@ -291,7 +291,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-09-30",
     "end_date": "2009-10-07",
-    "source_value": "2875",
+    "source_value": "7245",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-09-30",
@@ -301,7 +301,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825284
+    "primary_concept_id": 44825708
   },
   {
     "person_id": 27,
@@ -310,8 +310,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-08-26",
     "end_date": "2009-08-29",
-    "source_value": "78459",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2009-08-26",
     "discharge_date": "2009-08-29",
@@ -320,7 +320,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44830445
+    "primary_concept_id": 2002291
   },
   {
     "person_id": 28,
@@ -329,7 +329,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-21",
     "end_date": "2008-04-26",
-    "source_value": "4019",
+    "source_value": "42731",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-04-21",
@@ -339,7 +339,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44821957
   },
   {
     "person_id": 28,
@@ -367,7 +367,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-10",
     "end_date": "2009-06-15",
-    "source_value": "2752",
+    "source_value": "71690",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-06-10",
@@ -377,7 +377,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825273
+    "primary_concept_id": 44821128
   },
   {
     "person_id": 31,
@@ -386,7 +386,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-07",
     "end_date": "2009-12-13",
-    "source_value": "5184",
+    "source_value": "4241",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-12-07",
@@ -396,7 +396,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44833615
+    "primary_concept_id": 44820866
   },
   {
     "person_id": 32,
@@ -405,7 +405,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-08-30",
     "end_date": "2010-09-07",
-    "source_value": "4280",
+    "source_value": "40390",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-08-30",
@@ -415,7 +415,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826642
+    "primary_concept_id": 44835923
   },
   {
     "person_id": 35,
@@ -443,8 +443,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-20",
     "end_date": "2008-04-23",
-    "source_value": "285",
-    "source_vocabulary_id": "DRG",
+    "source_value": "42789",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-04-20",
     "discharge_date": "2008-04-23",
@@ -453,7 +453,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 38000583
+    "primary_concept_id": 44824249
   },
   {
     "person_id": 37,
@@ -462,7 +462,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-19",
     "end_date": "2009-01-20",
-    "source_value": "V6284",
+    "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-19",
@@ -472,7 +472,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828587
+    "primary_concept_id": 44836914
   },
   {
     "person_id": 38,
@@ -519,7 +519,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-14",
     "end_date": "2010-01-19",
-    "source_value": "4019",
+    "source_value": "5856",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-01-14",
@@ -529,7 +529,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44827889
   },
   {
     "person_id": 44,
@@ -538,7 +538,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-03-18",
     "end_date": "2010-03-24",
-    "source_value": "1977",
+    "source_value": "V1251",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-03-18",
@@ -548,7 +548,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44830990
+    "primary_concept_id": 44828495
   },
   {
     "person_id": 51,
@@ -557,7 +557,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-23",
     "end_date": "2008-05-26",
-    "source_value": "1122",
+    "source_value": "43820",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-05-23",
@@ -567,7 +567,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829774
+    "primary_concept_id": 44825445
   },
   {
     "person_id": 51,
@@ -576,7 +576,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-21",
     "end_date": "2008-06-25",
-    "source_value": "3572",
+    "source_value": "25002",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-06-21",
@@ -586,7 +586,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825349
+    "primary_concept_id": 44836915
   },
   {
     "person_id": 51,
@@ -595,7 +595,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-22",
     "end_date": "2008-06-26",
-    "source_value": "514",
+    "source_value": "27541",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-06-22",
@@ -605,7 +605,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825477
+    "primary_concept_id": 44828807
   },
   {
     "person_id": 54,
@@ -652,7 +652,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-07-19",
     "end_date": "2009-07-22",
-    "source_value": "73710",
+    "source_value": "V4501",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-07-19",
@@ -662,7 +662,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44819991
+    "primary_concept_id": 44823830
   },
   {
     "person_id": 60,
@@ -671,7 +671,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-03-16",
     "end_date": "2010-03-19",
-    "source_value": "V4581",
+    "source_value": "2720",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-03-16",
@@ -681,7 +681,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829639
+    "primary_concept_id": 44834564
   },
   {
     "person_id": 61,
@@ -690,7 +690,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-11-09",
     "end_date": "2009-11-11",
-    "source_value": "59971",
+    "source_value": "V1301",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-11-09",
@@ -700,7 +700,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44827894
+    "primary_concept_id": 44829595
   },
   {
     "person_id": 63,
@@ -766,8 +766,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-08",
     "end_date": "2008-12-13",
-    "source_value": "3895",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "20300",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-12-08",
     "discharge_date": "2008-12-13",
@@ -776,7 +776,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2002176
+    "primary_concept_id": 44833335
   },
   {
     "person_id": 66,
@@ -785,7 +785,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-08-04",
     "end_date": "2009-08-06",
-    "source_value": "V4581",
+    "source_value": "41401",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-08-04",
@@ -795,7 +795,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829639
+    "primary_concept_id": 44830080
   },
   {
     "person_id": 66,
@@ -804,8 +804,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-29",
     "end_date": "2009-12-31",
-    "source_value": "6826",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "8872",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2009-12-29",
     "discharge_date": "2009-12-31",
@@ -814,7 +814,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44823318
+    "primary_concept_id": 2006918
   },
   {
     "person_id": 68,
@@ -823,7 +823,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-09",
     "end_date": "2008-04-14",
-    "source_value": "7907",
+    "source_value": "34461",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-04-09",
@@ -833,7 +833,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44837445
+    "primary_concept_id": 44829970
   },
   {
     "person_id": 68,
@@ -842,7 +842,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-19",
     "end_date": "2008-04-23",
-    "source_value": "73300",
+    "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-04-19",
@@ -852,7 +852,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822235
+    "primary_concept_id": 44836914
   },
   {
     "person_id": 68,
@@ -861,8 +861,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-15",
     "end_date": "2008-09-18",
-    "source_value": "9904",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "53081",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-09-15",
     "discharge_date": "2008-09-18",
@@ -871,7 +871,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2008238
+    "primary_concept_id": 44822019
   },
   {
     "person_id": 68,
@@ -880,8 +880,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-10",
     "end_date": "2008-11-11",
-    "source_value": "3051",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "25000",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-11-10",
     "discharge_date": "2008-11-11",
@@ -890,7 +890,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 44836914
   },
   {
     "person_id": 68,
@@ -899,8 +899,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-28",
     "end_date": "2009-05-03",
-    "source_value": "25000",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "206",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2009-04-28",
     "discharge_date": "2009-05-03",
@@ -909,7 +909,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44836914
+    "primary_concept_id": 38000504
   },
   {
     "person_id": 71,
@@ -918,7 +918,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-07",
     "end_date": "2008-04-11",
-    "source_value": "V433",
+    "source_value": "42731",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-04-07",
@@ -928,7 +928,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829635
+    "primary_concept_id": 44821957
   },
   {
     "person_id": 72,
@@ -994,8 +994,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-30",
     "end_date": "2008-08-06",
-    "source_value": "V5866",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "V4589",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-07-30",
     "discharge_date": "2008-08-06",
@@ -1004,7 +1004,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828571
+    "primary_concept_id": 0
   },
   {
     "person_id": 77,
@@ -1013,8 +1013,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-07-18",
     "end_date": "2009-07-21",
-    "source_value": "500",
-    "source_vocabulary_id": "DRG",
+    "source_value": "71536",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-07-18",
     "discharge_date": "2009-07-21",
@@ -1023,7 +1023,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 38000803
+    "primary_concept_id": 44836174
   },
   {
     "person_id": 79,
@@ -1032,8 +1032,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-08-09",
     "end_date": "2009-08-24",
-    "source_value": "9469",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "30391",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-08-09",
     "discharge_date": "2009-08-24",
@@ -1042,7 +1042,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2007804
+    "primary_concept_id": 44825305
   },
   {
     "person_id": 80,
@@ -1051,7 +1051,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-15",
     "end_date": "2009-03-27",
-    "source_value": "3485",
+    "source_value": "2761",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-03-15",
@@ -1061,7 +1061,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44827702
+    "primary_concept_id": 44822952
   },
   {
     "person_id": 81,
@@ -1089,7 +1089,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-30",
     "end_date": "2008-12-04",
-    "source_value": "5589",
+    "source_value": "311",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-11-30",
@@ -1099,7 +1099,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834815
+    "primary_concept_id": 44833421
   },
   {
     "person_id": 81,
@@ -1109,7 +1109,7 @@
     "start_date": "2009-01-28",
     "end_date": "2009-01-30",
     "source_value": "V1582",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-28",
     "discharge_date": "2009-01-30",
@@ -1118,7 +1118,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 44826156
   },
   {
     "person_id": 83,
@@ -1127,7 +1127,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-31",
     "end_date": "2008-04-07",
-    "source_value": "5990",
+    "source_value": "5939",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-31",
@@ -1137,7 +1137,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44820980
+    "primary_concept_id": 44824345
   },
   {
     "person_id": 83,
@@ -1146,7 +1146,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-15",
     "end_date": "2008-12-20",
-    "source_value": "49120",
+    "source_value": "27651",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-12-15",
@@ -1156,7 +1156,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44832422
+    "primary_concept_id": 44828809
   },
   {
     "person_id": 83,
@@ -1165,7 +1165,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-20",
     "end_date": "2009-01-31",
-    "source_value": "7242",
+    "source_value": "V142",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-20",
@@ -1175,7 +1175,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44819973
+    "primary_concept_id": 44822666
   },
   {
     "person_id": 85,
@@ -1184,7 +1184,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-25",
     "end_date": "2008-09-26",
-    "source_value": "5859",
+    "source_value": "25002",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-09-25",
@@ -1194,7 +1194,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44836035
+    "primary_concept_id": 44836915
   },
   {
     "person_id": 86,
@@ -1203,7 +1203,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-13",
     "end_date": "2010-01-14",
-    "source_value": "0389",
+    "source_value": "51881",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-01-13",
@@ -1213,7 +1213,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44823969
+    "primary_concept_id": 44834776
   },
   {
     "person_id": 87,
@@ -1222,7 +1222,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-05-14",
     "end_date": "2010-06-17",
-    "source_value": "3016",
+    "source_value": "V8531",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-05-14",
@@ -1232,7 +1232,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44827662
+    "primary_concept_id": 44834364
   },
   {
     "person_id": 88,
@@ -1279,8 +1279,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-05",
     "end_date": "2008-02-12",
-    "source_value": "4254",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "313",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2008-02-05",
     "discharge_date": "2008-02-12",
@@ -1289,7 +1289,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825438
+    "primary_concept_id": 38000611
   },
   {
     "person_id": 88,
@@ -1298,7 +1298,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-22",
     "end_date": "2008-03-24",
-    "source_value": "78720",
+    "source_value": "34290",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-22",
@@ -1308,7 +1308,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828158
+    "primary_concept_id": 44829966
   },
   {
     "person_id": 88,
@@ -1317,8 +1317,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-23",
     "end_date": "2008-03-26",
-    "source_value": "250",
-    "source_vocabulary_id": "DRG",
+    "source_value": "41400",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-23",
     "discharge_date": "2008-03-26",
@@ -1327,7 +1327,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 38001090
+    "primary_concept_id": 44835932
   },
   {
     "person_id": 88,
@@ -1336,7 +1336,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-13",
     "end_date": "2008-06-16",
-    "source_value": "5723",
+    "source_value": "99662",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-06-13",
@@ -1346,7 +1346,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822040
+    "primary_concept_id": 44832931
   },
   {
     "person_id": 88,
@@ -1355,7 +1355,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-03",
     "end_date": "2009-01-09",
-    "source_value": "V854",
+    "source_value": "04185",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-03",
@@ -1365,7 +1365,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822764
+    "primary_concept_id": 44826333
   },
   {
     "person_id": 90,
@@ -1393,7 +1393,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-07-03",
     "end_date": "2010-07-12",
-    "source_value": "4240",
+    "source_value": "4580",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-07-03",
@@ -1403,7 +1403,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44832378
+    "primary_concept_id": 44819738
   },
   {
     "person_id": 90,
@@ -1412,7 +1412,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-07-10",
     "end_date": "2010-07-15",
-    "source_value": "311",
+    "source_value": "34982",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-07-10",
@@ -1422,7 +1422,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44833421
+    "primary_concept_id": 44833451
   },
   {
     "person_id": 93,
@@ -1450,7 +1450,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-21",
     "end_date": "2008-06-27",
-    "source_value": "78194",
+    "source_value": "2768",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-06-21",
@@ -1460,7 +1460,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822291
+    "primary_concept_id": 44834567
   },
   {
     "person_id": 94,
@@ -1469,7 +1469,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-12",
     "end_date": "2009-01-18",
-    "source_value": "51911",
+    "source_value": "V4501",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-12",
@@ -1479,7 +1479,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826686
+    "primary_concept_id": 44823830
   },
   {
     "person_id": 94,
@@ -1488,8 +1488,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-07-07",
     "end_date": "2009-07-12",
-    "source_value": "5853",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "302",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2009-07-07",
     "discharge_date": "2009-07-12",
@@ -1498,7 +1498,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44827888
+    "primary_concept_id": 38000600
   },
   {
     "person_id": 95,
@@ -1507,8 +1507,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-24",
     "end_date": "2008-02-26",
-    "source_value": "V173",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "3722",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-02-24",
     "discharge_date": "2008-02-26",
@@ -1517,7 +1517,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44835437
+    "primary_concept_id": 2001537
   },
   {
     "person_id": 95,
@@ -1526,7 +1526,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-01",
     "end_date": "2008-08-12",
-    "source_value": "5180",
+    "source_value": "48241",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-08-01",
@@ -1536,7 +1536,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829020
+    "primary_concept_id": 44823143
   },
   {
     "person_id": 95,
@@ -1545,7 +1545,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-17",
     "end_date": "2008-08-22",
-    "source_value": "4019",
+    "source_value": "41400",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-08-17",
@@ -1555,7 +1555,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44835932
   },
   {
     "person_id": 95,
@@ -1564,8 +1564,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-27",
     "end_date": "2008-09-01",
-    "source_value": "37991",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "205",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2008-08-27",
     "discharge_date": "2008-09-01",
@@ -1574,7 +1574,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44827764
+    "primary_concept_id": 38000503
   },
   {
     "person_id": 95,
@@ -1583,8 +1583,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-03",
     "end_date": "2008-09-12",
-    "source_value": "236",
-    "source_vocabulary_id": "DRG",
+    "source_value": "4011",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-09-03",
     "discharge_date": "2008-09-12",
@@ -1593,7 +1593,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 38001076
+    "primary_concept_id": 44834715
   },
   {
     "person_id": 96,
@@ -1621,7 +1621,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-14",
     "end_date": "2009-04-18",
-    "source_value": "2859",
+    "source_value": "5849",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-04-14",
@@ -1631,7 +1631,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825282
+    "primary_concept_id": 44826731
   },
   {
     "person_id": 96,
@@ -1640,8 +1640,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-10-19",
     "end_date": "2009-10-27",
-    "source_value": "884",
-    "source_vocabulary_id": "DRG",
+    "source_value": "60000",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-10-19",
     "discharge_date": "2009-10-27",
@@ -1650,7 +1650,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 38001571
+    "primary_concept_id": 44826738
   },
   {
     "person_id": 98,
@@ -1659,8 +1659,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-25",
     "end_date": "2010-01-29",
-    "source_value": "2761",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "466",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2010-01-25",
     "discharge_date": "2010-01-29",
@@ -1669,7 +1669,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822952
+    "primary_concept_id": 38000764
   },
   {
     "person_id": 106,
@@ -1735,8 +1735,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-23",
     "end_date": "2008-12-28",
-    "source_value": "V6442",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "4280",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-11-23",
     "discharge_date": "2008-12-28",
@@ -1745,7 +1745,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826239
+    "primary_concept_id": 0
   },
   {
     "person_id": 123,
@@ -1754,7 +1754,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-28",
     "end_date": "2008-12-31",
-    "source_value": "99673",
+    "source_value": "4275",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-12-28",
@@ -1764,7 +1764,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44824846
+    "primary_concept_id": 44825442
   },
   {
     "person_id": 131,
@@ -1792,8 +1792,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-12",
     "end_date": "2008-02-16",
-    "source_value": "2859",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "V4581",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-02-12",
     "discharge_date": "2008-02-16",
@@ -1802,7 +1802,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 44829639
   },
   {
     "person_id": 131,
@@ -1811,7 +1811,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-21",
     "end_date": "2008-03-24",
-    "source_value": "4019",
+    "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-21",
@@ -1821,7 +1821,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44836914
   },
   {
     "person_id": 131,
@@ -1830,7 +1830,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-22",
     "end_date": "2008-03-23",
-    "source_value": "41401",
+    "source_value": "7823",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-22",
@@ -1840,7 +1840,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44830080
+    "primary_concept_id": 44832710
   },
   {
     "person_id": 134,
@@ -1849,7 +1849,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-11-23",
     "end_date": "2009-11-30",
-    "source_value": "78605",
+    "source_value": "5854",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-11-23",
@@ -1859,7 +1859,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44824625
+    "primary_concept_id": 44820970
   },
   {
     "person_id": 135,
@@ -1868,8 +1868,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-21",
     "end_date": "2010-01-27",
-    "source_value": "4412",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "188",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2010-01-21",
     "discharge_date": "2010-01-27",
@@ -1878,7 +1878,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828993
+    "primary_concept_id": 38000486
   },
   {
     "person_id": 135,
@@ -1887,7 +1887,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-22",
     "end_date": "2010-03-02",
-    "source_value": "42823",
+    "source_value": "40391",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-02-22",
@@ -1897,7 +1897,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44833573
+    "primary_concept_id": 44828971
   },
   {
     "person_id": 136,
@@ -1906,7 +1906,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-14",
     "end_date": "2009-01-16",
-    "source_value": "2859",
+    "source_value": "4370",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-14",
@@ -1916,7 +1916,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825282
+    "primary_concept_id": 44834739
   },
   {
     "person_id": 138,
@@ -1925,7 +1925,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-18",
     "end_date": "2008-06-05",
-    "source_value": "27651",
+    "source_value": "9904",
     "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-05-18",
@@ -1935,7 +1935,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 2008238
   },
   {
     "person_id": 138,
@@ -1944,7 +1944,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-21",
     "end_date": "2009-02-14",
-    "source_value": "92400",
+    "source_value": "82021",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-21",
@@ -1954,7 +1954,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44836428
+    "primary_concept_id": 44823516
   },
   {
     "person_id": 147,
@@ -1963,8 +1963,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-10-01",
     "end_date": "2009-10-24",
-    "source_value": "260",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "51881",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2009-10-01",
     "discharge_date": "2009-10-24",
@@ -1973,7 +1973,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822943
+    "primary_concept_id": 0
   },
   {
     "person_id": 148,
@@ -2020,7 +2020,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-10-31",
     "end_date": "2009-11-04",
-    "source_value": "E8782",
+    "source_value": "5853",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-10-31",
@@ -2030,7 +2030,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826089
+    "primary_concept_id": 44827888
   },
   {
     "person_id": 152,
@@ -2077,7 +2077,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-29",
     "end_date": "2010-02-08",
-    "source_value": "4019",
+    "source_value": "5849",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-01-29",
@@ -2087,7 +2087,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44826731
   },
   {
     "person_id": 155,
@@ -2096,7 +2096,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-07-08",
     "end_date": "2010-07-10",
-    "source_value": "42842",
+    "source_value": "5849",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-07-08",
@@ -2106,7 +2106,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44820870
+    "primary_concept_id": 44826731
   },
   {
     "person_id": 158,
@@ -2115,8 +2115,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-12-20",
     "end_date": "2009-12-22",
-    "source_value": "53081",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "095",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2009-12-20",
     "discharge_date": "2009-12-22",
@@ -2125,7 +2125,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822019
+    "primary_concept_id": 38000383
   },
   {
     "person_id": 161,
@@ -2153,8 +2153,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-10-25",
     "end_date": "2009-10-29",
-    "source_value": "8872",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "022",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2009-10-25",
     "discharge_date": "2009-10-29",
@@ -2163,7 +2163,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2006918
+    "primary_concept_id": 38000904
   },
   {
     "person_id": 163,
@@ -2191,8 +2191,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-31",
     "end_date": "2008-04-01",
-    "source_value": "9904",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "2948",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-31",
     "discharge_date": "2008-04-01",
@@ -2201,7 +2201,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2008238
+    "primary_concept_id": 44827645
   },
   {
     "person_id": 168,
@@ -2210,7 +2210,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-02",
     "end_date": "2010-02-04",
-    "source_value": "V1582",
+    "source_value": "79431",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-02-02",
@@ -2220,7 +2220,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826156
+    "primary_concept_id": 44823465
   },
   {
     "person_id": 168,
@@ -2229,8 +2229,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-02-14",
     "end_date": "2010-02-18",
-    "source_value": "2449",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "4351",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2010-02-14",
     "discharge_date": "2010-02-18",
@@ -2239,7 +2239,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828786
+    "primary_concept_id": 0
   },
   {
     "person_id": 172,
@@ -2267,7 +2267,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-21",
     "end_date": "2008-11-27",
-    "source_value": "5601",
+    "source_value": "33394",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-11-21",
@@ -2277,7 +2277,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834816
+    "primary_concept_id": 44828863
   },
   {
     "person_id": 172,
@@ -2305,8 +2305,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-21",
     "end_date": "2010-01-23",
-    "source_value": "71536",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "8154",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2010-01-21",
     "discharge_date": "2010-01-23",
@@ -2315,7 +2315,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44836174
+    "primary_concept_id": 2005904
   },
   {
     "person_id": 177,
@@ -2362,8 +2362,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-06-13",
     "end_date": "2009-06-16",
-    "source_value": "V462",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "3722",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2009-06-13",
     "discharge_date": "2009-06-16",
@@ -2372,7 +2372,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834286
+    "primary_concept_id": 2001537
   },
   {
     "person_id": 178,
@@ -2381,8 +2381,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-17",
     "end_date": "2008-05-27",
-    "source_value": "40391",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "2639",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-05-17",
     "discharge_date": "2008-05-27",
@@ -2391,7 +2391,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 44828800
   },
   {
     "person_id": 178,
@@ -2400,7 +2400,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-26",
     "end_date": "2008-11-28",
-    "source_value": "51889",
+    "source_value": "78659",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-11-26",
@@ -2410,7 +2410,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44819752
+    "primary_concept_id": 44823450
   },
   {
     "person_id": 179,
@@ -2419,8 +2419,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-01-18",
     "end_date": "2008-01-21",
-    "source_value": "8154",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "2720",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-01-18",
     "discharge_date": "2008-01-21",
@@ -2429,7 +2429,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2005904
+    "primary_concept_id": 44834564
   },
   {
     "person_id": 179,
@@ -2438,8 +2438,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-14",
     "end_date": "2008-06-22",
-    "source_value": "3893",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "0389",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-06-14",
     "discharge_date": "2008-06-22",
@@ -2448,7 +2448,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2002174
+    "primary_concept_id": 44823969
   },
   {
     "person_id": 179,
@@ -2457,7 +2457,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-18",
     "end_date": "2008-09-19",
-    "source_value": "3572",
+    "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-09-18",
@@ -2467,7 +2467,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825349
+    "primary_concept_id": 44821949
   },
   {
     "person_id": 179,
@@ -2514,7 +2514,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-11-22",
     "end_date": "2009-11-26",
-    "source_value": "82009",
+    "source_value": "4240",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-11-22",
@@ -2524,7 +2524,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829353
+    "primary_concept_id": 44832378
   },
   {
     "person_id": 187,
@@ -2571,8 +2571,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-17",
     "end_date": "2008-02-20",
-    "source_value": "8151",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "71535",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-02-17",
     "discharge_date": "2008-02-20",
@@ -2581,7 +2581,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2005891
+    "primary_concept_id": 44826869
   },
   {
     "person_id": 187,
@@ -2590,8 +2590,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-26",
     "end_date": "2008-06-29",
-    "source_value": "8151",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "73349",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-06-26",
     "discharge_date": "2008-06-29",
@@ -2600,7 +2600,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2005891
+    "primary_concept_id": 44826914
   },
   {
     "person_id": 190,
@@ -2628,8 +2628,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-02",
     "end_date": "2008-12-04",
-    "source_value": "2948",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "3772",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-12-02",
     "discharge_date": "2008-12-04",
@@ -2638,7 +2638,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44827645
+    "primary_concept_id": 2001574
   },
   {
     "person_id": 191,
@@ -2647,8 +2647,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-08-24",
     "end_date": "2009-08-31",
-    "source_value": "5070",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "27803",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2009-08-24",
     "discharge_date": "2009-08-31",
@@ -2657,7 +2657,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44820894
+    "primary_concept_id": 0
   },
   {
     "person_id": 192,
@@ -2666,7 +2666,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-19",
     "end_date": "2008-04-12",
-    "source_value": "56400",
+    "source_value": "4131",
     "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-03-19",
@@ -2676,7 +2676,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 2002382
   },
   {
     "person_id": 195,
@@ -2685,8 +2685,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-07",
     "end_date": "2008-06-08",
-    "source_value": "25000",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "249",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2008-06-07",
     "discharge_date": "2008-06-08",
@@ -2695,7 +2695,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44836914
+    "primary_concept_id": 38000547
   },
   {
     "person_id": 195,
@@ -2704,7 +2704,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-03-28",
     "end_date": "2009-04-01",
-    "source_value": "3659",
+    "source_value": "41401",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-03-28",
@@ -2714,7 +2714,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834661
+    "primary_concept_id": 44830080
   },
   {
     "person_id": 196,
@@ -2742,7 +2742,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-12-12",
     "end_date": "2010-12-13",
-    "source_value": "5601",
+    "source_value": "570",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-12-12",
@@ -2752,7 +2752,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834816
+    "primary_concept_id": 44825528
   },
   {
     "person_id": 197,
@@ -2780,8 +2780,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-10-30",
     "end_date": "2008-11-02",
-    "source_value": "7936",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "34590",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-10-30",
     "discharge_date": "2008-11-02",
@@ -2790,7 +2790,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2005479
+    "primary_concept_id": 44835840
   },
   {
     "person_id": 199,
@@ -2818,7 +2818,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-24",
     "end_date": "2008-07-29",
-    "source_value": "V600",
+    "source_value": "72400",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-07-24",
@@ -2828,7 +2828,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44831984
+    "primary_concept_id": 44823368
   },
   {
     "person_id": 202,
@@ -2837,7 +2837,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-18",
     "end_date": "2008-08-20",
-    "source_value": "0417",
+    "source_value": "5990",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-08-18",
@@ -2847,7 +2847,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44827490
+    "primary_concept_id": 44820980
   },
   {
     "person_id": 204,
@@ -2856,8 +2856,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-08-15",
     "end_date": "2010-08-30",
-    "source_value": "5185",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "3733",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2010-08-15",
     "discharge_date": "2010-08-30",
@@ -2866,7 +2866,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821996
+    "primary_concept_id": 2001548
   },
   {
     "person_id": 207,
@@ -2875,8 +2875,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-04-28",
     "end_date": "2010-05-02",
-    "source_value": "60000",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "25000",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-04-28",
     "discharge_date": "2010-05-02",
@@ -2885,7 +2885,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 44836914
   },
   {
     "person_id": 212,
@@ -2970,7 +2970,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-04-01",
     "end_date": "2010-04-05",
-    "source_value": "486",
+    "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-04-01",
@@ -2980,7 +2980,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829009
+    "primary_concept_id": 44821949
   },
   {
     "person_id": 214,
@@ -3027,7 +3027,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-09-26",
     "end_date": "2008-09-28",
-    "source_value": "4019",
+    "source_value": "E8499",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-09-26",
@@ -3037,7 +3037,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44823705
   },
   {
     "person_id": 214,
@@ -3046,8 +3046,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-12-30",
     "end_date": "2009-01-04",
-    "source_value": "51881",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "198",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2008-12-30",
     "discharge_date": "2009-01-04",
@@ -3056,7 +3056,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834776
+    "primary_concept_id": 38000496
   },
   {
     "person_id": 214,
@@ -3065,7 +3065,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-01-26",
     "end_date": "2009-01-27",
-    "source_value": "5793",
+    "source_value": "E9444",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-01-26",
@@ -3075,7 +3075,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44834828
+    "primary_concept_id": 44835380
   },
   {
     "person_id": 217,
@@ -3103,7 +3103,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-08-18",
     "end_date": "2009-08-22",
-    "source_value": "V153",
+    "source_value": "5990",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-08-18",
@@ -3113,7 +3113,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44833062
+    "primary_concept_id": 44820980
   },
   {
     "person_id": 220,
@@ -3160,8 +3160,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-08-15",
     "end_date": "2009-08-20",
-    "source_value": "2859",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "3893",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2009-08-15",
     "discharge_date": "2009-08-20",
@@ -3170,7 +3170,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825282
+    "primary_concept_id": 2002174
   },
   {
     "person_id": 223,
@@ -3217,7 +3217,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-09-04",
     "end_date": "2009-09-04",
-    "source_value": "78909",
+    "source_value": "27651",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-09-04",
@@ -3227,7 +3227,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44822304
+    "primary_concept_id": 44828809
   },
   {
     "person_id": 226,
@@ -3236,7 +3236,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-11-10",
     "end_date": "2009-11-14",
-    "source_value": "40391",
+    "source_value": "28529",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-11-10",
@@ -3246,7 +3246,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828971
+    "primary_concept_id": 44835769
   },
   {
     "person_id": 230,
@@ -3274,8 +3274,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-01",
     "end_date": "2008-03-06",
-    "source_value": "2763",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "917",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2008-03-01",
     "discharge_date": "2008-03-06",
@@ -3284,7 +3284,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44832204
+    "primary_concept_id": 38001592
   },
   {
     "person_id": 230,
@@ -3293,7 +3293,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-14",
     "end_date": "2008-03-21",
-    "source_value": "70703",
+    "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-14",
@@ -3303,7 +3303,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44819940
+    "primary_concept_id": 44821949
   },
   {
     "person_id": 230,
@@ -3331,7 +3331,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-30",
     "end_date": "2008-04-02",
-    "source_value": "53541",
+    "source_value": "5849",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-30",
@@ -3341,7 +3341,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829038
+    "primary_concept_id": 44826731
   },
   {
     "person_id": 232,
@@ -3350,7 +3350,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-24",
     "end_date": "2008-03-27",
-    "source_value": "60000",
+    "source_value": "2720",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-24",
@@ -3360,7 +3360,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826738
+    "primary_concept_id": 44834564
   },
   {
     "person_id": 234,
@@ -3388,8 +3388,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-04",
     "end_date": "2010-01-07",
-    "source_value": "3310",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "41401",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-01-04",
     "discharge_date": "2010-01-07",
@@ -3398,7 +3398,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 0
+    "primary_concept_id": 44830080
   },
   {
     "person_id": 234,
@@ -3407,7 +3407,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-14",
     "end_date": "2010-01-18",
-    "source_value": "03819",
+    "source_value": "42830",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-01-14",
@@ -3417,7 +3417,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828670
+    "primary_concept_id": 44831250
   },
   {
     "person_id": 237,
@@ -3426,8 +3426,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-04-08",
     "end_date": "2008-04-12",
-    "source_value": "4280",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "297",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2008-04-08",
     "discharge_date": "2008-04-12",
@@ -3436,7 +3436,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44826642
+    "primary_concept_id": 38000595
   },
   {
     "person_id": 237,
@@ -3445,7 +3445,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-07-16",
     "end_date": "2010-07-19",
-    "source_value": "42731",
+    "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-07-16",
@@ -3455,7 +3455,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821957
+    "primary_concept_id": 44836914
   },
   {
     "person_id": 238,
@@ -3464,8 +3464,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-10-28",
     "end_date": "2009-10-30",
-    "source_value": "4580",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "575",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2009-10-28",
     "discharge_date": "2009-10-30",
@@ -3474,7 +3474,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44819738
+    "primary_concept_id": 38000882
   },
   {
     "person_id": 239,
@@ -3521,8 +3521,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-04",
     "end_date": "2008-08-18",
-    "source_value": "36201",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "3893",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-08-04",
     "discharge_date": "2008-08-18",
@@ -3531,7 +3531,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44831148
+    "primary_concept_id": 2002174
   },
   {
     "person_id": 239,
@@ -3540,7 +3540,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-11",
     "end_date": "2008-11-29",
-    "source_value": "5932",
+    "source_value": "5849",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-11-11",
@@ -3550,7 +3550,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44832487
+    "primary_concept_id": 44826731
   },
   {
     "person_id": 239,
@@ -3559,7 +3559,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-30",
     "end_date": "2008-12-07",
-    "source_value": "4019",
+    "source_value": "41401",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-11-30",
@@ -3569,7 +3569,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821949
+    "primary_concept_id": 44830080
   },
   {
     "person_id": 242,
@@ -3578,8 +3578,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-11-01",
     "end_date": "2008-11-07",
-    "source_value": "V5866",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "337",
+    "source_vocabulary_id": "DRG",
     "label": null,
     "admission_date": "2008-11-01",
     "discharge_date": "2008-11-07",
@@ -3588,7 +3588,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828571
+    "primary_concept_id": 38000635
   },
   {
     "person_id": 243,
@@ -3616,7 +3616,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-07",
     "end_date": "2008-02-10",
-    "source_value": "49122",
+    "source_value": "2762",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-02-07",
@@ -3626,7 +3626,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825474
+    "primary_concept_id": 44828808
   },
   {
     "person_id": 247,
@@ -3635,7 +3635,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-02-28",
     "end_date": "2008-03-04",
-    "source_value": "49121",
+    "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-02-28",
@@ -3645,7 +3645,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44821986
+    "primary_concept_id": 44821949
   },
   {
     "person_id": 247,
@@ -3654,8 +3654,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-25",
     "end_date": "2008-03-29",
-    "source_value": "5794",
-    "source_vocabulary_id": "ICD9Proc",
+    "source_value": "4019",
+    "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-03-25",
     "discharge_date": "2008-03-29",
@@ -3664,7 +3664,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 2003821
+    "primary_concept_id": 44821949
   },
   {
     "person_id": 247,
@@ -3673,8 +3673,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-03-29",
     "end_date": "2008-03-30",
-    "source_value": "41400",
-    "source_vocabulary_id": "ICD9CM",
+    "source_value": "0013",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-03-29",
     "discharge_date": "2008-03-30",
@@ -3683,7 +3683,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44835932
+    "primary_concept_id": 2000014
   },
   {
     "person_id": 247,
@@ -3692,7 +3692,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-05-14",
     "end_date": "2008-05-16",
-    "source_value": "V173",
+    "source_value": "4168",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-05-14",
@@ -3702,7 +3702,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44835437
+    "primary_concept_id": 44827786
   },
   {
     "person_id": 247,
@@ -3711,7 +3711,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-06-11",
     "end_date": "2008-06-13",
-    "source_value": "7837",
+    "source_value": "27651",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-06-11",
@@ -3721,7 +3721,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44829297
+    "primary_concept_id": 44828809
   },
   {
     "person_id": 247,
@@ -3730,7 +3730,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-07-13",
     "end_date": "2008-07-18",
-    "source_value": "2760",
+    "source_value": "0417",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-07-13",
@@ -3740,7 +3740,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44824089
+    "primary_concept_id": 44827490
   },
   {
     "person_id": 247,
@@ -3749,8 +3749,8 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-14",
     "end_date": "2008-08-21",
-    "source_value": "165",
-    "source_vocabulary_id": "DRG",
+    "source_value": "4223",
+    "source_vocabulary_id": "ICD9Proc",
     "label": null,
     "admission_date": "2008-08-14",
     "discharge_date": "2008-08-21",
@@ -3759,7 +3759,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 38000463
+    "primary_concept_id": 2002442
   },
   {
     "person_id": 248,
@@ -3768,7 +3768,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2008-08-15",
     "end_date": "2008-08-18",
-    "source_value": "75612",
+    "source_value": "72402",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2008-08-15",
@@ -3778,7 +3778,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44828114
+    "primary_concept_id": 44824521
   },
   {
     "person_id": 248,
@@ -3787,7 +3787,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2010-01-21",
     "end_date": "2010-01-29",
-    "source_value": "25000",
+    "source_value": "41400",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2010-01-21",
@@ -3797,7 +3797,7 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44836914
+    "primary_concept_id": 44835932
   },
   {
     "person_id": 249,
@@ -3806,7 +3806,7 @@
     "criterion_domain": "condition_occurrence",
     "start_date": "2009-04-07",
     "end_date": "2009-04-11",
-    "source_value": "7245",
+    "source_value": "32723",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "admission_date": "2009-04-07",
@@ -3816,6 +3816,6 @@
     "admission_source_description": null,
     "discharge_location_source_value": null,
     "discharge_location_source_description": null,
-    "primary_concept_id": 44825708
+    "primary_concept_id": 44825323
   }
 ]

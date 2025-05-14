@@ -910,7 +910,7 @@
     "source_vocabulary_id": "ICD9CM",
     "label": null,
     "file_provenance_type": 100000060,
-    "code_provenance_type": 100000070,
+    "code_provenance_type": 100000075,
     "admission_date": "2010-02-14",
     "discharge_date": "2010-02-18"
   },
