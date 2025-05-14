@@ -112,5 +112,9 @@ module ConceptQL
     def database_type
       @opts[:database_type]
     end
+
+    def type_for(column_name)
+      Scope::COLUMN_TYPES.fetch(column_name)
+    end
   end
 end
