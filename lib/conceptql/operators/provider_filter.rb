@@ -11,6 +11,7 @@ module ConceptQL
 
       desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids."
       option :specialties, type: :string
+      option :roles, type: :string
       category 'Filter Single Stream'
       basic_type :temporal
       allows_one_upstream
@@ -25,7 +26,7 @@ module ConceptQL
         specialty_concept_ids = options[:specialties].split(/\s*,\s*/)
 
         unless specialty_concept_ids.include?('*')
-          ds = ds.where(specialty_concept_id: specialty_concept_ids.map(&:to_i))
+          ds = ds.where(context_specialty_concept_id: specialty_concept_ids.map(&:to_i)).or(provider_specialty_concept_id: specialty_concept_ids.map(&:to_i))
         end
 
         ds
