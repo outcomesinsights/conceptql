@@ -1,0 +1,17 @@
+[
+  "provider_filter",
+  [
+    "person",
+    [
+      "first",
+      [
+        "icd9",
+        "410.00"
+      ]
+    ]
+  ],
+  {
+    "specialties": "*",
+    "roles": "*"
+  }
+]

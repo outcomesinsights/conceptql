@@ -9,7 +9,7 @@ module ConceptQL
         {
           visit_source_concept_id: ConceptQL::QueryModifiers::GdmWide::PoSQueryModifier,
           provider_id: ConceptQL::QueryModifiers::Gdm::ProviderQueryModifier,
-          specialty_concept_id: ConceptQL::QueryModifiers::Gdm::ProviderQueryModifier,
+          context_specialty_concept_id: ConceptQL::QueryModifiers::Gdm::ProviderQueryModifier,
           drug_name: ConceptQL::QueryModifiers::GdmWide::DrugQueryModifier,
           admission_date: ConceptQL::QueryModifiers::GdmWide::AdmissionDateQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::GdmWide::ProvenanceQueryModifier,

@@ -9,30 +9,53 @@ module ConceptQL
     class ProviderFilter < Operator
       register __FILE__
 
-      desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids."
+      desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids.\n\nA single record may have multiple specialties, so the operator will return all records that match any of the given specialties, which may lead to duplicate records."
       option :specialties, type: :string
+      option :roles, type: :string
       category 'Filter Single Stream'
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
-      validate_required_options :specialties
-      require_column :specialty_concept_id
+      validate_required_options :specialties, :roles
+      require_column :provider_id
+      require_column :context_specialty_concept_id
+      require_column :practitioner_specialty_concept_id
+      require_column :role_type_concept_id
       default_query_columns
 
       def query(db)
         ds = stream.evaluate(db).from_self(alias: :upstream)
 
         specialty_concept_ids = options[:specialties].split(/\s*,\s*/)
+        role_type_concept_ids = options[:roles].split(/\s*,\s*/)
 
         unless specialty_concept_ids.include?('*')
-          ds = ds.where(specialty_concept_id: specialty_concept_ids.map(&:to_i))
+          spec_con_ids = specialty_concept_ids.map(&:to_i)
+          ds = ds.where(
+            Sequel.or(
+              [
+                [:context_specialty_concept_id, spec_con_ids],
+                [:practitioner_specialty_concept_id, spec_con_ids]
+              ]
+            )
+          )
+        end
+
+        unless role_type_concept_ids.include?('*')
+          role_con_ids = role_type_concept_ids.map(&:to_i)
+          ds = ds.where(role_type_concept_id: role_con_ids)
         end
 
         ds
       end
 
       def query_columns
-        default_columns + [:specialty_concept_id]
+        default_columns + %i[
+          context_specialty_concept_id
+          practitioner_specialty_concept_id
+          role_type_concept_id
+          provider_id
+        ]
       end
     end
   end

@@ -39,6 +39,7 @@ module ConceptQL
         {
           visit_source_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,
           provider_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
+          context_specialty_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
           drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier,
           admission_date: ConceptQL::QueryModifiers::Omopv4Plus::AdmissionDateQueryModifier,
           provenance_type: ConceptQL::QueryModifiers::Omopv4Plus::ProvenanceQueryModifier
@@ -189,14 +190,14 @@ module ConceptQL
       def applicable_query_modifiers(table)
         query_modifiers.values_at(*query_columns.keys).compact.select do |klass|
           klass.has_required_columns?(table_cols(table))
-        end
+        end.uniq
       end
 
       def query_modifiers
         {
           visit_source_concept_id: query_modifier_for(:visit_source_concept_id),
           provider_id: query_modifier_for(:provider_id),
-          specialty_concept_id: query_modifier_for(:specialty_concept_id),
+          context_specialty_concept_id: query_modifier_for(:context_specialty_concept_id),
           drug_name: query_modifier_for(:drug_name),
           file_provenance_type: query_modifier_for(:provenance_type),
           admission_date: query_modifier_for(:admission_date),

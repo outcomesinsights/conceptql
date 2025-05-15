@@ -1,0 +1,17 @@
+[
+  {
+    "person_id": 234,
+    "criterion_id": 22299,
+    "criterion_table": "clinical_codes",
+    "criterion_domain": "condition_occurrence",
+    "start_date": "2008-09-01",
+    "end_date": "2008-09-01",
+    "source_value": "412",
+    "source_vocabulary_id": "ICD9CM",
+    "label": null,
+    "provider_id": 3026,
+    "context_specialty_concept_id": 38003940,
+    "practitioner_specialty_concept_id": null,
+    "role_type_concept_id": 100000067
+  }
+]

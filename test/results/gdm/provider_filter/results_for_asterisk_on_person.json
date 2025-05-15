@@ -1,0 +1,17 @@
+[
+  {
+    "person_id": 46,
+    "criterion_id": 46,
+    "criterion_table": "patients",
+    "criterion_domain": "person",
+    "start_date": "1931-01-01",
+    "end_date": "1931-01-01",
+    "source_value": "001A6B93EEA3062E",
+    "source_vocabulary_id": null,
+    "label": null,
+    "provider_id": null,
+    "context_specialty_concept_id": null,
+    "practitioner_specialty_concept_id": null,
+    "role_type_concept_id": null
+  }
+]
