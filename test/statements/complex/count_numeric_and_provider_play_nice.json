@@ -11,7 +11,8 @@
       "412"
     ],
     {
-      "specialties": "12345"
+      "specialties": "12345",
+      "roles": "*"
     }
   ]
 ]

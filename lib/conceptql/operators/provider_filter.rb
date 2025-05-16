@@ -16,17 +16,33 @@ module ConceptQL
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
-      validate_required_options :specialties
-      require_column :specialty_concept_id
+      validate_required_options :specialties, :roles
+      require_column :context_specialty_concept_id
+      require_column :practitioner_specialty_concept_id
+      require_column :role_type_concept_id
       default_query_columns
 
       def query(db)
         ds = stream.evaluate(db).from_self(alias: :upstream)
 
         specialty_concept_ids = options[:specialties].split(/\s*,\s*/)
+        role_type_concept_ids = options[:roles].split(/\s*,\s*/)
 
         unless specialty_concept_ids.include?('*')
-          ds = ds.where(context_specialty_concept_id: specialty_concept_ids.map(&:to_i)).or(provider_specialty_concept_id: specialty_concept_ids.map(&:to_i))
+          spec_con_ids = specialty_concept_ids.map(&:to_i)
+          ds = ds.where(
+            Sequel.or(
+              [
+                [:context_specialty_concept_id, spec_con_ids],
+                [:practitioner_specialty_concept_id, spec_con_ids]
+              ]
+            )
+          )
+        end
+
+        unless role_type_concept_ids.include?('*')
+          role_con_ids = role_type_concept_ids.map(&:to_i)
+          ds = ds.where(role_type_concept_id: role_con_ids)
         end
 
         ds
