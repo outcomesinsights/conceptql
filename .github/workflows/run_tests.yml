@@ -66,13 +66,13 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: /tmp/synpuf_test_data
-          key: synpuf-test-data-v6
+          key: synpuf-test-data-v7
         id: cache-synpuf-test-data
       - name: Download Data
         if: steps.cache-synpuf-test-data.outputs.cache-hit != 'true'
         run: |
           cd /tmp
-          curl -sSL "https://www.dropbox.com/scl/fi/qvbmhivp382im9mr9u29x/synpuf_test_data.tgz?rlkey=n1p7doei0erm2dlt37ovrr7ap&dl=1" > synpuf_test_data.tgz
+          curl -sSL "https://www.dropbox.com/scl/fi/bflehlmk1itwd352z0kjk/synpuf_test_data.tgz?rlkey=ogticol20oxvis5yzq37878z7&st=vydvpdyw&dl=1" > synpuf_test_data.tgz
           tar xzf synpuf_test_data.tgz
 
       - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
