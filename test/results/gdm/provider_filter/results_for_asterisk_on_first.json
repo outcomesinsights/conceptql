@@ -1,17 +1,17 @@
 [
   {
     "person_id": 46,
-    "criterion_id": 19867,
-    "criterion_table": "clinical_codes",
-    "criterion_domain": "condition_occurrence",
-    "start_date": "2009-05-19",
-    "end_date": "2009-05-19",
-    "source_value": "41000",
-    "source_vocabulary_id": "ICD9CM",
+    "criterion_id": 46,
+    "criterion_table": "patients",
+    "criterion_domain": "person",
+    "start_date": "1931-01-01",
+    "end_date": "1931-01-01",
+    "source_value": "001A6B93EEA3062E",
+    "source_vocabulary_id": null,
     "label": null,
-    "provider_id": 9311,
-    "context_specialty_concept_id": 38004191,
-    "practitioner_specialty_concept_id": 38003967,
-    "role_type_concept_id": 100000068
+    "provider_id": null,
+    "context_specialty_concept_id": null,
+    "practitioner_specialty_concept_id": null,
+    "role_type_concept_id": null
   }
 ]

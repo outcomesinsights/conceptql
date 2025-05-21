@@ -1,10 +1,13 @@
 [
   "provider_filter",
   [
-    "first",
+    "person",
     [
-      "icd9",
-      "410.00"
+      "first",
+      [
+        "icd9",
+        "410.00"
+      ]
     ]
   ],
   {
