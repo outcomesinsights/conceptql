@@ -9,7 +9,7 @@ module ConceptQL
     class ProviderFilter < Operator
       register __FILE__
 
-      desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids."
+      desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids.\n\nA single record may have multiple specialties, so the operator will return all records that match any of the given specialties, which may lead to duplicate records."
       option :specialties, type: :string
       option :roles, type: :string
       category 'Filter Single Stream'
@@ -17,6 +17,7 @@ module ConceptQL
       allows_one_upstream
       validate_one_upstream
       validate_required_options :specialties, :roles
+      require_column :provider_id
       require_column :context_specialty_concept_id
       require_column :practitioner_specialty_concept_id
       require_column :role_type_concept_id
@@ -49,7 +50,12 @@ module ConceptQL
       end
 
       def query_columns
-        default_columns + [:specialty_concept_id]
+        default_columns + %i[
+          context_specialty_concept_id
+          practitioner_specialty_concept_id
+          role_type_concept_id
+          provider_id
+        ]
       end
     end
   end

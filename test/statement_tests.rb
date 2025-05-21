@@ -168,6 +168,9 @@ module ConceptQL
       order_columns = %i[person_id criterion_table criterion_domain start_date criterion_id]
       order_columns << :uuid if ds.columns.include?(:uuid)
       order_columns << :window_id if ds.columns.include?(:window_id)
+      order_columns << :role_type_concept_id if ds.columns.include?(:role_type_concept_id)
+      order_columns << :context_specialty_concept_id if ds.columns.include?(:context_specialty_concept_id)
+      order_columns << :practitioner_specialty_concept_id if ds.columns.include?(:practitioner_specialty_concept_id)
       ds = ds.order(*order_columns)
       ds = ds.select_remove(:window_id) if remove_window_id
       ds
