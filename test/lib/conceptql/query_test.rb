@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../db_helper'
+require 'climate_control'
 
 describe ConceptQL::Query do
   it 'should handle errors in the root operator' do
@@ -49,14 +50,16 @@ describe ConceptQL::Query do
 
   describe '#code_list' do
     it 'should handle nil for a DB' do
-      db = ConceptQL::Database.new(nil)
-      query = db.query(['union', %w[cpt 80230], ['icd9', '250.00', '250.02']])
-      expected = [
-        'CPT 80230',
-        'ICD-9 CM 250.00',
-        'ICD-9 CM 250.02'
-      ]
-      _(query.code_list.map(&:to_s)).must_equal(expected)
+      ClimateControl.modify(LEXICON_URL: nil) do
+        db = ConceptQL::Database.new(nil)
+        query = db.query(['union', %w[cpt 80230], ['icd9', '250.00', '250.02']])
+        expected = [
+          'CPT 80230',
+          'ICD-9 CM 250.00',
+          'ICD-9 CM 250.02'
+        ]
+        _(query.code_list.map(&:to_s)).must_equal(expected)
+      end
     end
 
     it 'should handle nil for preferred name' do
@@ -68,17 +71,19 @@ describe ConceptQL::Query do
     end
 
     it 'should return codes even if database search_path is bad' do
-      seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
-      db = ConceptQL::Database.new(seq_db)
-      seq_db.drop_view(:concept, if_exists: true)
-      seq_db.drop_view(:concepts, if_exists: true)
-      query = db.query(['union', %w[cpt 80230], ['icd9', '250.00', '250.02']])
-      expected = [
-        'CPT 80230',
-        'ICD-9 CM 250.00',
-        'ICD-9 CM 250.02'
-      ]
-      _(query.code_list.map(&:to_s)).must_equal(expected)
+      ClimateControl.modify(LEXICON_URL: nil) do
+        seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
+        db = ConceptQL::Database.new(seq_db)
+        seq_db.drop_view(:concept, if_exists: true)
+        seq_db.drop_view(:concepts, if_exists: true)
+        query = db.query(['union', %w[cpt 80230], ['icd9', '250.00', '250.02']])
+        expected = [
+          'CPT 80230',
+          'ICD-9 CM 250.00',
+          'ICD-9 CM 250.02'
+        ]
+        _(query.code_list.map(&:to_s)).must_equal(expected)
+      end
     end
 
     it 'should return asterisk when selecting all' do
@@ -92,12 +97,14 @@ describe ConceptQL::Query do
     end
 
     it 'should return codes from vocabulary-based operators even with no db' do
-      db = ConceptQL::Database.new(nil)
-      query = db.query(['union', %w[cpt_or_hcpcs 80230], ['ATC', '*']])
-      _(query.code_list(nil).map(&:to_s)).must_equal([
-                                                       'CPT or HCPCS 80230',
-                                                       'WHO ATC *: ALL CODES'
-                                                     ])
+      ClimateControl.modify(LEXICON_URL: nil) do
+        db = ConceptQL::Database.new(nil)
+        query = db.query(['union', %w[cpt_or_hcpcs 80230], ['ATC', '*']])
+        _(query.code_list(nil).map(&:to_s)).must_equal([
+                                                         'CPT or HCPCS 80230',
+                                                         'WHO ATC *: ALL CODES'
+                                                       ])
+      end
     end
 
     it "should return codes even if the code doesn't exist in the database" do
