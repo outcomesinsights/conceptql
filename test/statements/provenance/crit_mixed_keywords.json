@@ -1,0 +1,9 @@
+[
+  "provenance",
+  [
+    "icd9",
+    "272.0"
+  ],
+  "outpatient",
+  "inpatient:primary_or_first"
+]
