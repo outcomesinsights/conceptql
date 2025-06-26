@@ -10,6 +10,7 @@ module ConceptQL
         base.require_column(:drug_quantity)
         base.require_column(:drug_strength_source_value)
         base.require_column(:drug_days_supply)
+        base.require_column(:drug_dose_value)
       end
     end
   end

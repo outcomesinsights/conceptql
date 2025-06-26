@@ -14,6 +14,7 @@
     "drug_amount_units": null,
     "drug_quantity": 20,
     "drug_strength_source_value": null,
-    "drug_days_supply": 30
+    "drug_days_supply": 30,
+    "drug_dose_value": null
   }
 ]
