@@ -8,13 +8,14 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: a09936ef69fa986f9ca7a084402df8a69a2f8543
+  revision: 2463c3f7ed2f0660a3d2eca8d162799d058abec0
   branch: main
   specs:
     sequelizer (0.1.5)
+      activesupport (~> 7.0)
       dotenv (~> 2.1)
       hashie (~> 3.2)
-      sequel (~> 5.0)
+      sequel (~> 5.93.0)
       thor (~> 1.0)
 
 PATH
@@ -93,7 +94,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sequel (5.87.0)
+    sequel (5.93.0)
       bigdecimal
     simplecov (0.21.2)
       docile (~> 1.1)
