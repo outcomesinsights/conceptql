@@ -59,7 +59,7 @@ jobs:
 
       - uses: actions/cache@v3
         with:
-          path: ~/spark
+          path: ~/spark-${{ matrix.spark_version }}
           key: spark-${{ env.SPARK_VERSION }}
         id: cache-spark
       - name: Download Spark
@@ -67,7 +67,7 @@ jobs:
         run: |
           wget -q https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz
           tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
-          mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark
+          mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark-$SPARK_VERSION
 
       - uses: actions/cache@v3
         with:
@@ -81,7 +81,7 @@ jobs:
           curl -sSL "https://www.dropbox.com/scl/fi/bflehlmk1itwd352z0kjk/synpuf_test_data.tgz?rlkey=ogticol20oxvis5yzq37878z7&st=vydvpdyw&dl=1" > synpuf_test_data.tgz
           tar xzf synpuf_test_data.tgz
 
-      - run: ~/spark/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
+      - run: ~/spark-$SPARK_VERSION/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
       - run: bundle exec ruby test/all.rb
         env:
           CONCEPTQL_PARQUET_TEST_DIR: '/tmp/synpuf_test_data/{${{ matrix.search_path }}}'
