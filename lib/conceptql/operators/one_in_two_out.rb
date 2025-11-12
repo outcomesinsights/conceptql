@@ -19,11 +19,9 @@ module ConceptQL
 
       option :inpatient_length_of_stay, type: :integer, min: 0, default: 0,
                                         desc: 'Minimum length of inpatient stay (in days) required for inpatient event to be valid', label: 'Inpatient Length of Stay (Days)'
-      option :inpatient_return_date, type: :string, options: ['Admit Date', 'Discharge Date'],
-                                     default: 'Discharge Date', desc: 'Which date to pass downstream in both the start_date and end_date fields'
       option :outpatient_minimum_gap, type: :string, default: '30d',
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
-      option :outpatient_maximum_gap, type: :string,
+      option :outpatient_maximum_gap, type: :string, default: '365d',
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
       option :outpatient_event_to_return, type: :string, options: ['Initial Event', 'Confirming Event'],
                                           default: 'Initial Event', desc: 'Which event to pass downstream'
@@ -68,11 +66,7 @@ module ConceptQL
 
         q = q.select(*(query_cols - %i[start_date end_date]))
 
-        q = if options[:inpatient_return_date] == 'Admit Date'
-              q.select_append(Sequel[:admission_date].as(:start_date), Sequel[:admission_date].as(:end_date))
-            else
-              q.select_append(Sequel[:discharge_date].as(:start_date), Sequel[:discharge_date].as(:end_date))
-            end
+        q = q.select_append(Sequel[:admission_date].as(:start_date), Sequel[:discharge_date].as(:end_date))
 
         q.from_self.select(*dynamic_columns).from_self
       end
@@ -109,13 +103,21 @@ module ConceptQL
         sub_select = sub_select.exclude(confirm[:start_date] < initial[:start_date])
 
         if ConceptQL::Utils.present?(min_gap)
-          sub_select = sub_select.where(Sequel.expr(confirm[:start_date]) >= DateAdjuster.new(self,
-                                                                                              min_gap).adjust(initial[:start_date]))
+          sub_select = sub_select.where(
+            Sequel.expr(confirm[:start_date]) >= DateAdjuster.new(
+              self,
+              min_gap
+            ).adjust(initial[:start_date])
+          )
         end
 
         if ConceptQL::Utils.present?(max_gap)
-          sub_select = sub_select.where(Sequel.expr(confirm[:start_date]) <= DateAdjuster.new(self,
-                                                                                              max_gap).adjust(initial[:start_date]))
+          sub_select = sub_select.where(
+            Sequel.expr(confirm[:start_date]) <= DateAdjuster.new(
+              self,
+              max_gap
+            ).adjust(initial[:start_date])
+          )
         end
 
         q = outpatient_events.from_self(alias: outer_table)
