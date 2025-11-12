@@ -51,6 +51,12 @@ jobs:
           ruby-version: 3.2
           bundler-cache: true
 
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ startsWith(matrix.spark_version, '4.') && '17' || '11' }}
+
       - uses: actions/cache@v3
         with:
           path: ~/spark
