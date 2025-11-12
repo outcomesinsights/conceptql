@@ -8,13 +8,14 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: a09936ef69fa986f9ca7a084402df8a69a2f8543
+  revision: 9557ee2ef0f6a03fcbc3dda3ba4083d836b69511
   branch: main
   specs:
-    sequelizer (0.1.5)
+    sequelizer (0.1.6)
+      activesupport (~> 7.0)
       dotenv (~> 2.1)
       hashie (~> 3.2)
-      sequel (~> 5.0)
+      sequel (~> 5.93)
       thor (~> 1.0)
 
 PATH
@@ -23,8 +24,13 @@ PATH
     conceptql (0.3.0)
       activesupport (>= 6)
       bigdecimal
+      csv
+      irb
       json
+      logger
       memo_wise (~> 1.10)
+      ostruct
+      reline
       sequel (~> 5.66)
       sequelizer (~> 0.1.3)
       thor (~> 1.0)
@@ -43,15 +49,24 @@ GEM
     climate_control (1.2.0)
     coderay (1.1.3)
     concurrent-ruby (1.2.2)
+    csv (3.3.5)
+    date (3.5.0)
     docile (1.4.0)
     dotenv (2.8.1)
+    erb (5.1.3)
     hashie (3.6.0)
     hexspace (0.2.1)
       thrift (>= 0.18)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
+    io-console (0.8.1)
+    irb (1.15.3)
+      pp (>= 0.6.0)
+      rdoc (>= 4.0.0)
+      reline (>= 0.4.2)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
+    logger (1.7.0)
     memo_wise (1.10.0)
     method_source (1.0.0)
     mini_portile2 (2.8.2)
@@ -59,21 +74,34 @@ GEM
     nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    ostruct (0.6.3)
     parallel (1.26.3)
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
     pg (1.3.5)
+    pp (0.6.3)
+      prettyprint
+    prettyprint (0.2.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
     pry-byebug (3.10.1)
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
+    psych (5.2.6)
+      date
+      stringio
     racc (1.6.2)
     rainbow (3.1.1)
     rake (13.0.6)
+    rdoc (6.15.1)
+      erb
+      psych (>= 4.0.0)
+      tsort
     regexp_parser (2.9.0)
+    reline (0.6.3)
+      io-console (~> 0.5)
     rexml (3.2.6)
     rubocop (1.69.0)
       json (~> 2.3)
@@ -93,7 +121,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sequel (5.87.0)
+    sequel (5.98.0)
       bigdecimal
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -102,8 +130,10 @@ GEM
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     sqlite3 (1.4.2)
+    stringio (3.1.8)
     thor (1.3.0)
     thrift (0.19.0)
+    tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.1.2)
