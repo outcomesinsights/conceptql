@@ -31,7 +31,7 @@ jobs:
     strategy:
       matrix:
         #spark_version: [3.5.0, 3.3.2]
-        spark_version: [3.5.6]
+        spark_version: [3.5.7, 4.0.1]
         vocabs: [ohdsi, ohdsi_wide]
         include:
           - vocabs: ohdsi
