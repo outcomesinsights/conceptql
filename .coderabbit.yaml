@@ -1,0 +1,92 @@
+# CodeRabbit Configuration for conceptql
+# Docs: https://docs.coderabbit.ai
+
+language: "en-US"
+early_access: false
+enable_free_tier: true
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  review_status: true
+  collapse_walkthrough: false
+  sequence_diagrams: true
+  poem: false
+  path_filters: []
+  path_instructions:
+    - path: "lib/conceptql/operators/**"
+      instructions: "These are algorithm operator nodes that generate SQL. Each operator must handle all supported RDBMS platforms (PostgreSQL, Athena/Presto, Spark). Check for platform-specific SQL generation."
+    - path: "**/*.rb"
+      instructions: "This project uses Sequel ORM exclusively. SQL generation must go through Sequel's DSL, never raw SQL strings. Check for proper handling of platform differences via Sequelizer's supports_*/prefers_* methods."
+  auto_review:
+    enabled: true
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT MERGE"
+    drafts: false
+    base_branches:
+      - "main"
+
+  tools:
+    rubocop:
+      enabled: true
+    brakeman:
+      enabled: true
+    shellcheck:
+      enabled: true
+    yamllint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    # Disable irrelevant tools
+    eslint:
+      enabled: false
+    biome:
+      enabled: false
+    phpstan:
+      enabled: false
+    phpmd:
+      enabled: false
+    phpcs:
+      enabled: false
+    golangci-lint:
+      enabled: false
+    swiftlint:
+      enabled: false
+    ruff:
+      enabled: false
+    flake8:
+      enabled: false
+    pylint:
+      enabled: false
+    clippy:
+      enabled: false
+    detekt:
+      enabled: false
+    buf:
+      enabled: false
+    clang:
+      enabled: false
+    cppcheck:
+      enabled: false
+    oxc:
+      enabled: false
+    fortitudeLint:
+      enabled: false
+    shopifyThemeCheck:
+      enabled: false
+    prismaLint:
+      enabled: false
+
+knowledge_base:
+  opt_out: false
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "**/CLAUDE.md"
+  learnings:
+    scope: "auto"
