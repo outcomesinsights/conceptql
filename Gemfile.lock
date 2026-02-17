@@ -84,7 +84,8 @@ GEM
     memo_wise (1.10.0)
     method_source (1.0.0)
     mini_portile2 (2.8.9)
-    minitest (5.15.0)
+    minitest (6.0.1)
+      prism (~> 1.5)
     nokogiri (1.19.1)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -172,7 +173,7 @@ DEPENDENCIES
   bundler (~> 2.0)
   climate_control
   conceptql!
-  minitest (~> 5.0)
+  minitest (~> 6.0)
   nokogiri (~> 1.14)
   pg
   pry-byebug (~> 3)
