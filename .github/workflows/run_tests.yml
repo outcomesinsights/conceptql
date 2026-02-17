@@ -57,7 +57,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ startsWith(matrix.spark_version, '4.') && '17' || '11' }}
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v5
         with:
           path: ~/spark-${{ matrix.spark_version }}
           key: spark-${{ env.SPARK_VERSION }}
@@ -69,7 +69,7 @@ jobs:
           tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
           mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark-$SPARK_VERSION
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v5
         with:
           path: /tmp/synpuf_test_data
           key: synpuf-test-data-v8
