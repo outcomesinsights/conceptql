@@ -12,7 +12,6 @@ jobs:
           - search_path: wide,slim,ohdsi_vocabs
             data_model: gdm_wide
     runs-on: ubuntu-latest
-    environment: Test Secrets
     env:
       SEQUELIZER_SEARCH_PATH: ${{ matrix.search_path }}
       CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
@@ -22,6 +21,7 @@ jobs:
       -
         name: Log into DockerHub
         uses: docker/login-action@v2
+        continue-on-error: true
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -102,4 +102,3 @@ jobs:
             exit 1
           fi
           echo "All CI jobs passed"
-
