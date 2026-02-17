@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'simplecov', '~> 0.11'
-  spec.add_development_dependency 'sqlite3', '~> 1.3'
+  spec.add_development_dependency 'sqlite3', '~> 2.9'
   spec.add_development_dependency 'watir', '~> 7.3'
   spec.add_development_dependency 'webdrivers', '~> 5.2'
 end
