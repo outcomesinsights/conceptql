@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: d041282798332227bbdf0a48a07c0494b2b54931
+  revision: ebcdb06b48cc39b0e5b154e3aca4398cf01d2645
   specs:
     sequel-hexspace (1.0.0)
-      hexspace
+      hexspace (>= 0.2.1)
       sequel (~> 5.0)
 
 GIT
@@ -67,7 +67,8 @@ GEM
     erb (6.0.1)
     hashie (5.1.0)
       logger
-    hexspace (0.2.1)
+    hexspace (0.3.0)
+      bigdecimal
       thrift (>= 0.18)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
@@ -147,7 +148,7 @@ GEM
     sqlite3 (1.4.2)
     stringio (3.2.0)
     thor (1.5.0)
-    thrift (0.19.0)
+    thrift (0.22.0)
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
