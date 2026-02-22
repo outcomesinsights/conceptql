@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: a51a83112622681fd08a3fadde6d19545c8f2571
+  revision: afbf55dc022080ff31514f468175de19023c789f
   specs:
     sequel-hexspace (1.0.0)
       hexspace (>= 0.2.1)
@@ -8,13 +8,14 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: 6f732673347d510f56dd9bf2ffb7d367d9f5b958
+  revision: 33a9caebd9c52349bd443ff7e06eec9925c1b9df
   branch: main
   specs:
     sequelizer (0.1.6)
       activesupport (>= 7, < 9)
       dotenv (>= 2.1, < 4.0)
       hashie (>= 3.2, < 6.0)
+      pp
       sequel (~> 5.93)
       thor (~> 1.0)
 
@@ -51,17 +52,18 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    ast (2.4.2)
+    ast (2.4.3)
     base64 (0.3.0)
     bigdecimal (4.0.1)
-    byebug (11.1.3)
+    byebug (13.0.0)
+      reline (>= 0.6.0)
     climate_control (1.2.0)
     coderay (1.1.3)
     concurrent-ruby (1.3.6)
     connection_pool (3.0.2)
     csv (3.3.5)
     date (3.5.1)
-    docile (1.4.0)
+    docile (1.4.1)
     dotenv (3.2.0)
     drb (2.2.3)
     erb (6.0.1)
@@ -79,18 +81,19 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.18.1)
-    language_server-protocol (3.17.0.3)
+    language_server-protocol (3.17.0.5)
+    lint_roller (1.1.0)
     logger (1.7.0)
-    memo_wise (1.10.0)
-    method_source (1.0.0)
+    memo_wise (1.13.0)
+    method_source (1.1.0)
     mini_portile2 (2.8.9)
-    minitest (5.15.0)
+    minitest (5.27.0)
     nokogiri (1.19.1)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     ostruct (0.6.3)
-    parallel (1.26.3)
-    parser (3.3.6.0)
+    parallel (1.27.0)
+    parser (3.3.10.2)
       ast (~> 2.4.1)
       racc
     pg (1.6.3)
@@ -98,63 +101,69 @@ GEM
       prettyprint
     prettyprint (0.2.0)
     prism (1.9.0)
-    pry (0.14.2)
+    pry (0.16.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.10.1)
-      byebug (~> 11.0)
-      pry (>= 0.13, < 0.15)
+      reline (>= 0.6.0)
+    pry-byebug (3.12.0)
+      byebug (~> 13.0)
+      pry (>= 0.13, < 0.17)
     psych (5.3.1)
       date
       stringio
     racc (1.8.1)
     rainbow (3.1.1)
-    rake (13.0.6)
+    rake (13.3.1)
     rdoc (7.2.0)
       erb
       psych (>= 4.0.0)
       tsort
-    regexp_parser (2.9.0)
+    regexp_parser (2.11.3)
     reline (0.6.3)
       io-console (~> 0.5)
-    rexml (3.4.2)
-    rubocop (1.69.0)
+    rexml (3.4.4)
+    rubocop (1.84.2)
       json (~> 2.3)
-      language_server-protocol (>= 3.17.0)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 2.4, < 3.0)
-      rubocop-ast (>= 1.36.1, < 2.0)
+      regexp_parser (>= 2.9.3, < 3.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.36.2)
-      parser (>= 3.3.1.0)
+    rubocop-ast (1.49.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.7)
     ruby-progressbar (1.13.0)
-    rubyzip (2.3.2)
+    rubyzip (3.2.2)
     securerandom (0.4.1)
-    selenium-webdriver (4.16.0)
+    selenium-webdriver (4.41.0)
+      base64 (~> 0.2)
+      logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
+      rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
     sequel (5.101.0)
       bigdecimal
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
+    simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
-    sqlite3 (1.4.2)
+    sqlite3 (1.7.3)
+      mini_portile2 (~> 2.8.0)
     stringio (3.2.0)
     thor (1.5.0)
     thrift (0.22.0)
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (3.1.2)
-      unicode-emoji (~> 4.0, >= 4.0.4)
-    unicode-emoji (4.0.4)
+    unicode-display_width (3.2.0)
+      unicode-emoji (~> 4.1)
+    unicode-emoji (4.2.0)
     uri (1.1.1)
     watir (7.3.0)
       regexp_parser (>= 1.2, < 3)
@@ -163,13 +172,13 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (~> 4.0)
-    websocket (1.2.10)
+    websocket (1.2.11)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 2.0)
+  bundler (>= 2.0)
   climate_control
   conceptql!
   minitest (~> 5.0)
@@ -186,4 +195,4 @@ DEPENDENCIES
   webdrivers (~> 5.2)
 
 BUNDLED WITH
-   2.5.4
+  4.0.6
