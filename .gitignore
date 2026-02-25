@@ -32,3 +32,12 @@ doc/.?????????*
 .specstory/
 .claude/
 .cursor/
+
+# Local dev scripts and scratch files
+bin/run_ops
+bin/run_tests
+metadata.js
+run_script.rb
+subs.txt
+try.rb
+claude_stuff/
