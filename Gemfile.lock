@@ -198,7 +198,7 @@ DEPENDENCIES
   rubocop-minitest (~> 0.25)
   sequel-hexspace!
   sequelizer!
-  simplecov (~> 0.11)
+  simplecov (~> 0.22)
   sqlite3 (~> 1.3)
   watir (~> 7.3)
 

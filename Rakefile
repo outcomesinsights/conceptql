@@ -38,12 +38,6 @@ task :test_gdm do
   run_spec.call(:gdm)
 end
 
-desc 'Run tests with omopv4 data model with coverage'
-task :test_cov do
-  ENV['COVERAGE'] = '1'
-  run_spec.call(:omopv4_plus)
-end
-
 desc 'Run tests with omopv4 data model'
 task default: :test_omopv4_plus
 

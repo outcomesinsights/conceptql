@@ -27,6 +27,13 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Run Tests
         run: docker compose run conceptql
+      - name: Upload Coverage
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-${{ matrix.data_model }}-${{ matrix.search_path }}
+          path: coverage/
+          retention-days: 90
   Run-Spark-Tests:
     strategy:
       matrix:
@@ -86,6 +93,13 @@ jobs:
         env:
           CONCEPTQL_PARQUET_TEST_DIR: '/tmp/synpuf_test_data/{${{ matrix.search_path }}}'
           SEQUELIZER_URL: hexspace://localhost:10000/default
+      - name: Upload Coverage
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-spark-${{ matrix.spark_version }}-${{ matrix.data_model }}
+          path: coverage/
+          retention-days: 90
   ci:
     if: always()
     needs: [Run-PostgreSQL-Tests, Run-Spark-Tests]
