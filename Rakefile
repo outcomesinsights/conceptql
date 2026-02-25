@@ -9,6 +9,25 @@ run_spec = lambda do |data_model|
   sh "CONCEPTQL_DATA_MODEL=#{data_model} #{FileUtils::RUBY} test/all.rb"
 end
 
+begin
+  require 'rubocop/rake_task'
+
+  RuboCop::RakeTask.new(:lint) do |task|
+    task.options = ['--display-cop-names']
+  end
+
+  RuboCop::RakeTask.new(:format) do |task|
+    task.options = ['--auto-correct-all']
+  end
+
+  desc 'Run RuboCop with safe autocorrect'
+  task :lint_fix do
+    system('bundle exec rubocop --autocorrect')
+  end
+rescue LoadError
+  # RuboCop not available
+end
+
 desc 'Run tests with omopv4_plus data model'
 task :test_omopv4_plus do
   run_spec.call(:omopv4_plus)

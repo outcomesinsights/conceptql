@@ -1,0 +1,60 @@
+# Overcommit configuration for ConceptQL
+# See https://github.com/sds/overcommit for documentation
+
+PreCommit:
+  RuboCop:
+    enabled: true
+    command: ['bundle', 'exec', 'rubocop']
+    flags: ['--autocorrect']
+    include:
+      - '**/*.rb'
+      - '**/*.rake'
+      - '**/Rakefile'
+      - '**/Gemfile'
+      - '**/*.gemspec'
+
+  # Tests disabled - requires live database
+  RakeTarget:
+    enabled: false
+
+  BundleAudit:
+    enabled: false
+
+  TrailingWhitespace:
+    enabled: true
+    exclude:
+      - '**/db/structure.sql'
+      - '**/*.md'
+
+  MergeConflicts:
+    enabled: true
+
+  YamlSyntax:
+    enabled: true
+
+  JsonSyntax:
+    enabled: true
+
+  HardTabs:
+    enabled: true
+    exclude:
+      - '**/Makefile*'
+      - '**/*.mk'
+
+CommitMsg:
+  TextWidth:
+    enabled: true
+    max_subject_width: 60
+    max_body_width: 72
+
+PostCheckout:
+  BundleCheck:
+    enabled: true
+
+PostMerge:
+  BundleCheck:
+    enabled: true
+
+PostRewrite:
+  BundleCheck:
+    enabled: true
