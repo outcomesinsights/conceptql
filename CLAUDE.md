@@ -43,17 +43,36 @@ Manages labeled operators and CTE creation. `Recall` operator reuses labeled sub
 
 ## Running Tests
 
-Tests require a **live database**. Both `LEXICON_URL` and `SEQUELIZER_URL` must point to real Postgres instances.
+Tests require a **live database** with both data tables and vocabulary/lexicon tables.
 
-### Required Environment Variables
+### Docker Compose (preferred)
 
-- `LEXICON_URL` — URL for the lexicon database
-- `SEQUELIZER_URL` — URL for the test database
-- `CONCEPTQL_DATA_MODEL` — one of `gdm`, `gdm_wide`, `omopv4_plus`
+Use `docker-compose.yml` which spins up a `test_data` Postgres container with all required schemas and data. **You must set `SEQUELIZER_SEARCH_PATH` and `CONCEPTQL_DATA_MODEL`** — without them, vocab tables aren't visible and tests fail with `NoMethodError: undefined method 'concepts_table' for LexiconNoDB`.
 
-### Test Commands
+```bash
+# GH Actions runs all 3 of these matrix configs — all must pass:
 
-Tests **must pass for both `gdm` AND `gdm_wide`** data models:
+# 1. gdm_wide (default for local dev, matches bin/run_tests)
+SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide docker compose run --rm conceptql
+
+# 2. gdm with ohdsi vocabs
+SEQUELIZER_SEARCH_PATH=slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose run --rm conceptql
+
+# 3. gdm with gdm vocabs
+SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose run --rm conceptql
+```
+
+The `test_data` image (`outcomesinsights/misc:test_data.ignitor`) contains:
+- `slim` schema — GDM data tables (patients, clinical_codes, etc.)
+- `wide` schema — GDM wide tables (observations, supplemented_payer_reimbursements)
+- `ohdsi_vocabs` schema — OHDSI vocabulary tables (concept, concept_ancestor, etc.)
+- `gdm_vocabs` schema — GDM vocabulary tables (concepts, ancestors, mappings, vocabularies)
+
+No separate `LEXICON_URL` is needed — the lexicon auto-detects vocab tables in the search path of the data database.
+
+### Without Docker (direct)
+
+Requires `SEQUELIZER_URL` pointing to a Postgres instance with the same schemas.
 
 ```bash
 # Using bin/run_tests (has defaults for titan.jsaw.io)
@@ -69,8 +88,7 @@ bundle exec rake test_omopv4_plus
 bundle exec rake test_cov
 ```
 
-### Default Values from bin/run_tests
-
+Default values from `bin/run_tests`:
 - `SEQUELIZER_URL`: `postgres://ryan:r@titan.jsaw.io/test_data?search_path=wide,slim,ohdsi_vocabs`
 - `CONCEPTQL_DATA_MODEL`: `gdm_wide`
 
