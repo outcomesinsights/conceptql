@@ -8,13 +8,14 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: 33a9caebd9c52349bd443ff7e06eec9925c1b9df
+  revision: c3768251695286668ca49dcbb84aa12c3bbb7f69
   branch: main
   specs:
-    sequelizer (0.1.6)
+    sequelizer (0.2.0)
       activesupport (>= 7, < 9)
       dotenv (>= 2.1, < 4.0)
       hashie (>= 3.2, < 6.0)
+      kvcsv (~> 0.1)
       pp
       sequel (~> 5.93)
       thor (~> 1.0)
@@ -89,6 +90,8 @@ GEM
     json-schema (6.1.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
+    kvcsv (0.1.0)
+      csv (~> 3.0)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
