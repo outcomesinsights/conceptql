@@ -12,6 +12,7 @@ $LOAD_PATH << 'lib'
 require 'conceptql'
 ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
 require 'minitest/spec'
+require 'minitest/mock'
 require 'minitest/autorun'
 
 Minitest::Test.make_my_diffs_pretty!
