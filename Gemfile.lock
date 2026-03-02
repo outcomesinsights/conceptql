@@ -93,6 +93,7 @@ GEM
     minitest (6.0.2)
       drb (~> 2.0)
       prism (~> 1.5)
+    minitest-mock (5.27.0)
     nokogiri (1.19.1)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -191,6 +192,7 @@ DEPENDENCIES
   climate_control
   conceptql!
   minitest (~> 6.0)
+  minitest-mock (~> 5.0)
   nokogiri (~> 1.14)
   overcommit (~> 0.68)
   pg
