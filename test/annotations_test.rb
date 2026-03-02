@@ -12,10 +12,8 @@ describe ConceptQL::Operators do
 
   describe "when tables aren't available" do
     it 'should not blow up' do
-      seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
+      seq_db = Sequel.connect(DB.opts.except(:after_connect).merge(search_path: 'bad_path'))
       db = ConceptQL::Database.new(seq_db)
-      seq_db.drop_view(:concept, if_exists: true)
-      seq_db.drop_view(:concepts, if_exists: true)
       query = db.query(['union', %w[cpt 00000 99213], ['icd9', '000.00', '412']])
       _(query.scope_annotate(skip_counts: true)).must_equal(
         { errors: {},
@@ -28,7 +26,7 @@ describe ConceptQL::Operators do
     end
 
     it "should still report if codes aren't properly formatted" do
-      seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
+      seq_db = Sequel.connect(DB.opts.except(:after_connect).merge(search_path: 'bad_path'))
       db = ConceptQL::Database.new(seq_db)
       query = db.query(['union', %w[cpt 0000], ['icd9', '00.00']])
       _(query.scope_annotate(skip_counts: true)).must_equal(
