@@ -72,10 +72,8 @@ describe ConceptQL::Query do
 
     it 'should return codes even if database search_path is bad' do
       ClimateControl.modify(LEXICON_URL: nil) do
-        seq_db = Sequel.connect(DB.opts.merge(search_path: 'bad_path'))
+        seq_db = Sequel.connect(DB.opts.except(:after_connect).merge(search_path: 'bad_path'))
         db = ConceptQL::Database.new(seq_db)
-        seq_db.drop_view(:concept, if_exists: true)
-        seq_db.drop_view(:concepts, if_exists: true)
         query = db.query(['union', %w[cpt 80230], ['icd9', '250.00', '250.02']])
         expected = [
           'CPT 80230',
