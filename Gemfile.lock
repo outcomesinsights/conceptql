@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: c3768251695286668ca49dcbb84aa12c3bbb7f69
+  revision: 4d6fccd704ec83452649f95a6c26a231ae1c3a3b
   branch: main
   specs:
     sequelizer (0.2.0)
@@ -86,7 +86,7 @@ GEM
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.18.1)
+    json (2.19.0)
     json-schema (6.1.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
