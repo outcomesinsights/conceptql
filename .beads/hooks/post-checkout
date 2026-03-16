@@ -114,3 +114,4 @@ rescue StandardError => e
   puts "Report this bug at #{Overcommit::BUG_REPORT_URL}"
   exit 70 # EX_SOFTWARE
 end
+

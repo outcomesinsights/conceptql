@@ -41,3 +41,7 @@ run_script.rb
 subs.txt
 try.rb
 claude_stuff/
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
