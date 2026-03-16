@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/outcomesinsights/sequel-duckdb.git
+  revision: 72f8e32e556f49fff8d88fcbcf481661b5db210f
+  branch: main
+  specs:
+    sequel-duckdb (0.1.0)
+      duckdb (~> 1.0, >= 1.0.0)
+      sequel (~> 5.0, >= 5.0)
+
+GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
   revision: ce8b23ef6e43792eb02d83fb173257f3ad44f77a
   specs:
@@ -71,6 +80,8 @@ GEM
     docile (1.4.1)
     dotenv (3.2.0)
     drb (2.2.3)
+    duckdb (1.5.0.0)
+      bigdecimal (>= 3.1.4)
     erb (6.0.1)
     hashie (5.1.0)
       logger
@@ -203,6 +214,7 @@ DEPENDENCIES
   bundler (>= 2.0)
   climate_control
   conceptql!
+  duckdb
   minitest (~> 6.0)
   minitest-mock (~> 5.0)
   nokogiri (~> 1.14)
@@ -212,6 +224,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rubocop (~> 1.0)
   rubocop-minitest (~> 0.25)
+  sequel-duckdb!
   sequel-hexspace!
   sequelizer!
   simplecov (~> 0.22)
