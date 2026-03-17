@@ -2,6 +2,6 @@
   "database": "dolt",
   "backend": "dolt",
   "dolt_mode": "server",
-  "dolt_database": "beads_conceptql",
-  "project_id": "e2ed411b-b7f6-4822-9098-c938453757ac"
+  "dolt_database": "conceptql",
+  "project_id": "e26dbe29-1271-448d-bb26-779cdc04139f"
 }
