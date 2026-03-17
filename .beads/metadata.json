@@ -2,6 +2,8 @@
   "database": "dolt",
   "backend": "dolt",
   "dolt_mode": "server",
+  "dolt_server_host": "127.0.0.1",
+  "dolt_server_port": 43004,
   "dolt_database": "conceptql",
   "project_id": "e26dbe29-1271-448d-bb26-779cdc04139f"
 }
