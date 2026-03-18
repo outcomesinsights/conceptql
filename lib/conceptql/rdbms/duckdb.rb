@@ -9,6 +9,10 @@ module ConceptQL
         cast_date(to_column) - cast_date(from_column)
       end
 
+      def datediff(from, to)
+        Sequel.function(:datediff, 'day', to, from)
+      end
+
       def preferred_formatter
         SqlFormatters::PgFormat
       end

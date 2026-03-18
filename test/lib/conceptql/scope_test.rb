@@ -75,4 +75,50 @@ describe ConceptQL::Scope do
       end
     end
   end
+
+  describe 'using duckdb' do
+    let(:host) { :duckdb }
+
+    it 'orders extracted ctes before dependent recalls' do
+      sequel_db = Sequel.mock(host: host)
+      scope = ConceptQL::Scope.new
+      ctes = []
+
+      label_ds = sequel_db[:patients]
+      recall_ds = sequel_db[:label1].with(:label1, label_ds)
+      query = sequel_db[:recall].with(:recall, recall_ds)
+
+      scope.send(:recursive_extract_ctes, query, ctes)
+
+      _(ctes.map(&:first)).must_equal(%i[label1 recall])
+    end
+
+    it 'sorts extracted ctes by dependency order' do
+      sequel_db = Sequel.mock(host: host)
+      scope = ConceptQL::Scope.new
+      label_ds = sequel_db[:patients]
+      recall_ds = sequel_db[:label1]
+
+      sorted = scope.send(:sort_extracted_ctes, [[:recall, recall_ds], [:label1, label_ds]])
+
+      _(sorted.map(&:first)).must_equal(%i[label1 recall])
+    end
+
+    it 'renders dependent ctes after their prerequisites in sql' do
+      sequel_db = Sequel.mock(host: host)
+      scope = ConceptQL::Scope.new
+      query = sequel_db[:result].with(:recall, sequel_db[:label1]).from_self
+      ctes = [[:label1, sequel_db[:patients]]]
+
+      query = scope.send(:recursive_extract_ctes, query, ctes)
+      ctes = scope.send(:sort_extracted_ctes, ctes)
+
+      ctes.each do |table_name, ds|
+        query = query.with(table_name, ds)
+      end
+
+      sql = query.sql
+      _(sql.index('"label1" AS')).must_be :<, sql.index('"recall" AS')
+    end
+  end
 end

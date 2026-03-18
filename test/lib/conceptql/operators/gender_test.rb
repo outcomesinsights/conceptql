@@ -3,6 +3,14 @@
 require_relative '../../../helper'
 
 describe ConceptQL::Operators::Gender do
+  def assert_gender_sql(query, where_pattern)
+    sql = query.sql
+
+    _(sql).must_match(/WITH "gender_\d+_1_\w+" AS MATERIALIZED/i)
+    _(sql).must_match(where_pattern)
+    _(sql).must_match(/FROM \(SELECT \* FROM "gender_\d+_1_\w+"\) AS "t1"/i)
+  end
+
   it 'be present in list of operators' do
     _(ConceptQL::Operators.operators[:omopv4_plus]['gender']).must_equal ConceptQL::Operators::Gender
   end
@@ -13,19 +21,22 @@ describe ConceptQL::Operators::Gender do
     end
 
     it 'should work with male' do
-      check_sequel(db.query(%w[gender male]), :gender, :with_male)
+      assert_gender_sql(db.query(%w[gender male]), /WHERE \("gender_concept_id" IN \(8507\)\)/i)
     end
 
     it 'should work with female' do
-      check_sequel(db.query(%w[gender female]), :gender, :with_female)
+      assert_gender_sql(db.query(%w[gender female]), /WHERE \("gender_concept_id" IN \(8532\)\)/i)
     end
 
     it 'should work with unknown' do
-      check_sequel(db.query(%w[gender unknown]), :gender, :with_unknown)
+      assert_gender_sql(db.query(%w[gender unknown]), /WHERE \(\("gender_concept_id" IS NULL\) OR \("gender_concept_id" NOT IN \(8507, 8532\)\)\)/i)
     end
 
     it 'should work with all' do
-      check_sequel(db.query(%w[gender male female unknown]), :gender, :with_all)
+      assert_gender_sql(
+        db.query(%w[gender male female unknown]),
+        /WHERE \(\("gender_concept_id" IN \(8507\)\) OR \("gender_concept_id" IN \(8532\)\) OR \("gender_concept_id" IS NULL\) OR \("gender_concept_id" NOT IN \(8507, 8532\)\)\)/i
+      )
     end
   end
 end

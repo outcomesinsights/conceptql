@@ -13,4 +13,11 @@ describe ConceptQL::Operators::Episode do
     _(sql).must_match(/INTERVAL '1' day/i)
     _(sql).must_match(/CAST\(/)
   end
+
+  it 'uses duckdb datediff with an explicit day unit' do
+    rdbms = ConceptQL::Rdbms::DuckDB.new
+    sql = Sequel.mock(host: :duckdb).literal(rdbms.datediff(:episode_start_date, :episode_end_date))
+
+    _(sql).must_match(/datediff\('day', "episode_end_date", "episode_start_date"\)/i)
+  end
 end

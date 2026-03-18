@@ -45,7 +45,7 @@ def check_sequel(query, source, name)
     file.dirname.mkpath
     file.write(actual_sql)
   end
-  reggy = file.read
+  reggy = file.read.chomp
               .gsub('*', '\\*')
               .gsub(' +', ' \\\\+')
               .gsub('(', '\\(')

@@ -263,6 +263,16 @@ module ConceptQL
       # puts
       # p [:rec, ctes, query.opts]
 
+      if (with = query.opts[:with])
+        keep, remove = with.partition { |w| w[:no_temp_table] }
+        ctes.concat(remove.map do |w|
+          opts = w.reject { |k, _| %i[name dataset no_temp_table].include?(k) }
+          [w[:name], recursive_extract_ctes(w[:dataset], ctes), opts]
+        end)
+        # p [:rec_with, ctes.map(&:first), with]
+        query = query.clone(with: keep.empty? ? nil : keep)
+      end
+
       if (from = query.opts[:from])
         query = query.clone(from: from.map { |t| recursive_extract_cte_expr(t, ctes) })
         # p [:rec_from, ctes.map(&:first), from]
@@ -284,14 +294,22 @@ module ConceptQL
         query = query.clone(where: CteExtractor.new(self, ctes).transform(where))
       end
 
-      if (with = query.opts[:with])
-        keep, remove = with.partition { |w| w[:no_temp_table] }
-        ctes.concat(remove.map { |w| [w[:name], recursive_extract_ctes(w[:dataset], ctes)] })
-        # p [:rec_with, ctes.map(&:first), with]
-        query = query.clone(with: keep.empty? ? nil : keep)
+      query
+    end
+
+    def sort_extracted_ctes(ctes)
+      ctes = ctes.uniq(&:first)
+
+      deps = ctes.each_with_object({}) do |(name, ds), memo|
+        sql = ds.sql
+        memo[name] = ctes.filter_map do |(other_name, _)|
+          next if other_name == name
+
+          other_name if sql.include?(%("#{other_name}"))
+        end
       end
 
-      query
+      sort_ctes([], ctes, deps)
     end
 
     def with_ctes(op, db, options = {})
@@ -305,10 +323,12 @@ module ConceptQL
       ctes.each do |label, operator|
         temp_tables << [label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables)]
       end
+      query = recursive_extract_ctes(query, temp_tables)
+      temp_tables = sort_extracted_ctes(temp_tables)
 
       if force_temp_tables?(options)
         scope = self
-        query = recursive_extract_ctes(query, temp_tables).with_extend do
+        query = query.with_extend do
           # Create temp tables for each CTE
           #
           # Need to override multiple methods if sequel_pg is in use, as in
@@ -320,7 +340,7 @@ module ConceptQL
             define_method(meth) do |*args, &block|
               if !temp_tables.empty? && !opts[:conceptql_temp_tables_created]
                 begin
-                  temp_tables.uniq(&:first).each do |table_name, ds|
+                  temp_tables.each do |table_name, ds, _with_opts|
                     db.create_table(table_name, rdbms.create_options(scope, ds).merge(options).merge(as: ds))
                     rdbms.post_create(db, table_name)
                   end
@@ -337,7 +357,7 @@ module ConceptQL
 
           define_method(:columns) do
             if self.db.respond_to?(:record_table)
-              temp_tables.uniq(&:first).each do |table_name, ds|
+              temp_tables.each do |table_name, ds, _with_opts|
                 self.db.record_table(table_name, self.db.columns_from_sql(ds))
               end
             end
@@ -363,8 +383,12 @@ module ConceptQL
         end
       else
         unless ConceptQL.avoid_ctes?
-          temp_tables.each do |table_name, ds|
-            query = query.with(table_name, ds)
+          temp_tables.each do |table_name, ds, with_opts|
+            query = if with_opts.nil? || with_opts.empty?
+                      query.with(table_name, ds)
+                    else
+                      query.with(table_name, ds, with_opts)
+                    end
           end
         end
 
