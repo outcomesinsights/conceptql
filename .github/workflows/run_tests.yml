@@ -100,9 +100,50 @@ jobs:
           name: coverage-spark-${{ matrix.spark_version }}-${{ matrix.data_model }}
           path: coverage/
           retention-days: 90
+  Run-DuckDB-Tests:
+    runs-on: ubuntu-latest
+    env:
+      SEQUELIZER_SEARCH_PATH: wide,slim,ohdsi_vocabs
+      CONCEPTQL_DATA_MODEL: gdm_wide
+      DUCKDB_TEST_DATA_PATH: /tmp/synpuf_test_data.duckdb
+      DUCKDB_TEST_DATA_URL: ${{ vars.DUCKDB_TEST_DATA_URL }}
+      DUCKDB_TEST_DATA_URL_SECRET: ${{ secrets.DUCKDB_TEST_DATA_URL }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - uses: actions/cache@v5
+        with:
+          path: /tmp/synpuf_test_data.duckdb
+          key: synpuf-test-data-duckdb-v1
+        id: cache-synpuf-test-data-duckdb
+      - name: Download DuckDB Data
+        if: steps.cache-synpuf-test-data-duckdb.outputs.cache-hit != 'true'
+        run: |
+          url="${DUCKDB_TEST_DATA_URL:-$DUCKDB_TEST_DATA_URL_SECRET}"
+          if [ -z "$url" ]; then
+            echo "Missing DUCKDB_TEST_DATA_URL repo variable or secret"
+            exit 1
+          fi
+          curl -sSL "$url" > "$DUCKDB_TEST_DATA_PATH"
+
+      - run: test -s "$DUCKDB_TEST_DATA_PATH"
+      - run: bundle exec ruby test/all.rb
+        env:
+          SEQUELIZER_URL: duckdb://${{ env.DUCKDB_TEST_DATA_PATH }}
+      - name: Upload Coverage
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-duckdb-${{ env.CONCEPTQL_DATA_MODEL }}
+          path: coverage/
+          retention-days: 90
   ci:
     if: always()
-    needs: [Run-PostgreSQL-Tests, Run-Spark-Tests]
+    needs: [Run-PostgreSQL-Tests, Run-Spark-Tests, Run-DuckDB-Tests]
     runs-on: ubuntu-latest
     steps:
       - name: Check CI status
