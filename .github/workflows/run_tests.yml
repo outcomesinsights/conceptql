@@ -51,6 +51,7 @@ jobs:
     env:
       SPARK_VERSION: ${{ matrix.spark_version }}
       CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
+      BUNDLE_WITH: hexspace
     steps:
       - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
@@ -105,6 +106,7 @@ jobs:
     env:
       SEQUELIZER_SEARCH_PATH: wide,slim,ohdsi_vocabs
       CONCEPTQL_DATA_MODEL: gdm_wide
+      BUNDLE_WITH: duckdb
       DUCKDB_TEST_DATA_PATH: /tmp/synpuf_test_data.duckdb
       DUCKDB_TEST_DATA_URL: ${{ vars.DUCKDB_TEST_DATA_URL }}
       DUCKDB_TEST_DATA_URL_SECRET: ${{ secrets.DUCKDB_TEST_DATA_URL }}

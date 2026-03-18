@@ -3,7 +3,6 @@
 require_relative 'rdbms/postgres'
 require_relative 'rdbms/presto'
 require_relative 'rdbms/spark'
-require_relative 'rdbms/duckdb'
 
 module ConceptQL
   module Rdbms
@@ -16,6 +15,8 @@ module ConceptQL
       when :spark
         ConceptQL::Rdbms::Spark.new
       when :duckdb
+        Sequelizer::OptionalAdapterSupport.require_adapter!(adapter: :duckdb)
+        require_relative 'rdbms/duckdb'
         ConceptQL::Rdbms::DuckDB.new
       else
         raise "Unknown database_type -- '#{database_type}'"
