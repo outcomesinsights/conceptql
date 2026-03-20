@@ -3,7 +3,7 @@ FROM ruby:3.2-slim-bullseye
 ENV PATH="/root/.local/bin:${PATH}"
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-  libpq-dev python3-pip python3-setuptools git krb5-user krb5-config build-essential \
+  libpq-dev python3-pip python3-setuptools git krb5-user krb5-config build-essential pkg-config \
   && pip3 install wheel \
   && pip3 install --user \
   wheel pyOpenSSL cryptography idna certifi "urllib3[secure]" sqlparse

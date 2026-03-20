@@ -107,15 +107,42 @@ jobs:
       SEQUELIZER_SEARCH_PATH: wide,slim,ohdsi_vocabs
       CONCEPTQL_DATA_MODEL: gdm_wide
       BUNDLE_WITH: duckdb
+      DUCKDB_VERSION: 1.5.0
+      DUCKDB_LIB_DIR: /tmp/libduckdb
       DUCKDB_TEST_DATA_PATH: /tmp/synpuf_test_data.duckdb
       DUCKDB_TEST_DATA_URL: ${{ vars.DUCKDB_TEST_DATA_URL }}
       DUCKDB_TEST_DATA_URL_SECRET: ${{ secrets.DUCKDB_TEST_DATA_URL }}
     steps:
       - uses: actions/checkout@v6
+      - name: Derive DuckDB Version
+        run: |
+          version="$(ruby -e '
+            in_gem = false
+            File.foreach("Gemfile.lock") do |line|
+              in_gem = true if line == "GEM\n"
+              next unless in_gem
+              if line =~ /^    duckdb \(([^)]+)\)/
+                puts Regexp.last_match(1).sub(/\.0$/, "")
+                exit 0
+              end
+            end
+            exit 1
+          ')"
+          echo "DUCKDB_VERSION=$version" >> "$GITHUB_ENV"
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
+      - name: Install libduckdb
+        run: |
+          curl -fsSL \
+            "https://github.com/duckdb/duckdb/releases/download/v${DUCKDB_VERSION}/libduckdb-linux-amd64.zip" \
+            -o /tmp/libduckdb.zip
+          rm -rf "$DUCKDB_LIB_DIR"
+          mkdir -p "$DUCKDB_LIB_DIR"
+          unzip -q /tmp/libduckdb.zip -d "$DUCKDB_LIB_DIR"
+          echo "BUNDLE_BUILD__DUCKDB=--with-duckdb-include=$DUCKDB_LIB_DIR --with-duckdb-lib=$DUCKDB_LIB_DIR" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$DUCKDB_LIB_DIR:${LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
+      - run: bundle install
 
       - uses: actions/cache@v5
         with:

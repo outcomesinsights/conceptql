@@ -6,10 +6,10 @@ source 'https://rubygems.org'
 gemspec
 gem 'pg'
 gem 'sequelizer', github: 'outcomesinsights/sequelizer', branch: 'main'
+gem 'sequel-duckdb', github: 'outcomesinsights/sequel-duckdb', branch: 'main'
 
 group :duckdb, optional: true do
   gem 'duckdb'
-  gem 'sequel-duckdb', github: 'outcomesinsights/sequel-duckdb', branch: 'main'
 end
 
 group :hexspace, optional: true do
