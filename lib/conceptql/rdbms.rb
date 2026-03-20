@@ -15,7 +15,6 @@ module ConceptQL
       when :spark
         ConceptQL::Rdbms::Spark.new
       when :duckdb
-        Sequelizer::OptionalAdapterSupport.require_adapter!(adapter: :duckdb)
         require_relative 'rdbms/duckdb'
         ConceptQL::Rdbms::DuckDB.new
       else
