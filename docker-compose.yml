@@ -17,16 +17,9 @@ services:
     build:
       context: "."
       dockerfile: dockers/standard/Dockerfile
-    command: >-
-      sh -c "git config --global --add safe.directory /home/gems/sequel-duckdb
-      && git config --global --add safe.directory /home/gems/sequelizer
-      && bundle config set --local local.sequel-duckdb /home/gems/sequel-duckdb
-      && bundle config set --local local.sequelizer /home/gems/sequelizer
-      && bundle && bundle exec ruby test/all.rb"
+    command: sh -c "bundle && bundle exec ruby test/all.rb"
     volumes:
       - "${PWD}:/home/conceptql"
-      - "${PWD}/../sequel-duckdb:/home/gems/sequel-duckdb"
-      - "${PWD}/../sequelizer:/home/gems/sequelizer"
   test_data:
     image: outcomesinsights/misc:test_data.ignitor
     command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c work_mem=4GB -c shared_buffers=6GB -c effective_cache_size=6GB -c max_parallel_workers_per_gather=0
