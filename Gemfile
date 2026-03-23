@@ -7,6 +7,7 @@ gemspec
 gem 'pg'
 gem 'sequelizer', github: 'outcomesinsights/sequelizer', branch: 'main'
 gem 'sequel-duckdb', github: 'outcomesinsights/sequel-duckdb', branch: 'main'
+gem 'overcommit', '~> 0.68'
 
 group :duckdb, optional: true do
   gem 'duckdb'
@@ -14,8 +15,4 @@ end
 
 group :hexspace, optional: true do
   gem 'sequel-hexspace', github: 'outcomesinsights/sequel-hexspace'
-end
-
-group :development do
-  gem 'overcommit', '~> 0.68'
 end
