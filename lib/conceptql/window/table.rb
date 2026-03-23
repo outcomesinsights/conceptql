@@ -55,8 +55,12 @@ module ConceptQL
       end
 
       def remove_window_id(ds)
-        if (cols = selected_columns(ds)) && cols.all? { |s| s.is_a?(Symbol) }
-          ds.select(*(cols - [:window_id]))
+        if (cols = selected_columns(ds))
+          if cols.all? { |s| s.is_a?(Symbol) }
+            ds.select(*(cols - [:window_id]))
+          else
+            ds.select(*cols.reject { |c| window_id_column?(c) })
+          end
         else
           ds.select_remove(:window_id)
         end
@@ -66,8 +70,26 @@ module ConceptQL
         opts = ds.opts
         if (select = opts[:select])
           select
-        elsif (from = opts[:from].first).is_a?(Sequel::Dataset)
-          selected_columns(from)
+        elsif (from = opts[:from]&.first)
+          case from
+          when Sequel::Dataset
+            selected_columns(from)
+          when Sequel::SQL::AliasedExpression
+            selected_columns(from.expression) if from.expression.is_a?(Sequel::Dataset)
+          end
+        end
+      end
+
+      def window_id_column?(col)
+        case col
+        when Symbol
+          col == :window_id
+        when Sequel::SQL::AliasedExpression
+          col.alias == :window_id
+        when Sequel::SQL::QualifiedIdentifier
+          col.column == :window_id
+        else
+          false
         end
       end
 
