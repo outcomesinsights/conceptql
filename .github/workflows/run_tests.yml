@@ -147,7 +147,7 @@ jobs:
       - uses: actions/cache@v5
         with:
           path: /tmp/synpuf_test_data.duckdb
-          key: synpuf-test-data-duckdb-v1
+          key: synpuf-test-data-duckdb-v${{ env.DUCKDB_VERSION }}
         id: cache-synpuf-test-data-duckdb
       - name: Download DuckDB Data
         if: steps.cache-synpuf-test-data-duckdb.outputs.cache-hit != 'true'
