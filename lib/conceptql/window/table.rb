@@ -62,8 +62,24 @@ module ConceptQL
           else
             ds.select(*cols.reject { |c| window_id_column?(c) })
           end
+        elsif (inner_cols = selected_columns(ds))
+          # from_self datasets: map inner expressions to safe outer-scope
+          # symbol names to avoid DuckDB strict-scoping errors
+          outer_cols = inner_cols.filter_map { |c| outer_column_name(c) }
+          ds.select(*outer_cols.reject { |c| c == :window_id })
         else
           ds.select_remove(:window_id)
+        end
+      end
+
+      def outer_column_name(col)
+        case col
+        when Symbol
+          col
+        when Sequel::SQL::AliasedExpression
+          col.alias
+        when Sequel::SQL::QualifiedIdentifier
+          col.column
         end
       end
 

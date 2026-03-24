@@ -75,7 +75,8 @@ describe ConceptQL::Window::Table do
 
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
-      _(outer_select).must_equal([:person_id, :start_date, source_value_expr])
+      # Inner expressions are mapped to safe outer-scope symbol names
+      _(outer_select).must_equal(%i[person_id start_date source_value])
     end
 
     it 'removes aliased window_id expression' do
