@@ -171,7 +171,6 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/conceptql/scope.rb'
-    - 'lib/sequel/extensions/cold_col.rb'
 
 # Offense count: 17
 # Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.
@@ -189,7 +188,6 @@ Metrics/MethodLength:
     - 'lib/conceptql/utils.rb'
     - 'lib/conceptql/vocabularies/vocabulary_class_factory.rb'
     - 'lib/conceptql/window/table.rb'
-    - 'lib/sequel/extensions/cold_col.rb'
     - 'test/statement_tests.rb'
 
 # Offense count: 5
@@ -199,7 +197,6 @@ Metrics/PerceivedComplexity:
     - 'lib/conceptql/date_adjuster.rb'
     - 'lib/conceptql/operators/operator.rb'
     - 'lib/conceptql/scope.rb'
-    - 'lib/sequel/extensions/cold_col.rb'
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
@@ -258,11 +255,6 @@ Minitest/GlobalExpectations:
 Minitest/RefuteFalse:
   Exclude:
     - 'test/lib/conceptql/utils_test.rb'
-
-# Offense count: 1
-Minitest/UnspecifiedException:
-  Exclude:
-    - 'test/lib/sequel/extensions/cold_col_test.rb'
 
 # Offense count: 6
 # This cop supports safe autocorrection (--autocorrect).
@@ -404,19 +396,12 @@ Style/MapToHash:
     - 'lib/conceptql/operators/co_reported.rb'
     - 'lib/conceptql/operators/episode.rb'
     - 'lib/conceptql/utils.rb'
-    - 'lib/sequel/extensions/cold_col.rb'
 
 # Offense count: 2
 Style/MixinUsage:
   Exclude:
     - 'run_script.rb'
     - 'try.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/NegatedIfElseCondition:
-  Exclude:
-    - 'lib/sequel/extensions/cold_col.rb'
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
