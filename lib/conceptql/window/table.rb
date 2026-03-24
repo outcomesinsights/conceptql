@@ -55,7 +55,8 @@ module ConceptQL
       end
 
       def remove_window_id(ds)
-        if (cols = selected_columns(ds))
+        cols = ds.opts[:select]
+        if cols && !cols.empty?
           if cols.all? { |s| s.is_a?(Symbol) }
             ds.select(*(cols - [:window_id]))
           else
