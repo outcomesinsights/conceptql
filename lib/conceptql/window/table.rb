@@ -56,44 +56,12 @@ module ConceptQL
 
       def remove_window_id(ds)
         cols = ds.opts[:select]
-        if cols && !cols.empty?
-          if cols.all? { |s| s.is_a?(Symbol) }
-            ds.select(*(cols - [:window_id]))
-          else
-            ds.select(*cols.reject { |c| window_id_column?(c) })
-          end
-        elsif (inner_cols = selected_columns(ds))
-          # from_self datasets: map inner expressions to safe outer-scope
-          # symbol names to avoid DuckDB strict-scoping errors
-          outer_cols = inner_cols.filter_map { |c| outer_column_name(c) }
-          ds.select(*outer_cols.reject { |c| c == :window_id })
+        if cols && !cols.empty? && cols.any? { |c| !c.is_a?(Symbol) }
+          # When select has non-symbol expressions (e.g. CAST...AS),
+          # select_remove can't match them by symbol name, so filter manually
+          ds.select(*cols.reject { |c| window_id_column?(c) })
         else
           ds.select_remove(:window_id)
-        end
-      end
-
-      def outer_column_name(col)
-        case col
-        when Symbol
-          col
-        when Sequel::SQL::AliasedExpression
-          col.alias
-        when Sequel::SQL::QualifiedIdentifier
-          col.column
-        end
-      end
-
-      def selected_columns(ds)
-        opts = ds.opts
-        if (select = opts[:select])
-          select
-        elsif (from = opts[:from]&.first)
-          case from
-          when Sequel::Dataset
-            selected_columns(from)
-          when Sequel::SQL::AliasedExpression
-            selected_columns(from.expression) if from.expression.is_a?(Sequel::Dataset)
-          end
         end
       end
 

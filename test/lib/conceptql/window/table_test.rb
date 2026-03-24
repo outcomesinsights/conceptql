@@ -3,47 +3,12 @@
 require_relative '../../../helper'
 
 describe ConceptQL::Window::Table do
-  describe '#selected_columns' do
-    let(:db) { Sequel.mock(host: :postgres) }
-    let(:window) do
-      ConceptQL::Window::Table.new(
-        window_table: :window_tbl,
-        event_start_date_column: :start_date,
-        event_end_date_column: :end_date
-      )
-    end
-
-    it 'finds columns through AliasedExpression from from_self' do
-      # Simulate what selectify produces: .select(*cols).from_self
-      inner = db[:some_table].select(:person_id, :start_date, :end_date, :window_id)
-      ds = inner.from_self
-
-      cols = window.send(:selected_columns, ds)
-      _(cols).must_equal(%i[person_id start_date end_date window_id])
-    end
-
-    it 'finds columns on dataset with explicit select' do
-      ds = db[:some_table].select(:person_id, :start_date, :end_date)
-      cols = window.send(:selected_columns, ds)
-      _(cols).must_equal(%i[person_id start_date end_date])
-    end
-
-    it 'finds columns through nested Dataset in from' do
-      inner = db[:some_table].select(:person_id, :start_date)
-      ds = db.from(inner)
-      cols = window.send(:selected_columns, ds)
-      _(cols).must_equal(%i[person_id start_date])
-    end
-
-    it 'returns nil for bare table reference' do
-      ds = db[:some_table]
-      cols = window.send(:selected_columns, ds)
-      _(cols).must_be_nil
-    end
-  end
-
   describe '#remove_window_id' do
-    let(:db) { Sequel.mock(host: :postgres) }
+    let(:db) do
+      d = Sequel.mock(host: :postgres)
+      d.extension(:smart_select_remove)
+      d
+    end
     let(:window) do
       ConceptQL::Window::Table.new(
         window_table: :window_tbl,
@@ -57,7 +22,6 @@ describe ConceptQL::Window::Table do
       ds = inner.from_self
 
       result = window.send(:remove_window_id, ds)
-      # The outer SELECT should not include window_id
       outer_select = result.opts[:select]
       _(outer_select).must_equal(%i[person_id start_date])
     end
@@ -75,7 +39,7 @@ describe ConceptQL::Window::Table do
 
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
-      # Inner expressions are mapped to safe outer-scope symbol names
+      # smart_select_remove maps inner expressions to outer-scope symbols
       _(outer_select).must_equal(%i[person_id start_date source_value])
     end
 
@@ -110,6 +74,16 @@ describe ConceptQL::Window::Table do
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
       _(outer_select).must_equal(%i[person_id start_date])
+    end
+
+    it 'removes window_id from explicit select with non-symbol expressions' do
+      # When opts[:select] is set directly (no from_self), uses window_id_column? filter
+      source_value_expr = Sequel.cast(nil, String).as(:source_value)
+      ds = db[:some_table].select(:person_id, source_value_expr, :window_id)
+
+      result = window.send(:remove_window_id, ds)
+      outer_select = result.opts[:select]
+      _(outer_select).must_equal([:person_id, source_value_expr])
     end
   end
 

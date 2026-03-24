@@ -15,7 +15,7 @@ module ConceptQL
       null_dataset
       pg_ctas_explain
       pg_vacuum_table
-      select_remove
+      smart_select_remove
       sql_comments
       usable
     ].freeze
