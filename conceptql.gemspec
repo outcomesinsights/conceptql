@@ -42,6 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 1.0'
   spec.add_development_dependency 'rubocop-minitest', '~> 0.25'
   spec.add_development_dependency 'simplecov', '~> 0.22'
-  spec.add_development_dependency 'sqlite3', '~> 1.3'
+  spec.add_development_dependency 'sqlite3', '~> 2.9'
   spec.add_development_dependency 'watir', '~> 7.3'
 end
