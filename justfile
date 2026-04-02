@@ -52,3 +52,6 @@ test:
 test-quick:
     SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide \
       docker compose run --rm conceptql
+
+bundle-update *ARGS:
+    bundle update {{ARGS}}
