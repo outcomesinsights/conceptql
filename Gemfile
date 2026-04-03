@@ -7,7 +7,7 @@ gemspec
 gem 'pg'
 gem 'sequelizer', github: 'outcomesinsights/sequelizer', branch: 'main'
 gem 'sequel-duckdb', github: 'outcomesinsights/sequel-duckdb', branch: 'main'
-gem 'overcommit', '~> 0.68'
+gem 'overcommit', '~> 0.69'
 
 group :duckdb, optional: true do
   gem 'duckdb'
