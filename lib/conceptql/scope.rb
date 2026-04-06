@@ -17,6 +17,8 @@ module ConceptQL
   # API for Recall operators to fetch the results/domains from
   # labeled operators.
   class Scope
+    DEFAULT_COLUMN_FAMILY = 'default'
+
     DEFAULT_COLUMNS = {
       person_id: :Bigint,
       criterion_id: :Bigint,
@@ -26,7 +28,8 @@ module ConceptQL
       end_date: :Date,
       source_value: :String,
       source_vocabulary_id: :String,
-      label: :String
+      label: :String,
+      column_family: :String
     }.freeze
 
     ADDITIONAL_COLUMNS = {
@@ -266,7 +269,7 @@ module ConceptQL
       if (with = query.opts[:with])
         keep, remove = with.partition { |w| w[:no_temp_table] }
         ctes.concat(remove.map do |w|
-          opts = w.reject { |k, _| %i[name dataset no_temp_table].include?(k) }
+          opts = w.except(:name, :dataset, :no_temp_table)
           [w[:name], recursive_extract_ctes(w[:dataset], ctes), opts]
         end)
         # p [:rec_with, ctes.map(&:first), with]

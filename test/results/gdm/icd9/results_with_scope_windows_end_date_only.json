@@ -8,7 +8,8 @@
     "end_date": "2010-06-27",
     "source_value": "5856",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   },
   {
     "person_id": 2,
@@ -19,6 +20,7 @@
     "end_date": "2010-06-27",
     "source_value": "5856",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   }
 ]

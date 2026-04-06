@@ -9,6 +9,7 @@
     "source_value": "4011",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
+    "column_family": "default",
     "window_id": 3
   },
   {
@@ -21,6 +22,7 @@
     "source_value": "4011",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
+    "column_family": "default",
     "window_id": 4
   }
 ]

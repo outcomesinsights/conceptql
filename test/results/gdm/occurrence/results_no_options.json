@@ -8,6 +8,7 @@
     "end_date": "2009-03-30",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   }
 ]

@@ -9,6 +9,7 @@
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
     "label": null,
+    "column_family": "default",
     "provider_id": 8860,
     "context_specialty_concept_id": null,
     "practitioner_specialty_concept_id": 38003770,

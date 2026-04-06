@@ -8,7 +8,8 @@
     "end_date": "2008-10-29",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 17,
@@ -19,7 +20,8 @@
     "end_date": "2008-08-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 17,
@@ -30,7 +32,8 @@
     "end_date": "2009-04-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 38,
@@ -41,7 +44,8 @@
     "end_date": "2010-02-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 54,
@@ -52,7 +56,8 @@
     "end_date": "2008-06-05",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 60,
@@ -63,7 +68,8 @@
     "end_date": "2009-07-22",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 66,
@@ -74,7 +80,8 @@
     "end_date": "2009-07-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 73,
@@ -85,7 +92,8 @@
     "end_date": "2008-11-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 77,
@@ -96,7 +104,8 @@
     "end_date": "2010-10-06",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 81,
@@ -107,7 +116,8 @@
     "end_date": "2009-01-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 88,
@@ -118,7 +128,8 @@
     "end_date": "2009-01-09",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 88,
@@ -129,7 +140,8 @@
     "end_date": "2009-05-30",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 90,
@@ -140,7 +152,8 @@
     "end_date": "2010-05-26",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 93,
@@ -151,7 +164,8 @@
     "end_date": "2009-11-08",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 96,
@@ -162,7 +176,8 @@
     "end_date": "2008-09-24",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 106,
@@ -173,7 +188,8 @@
     "end_date": "2009-02-27",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 109,
@@ -184,7 +200,8 @@
     "end_date": "2010-07-06",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 110,
@@ -195,7 +212,8 @@
     "end_date": "2010-06-27",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 131,
@@ -206,7 +224,8 @@
     "end_date": "2008-03-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 149,
@@ -217,7 +236,8 @@
     "end_date": "2008-04-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 152,
@@ -228,7 +248,8 @@
     "end_date": "2008-08-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 152,
@@ -239,7 +260,8 @@
     "end_date": "2010-11-22",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 161,
@@ -250,7 +272,8 @@
     "end_date": "2009-10-29",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 163,
@@ -261,7 +284,8 @@
     "end_date": "2008-12-25",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 172,
@@ -272,7 +296,8 @@
     "end_date": "2009-01-20",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 177,
@@ -283,7 +308,8 @@
     "end_date": "2008-09-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 177,
@@ -294,7 +320,8 @@
     "end_date": "2009-06-16",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 184,
@@ -305,7 +332,8 @@
     "end_date": "2008-01-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 187,
@@ -316,7 +344,8 @@
     "end_date": "2009-01-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 187,
@@ -327,7 +356,8 @@
     "end_date": "2010-12-26",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 190,
@@ -338,7 +368,8 @@
     "end_date": "2009-04-09",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 196,
@@ -349,7 +380,8 @@
     "end_date": "2008-12-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 197,
@@ -360,7 +392,8 @@
     "end_date": "2009-05-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 212,
@@ -371,7 +404,8 @@
     "end_date": "2009-10-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 212,
@@ -382,7 +416,8 @@
     "end_date": "2009-10-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 213,
@@ -393,7 +428,8 @@
     "end_date": "2009-06-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 213,
@@ -404,7 +440,8 @@
     "end_date": "2010-02-07",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 214,
@@ -415,7 +452,8 @@
     "end_date": "2008-02-17",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 214,
@@ -426,7 +464,8 @@
     "end_date": "2009-11-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 217,
@@ -437,7 +476,8 @@
     "end_date": "2010-06-23",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 220,
@@ -448,7 +488,8 @@
     "end_date": "2008-11-20",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 220,
@@ -459,7 +500,8 @@
     "end_date": "2009-10-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 223,
@@ -470,7 +512,8 @@
     "end_date": "2008-07-28",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 223,
@@ -481,7 +524,8 @@
     "end_date": "2008-10-31",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 230,
@@ -492,7 +536,8 @@
     "end_date": "2008-03-21",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 234,
@@ -503,7 +548,8 @@
     "end_date": "2008-09-01",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 239,
@@ -514,7 +560,8 @@
     "end_date": "2009-08-04",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   },
   {
     "person_id": 239,
@@ -525,6 +572,7 @@
     "end_date": "2010-02-12",
     "source_value": "412",
     "source_vocabulary_id": "ICD9CM",
-    "label": "label"
+    "label": "label",
+    "column_family": "default"
   }
 ]

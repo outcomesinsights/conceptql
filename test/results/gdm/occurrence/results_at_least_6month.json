@@ -8,7 +8,8 @@
     "end_date": "2009-05-16",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   },
   {
     "person_id": 2,
@@ -19,7 +20,8 @@
     "end_date": "2009-05-16",
     "source_value": "25000",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   },
   {
     "person_id": 2,
@@ -30,7 +32,8 @@
     "end_date": "2010-07-01",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   },
   {
     "person_id": 2,
@@ -41,7 +44,8 @@
     "end_date": "2010-07-01",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   },
   {
     "person_id": 2,
@@ -52,7 +56,8 @@
     "end_date": "2010-07-01",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   },
   {
     "person_id": 2,
@@ -63,7 +68,8 @@
     "end_date": "2010-07-01",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   },
   {
     "person_id": 2,
@@ -74,6 +80,7 @@
     "end_date": "2010-07-01",
     "source_value": "4019",
     "source_vocabulary_id": "ICD9CM",
-    "label": null
+    "label": null,
+    "column_family": "default"
   }
 ]

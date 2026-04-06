@@ -4,6 +4,7 @@ module ConceptQL
   module Behaviors
     module Labish
       def self.included(base)
+        base.define_method(:column_family) { 'lab' }
         base.require_column :value_as_number
         base.require_column :value_as_string
         base.require_column :value_as_concept_id

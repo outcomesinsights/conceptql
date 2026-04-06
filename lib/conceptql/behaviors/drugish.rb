@@ -4,6 +4,7 @@ module ConceptQL
   module Behaviors
     module Drugish
       def self.included(base)
+        base.define_method(:column_family) { 'drug' }
         base.require_column(:drug_name)
         base.require_column(:drug_amount)
         base.require_column(:drug_amount_units)

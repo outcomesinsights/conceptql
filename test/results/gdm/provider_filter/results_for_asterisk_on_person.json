@@ -9,6 +9,7 @@
     "source_value": "001A6B93EEA3062E",
     "source_vocabulary_id": null,
     "label": null,
+    "column_family": "default",
     "provider_id": null,
     "context_specialty_concept_id": null,
     "practitioner_specialty_concept_id": null,

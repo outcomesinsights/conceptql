@@ -25,6 +25,10 @@ module ConceptQL
         require_column :primary_concept_id
       end
 
+      def column_family
+        'inpatient'
+      end
+
       def query(db)
         return db[:condition_occurrence].where(false) if omopv4_plus?
 

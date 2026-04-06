@@ -93,7 +93,8 @@ module ConceptQL
 
         episode_query_cols = partition_vars + %i[start_date end_date criterion_id criterion_table
                                                  criterion_domain]
-        dm.selectify(episode_summary.from_self, { query_columns: episode_query_cols.zip(episode_query_cols).to_h })
+        dm.selectify(episode_summary.from_self, { query_columns: episode_query_cols.zip(episode_query_cols).to_h,
+                                                  replace: { column_family: ConceptQL::Scope::DEFAULT_COLUMN_FAMILY } })
       end
 
       def get_episode_gap

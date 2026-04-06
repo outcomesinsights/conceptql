@@ -273,7 +273,10 @@ module ConceptQL
           uuid: opts[:uuid] || options[:uuid]
         }
 
-        opts[:replace] = { label: label } if label
+        cf = column_family || (specific_table ? ConceptQL::Scope::DEFAULT_COLUMN_FAMILY : nil)
+        opts[:replace] ||= {}
+        opts[:replace][:label] = label if label
+        opts[:replace][:column_family] = cf if cf
 
         query = query.comment(comment) if comments?
 
@@ -318,6 +321,10 @@ module ConceptQL
           options.delete(:label) if options[:label] && options[:label].to_s.strip.empty?
           options[:label].respond_to?(:strip) ? options[:label].strip : options[:label]
         end
+      end
+
+      def column_family
+        nil
       end
 
       def valid?(db, opts = {})
