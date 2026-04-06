@@ -11,6 +11,12 @@ module ConceptQL
         upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple
       end
 
+      def multiple_vocabularies
+        return true if upstreams.any?(&:multiple_vocabularies)
+
+        vocabularies.length > 1
+      end
+
       desc 'Passes along all events that were co-reported in the same record in the source data.'
 
       allows_many_upstreams

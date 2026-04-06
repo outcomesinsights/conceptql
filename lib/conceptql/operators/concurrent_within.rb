@@ -12,6 +12,12 @@ module ConceptQL
         upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple
       end
 
+      def multiple_vocabularies
+        return true if upstreams.any?(&:multiple_vocabularies)
+
+        vocabularies.length > 1
+      end
+
       desc "Filters each upstream to only include records where other upstreams' date ranges overlap"
       option :start, type: :string
       option :end, type: :string

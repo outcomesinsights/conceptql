@@ -33,6 +33,12 @@ module ConceptQL
         upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple
       end
 
+      def multiple_vocabularies
+        return true if upstreams.any?(&:multiple_vocabularies)
+
+        vocabularies.length > 1
+      end
+
       desc 'Combines sets of incoming records into a single large set of records.'
       allows_many_upstreams
       category 'Combine Streams'

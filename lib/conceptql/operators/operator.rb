@@ -398,6 +398,24 @@ module ConceptQL
         end
       end
 
+      def vocabularies
+        if respond_to?(:vocab_entry)
+          [vocab_entry.omopv5_vocabulary_id]
+        elsif upstreams.any?
+          upstreams.flat_map(&:vocabularies).uniq
+        else
+          []
+        end
+      end
+
+      def multiple_vocabularies
+        if upstreams.any?
+          upstreams.first.multiple_vocabularies
+        else
+          false
+        end
+      end
+
       def same_table?(_table)
         false
       end

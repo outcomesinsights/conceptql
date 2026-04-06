@@ -28,6 +28,10 @@ module ConceptQL
         left.events_per_patient
       end
 
+      def multiple_vocabularies
+        left.multiple_vocabularies
+      end
+
       def accept(visitor, opts = {})
         visitor.visit(self)
         left.accept(visitor, opts)

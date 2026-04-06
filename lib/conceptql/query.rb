@@ -129,6 +129,10 @@ module ConceptQL
       operator.events_per_patient
     end
 
+    def multiple_vocabularies
+      operator.multiple_vocabularies
+    end
+
     def operator
       @operator ||= if statement.is_a?(Array)
                       if statement.first.is_a?(Array)

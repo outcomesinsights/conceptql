@@ -11,6 +11,12 @@ module ConceptQL
         :multiple
       end
 
+      def multiple_vocabularies
+        return true if upstreams.any?(&:multiple_vocabularies)
+
+        vocabularies.length > 1
+      end
+
       desc <<~EOF
         Sums value_as_number across all records that match on all but start_date, end_date.
         For start_date and end_date the min and max of each respectively is returned.'
