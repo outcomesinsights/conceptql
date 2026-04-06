@@ -46,7 +46,7 @@ test-full:
     echo "=== Results ==="
     for log in {{log_dir}}/gdm_*/${ts}.txt; do
       name=$(basename "$(dirname "$log")")
-      summary=$(grep -E '^\d+ runs' "$log" || echo "NO SUMMARY FOUND")
+      summary=$(grep -E '^[0-9]+ runs' "$log" || echo "NO SUMMARY FOUND")
       if echo "$summary" | grep -qE '0 failures, 0 errors'; then
         echo "  ✓ ${name}: ${summary}"
       else

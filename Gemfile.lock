@@ -120,7 +120,7 @@ GEM
     nokogiri (1.19.2-x86_64-linux-gnu)
       racc (~> 1.4)
     ostruct (0.6.3)
-    overcommit (0.68.0)
+    overcommit (0.69.0)
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
       rexml (>= 3.3.9)
@@ -222,7 +222,7 @@ DEPENDENCIES
   minitest (~> 6.0)
   minitest-mock (~> 5.0)
   nokogiri (~> 1.14)
-  overcommit (~> 0.68)
+  overcommit (~> 0.69)
   pg
   pry-byebug (~> 3)
   rake (~> 13.0)
