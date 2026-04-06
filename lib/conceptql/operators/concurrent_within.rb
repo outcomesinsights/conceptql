@@ -8,6 +8,10 @@ module ConceptQL
     class ConcurrentWithin < Operator
       register __FILE__
 
+      def events_per_patient
+        upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple
+      end
+
       desc "Filters each upstream to only include records where other upstreams' date ranges overlap"
       option :start, type: :string
       option :end, type: :string

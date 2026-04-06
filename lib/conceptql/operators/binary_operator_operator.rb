@@ -24,6 +24,10 @@ module ConceptQL
 
       attr_reader :left, :right
 
+      def events_per_patient
+        left.events_per_patient
+      end
+
       def accept(visitor, opts = {})
         visitor.visit(self)
         left.accept(visitor, opts)

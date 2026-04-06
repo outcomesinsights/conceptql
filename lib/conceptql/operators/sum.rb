@@ -7,6 +7,10 @@ module ConceptQL
     class Sum < PassThru
       register __FILE__
 
+      def events_per_patient
+        :multiple
+      end
+
       desc <<~EOF
         Sums value_as_number across all records that match on all but start_date, end_date.
         For start_date and end_date the min and max of each respectively is returned.'

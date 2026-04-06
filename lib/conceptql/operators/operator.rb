@@ -390,6 +390,14 @@ module ConceptQL
         raise NotImplementedError, self
       end
 
+      def events_per_patient
+        if upstreams.first
+          upstreams.first.events_per_patient
+        else
+          :multiple
+        end
+      end
+
       def same_table?(_table)
         false
       end

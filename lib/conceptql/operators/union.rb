@@ -29,6 +29,10 @@ module ConceptQL
         end
       end
 
+      def events_per_patient
+        upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple
+      end
+
       desc 'Combines sets of incoming records into a single large set of records.'
       allows_many_upstreams
       category 'Combine Streams'

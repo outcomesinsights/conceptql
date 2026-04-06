@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: 1c4a5599a33938b3151edc8c47d81e47ea8e9ae6
+  revision: ce8b23ef6e43792eb02d83fb173257f3ad44f77a
   specs:
     sequel-hexspace (1.0.1)
       hexspace (>= 0.2.1)
@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: ad690da7a6eead920a3ec0bdd5d9d24783d6ab2c
+  revision: d07f7c5e482074e631828afbf558a767d6695b66
   branch: main
   specs:
     sequelizer (0.2.0)
@@ -61,6 +61,8 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    addressable (2.8.9)
+      public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
     bigdecimal (4.1.0)
@@ -95,11 +97,16 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.19.3)
+    json-schema (6.2.0)
+      addressable (~> 2.8)
+      bigdecimal (>= 3.1, < 5)
     kvcsv (0.1.0)
       csv (~> 3.0)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
+    mcp (0.9.0)
+      json-schema (>= 4.1)
     memo_wise (1.13.0)
     method_source (1.1.0)
     mini_portile2 (2.8.9)
@@ -113,12 +120,12 @@ GEM
     nokogiri (1.19.2-x86_64-linux-gnu)
       racc (~> 1.4)
     ostruct (0.6.3)
-    overcommit (0.69.0)
+    overcommit (0.68.0)
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
       rexml (>= 3.3.9)
-    parallel (1.28.0)
-    parser (3.3.11.1)
+    parallel (1.27.0)
+    parser (3.3.10.2)
       ast (~> 2.4.1)
       racc
     pg (1.6.3)
@@ -137,6 +144,7 @@ GEM
     psych (5.3.1)
       date
       stringio
+    public_suffix (7.0.5)
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.3.1)
@@ -148,10 +156,11 @@ GEM
     reline (0.6.3)
       io-console (~> 0.5)
     rexml (3.4.4)
-    rubocop (1.86.0)
+    rubocop (1.85.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
+      mcp (~> 0.6)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
@@ -213,7 +222,7 @@ DEPENDENCIES
   minitest (~> 6.0)
   minitest-mock (~> 5.0)
   nokogiri (~> 1.14)
-  overcommit (~> 0.69)
+  overcommit (~> 0.68)
   pg
   pry-byebug (~> 3)
   rake (~> 13.0)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'operator'
+require_relative '../behaviors/single_event'
 
 module ConceptQL
   module Operators
@@ -24,6 +25,8 @@ module ConceptQL
     # If we ask for the second occurrence of something and a person has only one
     # occurrence, this operator returns nothing for that person
     class Occurrence < Operator
+      include ConceptQL::Behaviors::SingleEvent
+
       register __FILE__
 
       preferred_name 'Nth Occurrence'

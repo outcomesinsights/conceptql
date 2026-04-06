@@ -125,6 +125,10 @@ module ConceptQL
       operator.domains(db)
     end
 
+    def events_per_patient
+      operator.events_per_patient
+    end
+
     def operator
       @operator ||= if statement.is_a?(Array)
                       if statement.first.is_a?(Array)

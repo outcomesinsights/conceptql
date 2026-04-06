@@ -3,10 +3,13 @@
 require_relative 'operator'
 require_relative '../date_adjuster'
 require_relative '../behaviors/provenanceable'
+require_relative '../behaviors/single_event'
 
 module ConceptQL
   module Operators
     class OneInTwoOut < Operator
+      include ConceptQL::Behaviors::SingleEvent
+
       register __FILE__
 
       desc 'Identifies an event that appears either once in an inpatient setting or twice within a specified interval in an outpatient setting.'

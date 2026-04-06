@@ -7,6 +7,10 @@ module ConceptQL
     class CoReported < PassThru
       register __FILE__
 
+      def events_per_patient
+        upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple
+      end
+
       desc 'Passes along all events that were co-reported in the same record in the source data.'
 
       allows_many_upstreams
