@@ -1,24 +1,38 @@
 log_dir := "claude_stuff/test-logs"
 
-# Run all three CI matrix configs in parallel; fail if any fails
-test:
+# Run gdm_wide (default quick test)
+test *ARGS:
     #!/usr/bin/env bash
     set -euo pipefail
-    mkdir -p {{log_dir}}
-    ts=$(date +%Y%m%d-%H%M%S)
+    mkdir -p {{log_dir}}/test
+    ts=$(date +%Y%m%d%H%M%S)
+    log={{log_dir}}/test/${ts}.txt
+
+    SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide \
+      docker compose run --rm conceptql {{ARGS}} 2>&1 | tee "$log"
+
+    ln -sf "test/${ts}.txt" {{log_dir}}/latest.txt
+    echo "Log: $log"
+
+# Run all three CI matrix configs in parallel; fail if any fails
+test-full:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    ts=$(date +%Y%m%d%H%M%S)
+    mkdir -p {{log_dir}}/gdm_wide {{log_dir}}/gdm_ohdsi {{log_dir}}/gdm_vocabs
 
     echo "Running all 3 CI matrix configs in parallel..."
 
     SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide \
-      docker compose run --rm conceptql 2>&1 | tee {{log_dir}}/gdm_wide-${ts}.log &
+      docker compose run --rm conceptql 2>&1 | tee {{log_dir}}/gdm_wide/${ts}.txt &
     pid1=$!
 
     SEQUELIZER_SEARCH_PATH=slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm \
-      docker compose run --rm conceptql 2>&1 | tee {{log_dir}}/gdm_ohdsi-${ts}.log &
+      docker compose run --rm conceptql 2>&1 | tee {{log_dir}}/gdm_ohdsi/${ts}.txt &
     pid2=$!
 
     SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs CONCEPTQL_DATA_MODEL=gdm \
-      docker compose run --rm conceptql 2>&1 | tee {{log_dir}}/gdm_vocabs-${ts}.log &
+      docker compose run --rm conceptql 2>&1 | tee {{log_dir}}/gdm_vocabs/${ts}.txt &
     pid3=$!
 
     failed=0
@@ -30,8 +44,8 @@ test:
 
     echo ""
     echo "=== Results ==="
-    for log in {{log_dir}}/*-${ts}.log; do
-      name=$(basename "$log" -${ts}.log)
+    for log in {{log_dir}}/gdm_*/${ts}.txt; do
+      name=$(basename "$(dirname "$log")")
       summary=$(grep -E '^\d+ runs' "$log" || echo "NO SUMMARY FOUND")
       if echo "$summary" | grep -qE '0 failures, 0 errors'; then
         echo "  ✓ ${name}: ${summary}"
@@ -40,6 +54,8 @@ test:
       fi
     done
 
+    ln -sf "gdm_wide/${ts}.txt" {{log_dir}}/latest.txt
+
     if [ $failed -ne 0 ]; then
       echo ""
       echo "FAILED: one or more configs had errors"
@@ -47,11 +63,6 @@ test:
     fi
     echo ""
     echo "All configs passed."
-
-# Run a single config (gdm_wide by default)
-test-quick:
-    SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide \
-      docker compose run --rm conceptql
 
 bundle-update *ARGS:
     bundle update {{ARGS}}
