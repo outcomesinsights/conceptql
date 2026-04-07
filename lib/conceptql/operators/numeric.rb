@@ -42,6 +42,16 @@ module ConceptQL
         stream.nil? ? [:person] : super
       end
 
+      # Without an upstream, Numeric emits exactly one row per patient via the
+      # as_criterion path (SELECT value_as_number FROM patients). The leaf
+      # default in Operator#events_per_patient assumes :multiple, which is wrong
+      # for this single-row-per-patient shape. Override here so that downstream
+      # operators (Union, etc.) can correctly conclude that a numeric leaf is
+      # single-event-per-patient.
+      def events_per_patient
+        stream.nil? ? :single : super
+      end
+
       private
 
       def with_kids(db)
@@ -49,8 +59,23 @@ module ConceptQL
       end
 
       def as_criterion(db)
-        dm.selectify(db.from(dm.table_by_domain(:person)), domain: :person,
-                                                           replace: { value_as_number: first_argument })
+        # Explicitly set column_family to DEFAULT_COLUMN_FAMILY here. The
+        # selectify path through `domain: :person` runs against the patients
+        # table, which doesn't have a column_family column. Without this
+        # replace, nullified_columns inserts CAST(NULL AS text) AS
+        # "column_family", and the outer evaluate -> select_it wrapper does not
+        # re-inject a value (Numeric has no source_table/table/domain methods,
+        # so determine_table returns nil and select_it's `cf =
+        # DEFAULT_COLUMN_FAMILY` branch never fires). Result: every Numeric
+        # as_criterion row carried column_family = NULL. Explicitly replacing
+        # it here keeps the fix at the same level as Episode#query, which
+        # already sets column_family in its replace hash for the same reason.
+        dm.selectify(db.from(dm.table_by_domain(:person)),
+                     domain: :person,
+                     replace: {
+                       value_as_number: first_argument,
+                       column_family: ConceptQL::Scope::DEFAULT_COLUMN_FAMILY
+                     })
       end
 
       def first_argument
