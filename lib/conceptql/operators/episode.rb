@@ -20,6 +20,20 @@ module ConceptQL
         nil
       end
 
+      # Episode strips source_vocabulary_id from its output rows (the SQL emits
+      # NULL for that column), so downstream consumers can't tell which vocab
+      # the data originated from. The default introspection methods on Operator
+      # walk upstream and report whatever vocabularies were upstream of Episode,
+      # which misrepresents what Episode actually emits. Override both methods
+      # to reflect that Episode erases vocabulary metadata.
+      def vocabularies
+        []
+      end
+
+      def multiple_vocabularies
+        false
+      end
+
       def query(db)
         ds = unioned(db)
 

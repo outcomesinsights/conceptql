@@ -21,15 +21,16 @@ describe ConceptQL::Operators::Episode do
     _(sql).must_match(/datediff\('day', "episode_end_date", "episode_start_date"\)/i)
   end
 
-  # WARNING: Every assertion in this block documents CURRENT pre-fix behavior.
-  # When conceptql-grt lands, verify EACH assertion against the bead description
-  # before updating. Do NOT flip assertions one at a time in response to test
-  # failures. The bead specifies exactly which assertions should change and to
-  # what values. See conceptql-grt for the full fix specification.
-  describe 'introspection methods (CURRENT BEHAVIOR — pinned before conceptql-grt)' do
+  # Episode strips source_vocabulary_id from its output (the SQL emits NULL),
+  # so downstream consumers can't distinguish vocabularies in the data. To
+  # avoid misrepresenting what Episode actually emits, Episode overrides both
+  # #vocabularies and #multiple_vocabularies to report no vocabularies. The
+  # event-count introspection (events_per_patient) is unaffected — Episode
+  # still produces multiple events per patient when its upstream does.
+  describe 'introspection methods' do
     let(:db) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm) }
 
-    describe 'events_per_patient (Episode forwards to upstream — should NOT change in grt)' do
+    describe 'events_per_patient (Episode forwards to upstream)' do
       it 'inherits :multiple from a multi-event upstream' do
         query = db.query([:episode, [:icd9, '250.00']])
         _(query.events_per_patient).must_equal :multiple
@@ -44,27 +45,34 @@ describe ConceptQL::Operators::Episode do
         _(multi.events_per_patient).wont_equal single.events_per_patient
       end
 
-      it 'forwards to upstream value identically (anchor — should not change in grt)' do
+      it 'forwards to upstream value identically' do
         upstream_query = db.query([:first, [:icd9, '250.00']])
         episode_query = db.query([:episode, [:first, [:icd9, '250.00']]])
         _(episode_query.events_per_patient).must_equal upstream_query.events_per_patient
       end
     end
 
-    describe 'multiple_vocabularies (CURRENT — flips to false in conceptql-grt)' do
-      it 'returns false when upstream has a single vocabulary (anchor — should not change)' do
+    describe 'multiple_vocabularies (Episode strips vocab metadata)' do
+      it 'returns false when upstream has a single vocabulary' do
         query = db.query([:episode, [:icd9, '250.00']])
+        _(query.multiple_vocabularies).must_equal false
+      end
+
+      it 'returns false even when upstream is a union of multiple vocabularies' do
+        query = db.query([:episode, [:union, [:icd9, '250.00'], [:cpt, '99214']]])
         _(query.multiple_vocabularies).must_equal false
       end
     end
 
-    describe 'vocabularies (CURRENT — flips to [] in conceptql-grt)' do
-      it 'walks through to upstream vocabulary IDs' do
-        # CURRENT BEHAVIOR: Episode does not override #vocabularies, so the default
-        # implementation collects vocabulary IDs from upstreams. After conceptql-grt
-        # this should return [].
+    describe 'vocabularies (Episode strips vocab metadata)' do
+      it 'returns [] regardless of upstream vocabulary IDs' do
         query = db.query([:episode, [:icd9, '250.00']])
-        _(query.operator.vocabularies).must_equal ['ICD9CM']
+        _(query.operator.vocabularies).must_equal []
+      end
+
+      it 'returns [] even when upstream is a union of multiple vocabularies' do
+        query = db.query([:episode, [:union, [:icd9, '250.00'], [:cpt, '99214']]])
+        _(query.operator.vocabularies).must_equal []
       end
     end
 
@@ -78,38 +86,39 @@ describe ConceptQL::Operators::Episode do
       [:union],
       [:co_reported]
     ].each do |op, *opts|
-      describe "wrapped in #{op} (CURRENT — flips to false/[] in conceptql-grt)" do
+      describe "wrapped in #{op}" do
         let(:query) do
           db.query([op, [:episode, [:icd9, '250.00']], [:episode, [:cpt, '99214']], *opts])
         end
 
-        it "#{op}#multiple_vocabularies returns true via vocabularies aggregation" do
-          _(query.multiple_vocabularies).must_equal true
+        it "#{op}#multiple_vocabularies returns false because Episodes report no vocabularies" do
+          _(query.multiple_vocabularies).must_equal false
         end
 
-        it "#{op}#vocabularies aggregates upstream vocabs through Episode" do
-          _(query.operator.vocabularies).must_equal %w[ICD9CM CPT4]
+        it "#{op}#vocabularies returns [] because Episodes strip vocabulary metadata" do
+          _(query.operator.vocabularies).must_equal []
         end
       end
     end
 
-    describe 'wrapped in concurrent_within (CURRENT — flips to false/[] in conceptql-grt)' do
+    describe 'wrapped in concurrent_within' do
       let(:query) do
         db.query([:concurrent_within, [:episode, [:icd9, '250.00']], [:episode, [:cpt, '99214']],
                   { 'within' => '0d' }])
       end
 
-      it 'concurrent_within#multiple_vocabularies returns true via vocabularies aggregation' do
-        _(query.multiple_vocabularies).must_equal true
+      it 'concurrent_within#multiple_vocabularies returns false because Episodes report no vocabularies' do
+        _(query.multiple_vocabularies).must_equal false
       end
 
-      it 'concurrent_within#vocabularies aggregates upstream vocabs through Episode' do
-        _(query.operator.vocabularies).must_equal %w[ICD9CM CPT4]
+      it 'concurrent_within#vocabularies returns [] because Episodes strip vocabulary metadata' do
+        _(query.operator.vocabularies).must_equal []
       end
     end
 
-    # Anchor: bare vocabulary (no Episode wrapper) must not be affected by the grt fix.
-    describe 'anchors (must NOT change in conceptql-grt)' do
+    # Anchor: bare vocabulary (no Episode wrapper) must not be affected by the
+    # Episode override.
+    describe 'anchors (must NOT be affected by Episode override)' do
       it 'bare icd9 still reports vocabularies = [ICD9CM]' do
         query = db.query([:icd9, '250.00'])
         _(query.operator.vocabularies).must_equal ['ICD9CM']
