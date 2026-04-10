@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/outcomesinsights/sequel-duckdb.git
-  revision: 639daa0190cae562e26e8a0e3af74dc444b402dc
+  revision: 759e8a3d9f5145c8ee65c9caf40de6dbac89737c
   branch: main
   specs:
     sequel-duckdb (0.1.0)
@@ -65,7 +65,7 @@ GEM
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
-    bigdecimal (4.1.0)
+    bigdecimal (4.1.1)
     byebug (13.0.0)
       reline (>= 0.6.0)
     childprocess (5.1.0)
