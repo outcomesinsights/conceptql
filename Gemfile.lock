@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: d07f7c5e482074e631828afbf558a767d6695b66
+  revision: bd16133c51d64edf7680741c333a397001de04c1
   branch: main
   specs:
     sequelizer (0.2.0)
@@ -65,7 +65,7 @@ GEM
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
-    bigdecimal (4.1.0)
+    bigdecimal (4.1.1)
     byebug (13.0.0)
       reline (>= 0.6.0)
     childprocess (5.1.0)
