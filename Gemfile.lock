@@ -79,7 +79,7 @@ GEM
     docile (1.4.1)
     dotenv (3.2.0)
     drb (2.2.3)
-    duckdb (1.5.1.0)
+    duckdb (1.5.1.1)
       bigdecimal (>= 3.1.4)
     erb (6.0.2)
     hashie (5.1.0)
