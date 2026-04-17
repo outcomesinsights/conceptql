@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: bd16133c51d64edf7680741c333a397001de04c1
+  revision: 155449d9d07886ac24077b59913831f7906ef254
   branch: main
   specs:
     sequelizer (0.2.0)
