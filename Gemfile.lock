@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: 9a374b1a42c49c414f28de52ad7e53e82200c482
+  revision: 09a2914d5878564fbfcca342c821df4fc5b9fa36
   specs:
     sequel-hexspace (1.0.1)
       hexspace (>= 0.2.1)
@@ -63,7 +63,7 @@ GEM
       uri (>= 0.13.1)
     ast (2.4.3)
     base64 (0.3.0)
-    bigdecimal (4.1.1)
+    bigdecimal (4.1.2)
     byebug (13.0.0)
       reline (>= 0.6.0)
     childprocess (5.1.0)
