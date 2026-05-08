@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/outcomesinsights/sequel-duckdb.git
-  revision: 01e6c7ccedbe1177fe252e10ba549013e593ada2
+  revision: a8d24a11ed8c674ad1cab4c9d1653b1f00c301a7
   branch: main
   specs:
     sequel-duckdb (0.1.0)
@@ -175,7 +175,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    sequel (5.103.0)
+    sequel (5.104.0)
       bigdecimal
     simplecov (0.22.0)
       docile (~> 1.1)
