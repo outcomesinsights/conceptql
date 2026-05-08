@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: 09a2914d5878564fbfcca342c821df4fc5b9fa36
+  revision: 12868ce13a6a066d3147b79df827f92e511b286a
   specs:
     sequel-hexspace (1.0.1)
       hexspace (>= 0.2.1)
@@ -188,7 +188,8 @@ GEM
     sqlite3 (2.9.4-x86_64-linux-gnu)
     stringio (3.2.0)
     thor (1.5.0)
-    thrift (0.22.0)
+    thrift (0.23.0)
+      logger
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
