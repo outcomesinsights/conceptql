@@ -89,17 +89,19 @@ module ConceptQL
       end
 
       def gdm_wide_it(db, all_primary_ids, all_source_type_ids)
-        # TODO: Reinstate the original, less clunky version of this change once
-        # we stop supporting Spark 3.3.x
-        primary_cases = {}
-        all_primary_ids.each do |primary_id|
-          primary_cases[{ Sequel[:provenance_concept_id] => primary_id }] = 1
-        end
-
-        # This generates some gnarly SQL if there are no primary cases (like
-        # when we run a statement without a database to grab concepts from)
-        is_primary = Sequel[0]
-        is_primary = Sequel.case(primary_cases, 0) unless primary_cases.empty?
+        # Emit `CASE WHEN provenance_concept_id IN (...) THEN 1 ELSE 0 END`.
+        # The previous multi-WHEN form (`Sequel.case({{prov=>id1}=>1, {prov=>id2}=>1, ...}, 0)`)
+        # is mis-evaluated by Spark 3.3.2 when its result feeds the outer
+        # `CASE is_primary WHEN 1 THEN col ELSE NULL END` below. See conceptql-pk7.
+        is_primary =
+          if all_primary_ids.empty?
+            Sequel[0]
+          else
+            Sequel.case(
+              [[{ Sequel[:provenance_concept_id] => all_primary_ids }, 1]],
+              0
+            )
+          end
 
         db[:observations]
           .where(source_type_concept_id: all_source_type_ids)
