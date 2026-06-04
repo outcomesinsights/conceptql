@@ -66,3 +66,11 @@ test-full:
 
 bundle-update *ARGS:
     bundle update {{ARGS}}
+
+# Local pre-push CI gate — runs the default gdm_wide config (the primary
+# platform) before allowing a push. The other 2 Postgres configs and
+# Spark/DuckDB stay in remote CI as the last line of defense for cross-env
+# edge cases. Wired into the pre-push git hook; bypass with:
+#   git push --no-verify   (or SKIP_CI_GATE=1 git push)
+# Run `just test-full` to exercise all 3 Postgres configs manually.
+ci: test

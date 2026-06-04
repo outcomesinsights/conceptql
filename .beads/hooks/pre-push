@@ -22,3 +22,22 @@ if command -v bd >/dev/null 2>&1; then
   if [ $_bd_exit -ne 0 ]; then exit $_bd_exit; fi
 fi
 # --- END BEADS INTEGRATION v0.61.0 ---
+
+# --- BEGIN PROJECT CI GATE (not managed by beads) ---
+# Run the local CI-equivalent test suite before allowing a push, so remote
+# CI (billed) becomes the last line of defense for cross-environment edge
+# cases rather than the first place a problem surfaces.
+#   Bypass once:    git push --no-verify
+#   Bypass via env: SKIP_CI_GATE=1 git push
+if [ "${SKIP_CI_GATE:-}" != "1" ]; then
+  if command -v just >/dev/null 2>&1; then
+    echo "pre-push: running local CI gate (just ci)…" >&2
+    if ! just ci; then
+      echo "pre-push: CI gate FAILED — push blocked (bypass: git push --no-verify)" >&2
+      exit 1
+    fi
+  else
+    echo "pre-push: 'just' not found — skipping local CI gate" >&2
+  fi
+fi
+# --- END PROJECT CI GATE ---
