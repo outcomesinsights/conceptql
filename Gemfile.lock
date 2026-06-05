@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: f409fc36462ee11b67863e9e5d977144f46b6bfe
+  revision: 03b7e7b18b65d9c10310658a64b9861ffb28d6fd
   specs:
     sequel-hexspace (1.0.1)
       hexspace (>= 0.2.1)
@@ -194,7 +194,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    sequel (5.104.0)
+    sequel (5.105.0)
       bigdecimal
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -271,6 +271,7 @@ CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
+  bundler (4.0.13) sha256=19f08be7f27022cf0b89f27da0b044ae075e8270a9ef44ad248a932614e1ca3b
   byebug (13.0.0) sha256=d2263efe751941ca520fa29744b71972d39cbc41839496706f5d9b22e92ae05d
   childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
   climate_control (1.2.0) sha256=36b21896193fa8c8536fa1cd843a07cf8ddbd03aaba43665e26c53ec1bd70aa5
@@ -341,7 +342,7 @@ CHECKSUMS
   rubyzip (3.2.2) sha256=c0ed99385f0625415c8f05bcae33fe649ed2952894a95ff8b08f26ca57ea5b3c
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   selenium-webdriver (4.41.0) sha256=cdc1173cd55cf186022cea83156cc2d0bec06d337e039b02ad25d94e41bedd22
-  sequel (5.104.0) sha256=1521819b9204aa7f5c25b29fbb2a609ba3f6a82d2271f34f718e1169d31bf03e
+  sequel (5.105.0) sha256=4191d5e5d011b7229ff8a3401ca6beac047c4d35b1ec6703376513b4b25b2e67
   sequel-duckdb (0.1.0)
   sequel-hexspace (1.0.1)
   sequelizer (0.2.0)
