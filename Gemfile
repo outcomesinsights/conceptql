@@ -11,7 +11,7 @@ gem 'overcommit', '~> 0.71'
 # Transitive via rubocop. parallel 2.x requires ruby >= 3.4; pin to 1.x so the
 # lockfile installs cleanly on the ruby 3.2 CI floor (DuckDB job + docker test
 # image) instead of being downgraded at install time, which churns Gemfile.lock.
-gem 'parallel', '< 2.0'
+gem 'parallel', '< 3.0'
 
 group :duckdb, optional: true do
   gem 'duckdb'
