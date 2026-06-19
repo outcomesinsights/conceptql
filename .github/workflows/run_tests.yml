@@ -17,7 +17,7 @@ jobs:
       CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       -
         name: Log into DockerHub
         uses: docker/login-action@v4
@@ -53,7 +53,7 @@ jobs:
       CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
       BUNDLE_WITH: hexspace
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '4.0'
@@ -113,7 +113,7 @@ jobs:
       DUCKDB_TEST_DATA_URL: ${{ vars.DUCKDB_TEST_DATA_URL }}
       DUCKDB_TEST_DATA_URL_SECRET: ${{ secrets.DUCKDB_TEST_DATA_URL }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Derive DuckDB Version
         run: |
           version="$(ruby -e '
