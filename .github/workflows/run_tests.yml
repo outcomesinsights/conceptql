@@ -131,7 +131,7 @@ jobs:
           echo "DUCKDB_VERSION=$version" >> "$GITHUB_ENV"
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: '3.4'
       - name: Install libduckdb
         run: |
           curl -fsSL \
