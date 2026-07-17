@@ -75,7 +75,6 @@ GEM
     connection_pool (3.0.2)
     csv (3.3.5)
     date (3.5.1)
-    docile (1.4.1)
     dotenv (3.2.0)
     drb (2.2.3)
     duckdb (1.5.4.0)
@@ -197,12 +196,7 @@ GEM
       websocket (~> 1.0)
     sequel (5.106.0)
       bigdecimal
-    simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.13.2)
-    simplecov_json_formatter (0.1.4)
+    simplecov (1.0.1)
     sqlite3 (2.9.5)
       mini_portile2 (~> 2.8.0)
     sqlite3 (2.9.5-aarch64-linux-gnu)
@@ -262,7 +256,7 @@ DEPENDENCIES
   sequel-duckdb!
   sequel-hexspace!
   sequelizer!
-  simplecov (~> 0.22)
+  simplecov (~> 1.0)
   sqlite3 (~> 2.9)
   watir (~> 7.3)
 
@@ -280,7 +274,6 @@ CHECKSUMS
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
-  docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   duckdb (1.5.4.0) sha256=9ed7d00d50173fb17ed58e335cfc8f675507cd1303faf67e37c95c1ba774d66b
@@ -345,9 +338,7 @@ CHECKSUMS
   sequel-duckdb (0.1.0)
   sequel-hexspace (1.0.1)
   sequelizer (0.2.0)
-  simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
-  simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
-  simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
+  simplecov (1.0.1) sha256=419d93c40484159d20b40e26e9a83cdd4c3afa2f3fd443bb8946c301cd658d75
   sqlite3 (2.9.5) sha256=04572973a3f943ad50a8adfffc8dd752a5f06e4c3db2026f71838fed8a982606
   sqlite3 (2.9.5-aarch64-linux-gnu) sha256=78075b6337d3d182c6d2b4691049ed45cd220826160c9ea18946bf6a1de200dc
   sqlite3 (2.9.5-aarch64-linux-musl) sha256=18c801185deb4adc01ddb281e8f672a39e3d1729979ca91e39439cd3eac0402d
