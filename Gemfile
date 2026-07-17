@@ -14,5 +14,5 @@ group :duckdb, optional: true do
 end
 
 group :hexspace, optional: true do
-  gem 'sequel-hexspace', github: 'outcomesinsights/sequel-hexspace'
+  gem 'sequel-hexspace', github: 'outcomesinsights/sequel-hexspace', branch: 'main'
 end

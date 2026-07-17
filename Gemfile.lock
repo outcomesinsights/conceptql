@@ -8,7 +8,8 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: a7ff4356c135cf233cc2770ab3f191eac679a6e6
+  revision: 3300eaec7afb5f475935a66ac745ab7652baf527
+  branch: main
   specs:
     sequel-hexspace (1.0.1)
       hexspace (>= 0.2.1)
@@ -16,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: e885e7475f9428c9dc96cb7cf994c0052d23f448
+  revision: 8ec8987a498d6a569fd42bbb876bd1d20d2f60a0
   branch: main
   specs:
     sequelizer (0.2.0)
@@ -216,7 +217,7 @@ GEM
     sqlite3 (2.9.5-x86_64-linux-musl)
     stringio (3.2.0)
     thor (1.5.0)
-    thrift (0.23.0)
+    thrift (0.24.0)
       logger
     tsort (0.2.0)
     tzinfo (2.0.6)
@@ -360,7 +361,7 @@ CHECKSUMS
   sqlite3 (2.9.5-x86_64-linux-musl) sha256=e7d3a7474e8af0f96150c21abc203fbab5437206bfcdf11deab7741c0ca516f2
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
-  thrift (0.23.0) sha256=f7ea697a60b7b9318ba5df0a7c7c90f9411ea4f19eb096ed7ca720518708592f
+  thrift (0.24.0) sha256=4ccdcf2c7150de27547ce635725c8b1c85138ae5dea5667c7832abe1fec6c2c1
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (3.2.0) sha256=0cdd96b5681a5949cdbc2c55e7b420facae74c4aaf9a9815eee1087cb1853c42
