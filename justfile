@@ -67,6 +67,12 @@ test-full:
 bundle-update *ARGS:
     bundle update {{ARGS}}
 
+# Re-pin this gem's OI git deps to their current main HEAD (lock-only; review the diff).
+# sequelizer here is a bundler LOCAL override — run `just sync-oi-gems` (umbrella) first.
+bump-oi:
+    bundle lock --update sequelizer sequel-duckdb sequel-hexspace
+    @git --no-pager diff --stat -- Gemfile.lock
+
 # Local pre-push CI gate — runs the default gdm_wide config (the primary
 # platform) before allowing a push. The other 2 Postgres configs and
 # Spark/DuckDB stay in remote CI as the last line of defense for cross-env
