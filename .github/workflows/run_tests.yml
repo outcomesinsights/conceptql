@@ -65,7 +65,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ startsWith(matrix.spark_version, '4.') && '17' || '11' }}
 
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         with:
           path: ~/spark-${{ matrix.spark_version }}
           key: spark-${{ env.SPARK_VERSION }}
@@ -77,7 +77,7 @@ jobs:
           tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
           mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark-$SPARK_VERSION
 
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         with:
           path: /tmp/synpuf_test_data
           key: synpuf-test-data-v8
@@ -144,7 +144,7 @@ jobs:
           echo "LD_LIBRARY_PATH=$DUCKDB_LIB_DIR:${LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
       - run: bundle install
 
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         with:
           path: /tmp/synpuf_test_data.duckdb
           key: synpuf-test-data-duckdb-${{ hashFiles('.github/workflows/run_tests.yml') }}
