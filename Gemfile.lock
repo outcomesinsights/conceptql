@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/outcomesinsights/sequel-duckdb.git
-  revision: 23c3f0e43fad48d39489be6089916dc3ea2dbfaf
+  revision: 5a4ef2b2331bda6103c0d70a1406f7b3efd7c9a2
   branch: main
   specs:
     sequel-duckdb (0.1.0)
