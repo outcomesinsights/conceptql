@@ -147,7 +147,11 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: /tmp/synpuf_test_data.duckdb
-          key: synpuf-test-data-duckdb-${{ hashFiles('.github/workflows/run_tests.yml') }}
+          # Keyed on the checksum of the fixture, not on this workflow file, so
+          # the key tracks the DATA. Publishing a new fixture means updating
+          # .github/synpuf_test_data.sha256, which invalidates the cache by
+          # itself; editing this YAML no longer forces a 2 GB re-download.
+          key: synpuf-test-data-duckdb-${{ hashFiles('.github/synpuf_test_data.sha256') }}
         id: cache-synpuf-test-data-duckdb
       - name: Download DuckDB Data
         if: steps.cache-synpuf-test-data-duckdb.outputs.cache-hit != 'true'
@@ -157,9 +161,31 @@ jobs:
             echo "Missing DUCKDB_TEST_DATA_URL repo variable or secret"
             exit 1
           fi
-          curl -sSL "$url" > "$DUCKDB_TEST_DATA_PATH"
+          # -f so an HTTP error is an error. Without it curl happily writes the
+          # body of an error page to the file: when the Dropbox share behind
+          # this URL was deleted, every run downloaded a 189 KB HTML page titled
+          # "Dropbox - File Deleted", passed the old `test -s` check, and failed
+          # much later as "not a valid DuckDB database file".
+          curl -fsSL --retry 3 --retry-delay 5 "$url" -o "$DUCKDB_TEST_DATA_PATH"
 
-      - run: test -s "$DUCKDB_TEST_DATA_PATH"
+      # Runs on cache hit as well as after a download, so a truncated or stale
+      # cached fixture is caught here rather than inside the test run.
+      - name: Verify DuckDB Data
+        run: |
+          # Magic-byte check first, purely for a readable failure. A dead or
+          # permission-gated Dropbox link answers 200 with an HTML page, which
+          # -f cannot catch and a size test happily accepts; the checksum below
+          # would reject it, but only after hashing 2 GB and with a message that
+          # says nothing about what actually went wrong.
+          magic=$(dd if="$DUCKDB_TEST_DATA_PATH" bs=1 skip=8 count=4 2>/dev/null)
+          if [ "$magic" != "DUCK" ]; then
+            echo "Not a DuckDB file: magic at offset 8 is '$magic', expected 'DUCK'."
+            echo "First bytes were:"
+            head -c 200 "$DUCKDB_TEST_DATA_PATH"
+            exit 1
+          fi
+          cd "$(dirname "$DUCKDB_TEST_DATA_PATH")"
+          sha256sum -c "${GITHUB_WORKSPACE}/.github/synpuf_test_data.sha256"
       - run: bundle exec ruby test/all.rb
         env:
           SEQUELIZER_URL: duckdb://${{ env.DUCKDB_TEST_DATA_PATH }}
