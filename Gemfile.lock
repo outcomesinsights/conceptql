@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/outcomesinsights/sequel-duckdb.git
-  revision: b15690e1c55d027aa1b94dc3ffa1b48f4ce9b188
+  revision: 8c6b542b158d8f9fc78891e0f043b18e1356e11c
   branch: main
   specs:
     sequel-duckdb (0.1.0)
@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: 81902603a286c42b5f28d6eb224a3358a9e08809
+  revision: 73d01e2b4680a36b7abbdc6dbe59ecbda5ffcfaf
   branch: main
   specs:
     sequel-hexspace (1.0.1)
@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: fbab6f0a3a9e9af4e0e5791f3b817d66279e4f32
+  revision: 101385190114054e7da7838cf7036aaf07ca0d45
   branch: main
   specs:
     sequelizer (0.2.0)
