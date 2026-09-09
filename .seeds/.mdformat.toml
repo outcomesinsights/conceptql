@@ -1,0 +1,18 @@
+# The markdown formatter's settings for this seed store.
+#
+# seeds formats every body with mdformat as it writes it, and reads THIS file
+# for the options -- the same file mdformat itself discovers, because it
+# searches upward from each file's own directory. So a plain `mdformat .` over
+# the repo is a no-op on the store instead of a churn of every seed, and the
+# repo's other markdown is left on mdformat's defaults.
+#
+# `extensions` is an allowlist, and it belongs here: without it, an operator
+# whose mdformat has extra plugins installed would format the store
+# differently from the way seeds wrote it. `frontmatter` is not optional --
+# drop it and mdformat reads the opening `---` as a thematic break and
+# destroys every seed's frontmatter.
+extensions = ["frontmatter", "gfm"]
+
+# Keep a hand-numbered list numbered. mdformat's default rewrites 1. 2. 3. to
+# 1. 1. 1., which renders the same but edits text somebody may have quoted.
+number = true
