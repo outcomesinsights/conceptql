@@ -45,3 +45,7 @@ claude_stuff/
 # Dolt database files (added by bd init)
 .dolt/
 *.db
+
+# Beads export — derived. The Dolt remote at refs/dolt/data is the store
+# and the backup; this file is kept on disk for local grep only.
+.beads/issues.jsonl
