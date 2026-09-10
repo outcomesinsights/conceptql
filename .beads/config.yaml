@@ -53,3 +53,4 @@
 # - github.org
 # - github.repo
 
+sync.remote: "git+https://github.com/outcomesinsights/conceptql.git"
