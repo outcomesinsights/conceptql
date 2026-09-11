@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: 73d01e2b4680a36b7abbdc6dbe59ecbda5ffcfaf
+  revision: 09824465fe24cfcb51d583731190e25bfcdcb29a
   branch: main
   specs:
     sequel-hexspace (1.0.1)
@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequelizer.git
-  revision: ede469a3ed51c7dbdadc5dba960dd9c3f5bb2644
+  revision: 971228efddcdefe71bbb25abd17a2699ec9afd55
   branch: main
   specs:
     sequelizer (0.2.0)
