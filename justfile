@@ -79,7 +79,7 @@ bump-oi:
 # edge cases. Wired into the pre-push git hook; bypass with:
 #   git push --no-verify   (or SKIP_CI_GATE=1 git push)
 # Run `just test-full` to exercise all 3 Postgres configs manually.
-ci: fmt-check test
+ci: fmt-check test hygiene
 
 # Rewrite files to canonical format. Run deliberately; never from a hook.
 fmt:
@@ -100,4 +100,23 @@ pre-push: ci
 
 # Runs on every commit, so it must stay FAST — a sub-minute budget. Tests belong
 # here when they fit; lint alone when they do not. fmt-check never rewrites.
-pre-commit: fmt-check
+pre-commit: fmt-check hygiene
+
+# Content checks inherited from overcommit when it was removed (2026-09-12):
+# MergeConflicts, YamlSyntax, JsonSyntax. RuboCop and the test target were already
+# covered by fmt-check/lint/test; HardTabs and TrailingWhitespace were dropped because
+# they fight shfmt, .tsv, and generated files. See habituate/standards.md.
+hygiene:
+    #!/usr/bin/env bash
+    set -uo pipefail
+    rc=0
+    bad=$(git ls-files | xargs -r grep -IlE '^(<{7}|={7}|>{7})( |$)' 2>/dev/null || true)
+    [ -n "$bad" ] && { echo "merge conflict markers:"; printf '%s\n' "$bad" | sed 's/^/  /'; rc=1; }
+    for f in $(git ls-files '*.yml' '*.yaml'); do
+      python3 -c 'import yaml,sys; yaml.safe_load(open(sys.argv[1]))' "$f" 2>/dev/null \
+        || { echo "invalid YAML: $f"; rc=1; }
+    done
+    for f in $(git ls-files '*.json'); do
+      jq empty "$f" 2>/dev/null || { echo "invalid JSON: $f"; rc=1; }
+    done
+    exit $rc
