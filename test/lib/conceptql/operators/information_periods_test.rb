@@ -22,11 +22,13 @@ describe ConceptQL::Operators::InformationPeriods do
 
   it 'should produce correct SQL under gdm' do
     cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
+
     assert_information_periods_sql(cdb.query(['information_periods']), 'information_periods')
   end
 
   it 'should produce correct SQL under omopv4_plus' do
     cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
+
     assert_information_periods_sql(cdb.query(['information_periods']), 'observation_period')
   end
 end

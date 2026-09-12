@@ -23,6 +23,7 @@ describe ConceptQL::Window::Table do
 
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
+
       _(outer_select).must_equal(%i[person_id start_date])
     end
 
@@ -50,6 +51,7 @@ describe ConceptQL::Window::Table do
 
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
+
       _(outer_select).must_equal(%i[person_id start_date])
     end
 
@@ -64,6 +66,7 @@ describe ConceptQL::Window::Table do
       # Should NOT trigger a DB query (columns! would fail on nonexistent table)
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
+
       _(outer_select).must_equal(%i[person_id criterion_id start_date end_date])
     end
 
@@ -73,6 +76,7 @@ describe ConceptQL::Window::Table do
 
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
+
       _(outer_select).must_equal(%i[person_id start_date])
     end
 
@@ -83,6 +87,7 @@ describe ConceptQL::Window::Table do
 
       result = window.send(:remove_window_id, ds)
       outer_select = result.opts[:select]
+
       _(outer_select).must_equal([:person_id, source_value_expr])
     end
   end
@@ -106,21 +111,25 @@ describe ConceptQL::Window::Table do
 
     it 'matches AliasedExpression with window_id alias' do
       expr = Sequel.cast(nil, :Bigint).as(:window_id)
+
       _(window.send(:window_id_column?, expr)).must_equal true
     end
 
     it 'does not match AliasedExpression with other alias' do
       expr = Sequel.cast(nil, String).as(:source_value)
+
       _(window.send(:window_id_column?, expr)).must_equal false
     end
 
     it 'matches QualifiedIdentifier with window_id column' do
       expr = Sequel[:t][:window_id]
+
       _(window.send(:window_id_column?, expr)).must_equal true
     end
 
     it 'does not match QualifiedIdentifier with other column' do
       expr = Sequel[:t][:person_id]
+
       _(window.send(:window_id_column?, expr)).must_equal false
     end
   end

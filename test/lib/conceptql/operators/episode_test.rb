@@ -33,6 +33,7 @@ describe ConceptQL::Operators::Episode do
     describe 'events_per_patient (Episode forwards to upstream)' do
       it 'inherits :multiple from a multi-event upstream' do
         query = db.query([:episode, [:icd9, '250.00']])
+
         _(query.events_per_patient).must_equal :multiple
       end
 
@@ -40,6 +41,7 @@ describe ConceptQL::Operators::Episode do
         # If Episode hardcodes a return value, multi and single will collapse.
         multi = db.query([:episode, [:icd9, '250.00']])
         single = db.query([:episode, [:first, [:icd9, '250.00']]])
+
         _(multi.events_per_patient).must_equal :multiple
         _(single.events_per_patient).must_equal :single
         _(multi.events_per_patient).wont_equal single.events_per_patient
@@ -48,6 +50,7 @@ describe ConceptQL::Operators::Episode do
       it 'forwards to upstream value identically' do
         upstream_query = db.query([:first, [:icd9, '250.00']])
         episode_query = db.query([:episode, [:first, [:icd9, '250.00']]])
+
         _(episode_query.events_per_patient).must_equal upstream_query.events_per_patient
       end
     end
@@ -55,11 +58,13 @@ describe ConceptQL::Operators::Episode do
     describe 'multiple_vocabularies (Episode strips vocab metadata)' do
       it 'returns false when upstream has a single vocabulary' do
         query = db.query([:episode, [:icd9, '250.00']])
+
         _(query.multiple_vocabularies).must_equal false
       end
 
       it 'returns false even when upstream is a union of multiple vocabularies' do
         query = db.query([:episode, [:union, [:icd9, '250.00'], [:cpt, '99214']]])
+
         _(query.multiple_vocabularies).must_equal false
       end
     end
@@ -67,11 +72,13 @@ describe ConceptQL::Operators::Episode do
     describe 'vocabularies (Episode strips vocab metadata)' do
       it 'returns [] regardless of upstream vocabulary IDs' do
         query = db.query([:episode, [:icd9, '250.00']])
+
         _(query.operator.vocabularies).must_equal []
       end
 
       it 'returns [] even when upstream is a union of multiple vocabularies' do
         query = db.query([:episode, [:union, [:icd9, '250.00'], [:cpt, '99214']]])
+
         _(query.operator.vocabularies).must_equal []
       end
     end
@@ -84,7 +91,7 @@ describe ConceptQL::Operators::Episode do
     # That cross-check is the entire point of these tests — do NOT loosen them.
     [
       [:union],
-      [:co_reported]
+      [:co_reported],
     ].each do |op, *opts|
       describe "wrapped in #{op}" do
         let(:query) do
@@ -121,16 +128,19 @@ describe ConceptQL::Operators::Episode do
     describe 'anchors (must NOT be affected by Episode override)' do
       it 'bare icd9 still reports vocabularies = [ICD9CM]' do
         query = db.query([:icd9, '250.00'])
+
         _(query.operator.vocabularies).must_equal ['ICD9CM']
       end
 
       it 'bare icd9 still reports multiple_vocabularies = false' do
         query = db.query([:icd9, '250.00'])
+
         _(query.multiple_vocabularies).must_equal false
       end
 
       it 'union of two icd9 codes still reports multiple_vocabularies = false' do
         query = db.query([:union, [:icd9, '250.00'], [:icd9, '401.1']])
+
         _(query.multiple_vocabularies).must_equal false
       end
     end

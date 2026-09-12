@@ -31,21 +31,25 @@ describe ConceptQL::Operators::Numeric do
     describe 'with upstream (with_kids path — inherits from upstream)' do
       it 'inherits events_per_patient :multiple from a multi-event upstream' do
         query = db.query([:numeric, 1, [:icd9, '250.00']])
+
         _(query.events_per_patient).must_equal :multiple
       end
 
       it 'inherits events_per_patient :single from a single-event upstream' do
         query = db.query([:numeric, 1, [:first, [:icd9, '250.00']]])
+
         _(query.events_per_patient).must_equal :single
       end
 
       it 'inherits multiple_vocabularies from upstream (single vocab)' do
         query = db.query([:numeric, 1, [:icd9, '250.00']])
+
         _(query.multiple_vocabularies).must_equal false
       end
 
       it 'aggregates vocabularies from upstream' do
         query = db.query([:numeric, 1, [:icd9, '250.00']])
+
         _(query.operator.vocabularies).must_equal ['ICD9CM']
       end
     end
@@ -56,11 +60,13 @@ describe ConceptQL::Operators::Numeric do
         # numeric leaves use the as_criterion path and report :single via
         # the override, so Union also reports :single.
         query = db.query([:union, [:numeric, 1], [:numeric, 2]])
+
         _(query.events_per_patient).must_equal :single
       end
 
       it 'union(numeric, numeric) reports multiple_vocabularies false' do
         query = db.query([:union, [:numeric, 1], [:numeric, 2]])
+
         _(query.multiple_vocabularies).must_equal false
       end
     end
@@ -77,6 +83,7 @@ describe ConceptQL::Operators::Numeric do
       # what guarantees the default is emitted.
       query = db.query([:numeric, 1])
       sql = query.sql
+
       _(sql).must_match(/CAST\('default' AS text\) AS "column_family"/)
       _(sql).wont_match(/CAST\(NULL AS text\) AS "column_family"/)
     end
@@ -87,6 +94,7 @@ describe ConceptQL::Operators::Numeric do
       # flows through from the upstream operator's value of 'default'.
       query = db.query([:numeric, 1, [:icd9, '250.00']])
       sql = query.sql
+
       _(sql).must_match(/CAST\('default' AS text\) AS "column_family"/)
     end
   end
