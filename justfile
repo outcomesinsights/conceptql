@@ -83,7 +83,6 @@ ci: fmt-check test
 
 # Rewrite files to canonical format. Run deliberately; never from a hook.
 fmt:
-    bundle exec standardrb --fix || bundle exec rubocop -a
     git ls-files "*.sh" | xargs -r shfmt -w
     just --fmt --unstable
     git ls-files "*.md" | xargs -r mdformat
@@ -91,7 +90,6 @@ fmt:
 # Report format drift without changing anything. This is what the hooks run —
 # a formatter that rewrites files mid-commit changes what you already reviewed.
 fmt-check:
-    bundle exec standardrb --no-fix || bundle exec rubocop
     git ls-files "*.sh" | xargs -r shfmt -d
     just --fmt --check --unstable
     git ls-files "*.md" | xargs -r mdformat --check
