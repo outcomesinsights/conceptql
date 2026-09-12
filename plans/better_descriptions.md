@@ -99,27 +99,32 @@ These operators take two streams and use `example_input.left_stream` and `exampl
 ## Operators with Specific Keywords/Options
 
 ### Gender
+
 ```
 options: ["Male", "Female", "Unknown"]
 ```
 
 ### Ethnicity
+
 ```
 options: ["Hispanic or Latino", "Not Hispanic or Latino"]
 ```
 
 ### Race
+
 ```
 options: Race vocabulary codes (e.g., "White", "Black or African American", "Asian", etc.)
 ```
 
 ### Provenance
+
 ```
 options: Provenance concept codes from the database vocabulary
 Examples: "inpatient", "outpatient", "carrier", or concept IDs like "38000204"
 ```
 
 ### One In Two Out
+
 ```
 options:
   - inpatient_length_of_stay: integer (default: 0)
@@ -129,6 +134,7 @@ options:
 ```
 
 ### Time Window
+
 ```
 options:
   - start: date adjustment string (e.g., "-30d", "1y", "-2m")
@@ -136,6 +142,7 @@ options:
 ```
 
 ### Date Range
+
 ```
 options:
   - start: date string (YYYY-MM-DD format)
@@ -143,6 +150,7 @@ options:
 ```
 
 ### Numeric Filter
+
 ```
 options:
   - greater_than_or_equal_to: float
@@ -150,12 +158,14 @@ options:
 ```
 
 ### Episode
+
 ```
 options:
   - gap_of: integer (days between records to merge into same episode)
 ```
 
 ### Occurrence
+
 ```
 options:
   - at_least: date adjustment (minimum gap from previous occurrence)
@@ -164,6 +174,7 @@ options:
 ```
 
 ### Temporal Operators (After, Before, During, Contains, Any Overlap)
+
 ```
 options:
   - within: date adjustment (maximum distance between records)
@@ -171,6 +182,7 @@ options:
 ```
 
 ### Provider Filter
+
 ```
 options:
   - specialties: comma-separated specialty concept IDs (required)
@@ -178,6 +190,7 @@ options:
 ```
 
 ### Concurrent Within
+
 ```
 options:
   - start: date adjustment for start date
@@ -187,6 +200,7 @@ options:
 ## Date Adjustment Format
 
 Many operators accept date adjustment strings in the format:
+
 - `Nd` - N days (e.g., "30d", "-7d")
 - `Nw` - N weeks
 - `Nm` - N months
@@ -197,6 +211,7 @@ Negative values move backward in time, positive values move forward.
 ## Example Record Structure
 
 ConceptQL records typically contain:
+
 - `person_id` - Patient identifier
 - `criterion_id` - Record identifier
 - `criterion_domain` - Type of record (condition_occurrence, drug_exposure, etc.)

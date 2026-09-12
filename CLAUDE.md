@@ -64,6 +64,7 @@ SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose r
 ```
 
 The `test_data` image (`outcomesinsights/misc:test_data.ignitor`) contains:
+
 - `slim` schema — GDM data tables (patients, clinical_codes, etc.)
 - `wide` schema — GDM wide tables (observations, supplemented_payer_reimbursements)
 - `ohdsi_vocabs` schema — OHDSI vocabulary tables (concept, concept_ancestor, etc.)
@@ -90,6 +91,7 @@ bundle exec rake test_cov
 ```
 
 Default values from `bin/run_tests`:
+
 - `SEQUELIZER_URL`: `postgres://ryan:r@titan.jsaw.io/test_data?search_path=wide,slim,ohdsi_vocabs`
 - `CONCEPTQL_DATA_MODEL`: `gdm_wide`
 
