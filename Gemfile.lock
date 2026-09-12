@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/outcomesinsights/sequel-hexspace.git
-  revision: 09824465fe24cfcb51d583731190e25bfcdcb29a
+  revision: 7eed20fdad9636211d2157c8733abc70f9ff2869
   branch: main
   specs:
     sequel-hexspace (1.0.1)
