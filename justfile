@@ -79,4 +79,27 @@ bump-oi:
 # edge cases. Wired into the pre-push git hook; bypass with:
 #   git push --no-verify   (or SKIP_CI_GATE=1 git push)
 # Run `just test-full` to exercise all 3 Postgres configs manually.
-ci: test
+ci: fmt-check test
+
+# Rewrite files to canonical format. Run deliberately; never from a hook.
+fmt:
+    bundle exec standardrb --fix || bundle exec rubocop -a
+    git ls-files "*.sh" | xargs -r shfmt -w
+    just --fmt --unstable
+    git ls-files "*.md" | xargs -r mdformat
+
+# Report format drift without changing anything. This is what the hooks run —
+# a formatter that rewrites files mid-commit changes what you already reviewed.
+fmt-check:
+    bundle exec standardrb --no-fix || bundle exec rubocop
+    git ls-files "*.sh" | xargs -r shfmt -d
+    just --fmt --check --unstable
+    git ls-files "*.md" | xargs -r mdformat --check
+
+# What actually runs before a push. Defaults to the complete `ci`; point it at
+# something smaller ONLY where running complete CI locally is impractical.
+pre-push: ci
+
+# Runs on every commit, so it must stay FAST — a sub-minute budget. Tests belong
+# here when they fit; lint alone when they do not. fmt-check never rewrites.
+pre-commit: fmt-check
