@@ -120,3 +120,37 @@ hygiene:
       jq empty "$f" 2>/dev/null || { echo "invalid JSON: $f"; rc=1; }
     done
     exit $rc
+
+# Arm THIS clone's git hooks. A gate in .git/hooks is per-clone and untracked, so a
+# fresh clone silently has none; this recipe is the tracked declaration that one is
+# expected, plus the installer. `habituate repo-doctor` reports an unarmed clone.
+# Chains the beads hook first and preserves any hook it did not write.
+hooks:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="$(git rev-parse --show-toplevel)"
+    hooks="$(git rev-parse --git-path hooks)"
+    mkdir -p "$hooks"
+    for h in pre-commit pre-push; do
+        just --summary 2>/dev/null | tr ' ' '\n' | grep -qx "$h" || continue
+        live="$hooks/$h"
+        # Never clobber a hook this recipe did not write; chain it instead.
+        keep=""
+        if [ -f "$live" ] && ! grep -qs 'just hooks' "$live"; then
+            mkdir -p "$hooks/preserved"
+            keep="$hooks/preserved/$h"
+            [ -e "$keep" ] || { mv "$live" "$keep"; chmod +x "$keep"; }
+        fi
+        {
+            echo '#!/usr/bin/env sh'
+            echo '# Written by `just hooks`. Re-run to regenerate.'
+            echo 'set -e'
+            echo 'root="$(git rev-parse --show-toplevel)"'
+            echo 'hooks="$(git rev-parse --git-path hooks)"'
+            [ -n "$keep" ] && echo "p=\"\$hooks/preserved/$h\"; [ -x \"\$p\" ] && { \"\$p\" \"\$@\" || exit \$?; }"
+            echo "b=\"\$root/.beads/hooks/$h\"; [ -x \"\$b\" ] && { \"\$b\" \"\$@\" || exit \$?; }"
+            echo "cd \"\$root\" && exec just $h"
+        } > "$live"
+        chmod +x "$live"
+        echo "armed: $h"
+    done
