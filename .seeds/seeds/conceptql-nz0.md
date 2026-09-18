@@ -4,7 +4,7 @@ title: LexiconStrategy#concepts wildcard branch is unreachable — delete or rai
 status: captured
 type: question
 created_at: 2026-09-18T16:51:39.478325+00:00
-updated_at: 2026-09-18T17:05:41.408512+00:00
+updated_at: 2026-09-18T17:23:16.952959+00:00
 ---
 
 `lib/conceptql/lexicon/lexicon_strategy.rb:14`
@@ -175,3 +175,35 @@ feature. Nothing is lost by removing the `unless` clause outright. A raise is
 worth adding only on its own merits -- turning a silently-empty result into a
 named error -- and if added must tolerate Array and Integer per the polymorphism
 section above.
+
+## DECISION (Ryan, 2026-09-18): option (b) with (a) folded in
+
+Delete the bypass AND raise. Implement now.
+
+Final shape:
+
+```
+raise ArgumentError, "..." if vocabulary_id.blank? || Array(vocabulary_id).include?('*')
+ds = ds.where(vocabulary_id: vocabulary_id)     # unconditional
+```
+
+Three things the guard has to get right, all established above:
+
+1. `blank?` not a type check. `17.blank?` is false, `%w[A B].blank?` is false,
+   so ReadOmop's Integer and the four provenance Arrays pass through untouched.
+   `nil` and `''` raise, and an EMPTY Array raises too -- which is correct, since
+   `where(vocabulary_id: [])` silently matches nothing.
+2. `Array(vocabulary_id).include?('*')` rather than `== '*'`, so `['*']` is caught
+   as well as the bare string. `Array(nil)` is `[]`, but `blank?` has already
+   raised by then.
+3. The raise goes FIRST, before `concepts_table`, so the error names the mistake
+   before any query is built.
+
+Not touched: `concepts_ds`, `vocabulary_is_empty?`, `concepts_by_name`. They
+already filter unconditionally and were never part of the defect.
+
+Also unchanged: `Vocabulary#select_all?` and everything reading `'*'` out of
+`arguments`. That is the real 2017 feature and it stays exactly as it is. The
+whole point of this change is that the two asterisks are unrelated.
+
+Tracked as bead conceptql-7dr.

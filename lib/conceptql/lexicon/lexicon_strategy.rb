@@ -8,10 +8,26 @@ module ConceptQL
       @db = db
     end
 
+    # A lookup is always scoped to a vocabulary. `vocabulary_id` is polymorphic:
+    # a String, an Integer (ReadOmop reports 17), or an Array of vocabulary names
+    # (the provenance-type pairs), which Sequel turns into an IN clause.
+    #
+    # There is deliberately no wildcard. `'*'` is meaningful elsewhere in the
+    # operator family, but only in `arguments` — Vocabulary#select_all? reads it
+    # there and *skips* the lexicon call entirely. An earlier version of this
+    # method honoured `'*'` here too, which no caller ever used and which read as
+    # support for cross-vocabulary lookup that does not exist.
     def concepts(_data_db, vocabulary_id, codes = [])
+      if vocabulary_id.blank? || Array(vocabulary_id).include?('*')
+        raise ArgumentError,
+              "concepts requires a specific vocabulary, got #{vocabulary_id.inspect}. " \
+              'There is no wildcard lookup; pass a vocabulary name, an Array of them, ' \
+              "or an id. ('*' belongs in arguments, where Vocabulary#select_all? handles it.)"
+      end
+
       ds = concepts_table(_data_db)
 
-      ds = ds.where(vocabulary_id: vocabulary_id) unless vocabulary_id == '*'
+      ds = ds.where(vocabulary_id: vocabulary_id)
       ds = ds.where(Sequel.function(:lower, :concept_code) => Array(codes).map(&:downcase)) unless codes.blank?
 
       ds
