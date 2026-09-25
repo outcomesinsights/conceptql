@@ -84,12 +84,15 @@ module ConceptQL
         node = {
           name: name.to_s,
           base: metadata_for(name)[:basic_type]&.to_s,
-          humanName: opts[:name] || metadata_for(name)[:preferred_name] || name.to_s,
+          humanName: opts[:name] || metadata_for(name)[:preferred_name] || name.to_s
+        }
+        node[:vocabularyId] = metadata_for(name)[:preferred_name] if vocabulary?(name)
+        node.merge!(
           outputTypes: output_types(annotation),
           parameters: opts.except(*STRUCTURAL_OPTIONS),
           values: values,
           children: children.map { |child| node(child) }
-        }
+        )
         node[:counts] = counts(annotation) if counts?
         node[:errors] = annotation[:errors] if annotation[:errors].present?
         node[:warnings] = annotation[:warnings] if annotation[:warnings].present?
@@ -112,12 +115,31 @@ module ConceptQL
       end
 
       def metadata_for(name)
-        name = name.to_s
-        operators_metadata[name] || operators_metadata[aliases[name]] || {}
+        operators_metadata[canonical_name(name)] || {}
       end
 
       def operators_metadata
         @operators_metadata ||= ConceptQL.metadata(cdb)[:operators]
+      end
+
+      # A single-vocabulary operator (icd9, loinc, ...). Its metadata
+      # preferred_name is the vocabulary's ID (Entry#preferred_name:
+      # omopv5_id || id, e.g. "ICD9CM", "LOINC"), which a renderer can show
+      # when the humanName (the vocabulary's short name) is too long.
+      # Multi-vocabulary operators ("CPT or HCPCS") span several IDs, so they
+      # are not included.
+      def vocabulary?(name)
+        klass = operator_classes[canonical_name(name)]
+        !klass.nil? && klass <= ConceptQL::Operators::Vocabulary
+      end
+
+      def operator_classes
+        @operator_classes ||= ConceptQL::Operators.operators.fetch(cdb.opts[:data_model].to_sym)
+      end
+
+      def canonical_name(name)
+        name = name.to_s
+        operators_metadata.key?(name) ? name : aliases[name]
       end
 
       def aliases

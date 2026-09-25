@@ -25,6 +25,7 @@ describe ConceptQL::Diagram do
       name: 'icd9',
       base: 'selection',
       humanName: human('icd9', '412'),
+      vocabularyId: 'ICD9CM',
       outputTypes: ['condition_occurrence'],
       parameters: {},
       values: codes,
@@ -69,6 +70,7 @@ describe ConceptQL::Diagram do
                 name: 'condition_type',
                 base: 'selection',
                 humanName: human('condition_type', 'inpatient'),
+                vocabularyId: 'Condition Type',
                 outputTypes: ['condition_occurrence'],
                 parameters: {},
                 values: ['inpatient'],
@@ -162,6 +164,17 @@ describe ConceptQL::Diagram do
       _(render([%w[icd9 412], %w[icd9 799.22]])[:statements]).must_equal([icd9('412'), icd9('799.22')])
     end
 
+    it 'gives only single-vocabulary operators a vocabularyId, right after humanName' do
+      union = render(['union', %w[loinc 2160-0], %w[cpt_or_hcpcs 99214], ['person']])[:statements].first
+      loinc, cpt_or_hcpcs, person = union[:children]
+
+      _(loinc[:vocabularyId]).must_equal('LOINC')
+      _(loinc.keys).must_equal(%i[name base humanName vocabularyId outputTypes parameters values children])
+      _(union.key?(:vocabularyId)).must_equal(false)
+      _(cpt_or_hcpcs.key?(:vocabularyId)).must_equal(false) # spans CPT4 and HCPCS
+      _(person.key?(:vocabularyId)).must_equal(false)
+    end
+
     it 'omits counts unless asked for them' do
       _(render([%w[icd9 412]])[:statements].first.key?(:counts)).must_equal(false)
     end
@@ -229,7 +242,7 @@ describe ConceptQL::Diagram do
 
       _(doc['format']).must_equal('conceptql-diagram/v1')
       _(doc['statements']).must_equal(
-        [{ 'name' => 'icd9', 'base' => 'selection', 'humanName' => human('icd9', '412'),
+        [{ 'name' => 'icd9', 'base' => 'selection', 'humanName' => human('icd9', '412'), 'vocabularyId' => 'ICD9CM',
            'outputTypes' => ['condition_occurrence'], 'parameters' => {}, 'values' => ['412'], 'children' => [] }]
       )
     end
@@ -243,6 +256,7 @@ describe ConceptQL::Diagram do
               "name": "cpt",
               "base": "selection",
               "humanName": "#{human("cpt", "99214")}",
+              "vocabularyId": "CPT4",
               "outputTypes": [
                 "procedure_occurrence"
               ],
