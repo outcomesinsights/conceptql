@@ -39,6 +39,11 @@ module ConceptQL
       private
 
       def additional_validation(db, _opts = {})
+        # With no lexicon there are no provenance concepts to check against,
+        # and every keyword would be reported as unrecognized. Vocabulary
+        # operators skip their unknown-code check in the same situation.
+        return if dm.lexicon.strategy == :no_db
+
         bad_keywords = find_bad_keywords(db, arguments)
         return unless bad_keywords.present?
 

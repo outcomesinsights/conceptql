@@ -175,6 +175,25 @@ describe ConceptQL::Diagram do
       _(person.key?(:vocabularyId)).must_equal(false)
     end
 
+    # Provenance reads the lexicon while validating; db-less that lexicon is
+    # LexiconNoDB, which used to raise, and whose empty concept list used to
+    # flag every keyword as unrecognized.
+    it 'renders provenance without a database, with no false keyword error' do
+      _(render([['provenance', 'inpatient', ['icd9', '250.00']]])[:statements]).must_equal(
+        [
+          {
+            name: 'provenance',
+            base: 'temporal',
+            humanName: 'Provenance',
+            outputTypes: ['condition_occurrence'],
+            parameters: {},
+            values: ['inpatient'],
+            children: [icd9('250.00')],
+          },
+        ]
+      )
+    end
+
     it 'omits counts unless asked for them' do
       _(render([%w[icd9 412]])[:statements].first.key?(:counts)).must_equal(false)
     end
