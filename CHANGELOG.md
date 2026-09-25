@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Support REQUEST_POOL option for Impala (#89)
+- `conceptql render_json STATEMENT_FILE [--counts] [--data-model=...]` prints statements as a
+  `conceptql-diagram/v1` render tree for the diagram renderer (`ConceptQL::Diagram`), plus
+  `ConceptQL::Diagram::JigsawTree`, a port of the diagram editor's ConceptqlAdapter
 
 ### Fixed
 

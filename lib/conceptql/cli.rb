@@ -82,6 +82,29 @@ module ConceptQL
       pp q.scope_annotate(skip_counts: true)
     end
 
+    desc 'render_json STATEMENT_FILE',
+         "Prints the statement(s) as a #{ConceptQL::Diagram::FORMAT} render tree (JSON) for the diagram renderer"
+    long_desc <<~DESC
+      STATEMENT_FILE holds one ConceptQL statement or an array of them (.json, or Ruby for any other extension).
+      Prints {"format": "#{ConceptQL::Diagram::FORMAT}", "statements": [<node>, ...]}, one node per statement.
+
+      Without --counts no claims database is used. With --counts each node gains
+      "counts": {<domain>: {"rows": Integer, "n": Integer}}, computed against the database
+      given by the connection options (or sequelizer's configuration).
+    DESC
+    option :counts, type: :boolean, default: false, desc: 'annotate with per-domain row/person counts (needs a DB)'
+    option :data_model, desc: 'data model: gdm, gdm_wide, omopv4_plus (default: $CONCEPTQL_DATA_MODEL or gdm)'
+    def render_json(statement_file)
+      cdb = if options[:counts]
+              ConceptQL::Database.new(db(options.except('counts', 'data_model')),
+                                      { data_model: options[:data_model] }.compact)
+            else
+              ConceptQL::Diagram.default_cdb(options[:data_model])
+            end
+      doc = ConceptQL::Diagram.render(criteria_from_file(statement_file), cdb: cdb, counts: options[:counts])
+      puts JSON.pretty_generate(doc)
+    end
+
     desc 'metadata', 'Generates the metadata.js file for the JAM'
     def metadata
       File.write('metadata.js', "$metadata = #{ConceptQL.metadata(cdb(options), warn: true).to_json};")

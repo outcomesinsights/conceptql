@@ -17,6 +17,7 @@ require 'conceptql/null_query'
 require 'conceptql/database'
 require 'conceptql/data_model'
 require 'conceptql/columnizer'
+require 'conceptql/diagram'
 
 # byebug is only required during development
 begin
