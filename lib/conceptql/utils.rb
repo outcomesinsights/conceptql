@@ -2,7 +2,6 @@
 
 require 'json'
 require 'timeout'
-require 'pry-byebug'
 
 module ConceptQL
   module Utils
