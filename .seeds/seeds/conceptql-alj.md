@@ -4,7 +4,7 @@ title: require 'conceptql' connects to a database at load time -- make vocabular
 status: captured
 type: exploration
 created_at: 2026-09-28T15:09:16.242515+00:00
-updated_at: 2026-09-28T15:09:16.242515+00:00
+updated_at: 2026-09-28T15:55:05.331910+00:00
 tags:
   - load-time
   - lexicon
@@ -113,3 +113,52 @@ consequence 3 has ever bitten or is likely to. Not decided; not authorized to bu
   no direct reads, only `ConceptQL::Database.new(...)`; conceptql_spec was not checked.
 - Is DuckDB a production target or only a test matrix entry? Consequence 1 matters
   far more if production processes share a DuckDB file.
+
+## Ruled (Ryan, 2026-09-28): option (B), per-Database registry
+
+DuckDB is a PRODUCTION target, not only a test-matrix entry. So "a second process
+cannot load conceptql while another holds the DuckDB file" is a production defect,
+not a CI nuisance -- and (A) was never going to be enough, because (A) keeps the
+operator set tied to whatever was reachable at boot.
+
+Design constraint that follows from DuckDB-in-production: the vocabulary lookup
+for a `ConceptQL::Database` must go through THAT Database's own connection. It must
+not open a second connection (no Sequelizer `db` from env, no class-level memoized
+lexicon). Unverified whether DuckDB even allows a second handle on the same file
+inside one process; do not design in a way that needs the answer.
+
+## Impact on conceptql_spec (read-only survey, 2026-09-28)
+
+conceptql_spec (the ConceptQL spec/README generator) tracks conceptql `main` in its
+Gemfile (lock currently at 6985c32d). What it does with conceptql:
+
+- lib/knitter.rb and exe/annotate.rb build `ConceptQL::Database.new(db)` from their
+  own Sequelizer connection and use `cdb.query` / `ConceptQL::Diagram.render(..., cdb:)`.
+  Every path is already Database-first, which is exactly the shape (B) wants. No
+  conceptql_spec code should need to change for (B).
+- It loads today only by luck of ordering: exe/knit.rb requires conceptql BEFORE
+  calling `Dotenv.load!`, so the load-time connection works only because Sequelizer
+  reads `.env` on its own. Under (B) that coupling disappears.
+- Its databases are Postgres (SEQUELIZER_URL and LEXICON_URL both postgres), so the
+  DuckDB lock does not affect it.
+- The vocabulary operators its README exercises (icd9 -> ICD9CM, cpt -> CPT4,
+  icd9_procedure -> ICD9Proc) all come from config/vocabularies.csv, not only from
+  the lexicon, so they exist with or without a DB.
+- It has no test suite (`just test` is `mdl README.md`). But regenerating its README
+  (prep_readme.sh, 60 ConceptQL examples with SQL, results and diagrams) before and
+  after (B) and diffing the output is a free end-to-end regression check for (B)
+  against a real database. Worth using as an acceptance criterion.
+
+The one conceptql-side spot (B) must rework that conceptql_spec reaches:
+`ConceptQL::Diagram#operator_classes` (diagram.rb) takes a cdb but then reads the
+GLOBAL registry by `cdb.opts[:data_model]`. Under (B) it must ask the cdb.
+
+## Behaviour (B) changes for a Database with no connection
+
+`ConceptQL::Diagram.default_cdb` is `ConceptQL::Database.new(nil, ...)` and backs
+`render_json` without counts. Today that gets the vocabulary operators the GLOBAL
+registry picked up from SEQUELIZER_URL at boot. Under (B) a db-less Database would
+get CSV vocabularies plus whatever LEXICON_URL provides -- so vocabularies that
+exist only in the data DB's lexicon would stop rendering there. This needs a
+decision when the beads are written: acceptable, or should `render_json` take a
+connection for metadata.
