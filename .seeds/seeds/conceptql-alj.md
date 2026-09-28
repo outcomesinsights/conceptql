@@ -4,7 +4,7 @@ title: require 'conceptql' connects to a database at load time -- make vocabular
 status: captured
 type: exploration
 created_at: 2026-09-28T15:09:16.242515+00:00
-updated_at: 2026-09-28T15:57:42.113095+00:00
+updated_at: 2026-09-28T16:05:08.455474+00:00
 tags:
   - load-time
   - lexicon
@@ -166,3 +166,27 @@ connection for metadata.
 ## Ruled (Ryan, 2026-09-28): render_json behaviour change accepted
 
 Under (B), `render_json` without counts (db-less `Diagram.default_cdb`) gets CSV vocabularies plus whatever LEXICON_URL provides, and stops showing vocabularies that exist only in the data DB's lexicon. Ryan accepted this; render_json does not need to take a connection for metadata.
+
+## Rulings at seeds-to-beads conversion (Ryan, 2026-09-28)
+
+Asked as four options; Ryan picked:
+
+1. **Old global registry -> "Rename it".** Delete `ConceptQL::Operators.operators`; the
+   static-only registry lives on as `Operators.static_operators`; per-database lookup is
+   `cdb.operators`. An outside caller fails loudly with NoMethodError rather than silently
+   losing ~296 vocabulary operators. (No caller in JDE, t_shank or conceptql_spec.)
+2. **Existing tests -> "Change lookup only".** Tests may change the expression that
+   fetches an operator (global registry -> a Database) and nothing else; every assertion
+   about which operators exist, their metadata, aliases and domains stays as written.
+3. **DuckDB check -> "Add it and put it in the gate".** A `just test-duckdb` recipe, AND
+   `just ci` (the pre-push gate) runs it. Sequencing consequence (not Ryan's words):
+   the recipe fails on main today, so it joins the gate only AFTER (B) turns it green --
+   wiring a red check into the gate first would block every push, the same fleet defect
+   recorded 2026-09-13.
+4. **conceptql_spec check -> "Scratch copy, before push".** Regenerate conceptql_spec's
+   README in scratch copies, pre-(B) and post-(B), and diff; the real repo is never touched.
+
+Measured for the precedence rule (claude_stuff/probe_registry_collisions-20260928-090030.log):
+with the gdm_wide test DB, 342 gdm operators = 296 vocabulary + 46 static; exactly three
+vocabulary names are overridden by a static operator -- `ethnicity`, `gender`, `race` -- and
+static must keep winning. No vocabulary alias collides with a registry key.
