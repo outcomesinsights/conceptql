@@ -19,7 +19,7 @@ test *ARGS:
 # PUBLISHED Dropbox share, so the source is never opened: each run copies it to a
 # scratch dir, verifies the copy against the committed checksum, tests the copy,
 # and deletes it. libduckdb is cached per version under ~/.cache/conceptql/libduckdb.
-# Not part of `ci` yet. Override the source with DUCKDB_TEST_DATA_SOURCE.
+# Part of `ci` (the pre-push gate). Override the source with DUCKDB_TEST_DATA_SOURCE.
 # Run the suite against DuckDB, as CI does (args: test files; default all)
 test-duckdb *ARGS:
     #!/usr/bin/env bash
@@ -79,6 +79,8 @@ test-duckdb *ARGS:
     fi
 
     export SEQUELIZER_URL="duckdb://$data"
+    # `just test` (docker) leaves a root-owned coverage/; keep this run's report out of it.
+    export CONCEPTQL_COVERAGE_DIR="{{ justfile_directory() }}/{{ log_dir }}/duckdb/coverage"
     args=({{ ARGS }})
     if [ ${#args[@]} -eq 0 ]; then
       bundle exec ruby test/all.rb
@@ -145,13 +147,14 @@ bump-oi:
     bundle lock --update sequelizer sequel-duckdb sequel-hexspace
     @git --no-pager diff --stat -- Gemfile.lock
 
-# Local pre-push CI gate — runs the default gdm_wide config (the primary
-# platform) before allowing a push. The other 2 Postgres configs and
-# Spark/DuckDB stay in remote CI as the last line of defense for cross-env
-# edge cases. Wired into the pre-push git hook; bypass with:
+# Local pre-push CI gate — runs the default Postgres gdm_wide config (the
+# primary platform) and the DuckDB suite before allowing a push. The other 2
+# Postgres configs and Spark stay in remote CI as the last line of defense for
+# cross-env edge cases. test-duckdb fails, never skips, when its fixture or
+# libduckdb is unavailable. Wired into the pre-push git hook; bypass with:
 #   git push --no-verify   (or SKIP_CI_GATE=1 git push)
 # Run `just test-full` to exercise all 3 Postgres configs manually.
-ci: fmt-check test hygiene
+ci: fmt-check test test-duckdb hygiene
 
 # Rewrite files to canonical format. Run deliberately; never from a hook.
 fmt:

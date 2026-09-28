@@ -2,6 +2,9 @@
 
 require 'simplecov'
 SimpleCov.start do
+  # `just test-duckdb` runs on the host after `just test` has left a root-owned
+  # coverage/ behind (docker), so it writes its report somewhere it owns.
+  coverage_dir ENV.fetch('CONCEPTQL_COVERAGE_DIR', 'coverage')
   add_filter '/test/'
   enable_coverage :branch
   add_group('Missing') { |src| src.covered_percent < 100 }
