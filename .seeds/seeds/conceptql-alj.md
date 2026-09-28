@@ -4,7 +4,7 @@ title: require 'conceptql' connects to a database at load time -- make vocabular
 status: captured
 type: exploration
 created_at: 2026-09-28T15:09:16.242515+00:00
-updated_at: 2026-09-28T15:55:05.331910+00:00
+updated_at: 2026-09-28T15:57:42.113095+00:00
 tags:
   - load-time
   - lexicon
@@ -162,3 +162,7 @@ get CSV vocabularies plus whatever LEXICON_URL provides -- so vocabularies that
 exist only in the data DB's lexicon would stop rendering there. This needs a
 decision when the beads are written: acceptable, or should `render_json` take a
 connection for metadata.
+
+## Ruled (Ryan, 2026-09-28): render_json behaviour change accepted
+
+Under (B), `render_json` without counts (db-less `Diagram.default_cdb`) gets CSV vocabularies plus whatever LEXICON_URL provides, and stops showing vocabularies that exist only in the data DB's lexicon. Ryan accepted this; render_json does not need to take a connection for metadata.
