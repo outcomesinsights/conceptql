@@ -6,7 +6,7 @@
 - ORM: **Sequel (~> 5.66) — NOT ActiveRecord**
 - Test: `bundle exec ruby test/all.rb` or `bin/run_tests`
 - Lint: `bundle exec rubocop`
-- Local CI gate: `just ci` — runs the default `gdm_wide` config (~1.5 min) before push. A **pre-push git hook runs this automatically**; the other 2 Postgres configs + Spark/DuckDB stay in remote CI (billed) as the last line of defense for cross-env edge cases, not the first place a problem surfaces. Bypass with `git push --no-verify` (or `SKIP_CI_GATE=1 git push`). Use `just test-full` to run all 3 Postgres configs manually.
+- Local CI gate: `just ci` — runs the default Postgres `gdm_wide` config (docker) AND the DuckDB suite (`just test-duckdb`, host Ruby, linux-amd64 only) before push. A **pre-push git hook runs this automatically**; the other 2 Postgres configs + Spark stay in remote CI (billed) as the last line of defense for cross-env edge cases, not the first place a problem surfaces. If the DuckDB fixture or libduckdb is unavailable, the gate fails with a message saying what is missing; it never skips. Bypass with `git push --no-verify` (or `SKIP_CI_GATE=1 git push`). Use `just test-full` to run all 3 Postgres configs manually.
 
 ## Architecture
 
