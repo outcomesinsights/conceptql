@@ -42,11 +42,13 @@ module ConceptQL
       end.reject { |_k, v| v[:categories].empty? }.sort_by { |_k, v| v[:name] }]
     end
 
-    private
-
+    # The operators this nodifier can create: its Database's registry for
+    # its data model.
     def operators
-      @operators ||= Operators.operators.fetch(@data_model)
+      @operators ||= cdb.operators(@data_model)
     end
+
+    private
 
     def fetch_op(operator)
       operators[alias_for(operator)]

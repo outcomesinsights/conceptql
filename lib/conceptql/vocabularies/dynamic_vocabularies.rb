@@ -11,10 +11,29 @@ module ConceptQL
     class DynamicVocabularies
       include Sequelizer
 
+      # lexicon: the Lexicon whose vocabularies become operators, normally a
+      # ConceptQL::Database's own (Database#operators passes it). Without one,
+      # the vocabularies come from ConceptQL::Database.lexicon, which connects
+      # to whatever Sequelizer is configured for.
+      def initialize(lexicon = nil)
+        @lexicon = lexicon
+      end
+
+      # Vocabulary operators for one data model, as name => operator class.
+      # Fresh classes on every call.
+      def operators(data_model)
+        all_vocabs.each_with_object({}) do |(name, entry), h|
+          klass = entry.dup.get_klasses[data_model]
+          h[name] = klass if klass
+        end
+      end
+
+      # Writes into the global registry only. Operator.register would also put
+      # these classes in Operators.static_operators, which holds built-ins.
       def register_operators
         all_vocabs.each do |name, entry|
           entry.dup.get_klasses.each do |data_model, klass|
-            klass.register(name, data_model)
+            ConceptQL::Operators.operators[data_model][name] = klass
           end
         end
       end
@@ -44,8 +63,10 @@ module ConceptQL
         lexicon_vocabularies + vocabs
       end
 
+      # A Database accepts any object as its lexicon (opts[:lexicon]); one that
+      # keeps no vocabulary list contributes no vocabulary operators.
       def lexicon_vocabularies
-        lexicon ? lexicon.vocabularies : []
+        lexicon.respond_to?(:vocabularies) ? lexicon.vocabularies : []
       end
 
       def lexicon

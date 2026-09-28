@@ -71,3 +71,4 @@ Dir.new("#{File.dirname(__FILE__)}/conceptql/operators")
   require_relative "conceptql/operators/#{filename}" if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)
 end
 ConceptQL::Operators.operators.each_value(&:freeze)
+ConceptQL::Operators.static_operators.each_value(&:freeze)

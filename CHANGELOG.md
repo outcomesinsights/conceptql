@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 - `conceptql render_json STATEMENT_FILE [--counts] [--data-model=...]` prints statements as a
   `conceptql-diagram/v1` render tree for the diagram renderer (`ConceptQL::Diagram`), plus
   `ConceptQL::Diagram::JigsawTree`, a port of the diagram editor's ConceptqlAdapter
+- `ConceptQL::Database#operators(data_model = own)`: each Database's own operator registry, with
+  vocabulary operators built from that Database's lexicon and the built-in operators merged over
+  them. Every operator lookup goes through it.
 
 ### Fixed
 
