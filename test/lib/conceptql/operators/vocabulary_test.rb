@@ -4,27 +4,29 @@ require_relative '../../../helper'
 require 'conceptql'
 
 describe ConceptQL::Operators::Vocabulary do
+  let(:gdm_operators) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm).operators }
+
   it 'should populate known vocabularies from file in gdm' do
-    assert ConceptQL::Operators.operators[:gdm]['admsrce']
+    assert gdm_operators['admsrce']
   end
 
   it 'should have a description' do
-    assert ConceptQL::Operators.operators[:gdm]['admsrce'].standard_description
+    assert gdm_operators['admsrce'].standard_description
   end
 
   it 'should have arguments' do
-    assert ConceptQL::Operators.operators[:gdm]['admsrce'].to_metadata('admsrce')[:arguments].present?
+    assert gdm_operators['admsrce'].to_metadata('admsrce')[:arguments].present?
   end
 
   it 'should have aliases' do
-    assert ConceptQL::Operators.operators[:gdm]['admsrce'].to_metadata('admsrce')[:aliases].empty?
-    assert ConceptQL::Operators.operators[:gdm]['icd9cm'].to_metadata('admsrce')[:aliases].present?
+    assert gdm_operators['admsrce'].to_metadata('admsrce')[:aliases].empty?
+    assert gdm_operators['icd9cm'].to_metadata('admsrce')[:aliases].present?
   end
 
   it 'should have predominant_domains set to correct value' do
-    assert ConceptQL::Operators.operators[:gdm]['icd9cm'].to_metadata('icd9cm')[:predominant_domains] == [['condition_occurrence']]
-    assert ConceptQL::Operators.operators[:gdm]['hcpcs'].to_metadata('icd9cm')[:predominant_domains] == [['procedure_occurrence']]
-    assert ConceptQL::Operators.operators[:gdm]['ndc'].to_metadata('icd9cm')[:predominant_domains] == [['drug_exposure']]
+    assert gdm_operators['icd9cm'].to_metadata('icd9cm')[:predominant_domains] == [['condition_occurrence']]
+    assert gdm_operators['hcpcs'].to_metadata('icd9cm')[:predominant_domains] == [['procedure_occurrence']]
+    assert gdm_operators['ndc'].to_metadata('icd9cm')[:predominant_domains] == [['drug_exposure']]
   end
 
   describe 'under gdm' do
@@ -112,11 +114,9 @@ describe ConceptQL::Operators::Vocabulary do
         entry.id == 'example'
       end)
 
-      ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
-        refute_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
-          entry.id == 'example'
-        end)
-      end
+      refute_empty(ConceptQL::Vocabularies::DynamicVocabularies.new(ConceptQL::Lexicon.new(db)).all_vocabs.select do |_, entry|
+        entry.id == 'example'
+      end)
 
       assert_empty(ConceptQL::Vocabularies::DynamicVocabularies.new.all_vocabs.select do |_, entry|
         entry.id == 'example'
@@ -126,14 +126,9 @@ describe ConceptQL::Operators::Vocabulary do
     it 'should use proper case sensitivity for dynamic vocabularies' do
       cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
       lexicon = ConceptQL::Lexicon.new(db)
-      ConceptQL::Operators.stub(:operators, { gdm: {}, omopv4_plus: {}, gdm_wide: {} }) do
-        ConceptQL::Database.stub(:lexicon, ConceptQL::Lexicon.new(db)) do
-          cdb.stub(:lexicon, lexicon) do
-            ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
-            q = cdb.query(%w[example 12])
-            assert_match(/EXAMPLE/, q.sql)
-          end
-        end
+      cdb.stub(:lexicon, lexicon) do
+        q = cdb.query(%w[example 12])
+        assert_match(/EXAMPLE/, q.sql)
       end
     end
   end

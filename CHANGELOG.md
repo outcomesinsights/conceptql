@@ -10,14 +10,25 @@ All notable changes to this project will be documented in this file.
 - `conceptql render_json STATEMENT_FILE [--counts] [--data-model=...]` prints statements as a
   `conceptql-diagram/v1` render tree for the diagram renderer (`ConceptQL::Diagram`), plus
   `ConceptQL::Diagram::JigsawTree`, a port of the diagram editor's ConceptqlAdapter
+- `ConceptQL::Database#operators(data_model = own)`: each Database's own operator registry, with
+  vocabulary operators built from that Database's lexicon and the built-in operators merged over
+  them. Every operator lookup goes through it.
 
 ### Fixed
 
+- `require 'conceptql'` no longer connects to a database. It used to connect to whatever
+  Sequelizer was configured for, to register an operator per vocabulary, so it crashed with no
+  database configured and, on DuckDB, a second process could not load the library while another
+  held the file
 - Bug with PlaceOfServiceFilter and other procedure_cost-based operators (#84)
 
 ### Changed
 
 - Set RUNTIME_FILTER_MODE only if asked
+- `ConceptQL::Operators.operators` is removed. Built-in operators are in
+  `ConceptQL::Operators.static_operators`; vocabulary operators come from each Database
+  (`ConceptQL::Database#operators`). `ConceptQL::Database.lexicon` (class method) is removed;
+  use `Database#lexicon`
 
 ## [0.3.0] - 2016-11-08
 

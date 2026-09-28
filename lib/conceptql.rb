@@ -59,15 +59,15 @@ module ConceptQL
   end
 end
 
-# Require all operator subclasses eagerly
+# Require all built-in operator classes eagerly. Each registers itself in
+# ConceptQL::Operators.static_operators as its file loads.
 #
-# First, require vocabulary operator.  It will establish operators for all
-# vocabularies found in Lexicon.  Then other operators might override
-# some of those dynamically generated operators
-ConceptQL::Vocabularies::DynamicVocabularies.new.register_operators
+# Vocabulary operators are not built here: each ConceptQL::Database builds its
+# own from config/vocabularies.csv and its own lexicon (Database#operators), so
+# loading the library touches no database.
 Dir.new("#{File.dirname(__FILE__)}/conceptql/operators")
    .entries
    .each do |filename|
   require_relative "conceptql/operators/#{filename}" if filename =~ /\.rb\z/ && filename != File.basename(__FILE__)
 end
-ConceptQL::Operators.operators.each_value(&:freeze)
+ConceptQL::Operators.static_operators.each_value(&:freeze)

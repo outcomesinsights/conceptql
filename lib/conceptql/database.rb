@@ -84,10 +84,6 @@ module ConceptQL
         @lexicon_db
       end
 
-      def lexicon(db = nil)
-        @lexicon ||= Lexicon.new(lexicon_db, db)
-      end
-
       def make_lexicon_db
         db_opts = {}
         if ENV['CONCEPTQL_LOG_LEXICON']
@@ -107,6 +103,23 @@ module ConceptQL
 
     def lexicon
       @lexicon ||= Lexicon.new(self.class.lexicon_db, db)
+    end
+
+    # This Database's operators for a data model, as a frozen name => class
+    # Hash: a vocabulary operator for every vocabulary in config/vocabularies.csv
+    # (plus the custom file) and in this Database's lexicon, with the built-in
+    # operators merged over them. A built-in wins a name clash (gender, race and
+    # ethnicity are also vocabularies). Built lazily, once per data model.
+    #
+    # The data model is an argument because a Nodifier can be given one that
+    # differs from this Database's.
+    def operators(data_model = opts[:data_model])
+      data_model = data_model.to_sym
+      @operators ||= {}
+      @operators[data_model] ||= begin
+        vocabulary_operators = Vocabularies::DynamicVocabularies.new(lexicon).operators(data_model)
+        vocabulary_operators.merge(Operators.static_operators.fetch(data_model)).freeze
+      end
     end
 
     def database_type

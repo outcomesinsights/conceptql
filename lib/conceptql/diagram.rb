@@ -134,7 +134,7 @@ module ConceptQL
       end
 
       def operator_classes
-        @operator_classes ||= ConceptQL::Operators.operators.fetch(cdb.opts[:data_model].to_sym)
+        @operator_classes ||= cdb.operators(cdb.opts[:data_model])
       end
 
       def canonical_name(name)

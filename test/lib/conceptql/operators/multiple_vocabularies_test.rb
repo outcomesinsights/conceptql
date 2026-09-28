@@ -5,7 +5,7 @@ require 'conceptql'
 
 describe ConceptQL::Operators::MultipleVocabularies do
   it 'should appear for both GDM' do
-    _(ConceptQL::Operators.operators[:gdm]['cpt_or_hcpcs']).must_equal ConceptQL::Operators::MultipleVocabularies
+    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm).operators['cpt_or_hcpcs']).must_equal ConceptQL::Operators::MultipleVocabularies
   end
 
   it 'should produce correct SQL under gdm' do

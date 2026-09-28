@@ -2,20 +2,24 @@
 
 require 'active_support/core_ext/object/blank'
 require 'csv'
-require 'sequelizer'
 require_relative 'entry'
-require_relative '../database'
 
 module ConceptQL
   module Vocabularies
     class DynamicVocabularies
-      include Sequelizer
+      # lexicon: the Lexicon whose vocabularies become operators, normally a
+      # ConceptQL::Database's own (Database#operators passes it). Without one,
+      # only the CSV vocabularies are used.
+      def initialize(lexicon = nil)
+        @lexicon = lexicon
+      end
 
-      def register_operators
-        all_vocabs.each do |name, entry|
-          entry.dup.get_klasses.each do |data_model, klass|
-            klass.register(name, data_model)
-          end
+      # Vocabulary operators for one data model, as name => operator class.
+      # Fresh classes on every call.
+      def operators(data_model)
+        all_vocabs.each_with_object({}) do |(name, entry), h|
+          klass = entry.dup.get_klasses[data_model]
+          h[name] = klass if klass
         end
       end
 
@@ -28,6 +32,8 @@ module ConceptQL
       end
 
       private
+
+      attr_reader :lexicon
 
       def each_vocab
         @each_vocab ||= get_all_vocabs
@@ -44,12 +50,10 @@ module ConceptQL
         lexicon_vocabularies + vocabs
       end
 
+      # A Database accepts any object as its lexicon (opts[:lexicon]); one that
+      # keeps no vocabulary list contributes no vocabulary operators.
       def lexicon_vocabularies
-        lexicon ? lexicon.vocabularies : []
-      end
-
-      def lexicon
-        @lexicon || ConceptQL::Database.lexicon(db)
+        lexicon.respond_to?(:vocabularies) ? lexicon.vocabularies : []
       end
     end
   end
