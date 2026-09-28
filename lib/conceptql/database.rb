@@ -84,18 +84,19 @@ module ConceptQL
         @lexicon_db
       end
 
+      # The LEXICON_URL database, or nil when it is unset. Lexicon tries the
+      # data db first and, when neither has the vocabulary tables, falls back
+      # to LexiconNoDB, so no database (and no sqlite3 gem) is needed here.
       def make_lexicon_db
+        return unless ENV['LEXICON_URL']
+
         db_opts = {}
         if ENV['CONCEPTQL_LOG_LEXICON']
           log_path = Pathname.new('log') / 'conceptql_lexicon.log'
           log_path.dirname.mkpath
           db_opts[:logger] = Logger.new(log_path)
         end
-        lexicon_db = if ENV['LEXICON_URL']
-                       Sequel.connect(ENV['LEXICON_URL'], db_opts)
-                     else
-                       Sequel.sqlite
-                     end
+        lexicon_db = Sequel.connect(ENV['LEXICON_URL'], db_opts)
         lexicon_db.extension(:date_arithmetic)
         lexicon_db
       end
