@@ -14,6 +14,78 @@ test *ARGS:
     ln -sf "test/${ts}.txt" {{ log_dir }}/latest.txt
     echo "Log: $log"
 
+# Mirrors CI's Run-DuckDB-Tests job (.github/workflows/run_tests.yml) on host Ruby.
+# Tests write temp tables into the database file and the default source is a
+# PUBLISHED Dropbox share, so the source is never opened: each run copies it to a
+# scratch dir, verifies the copy against the committed checksum, tests the copy,
+# and deletes it. libduckdb is cached per version under ~/.cache/conceptql/libduckdb.
+# Not part of `ci` yet. Override the source with DUCKDB_TEST_DATA_SOURCE.
+# Run the suite against DuckDB, as CI does (args: test files; default all)
+test-duckdb *ARGS:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p {{ log_dir }}/duckdb
+    log={{ log_dir }}/duckdb/$(date +%Y%m%d%H%M%S).txt
+    exec 3>&1 > >(tee "$log") 2>&1
+    tee_pid=$!
+    work=""
+    finish() {
+      rc=$?
+      if [ -n "$work" ]; then rm -rf "$work"; fi
+      exec >&- 2>&-
+      wait "$tee_pid" || true
+      echo "Log: $log" >&3
+      exit $rc
+    }
+    trap finish EXIT
+
+    [ "$(uname -s)-$(uname -m)" = Linux-x86_64 ] || { echo "linux-amd64 only, as in CI"; exit 1; }
+
+    # libduckdb version from the duckdb gem in Gemfile.lock, as CI's "Derive DuckDB Version"
+    version=$(sed -nE '/^GEM$/,/^$/ s/^    duckdb \(([0-9]+\.[0-9]+\.[0-9]+)[^)]*\)$/\1/p' Gemfile.lock)
+    [ -n "$version" ] || { echo "No duckdb gem in Gemfile.lock's GEM section"; exit 1; }
+    libdir="${XDG_CACHE_HOME:-$HOME/.cache}/conceptql/libduckdb/v${version}"
+    if [ ! -f "$libdir/libduckdb.so" ]; then
+      echo "Downloading libduckdb v${version} to $libdir"
+      rm -rf "$libdir.tmp"
+      mkdir -p "$libdir.tmp"
+      curl -fsSL "https://github.com/duckdb/duckdb/releases/download/v${version}/libduckdb-linux-amd64.zip" \
+        -o "$libdir.tmp/libduckdb.zip"
+      unzip -q "$libdir.tmp/libduckdb.zip" -d "$libdir.tmp"
+      rm "$libdir.tmp/libduckdb.zip"
+      mv "$libdir.tmp" "$libdir"
+    fi
+
+    export SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide BUNDLE_WITH=duckdb
+    export BUNDLE_BUILD__DUCKDB="--with-duckdb-include=$libdir --with-duckdb-lib=$libdir"
+    export LD_LIBRARY_PATH="$libdir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    bundle check >/dev/null || bundle install
+
+    src="${DUCKDB_TEST_DATA_SOURCE:-$HOME/Dropbox/Publicized/synpuf_test_data.duckdb}"
+    [ -f "$src" ] || { echo "No DuckDB fixture at $src (set DUCKDB_TEST_DATA_SOURCE)"; exit 1; }
+    mkdir -p "${TMPDIR:-/tmp}/conceptql-duckdb"
+    work=$(mktemp -d "${TMPDIR:-/tmp}/conceptql-duckdb/run.XXXXXX")
+    data="$work/synpuf_test_data.duckdb"
+    echo "Copying $src -> $data"
+    cp "$src" "$data"
+
+    magic=$(dd if="$data" bs=1 skip=8 count=4 2>/dev/null)
+    [ "$magic" = DUCK ] || { echo "Not a DuckDB file: magic at offset 8 is '$magic', expected 'DUCK' ($src)"; exit 1; }
+    if ! (cd "$work" && sha256sum -c "{{ justfile_directory() }}/.github/synpuf_test_data.sha256"); then
+      echo "Checksum mismatch: $src is not the fixture pinned in .github/synpuf_test_data.sha256"
+      echo "  pinned: $(cut -d' ' -f1 .github/synpuf_test_data.sha256)"
+      echo "  actual: $(sha256sum "$data" | cut -d' ' -f1)"
+      exit 1
+    fi
+
+    export SEQUELIZER_URL="duckdb://$data"
+    args=({{ ARGS }})
+    if [ ${#args[@]} -eq 0 ]; then
+      bundle exec ruby test/all.rb
+    else
+      bundle exec ruby -e 'files = ARGV.dup; ARGV.clear; files.each { |f| require File.expand_path(f) }' "${args[@]}"
+    fi
+
 # Run all three CI matrix configs in parallel; fail if any fails
 test-full:
     #!/usr/bin/env bash
