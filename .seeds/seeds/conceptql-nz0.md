@@ -1,10 +1,12 @@
 ---
 id: conceptql-nz0
 title: LexiconStrategy#concepts wildcard branch is unreachable — delete or raise?
-status: captured
+status: resolved
 type: question
 created_at: 2026-09-18T16:51:39.478325+00:00
-updated_at: 2026-09-18T17:23:16.952959+00:00
+updated_at: 2026-09-28T13:18:59.502746+00:00
+resolved_at: 2026-09-28T13:18:59.502734+00:00
+resolution: "Shipped in 7d237b70 (bead conceptql-7dr): bypass removed, filter unconditional (lib/conceptql/lexicon/lexicon_strategy.rb:29), ArgumentError for blank/'*'/['*'] raised first (lexicon_strategy.rb:21-26), polymorphic Integer/Array ids pass; 10 tests in test/lib/conceptql/lexicon/lexicon_strategy_test.rb. Efficacy: no tweaking; the seed's polymorphism analysis carried straight into the bead and prevented a type-check guard that would have broken 5 call sites."
 ---
 
 `lib/conceptql/lexicon/lexicon_strategy.rb:14`
@@ -207,3 +209,9 @@ Also unchanged: `Vocabulary#select_all?` and everything reading `'*'` out of
 whole point of this change is that the two asterisks are unrelated.
 
 Tracked as bead conceptql-7dr.
+
+## Reconciled against what shipped (2026-09-28)
+
+Shipped in 7d237b70 via bead conceptql-7dr, matching the DECISION above line for line. One addition the decision did not spell out: the method gained a doc comment stating there is deliberately no wildcard, and that '\*' belongs in `arguments` where Vocabulary#select_all? handles it. That covers option (c)'s concern (the next reader re-deriving the same false alarm) without leaving the dead branch in place.
+
+Lineage note: the bead's Source: line sits in its design field, and `seeds candidates` reads only the description, so the sweep returned no candidates and this seed was found by hand.
