@@ -215,7 +215,6 @@ module ConceptQL
 
     def test_name
       @test_name ||= [statement_file.dirname.basename, statement_file.basename]
-                     .map(&:to_s)
                      .join('/')
     end
 

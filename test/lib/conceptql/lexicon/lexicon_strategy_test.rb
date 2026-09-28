@@ -40,12 +40,14 @@ describe ConceptQL::LexiconStrategy do
     # The guard must not be a type check: these three shapes are all live.
     it 'accepts a String vocabulary and filters on it' do
       sql = lexicon.concepts(db, 'ICD9CM').sql
+
       _(sql).must_match(/"vocabulary_id" = 'ICD9CM'/)
     end
 
     # ReadOmop#vocabulary_id returns the Integer 17.
     it 'accepts an Integer vocabulary' do
       sql = lexicon.concepts(db, 17).sql
+
       _(sql).must_match(/"vocabulary_id" = 17/)
     end
 
@@ -53,11 +55,13 @@ describe ConceptQL::LexiconStrategy do
     # Sequel renders as an IN clause.
     it 'accepts an Array of vocabularies and renders an IN clause' do
       sql = lexicon.concepts(db, %w[JIGSAW_FILE_PROVENANCE_TYPE JS_FILE_PROV_TYPE]).sql
+
       _(sql).must_match(/"vocabulary_id" IN \('JIGSAW_FILE_PROVENANCE_TYPE', 'JS_FILE_PROV_TYPE'\)/)
     end
 
     it 'still filters by code alongside the vocabulary' do
       sql = lexicon.concepts(db, 'ICD9CM', ['250.00']).sql
+
       _(sql).must_match(/"vocabulary_id" = 'ICD9CM'/)
       _(sql).must_match(/lower\("concept_code"\) IN \('250.00'\)/)
     end

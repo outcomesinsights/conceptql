@@ -8,11 +8,6 @@ require_relative '../database'
 
 module ConceptQL
   module Vocabularies
-  end
-end
-
-module ConceptQL
-  module Vocabularies
     class DynamicVocabularies
       include Sequelizer
 

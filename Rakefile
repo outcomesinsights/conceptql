@@ -48,13 +48,13 @@ task :make_vocabs_csv, [:csv_path] do |_t, args|
   require 'open-uri'
 
   known_vocabs = CSV.foreach(ConceptQL.vocabularies_file_path, headers: true,
-                                                               header_converters: :symbol).each_with_object({}) do |row, h|
-    h[row[:id].downcase] = row.to_hash
+                                                               header_converters: :symbol).to_h do |row|
+    [row[:id].downcase, row.to_hash]
   end
 
   amgen_vocabs = open(args.csv_path) do |amgen_csv_file|
-    CSV.parse(amgen_csv_file.read, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
-      h[row[:vocabulary_short_name].downcase] = row.to_hash
+    CSV.parse(amgen_csv_file.read, headers: true, header_converters: :symbol).to_h do |row|
+      [row[:vocabulary_short_name].downcase, row.to_hash]
     end
   end
 

@@ -20,8 +20,8 @@ module ConceptQL
                      :known_codes,
                      :related_concept_ids
 
-      SCHEMAS = ConceptQL.schemas_dir.glob('*.yml').each_with_object({}) do |schema_file, schemas|
-        schemas[schema_file.basename('.*').to_s.to_sym] = Psych.load_file(schema_file)
+      SCHEMAS = ConceptQL.schemas_dir.glob('*.yml').to_h do |schema_file|
+        [schema_file.basename('.*').to_s.to_sym, Psych.load_file(schema_file)]
       end
 
       attr_reader :operator, :nodifier

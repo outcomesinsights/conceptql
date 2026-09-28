@@ -53,8 +53,8 @@ module ConceptQL
     def query_cols(opts = {})
       cols = operator.dynamic_columns
       if opts[:cast]
-        cols = query_cols.each_with_object({}) do |column, h|
-          h[column] = operator.cast_column(column)
+        cols = query_cols.to_h do |column|
+          [column, operator.cast_column(column)]
         end
       end
       cols

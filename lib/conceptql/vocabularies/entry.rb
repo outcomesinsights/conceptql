@@ -137,8 +137,8 @@ module ConceptQL
       end
 
       def to_hash
-        METADATA_METHODS.each_with_object({}) do |meth, h|
-          h[meth] = send(meth)
+        METADATA_METHODS.to_h do |meth|
+          [meth, send(meth)]
         end
       end
 

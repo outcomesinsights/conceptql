@@ -10,6 +10,7 @@ AllCops:
     - 'vendor/**/*'
     - 'bin/**/*'
     - 'tmp/**/*'
+    - 'claude_stuff/**/*'
 
 Layout/IndentationWidth:
   Width: 2
@@ -120,6 +121,13 @@ Metrics/PerceivedComplexity:
 
 Metrics/BlockNesting:
   Max: 4
+
+Naming/PredicateMethod:
+  # multiple_vocabularies is a polymorphic operator hook exposed as
+  # Query#multiple_vocabularies, which t_shank calls; renaming it breaks callers.
+  AllowedMethods:
+    - call
+    - multiple_vocabularies
 
 Naming/AccessorMethodName:
   Enabled: false
