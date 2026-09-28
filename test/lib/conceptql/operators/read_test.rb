@@ -4,7 +4,7 @@ require_relative '../../../helper'
 
 describe ConceptQL::Operators::Read do
   it 'be present in list of operators' do
-    _(ConceptQL::Operators.operators[:omopv4_plus]['read']).must_equal ConceptQL::Operators::Read
+    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus).operators['read']).must_equal ConceptQL::Operators::Read
   end
 
   it 'should include measurement columns under GDM' do

@@ -12,7 +12,7 @@ describe ConceptQL::Operators::Gender do
   end
 
   it 'be present in list of operators' do
-    _(ConceptQL::Operators.operators[:omopv4_plus]['gender']).must_equal ConceptQL::Operators::Gender
+    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus).operators['gender']).must_equal ConceptQL::Operators::Gender
   end
 
   describe 'under gdm' do

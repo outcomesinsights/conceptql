@@ -18,7 +18,7 @@ ConceptQL::Database -> Query -> Nodifier -> Operator tree -> Sequel dataset -> S
 
 ### Operators (`lib/conceptql/operators/`)
 
-~50 operator classes, each producing a Sequel dataset. Operators self-register via `register(__FILE__, :gdm, :gdm_wide)` into an `OPERATORS` hash keyed by data model. Unregistered operators return `Invalid`.
+~50 operator classes, each producing a Sequel dataset. Operators self-register via `register(__FILE__, :gdm, :gdm_wide)` into `Operators.static_operators`, keyed by data model. Vocabulary operators are not registered at load: each `ConceptQL::Database` builds its own from `config/vocabularies.csv` and its own lexicon, and `Database#operators(data_model)` merges the built-ins over them. Every lookup goes through `cdb.operators`; `require 'conceptql'` touches no database. Unregistered operators return `Invalid`.
 
 Standard output columns: `person_id`, `criterion_id`, `criterion_table`, `criterion_domain`, `start_date`, `end_date`, `value_as_number`, `value_as_string`, `value_as_concept_id`, `units_source_value`, `source_value`.
 

@@ -13,11 +13,11 @@ describe ConceptQL::Operators::InformationPeriods do
   end
 
   it 'should appear for both GDM' do
-    _(ConceptQL::Operators.operators[:gdm]['information_periods']).must_equal ConceptQL::Operators::InformationPeriods
+    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm).operators['information_periods']).must_equal ConceptQL::Operators::InformationPeriods
   end
 
   it 'should appear for both OMOPv4+' do
-    _(ConceptQL::Operators.operators[:omopv4_plus]['information_periods']).must_equal ConceptQL::Operators::InformationPeriods
+    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus).operators['information_periods']).must_equal ConceptQL::Operators::InformationPeriods
   end
 
   it 'should produce correct SQL under gdm' do

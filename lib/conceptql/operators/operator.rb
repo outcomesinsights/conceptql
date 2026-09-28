@@ -6,8 +6,6 @@ require 'forwardable'
 
 module ConceptQL
   module Operators
-    OPERATORS = { omopv4_plus: {}, gdm: {}, gdm_wide: {} }.freeze
-
     # Built-in operators only: the classes that call Operator.register when
     # their file loads. Vocabulary operators are not in here; each
     # ConceptQL::Database builds its own from its lexicon (Database#operators).
@@ -24,10 +22,6 @@ module ConceptQL
                           value_as_concept_id
                           units_source_value
                           source_value].freeze
-
-    def self.operators
-      OPERATORS
-    end
 
     def self.static_operators
       STATIC_OPERATORS
@@ -50,7 +44,6 @@ module ConceptQL
           data_models = STATIC_OPERATORS.keys if data_models.empty?
           data_models.each do |dm|
             op_name = File.basename(file).sub(/\.rb\z/, '').downcase
-            Operators.operators[dm][op_name] = self
             Operators.static_operators[dm][op_name] = self
           end
         end

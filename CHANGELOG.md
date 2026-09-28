@@ -16,11 +16,19 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `require 'conceptql'` no longer connects to a database. It used to connect to whatever
+  Sequelizer was configured for, to register an operator per vocabulary, so it crashed with no
+  database configured and, on DuckDB, a second process could not load the library while another
+  held the file
 - Bug with PlaceOfServiceFilter and other procedure_cost-based operators (#84)
 
 ### Changed
 
 - Set RUNTIME_FILTER_MODE only if asked
+- `ConceptQL::Operators.operators` is removed. Built-in operators are in
+  `ConceptQL::Operators.static_operators`; vocabulary operators come from each Database
+  (`ConceptQL::Database#operators`). `ConceptQL::Database.lexicon` (class method) is removed;
+  use `Database#lexicon`
 
 ## [0.3.0] - 2016-11-08
 

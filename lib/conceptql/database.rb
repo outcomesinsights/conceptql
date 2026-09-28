@@ -84,10 +84,6 @@ module ConceptQL
         @lexicon_db
       end
 
-      def lexicon(db = nil)
-        @lexicon ||= Lexicon.new(lexicon_db, db)
-      end
-
       def make_lexicon_db
         db_opts = {}
         if ENV['CONCEPTQL_LOG_LEXICON']
