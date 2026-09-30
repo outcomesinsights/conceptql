@@ -4,7 +4,7 @@ title: Lexicon re-issues identical vocabulary queries per Database/export; remov
 status: captured
 type: question
 created_at: 2026-09-29T03:04:20.735970+00:00
-updated_at: 2026-09-29T03:04:20.735970+00:00
+updated_at: 2026-09-30T13:08:50.199158+00:00
 tags:
   - lexicon
   - performance
@@ -56,3 +56,17 @@ Also in scope: the table_exists? probes. determine_strategy probes 4 tables per 
 ## Open question
 
 Which of (a) / (b), or something else, removes the round trips without a cache and without changing any lexicon result? This is deliberation, not yet a task (Ryan, 2026-09-28: "not a bead, probably a seed").
+
+## Ruling relayed from t_shank: candidate (c) is RULED OUT (Ryan, 2026-09-29)
+
+Relayed by the t_shank session on 2026-09-30 and recorded in its seed t-shank-58t. Not heard directly in this repo. Attributed as relayed.
+
+**No test-only code paths.** The export fixtures exist to prove production behaviour. A mechanism that only makes tests faster, and that production never exercises, masks production behaviour and is not acceptable. Ryan applied this to every caching variant:
+
+- a process-lifetime shared Lexicon (candidate c above): ruled out;
+- a result cache in conceptql or t_shank: ruled out;
+- a Sequelizer extension handed a cache object keyed on connection + SQL (Ryan's own sketch): set aside for the same reason.
+
+What survives: changes that remove the redundancy for PRODUCTION too, through one code path. Candidate (a), emitting the Gender operator's concept_relationship lookup (gender.rb:42,46 -> related_concept_ids -> is_a_relationships) as a subquery in the generated SQL instead of fetching IDs into Ruby, fits. Unmeasured: it may only move the scan into every query that filters on gender.
+
+Related measured fact from t_shank (not a conceptql change): a Spark-side CACHE TABLE on the four vocabulary tables, done in t_shank's TEST SETUP only, cut a CI-shaped shard's wall time by 29% and lexicon lookups from 1.43 s to 0.18 s. Whether that setup-level variant is acceptable is pending Ryan's ruling. It bears on how much (a) would buy on Spark.
