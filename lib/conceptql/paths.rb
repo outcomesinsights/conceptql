@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Pathname is core only from Ruby 4.0; on 3.x a clean `gem install` (no Bundler
+# preloading it) fails in ConceptQL.root without this. RuboCop targets 4.0.
+require 'pathname' # rubocop:disable Lint/RedundantRequireStatement
+
 module ConceptQL
   class << self
     def root
