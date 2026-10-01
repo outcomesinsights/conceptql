@@ -85,6 +85,7 @@ CONCEPTQL_DATA_MODEL=gdm bundle exec ruby test/all.rb
 CONCEPTQL_DATA_MODEL=gdm_wide bundle exec ruby test/all.rb
 
 # Rake tasks
+bundle exec rake test   # as CI: data model + database from the environment
 bundle exec rake test_gdm
 bundle exec rake test_omopv4_plus
 bundle exec rake test_cov

@@ -28,6 +28,15 @@ rescue LoadError
   # RuboCop not available
 end
 
+# Runs the suite exactly as CI does: test/all.rb, with CONCEPTQL_DATA_MODEL,
+# SEQUELIZER_URL and SEQUELIZER_SEARCH_PATH taken from the environment, never
+# set here. The suite needs a live database (Postgres test_data, or the DuckDB
+# fixture), so this is not self-contained.
+desc 'Run the test suite against the database in SEQUELIZER_URL (data model from CONCEPTQL_DATA_MODEL)'
+task :test do
+  ruby 'test/all.rb'
+end
+
 desc 'Run tests with omopv4_plus data model'
 task :test_omopv4_plus do
   run_spec.call(:omopv4_plus)
