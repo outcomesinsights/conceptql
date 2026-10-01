@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'English'
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'conceptql/version'
@@ -14,10 +13,16 @@ Gem::Specification.new do |spec|
   spec.description   = 'ConceptQL is a query language for specifying queries to be run OMOP CDMv4 structured data'
   spec.homepage      = 'https://github.com/outcomesinsights/conceptql'
   spec.license       = 'MIT'
+  spec.required_ruby_version = '>= 3.3'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 
-  spec.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  # Allowlist, not `git ls-files`: ship only what the gem reads at runtime.
+  # config/ and schemas/ live at the gem root (ConceptQL.root), not under lib/.
+  spec.files = %w[CHANGELOG.md LICENSE README.md] +
+               Dir['lib/**/*.rb'] + Dir['config/*'] + Dir['schemas/*'] +
+               %w[bin/conceptql bin/conceptql_utils]
+  spec.bindir        = 'bin'
+  spec.executables   = %w[conceptql conceptql_utils]
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport', '>= 6'
