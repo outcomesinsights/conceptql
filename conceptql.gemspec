@@ -13,6 +13,8 @@ Gem::Specification.new do |spec|
   spec.description   = 'ConceptQL is a query language for specifying queries to be run OMOP CDMv4 structured data'
   spec.homepage      = 'https://github.com/outcomesinsights/conceptql'
   spec.license       = 'MIT'
+  spec.required_ruby_version = '>= 3.3'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 
   # Allowlist, not `git ls-files`: ship only what the gem reads at runtime.
   # config/ and schemas/ live at the gem root (ConceptQL.root), not under lib/.
