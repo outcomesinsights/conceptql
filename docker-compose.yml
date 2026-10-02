@@ -20,6 +20,12 @@ services:
     command: sh -c "bundle && bundle exec ruby test/all.rb"
     volumes:
       - "${PWD}:/home/conceptql"
+      # Anonymous volume, seeded from the image on each run: keeps bundler's
+      # git clones off overlayfs. bookworm's git refuses a local clone whose
+      # hardlinks cross image layers ("fatal: hardlink different from source"),
+      # which breaks `bundle` whenever Gemfile.lock pins an OI gem commit that
+      # the image did not bake in.
+      - /usr/local/bundle
   test_data:
     image: outcomesinsights/misc:test_data.ignitor
     command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c work_mem=4GB -c shared_buffers=6GB -c effective_cache_size=6GB -c max_parallel_workers_per_gather=0
