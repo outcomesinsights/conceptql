@@ -1,2 +1,21 @@
-.ci/logs
-.ci/cids
+# Allowlist: ignore everything, then admit only what the image needs.
+# The image is published publicly (outcomesinsights/misc on Docker Hub), and the
+# Dockerfile ends with `COPY . ./`. A denylist leaked .env, .beads/, claude_stuff/
+# and agent transcripts into conceptql.master.latest (found 2026-10-02), so a new
+# local file must stay out of the image unless it is listed here.
+*
+!Gemfile
+!Gemfile.lock
+!conceptql.gemspec
+!Rakefile
+!justfile
+!README.md
+!CHANGELOG.md
+!LICENSE
+!bin/conceptql
+!bin/conceptql_utils
+!lib/
+!config/
+!schemas/
+!test/
+!dockers/
