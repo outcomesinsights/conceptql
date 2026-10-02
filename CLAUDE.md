@@ -100,6 +100,17 @@ Default values from `bin/run_tests`:
 
 Minitest. Tests in `test/`, named `*_test.rb`. Runner is `test/all.rb` which globs `./test/**/*_test.rb`.
 
+### DuckDB fixture (pin and download link)
+
+`just test-duckdb` and CI's `Run-DuckDB-Tests` both test against `synpuf_test_data.duckdb`, which vocabulation publishes to Dropbox `Publicized/`. Each one verifies the file against `.github/synpuf_test_data.sha256`. When vocabulation republishes, two things can break:
+
+- **Checksum mismatch** (local and CI). vocabulation's pipeline step `handoff` prints the new sha256. Re-pin the file after a green `just test-duckdb` against the new data.
+- **CI downloads an HTML page** ("Not a DuckDB file … expected 'DUCK'"). The repo variable `DUCKDB_TEST_DATA_URL` points at a Dropbox shared link that the republish killed ("File Deleted"), or the link is team-only ("Log in to Dropbox"). Fix it on titan through the Dropbox API, with a fresh token from `dropbox-token` (in `~/.local/bin`; never print or store the token, and never delete anything in `~/.config/dropbox/`):
+  1. `TOKEN=$(dropbox-token)`, then POST `https://api.dropboxapi.com/2/sharing/list_shared_links` with `{"path":"/Publicized/synpuf_test_data.duckdb","direct_only":true}`. If there is no link, use `sharing/create_shared_link_with_settings`.
+  2. POST `sharing/modify_shared_link_settings` with `{"url":<link>,"settings":{"audience":"public","access":"viewer","allow_download":true}}`. Links are team-only by default on this business account.
+  3. Swap `dl=0` for `dl=1`, download the file, and check it with `sha256sum -c .github/synpuf_test_data.sha256` from the download's directory.
+  4. `gh variable set DUCKDB_TEST_DATA_URL -R outcomesinsights/conceptql --body <dl=1 url>`, then re-run the failed CI job.
+
 ## Key Constraints and Gotchas
 
 - **Sequel ORM only** — `activesupport` is included for utility helpers, NOT for ActiveRecord
