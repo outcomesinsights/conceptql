@@ -6,6 +6,7 @@ require 'thor'
 require 'sequelizer'
 require 'json'
 require 'csv'
+require 'logger'
 require 'conceptql'
 require_relative 'query'
 
