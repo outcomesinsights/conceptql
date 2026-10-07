@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require_relative 'lexicon'
 
 module ConceptQL
@@ -44,7 +45,6 @@ module ConceptQL
     end
 
     def query(statement, opts = {})
-      NullQuery.new if statement.nil? || statement.empty?
       opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
       Query.new(self, ConceptQL::Utils.rekey(statement), @opts.merge(opts))
     end
