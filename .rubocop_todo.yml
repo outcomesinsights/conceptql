@@ -301,10 +301,9 @@ Naming/VariableNumber:
   Exclude:
     - 'lib/conceptql/lexicon/lexicon_ohdsi.rb'
 
-# Offense count: 3
+# Offense count: 1
 Security/Eval:
   Exclude:
-    - 'doc/converter.rb'
     - 'lib/conceptql/cli.rb'
 
 # Offense count: 1
@@ -359,11 +358,10 @@ Style/FetchEnvVar:
     - 'test/db_helper.rb'
     - 'test/from_operator_test.rb'
 
-# Offense count: 13
+# Offense count: 11
 # Configuration parameters: AllowedVariables.
 Style/GlobalVars:
   Exclude:
-    - 'doc/converter.rb'
     - 'test/lib/conceptql/operators/conceptql_spec_test.rb'
 
 # Offense count: 9
@@ -513,13 +511,12 @@ Style/SuperArguments:
 Style/TrailingCommaInArguments:
   Enabled: false
 
-# Offense count: 16
+# Offense count: 15
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyleForMultiline.
 # SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
 Style/TrailingCommaInArrayLiteral:
   Exclude:
-    - 'Guardfile'
     - 'Rakefile'
     - 'lib/conceptql.rb'
     - 'lib/conceptql/behaviors/utilizable.rb'
