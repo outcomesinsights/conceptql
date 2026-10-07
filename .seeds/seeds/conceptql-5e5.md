@@ -4,7 +4,7 @@ title: 'Over-engineering audit 2026-10-07: cuts to make (all but 1, 2, 7)'
 status: captured
 type: decision
 created_at: 2026-10-07T17:50:51.199585+00:00
-updated_at: 2026-10-07T17:50:51.199585+00:00
+updated_at: 2026-10-07T21:00:41.649582+00:00
 tags:
   - ponytail-audit
   - cleanup
@@ -63,3 +63,22 @@ Implement every finding **except 1, 2 and 7**. Those three stay open here as del
 - `Columnizer` reads `options.qualifer` (misspelt), so the qualifier option never applies.
 - `CLI#cdb` calls `String#glob`, which doesn't exist (the CONCEPTQL_PARQUET_TEST_DIR branch).
 - The CLI's `metadata` and `selection_operators` commands call `ConceptQL.metadata` with no arguments, but it requires a database.
+
+## Outcome (2026-10-07)
+
+Implemented via beads, all merged locally to main and closed. Not pushed.
+
+- #3-6 -> conceptql-fsx (also removed their .rubocop_todo.yml excludes)
+- #8, #9 -> conceptql-bvj. Deleting logger.rb dropped the gem's only `require 'logger'`; it is now required in database.rb and cli.rb.
+- #10, #17-20 -> conceptql-g0i. Every listed method deleted. v5_vocab_to_v4_vocab never existed.
+- #11 -> conceptql-kyg. 154 lines down to 47. A fallback-order pin test was added first, and the output of all 5 rdbms was compared with cmp: identical. Presto still formats with `-l postgresql`; the unused trino variant was deleted, not wired in.
+- #12 -> conceptql-ztt. Metadata byte-identical; underscore == snakecase for all 127 operator names. one_in_two_out gaps and scope scratch_database keep the old nil-or-empty rule (`x.to_s.empty?`), not ActiveSupport blank?.
+- #13-15 -> conceptql-b8l. The lockfile change is removals only; irb's tail (date, erb, psych, rdoc, stringio, tsort) left the lock. bigdecimal and reline stay as transitive deps.
+- #16 -> conceptql-8rh. Raw README + regex gives 37 anchors, identical to the rendered page. watir, nokogiri, selenium-webdriver, websocket, rubyzip and rexml left the lock.
+- Cascade -> conceptql-p0h. Deleted Vocabulary#table_name, Operator#modify_query, the @codes_regexp plumbing, the unused `deprecated` DSL, and the remaining one-element sorts. KEPT Operator#make_table_name: CastingOperator calls it through `super`, which a name grep cannot see, so the audit's "no callers" was wrong there.
+
+Pre-chain fix: conceptql-m5q. The test_data image's 2026-10-02 FY2027 rebuild split the CPT 80230 text between ohdsi_vocabs and gdm_vocabs. Expected results can now be keyed by lexicon strategy: test/results/<model>/\<ohdsi|gdm>/... wins over the shared file.
+
+Filed, not run: conceptql-pni (dead Chrome libs and the nokogiri build config in dockers/standard/Dockerfile; needs a decision about the published image tag).
+
+Still open here for deliberation: #1 (JigsawTree), #2 (Rakefile Presto/driftr + default task), #7 (dead optimizer). b8l noted that Query#optimized returns a stale cached dataset if called after #query, which is one more reason to delete it under #7.
