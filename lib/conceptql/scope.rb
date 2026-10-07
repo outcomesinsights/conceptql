@@ -93,7 +93,7 @@ module ConceptQL
       @mutex = Mutex.new
       @cte_name_next = -> { @mutex.synchronize { @i += 1 } }
 
-      return unless force_temp_tables? && ConceptQL::Utils.blank?(scratch_database)
+      return unless force_temp_tables? && scratch_database.to_s.empty?
 
       raise ArgumentError,
             'You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable'

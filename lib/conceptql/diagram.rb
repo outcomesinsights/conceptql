@@ -2,7 +2,6 @@
 
 require 'json'
 require 'active_support/core_ext/hash/indifferent_access'
-require 'active_support/core_ext/object/blank'
 
 module ConceptQL
   # Converts ConceptQL statements into trees a diagram renderer can draw.

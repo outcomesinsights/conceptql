@@ -105,7 +105,7 @@ module ConceptQL
         # represent confirming events
         sub_select = sub_select.exclude(confirm[:start_date] < initial[:start_date])
 
-        if ConceptQL::Utils.present?(min_gap)
+        unless min_gap.to_s.empty?
           sub_select = sub_select.where(
             Sequel.expr(confirm[:start_date]) >= DateAdjuster.new(
               self,
@@ -114,7 +114,7 @@ module ConceptQL
           )
         end
 
-        if ConceptQL::Utils.present?(max_gap)
+        unless max_gap.to_s.empty?
           sub_select = sub_select.where(
             Sequel.expr(confirm[:start_date]) <= DateAdjuster.new(
               self,

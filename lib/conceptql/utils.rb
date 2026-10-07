@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'active_support/core_ext/array/conversions'
+require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/string/inflections'
 require 'json'
 require 'open3'
 require 'timeout'
@@ -25,46 +28,6 @@ module ConceptQL
           return h.to_sym if h.respond_to?(:to_sym)
 
           h
-        end
-      end
-
-      def blank?(thing)
-        thing.nil? || (thing.respond_to?(:empty?) ? thing.empty? : false)
-      end
-
-      def present?(thing)
-        !blank?(thing)
-      end
-
-      # Cut and paste from Facets
-      def snakecase(str)
-        str.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-           .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-           .tr('-', '_')
-           .gsub(/\s/, '_')
-           .gsub(/__+/, '_')
-           .downcase
-      end
-
-      # Copy of rails to_sentence method
-      def to_sentence(array, options = {})
-        default_connectors = {
-          words_connector: ', ',
-          two_words_connector: ' and ',
-          last_word_connector: ', and '
-        }
-
-        options = default_connectors.merge!(options)
-
-        case array.length
-        when 0
-          ''
-        when 1
-          (array[0]).to_s
-        when 2
-          "#{array[0]}#{options[:two_words_connector]}#{array[1]}"
-        else
-          "#{array[0...-1].join(options[:words_connector])}#{options[:last_word_connector]}#{array[-1]}"
         end
       end
 

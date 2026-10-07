@@ -139,7 +139,7 @@ module ConceptQL
         preferred_name: pref_name,
         short_name: short_name,
         long_name: long_name,
-        operation: ConceptQL::Utils.snakecase(just_class_name),
+        operation: just_class_name.underscore,
         min_upstreams: @max_upstreams || 0,
         max_upstreams: @max_upstreams || 0,
         arguments: @arguments || [],
@@ -178,8 +178,7 @@ module ConceptQL
       @deprecated = true
       message = ['This operator will no longer be available in a future version of Jigsaw.']
       if opts[:replaced_by]
-        message << "Please use #{ConceptQL::Utils.to_sentence(Array(opts[:replaced_by]),
-                                                              last_word_connector: ', or ')} instead."
+        message << "Please use #{Array(opts[:replaced_by]).to_sentence(last_word_connector: ', or ')} instead."
       end
       define_method(:deprecation_warning) do |*_args|
         add_warning(message.join(' '))
