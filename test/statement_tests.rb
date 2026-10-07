@@ -218,8 +218,18 @@ module ConceptQL
                      .join('/')
     end
 
+    # Where a test's expected results live. A few expectations differ by
+    # vocabulary source (ohdsi_vocabs and gdm_vocabs carry different text for
+    # some codes), so a file under test/results/<data model>/<lexicon strategy>/
+    # (ohdsi or gdm) takes precedence over the shared one.
+    def expected_results_path
+      base = "test/results/#{cdb.base_data_model}"
+      by_vocab_source = "#{base}/#{cdb.lexicon.strategy}/#{test_name}"
+      File.exist?(by_vocab_source) ? by_vocab_source : "#{base}/#{test_name}"
+    end
+
     def get_expected_results(results)
-      path = "test/results/#{cdb.base_data_model}/#{test_name}"
+      path = expected_results_path
 
       results.save(path) if ENV['CONCEPTQL_OVERWRITE_TEST_RESULTS']
 
