@@ -12,7 +12,7 @@ describe ConceptQL::SqlFormatters do
   let(:sql) { 'select 1' }
 
   def format_with(installed, rdbms)
-    which = ENV.fetch('PATH').split(':').map { File.join(_1, 'which') }.find { File.executable?(_1) }
+    which = ENV.fetch('PATH').split(':').map { File.join(it, 'which') }.find { File.executable?(it) }
     Dir.mktmpdir do |dir|
       File.symlink(which, File.join(dir, 'which'))
       installed.each do |name|

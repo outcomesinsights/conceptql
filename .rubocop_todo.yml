@@ -525,7 +525,6 @@ Style/TrailingCommaInArrayLiteral:
     - 'lib/conceptql/behaviors/utilizable.rb'
     - 'lib/conceptql/operators/provider_filter.rb'
     - 'lib/conceptql/scope.rb'
-    - 'lib/conceptql/sql_formatters.rb'
     - 'lib/conceptql/vocabularies/entry.rb'
     - 'test/lib/conceptql/operators/vocabulary_test.rb'
     - 'test/lib/conceptql/query_test.rb'
