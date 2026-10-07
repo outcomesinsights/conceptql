@@ -86,11 +86,6 @@ module ConceptQL
           end
         end
 
-        def codes_should_match(format)
-          @codes_regexp = format
-          validate_codes_match
-        end
-
         def inherited(subclass)
           super
           subclass.instance_variable_set(:@validations, validations.dup)
@@ -310,11 +305,6 @@ module ConceptQL
         @stream ||= upstreams.first
       end
 
-      def setup_select(query, table = nil)
-        query = modify_query(query, table)
-        query.select(*columns(table))
-      end
-
       def columns(table = nil)
         dm.columns(table: table)
       end
@@ -326,9 +316,7 @@ module ConceptQL
         end
       end
 
-      def column_family
-        nil
-      end
+      def column_family; end
 
       def valid?(db, opts = {})
         validate(db, opts)
@@ -367,10 +355,6 @@ module ConceptQL
 
       def omopv4_plus?
         data_model == :omopv4_plus
-      end
-
-      def omopv4?
-        data_model == :omopv4
       end
 
       def gdm?
@@ -417,10 +401,6 @@ module ConceptQL
         else
           false
         end
-      end
-
-      def same_table?(_table)
-        false
       end
 
       def accept(visitor, opts = {})

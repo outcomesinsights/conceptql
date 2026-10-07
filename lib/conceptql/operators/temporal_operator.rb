@@ -69,10 +69,6 @@ module ConceptQL
         v
       end
 
-      def occurrences_option
-        options[:occurrences]
-      end
-
       def within_source_table
         Sequel[:r]
       end
@@ -108,14 +104,6 @@ module ConceptQL
         cols = cols.map { |c| Sequel.function(opts[:function], c).as(c) } if opts[:function]
         cols = cols.map { |c| Sequel[opts[:qualifier]][c].as(c) } if opts[:qualifier]
         cols
-      end
-
-      def at_least_check?
-        false
-      end
-
-      def inclusive?
-        options[:inclusive]
       end
 
       def include_rhs_columns

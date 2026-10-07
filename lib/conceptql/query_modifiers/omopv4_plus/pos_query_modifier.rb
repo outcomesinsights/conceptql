@@ -23,7 +23,7 @@ module ConceptQL
           @column = :visit_source_concept_id
           @join_id = :visit_occurrence_id
           @table = :visit_occurrence
-          @source_column = op.omopv4? ? :place_of_service_concept_id : :visit_source_concept_id
+          @source_column = :visit_source_concept_id
         end
 
         def modified_query

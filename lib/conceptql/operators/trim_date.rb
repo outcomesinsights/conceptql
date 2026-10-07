@@ -45,10 +45,6 @@ module ConceptQL
         ds.from_self
       end
 
-      def within_column
-        Sequel[:l][:end_date]
-      end
-
       private
 
       def compare_all?

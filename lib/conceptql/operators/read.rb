@@ -53,19 +53,6 @@ module ConceptQL
         ops.flat_map { |op| op.describe_codes(db, codes) }
       end
 
-      def mapping_type_to_domain(mapping_type)
-        case mapping_type.to_s
-        when /cond/i
-          :condition_occurrence
-        when /proc/i
-          :procedure_occurrence
-        when /drug/i
-          :drug_exposure
-        else
-          :observation
-        end
-      end
-
       def klasses
         @klasses ||= {
           condition_occurrence: ReadCondition,
