@@ -13,7 +13,7 @@ module ConceptQL
         end
 
         def self.has_required_columns?(cols)
-          needed = [:visit_occurrence_id].sort
+          needed = [:visit_occurrence_id]
           found = needed & cols
           needed == found
         end

@@ -38,7 +38,7 @@ module ConceptQL
       @validations = []
 
       class << self
-        attr_reader :validations, :codes_regexp, :required_columns
+        attr_reader :validations, :required_columns
 
         def register(file, *data_models)
           data_models = STATIC_OPERATORS.keys if data_models.empty?
@@ -89,7 +89,6 @@ module ConceptQL
         def inherited(subclass)
           super
           subclass.instance_variable_set(:@validations, validations.dup)
-          subclass.instance_variable_set(:@codes_regexp, codes_regexp.dup) if codes_regexp
         end
 
         def new(*)
@@ -478,23 +477,6 @@ module ConceptQL
         cast_column(:provider_id, dm.provider_id_column(query, table))
       end
 
-      def modify_query(query, table)
-        {
-          visit_source_concept_id: dm.query_modifier_for(:visit_source_concept_id),
-          drug_name: dm.query_modifier_for(:drug_name)
-        }.each do |column, klass|
-          # p [table, column, table, join_id, source_column]
-          # p dynamic_columns
-          # p query_cols
-          next if table.nil?
-          next unless dynamic_columns.include?(column)
-
-          query = klass.new(query, self).modified_query
-        end
-
-        query
-      end
-
       def determine_tables
         if upstreams.empty?
           if respond_to?(:table)
@@ -600,8 +582,9 @@ module ConceptQL
         end
       end
 
+      # Only Vocabulary operators carry a code format (Vocabulary#code_regexp)
       def code_regexp
-        self.class.codes_regexp
+        nil
       end
 
       def validate_codes_match
