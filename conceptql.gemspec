@@ -36,12 +36,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'climate_control'
   spec.add_development_dependency 'minitest', '~> 6.0'
   spec.add_development_dependency 'minitest-mock', '~> 5.0'
-  spec.add_development_dependency 'nokogiri', '~> 1.14'
   spec.add_development_dependency 'pry-byebug', '~> 3'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rubocop', '~> 1.0'
   spec.add_development_dependency 'rubocop-minitest', '~> 0.25'
   spec.add_development_dependency 'simplecov', '~> 1.0'
   spec.add_development_dependency 'sqlite3', '~> 2.9'
-  spec.add_development_dependency 'watir', '~> 7.3'
 end
