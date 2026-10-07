@@ -58,7 +58,7 @@ module ConceptQL
       end
 
       def preferred_formatter
-        SqlFormatters::SqlFormatter
+        SqlFormatters::SQL_FORMATTER
       end
 
       def datediff(from, to)

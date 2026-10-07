@@ -14,7 +14,7 @@ module ConceptQL
       end
 
       def preferred_formatter
-        SqlFormatters::PgFormat
+        SqlFormatters::PG_FORMAT
       end
 
       def primary_concepts(db, all_primary_ids)

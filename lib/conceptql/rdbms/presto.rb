@@ -29,7 +29,7 @@ module ConceptQL
       end
 
       def preferred_formatter
-        SqlFormatters::PostgresFormatter
+        SqlFormatters::POSTGRES
       end
 
       def supports_materialized?
