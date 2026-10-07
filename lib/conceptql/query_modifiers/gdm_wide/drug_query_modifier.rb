@@ -18,7 +18,7 @@ module ConceptQL
         end
 
         def self.has_required_columns?(cols)
-          needed = [:dose_unit_concept_id].sort
+          needed = [:dose_unit_concept_id]
           found = needed & cols
           needed == found
         end

@@ -148,7 +148,7 @@ module ConceptQL
         desc: get_desc,
         categories: @categories || [],
         basic_type: @basic_type,
-        deprecated: @deprecated,
+        deprecated: nil, # kept for metadata consumers; no operator is deprecated
         arity: arity,
         aliases: @aliases,
         spec_id: spec_id
@@ -172,18 +172,6 @@ module ConceptQL
 
     def get_desc
       @get_desc ||= standard_description
-    end
-
-    def deprecated(opts = {})
-      @deprecated = true
-      message = ['This operator will no longer be available in a future version of Jigsaw.']
-      if opts[:replaced_by]
-        message << "Please use #{Array(opts[:replaced_by]).to_sentence(last_word_connector: ', or ')} instead."
-      end
-      define_method(:deprecation_warning) do |*_args|
-        add_warning(message.join(' '))
-      end
-      validations << [:deprecation_warning, []]
     end
 
     def process_options(options)

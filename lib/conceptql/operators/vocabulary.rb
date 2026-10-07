@@ -70,10 +70,6 @@ module ConceptQL
 
       private
 
-      def table_name
-        @table_name ||= make_table_name(table)
-      end
-
       def query(db)
         ds = db[criterion_table]
 
