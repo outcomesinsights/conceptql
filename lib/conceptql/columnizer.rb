@@ -28,7 +28,7 @@ module ConceptQL
 
         unless options.no_alias
           n = extract_name(name)
-          col = Sequel.expr(col).as(n) if ConceptQL::Utils.present?(n)
+          col = Sequel.expr(col).as(n) if n.present?
         end
 
         col
@@ -39,10 +39,10 @@ module ConceptQL
 
         n = nil
         n = name.column if name.respond_to?(:column)
-        return n unless ConceptQL::Utils.blank?(n)
+        return n unless n.blank?
 
         n = name.table if name.respond_to?(:table)
-        return n unless ConceptQL::Utils.blank?(n)
+        return n unless n.blank?
 
         extract_name(name.expr) if name.respond_to?(:expr)
       end

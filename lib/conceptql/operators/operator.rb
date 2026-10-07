@@ -133,7 +133,7 @@ module ConceptQL
       end
 
       def operator_name
-        ConceptQL::Utils.snakecase(self.class.just_class_name)
+        self.class.just_class_name.underscore
       end
 
       def required_columns

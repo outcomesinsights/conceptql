@@ -24,7 +24,7 @@ module ConceptQL
 
       def source_table
         tab = dm.table_by_domain(domain)
-        tab = :payer_plan_period if tab == :observation_period && ConceptQL::Utils.present?(arguments)
+        tab = :payer_plan_period if tab == :observation_period && arguments.present?
         tab
       end
 

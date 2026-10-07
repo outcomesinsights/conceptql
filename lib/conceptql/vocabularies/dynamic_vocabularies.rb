@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/object/blank'
 require 'csv'
 require_relative 'entry'
 
