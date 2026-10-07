@@ -358,12 +358,6 @@ Style/FetchEnvVar:
     - 'test/db_helper.rb'
     - 'test/from_operator_test.rb'
 
-# Offense count: 11
-# Configuration parameters: AllowedVariables.
-Style/GlobalVars:
-  Exclude:
-    - 'test/lib/conceptql/operators/conceptql_spec_test.rb'
-
 # Offense count: 9
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: AllowSplatArgument.
