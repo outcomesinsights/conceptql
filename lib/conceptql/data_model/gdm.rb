@@ -90,15 +90,6 @@ module ConceptQL
         }[table]
       end
 
-      def person_id_column(table)
-        col = if table.to_sym == :patients
-                :id
-              else
-                :patient_id
-              end
-        Sequel.identifier(col).as(:person_id)
-      end
-
       def data_model
         :gdm
       end

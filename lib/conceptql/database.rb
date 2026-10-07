@@ -28,11 +28,8 @@ module ConceptQL
 
       @opts[:data_model] ||= (ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
 
+      self.class.db_extensions(db, @opts[:data_model], @opts[:use_cold_col])
       db_type = db ? db.database_type.to_sym : :postgres
-      if db
-        self.class.db_extensions(db, @opts[:data_model], @opts[:use_cold_col])
-        db_type = db.database_type.to_sym
-      end
 
       @lexicon = opts[:lexicon]
 

@@ -68,10 +68,6 @@ module ConceptQL
         make_table_id(table)
       end
 
-      def convert_table(table)
-        table
-      end
-
       def person_id(table)
         case table.to_sym
         when :procedure_cost, :drug_cost
@@ -79,10 +75,6 @@ module ConceptQL
         else
           :person_id
         end
-      end
-
-      def person_id_column(_query)
-        :person_id
       end
 
       def schema
@@ -315,10 +307,6 @@ module ConceptQL
 
       def table_by_domain(domain)
         domain
-      end
-
-      def condition_table
-        :condition_occurrence
       end
 
       def period_table

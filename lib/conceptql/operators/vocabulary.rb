@@ -70,20 +70,8 @@ module ConceptQL
 
       private
 
-      def code_column
-        dm.table_source_value(table_name)
-      end
-
-      def vocabulary_id_column
-        dm.source_vocabulary_id(table_name)
-      end
-
       def table_name
         @table_name ||= make_table_name(table)
-      end
-
-      def table_concept_column
-        Sequel.qualify(:tab, concept_column)
       end
 
       def query(db)
@@ -151,13 +139,6 @@ module ConceptQL
 
       def translated_vocabulary_id
         vocab_entry.omopv5_vocabulary_id || op_name
-      end
-
-      def translate_to_old(v_id)
-        v = self.class.v5_vocab_to_v4_vocab[v_id.to_s.downcase]
-        return v.to_i if v
-
-        v
       end
 
       def domain_map(_v_id)

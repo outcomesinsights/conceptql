@@ -117,9 +117,7 @@ module ConceptQL
 
     desc 'extract_metadata', 'test visiting'
     def simple_visit(statement_file)
-      visitor = ConceptQL::Visitors::MetadataExtractor.new
-      ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file)).accept(visitor)
-      pp visitor.results
+      pp cdb(options).query(criteria_from_file(statement_file)).extract_metadata
     end
 
     desc 'selection_operators', 'Generates a TSV of all the selection operators'
@@ -173,10 +171,6 @@ module ConceptQL
       else
         eval(File.read(file))
       end
-    end
-
-    def filtered(results)
-      results.each { |r| r.delete_if { |_k, v| v.nil? } }
     end
 
     def cdb(options)

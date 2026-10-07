@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'json'
-require 'open3'
 require 'forwardable'
 require 'memo_wise'
 require_relative 'scope'
@@ -24,9 +23,8 @@ module ConceptQL
     end
 
     extend Forwardable
-    def_delegators :query, :all, :count, :execute, :order, :profile
+    def_delegators :query, :all, :count, :execute, :order
     def_delegators :cdb, :db
-    def_delegators :db, :profile_for
 
     attr_reader :statement
 
