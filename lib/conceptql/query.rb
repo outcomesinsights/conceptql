@@ -2,15 +2,12 @@
 
 require 'json'
 require 'forwardable'
-require 'memo_wise'
 require_relative 'scope'
 require_relative 'nodifier'
 require_relative 'sql_formatters'
 
 module ConceptQL
   class Query
-    prepend MemoWise
-
     class QueryError < StandardError
       def message
         og_message = if cause.respond_to?(:full_message)
@@ -44,9 +41,8 @@ module ConceptQL
     end
 
     def query(opts = {})
-      nodifier.scope.with_ctes(operator, db, opts)
+      (@queries ||= {})[opts] ||= nodifier.scope.with_ctes(operator, db, opts)
     end
-    memo_wise :query
 
     def query_cols(opts = {})
       cols = operator.dynamic_columns

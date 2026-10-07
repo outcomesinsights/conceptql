@@ -407,11 +407,6 @@ Style/NilLambda:
   Exclude:
     - 'lib/conceptql/nodifier.rb'
 
-# Offense count: 1
-Style/OpenStructUse:
-  Exclude:
-    - 'lib/conceptql/columnizer.rb'
-
 # Offense count: 5
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: respond_to_missing?

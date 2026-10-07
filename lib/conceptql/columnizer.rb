@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'ostruct'
-
 module ConceptQL
   class Columnizer
     class ColumnDefinition
@@ -9,24 +7,24 @@ module ConceptQL
 
       def initialize(name, options)
         @name = name
-        @options = OpenStruct.new(options)
+        @options = options
       end
 
       def grouped?
-        options.grouped
+        options[:grouped]
       end
 
       def sequelized
         col = name
-        if (q = options.qualifer)
+        if (q = options[:qualifer])
           col = Sequel.qualify(q, col)
         end
 
-        if (fun = options.function)
+        if (fun = options[:function])
           col = Sequel.function(fun, col)
         end
 
-        unless options.no_alias
+        unless options[:no_alias]
           n = extract_name(name)
           col = Sequel.expr(col).as(n) if n.present?
         end
@@ -56,7 +54,6 @@ module ConceptQL
 
     def add_columns(*column_names)
       opts = ConceptQL::Utils.extract_opts!(column_names)
-      column_names.map { |cn| cn.respond_to?(:to_sym) ? cn.to_sym : cn }
       column_names.each do |column_name|
         columns[column_name] = ColumnDefinition.new(column_name, opts)
       end
