@@ -97,7 +97,7 @@ module ConceptQL
         wheres = { clinical_code_vocabulary_id: vocabulary_id }
 
         unless select_all?
-          concept_ids = dm.concepts(db, vocabulary_id, arguments).select_map(:id)
+          concept_ids = dm.concept_ids(db, vocabulary_id, arguments)
 
           wheres = wheres.merge({ clinical_code_concept_id: concept_ids })
         end

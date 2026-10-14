@@ -23,7 +23,10 @@ if DB.database_type.to_sym == :duckdb
   DB.make_ready(search_path: schemas)
 end
 
-CDB = ConceptQL::Database.new(DB, data_model: (ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym)
+# cache_lookups is on so the suite runs the same lookup path that production
+# exports use (seed conceptql-a5f).
+CDB = ConceptQL::Database.new(DB, data_model: (ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym,
+                                  cache_lookups: true)
 DB.extension :error_sql
 
 PRINT_CONCEPTQL = ENV['CONCEPTQL_PRINT_SQL']

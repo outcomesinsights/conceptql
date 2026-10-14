@@ -32,6 +32,9 @@ module ConceptQL
       db_type = db ? db.database_type.to_sym : :postgres
 
       @lexicon = opts[:lexicon]
+      if @lexicon && @opts[:cache_lookups]
+        raise ArgumentError, 'cache_lookups needs the Database to build its own Lexicon; do not pass lexicon:'
+      end
 
       @opts[:database_type] ||= (ENV['CONCEPTQL_DATABASE_TYPE'] || db_type).to_sym
       @opts[:scope_opts] = {
@@ -100,7 +103,7 @@ module ConceptQL
     end
 
     def lexicon
-      @lexicon ||= Lexicon.new(self.class.lexicon_db, db)
+      @lexicon ||= Lexicon.new(self.class.lexicon_db, db, cache: @opts[:cache_lookups])
     end
 
     # This Database's operators for a data model, as a frozen name => class

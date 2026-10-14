@@ -56,7 +56,7 @@ module ConceptQL
 
         q = db.from(source_table)
         if words.any? { |w| w.match(/unknown/i) }
-          c_ids << 0
+          c_ids += [0]
           q = q.where(race_concept_id: nil)
         end
 
