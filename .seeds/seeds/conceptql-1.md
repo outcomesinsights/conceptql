@@ -4,7 +4,7 @@ title: CPT4_HCPCS merged vocabulary — ConceptQL integration (deferred)
 status: captured
 type: decision
 created_at: 2026-06-04T17:06:48.933160+00:00
-updated_at: 2026-06-04T17:06:48.933169+00:00
+updated_at: 2026-10-14T20:41:23.123203+00:00
 tags:
   - cpt
   - hcpcs
@@ -27,3 +27,5 @@ OPEN (decide before implementing):
 - format_regexp re-evaluation (config/vocabularies.csv): current CPT4 = four-digits-then-word-char, HCPCS = word-char-then-four-digits. NEITHER matches the 2-char modifiers and may not capture true shapes (Category II/III NNNN-letter, etc.). Need a CPT4_HCPCS regexp unioning all real shapes; CPT4/HCPCS regexps likely need fixing too. Ryan wants a short investigation of actual code shapes - data already partially characterized in vocabulation seed vocabulation-1.1 (CPT4: 11,259 five-digit-numeric + 6,420 four-digit-plus-letter + 390 letter-prefixed; HCPCS: 12,559 letter-prefixed + 27 other).
 - Namespace trap: ConceptQL juggles operator name vs OHDSI vocabulary_id vs internal operator symbol (entry.rb remaps the ICD10 vocab to the icd10who operator). Account for this when wiring CPT4_HCPCS.
 - Standardness: merged concepts inherit standard_concept from source (can be S), so two standard concepts may exist for one meaning - implications for standard/descendant resolution + whether merged concepts need concept_ancestor / Maps-to rows (also deferred upstream).
+
+RULED 2026-10-14 (Ryan): "CPT4_HCPCS will be part of the cpt_or_hcpcs multi vocab and its own dynamic vocab operator. if you need a guard, add one." This answers the first open question: both. CPT4_HCPCS is a third row of "CPT or HCPCS" in config/multiple_vocabularies.csv, and it keeps the operator cpt4_hcpcs that DynamicVocabularies builds from any lexicon that carries it. The row is marked optional, so a Database whose lexicon lacks CPT4_HCPCS (for example the gdm_vocabs test schema) skips it. A missing required vocabulary still raises. In about a year "CPT or HCPCS" will use CPT4_HCPCS alone (Ryan, 2026-10-14). The format_regexp and standardness questions above stay open.

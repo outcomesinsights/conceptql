@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-14T19:22:29.447317+00:00
+updated_at: 2026-10-14T20:41:23.536920+00:00
 tags:
   - performance
   - spark
@@ -149,3 +149,5 @@ unit_concept_id, result_as_concept_id   "None" (1 id each)
 
 - Fixed: MultipleVocabularies now skips the second window application (`skip_windows?` is true), because each vocabulary operator below it already applied the scope's windows.
 - Test: `cpt_or_hcpcs 99232 A0425` with overlapping windows (one window per ICD9 412 event, widened by 2 years each way) now gives 470 rows, identical to `union [cpt4 99232] [hcpcs A0425]` under the same windows. The old code fails that test.
+
+RULED 2026-10-14, second round (Ryan): remove the "ICD10" multi-vocabulary operator now (see conceptql-sn2). Add CPT4_HCPCS to "CPT or HCPCS" with a guard (see conceptql-1). The lexicon cache is created by the Database (see conceptql-a5f). Time one_in_two_out on Spark before any rewrite (see conceptql-x9w).

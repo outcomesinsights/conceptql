@@ -4,7 +4,7 @@ title: Lexicon re-issues identical vocabulary queries per Database/export; remov
 status: captured
 type: question
 created_at: 2026-09-29T03:04:20.735970+00:00
-updated_at: 2026-10-14T19:21:39.973882+00:00
+updated_at: 2026-10-14T20:58:34.113183+00:00
 tags:
   - lexicon
   - performance
@@ -140,3 +140,55 @@ A lookup cache that the ConceptQL::Database owns.
 
 1. **Who creates the cache?** (a) ConceptQL::Database always creates its own and accepts none from outside. A long-lived cache is then impossible by construction, and t_shank needs no change. (b) The caller passes one in, as Ryan sketched. That makes the lifetime explicit at the call site, but a caller could pass one cache to many Databases, which brings back the long-lived case. Recommendation: (a).
 2. **Cache or SQL push-down for the Gender lookup?** Candidate (a) from 2026-09-28, which emits the is_a lookup as a subquery in the generated SQL, still removes that round trip without any cache. The two can coexist. Which lookups dominate the 195 distinct ones in f4f10fdf has not been broken down by Lexicon method yet. That breakdown should come before choosing.
+
+## RULED 2026-10-14: the Database creates the cache
+
+Ryan chose option (a) of the open question "Who creates the cache?": ConceptQL::Database creates its own lookup cache and accepts none from outside. A cache that lives longer than one Database is then impossible by construction.
+
+Two facts checked the same day:
+
+- The t_shank session confirmed that both lookup counts come from ONE export with one ConceptQL::Database. The bench re-run had 929 lookups (195 distinct), and the March production run had 970 (198 distinct). Each log has exactly one "NEW CDB" line, one temp-table prefix and one destination. So a cache that lives one Database removes at most 929 - 195 = 734 lookups in that export.
+- t_shank's direct calls `cdb.data_model.concept_ids` and `descendants_of` (exporter.rb:1727-1757) also reach the Lexicon. DataModel::Base delegates those methods to `cdb.lexicon` (data_model/base.rb:11-12). So a cache at the Lexicon method boundary sees them too.
+
+Not yet decided: which Lexicon methods to memoize. Break the 195 distinct lookups down by method first.
+
+## 2026-10-14, later: an opt-in flag, off by default
+
+Ryan, verbatim:
+
+> I'm leaning towards having conceptual carry a caching or carrying caching inside of the database object. I only want it, I want it to be a flag when we're creating a new database object with a the default of not being created. Are there any libraries that help with a caching object like this. Ask Ponytail for its feedback on this idea.
+
+("conceptual" is ConceptQL.) This refines the earlier ruling in this seed. The cache still lives inside ConceptQL::Database, and the Database still creates it. It is created only when the caller passes a flag to ConceptQL::Database.new, and the default is no cache. The flag name is not decided. Ponytail (the over-engineering review) was asked for feedback, and its answer is recorded below when it arrives.
+
+## Ponytail review of the opt-in cache (2026-10-14)
+
+An agent applied the ponytail-audit rules (over-engineering review) to the design: a flag on ConceptQL::Database.new, default off, that memoizes lookups in a Hash for the life of the Database. Its verdict: the design is about the right size, but it misses the most common lookup. The main session checked finding 1 in the code.
+
+Findings, ranked:
+
+1. The Vocabulary operator fetches concept ids itself with `dm.concepts(db, vocabulary_id, arguments).select_map(:id)` (operators/vocabulary.rb:100). That is the same SQL as `Lexicon#concept_ids` (lexicon_strategy.rb:57-60), but it does not go through the Lexicon, so a cache there never sees it. Race (race.rb:51) and Provenanceable (behaviors/provenanceable.rb:23) do the same. Every code-list criterion uses the Vocabulary operator. Route these calls through the Lexicon's value-returning methods first. Their share of the 195 distinct lookups is not measured.
+2. Drop "answer the table_exists? probes once". determine_strategy already probes once per Lexicon, so once per Database. The probe at lexicon_strategy.rb:82 disappears when concepts_to_codes is memoized. The data-model probes check data tables, not the Lexicon.
+3. Drop the hit and miss counters. `cache.size` is the number of distinct lookups, and t_shank's SQL log already counts statements. Expose the Hash with `attr_reader :cache`.
+4. Do not memoize `vocabularies`. Database#operators already reads it once per data model, and it returns mutable row Hashes.
+5. If every production caller turns the flag on, the off branch is dead code. The flag is Ryan's call, so keep the off branch to one line.
+
+Methods to memoize: concept_ids, concepts_to_codes, descendants_of, known_codes and related_concept_ids. Each returns a new Array. Freeze a copy (`.dup.freeze`), so that a later mutation fails with an error. Two cautions for known_codes:
+
+- It can return the caller's own Array (lexicon_strategy.rb:73-74), so it must be copied before it is frozen.
+- It turns Sequel::DatabaseError into `[]` (lexicon_strategy.rb:77-78). With the cache, one transient error then lasts for the life of the Database. Only "unknown code" warnings depend on it.
+
+Do not memoize the methods that return datasets (concepts, concepts_by_name, concepts_ds, concepts_table, vocabularies_query). The round trip happens later, when the caller runs `select_map`. That is the reason for finding 1.
+
+Libraries: use a plain Hash.
+
+- memo_wise: no. conceptql-b8l removed it, because a Hash replaced its only use.
+- memoist: no. It memoizes every call with no per-instance switch, so a flag needs a wrapper anyway.
+- ActiveSupport::Cache::MemoryStore: no. Its time-to-live and eviction are the behaviour that is hard to trace.
+- Sequel's caching plugins: no. They work only on Models.
+- Concurrent::Map: no. Each export has its own Database, so nothing is shared between threads.
+
+Second code path: the flag creates one. If production turns it on and the tests leave it off, then only production runs the cached path. That breaks the rule against test-only code paths in the opposite direction. The suite should run with the flag on, set on CDB (test/db_helper.rb:26). CDB lives for the whole test process, so in tests the cache outlives one export. This is harmless, because the vocabulary tables do not change during a run.
+
+Guard: Database#initialize accepts an outside Lexicon (`opts[:lexicon]`, database.rb:34). Raise when a caller passes both that and the flag, otherwise the flag does nothing.
+
+Size: about 20 lines, no new dependencies.
