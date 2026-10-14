@@ -42,13 +42,16 @@ module ConceptQL
 
       def query(db)
         @db = db
+        # Evaluate the upstream once. The inpatient branch and both sides of the
+        # outpatient self-join read it, and three evaluations emit three CTEs.
+        @upstream = stream.evaluate(db)
         first_valid_event.from_self
       end
 
       private
 
       def condition_events
-        db[stream.evaluate(db)]
+        db[@upstream]
           .where(criterion_domain: 'condition_occurrence')
           .from_self
       end
