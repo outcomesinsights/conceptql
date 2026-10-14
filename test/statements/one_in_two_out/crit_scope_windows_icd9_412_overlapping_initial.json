@@ -1,0 +1,26 @@
+[
+  "window",
+  [
+    "one_in_two_out",
+    [
+      "icd9",
+      "585.6",
+      "285.21",
+      "285.1",
+      "272.4"
+    ],
+    {
+      "outpatient_minimum_gap": "1m",
+      "outpatient_maximum_gap": "2m",
+      "outpatient_event_to_return": "Initial Event"
+    }
+  ],
+  {
+    "window_table": [
+      "icd9",
+      "412"
+    ],
+    "adjust_window_start": "-2y",
+    "adjust_window_end": "2y"
+  }
+]

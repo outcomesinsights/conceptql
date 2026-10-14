@@ -1,0 +1,13 @@
+[
+  "one_in_two_out",
+  [
+    "icd9",
+    "401.9",
+    "272.4"
+  ],
+  {
+    "outpatient_minimum_gap": "",
+    "outpatient_maximum_gap": "",
+    "outpatient_event_to_return": "Confirming Event"
+  }
+]

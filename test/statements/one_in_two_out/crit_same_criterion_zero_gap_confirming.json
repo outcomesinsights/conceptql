@@ -1,0 +1,26 @@
+[
+  "one_in_two_out",
+  [
+    "union",
+    [
+      "icd9",
+      "585.6"
+    ],
+    [
+      "time_window",
+      [
+        "icd9",
+        "585.6"
+      ],
+      {
+        "start": "1m",
+        "end": "1m"
+      }
+    ]
+  ],
+  {
+    "outpatient_minimum_gap": "0",
+    "outpatient_maximum_gap": "1m",
+    "outpatient_event_to_return": "Confirming Event"
+  }
+]

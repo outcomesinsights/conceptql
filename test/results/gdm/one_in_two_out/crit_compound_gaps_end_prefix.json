@@ -1,0 +1,386 @@
+[
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 95
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 127
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 150
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 342
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 391
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 666
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 775
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 823
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 836
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 889
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 894
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1007
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1152
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1325
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1457
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1545
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1625
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1713
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 1722
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 13549
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 14864
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 15091
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 15870
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 18439
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 19034
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 23217
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 24325
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 24470
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 24825
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 29092
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 29500
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 30733
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 32386
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 32910
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 33333
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 34274
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 34376
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 34978
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 35738
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 37529
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 39810
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 40511
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 40739
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 41342
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 41708
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 43552
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 44304
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 45333
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 48188
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 48284
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 49936
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 50516
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 50659
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 51369
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 51548
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 54399
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 54460
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 56393
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 60749
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 61008
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 61704
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 62712
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 63772
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 64268
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 67578
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 68293
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 68428
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 69572
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 69968
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 71065
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 72207
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 73094
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 73193
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 74386
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 74449
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 75817
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 77441
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 78090
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 79894
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 80763
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 81255
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 82919
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 83136
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 85147
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 86007
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 86725
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 87839
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 89225
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 89244
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 89479
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 89970
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 91546
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 92193
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 93918
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 94353
+  },
+  {
+    "criterion_domain": "condition_occurrence",
+    "criterion_id": 95614
+  }
+]

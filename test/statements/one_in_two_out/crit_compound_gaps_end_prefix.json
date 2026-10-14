@@ -1,0 +1,15 @@
+[
+  "one_in_two_out",
+  [
+    "icd9",
+    "585.6",
+    "285.21",
+    "285.1",
+    "272.4"
+  ],
+  {
+    "outpatient_minimum_gap": "e1w",
+    "outpatient_maximum_gap": "2m-3d",
+    "outpatient_event_to_return": "Initial Event"
+  }
+]
