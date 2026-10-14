@@ -15,6 +15,10 @@ describe ConceptQL::Operators::MultipleVocabularies do
     sql.must_match(/"clinical_code_vocabulary_id" = 'CPT4'/)
   end
 
+  it 'has no icd10 operator' do
+    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm).operators.key?('icd10')).must_equal false
+  end
+
   it 'should produce correct SQL under omopv4_plus' do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
     sql = _(db.query(%w[cpt_or_hcpcs 99214]).sql)
