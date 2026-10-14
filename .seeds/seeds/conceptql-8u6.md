@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-14T17:05:51.210794+00:00
+updated_at: 2026-10-14T19:21:27.845481+00:00
 tags:
   - performance
   - spark
@@ -85,3 +85,60 @@ Per export, 52% of live leaf scans repeat a leaf from another statement, and ICD
 
 - The t_shank session saw Spark run times vary about 5x between identical runs. spark-defaults.conf was rewritten on 2026-09-30, so the March 2026 timings came from a different configuration.
 - The production EXPLAIN plans are pre-AQE. Runtime reuse of shuffles and broadcast conversion are not visible in them.
+
+## Ryan's responses, 2026-10-14 (verbatim)
+
+On the ranked options:
+
+> 1. one admission will never belong to two patients. please do this fix
+> 2. don't know what you're saying, but I think the concept table is partitioned by vocabulary id, so might that help?
+> 3. please look into fixing this
+> 4. I'm fine with this, though I'd like to point out that we now have a new vocabulary, I think it's cpt4 underscore HCPCS, that we will be using going forward for this quote multi-vocabulary CPT or HCPCS setup. So actually, that should be a third vocabulary ID that is included in that mishmash. And we will mark multiple vocabularies as deprecated because I think CPT or hic pics is the only one. So in the future, CPT or HCPCS will just call that one unified vocabulary in the future, but not for at least another maybe year. Does that all make sense?
+
+On the three decisions (hospitalization beads, the duplicate-row defect, the lexicon cache):
+
+> Here's my response to decisions. Item one. Yes. Item two. Yes, that needs to be fixed. Three Three I think we had actually talked about this caching before [...]
+
+The cache part is recorded in full in conceptql-a5f.
+
+RULED 2026-10-14:
+
+- Option 1 (hospitalization person filter): build it. Precondition settled by Ryan: one admission never belongs to two persons.
+- The duplicate-row defect (bead conceptql-7cd): fix it.
+- Option 3 (one_in_two_out triple read): investigate a fix.
+- Option 4: the explicit vocabulary_id IN conjunct is accepted. CPT4_HCPCS joins CPT4 and HCPCS in "CPT or HCPCS". MultipleVocabularies will be marked deprecated. "CPT or HCPCS" moves to the CPT4_HCPCS vocabulary alone in about a year, not now.
+
+## Follow-up findings, 2026-10-14
+
+### Option 2: is the concept table partitioned by vocabulary_id? Yes, but these joins do not use it
+
+- In current production Spark datasets, `concept` is a partitioned catalog table (CatalogFileIndex), and lookups that filter on vocabulary_id show PartitionFilters on it (for example `vocabulary_id = Race`, `vocabulary_id = Ethnicity`).
+- The dose_con, ing_con, asc, dlc and unit joins join on concept_id only. Every one of those concept scans in the production plans has `PartitionFilters: []`, so Spark reads every partition.
+- A `vocabulary_id IN (...)` conjunct on the concept side of each join would let Spark prune. But conceptql does not know which vocabularies those columns use, and they differ by dataset. On seer_2022_lung (DuckDB, real data):
+
+```
+admit_source_concept_id        SEER_SRC_IP_ADMN_CD (13 ids), "None" (1 id)
+discharge_location_concept_id  SEER_DSCHRG_DST_CD (38 ids), PTNT_DSCHRG_STUS_CD (21 ids)
+dose_unit_concept_id           UCUM (3 ids), CMS_MTUS_TYPE (1 id)
+unit_concept_id, result_as_concept_id   "None" (1 id each)
+```
+
+- A fixed vocabulary list in conceptql would drop names on some dataset. A list per dataset needs a lookup (a round trip) or metadata from the ETL. So partitioning does not help these joins by itself. The output-identical options stay the same: a broadcast hint, or applying the window join before the concept joins.
+
+### Option 3: one_in_two_out
+
+- Spark experiment (local Spark 3.5.0 from the spark-image Docker image, AQE off, synthetic Parquet tables): three separately named identical CTEs and one CTE referenced three times give the same physical plan. Both scan the upstream three times. Spark inlines deterministic CTEs and reuses only the broadcast of the window table. Production runs Spark 3.3.2. Its CTE inlining is expected to behave the same, but that is not verified.
+- Done: OneInTwoOut#query now evaluates its upstream once, so the SQL has one CTE where it had three. Output is unchanged. This helps Postgres, where conceptql marks CTEs MATERIALIZED, and DuckDB. It does not change the Spark plan.
+- A fix that reads the upstream once on Spark must replace the EXISTS self-join with window functions over a date RANGE frame. Risks: (1) gaps in months are not symmetric at month ends (`add_months(Jan 31, 1)` is Feb 28, and `add_months(Feb 28, -1)` is Jan 28), so the "Confirming Event" side can change output at month ends. (2) RANGE frames with interval offsets differ by RDBMS. (3) The 65% duplicate-scan figure came from pre-AQE plans. AQE can reuse identical query stages at runtime, so the real duplication may be smaller.
+- Recommendation: measure one production-shaped one_in_two_out statement on Spark with AQE on, and only then decide on the rewrite.
+
+### Option 4: CPT4_HCPCS and MultipleVocabularies
+
+- The vocabulary CPT4_HCPCS exists. ohdsi_supplemental_vocabs builds it, and vocabulation keeps it in the trimmed and test images permanently (vocabulation seed vocabulation-5, bead vocabulation-rb4).
+- `config/multiple_vocabularies.csv` defines two multi-vocabulary operators, not one: "CPT or HCPCS" (CPT4, HCPCS) and "ICD10" (ICD10CM, ICD10WHO). Deprecating MultipleVocabularies needs a plan for "ICD10" too. The duplicate-row defect also affected "ICD10".
+- Adding CPT4_HCPCS as a third row needs a `cpt4_hcpcs` vocabulary operator on every ConceptQL::Database. MultipleVocabularies#vocab_ops uses `fetch`, so a database whose lexicon has no CPT4_HCPCS would raise KeyError. Either every lexicon has CPT4_HCPCS, or the operator skips a vocabulary that is missing.
+
+### The duplicate-row defect (bead conceptql-7cd)
+
+- Fixed: MultipleVocabularies now skips the second window application (`skip_windows?` is true), because each vocabulary operator below it already applied the scope's windows.
+- Test: `cpt_or_hcpcs 99232 A0425` with overlapping windows (one window per ICD9 412 event, widened by 2 years each way) now gives 470 rows, identical to `union [cpt4 99232] [hcpcs A0425]` under the same windows. The old code fails that test.
