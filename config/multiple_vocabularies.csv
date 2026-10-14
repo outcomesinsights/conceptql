@@ -1,3 +1,4 @@
-operator,vocabulary_id,domain
-CPT or HCPCS,CPT4,procedure_occurrence
-CPT or HCPCS,HCPCS,procedure_occurrence
+operator,vocabulary_id,domain,optional
+CPT or HCPCS,CPT4,procedure_occurrence,
+CPT or HCPCS,HCPCS,procedure_occurrence,
+CPT or HCPCS,CPT4_HCPCS,procedure_occurrence,yes

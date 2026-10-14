@@ -170,6 +170,10 @@ module ConceptQL
         hash[:from_csv].present?
       end
 
+      def requires_lexicon?
+        hash[:requires_lexicon].present?
+      end
+
       def has_domain?
         hash[:domain].present?
       end

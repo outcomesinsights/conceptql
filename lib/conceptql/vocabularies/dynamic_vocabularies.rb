@@ -17,6 +17,10 @@ module ConceptQL
       # Fresh classes on every call.
       def operators(data_model)
         all_vocabs.each_with_object({}) do |(name, entry), h|
+          # A CSV row marked requires_lexicon (CPT4_HCPCS) supplies metadata
+          # only. Its operator exists only where the lexicon has the vocabulary.
+          next if entry.requires_lexicon? && !entry.from_lexicon?
+
           klass = entry.dup.get_klasses[data_model]
           h[name] = klass if klass
         end

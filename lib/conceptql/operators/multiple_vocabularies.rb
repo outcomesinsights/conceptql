@@ -119,16 +119,22 @@ module ConceptQL
           vo.describe_codes(db, codes)
         end
 
-        codes_with_descriptions = codes.select(&:last)
+        # The first vocabulary that describes a code wins, so CPT4_HCPCS adds
+        # descriptions only for codes that CPT4 and HCPCS do not know.
+        codes_with_descriptions = codes.select(&:last).uniq(&:first)
         codes_without_descriptions = codes.reject(&:last).map(&:first)
         codes_without_descriptions -= codes_with_descriptions.map(&:first)
         codes_with_descriptions + codes_without_descriptions.zip([])
       end
 
+      # An optional vocabulary (CPT4_HCPCS) has an operator only on a Database
+      # whose lexicon carries it, so it is skipped elsewhere. A required one
+      # that is missing still raises.
       def vocab_ops
-        @vocab_ops ||= self.class.multiple_vocabularies[op_name].map do |op_info|
-          op_info[:vocabulary_id].to_s.downcase
-        end.map do |name|
+        @vocab_ops ||= self.class.multiple_vocabularies[op_name].filter_map do |op_info|
+          name = op_info[:vocabulary_id].to_s.downcase
+          next if op_info[:optional] == 'yes' && !nodifier.operators.key?(name)
+
           nodifier.operators.fetch(name).new(nodifier, name, *arguments)
         end
       end
