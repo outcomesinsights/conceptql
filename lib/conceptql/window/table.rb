@@ -47,6 +47,13 @@ module ConceptQL
           .from_self
       end
 
+      # The persons this window covers. An operator that runs a window
+      # function over a whole table filters on this first, because a database
+      # cannot push the window join (#call) below that function.
+      def person_ids(db)
+        db[get_table_window(nil)].select(:person_id)
+      end
+
       def order_columns(op)
         # Hack until Cloudera 6.1
         %i[person_id start_date end_date].map do |c|

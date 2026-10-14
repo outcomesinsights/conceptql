@@ -56,6 +56,7 @@ module ConceptQL
                             .select(:collection_id)
 
         db[:collections].from_self(alias: :cl)
+                        .then { |cl| restrict_to_window_persons(cl, Sequel[:cl][:patient_id]) }
                         .join(:admission_details, { Sequel[:ad][:id] => Sequel[:cl][:admission_detail_id] }, table_alias: :ad)
                         .left_join(dm.concepts_table(db), { Sequel[:ad][:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
                         .left_join(dm.concepts_table(db), { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
@@ -104,6 +105,7 @@ module ConceptQL
           end
 
         db[:observations]
+          .then { |observations| restrict_to_window_persons(observations, :patient_id) }
           .where(source_type_concept_id: all_source_type_ids)
           .exclude(admit_admission_date: nil)
           .select_append(
@@ -129,6 +131,19 @@ module ConceptQL
             Sequel.case({ 1 => :clinical_code_vocabulary_id }, nil, :is_primary).as(:source_vocabulary_id)
           )
           .from_self
+      end
+
+      # Keep only the persons that the scope's table windows cover, before the
+      # ROW_NUMBER over admission_detail_id. Without this, Spark numbers every
+      # inpatient row in the database and applies the window join afterwards.
+      # Output is unchanged because one admission never belongs to two persons
+      # (Ryan, 2026-10-14), so each ROW_NUMBER partition is kept or dropped whole.
+      def restrict_to_window_persons(ds, person_column)
+        return ds if skip_windows?
+
+        scope.windows.grep(Window::Table).inject(ds) do |restricted, window|
+          restricted.where(person_column => window.person_ids(restricted.db))
+        end
       end
 
       def table
