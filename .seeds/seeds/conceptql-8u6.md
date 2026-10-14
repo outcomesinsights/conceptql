@@ -4,12 +4,19 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-14T19:21:27.845481+00:00
+updated_at: 2026-10-14T19:22:29.447317+00:00
 tags:
   - performance
   - spark
   - sql
   - t_shank
+relationships:
+  - target_id: conceptql-sn2
+    rel_type: questioned-by
+    created_at: 2026-10-14T19:22:28.940357+00:00
+  - target_id: conceptql-x9w
+    rel_type: questioned-by
+    created_at: 2026-10-14T19:22:29.445380+00:00
 ---
 
 Ryan asked on 2026-10-14 where the SQL optimization work stood, to re-evaluate it, to review the result adversarially, and to look for other opportunities. This seed records the ConceptQL side. The t_shank side is t_shank seed t-shank-ucq (production export timings, cohort slice, ANALYZE flag) and t_shank/docs/export_performance_review.md (September 2026 review of the test fixtures).
