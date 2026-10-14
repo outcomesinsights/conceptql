@@ -68,6 +68,13 @@ module ConceptQL
         vocab_ops.map(&:domain).uniq
       end
 
+      # Each vocabulary operator in vocab_ops has already applied the scope's
+      # windows. Applying them again to the union multiplied rows: an event in
+      # k overlapping windows came out k*k times instead of k (conceptql-7cd).
+      def skip_windows?
+        true
+      end
+
       def source_table
         nil
       end

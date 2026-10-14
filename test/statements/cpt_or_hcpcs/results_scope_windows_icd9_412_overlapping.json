@@ -1,0 +1,16 @@
+[
+  "window",
+  [
+    "cpt_or_hcpcs",
+    "99232",
+    "A0425"
+  ],
+  {
+    "window_table": [
+      "icd9",
+      "412"
+    ],
+    "adjust_window_start": "-2y",
+    "adjust_window_end": "2y"
+  }
+]
