@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-15T13:20:48.859790+00:00
+updated_at: 2026-10-15T13:21:20.050495+00:00
 tags:
   - performance
   - spark
@@ -232,3 +232,5 @@ Which fix to build:
 - (d) (a) now, and (b) or (c) later.
 
 UPDATE 2026-10-15: Ryan: "send b to roobetl as a seed". Option (b), a cut-down concept table shipped with each dataset, was handed to the live roobetl session to file as a seed in roobetl. roobetl filed it as seed roobetl-825 (roobetl commit 087fa6b). Options (a), (c) and (d) are not ruled.
+
+UPDATE 2026-10-15: Ryan: "tell tshank about c and have it fold that into the testing its doing on claims slicing right now". Option (c), a cut-down concept table built once per export, was sent to the live t_shank session, with the measurement facts and a way to test it by rewriting SQL text. t_shank reports back to conceptql. Options (a) and (d) are not ruled.
