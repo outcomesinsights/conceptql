@@ -4,7 +4,7 @@ title: Should one production-shaped one_in_two_out statement be timed on Spark w
 status: resolved
 type: question
 created_at: 2026-10-14T19:22:29.443544+00:00
-updated_at: 2026-10-15T00:05:05.902843+00:00
+updated_at: 2026-10-15T02:56:36.810969+00:00
 resolved_at: 2026-10-14T21:23:19.941116+00:00
 relationships:
   - target_id: conceptql-8u6
@@ -63,6 +63,6 @@ Verdict: the rewrite is worth doing, but only if output stays identical. The tes
 ## UPDATE 2026-10-14: built (bead conceptql-7qo, commit d9371d12)
 
 - The rewrite needs no RANGE frames. A CROSS JOIN with a four-row tag table copies each event (lower bound, event, upper bound, inpatient). Running window sums over the copies, ordered by date and then tag, replace the EXISTS self-join. Bounds come from DateAdjuster as before, so the month-end question does not arise: each bound is computed forward from the initial event, exactly as the old SQL computed it.
-- Differential check of old against new SQL: 746 cases on Postgres and 746 on DuckDB, identical valid-event sets and final outputs. Local Spark 3.5: 80 cases with identical valid-event sets. Final outputs differed only for persons with two rows tied for first event, which row_number resolves arbitrarily in both versions.
+- Differential check of old against new SQL: 746 cases on Postgres and 746 on DuckDB, identical valid-event sets and final outputs. Local Spark 3.5: 80 cases with identical valid-event sets. Final outputs differed only for persons whose first valid event had two output rows with the same start_date and criterion_id, so the start_date-then-criterion_id tie breaker could not separate them. The synthetic Spark data caused this: it copied each source row up to nine times with the same id, and it let one row count as both inpatient and outpatient. In GDM data the id is unique and a row has one file provenance type, so these ties cannot occur. The Postgres and DuckDB checks used the real fixture, and their final outputs were identical.
 - Found on the way: DuckDB merges date + 30 days and date + 1 month in one SELECT list (bead conceptql-a4j). The operator computes the upper bound in its own SELECT level to avoid it.
 - Not measured yet: the production-scale Spark time of the new SQL. The 56-65% figure above bounds it from above.
