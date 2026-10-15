@@ -283,7 +283,13 @@ module ConceptQL
 
       if (joins = query.opts[:join])
         query = query.clone(join: joins.map do |jc|
-          jc.class.new(jc.on, jc.join_type, recursive_extract_cte_expr(jc.table_expr, ctes))
+          table_expr = recursive_extract_cte_expr(jc.table_expr, ctes)
+          # A CROSS JOIN is a plain JoinClause, with no ON condition.
+          if jc.respond_to?(:on)
+            jc.class.new(jc.on, jc.join_type, table_expr)
+          else
+            jc.class.new(jc.join_type, table_expr)
+          end
         end)
         # p [:rec_join, ctes.map(&:first), joins]
       end

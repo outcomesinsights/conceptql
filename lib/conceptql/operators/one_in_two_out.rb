@@ -38,102 +38,207 @@ module ConceptQL
       require_column :admission_date
       require_column :discharge_date
 
+      # Each event is copied once per tag, by a cross join with a constant
+      # table, so the upstream is read only once. The copies sort by date
+      # and, at equal dates, by tag: a lower gap bound, then an event, then
+      # an upper gap bound. Running sums over that order then count, at each
+      # bound, the events on or after the lower bound and on or before the
+      # upper bound, which is the old self-join's condition.
+      LOWER = 0
+      EVENT = 1
+      UPPER = 2
+      INPATIENT = 3
+
       attr_reader :db
 
       def query(db)
         @db = db
-        # Evaluate the upstream once. The inpatient branch and both sides of the
-        # outpatient self-join read it, and three evaluations emit three CTEs.
-        @upstream = stream.evaluate(db)
         first_valid_event.from_self
       end
 
       private
 
+      def initial_mode?
+        options[:outpatient_event_to_return] == 'Initial Event'
+      end
+
+      def min_gap
+        (options[:outpatient_minimum_gap] || '30d').to_s
+      end
+
+      def max_gap
+        options[:outpatient_maximum_gap].to_s
+      end
+
+      # In the old self-join, a bare START or END resolved to the subquery's
+      # table. In Initial Event mode that is the confirming event, so the
+      # "gap" compares the confirming event with itself. It filters which
+      # events can confirm and bounds nothing.
+      def keyword_gap?(gap)
+        initial_mode? && %w[start end].include?(gap.downcase)
+      end
+
+      def adjusted(gap)
+        DateAdjuster.new(self, gap).adjust(:start_date)
+      end
+
+      # The earliest date a partner event may have. NULL when the bound is
+      # NULL, as the old comparison then failed.
+      def lower_bound
+        return Sequel[:start_date] if min_gap.empty? || keyword_gap?(min_gap)
+
+        bound = adjusted(min_gap)
+        Sequel.case([[Sequel.expr(bound) > :start_date, bound], [Sequel.expr(bound) <= :start_date, :start_date]], nil)
+      end
+
+      # The latest date a partner event may have, or nil for no limit.
+      def upper_bound
+        return if max_gap.empty? || keyword_gap?(max_gap)
+
+        adjusted(max_gap)
+      end
+
+      def partner_filter
+        conditions = []
+        conditions << (Sequel.expr(:start_date) >= adjusted(min_gap)) if keyword_gap?(min_gap)
+        conditions << (Sequel.expr(:start_date) <= adjusted(max_gap)) if keyword_gap?(max_gap)
+        return true if conditions.empty?
+
+        Sequel.&(*conditions)
+      end
+
+      def inpatient_condition
+        condition = build_where_from_codes(db, ['inpatient'])
+        return condition if options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
+
+        Sequel.&(condition, rdbms.days_between(:admission_date, :discharge_date) > options[:inpatient_length_of_stay].to_i)
+      end
+
+      # The old self-join compared these columns with = and <>, so a NULL in
+      # any of them kept an event from pairing.
+      def outpatient_condition
+        not_null = (matching_columns + [:criterion_id]).map { |c| Sequel.~(c => nil) }
+        Sequel.&(build_where_from_codes(db, %w[carrier_claim outpatient]), *not_null)
+      end
+
+      def flag(condition)
+        Sequel.case([[condition, 1]], 0)
+      end
+
       def condition_events
-        db[@upstream]
+        db[stream.evaluate(db)]
           .where(criterion_domain: 'condition_occurrence')
+          .where(Sequel.|(inpatient_condition, outpatient_condition))
+          .select(*query_cols)
+          .select_append(flag(inpatient_condition).as(:is_inpatient), flag(outpatient_condition).as(:is_outpatient))
+          .select_append(lower_bound.as(:lower_bound))
+          .select_append(flag(partner_filter).as(:can_partner))
+          .then { |ds| initial_mode? ? ds.select_append(event_key) : ds }
+          .from_self
+          # The upper bound gets its own SELECT. DuckDB merges date + 30 days
+          # and date + 1 month in one SELECT list as if they were equal
+          # (bead conceptql-a4j).
+          .select_append(Sequel.as(upper_bound || Sequel.cast(nil, Date), :upper_bound))
           .from_self
       end
 
-      def all_inpatient_events
+      # Tells an event's copies apart from other events' copies. Only Initial
+      # Event mode needs it, to bring its two bounds' counts together.
+      def event_key
+        Sequel.function(:row_number).over(partition: matching_columns, order: %i[start_date criterion_id]).as(:event_key)
+      end
+
+      def tags
+        [LOWER, EVENT, UPPER, INPATIENT]
+          .map { |tag| db.select(Sequel.as(tag, :tag)) }
+          .inject { |all, one| all.union(one, all: true, from_self: false) }
+      end
+
+      def bounds_valid
+        valid = Sequel.~(lower_bound: nil)
+        return valid unless upper_bound
+
+        Sequel.&(valid, Sequel.~(upper_bound: nil), Sequel.expr(:lower_bound) <= :upper_bound)
+      end
+
+      def copies
+        bound_tags = upper_bound ? [LOWER, UPPER] : [LOWER]
         condition_events
-          .where(build_where_from_codes(db, ['inpatient']))
+          .cross_join(tags, table_alias: :tags)
+          .where(Sequel.|(
+                   Sequel.&({ tag: INPATIENT }, { is_inpatient: 1 }),
+                   Sequel.&({ tag: EVENT }, { is_outpatient: 1 }, Sequel.~(start_date: nil)),
+                   Sequel.&({ tag: bound_tags }, { is_outpatient: 1 }, bounds_valid)
+                 ))
+          .select_all(:t1)
+          .select_append(:tag)
+          .select_append(Sequel.case({ LOWER => :lower_bound, UPPER => :upper_bound }, :start_date, :tag).as(:sweep_date))
+          .select_append(weight.as(:weight))
           .from_self
       end
 
-      def valid_inpatient_events
-        q = all_inpatient_events
-        unless options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
-          q = q.where do |o|
-            rdbms.days_between(o.admission_date, o.discharge_date) > options[:inpatient_length_of_stay].to_i
-          end
+      # Initial Event mode counts events at its bounds. Confirming Event mode
+      # counts the bound intervals that are open at each event.
+      def weight
+        if initial_mode?
+          Sequel.case([[Sequel.&({ tag: EVENT }, { can_partner: 1 }), 1]], 0)
+        else
+          Sequel.case({ LOWER => 1, UPPER => -1 }, 0, :tag)
         end
-
-        q = q.select(*(query_cols - %i[start_date end_date]))
-
-        q = q.select_append(Sequel[:admission_date].as(:start_date), Sequel[:discharge_date].as(:end_date))
-
-        q.from_self.select(*dynamic_columns).from_self
       end
 
-      def outpatient_events
-        condition_events
-          .where(build_where_from_codes(db, %w[carrier_claim outpatient]))
+      def running_sum(partition)
+        Sequel.function(:sum, :weight).over(partition: partition, order: %i[sweep_date tag])
+      end
+
+      def total_sum(partition)
+        Sequel.function(:sum, :weight).over(partition: partition)
+      end
+
+      # Counts from events with a different criterion_id only: the old
+      # self-join excluded pairs that shared one.
+      def counted_copies
+        same = matching_columns + [:criterion_id]
+        ds = copies.select_append((running_sum(matching_columns) - running_sum(same)).as(:partners))
+        if initial_mode? && !upper_bound
+          ds = ds.select_append((total_sum(matching_columns) - total_sum(same)).as(:all_partners))
+        end
+        ds.from_self
+      end
+
+      def valid_condition
+        return Sequel.&({ tag: EVENT }, Sequel.expr(:partners) >= 1) unless initial_mode?
+
+        Sequel.&({ tag: EVENT }, Sequel.expr(:upper_partners) - :lower_partners >= 1)
+      end
+
+      def bound_partners(tag)
+        Sequel.function(:max, Sequel.case([[{ tag: tag }, :partners]], nil))
+              .over(partition: matching_columns + [:event_key])
+      end
+
+      def judged_copies
+        return counted_copies unless initial_mode?
+
+        upper = upper_bound ? bound_partners(UPPER) : Sequel.function(:max, :all_partners).over(partition: matching_columns + [:event_key])
+        counted_copies
+          .select_append(bound_partners(LOWER).as(:lower_partners), upper.as(:upper_partners))
           .from_self
       end
 
-      def valid_outpatient_events
-        min_gap = options[:outpatient_minimum_gap] || '30d'
-
-        max_gap = options[:outpatient_maximum_gap]
-
-        return_confirm = options[:outpatient_event_to_return] != 'Initial Event'
-
-        outer_table = return_confirm ? :confirm : :initial
-        sub_table = return_confirm ? :initial : :confirm
-
-        confirm = Sequel[:confirm]
-        initial = Sequel[:initial]
-
-        sub_select = outpatient_events
-                     .from_self(alias: sub_table)
-                     .where(matching_columns.map { |c| [initial[c], confirm[c]] })
-                     .exclude({ initial[:criterion_id] => confirm[:criterion_id] })
-
-        # In order to avoid many more comparisons of initial to confirm events, we now
-        # filter the join by having only confirm events that come on or after initial events
-        #
-        # This ensures that initial events represent initial events and confirm events
-        # represent confirming events
-        sub_select = sub_select.exclude(confirm[:start_date] < initial[:start_date])
-
-        unless min_gap.to_s.empty?
-          sub_select = sub_select.where(
-            Sequel.expr(confirm[:start_date]) >= DateAdjuster.new(
-              self,
-              min_gap
-            ).adjust(initial[:start_date])
-          )
+      def output_column(column)
+        case column
+        when :start_date then Sequel.case([[{ tag: INPATIENT }, :admission_date]], :start_date).as(:start_date)
+        when :end_date then Sequel.case([[{ tag: INPATIENT }, :discharge_date]], :end_date).as(:end_date)
+        else column
         end
-
-        unless max_gap.to_s.empty?
-          sub_select = sub_select.where(
-            Sequel.expr(confirm[:start_date]) <= DateAdjuster.new(
-              self,
-              max_gap
-            ).adjust(initial[:start_date])
-          )
-        end
-
-        q = outpatient_events.from_self(alias: outer_table)
-                             .where(sub_select.exists)
-
-        q.from_self.select(*dynamic_columns).from_self
       end
 
       def all_valid_events
-        valid_inpatient_events.union(valid_outpatient_events, all: true)
+        judged_copies
+          .where(Sequel.|({ tag: INPATIENT }, valid_condition))
+          .select(*dynamic_columns.map { |column| output_column(column) })
+          .from_self
       end
 
       def first_valid_event
