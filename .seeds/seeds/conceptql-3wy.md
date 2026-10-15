@@ -4,7 +4,7 @@ title: 'DuckDB merges date + 30 days with date + 1 month in one SELECT list: rep
 status: captured
 type: question
 created_at: 2026-10-15T02:56:27.272642+00:00
-updated_at: 2026-10-15T03:05:19.724514+00:00
+updated_at: 2026-10-15T03:53:23.709956+00:00
 ---
 
 ## The defect
@@ -94,3 +94,12 @@ The form does not fix one residual case. A DAY interval and a time interval of e
 The work was handed on 2026-10-14 to the live sequel-duckdb session, with the facts above. It changes `date_add_sql_append` in `lib/sequel/adapters/shared/duckdb.rb`. conceptql then needs a Gemfile.lock bump and a DuckDB suite run to pick the change up. Bead conceptql-a4j tracks that conceptql side.
 
 No DuckDB issue was found for this defect. One web search and three GitHub issue searches were done on 2026-10-14.
+
+## UPDATE 2026-10-14 evening: sequel-duckdb fix verified from conceptql
+
+sequel-duckdb commit c139c5e (bead sequel-duckdb-ux7, closed) writes YEAR and MONTH intervals as a subtraction of the negated value. It is not pushed, so conceptql tested it through a temporary bundler local override and then restored Gemfile.lock.
+
+- The conceptql DuckDB suite passed: 529 runs, 1913 assertions, 0 failures, 0 errors (log claude_stuff/test-logs/focused/duckdb-local-seqduck-suite-20261014-200854.log).
+- The one_in_two_out differential harness ran 946 cases. Old and new operators gave identical results in every case that compiles. The old operator puts 30d and 1m in one SELECT list and differed on DuckDB before the fix, so this shows the fix works on SQL that conceptql generates. The other 88 cases use the invalid gap `e`, which both operators reject (log claude_stuff/oito-diff-duckdb-local-seqduck-20261014-200854.log).
+
+Remaining: Ryan decides when sequel-duckdb is pushed. After that, conceptql bumps sequel-duckdb in Gemfile.lock and closes bead conceptql-a4j. Reporting upstream is still not ruled.

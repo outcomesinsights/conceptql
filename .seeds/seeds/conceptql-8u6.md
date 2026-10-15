@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-14T20:41:23.536920+00:00
+updated_at: 2026-10-15T03:40:13.075732+00:00
 tags:
   - performance
   - spark
@@ -151,3 +151,20 @@ unit_concept_id, result_as_concept_id   "None" (1 id each)
 - Test: `cpt_or_hcpcs 99232 A0425` with overlapping windows (one window per ICD9 412 event, widened by 2 years each way) now gives 470 rows, identical to `union [cpt4 99232] [hcpcs A0425]` under the same windows. The old code fails that test.
 
 RULED 2026-10-14, second round (Ryan): remove the "ICD10" multi-vocabulary operator now (see conceptql-sn2). Add CPT4_HCPCS to "CPT or HCPCS" with a guard (see conceptql-1). The lexicon cache is created by the Database (see conceptql-a5f). Time one_in_two_out on Spark before any rewrite (see conceptql-x9w).
+
+## UPDATE 2026-10-14: status of each option after the beads closed
+
+Shipped, all local and unpushed:
+
+- Option 1, the hospitalization person filter: bead conceptql-dc0, commit 39dd6c15.
+- Option 3, one_in_two_out reads its upstream once: bead conceptql-3ae (one CTE, 02d2c565), then bead conceptql-7qo (single-read rewrite, d9371d12). Seed conceptql-x9w holds the measurement and the verification.
+- Option 5, the lexicon cache: bead conceptql-ogh, commit bbdac88d, opt-in and off by default. Production gains nothing until t_shank passes cache_lookups: true.
+- The duplicate-row defect: bead conceptql-7cd, commit 05d06e5b.
+- CPT4_HCPCS as a third vocabulary of "CPT or HCPCS": bead conceptql-ydh, commit affe54fa. The "ICD10" multi-vocabulary operator is removed (seed conceptql-sn2).
+
+Not shipped:
+
+- Option 4, the explicit vocabulary_id IN conjunct: bead conceptql-agx is open.
+- Option 4, marking MultipleVocabularies as deprecated: no bead, and lib/conceptql/operators/multiple_vocabularies.rb has no deprecation mark.
+- Option 2, the concept lookup joins: not ruled. The follow-up showed that partition pruning cannot help these joins. A broadcast hint, or applying the window join before the concept joins, are still the output-identical options.
+- Found later: MultipleVocabularies reports no vocabularies, so the multiple_vocabularies flag is false for "CPT or HCPCS". No bead yet.

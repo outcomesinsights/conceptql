@@ -1,10 +1,12 @@
 ---
 id: conceptql-alj
 title: require 'conceptql' connects to a database at load time -- make vocabulary operator registration lazy
-status: captured
+status: resolved
 type: exploration
 created_at: 2026-09-28T15:09:16.242515+00:00
-updated_at: 2026-09-28T16:05:08.455474+00:00
+updated_at: 2026-10-15T03:40:10.130360+00:00
+resolved_at: 2026-10-15T03:40:10.130349+00:00
+resolution: "Shipped as ruled option (B), the per-Database operator registry. The code: lib/conceptql.rb no longer registers vocabulary operators at load. The global registry became Operators.static_operators (lib/conceptql/operators/operator.rb:26). Database#operators (lib/conceptql/database.rb:117) builds each Database's vocabulary operators from its own connection. test/lib/conceptql/load_without_database_test.rb proves that require opens no connection. just ci runs test-duckdb (justfile:185). Beads: conceptql-cat and conceptql-yq1 (681c9128, merged d6d7b1f7), conceptql-lao (just test-duckdb), conceptql-ig6 (gate, 8c20381e), conceptql-bu2 (conceptql_spec README, 59 SVGs and knitter cache byte-identical). Efficacy: no rework is recorded; all five beads closed on 2026-09-28 and none reopened. Later, unrelated: the gate is blocked by the stale DuckDB fixture pin (2026-10-02), not by this work."
 tags:
   - load-time
   - lexicon
