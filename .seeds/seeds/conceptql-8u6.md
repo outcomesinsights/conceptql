@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-15T03:40:13.075732+00:00
+updated_at: 2026-10-15T12:59:07.337902+00:00
 tags:
   - performance
   - spark
@@ -168,3 +168,9 @@ Not shipped:
 - Option 4, marking MultipleVocabularies as deprecated: no bead, and lib/conceptql/operators/multiple_vocabularies.rb has no deprecation mark.
 - Option 2, the concept lookup joins: not ruled. The follow-up showed that partition pruning cannot help these joins. A broadcast hint, or applying the window join before the concept joins, are still the output-identical options.
 - Found later: MultipleVocabularies reports no vocabularies, so the multiple_vocabularies flag is false for "CPT or HCPCS". No bead yet.
+
+## Ryan, 2026-10-15 (verbatim)
+
+> 8u6 -- most of what's left seems oriented around multiple vocabularies. we are deprecating and/or removing that feature soon, so I doubt we'll invest in optimizations for it. what does that leave?
+
+Effect: the MultipleVocabularies items in the 2026-10-14 status list are not to be pursued. These are the merge of MultipleVocabularies into one scan, the deprecation mark (replaced by the plan to deprecate or remove the feature), and the multiple_vocabularies flag for "CPT or HCPCS". Bead conceptql-agx keeps its Union Combiner half, which does not depend on MultipleVocabularies.
