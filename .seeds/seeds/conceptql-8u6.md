@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-15T13:17:02.519133+00:00
+updated_at: 2026-10-15T13:20:24.144174+00:00
 tags:
   - performance
   - spark
@@ -230,3 +230,5 @@ Which fix to build:
 - (b) a small concept table for each dataset, built by the ETL or vocabulary pipeline.
 - (c) a small concept table that conceptql builds once for each Database.
 - (d) (a) now, and (b) or (c) later.
+
+UPDATE 2026-10-15: Ryan: "send b to roobetl as a seed". Option (b), a cut-down concept table shipped with each dataset, was handed to the live roobetl session to file as a seed in roobetl. The roobetl seed ID will be added here when it arrives. Options (a), (c) and (d) are not ruled.
