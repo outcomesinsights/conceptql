@@ -135,9 +135,12 @@ module ConceptQL
           .select_append(flag(partner_filter).as(:can_partner))
           .then { |ds| initial_mode? ? ds.select_append(event_key) : ds }
           .from_self
-          # The upper bound gets its own SELECT. DuckDB merges date + 30 days
-          # and date + 1 month in one SELECT list as if they were equal
-          # (bead conceptql-a4j).
+          # The upper bound gets its own SELECT. DuckDB compares 1 month as
+          # equal to 30 days, so its optimizer merges date + 30 days and
+          # date + 1 month in one SELECT list into one expression (bead
+          # conceptql-a4j, seed conceptql-3wy). sequel-duckdb is to emit month
+          # intervals in a form that avoids this; the split stays as a second
+          # guard.
           .select_append(Sequel.as(upper_bound || Sequel.cast(nil, Date), :upper_bound))
           .from_self
       end

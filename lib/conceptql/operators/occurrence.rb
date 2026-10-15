@@ -19,8 +19,10 @@ module ConceptQL
     # by start_date and then select at most one row per person, regardless
     # of how many different types of streams enter the operator
     #
-    # If two rows have the same start_date, the order of their ranking
-    # is arbitrary
+    # If two rows have the same start_date, criterion_id breaks the tie.
+    # criterion_id is unique within one criterion_table, so only rows from
+    # two different tables with the same id and start_date still rank in
+    # arbitrary order
     #
     # If we ask for the second occurrence of something and a person has only one
     # occurrence, this operator returns nothing for that person
