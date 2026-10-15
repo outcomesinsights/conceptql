@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-15T13:21:20.050495+00:00
+updated_at: 2026-10-15T14:11:13.610014+00:00
 tags:
   - performance
   - spark
@@ -234,3 +234,22 @@ Which fix to build:
 UPDATE 2026-10-15: Ryan: "send b to roobetl as a seed". Option (b), a cut-down concept table shipped with each dataset, was handed to the live roobetl session to file as a seed in roobetl. roobetl filed it as seed roobetl-825 (roobetl commit 087fa6b). Options (a), (c) and (d) are not ruled.
 
 UPDATE 2026-10-15: Ryan: "tell tshank about c and have it fold that into the testing its doing on claims slicing right now". Option (c), a cut-down concept table built once per export, was sent to the live t_shank session, with the measurement facts and a way to test it by rewriting SQL text. t_shank reports back to conceptql. Options (a) and (d) are not ruled.
+
+## Option (c) measured by t_shank on a real export, 2026-10-15
+
+Relayed by the t_shank session. Setup: export f4f10fdf, marketscan_mdcd_2026_20260318, DuckDB, conceptql 64447c52. The t_shank arm is commit 6750efb95. t_shank records it in seed t-shank-ucq and in its log claude_stuff/export-bench-summary-20261015-071032.log.
+
+- The cut-down table (concept_refs) had 57,715 of 10,971,106 concept rows (0.5%), built from the export's slice. It built in 0.4 s.
+- Each run rewrote 416 name joins: dose_con 167, ing_con 167, asc 41, dlc 41. The export had no lab joins.
+- SQL phase in minutes, as the median (minimum to maximum). The slice arms include the time to build the slice.
+
+```
+production, unsliced   n=7  10.4 (10.0-11.8)
+slice                  n=4   5.0 (4.9-5.2)
+slice + option (c)     n=3   3.6 (3.4-3.6)
+```
+
+- Option (c) saved 1.4 minutes on top of the slice, which is 28% of the sliced SQL phase. That is about 0.2 s per rewritten join. conceptql's own SEER statements measured 0.3 to 0.45 s per join.
+- Output: all 236 output column hashes and the row counts were identical across all 21 runs.
+- Not measured: option (c) without the slice, and option (c) on Spark.
+- The match text `FROM "concept") AS "t1") AS "` also matches t_shank's own description joins, so the arm rewrote only the six name-join aliases. In conceptql's SEER statements, every match was a name join.
