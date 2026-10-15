@@ -68,6 +68,12 @@ module ConceptQL
         dm.table_by_domain(domain)
       end
 
+      # The condition that selects this vocabulary's rows. where_clause
+      # includes it, so Union can name every merged vocabulary in one IN list.
+      def vocabulary_condition
+        { clinical_code_vocabulary_id: vocabulary_id }
+      end
+
       private
 
       def query(db)
@@ -94,7 +100,7 @@ module ConceptQL
         # We're probably going to partition the observations table by clinical_code_vocabulary_id,
         # for Spark, so this will create queries that leverage that partitioning
         # and it shouldn't hurt for PostgreSQL performance
-        wheres = { clinical_code_vocabulary_id: vocabulary_id }
+        wheres = vocabulary_condition
 
         unless select_all?
           concept_ids = dm.concept_ids(db, vocabulary_id, arguments)

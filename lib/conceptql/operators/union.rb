@@ -21,11 +21,26 @@ module ConceptQL
               combo.filter_clause(db)
             end.inject(&:|)
 
+            criteria = Sequel.&(vocabularies_in(combos), criteria) if combos.length > 1
+
             table = combos.first.criterion_table
             ds = db[table]
                  .where(criteria)
             combos.first.select_it(ds, specific_table: table, domain: domain, uuid: include_uuid)
           end
+        end
+
+        private
+
+        # Every OR'd criterion already requires its own vocabulary, so this IN
+        # list selects no new rows and drops none. It is explicit because a
+        # plain OR stopped DuckDB's Parquet filter pushdown (bead conceptql-agx).
+        def vocabularies_in(combos)
+          conditions = combos.map(&:vocabulary_condition)
+          columns = conditions.flat_map(&:keys).uniq
+          raise "Merged vocabularies use more than one vocabulary column: #{columns}" unless columns.length == 1
+
+          { columns.first => conditions.map { |c| c[columns.first] }.uniq }
         end
       end
 
