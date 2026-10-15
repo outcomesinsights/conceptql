@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-15T12:59:07.337902+00:00
+updated_at: 2026-10-15T13:17:02.519133+00:00
 tags:
   - performance
   - spark
@@ -174,3 +174,59 @@ Not shipped:
 > 8u6 -- most of what's left seems oriented around multiple vocabularies. we are deprecating and/or removing that feature soon, so I doubt we'll invest in optimizations for it. what does that leave?
 
 Effect: the MultipleVocabularies items in the 2026-10-14 status list are not to be pursued. These are the merge of MultipleVocabularies into one scan, the deprecation mark (replaced by the plan to deprecate or remove the feature), and the multiple_vocabularies flag for "CPT or HCPCS". Bead conceptql-agx keeps its Union Combiner half, which does not depend on MultipleVocabularies.
+
+## Option 2 measured on DuckDB, 2026-10-15
+
+Ryan asked for this measurement on 2026-10-15, because production is moving to DuckDB.
+
+### Method
+
+- Data: SEER lung (`/mnt/samba/data/gdm/seer_2022_lung`), DuckDB views over the Parquet files. The concept table has 9,466,414 rows.
+- Statements: compiled by conceptql at 2822a16b (gdm_wide), wrapped in a window with precalculated_window_id as t_shank does, for cohorts of 5,000 and 50,000 persons. All drug-name and lab joins appear in these statements, because a drug or lab vocabulary in a statement adds those joins to every leaf in it.
+  - ndc: six frequent NDC codes.
+  - hcpcs_ndc: HCPCS J9022, J9271 and J9299, plus the six NDC codes.
+  - icd_ndc: ICD9 162.9 and 162.3, plus the six NDC codes.
+  - hcpcs_lab: the HCPCS codes plus LOINC 2160-0 and 718-7.
+- Timing: each variant ran in a new DuckDB process with 16 threads. The table shows the median of runs 2 to 6, divided by the median of the current SQL.
+- Output: each variant was compared with the current SQL by EXCEPT ALL in both directions.
+- Hospitalization could not be measured. The SEER files have no admission_detail_id column.
+
+### Variants
+
+- none: the joins read an empty concept table. This shows the cost of the joins. It changes output, because the name columns are empty.
+- used: the joins read only the concept rows that this dataset references, which is 162,891 rows (1.7%). The output is identical. Building the table took 15 s, once per dataset.
+- ingids: the ingredient-name join reads only the concept ids that the leaf itself selects. conceptql knows these ids at compile time. The output is identical. The dose-unit join is unchanged.
+- sj: each observations scan keeps only cohort persons before the joins. The output is identical.
+
+### Results (time relative to the current SQL)
+
+```
+statement  cohort  current_s  none  used  ingids  sj
+ndc        5k        1.13     0.45  0.38  0.67    1.57
+ndc        50k       0.98     0.49  0.39  0.76    1.06
+hcpcs_ndc  5k        2.56     0.44  0.32  0.60    0.82
+hcpcs_ndc  50k       2.44     0.34  0.35  0.68    1.41
+icd_ndc    5k        3.25     0.43  0.31  0.56    0.64
+icd_ndc    50k       3.66     0.53  0.41  0.64    0.70
+hcpcs_lab  5k        1.35     0.44  0.43  -       1.29
+hcpcs_lab  50k       1.62     0.37  0.37  -       0.83
+```
+
+### Findings
+
+- The concept joins take about half to two thirds of each statement's time on DuckDB. Each join costs about 0.3 to 0.45 s. The cost does not grow with the cohort, so it is a fixed cost: DuckDB builds a hash table over the whole concept table for each join.
+- used removes all of that cost, with identical output. Someone must build the small concept table for each dataset.
+- ingids removes about half of the drug-join cost, with identical output. It needs nothing outside conceptql. It does not help the dose-unit, lab or hospitalization joins.
+- sj does not help on DuckDB. It was sometimes slower, because the cost is in the concept side of the join, not in the number of event rows.
+- Unexplained: hcpcs_lab with both sj and used ran in 0.18 to 0.23 s, which is faster than none. Treat that row as noise until it is repeated.
+
+Logs: claude_stuff/concept-joins-summary-20261015-061616.log, with the run logs concept-joins-run-20261015-060748.log and concept-joins-run-ingids-20261015-061517.log. The scripts are in the session scratchpad (exp2), which is temporary.
+
+### Not ruled
+
+Which fix to build:
+
+- (a) ingids in conceptql.
+- (b) a small concept table for each dataset, built by the ETL or vocabulary pipeline.
+- (c) a small concept table that conceptql builds once for each Database.
+- (d) (a) now, and (b) or (c) later.
