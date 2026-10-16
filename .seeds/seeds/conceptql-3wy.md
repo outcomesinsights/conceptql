@@ -4,7 +4,7 @@ title: 'DuckDB merges date + 30 days with date + 1 month in one SELECT list: rep
 status: captured
 type: question
 created_at: 2026-10-15T02:56:27.272642+00:00
-updated_at: 2026-10-15T03:53:23.709956+00:00
+updated_at: 2026-10-16T13:28:21.437038+00:00
 ---
 
 ## The defect
@@ -103,3 +103,5 @@ sequel-duckdb commit c139c5e (bead sequel-duckdb-ux7, closed) writes YEAR and MO
 - The one_in_two_out differential harness ran 946 cases. Old and new operators gave identical results in every case that compiles. The old operator puts 30d and 1m in one SELECT list and differed on DuckDB before the fix, so this shows the fix works on SQL that conceptql generates. The other 88 cases use the invalid gap `e`, which both operators reject (log claude_stuff/oito-diff-duckdb-local-seqduck-20261014-200854.log).
 
 Remaining: Ryan decides when sequel-duckdb is pushed. After that, conceptql bumps sequel-duckdb in Gemfile.lock and closes bead conceptql-a4j. Reporting upstream is still not ruled.
+
+RULED 2026-10-16: Ryan, on whether conceptql reports the defect to the DuckDB project: "that's sequel duckdb's issue, not yours". conceptql does not report it. The workaround and any upstream report belong to sequel-duckdb.

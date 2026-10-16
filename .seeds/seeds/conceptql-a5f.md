@@ -4,7 +4,7 @@ title: Lexicon re-issues identical vocabulary queries per Database/export; remov
 status: captured
 type: question
 created_at: 2026-09-29T03:04:20.735970+00:00
-updated_at: 2026-10-14T20:58:34.113183+00:00
+updated_at: 2026-10-16T13:28:20.685789+00:00
 tags:
   - lexicon
   - performance
@@ -192,3 +192,32 @@ Second code path: the flag creates one. If production turns it on and the tests 
 Guard: Database#initialize accepts an outside Lexicon (`opts[:lexicon]`, database.rb:34). Raise when a caller passes both that and the flag, otherwise the flag does nothing.
 
 Size: about 20 lines, no new dependencies.
+
+RULED 2026-10-16: Ryan: "keep open and let's explore what other lookups are still not going through the expected path".
+
+## Probe of lookups that bypass the cache, 2026-10-16
+
+Method: one Database with cache_lookups: true, as one export uses. It compiled all 291 test statements (267 compile; the other 24 are invalid on purpose). For each statement it ran Query#sql, Query#annotate(skip_counts: true) and Query#code_list. A hook on Dataset#fetch_rows recorded every query executed and the conceptql frame that caused it. DuckDB fixture, two setups: gdm_wide with ohdsi_vocabs, and gdm with gdm_vocabs. Script: the session scratchpad lookup_probe.rb. Logs: claude_stuff/lookup-probe-duckdb-gdm_wide-ohdsi_vocabs-20261016-062557.log and claude_stuff/lookup-probe-duckdb-gdm-gdm_vocabs-20261016-062621.log, each with a .json dump of every query.
+
+The cached lookups work. concept_ids, concepts_to_codes, known_codes, descendants_of and related_concept_ids each reached the database once per distinct argument list.
+
+Vocabulary queries that do not go through the cache (gdm_wide / ohdsi_vocabs counts):
+
+```
+annotate  110 runs  16 distinct  vocabulary_is_empty?  lexicon_strategy.rb:88, called by known_codes (:74)
+sql         6 runs   4 distinct  concepts_by_name      operators/race.rb:51
+annotate    6 runs   1 distinct  concepts(...).select_map  behaviors/provenanceable.rb:25 (find_bad_keywords)
+sql         1 run    1 distinct  vocabularies          dynamic_vocabularies.rb:59 (once per Database, as designed)
+```
+
+- vocabulary_is_empty? is the largest. known_codes is cached, but each distinct code list calls vocabulary_is_empty? again for the same vocabulary. Each call is a COUNT over all concept rows of that vocabulary. 94 of the 110 runs repeat an earlier query. On Spark each one is a scan of the concept table.
+- race.rb runs concepts_by_name(...).select_map(:id) directly. The same name ('white') was looked up twice.
+- find_bad_keywords (provenance validation) lists all provenance-type codes. The same query ran 6 times.
+- The gdm / gdm_vocabs setup gave the same picture (96 runs, 15 distinct, for vocabulary_is_empty?).
+
+Queries during compilation that are not vocabulary lookups, so outside this seed's scope:
+
+- Column introspection (SELECT ... LIMIT 0): window/table.rb:71 (27 runs), query_modifiers/gdm/provider_query_modifier.rb:33 and :41 (15 runs, 8 distinct), operators/occurrence.rb:76 (8), operators/temporal_operator.rb:96 (2).
+- date_range.rb:62-63: min(start_date) and max(end_date) of information_periods for START and END. 7 runs, 2 distinct.
+
+Side finding: Query#code_list raises NoMethodError on 8 annotation-test statements (after/anno_1-3, recall/anno_1,3-6), at binary_operator_operator.rb:22 and recall.rb:51, because an operand is nil. Log: claude_stuff/code-list-errors-20261016-062753.log. Those statements are invalid on purpose. Not ruled whether code_list should handle them.
