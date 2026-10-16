@@ -13,6 +13,11 @@ All notable changes to this project will be documented in this file.
 - `ConceptQL::Database#operators(data_model = own)`: each Database's own operator registry, with
   vocabulary operators built from that Database's lexicon and the built-in operators merged over
   them. Every operator lookup goes through it.
+- `ConceptQL::Database.new(db, name_concepts_table: name)` and
+  `ConceptQL::Database#create_name_concepts_table`: the display-name joins (drug name and dose
+  units, lab units and result concept, admission source and discharge location) read a table of
+  only the concept rows that the data references, instead of the whole concept table. The caller
+  builds the table once, before its queries run, and drops it afterwards. Off by default.
 
 ### Fixed
 

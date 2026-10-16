@@ -62,6 +62,15 @@ module ConceptQL
         :gdm
       end
 
+      def name_concept_columns
+        {
+          clinical_codes: %i[clinical_code_concept_id],
+          drug_exposure_details: %i[dose_unit_concept_id],
+          measurement_details: %i[unit_concept_id result_as_concept_id],
+          admission_details: %i[admit_source_concept_id discharge_location_concept_id]
+        }
+      end
+
       def table_by_domain(table)
         return nil unless table
 

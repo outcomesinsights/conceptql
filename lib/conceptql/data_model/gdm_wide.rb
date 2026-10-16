@@ -27,6 +27,13 @@ module ConceptQL
         :gdm_wide
       end
 
+      def name_concept_columns
+        {
+          observations: %i[clinical_code_concept_id dose_unit_concept_id unit_concept_id result_as_concept_id
+                           admit_source_concept_id discharge_location_concept_id]
+        }
+      end
+
       def table_is_missing?(db)
         !db.table_exists?(:observations)
       end

@@ -30,8 +30,8 @@ module ConceptQL
 
           query.from_self(alias: :cc)
                .left_join(Sequel[:measurement_details].as(:md), Sequel[:cc][:measurement_detail_id] => Sequel[:md][:id])
-               .left_join(dm.concepts_table(query.db).as(:unit_con), Sequel[:md][:unit_concept_id] => Sequel[:unit_con][:id])
-               .left_join(dm.concepts_table(query.db).as(:concept_con), Sequel[:md][:result_as_concept_id] => Sequel[:concept_con][:id])
+               .left_join(dm.name_concepts_table(query.db).as(:unit_con), Sequel[:md][:unit_concept_id] => Sequel[:unit_con][:id])
+               .left_join(dm.name_concepts_table(query.db).as(:concept_con), Sequel[:md][:result_as_concept_id] => Sequel[:concept_con][:id])
                .select_all(:cc)
                .select_append(Sequel[:md][:result_as_number].as(:value_as_number))
                .select_append(Sequel[:md][:result_as_string].as(:value_as_string))

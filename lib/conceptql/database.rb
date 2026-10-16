@@ -123,6 +123,24 @@ module ConceptQL
       end
     end
 
+    # Builds the table that the name_concepts_table option names. It holds
+    # the concept rows whose ids appear in the data columns that the
+    # display-name joins read, so those joins hash a small table instead of
+    # the whole concept table. The caller drops it.
+    def create_name_concepts_table
+      table = opts[:name_concepts_table]
+      raise ArgumentError, 'create_name_concepts_table needs the name_concepts_table option' unless table
+
+      ids = data_model.name_concept_columns.flat_map do |source, columns|
+        next [] unless db.table_exists?(source)
+
+        (columns & db[source].columns).map { |column| db[source].exclude(column => nil).select(Sequel.as(column, :id)) }
+      end
+      raise ArgumentError, "no data columns to read for data model #{opts[:data_model]}" if ids.empty?
+
+      db.create_table(table, as: data_model.concepts_table(db).where(id: ids.reduce { |all, one| all.union(one) }))
+    end
+
     def database_type
       @opts[:database_type]
     end

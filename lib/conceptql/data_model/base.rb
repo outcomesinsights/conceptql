@@ -35,6 +35,22 @@ module ConceptQL
         @rdbms ||= ConceptQL::Rdbms.generate(nodifier.database_type)
       end
 
+      # The concept table that the display-name joins read. It is the
+      # Database's name_concepts_table when it has one, and the full concept
+      # table otherwise (bead conceptql-auu, seed conceptql-8u6).
+      def name_concepts_table(db)
+        table = cdb.opts[:name_concepts_table]
+        return concepts_table(db) unless table
+
+        db[table]
+      end
+
+      # The data columns whose concept ids the display-name joins look up, by
+      # table. A data model without those joins has none.
+      def name_concept_columns
+        {}
+      end
+
       def query_modifier_for(column)
         {
           visit_source_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,

@@ -58,8 +58,8 @@ module ConceptQL
         db[:collections].from_self(alias: :cl)
                         .then { |cl| restrict_to_window_persons(cl, Sequel[:cl][:patient_id]) }
                         .join(:admission_details, { Sequel[:ad][:id] => Sequel[:cl][:admission_detail_id] }, table_alias: :ad)
-                        .left_join(dm.concepts_table(db), { Sequel[:ad][:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
-                        .left_join(dm.concepts_table(db), { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
+                        .left_join(dm.name_concepts_table(db), { Sequel[:ad][:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
+                        .left_join(dm.name_concepts_table(db), { Sequel[:ad][:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
                         .left_join(primary_concepts, { Sequel[:pcon][:collection_id] => Sequel[:cl][:id] }, table_alias: :pcon)
                         .where(Sequel[:cl][:id] => relevant_contexts)
                         .select(
@@ -119,8 +119,8 @@ module ConceptQL
           .from_self
           .where(nummy: 1)
           .from_self
-          .left_join(dm.concepts_table(db), { Sequel[:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
-          .left_join(dm.concepts_table(db), { Sequel[:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
+          .left_join(dm.name_concepts_table(db), { Sequel[:admit_source_concept_id] => Sequel[:asc][:id] }, table_alias: :asc)
+          .left_join(dm.name_concepts_table(db), { Sequel[:discharge_location_concept_id] => Sequel[:dlc][:id] }, table_alias: :dlc)
           .select_append(
             Sequel[:asc][:concept_code].as(:admission_source_value),
             Sequel[:asc][:concept_text].as(:admission_source_description),

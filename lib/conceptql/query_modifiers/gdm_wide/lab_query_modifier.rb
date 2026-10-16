@@ -29,8 +29,8 @@ module ConceptQL
           return query unless dm.table_cols(source_table).include?(:unit_concept_id)
 
           query.from_self(alias: :cc)
-               .left_join(dm.concepts_table(query.db).as(:unit_con), Sequel[:cc][:unit_concept_id] => Sequel[:unit_con][:id])
-               .left_join(dm.concepts_table(query.db).as(:concept_con), Sequel[:cc][:result_as_concept_id] => Sequel[:concept_con][:id])
+               .left_join(dm.name_concepts_table(query.db).as(:unit_con), Sequel[:cc][:unit_concept_id] => Sequel[:unit_con][:id])
+               .left_join(dm.name_concepts_table(query.db).as(:concept_con), Sequel[:cc][:result_as_concept_id] => Sequel[:concept_con][:id])
                .select_all(:cc)
                .select_append(Sequel[:cc][:result_as_number].as(:value_as_number))
                .select_append(Sequel[:cc][:result_as_string].as(:value_as_string))
