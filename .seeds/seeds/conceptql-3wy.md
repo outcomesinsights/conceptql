@@ -4,7 +4,7 @@ title: 'DuckDB merges date + 30 days with date + 1 month in one SELECT list: rep
 status: captured
 type: question
 created_at: 2026-10-15T02:56:27.272642+00:00
-updated_at: 2026-10-16T13:28:21.437038+00:00
+updated_at: 2026-10-16T13:45:21.407232+00:00
 ---
 
 ## The defect
@@ -105,3 +105,5 @@ sequel-duckdb commit c139c5e (bead sequel-duckdb-ux7, closed) writes YEAR and MO
 Remaining: Ryan decides when sequel-duckdb is pushed. After that, conceptql bumps sequel-duckdb in Gemfile.lock and closes bead conceptql-a4j. Reporting upstream is still not ruled.
 
 RULED 2026-10-16: Ryan, on whether conceptql reports the defect to the DuckDB project: "that's sequel duckdb's issue, not yours". conceptql does not report it. The workaround and any upstream report belong to sequel-duckdb.
+
+UPDATE 2026-10-16: at Ryan's request, the sequel-duckdb session filed seed sequel-duckdb-yzp (sequel-duckdb commit 17b90bf). It holds the facts above, the fix c139c5e, and the two open questions: the upstream report, and the residual day/time case. sequel-duckdb confirmed the residual case on libduckdb 1.5.5: for a TIMESTAMPTZ across the March 2026 daylight-saving change, + 1 day and + 24 hours return the same value. conceptql does not reach that case.
