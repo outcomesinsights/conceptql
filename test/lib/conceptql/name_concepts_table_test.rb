@@ -18,7 +18,7 @@ describe 'ConceptQL::Database name_concepts_table' do
     it "points every name join at the table in #{data_model}" do
       sql = mock_cdb(data_model, name_concepts_table: :name_refs).query(statement).sql
 
-      _(sql.scan(/AS "(#{name_joins.join('|')})"/).flatten.uniq.sort).must_equal name_joins.sort
+      _(sql.scan(/AS "(#{name_joins.join("|")})"/).flatten.uniq.sort).must_equal name_joins.sort
       _(sql).wont_match(/FROM "concepts?"/)
       _(sql).must_include '"name_refs"'
     end
