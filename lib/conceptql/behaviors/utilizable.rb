@@ -112,10 +112,17 @@ module ConceptQL
             is_primary.as(:is_primary)
           )
           .from_self
-          .select_append(Sequel[:ROW_NUMBER].function.over(
-            partition: [:admission_detail_id],
-            order: [Sequel[:is_primary].desc, Sequel[:collection_id], Sequel[:clinical_code_concept_id]]
-          ).as(:nummy))
+          # One admission has many rows with the same concept on different
+          # line dates. The unique id ends the ORDER BY so the kept row is the
+          # same on every run, and admission_end_date takes the latest end_date
+          # over all of the admission's rows, not the kept row's. See conceptql-evk.
+          .select_append(
+            Sequel[:ROW_NUMBER].function.over(
+              partition: [:admission_detail_id],
+              order: [Sequel[:is_primary].desc, Sequel[:collection_id], Sequel[:clinical_code_concept_id], Sequel[:id]]
+            ).as(:nummy),
+            Sequel.function(:max, :end_date).over(partition: [:admission_detail_id]).as(:admission_end_date)
+          )
           .from_self
           .where(nummy: 1)
           .from_self
@@ -155,7 +162,7 @@ module ConceptQL
 
         {
           length_of_stay: (rdbms.days_between(Sequel[:admission_date],
-                                              Sequel[:discharge_date]) + 1).as(:length_of_stay),
+                                              discharge_date_column) + 1).as(:length_of_stay),
           criterion_table: Sequel.cast_string('collections').as(:criterion_table),
           criterion_domain: Sequel.cast_string('condition_occurrence').as(:criterion_domain),
           admission_source_value: Sequel[:admission_source_value],
@@ -163,7 +170,7 @@ module ConceptQL
           discharge_location_source_value: Sequel[:discharge_location_source_value],
           discharge_location_source_description: Sequel[:discharge_location_source_description],
           admission_date: Sequel[:admission_date],
-          discharge_date: Sequel[:discharge_date],
+          discharge_date: discharge_date_column.as(:discharge_date),
           person_id: Sequel[:patient_id].as(:person_id),
           criterion_id: Sequel[:collection_id].as(:criterion_id),
           start_date: Sequel[:collection_start_date].as(:start_date),
@@ -172,6 +179,15 @@ module ConceptQL
           source_value: Sequel[:source_value].as(:source_value),
           source_vocabulary_id: Sequel[:source_vocabulary_id].as(:source_vocabulary_id)
         }
+      end
+
+      # gdm_wide's AdmissionDateQueryModifier falls back to the kept row's own
+      # end_date when the admission has no discharge date. An admission falls
+      # back to its latest end_date instead (Ryan, 2026-10-16). See conceptql-evk.
+      def discharge_date_column
+        return Sequel[:discharge_date] unless wide?
+
+        Sequel.function(:coalesce, :admit_discharge_date, :admission_end_date, :discharge_date)
       end
     end
   end
