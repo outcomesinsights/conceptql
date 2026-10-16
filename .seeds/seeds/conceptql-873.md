@@ -4,7 +4,7 @@ title: 'Hospitalization lists: build each once per export and reuse it across st
 status: captured
 type: exploration
 created_at: 2026-10-16T20:27:35.377005+00:00
-updated_at: 2026-10-16T20:27:35.377005+00:00
+updated_at: 2026-10-16T20:38:36.685688+00:00
 ---
 
 ## Origin
@@ -38,3 +38,10 @@ Operator#evaluate wraps each operator's query in a CTE. Scope#cte_name names it 
 2. When the table is built. (a) At SQL generation, as in the prototype: simplest, but building SQL has a side effect. (b) When the query is first read, through the same hook that force_temp_tables uses: no side effect from Query#sql, more code. Recommended: (b).
 3. Cleanup. Recommended: names carry table_prefix, and the Database also lists the tables it created, so the caller can drop them explicitly. conceptql never drops them itself.
 4. Spark. Recommended: allow it on every database. The caller decides whether to turn it on. The CHANGELOG says Spark is not measured.
+
+RULED 2026-10-16 (Ryan, all four as recommended):
+
+1. Opt-in option on ConceptQL::Database, off by default. Without it the SQL is unchanged.
+2. Build the shared table when the query's rows are first read, through the same hook that force_temp_tables uses. Building or printing SQL creates no table.
+3. Table names carry the export's table_prefix. The Database lists the tables it created. The caller drops them. conceptql never drops them.
+4. Allowed on every database, Spark included. The CHANGELOG says Spark is not measured.
