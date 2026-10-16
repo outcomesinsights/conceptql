@@ -18,6 +18,16 @@ All notable changes to this project will be documented in this file.
   units, lab units and result concept, admission source and discharge location) read a table of
   only the concept rows that the data references, instead of the whole concept table. The caller
   builds the table once, before its queries run, and drops it afterwards. Off by default.
+- `ConceptQL::Database.new(db, share_utilization: true)` and `ConceptQL::Database#shared_tables`:
+  the statements of one Database share each hospitalization, SNF and hospice list (the
+  `Utilizable` operators). The first query that reads rows creates the list as a table named
+  `<table_prefix>_util_<hash>`, in `scratch_database` when that is set, and later statements read
+  it. Building SQL creates no table. The key is the SQL of the list, so each window gets its own
+  table, and a list shares only when its lookup ids come in one order: use the option with
+  `cache_lookups: true`. The option needs a `table_prefix` in `scope_opts`. conceptql never drops
+  these tables: the caller drops `shared_tables`. Off by default. On DuckDB, a t_shank prototype of this
+  change cut one export with 40 hospitalization criteria from 6.85 to 5.10 minutes. Spark and
+  Postgres timing are not measured.
 
 ### Fixed
 

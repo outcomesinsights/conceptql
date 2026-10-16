@@ -39,6 +39,19 @@ module ConceptQL
         raise NotImplementedError
       end
 
+      # With the Database's share_utilization option, the list is read from a
+      # table that every statement on the Database shares. The WITH entry only
+      # carries the list to Scope#with_ctes, which takes it out of the SQL and
+      # creates the table when the query first reads rows.
+      def evaluate(db)
+        cdb = nodifier.cdb
+        return super unless cdb.opts[:share_utilization]
+
+        list = select_it(query(db))
+        name = cdb.shared_utilization_table(list, scope)
+        db[name].with(name, list, Scope::SHARED_TABLE => true)
+      end
+
       def gdm_it(db)
         source_type_id = dm.concept_ids(db, dm.file_provenance_types_vocab, collection_type)
         all_source_type_ids = dm.descendants_of(db, source_type_id)

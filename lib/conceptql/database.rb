@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require 'logger'
 require_relative 'lexicon'
 
@@ -42,10 +43,17 @@ module ConceptQL
         scratch_database: opts.fetch(:scratch_database, ENV['DOCKER_SCRATCH_DATABASE'])
       }.merge(opts[:scope_opts] || {})
       @opts[:scope_opts][:lexicon] = lexicon
+
+      @shared_utilization_tables = {}
+      @shared_utilization_mutex = Mutex.new
     end
 
     def query(statement, opts = {})
       opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
+      if @opts[:share_utilization] && opts[:scope_opts][:table_prefix].to_s.empty?
+        raise ArgumentError, 'share_utilization needs a table_prefix in scope_opts, to name its tables'
+      end
+
       Query.new(self, ConceptQL::Utils.rekey(statement), @opts.merge(opts))
     end
 
@@ -139,6 +147,35 @@ module ConceptQL
       raise ArgumentError, "no data columns to read for data model #{opts[:data_model]}" if ids.empty?
 
       db.create_table(table, as: data_model.concepts_table(db).where(id: ids.reduce { |all, one| all.union(one) }))
+    end
+
+    # The share_utilization option: the name of the table that holds a
+    # Utilizable operator's list (its select_it(query(db)), passed as key).
+    # The key's SQL contains the window table and adjustments, so two
+    # different windows get two tables.
+    def shared_utilization_table(key, scope)
+      name = Sequel.identifier("#{scope.opts[:table_prefix]}_util_#{Digest::MD5.hexdigest(key.sql)[0, 16]}")
+      scope.scratch_database.to_s.empty? ? name : name.qualify(scope.scratch_database)
+    end
+
+    # Creates a shared_utilization_table from its key, once per key, when a
+    # query first reads rows. Another thread that reads the same key waits
+    # here and then reads the table that the first thread created.
+    def create_shared_utilization_table(name, key, rdbms, scope)
+      sql = key.sql
+      @shared_utilization_mutex.synchronize do
+        next if @shared_utilization_tables.key?(sql)
+
+        db.create_table(name, rdbms.create_options(scope, key).merge(as: key))
+        rdbms.post_create(db, name)
+        @shared_utilization_tables[sql] = name
+      end
+    end
+
+    # The tables that the share_utilization option created. conceptql never
+    # drops them: the caller does.
+    def shared_tables
+      @shared_utilization_mutex.synchronize { @shared_utilization_tables.values }
     end
 
     def database_type
