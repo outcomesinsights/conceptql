@@ -25,7 +25,7 @@ describe 'ConceptQL::Database share_utilization' do
       op = query.operator
       key = op.select_it(op.query(cdb.db)).sql
 
-      sql = query.sql
+      sql = query.sql_statements[:query]
 
       _(sql).must_include %(FROM "#{prefix}_util_#{Digest::MD5.hexdigest(key)[0, 16]}")
       _(sql).wont_match(/"(observations|admission_details)"/)
@@ -70,6 +70,36 @@ describe 'ConceptQL::Database share_utilization' do
 
     statements = [['hospitalization'], ['occurrence', 1, ['hospitalization']]]
 
+    # Runs the entries in order, as CREATE TABLE AS and then the query, as
+    # t_shank's Runner#recreate does.
+    def run_statements(stmts)
+      stmts.each { |name, sql| DB.create_table(name, as: sql) unless name == :query }
+      DB.fetch(stmts[:query]).all.sort_by(&:to_s)
+    end
+
+    it 'lists the table in sql_statements for the caller to create' do
+      cdb = shared_cdb(prefix)
+      first, second = statements.map { |statement| cdb.query(statement) }
+
+      stmts = first.sql_statements
+      name = stmts.keys.first
+
+      _(stmts.keys).must_equal [name, :query]
+      _(name.to_s).must_match(/\A#{prefix}_util_\h{16}\z/)
+      _(stmts[:query]).must_include name.to_s
+      _(run_statements(stmts)).must_equal rows(CDB, statements.first)
+      _(cdb.shared_tables).must_equal [name]
+
+      stmts = second.sql_statements
+
+      _(stmts.keys).must_equal [:query]
+      _(stmts[:query]).must_include name.to_s
+      _(run_statements(stmts)).must_equal rows(CDB, statements.last)
+      # The read hook finds the table and creates nothing.
+      _(second.query.all.sort_by(&:to_s)).must_equal rows(CDB, statements.last)
+      _(cdb.shared_tables).must_equal [name]
+    end
+
     it 'returns the same rows as the inline list from one table' do
       cdb = shared_cdb(prefix)
 
@@ -83,16 +113,17 @@ describe 'ConceptQL::Database share_utilization' do
       _(DB[cdb.shared_tables.first].count).must_be :>, 0
     end
 
-    it 'creates no table to build SQL' do
+    it 'creates no table to build SQL and lists the table each time' do
       cdb = shared_cdb(prefix)
       query = cdb.query(statements.last)
 
       name = query.sql[table_pattern].delete('"').to_sym
-      query.sql_statements
+      listed = Array.new(2) { query.sql_statements.keys }
       query.annotate(skip_counts: true)
 
-      _(cdb.shared_tables).must_be_empty
+      _(listed).must_equal [[name, :query]] * 2
       _(DB.table_exists?(name)).must_equal false
+      _(cdb.shared_tables).must_equal [name]
     end
 
     it 'creates one table for each window' do

@@ -340,6 +340,7 @@ module ConceptQL
       end
       query = recursive_extract_ctes(query, temp_tables)
       shared_tables, temp_tables = temp_tables.partition { |_, _, with_opts| with_opts&.fetch(SHARED_TABLE, false) }
+      shared_tables = shared_tables.uniq(&:first)
       temp_tables = sort_extracted_ctes(temp_tables)
 
       if force_temp_tables?(options)
@@ -384,7 +385,7 @@ module ConceptQL
             sql_statements = temp_tables.map do |table_name, ds|
               [table_name, ds.sql]
             end.compact.push([:query, sql(*args, &block)])
-            Hash[sql_statements]
+            Hash[scope.shared_table_statements(shared_tables, op) + sql_statements]
           end
 
           define_method(:drop_temp_tables) do |opts = {}|
@@ -408,9 +409,10 @@ module ConceptQL
           end
         end
 
+        scope = self
         query = query.with_extend do
           define_method(:sql_statements) do |*args, &block|
-            { query: sql(*args, &block) }
+            Hash[scope.shared_table_statements(shared_tables, op).push([:query, sql(*args, &block)])]
           end
 
           define_method(:drop_temp_tables) do |opts = {}|
@@ -418,10 +420,17 @@ module ConceptQL
         end
       end
 
-      shared_tables.empty? ? query : create_shared_tables_on_read(query, shared_tables.uniq(&:first), op)
+      shared_tables.empty? ? query : create_shared_tables_on_read(query, shared_tables, op)
     end
 
-    # Creates the shared tables before the query reads its first rows. This
+    # The sql_statements entries that create the shared tables that do not
+    # exist yet. They come first, because the other entries read them.
+    def shared_table_statements(shared_tables, op)
+      shared_tables.filter_map { |name, key, _with_opts| op.nodifier.cdb.shared_utilization_statement(name, key) }
+    end
+
+    # Creates the shared tables that do not exist yet before the query reads
+    # its first rows, for a caller that reads rows through conceptql. This
     # hook runs before the force_temp_tables hook, so the temp tables can read
     # them. The shared tables are never in drop_temp_tables.
     def create_shared_tables_on_read(query, shared_tables, op)
