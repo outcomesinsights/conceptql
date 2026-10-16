@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-15T14:11:13.610014+00:00
+updated_at: 2026-10-16T03:32:51.470731+00:00
 tags:
   - performance
   - spark
@@ -253,3 +253,12 @@ slice + option (c)     n=3   3.6 (3.4-3.6)
 - Output: all 236 output column hashes and the row counts were identical across all 21 runs.
 - Not measured: option (c) without the slice, and option (c) on Spark.
 - The match text `FROM "concept") AS "t1") AS "` also matches t_shank's own description joins, so the arm rewrote only the six name-join aliases. In conceptql's SEER statements, every match was a name join.
+
+RULED 2026-10-15: Ryan: "C please". conceptql builds the cut-down concept table (option c). Options (a) and (d) are dropped. Option (b) stays with roobetl as seed roobetl-825.
+
+Design, chosen by the agent and not ruled by Ryan:
+
+- A Database option, name_concepts_table:, names the table. When it is set, the six name joins (dose_con, ing_con, unit_con, concept_con, asc, dlc) read it instead of the lexicon's concept table. Code lookups still read the full table.
+- Database#create_name_concepts_table builds it with CREATE TABLE AS. It holds the concept rows whose ids appear in the data columns that the joins read. For gdm, these are clinical_codes.clinical_code_concept_id, drug_exposure_details.dose_unit_concept_id, measurement_details.unit_concept_id and result_as_concept_id, and admission_details.admit_source_concept_id and discharge_location_concept_id. For gdm_wide, these are the same six columns in observations.
+- The caller decides when to build the table and when to drop it. conceptql does not build it lazily while it generates SQL, because Query#sql must have no side effect. A temporary table could also disappear across pooled connections.
+- If the option is set and the table does not exist, the query fails. conceptql does not fall back to the full concept table.
