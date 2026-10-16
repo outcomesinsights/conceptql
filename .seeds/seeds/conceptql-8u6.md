@@ -4,7 +4,7 @@ title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversar
 status: captured
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-16T03:32:51.470731+00:00
+updated_at: 2026-10-16T03:43:34.700410+00:00
 tags:
   - performance
   - spark
@@ -262,3 +262,5 @@ Design, chosen by the agent and not ruled by Ryan:
 - Database#create_name_concepts_table builds it with CREATE TABLE AS. It holds the concept rows whose ids appear in the data columns that the joins read. For gdm, these are clinical_codes.clinical_code_concept_id, drug_exposure_details.dose_unit_concept_id, measurement_details.unit_concept_id and result_as_concept_id, and admission_details.admit_source_concept_id and discharge_location_concept_id. For gdm_wide, these are the same six columns in observations.
 - The caller decides when to build the table and when to drop it. conceptql does not build it lazily while it generates SQL, because Query#sql must have no side effect. A temporary table could also disappear across pooled connections.
 - If the option is set and the table does not exist, the query fails. conceptql does not fall back to the full concept table.
+
+UPDATE 2026-10-15: option (c) shipped in e1c308a1 (bead conceptql-auu), as designed above. Postgres gdm_wide, gdm_ohdsi and gdm_vocabs and DuckDB each passed 541 runs with 0 failures. The live test is skipped on Spark, where the build was not tried. The test fixture has no admission source or discharge location values, so for those two joins only the SQL is checked. t_shank has not adopted it. conceptql is unpushed, and t_shank pins an older conceptql.
