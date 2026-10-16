@@ -72,6 +72,10 @@ module ConceptQL
 
     COLUMN_TYPES = DEFAULT_COLUMNS.merge(ADDITIONAL_COLUMNS).freeze
 
+    # Marks the WITH entry of a list that the Database's share_utilization
+    # option keeps in a shared table (Behaviors::Utilizable#evaluate).
+    SHARED_TABLE = :conceptql_shared_table
+
     attr_accessor :person_ids
 
     attr_reader :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
@@ -270,7 +274,9 @@ module ConceptQL
         keep, remove = with.partition { |w| w[:no_temp_table] }
         ctes.concat(remove.map do |w|
           opts = w.except(:name, :dataset, :no_temp_table)
-          [w[:name], recursive_extract_ctes(w[:dataset], ctes), opts]
+          # A shared table is created from its whole list, nested CTEs included.
+          ds = w[SHARED_TABLE] ? w[:dataset] : recursive_extract_ctes(w[:dataset], ctes)
+          [w[:name], ds, opts]
         end)
         # p [:rec_with, ctes.map(&:first), with]
         query = query.clone(with: keep.empty? ? nil : keep)
@@ -333,6 +339,8 @@ module ConceptQL
         temp_tables << [label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables)]
       end
       query = recursive_extract_ctes(query, temp_tables)
+      shared_tables, temp_tables = temp_tables.partition { |_, _, with_opts| with_opts&.fetch(SHARED_TABLE, false) }
+      shared_tables = shared_tables.uniq(&:first)
       temp_tables = sort_extracted_ctes(temp_tables)
 
       if force_temp_tables?(options)
@@ -377,7 +385,7 @@ module ConceptQL
             sql_statements = temp_tables.map do |table_name, ds|
               [table_name, ds.sql]
             end.compact.push([:query, sql(*args, &block)])
-            Hash[sql_statements]
+            Hash[scope.shared_table_statements(shared_tables, op) + sql_statements]
           end
 
           define_method(:drop_temp_tables) do |opts = {}|
@@ -401,9 +409,10 @@ module ConceptQL
           end
         end
 
+        scope = self
         query = query.with_extend do
           define_method(:sql_statements) do |*args, &block|
-            { query: sql(*args, &block) }
+            Hash[scope.shared_table_statements(shared_tables, op).push([:query, sql(*args, &block)])]
           end
 
           define_method(:drop_temp_tables) do |opts = {}|
@@ -411,7 +420,33 @@ module ConceptQL
         end
       end
 
-      query
+      shared_tables.empty? ? query : create_shared_tables_on_read(query, shared_tables, op)
+    end
+
+    # The sql_statements entries that create the shared tables that do not
+    # exist yet. They come first, because the other entries read them.
+    def shared_table_statements(shared_tables, op)
+      shared_tables.filter_map { |name, key, _with_opts| op.nodifier.cdb.shared_utilization_statement(name, key) }
+    end
+
+    # Creates the shared tables that do not exist yet before the query reads
+    # its first rows, for a caller that reads rows through conceptql. This
+    # hook runs before the force_temp_tables hook, so the temp tables can read
+    # them. The shared tables are never in drop_temp_tables.
+    def create_shared_tables_on_read(query, shared_tables, op)
+      scope = self
+      cdb = op.nodifier.cdb
+      rdbms = op.rdbms
+      query.with_extend do
+        %i[each to_hash_groups to_hash].each do |meth|
+          define_method(meth) do |*args, &block|
+            shared_tables.each do |name, key, _with_opts|
+              cdb.create_shared_utilization_table(name, key, rdbms, scope)
+            end
+            super(*args, &block)
+          end
+        end
+      end
     end
 
     def label_cte_name(label)

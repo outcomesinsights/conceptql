@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require 'logger'
 require_relative 'lexicon'
 
@@ -42,10 +43,17 @@ module ConceptQL
         scratch_database: opts.fetch(:scratch_database, ENV['DOCKER_SCRATCH_DATABASE'])
       }.merge(opts[:scope_opts] || {})
       @opts[:scope_opts][:lexicon] = lexicon
+
+      @shared_utilization_tables = {}
+      @shared_utilization_mutex = Mutex.new
     end
 
     def query(statement, opts = {})
       opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
+      if @opts[:share_utilization] && opts[:scope_opts][:table_prefix].to_s.empty?
+        raise ArgumentError, 'share_utilization needs a table_prefix in scope_opts, to name its tables'
+      end
+
       Query.new(self, ConceptQL::Utils.rekey(statement), @opts.merge(opts))
     end
 
@@ -139,6 +147,45 @@ module ConceptQL
       raise ArgumentError, "no data columns to read for data model #{opts[:data_model]}" if ids.empty?
 
       db.create_table(table, as: data_model.concepts_table(db).where(id: ids.reduce { |all, one| all.union(one) }))
+    end
+
+    # The share_utilization option: the name of the table that holds a
+    # Utilizable operator's list (its select_it(query(db)), passed as key).
+    # The key's SQL contains the window table and adjustments, so two
+    # different windows get two tables. The name is a Symbol, because
+    # sequel-duckdb's table_exists? reads a Sequel::SQL::Identifier wrong.
+    def shared_utilization_table(key, scope)
+      name = :"#{scope.opts[:table_prefix]}_util_#{Digest::MD5.hexdigest(key.sql)[0, 16]}"
+      scope.scratch_database.to_s.empty? ? name : Sequel.qualify(scope.scratch_database.to_sym, name)
+    end
+
+    # The sql_statements entry that creates a shared_utilization_table, or nil
+    # when the table exists. The caller runs the entries in order. Nothing is
+    # claimed: every call lists a table until it exists.
+    def shared_utilization_statement(name, key)
+      return if db.table_exists?(name)
+
+      @shared_utilization_mutex.synchronize { @shared_utilization_tables[key.sql] = name }
+      [name, key.sql]
+    end
+
+    # Creates a shared_utilization_table that does not exist yet, when a
+    # query first reads rows through conceptql. Another thread that reads the
+    # same table waits here and then reads the table the first thread created.
+    def create_shared_utilization_table(name, key, rdbms, scope)
+      @shared_utilization_mutex.synchronize do
+        next if db.table_exists?(name)
+
+        db.create_table(name, rdbms.create_options(scope, key).merge(as: key))
+        rdbms.post_create(db, name)
+        @shared_utilization_tables[key.sql] = name
+      end
+    end
+
+    # The shared tables that conceptql listed in sql_statements or created.
+    # conceptql never drops them: the caller does.
+    def shared_tables
+      @shared_utilization_mutex.synchronize { @shared_utilization_tables.values }
     end
 
     def database_type
