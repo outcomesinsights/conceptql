@@ -1,0 +1,31 @@
+[
+  "last",
+  [
+    "icd9",
+    "412",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 48,
+            "n": 37
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  {
+    "within": "1y",
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["unsupported option", "within", "1y"]]
+    },
+    "name": "Last"
+  }
+]

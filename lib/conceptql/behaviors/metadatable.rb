@@ -54,6 +54,11 @@ module ConceptQL
       @options[name] = auto_label(name, options)
     end
 
+    # Takes an option that a subclass inherited out of its metadata
+    def remove_option(name)
+      @options.delete(name)
+    end
+
     def auto_label(name, opts = {})
       return opts if opts[:label]
       return opts.merge(label: name.to_s.split("_").map(&:capitalize).join(" ")) unless opts[:type] == :codelist

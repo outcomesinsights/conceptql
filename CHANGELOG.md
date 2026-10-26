@@ -94,6 +94,10 @@ All notable changes to this project will be documented in this file.
   formatted
 - A `cpt_or_hcpcs` code gets a warning when every vocabulary rejects it, for any reason. It is
   "improperly formatted" only when every vocabulary says so, and otherwise "unknown"
+- `first` and `last` reject the `at_least` and `within` options with the validation error
+  "unsupported option". With either option they returned every upstream row instead of one row
+  per person. The two options are no longer in the `first` and `last` metadata. A blank value
+  counts as not set. `occurrence` keeps both options
 
 ### Removed
 

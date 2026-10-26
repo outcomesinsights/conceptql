@@ -21,8 +21,18 @@ module ConceptQL
 
       desc "For each person, passes along the record with the earliest start_date."
 
+      # With either option, Occurrence's timed query returns every upstream
+      # row instead of one row per person
+      unsupported_options :at_least, :within
+
       def occurrence
         1
+      end
+
+      # A blank at_least or within passes validation, and must not select
+      # the timed query
+      def timed?
+        false
       end
     end
   end
