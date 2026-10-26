@@ -1,0 +1,6 @@
+# mdformat reads this by walking UP from each file, so a repo that does not track it inherits
+# ~/.mdformat.toml under HOME and nothing anywhere else -- identical trees passed under ~ and
+# failed under /tmp (sequel-duckdb c99a25f). Without the plugins, `1. 2. 3.` becomes
+# `1. 1. 1.` and front matter is mangled. Copy as .mdformat.toml, verbatim.
+extensions = ["frontmatter", "gfm"]
+number = true

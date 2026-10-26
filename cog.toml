@@ -1,0 +1,12 @@
+# cocogitto: `cog check` in `lint` reads commit subjects since the last release tag
+# (docs/lint-and-format.md has the line, and why it is not --from-latest-tag). Releases are
+# tagged vX.Y.Z (git-cliff and release.yml agree on the prefix); without tag_prefix, cog finds
+# no tag and errors "unable to get any tag" -- which, piped through tee or tail, passes as rc 0
+# (sequel-duckdb, 2026-10-02).
+tag_prefix = "v"
+
+# bd commits its own config rewrites as `bd: update sync.remote`; without this type every beads
+# repo whose bd did so since the last tag fails lint (seeds, 2026-10-12). git-cliff already skips
+# `^bd:` in cliff.toml. Unknown types are still rejected (measured, cog 7.0.0).
+[commit_types]
+bd = { changelog_title = "", omit_from_changelog = true }

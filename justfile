@@ -1,5 +1,7 @@
 log_dir := "claude_stuff/test-logs"
 
+# CI's Postgres matrix sets SEQUELIZER_SEARCH_PATH and CONCEPTQL_DATA_MODEL to
+# run its other two configs.
 # Run gdm_wide (default quick test)
 test *ARGS:
     #!/usr/bin/env bash
@@ -8,7 +10,8 @@ test *ARGS:
     ts=$(date +%Y%m%d%H%M%S)
     log={{ log_dir }}/test/${ts}.txt
 
-    SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide \
+    SEQUELIZER_SEARCH_PATH="${SEQUELIZER_SEARCH_PATH:-wide,slim,ohdsi_vocabs}" \
+      CONCEPTQL_DATA_MODEL="${CONCEPTQL_DATA_MODEL:-gdm_wide}" \
       docker compose run --rm conceptql {{ ARGS }} 2>&1 | tee "$log"
 
     ln -sf "test/${ts}.txt" {{ log_dir }}/latest.txt
@@ -175,86 +178,63 @@ check-oi-pins lock="Gemfile.lock":
     [ $rc -eq 0 ] || echo "{{ lock }} is not pinned to OI main: run 'bundle update --source <gem>' and re-check"
     exit $rc
 
-# Local pre-push CI gate — runs the default Postgres gdm_wide config (the
-# primary platform) and the DuckDB suite before allowing a push. The other 2
-# Postgres configs and Spark stay in remote CI as the last line of defense for
-# cross-env edge cases. test-duckdb fails, never skips, when its fixture or
-# libduckdb is unavailable. Run `just test-full` for all 3 Postgres configs.
-#
-# The two suites run concurrently, each to its own log in claude_stuff/test-logs/ci/.
-# They share no state: test uses the docker test_data database and writes
-# coverage/; test-duckdb tests a per-run copy of its fixture and writes its
-# coverage under claude_stuff/test-logs/duckdb/. A Ctrl-C reaches both.
+# Local pre-push CI gate. GitHub CI runs the same recipes: its lint job runs
+# lint, fmt-check and hygiene, its Postgres job runs `test` and its DuckDB job
+# runs `test-duckdb`. Locally `test` runs only the default Postgres gdm_wide
+# config (the primary platform). The other 2 Postgres configs and Spark stay in
+# remote CI as the last line of defense for cross-env edge cases. test-duckdb
+# fails, never skips, when its fixture or libduckdb is unavailable. Run
+# `just test-full` for all 3 Postgres configs.
 #
 # The pre-push git hook runs this once, as `just pre-push`. Bypass with
 # `SKIP_GATE=1 git push`, which skips this gate and still publishes the beads.
 # `git push --no-verify` skips the beads publish too.
 # Lint, then the Postgres and DuckDB suites in parallel, then hygiene
-ci: lint fmt-check && hygiene
-    #!/usr/bin/env bash
-    set -euo pipefail
-    dir={{ log_dir }}/ci
-    mkdir -p "$dir"
-    ts=$(date +%Y%m%d%H%M%S)
-    pg_log="$dir/${ts}-test.txt"
-    duck_log="$dir/${ts}-test-duckdb.txt"
+ci: lint fmt-check test-both hygiene
 
-    echo "Running test (Postgres gdm_wide) and test-duckdb in parallel. Follow with:"
-    echo "  tail -f $pg_log"
-    echo "  tail -f $duck_log"
-    {{ just_executable() }} --justfile "{{ justfile() }}" test >"$pg_log" 2>&1 &
-    pg_pid=$!
-    {{ just_executable() }} --justfile "{{ justfile() }}" test-duckdb >"$duck_log" 2>&1 &
-    duck_pid=$!
-
-    pg_rc=0
-    duck_rc=0
-    wait "$pg_pid" || pg_rc=$?
-    wait "$duck_pid" || duck_rc=$?
-
-    echo ""
-    echo "=== Results ==="
-    for suite in "test:$pg_rc:$pg_log" "test-duckdb:$duck_rc:$duck_log"; do
-      IFS=: read -r name rc log <<<"$suite"
-      summary=$(grep -E '^[0-9]+ runs' "$log" || echo "NO SUMMARY FOUND")
-      if [ "$rc" -eq 0 ]; then
-        echo "  ✓ ${name}: ${summary}"
-      else
-        echo "  ✗ ${name} (exit $rc): ${summary}"
-        echo "    last lines of $log:"
-        tail -n 20 "$log" | sed 's/^/      /'
-      fi
-      echo "    log: $log"
-    done
-
-    if [ "$pg_rc" -ne 0 ] || [ "$duck_rc" -ne 0 ]; then
-      echo ""
-      echo "FAILED: one or more suites failed"
-      exit 1
-    fi
+# The two suites share no state: test uses the docker test_data database and
+# writes coverage/; test-duckdb tests a per-run copy of its fixture and writes its
+# coverage under claude_stuff/test-logs/duckdb/. Their output interleaves on the
+# terminal, and each one also writes its own log under claude_stuff/test-logs/.
+# Run the Postgres gdm_wide suite and the DuckDB suite at the same time
+[parallel]
+test-both: test test-duckdb
 
 # Rewrite files to canonical format. Run deliberately; never from a hook.
 fmt:
     bundle exec rubocop --autocorrect
     git ls-files "*.sh" | xargs -r shfmt -w
     just --fmt --unstable
-    git ls-files "*.md" | xargs -r mdformat
+    git ls-files "*.md" | xargs -r uvx --from mdformat --with mdformat-gfm --with mdformat-frontmatter mdformat
 
 # Report format drift without changing anything. This is what the hooks run —
 # a formatter that rewrites files mid-commit changes what you already reviewed.
 fmt-check:
     git ls-files "*.sh" | xargs -r shfmt -d
     just --fmt --check --unstable
-    git ls-files "*.md" | xargs -r mdformat --check
+    git ls-files "*.md" | xargs -r uvx --from mdformat --with mdformat-gfm --with mdformat-frontmatter mdformat --check
 
 # What actually runs before a push. Defaults to the complete `ci`; point it at
 # something smaller ONLY where running complete CI locally is impractical.
 pre-push: ci
 
-# Every non-rewriting check. Reports and never rewrites: rubocop's safe
-# autocorrections run in `fmt`, never here.
+# Reports and never rewrites: rubocop's safe autocorrections run in `fmt`, never
+# here. Tools come from mise.toml; a missing one fails the recipe. cog checks the
+# commit subjects since the last v* tag, or the last 20 commits before the first
+# tag (a shallow clone fails here, loudly).
+# Every non-rewriting check: rubocop, shellcheck, actionlint, zizmor, hadolint, cog
 lint:
     bundle exec rubocop
+    shellcheck $(git ls-files '*.sh' '*.bash')
+    actionlint
+    zizmor --offline .
+    git ls-files '*Dockerfile' '*.Dockerfile' | xargs -r hadolint
+    tag="$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)" && cog check --ignore-merge-commits "${tag:-HEAD~20}..HEAD"
+
+# Installs the pinned tools (mise.toml) and the bundle. A clone needs git and mise.
+setup:
+    mise install
+    bundle install
 
 # Runs on every commit, so it must stay FAST — a sub-minute budget. Tests belong
 # here when they fit; lint alone when they do not. fmt-check never rewrites.
