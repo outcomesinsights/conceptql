@@ -21,6 +21,7 @@ module ConceptQL
       descendants_of
       known_codes
       related_concept_ids
+      table_is_missing?
       vocabulary_is_empty?
     ].freeze
 
@@ -42,7 +43,7 @@ module ConceptQL
       @cache = {} if cache
     end
 
-    (CACHED_LOOKUPS - %i[known_codes]).each do |name|
+    (CACHED_LOOKUPS - %i[concepts_to_codes known_codes]).each do |name|
       define_method(name) do |*args|
         lookup(name, args) { @strategy.public_send(name, *args) }
       end
@@ -53,6 +54,14 @@ module ConceptQL
     def known_codes(data_db, vocabulary_id, codes)
       lookup(:known_codes, [ data_db, vocabulary_id, codes ]) do
         @strategy.known_codes(data_db, vocabulary_id, codes) { vocabulary_is_empty?(data_db, vocabulary_id) }
+      end
+    end
+
+    # The strategy's concepts_to_codes first asks whether the concept table is
+    # missing. It asks through the block, so that question also reaches the cache.
+    def concepts_to_codes(data_db, vocabulary_id, codes = [])
+      lookup(:concepts_to_codes, [ data_db, vocabulary_id, codes ]) do
+        @strategy.concepts_to_codes(data_db, vocabulary_id, codes) { table_is_missing?(data_db) }
       end
     end
 

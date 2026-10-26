@@ -8,7 +8,7 @@ module ConceptQL
     class Base
       extend Forwardable
       def_delegators :nodifier, :cdb
-      def_delegators :cdb, :lexicon
+      def_delegators :cdb, :lexicon, :source_table_exists?
       def_delegators :lexicon,
                      :concept_codes,
                      :concept_ids,
@@ -429,7 +429,7 @@ module ConceptQL
       end
 
       def table_is_missing?(db)
-        !(db.table_exists?(:observation_period) && db.table_exists?(:condition_occurrence))
+        !(source_table_exists?(db, :observation_period) && source_table_exists?(db, :condition_occurrence))
       end
 
       def concept_id(table)

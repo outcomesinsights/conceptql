@@ -35,7 +35,7 @@ module ConceptQL
       end
 
       def table_is_missing?(db)
-        !db.table_exists?(:observations)
+        !source_table_exists?(db, :observations)
       end
     end
   end
