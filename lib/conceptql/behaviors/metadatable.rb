@@ -183,9 +183,9 @@ module ConceptQL
     def process_options(options)
       return {} if options.nil? || options.empty?
 
-      options.each_with_object({}) do |(k, v), h|
-        v[:options] = v[:options].call if v.respond_to?(:[]) && v[:options].respond_to?(:call)
-        h[k] = v
+      # Build new hashes: the option hashes can be shared with a parent class
+      options.transform_values do |v|
+        v[:options].respond_to?(:call) ? v.merge(options: v[:options].call) : v
       end
     end
 
@@ -197,10 +197,12 @@ module ConceptQL
       puts "#{just_class_name} is missing #{missing.join(', ')}" unless missing.empty?
     end
 
+    # Each validation is [meth, *args]. Every argument reaches the hook, so
+    # validate_required_options :left, :right marks both options.
     def derive_metadata_from_validations
-      instance_variable_get(:@validations).each do |meth, args|
-        meth = "#{meth}_to_metadata"
-        send(meth, args) if respond_to?(meth)
+      @validations.each do |meth, *args|
+        hook = "#{meth}_to_metadata"
+        send(hook, *args) if respond_to?(hook)
       end
     end
 
@@ -228,9 +230,12 @@ module ConceptQL
       @arguments = []
     end
 
-    def validate_required_options_to_metadata(*args)
-      args.each do |opt_name|
-        @options[opt_name][:required] = true
+    # A subclass shares the option hashes that it inherits (see #inherited),
+    # so mark a copy. Writing into the shared hash would mark the option as
+    # required for the parent class too.
+    def validate_required_options_to_metadata(*names)
+      names.each do |name|
+        @options[name] = @options.fetch(name).merge(required: true)
       end
     end
 

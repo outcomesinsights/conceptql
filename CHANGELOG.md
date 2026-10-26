@@ -44,6 +44,10 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `ConceptQL.metadata` marks every option that an operator requires as `required`, not only the
+  first. `right` on each two-stream operator, `end` on `date_range` and `roles` on
+  `provider_filter` were not marked. Marking a subclass's options no longer changes its parent
+  class's option hashes
 - `trim_date_end` and `trim_date_start` accept `join_columns` from a JSON statement. The column
   names arrived as strings and became string literals in the SQL, so the query failed
 - `Query#code_list` on a statement with validation errors raises `Query::InvalidStatementError`
