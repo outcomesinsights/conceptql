@@ -92,12 +92,14 @@ bin/run_tests
 CONCEPTQL_DATA_MODEL=gdm bundle exec ruby test/all.rb
 CONCEPTQL_DATA_MODEL=gdm_wide bundle exec ruby test/all.rb
 
-# Rake tasks
+# Rake tasks (`bundle exec rake -T` lists them all)
+bundle exec rake        # the default task, the same as rake test
 bundle exec rake test   # as CI: data model + database from the environment
 bundle exec rake test_gdm
 bundle exec rake test_omopv4_plus
-bundle exec rake test_cov
 ```
+
+`rake test_gdm` and `rake test_omopv4_plus` set only `CONCEPTQL_DATA_MODEL`. The database and the search path still come from the environment. `rake test_omopv4_plus` fails against `test_data`, because that fixture has no OMOP tables. No OMOP fixture exists, so CI does not run it. When an expected-results file is missing, the suite writes a new one, so a failed run like this one leaves untracked files under `test/results/`.
 
 Default values from `bin/run_tests`:
 
