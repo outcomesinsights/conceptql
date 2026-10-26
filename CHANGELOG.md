@@ -81,6 +81,7 @@ All notable changes to this project will be documented in this file.
   emitted `DISTINCT ON`, which Presto does not support. The Rakefile's Presto scaffolding
   (`test_script` and `driftr_script` namespaces, `convert`, `prestofy`, the Presto `cdb`) is
   removed too. The default rake task is now `test` instead of `test_omopv4_plus`
+- The `conceptql selection_operators` command, which had raised NameError since 2016.
 
 ## [0.3.0] - 2016-11-08
 

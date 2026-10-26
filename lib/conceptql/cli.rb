@@ -121,29 +121,6 @@ module ConceptQL
       pp cdb(options).query(criteria_from_file(statement_file)).extract_metadata
     end
 
-    desc "selection_operators", "Generates a TSV of all the selection operators"
-    def selection_operators
-      require "csv"
-      CSV.open("selection_operators.tsv", "w", col_sep: "\t") do |csv|
-        csv << [ "name" ]
-        ConceptQL.metadata[:operators].values.select do |v|
-          v[:basic_type] == :selection
-        end.map { |v| v[:preferred_name] }.each do |name|
-          csv << [ name ]
-        end
-      end
-
-      CSV.open("domains.tsv", "w", col_sep: "\t") do |csv|
-        csv << [ "name" ]
-        ConceptQL::Operators::TABLE_COLUMNS.each do |domain, columns|
-          next unless columns.include?(:person_id)
-          next if domain.to_s =~ /era\Z/
-
-          csv << [ domain ]
-        end
-      end
-    end
-
     desc "dumpit", "Dumps out test data into CSVs"
     def dumpit(path)
       path = Pathname.new(path)

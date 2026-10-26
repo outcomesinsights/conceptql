@@ -9,6 +9,16 @@ require_relative "../../../lib/conceptql/cli"
 describe ConceptQL::CLI do
   let(:cli) { ConceptQL::CLI.new }
 
+  describe "help" do
+    it "does not list the removed selection_operators command" do
+      out, = capture_io { ConceptQL::CLI.start([ "help" ]) }
+
+      _(out).must_match(/^\s*\S+ metadata\b/)
+      _(out).wont_match(/selection_operators/)
+      _(ConceptQL::CLI.all_commands.keys).wont_include("selection_operators")
+    end
+  end
+
   describe "metadata" do
     # The command connects through sequelizer; the suite's own connection
     # stands in for it. Spark CI sets CONCEPTQL_PARQUET_TEST_DIR, and DB has
