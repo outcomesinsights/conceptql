@@ -13,6 +13,19 @@ services:
       - SEQUELIZER_RETRY_DELAY=5
       - SEQUELIZER_SEARCH_PATH
       - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data
+      # The calling user cannot write the image's HOME (/) or its baked bundle
+      # (/usr/local/bundle). Bundler reads the baked gems through GEM_PATH (the
+      # trailing ':' keeps Ruby's default gems) and installs only the gems that
+      # Gemfile.lock adds into GEM_HOME, in this container's own writable layer.
+      # Git gems are cloned there too, so no clone crosses an image layer
+      # (bookworm's git refuses that: "fatal: hardlink different from source").
+      - HOME=/tmp
+      - GEM_HOME=/tmp/bundle
+      - "GEM_PATH=/usr/local/bundle:"
+    # Run as the calling user, so coverage/ and test/results/ stay owned by
+    # that user. The justfile exports both values; a missing one fails here.
+    # Rootless docker maps container root to the calling user: drop this line there.
+    user: "${CONCEPTQL_UID:?run through just, or export CONCEPTQL_UID (id -u)}:${CONCEPTQL_GID:?run through just, or export CONCEPTQL_GID (id -g)}"
     image: outcomesinsights/misc:conceptql.master.latest
     build:
       context: "."
@@ -20,12 +33,6 @@ services:
     command: sh -c "bundle && bundle exec ruby test/all.rb"
     volumes:
       - "${PWD}:/home/conceptql"
-      # Anonymous volume, seeded from the image on each run: keeps bundler's
-      # git clones off overlayfs. bookworm's git refuses a local clone whose
-      # hardlinks cross image layers ("fatal: hardlink different from source"),
-      # which breaks `bundle` whenever Gemfile.lock pins an OI gem commit that
-      # the image did not bake in.
-      - /usr/local/bundle
   test_data:
     # Pinned by digest so local runs and CI test the same database: the
     # 2026-10-02 build (FY2027 vocabulary rebuild). The package is private;

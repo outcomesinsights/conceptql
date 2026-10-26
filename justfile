@@ -10,6 +10,11 @@ log_dir := "claude_stuff/test-logs"
 # run `gem pristine duckdb` after a switch.
 libduckdb_version := env("LIBDUCKDB_VERSION", "1.5.6")
 
+# docker-compose.yml runs the conceptql container as this user (its `user:`), so
+# the files a docker run writes into the checkout are not owned by root.
+export CONCEPTQL_UID := `id -u`
+export CONCEPTQL_GID := `id -g`
+
 # CI's Postgres matrix sets SEQUELIZER_SEARCH_PATH and CONCEPTQL_DATA_MODEL to
 # run its other two configs.
 # Run gdm_wide (default quick test)
@@ -20,12 +25,14 @@ test *ARGS:
     ts=$(date +%Y%m%d%H%M%S)
     log={{ log_dir }}/test/${ts}.txt
 
+    rc=0
     SEQUELIZER_SEARCH_PATH="${SEQUELIZER_SEARCH_PATH:-wide,slim,ohdsi_vocabs}" \
       CONCEPTQL_DATA_MODEL="${CONCEPTQL_DATA_MODEL:-gdm_wide}" \
-      docker compose run --rm conceptql {{ ARGS }} 2>&1 | tee "$log"
+      docker compose run --rm conceptql {{ ARGS }} 2>&1 | tee "$log" || rc=$?
 
     ln -sf "test/${ts}.txt" {{ log_dir }}/latest.txt
     echo "Log: $log"
+    exit $rc
 
 # Mirrors CI's Run-DuckDB-Tests job (.github/workflows/run_tests.yml) on host Ruby.
 # Tests write temp tables into the database file and the default source is a
@@ -97,7 +104,7 @@ test-duckdb *ARGS:
     fi
 
     export SEQUELIZER_URL="duckdb://$data"
-    # `just test` (docker) leaves a root-owned coverage/; keep this run's report out of it.
+    # `just ci` runs `test` at the same time, and it writes coverage/; keep this run's report apart.
     export CONCEPTQL_COVERAGE_DIR="{{ justfile_directory() }}/{{ log_dir }}/duckdb/coverage"
     args=({{ ARGS }})
     if [ ${#args[@]} -eq 0 ]; then
