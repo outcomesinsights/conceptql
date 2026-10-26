@@ -1,0 +1,142 @@
+# git-cliff config -- the canonical copy (weekly release ceremony, seed gator-4ws.30).
+# Copy as cliff.toml and replace OWNER/REPO in the templates (commit links in the body,
+# compare and release-tag links in the footer) with the repo's -- skipping comment lines, or
+# the sed rewrites its own example below into a no-op (sequel-duckdb, 2026-10-08):
+#   sed -i '/^#/!s#OWNER/REPO#outcomesinsights/sequel-duckdb#g' cliff.toml
+# The footer emits a definition only for a release with rendered commits, matching the body;
+# a backfill of an older CHANGELOG.md must add by hand the definition for any release whose
+# commits were all skipped types (sequel-duckdb's 0.2.1). NOT a [remote.github] table: that switches on
+# git-cliff's GitHub integration, which calls the API for pull-request metadata and PANICS
+# on a private repo (404) or needs a token on a public one (measured, 2.13 and 2.14).
+#
+# Everything else is identical across the fleet, EXCEPT the [bump] table at the bottom: its two
+# `= false` lines are the 0.x convention (a breaking change bumps minor, a feature bumps patch)
+# and belong only to a gem whose version is 0.x. A gem at 1.0 or above follows ordinary SemVer
+# and leaves them out -- measured on sequel-hexspace (2.0.0): at >= 1.0 the two settings are
+# inert either way. gator-doctor checks them against the repo's current version.
+# git-cliff config, used by the weekly release agent to pick the next version
+# and draft the CHANGELOG.md section. See https://git-cliff.org/docs/configuration
+#
+#   git-cliff --bumped-version            # next version from commits since the last v* tag
+#   git-cliff --unreleased --bump         # the section to add to CHANGELOG.md, and its one
+#                                         # `[X.Y.Z]: ...compare...` line for the file's end
+#
+# Only changes to the shipped gem count. chore, ci, test, style and docs commits are
+# skipped, so a week of nothing but those produces no release. `build:` commits COUNT
+# (under Changed): a dependency or Ruby-floor change changes what a consumer installs.
+# A breaking change is never skipped, whatever its type.
+#
+# Because build: counts toward the bump, the commit that ADOPTS this file must not be
+# typed build: -- `build(release): sync cliff.toml` made --bumped-version answer v0.3.2
+# for an unchanged gem (sequel-duckdb, measured). Type it ci(release):.
+
+[changelog]
+# Keep a Changelog, complete (gator-cf4, ruled 2026-10-08): `## [X.Y.Z] - YYYY-MM-DD`
+# headings, Added / Fixed / Changed groups plus the common `Breaking changes` extension,
+# the commit scope as a bold prefix (`**spark:** Keep the schema ...`), a blank line after
+# every heading so a pasted draft is mdformat-clean (gator-6dy), and in the FOOTER the
+# link reference definitions that make `[X.Y.Z]` a link. Keep a Changelog puts those at
+# the END of the file, so a draft is pasted in two places: the section under `# Changelog`
+# at the top, the one-line `[X.Y.Z]: ...compare...` definition at the bottom.
+header = ""
+body = """
+{%- if commits | length == 0 -%}
+{#- An empty range renders nothing. Without this guard a deps-only range still emits a
+    bare heading naming the version already published -- precisely the thing somebody
+    pastes in by reflex (sequel-hexspace, gator-uem). No commits, no section. -#}
+{%- else -%}
+{%- if version -%}
+## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else -%}
+## [Unreleased]
+{% endif %}
+{%- set breaking = commits | filter(attribute="breaking", value=true) -%}
+{% if breaking | length > 0 %}
+### Breaking changes
+
+{% for commit in breaking -%}
+- {% if commit.scope %}**{{ commit.scope }}:** {% endif %}{{ commit.message | split(pat="\\n") | first | upper_first | trim }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/outcomesinsights/conceptql/commit/{{ commit.id }})){% if commit.breaking_description and commit.breaking_description != commit.message %}: {{ commit.breaking_description | replace(from="\n", to=" ") | trim }}{% endif %}
+{% endfor %}
+{%- endif -%}
+{% for group, commits in commits | filter(attribute="breaking", value=false) | group_by(attribute="group") %}
+### {{ group }}
+
+{% for commit in commits -%}
+- {% if commit.scope %}**{{ commit.scope }}:** {% endif %}{{ commit.message | split(pat="\\n") | first | upper_first | trim }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/outcomesinsights/conceptql/commit/{{ commit.id }}))
+{% endfor %}
+{%- endfor %}
+{% endif -%}
+"""
+# The link reference definitions, one per rendered release: a compare link against the
+# previous tag, or the tag's own release page for the first release. `[Unreleased]` only
+# renders without --bump; with --bump the pending section already carries its version.
+footer = """
+{%- set_global defs = [] -%}
+{%- for release in releases -%}
+  {%- if release.commits | length == 0 %}{% continue %}{% endif -%}
+  {%- set from = release.previous.version | default(value="") -%}
+  {%- if release.version -%}
+    {%- set label = release.version | trim_start_matches(pat="v") -%}
+    {%- if from -%}
+      {%- set_global defs = defs | concat(with="[" ~ label ~ "]: https://github.com/outcomesinsights/conceptql/compare/" ~ from ~ "..." ~ release.version) -%}
+    {%- else -%}
+      {%- set_global defs = defs | concat(with="[" ~ label ~ "]: https://github.com/outcomesinsights/conceptql/releases/tag/" ~ release.version) -%}
+    {%- endif -%}
+  {%- elif from -%}
+    {%- set_global defs = defs | concat(with="[Unreleased]: https://github.com/outcomesinsights/conceptql/compare/" ~ from ~ "...HEAD") -%}
+  {%- endif -%}
+{%- endfor -%}
+{{ defs | join(sep="\n") }}
+"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+filter_commits = true
+# A `!` or BREAKING CHANGE commit is shown and bumps the version even when its
+# type is one skipped below (e.g. `build!:` raising the Ruby floor).
+protect_breaking_commits = true
+# Anchored at BOTH ends. Without the `$`, v1.1.0-rc1 and v1.1.0.1 match too and become
+# release boundaries: v1.1.0's section then starts at the rc instead of at v1.0.0, and
+# --bumped-version after a four-part tag answers v1.1.1.0 (measured on 2.14.2, gator-2x6).
+# The optional `-a.N` suffix is the fleet's pre-release form (gator-4ws.30: dotted, so it
+# sorts numerically and PEP 440 normalises it). Without it seeds' alpha train is invisible:
+# --bumped-version answered v0.7.0 instead of v0.7.0-a.10. Undotted rc1 / a8 stay rejected
+# (measured on a seeds clone and the gator-2x6 fixture, 2026-10-08).
+tag_pattern = "^v[0-9]+\\.[0-9]+\\.[0-9]+(-[a-z]+\\.[0-9]+)?$"
+topo_order = false
+sort_commits = "newest"
+
+# First match wins.
+commit_parsers = [
+  # Not part of the shipped gem: no changelog entry, no release.
+  { message = "^chore", skip = true },
+  { message = "^ci", skip = true },
+  # build: NOT skipped. A `build:` commit that changes a runtime dependency (add_dependency,
+  # a widened constraint) changes what a consumer installs; two of sequel-hexspace's three
+  # such commits since 1.0.0 were invisible to the changelog when build was skipped
+  # (gator-uem). Tooling-only build commits appearing under Changed are the cost.
+  { message = "^build", group = "Changed" },
+  { message = "^test", skip = true },
+  { message = "^style", skip = true },
+  { message = "^docs", skip = true },
+  { message = "^bd:", skip = true },
+
+  { message = "^feat", group = "Added" },
+  { message = "^fix", group = "Fixed" },
+  { message = "^perf", group = "Changed" },
+  { message = "^refactor", group = "Changed" },
+  { message = "^revert", group = "Changed" },
+
+  # Deliberately not a silent skip: a type nobody has classified renders
+  # under its own heading rather than vanishing from the release.
+  { message = ".*", group = "Uncategorized" },
+]
+
+# 0.x convention: a breaking change bumps the minor version and a feature
+# bumps the patch. Without these, the build! commit since v0.2.1 makes
+# --bumped-version answer v1.0.0.
+[bump]
+features_always_bump_minor = false
+breaking_always_bump_major = false
