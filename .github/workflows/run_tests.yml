@@ -3,8 +3,11 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions: {}
 jobs:
   Run-PostgreSQL-Tests:
+    permissions:
+      contents: read
     strategy:
       matrix:
         include:
@@ -20,10 +23,12 @@ jobs:
       CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       -
         name: Log into DockerHub
-        uses: docker/login-action@v4.6.0
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         continue-on-error: true
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -32,12 +37,14 @@ jobs:
         run: docker compose run conceptql
       - name: Upload Coverage
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-${{ matrix.data_model }}-${{ matrix.search_path }}
           path: coverage/
           retention-days: 90
   Run-Spark-Tests:
+    permissions:
+      contents: read
     strategy:
       matrix:
         #spark_version: [3.5.0, 3.3.2]
@@ -56,19 +63,21 @@ jobs:
       CONCEPTQL_DATA_MODEL: ${{ matrix.data_model }}
       BUNDLE_WITH: hexspace
     steps:
-      - uses: actions/checkout@v7
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '4.0'
           bundler-cache: true
 
       - name: Set up Java
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: 'temurin'
           java-version: ${{ startsWith(matrix.spark_version, '4.') && '17' || '11' }}
 
-      - uses: actions/cache@v6
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/spark-${{ matrix.spark_version }}
           key: spark-${{ env.SPARK_VERSION }}
@@ -76,11 +85,11 @@ jobs:
       - name: Download Spark
         if: steps.cache-spark.outputs.cache-hit != 'true'
         run: |
-          wget -q https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz
-          tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
-          mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark-$SPARK_VERSION
+          wget -q "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz"
+          tar xzf "spark-${SPARK_VERSION}-bin-hadoop3.tgz"
+          mv "spark-${SPARK_VERSION}-bin-hadoop3" ~/"spark-${SPARK_VERSION}"
 
-      - uses: actions/cache@v6
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: /tmp/synpuf_test_data
           key: synpuf-test-data-v8
@@ -92,19 +101,21 @@ jobs:
           curl -sSL "https://www.dropbox.com/scl/fi/bflehlmk1itwd352z0kjk/synpuf_test_data.tgz?rlkey=ogticol20oxvis5yzq37878z7&st=vydvpdyw&dl=1" > synpuf_test_data.tgz
           tar xzf synpuf_test_data.tgz
 
-      - run: ~/spark-$SPARK_VERSION/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
+      - run: ~/"spark-${SPARK_VERSION}"/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
       - run: bundle exec ruby test/all.rb
         env:
           CONCEPTQL_PARQUET_TEST_DIR: '/tmp/synpuf_test_data/{${{ matrix.search_path }}}'
           SEQUELIZER_URL: hexspace://localhost:10000/default
       - name: Upload Coverage
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-spark-${{ matrix.spark_version }}-${{ matrix.data_model }}
           path: coverage/
           retention-days: 90
   Run-DuckDB-Tests:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     env:
       SEQUELIZER_SEARCH_PATH: wide,slim,ohdsi_vocabs
@@ -116,7 +127,9 @@ jobs:
       DUCKDB_TEST_DATA_URL: ${{ vars.DUCKDB_TEST_DATA_URL }}
       DUCKDB_TEST_DATA_URL_SECRET: ${{ secrets.DUCKDB_TEST_DATA_URL }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Derive DuckDB Version
         run: |
           version="$(ruby -e '
@@ -132,7 +145,7 @@ jobs:
             exit 1
           ')"
           echo "DUCKDB_VERSION=$version" >> "$GITHUB_ENV"
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
       - name: Install libduckdb
@@ -147,7 +160,7 @@ jobs:
           echo "LD_LIBRARY_PATH=$DUCKDB_LIB_DIR:${LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
       - run: bundle install
 
-      - uses: actions/cache@v6
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: /tmp/synpuf_test_data.duckdb
           # Keyed on the checksum of the fixture, not on this workflow file, so
@@ -194,24 +207,26 @@ jobs:
           SEQUELIZER_URL: duckdb://${{ env.DUCKDB_TEST_DATA_PATH }}
       - name: Upload Coverage
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-duckdb-${{ env.CONCEPTQL_DATA_MODEL }}
           path: coverage/
           retention-days: 90
   ci:
     if: always()
+    permissions: {}
     needs: [Run-PostgreSQL-Tests, Run-Spark-Tests, Run-DuckDB-Tests]
     runs-on: ubuntu-latest
     steps:
-      - name: Check CI status
+      # Allowlists success: a skipped, cancelled or failed needed job (or any
+      # result GitHub adds later) fails this job, and so does an empty list.
+      # A skipped job ran no tests, so a green here must not hide it.
+      - name: Every needed job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
-            echo "One or more CI jobs failed"
-            exit 1
-          fi
-          if [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
-            echo "One or more CI jobs were cancelled"
-            exit 1
-          fi
+          [[ -n "$RESULTS" ]] || { echo "no needed job results; refusing to report green"; exit 1; }
+          for result in $RESULTS; do
+            [[ "$result" == "success" ]] || { echo "a needed job ended '$result'; refusing to report green"; exit 1; }
+          done
           echo "All CI jobs passed"
