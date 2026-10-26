@@ -177,8 +177,9 @@ module ConceptQL
     def cdb(options)
       data_db = db(options)
       cdb = ConceptQL::Database.new(data_db)
-      if ENV["CONCEPTQL_PARQUET_TEST_DIR"]
-        data_db.make_ready(search_paths: Pathname.new(ENV["CONCEPTQL_PARQUET_TEST_DIR"].glob("*.parquet")))
+      # A glob of directories, in search path order: "/data/{wide,slim}".
+      if (parquet_dirs = ENV["CONCEPTQL_PARQUET_TEST_DIR"])
+        data_db.make_ready(search_path: Dir[parquet_dirs].map { |dir| Pathname.new(dir).glob("*.parquet") })
       end
       cdb
     end

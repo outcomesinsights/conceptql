@@ -34,4 +34,39 @@ describe ConceptQL::CLI do
       end
     end
   end
+
+  describe "CONCEPTQL_PARQUET_TEST_DIR" do
+    # CI's Spark job sets a brace pattern, one directory per schema in search
+    # path order: "/tmp/synpuf_test_data/{wide,slim}". sequelizer's make_ready
+    # (the make_readyable extension) turns each file into a view, and the
+    # first file of a name wins.
+    it "passes the parquet files of each directory to make_ready, in search path order" do
+      Dir.mktmpdir do |dir|
+        %w[wide/observations slim/observations slim/patients].each do |name|
+          path = File.join(dir, "#{name}.parquet")
+          FileUtils.mkdir_p(File.dirname(path))
+          FileUtils.touch(path)
+        end
+        FileUtils.touch(File.join(dir, "slim", "README.txt"))
+
+        made_ready = []
+        data_db = Sequel.mock
+        data_db.define_singleton_method(:make_ready) { |opts| made_ready << opts }
+        ClimateControl.modify(CONCEPTQL_PARQUET_TEST_DIR: "#{dir}/{wide,slim}") do
+          cli.stub(:db, ->(_opts) { data_db }) { cli.send(:cdb, {}) }
+        end
+
+        _(made_ready).must_equal(
+          [
+            {
+              search_path: [
+                [ Pathname("#{dir}/wide/observations.parquet") ],
+                [ Pathname("#{dir}/slim/observations.parquet"), Pathname("#{dir}/slim/patients.parquet") ]
+              ]
+            }
+          ]
+        )
+      end
+    end
+  end
 end
