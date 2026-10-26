@@ -83,7 +83,9 @@ All notable changes to this project will be documented in this file.
 - Code format checks ("improperly formatted code") use the vocabulary_formats validator patterns.
   CPT4, CPT4_HCPCS, HCPCS, ICD10, ICD10CM and ICD9Proc changed: CPT4 now accepts M0201, HCPCS
   needs a leading letter, and the ICD patterns need a real dot. ATC, DRG, ICD03_Morphology,
-  ICD03_Topography, NDC, RxNorm and SNOMED are checked for the first time. ICD10PCS is unchanged
+  ICD03_Topography, NDC, RxNorm and SNOMED are checked for the first time. ICD10PCS accepts only 7-character billable codes
+  with a real section character first (row ICD10PCS.BILLABLE), so Z561123 is now improperly
+  formatted
 - A `cpt_or_hcpcs` code gets a warning when every vocabulary rejects it, for any reason. It is
   "improperly formatted" only when every vocabulary says so, and otherwise "unknown"
 

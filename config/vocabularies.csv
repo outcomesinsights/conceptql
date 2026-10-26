@@ -26,7 +26,7 @@ HCPCS,5,Healthcare Common Procedure Coding System (CMS),HCPCS,procedure_occurren
 ICD03_Morphology,1000008,ICD03_Morphology,,,,"^\d{4}/\d$",,
 ICD03_Topography,1000009,ICD03_Topography,,,,"^[A-Za-z]\d{2}(\.\d{1,2})?$",,
 ICD10,34,"International Classification of Diseases, Tenth Revision (WHO)",ICD-10 WHO,condition_occurrence,,"^([A-Za-z][0-9][0-9A-Za-z](\.\w{1,4})?|[A-Za-z][0-9][0-9A-Za-z]-[A-Za-z][0-9][0-9A-Za-z]|(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX|XXI|XXII))$",,
-ICD10PCS,35,"ICD-10 Procedure Coding System (CMS)",ICD-10 PCS,procedure_occurrence,,"^\w{7}$",icd10_pcs,
+ICD10PCS,35,"ICD-10 Procedure Coding System (CMS)",ICD-10 PCS,procedure_occurrence,,"^[0-9BCDFGHX][0-9A-HJ-NP-Z]{6}$",icd10_pcs,
 ICD10CM,70,"International Classification of Diseases, Tenth Revision, Clinical Modification (NCHS)",ICD-10 CM,condition_occurrence,,"^(?:QA[0-9]|[A-Za-z][0-9][0-9ABab])(\.[0-9A-Za-z]{1,4})?$",,
 ICD9CM,2,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS)",ICD-9 CM,condition_occurrence,,"^(V\d{2}(\.\d{1,2})?|\d{3}(\.\d{1,2})?|E\d{3}(\.\d)?)$",icd9,
 ICD9Proc,3,"International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 3 (NCHS)",ICD-9 Proc,procedure_occurrence,,"^\d{2}(\.\d{1,2})?$",icd9_procedure,

@@ -6,8 +6,8 @@ require "conceptql"
 # Each format_regexp in config/vocabularies.csv is a vocabulary_formats
 # validator row, anchored with ^...$. The real codes below are concept_codes of
 # that vocabulary in the OHDSI vocabulary of the DuckDB test fixture.
-# ICD10PCS keeps its own ^\w{7}$ for now: the official ICD10PCS.BILLABLE row
-# would change the expected result of icd10pcs/anno_bad_format (Z561123).
+# ICD10PCS uses the ICD10PCS.BILLABLE row: 7 characters, a real section
+# character first, so hierarchy parents (0016) and Z561123 are malformed.
 describe "vocabulary code formats" do
   # CPT4_HCPCS has an operator only when the lexicon carries it.
   let(:lexicon_db) do
@@ -46,6 +46,7 @@ describe "vocabulary code formats" do
     "hcpcs" => [ %w[A0382 A2001], %w[99214 0382] ],
     "icd10who" => [ %w[A20 A30.8 A15-A19 II], %w[1A0 A20.12345] ],
     "icd10cm" => [ %w[E58 Y36.101A M10.142 QA0], %w[E1165 1A0] ],
+    "icd10pcs" => [ %w[00163ZB XW03368 03JY3ZZ], %w[Z561123 561123 0016 00163ZI] ],
     "icd9cm" => [ %w[412 V62.3 E873.1], %w[4011 00.00] ],
     "icd9proc" => [ %w[00.01 01.6 00], %w[4523 0001] ],
     "atc" => [ %w[A A01 A01AB02], %w[E01 A01AB023] ],
