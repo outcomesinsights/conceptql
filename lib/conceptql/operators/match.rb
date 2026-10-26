@@ -12,6 +12,18 @@ module ConceptQL
       desc "Keeps left hand records that have the same values as a right hand side record. By default, every column is compared. only_columns or except_columns narrows that set, and join_columns compares only the person and the listed columns. Two NULL values count as the same value."
       default_query_columns
 
+      # The column lists are arrays of column names. The metadata has no list
+      # type that the diagram editor can show, so they are declared as
+      # :string, the type of the editor's plain text field.
+      option :only_columns, type: :string,
+                            instructions: "Compare only these columns. Cannot be used with Join Columns."
+      option :except_columns, type: :string,
+                              instructions: "Compare every column except these. Cannot be used with Join Columns."
+      option :join_columns, type: :string,
+                            instructions: "Compare only the person and these columns. Cannot be used with Only Columns or Except Columns."
+      option :invert_match, type: :boolean,
+                            instructions: "Keep the left hand records that have no matching right hand record."
+
       # These columns identify a record and are never NULL, so match compares
       # them with =. It compares every other column NULL-safe: the value
       # columns are often NULL, and with = a NULL never equals a NULL.

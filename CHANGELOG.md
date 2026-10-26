@@ -76,6 +76,10 @@ All notable changes to this project will be documented in this file.
   `=` and the other columns NULL-safe (`IS NOT DISTINCT FROM`, `<=>` on Spark). `match` also
   ignored `join_columns`. It now compares only the person and the listed columns, as the other
   two-stream operators do, and rejects `join_columns` next to `only_columns` or `except_columns`
+- The `match` metadata now lists the options that `match` reads: `only_columns`,
+  `except_columns` and `join_columns` (type `string`, because the metadata has no list type) and
+  `invert_match` (type `boolean`). Before, `ConceptQL.metadata` listed none of them, so the
+  diagram editor could not offer them
 
 ### Changed
 
