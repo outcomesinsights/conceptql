@@ -44,6 +44,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `trim_date_end` and `trim_date_start` accept `join_columns` from a JSON statement. The column
+  names arrived as strings and became string literals in the SQL, so the query failed
 - `Query#code_list` on a statement with validation errors raises `Query::InvalidStatementError`
   (a `Query::QueryError` that names the errors) instead of NoMethodError or a partial code list
 - `require 'conceptql'` no longer connects to a database. It used to connect to whatever
@@ -118,6 +120,10 @@ All notable changes to this project will be documented in this file.
 - `ConceptQL::Vocabularies::Entry#is_source?`, `Entry#is_standard?` and `Entry::STANDARD_VOCABS`
   (breaking for a caller of these). Their only use was the `Sourcish` include removed with the
   query optimizer. Neither t_shank nor jigsaw-diagram-editor calls them.
+- The `only_columns`, `except_columns` and `query_columns` options of `dedup` (breaking). No
+  statement could use them: with any column left out, the query failed, and from JSON they did
+  nothing or broke the SQL. Like any option an operator does not read, they are now ignored, and
+  dedup groups by every column.
 
 ## [0.3.0] - 2016-11-08
 

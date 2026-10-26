@@ -53,7 +53,7 @@ module ConceptQL
       end
 
       def join_columns_option
-        (options[:join_columns] || []) + matching_columns
+        (column_names_option(:join_columns) || []) + matching_columns
       end
 
       def annotate_values(db, opts = {})

@@ -13,7 +13,7 @@ module ConceptQL
 
       def query(db)
         db.from(unioned(db))
-          .select_group(*desired_columns)
+          .select_group(*query_cols)
           .from_self
       end
 
@@ -25,16 +25,6 @@ module ConceptQL
         upstreams.map { |c| c.evaluate(db) }.inject do |uni, q|
           uni.union(q)
         end
-      end
-
-      def desired_columns
-        return options[:query_columns] if options[:query_columns]
-
-        columns = query_cols
-
-        columns &= options[:only_columns] if options[:only_columns]
-        columns -= options[:except_columns] if options[:except_columns]
-        columns
       end
     end
   end
