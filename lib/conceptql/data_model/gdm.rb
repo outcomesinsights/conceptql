@@ -148,7 +148,7 @@ module ConceptQL
       end
 
       def table_is_missing?(db)
-        !(db.table_exists?(:patients) && db.table_exists?(:clinical_codes))
+        !(source_table_exists?(db, :patients) && source_table_exists?(db, :clinical_codes))
       end
     end
   end

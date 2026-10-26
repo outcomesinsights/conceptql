@@ -89,8 +89,11 @@ module ConceptQL
       []
     end
 
+    # A caller can answer "is the concept table missing?" with a block. The
+    # Lexicon does, so that the answer comes from its cache.
     def concepts_to_codes(data_db, vocabulary_id, codes = [])
-      return codes.map { |code| [ code, nil ] } if db.nil? || table_is_missing?(data_db)
+      missing = db.nil? || (block_given? ? yield : table_is_missing?(data_db))
+      return codes.map { |code| [ code, nil ] } if missing
 
       concepts(db, vocabulary_id, codes).select_map(%i[concept_code concept_text])
     end

@@ -21,6 +21,7 @@ module ConceptQL
       descendants_of
       known_codes
       related_concept_ids
+      table_is_missing?
       vocabulary_is_empty?
     ].freeze
 
@@ -42,7 +43,7 @@ module ConceptQL
       @cache = {} if cache
     end
 
-    (CACHED_LOOKUPS - %i[known_codes]).each do |name|
+    (CACHED_LOOKUPS - %i[concepts_to_codes known_codes table_is_missing?]).each do |name|
       define_method(name) do |*args|
         lookup(name, args) { @strategy.public_send(name, *args) }
       end
@@ -56,15 +57,36 @@ module ConceptQL
       end
     end
 
+    # The strategy's concepts_to_codes first asks whether the concept table is
+    # missing. It asks through the block, so that question also reaches the cache.
+    def concepts_to_codes(data_db, vocabulary_id, codes = [])
+      lookup(:concepts_to_codes, [ data_db, vocabulary_id, codes ]) do
+        @strategy.concepts_to_codes(data_db, vocabulary_id, codes) { table_is_missing?(data_db) }
+      end
+    end
+
+    # Only "the table is there" is kept. A missing table (or a database error,
+    # which Sequel's table_exists? turns into "missing") is checked again on
+    # the next call, so one transient error does not last the whole export.
+    def table_is_missing?(data_db)
+      lookup(:table_is_missing?, [ data_db ], keep: ->(missing) { !missing }) do
+        @strategy.table_is_missing?(data_db)
+      end
+    end
+
     # Runs the lookup, or with caching on returns the result kept for the same
-    # method and arguments.
-    def lookup(name, args)
+    # method and arguments. A result that keep rejects is returned, not kept.
+    def lookup(name, args, keep: nil)
       return yield unless cache
 
       # Copy Array arguments so a caller that mutates one later cannot
       # change a key. Results are frozen so a mutation fails loudly.
       key = [ name, args.map { |arg| arg.is_a?(Array) ? arg.dup.freeze : arg } ]
-      cache.fetch(key) { cache[key] = yield.dup.freeze }
+      cache.fetch(key) do
+        result = yield.dup.freeze
+        cache[key] = result if keep.nil? || keep.call(result)
+        result
+      end
     end
     private :lookup
 
