@@ -189,17 +189,17 @@ Use `ds.unfiltered.unordered.clone(select: nil).sql` or a simpler SQL generation
 
 ```bash
 # In t_shank, update Gemfile.lock to latest gem revisions:
-cd /home/ryan/projects/outins/jigsaw/main/t_shank
+cd <t_shank checkout>
 bundle update conceptql sequelizer sequel-duckdb
 
 # Run tests — 139 failures
-cd /home/ryan/projects/outins/jigsaw/main
+cd <jigsaw checkout that holds the test-tshank recipe>
 just test-tshank
 
 # Restore old Gemfile.lock — 0 failures
-cd /home/ryan/projects/outins/jigsaw/main/t_shank
+cd <t_shank checkout>
 git checkout Gemfile.lock
-cd /home/ryan/projects/outins/jigsaw/main
+cd <jigsaw checkout that holds the test-tshank recipe>
 just test-tshank
 ```
 
