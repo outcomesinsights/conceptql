@@ -48,7 +48,7 @@ module ConceptQL
       def query(db)
         words = arguments - actual_ids
 
-        concept_ids = dm.concepts_by_name(db, words).select_map(:id)
+        concept_ids = dm.concept_ids_by_name(db, words)
 
         c_ids = (concept_ids + actual_ids).map { |i| [ i, race_descendents[i] ] }.flatten.compact.uniq.sort
 

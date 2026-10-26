@@ -20,9 +20,7 @@ module ConceptQL
     end
 
     def find_bad_keywords(db, codes)
-      codes - dm.concepts(db,
-                          [ dm.file_provenance_types_vocab,
-                           dm.code_provenance_types_vocab ].flatten).select_map(:concept_code)
+      codes - dm.concept_codes(db, [ dm.file_provenance_types_vocab, dm.code_provenance_types_vocab ].flatten)
     end
   end
 end

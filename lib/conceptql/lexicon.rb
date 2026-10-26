@@ -13,7 +13,16 @@ module ConceptQL
     # for the life of this Lexicon, which is the life of its Database, so the
     # cache never outlives one export (seed conceptql-a5f). Methods that return
     # datasets are not cached: their query runs later, in the caller.
-    CACHED_LOOKUPS = %i[concept_ids concepts_to_codes descendants_of known_codes related_concept_ids].freeze
+    CACHED_LOOKUPS = %i[
+      concept_codes
+      concept_ids
+      concept_ids_by_name
+      concepts_to_codes
+      descendants_of
+      known_codes
+      related_concept_ids
+      vocabulary_is_empty?
+    ].freeze
 
     def_delegators :@strategy,
                    :strategy,
@@ -33,16 +42,31 @@ module ConceptQL
       @cache = {} if cache
     end
 
-    CACHED_LOOKUPS.each do |name|
+    (CACHED_LOOKUPS - %i[known_codes]).each do |name|
       define_method(name) do |*args|
-        return @strategy.public_send(name, *args) unless cache
-
-        # Copy Array arguments so a caller that mutates one later cannot
-        # change a key. Results are frozen so a mutation fails loudly.
-        key = [ name, args.map { |arg| arg.is_a?(Array) ? arg.dup.freeze : arg } ]
-        cache.fetch(key) { cache[key] = @strategy.public_send(name, *args).dup.freeze }
+        lookup(name, args) { @strategy.public_send(name, *args) }
       end
     end
+
+    # The strategy's known_codes first asks whether the vocabulary is empty.
+    # It asks through the block, so that question also reaches the cache.
+    def known_codes(data_db, vocabulary_id, codes)
+      lookup(:known_codes, [ data_db, vocabulary_id, codes ]) do
+        @strategy.known_codes(data_db, vocabulary_id, codes) { vocabulary_is_empty?(data_db, vocabulary_id) }
+      end
+    end
+
+    # Runs the lookup, or with caching on returns the result kept for the same
+    # method and arguments.
+    def lookup(name, args)
+      return yield unless cache
+
+      # Copy Array arguments so a caller that mutates one later cannot
+      # change a key. Results are frozen so a mutation fails loudly.
+      key = [ name, args.map { |arg| arg.is_a?(Array) ? arg.dup.freeze : arg } ]
+      cache.fetch(key) { cache[key] = yield.dup.freeze }
+    end
+    private :lookup
 
     def determine_strategy(lexicon_db, dataset_db)
       [ dataset_db, lexicon_db ].compact.each do |db|
