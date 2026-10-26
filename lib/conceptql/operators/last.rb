@@ -29,8 +29,8 @@ module ConceptQL
         -1
       end
 
-      # A blank at_least or within passes validation, and must not select
-      # the timed query
+      # A non-blank at_least or within fails validation, but the statement
+      # still builds SQL. That SQL stays the plain query, not the timed one.
       def timed?
         false
       end
