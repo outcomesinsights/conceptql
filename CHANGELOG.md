@@ -111,6 +111,9 @@ All notable changes to this project will be documented in this file.
   statement that used it failed to generate SQL. A `pass_thru` statement is now an invalid
   operator. The `PassThru` class stays as the base class of union, count, sum, numeric, dedup,
   episode, time_window and co_reported.
+- `ConceptQL::Vocabularies::Entry#is_source?`, `Entry#is_standard?` and `Entry::STANDARD_VOCABS`
+  (breaking for a caller of these). Their only use was the `Sourcish` include removed with the
+  query optimizer. Neither t_shank nor jigsaw-diagram-editor calls them.
 
 ## [0.3.0] - 2016-11-08
 
