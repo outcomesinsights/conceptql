@@ -23,9 +23,12 @@ services:
       - GEM_HOME=/tmp/bundle
       - "GEM_PATH=/usr/local/bundle:"
     # Run as the calling user, so coverage/ and test/results/ stay owned by
-    # that user. The justfile exports both values; a missing one fails here.
+    # that user. The justfile exports both values. Without them the default is
+    # a user name that does not exist, so `run` fails ("unable to find user
+    # run-through-just-or-export-CONCEPTQL_UID") instead of running as root,
+    # and `down`, `ps` and `logs` still work.
     # Rootless docker maps container root to the calling user: drop this line there.
-    user: "${CONCEPTQL_UID:?run through just, or export CONCEPTQL_UID (id -u)}:${CONCEPTQL_GID:?run through just, or export CONCEPTQL_GID (id -g)}"
+    user: "${CONCEPTQL_UID:-run-through-just-or-export-CONCEPTQL_UID}:${CONCEPTQL_GID:-run-through-just-or-export-CONCEPTQL_GID}"
     image: outcomesinsights/misc:conceptql.master.latest
     build:
       context: "."
