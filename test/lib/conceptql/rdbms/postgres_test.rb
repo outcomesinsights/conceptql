@@ -15,4 +15,13 @@ describe ConceptQL::Rdbms::Postgres do
       _(result).must_match("-")
     end
   end
+
+  describe "#primary_concepts" do
+    it "keeps its DISTINCT ON override of the ROW_NUMBER default" do
+      result = rdbms.primary_concepts(db, [ 1, 2 ]).sql
+
+      _(result).must_match(/DISTINCT ON \("collection_id"\)/i)
+      _(result).wont_match(/ROW_NUMBER/i)
+    end
+  end
 end

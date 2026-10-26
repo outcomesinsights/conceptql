@@ -35,8 +35,9 @@ Standard output columns: `person_id`, `criterion_id`, `criterion_table`, `criter
 
 ### RDBMS Adapters (`lib/conceptql/rdbms/`)
 
-- `Postgres` — primary platform, uses `DISTINCT ON`, materialized CTEs
-- `DuckDB` — uses `ROW_NUMBER()` in place of `DISTINCT ON`
+- `Generic` — the base class. Its defaults are portable SQL, for example `ROW_NUMBER()` in `primary_concepts`
+- `Postgres` — primary platform, overrides with `DISTINCT ON`, materialized CTEs
+- `DuckDB` — via sequel-duckdb
 - `Spark` — via sequel-hexspace
 
 ### Behaviors (`lib/conceptql/behaviors/`)
