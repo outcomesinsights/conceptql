@@ -139,7 +139,7 @@ Releases are tag-based. A pushed `v*` tag runs `.github/workflows/release.yml`, 
 
 The workflow refuses to publish unless the tag is `v` + `ConceptQL::VERSION`, the commit is on `main`, and a push-to-`main` run of `run_tests.yml` succeeded on that exact commit. It runs no test suite itself. If the tag was pushed before CI finished, re-run the release workflow once CI is green. Before it publishes, it installs the built gem into an empty `GEM_HOME` and checks that it loads, creates a `ConceptQL::Database`, and contains every file under `config/` and `schemas/`. After it publishes, it fails unless rubygems.org lists the new version.
 
-The older tags are date-shaped (`20.09.01`) and do not match `v*`. The first tag-based release is `v0.4.0`.
+The older version tags have no `v` (`0.0.4` to `0.3.0`), so they do not match `v*`. The old Jigsaw release-train tags are named `train/<name>`. The first tag-based release is `v0.4.0`.
 
 One-time setup, done by a repository owner: register the trusted publisher on rubygems.org (owner `outcomesinsights`, repository `conceptql`, workflow `release.yml`, environment `release`). The environment must match the publish job's `environment:` exactly, or the token exchange fails. In the GitHub `release` environment, allow deployments only from `v*` tags.
 
