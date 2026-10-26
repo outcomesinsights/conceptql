@@ -80,6 +80,12 @@ All notable changes to this project will be documented in this file.
   `except_columns` and `join_columns` (type `string`, because the metadata has no list type) and
   `invert_match` (type `boolean`). Before, `ConceptQL.metadata` listed none of them, so the
   diagram editor could not offer them
+- An option that lists columns (`only_columns`, `except_columns` and `join_columns` on `match`,
+  and `join_columns` on the temporal operators and `trim_date_start`/`trim_date_end`) also
+  accepts a comma-separated string, as the diagram editor's text field gives it. A blank string
+  is an unset option. Before, a string raised NoMethodError
+- `match` with `invert_match` set to the string `"false"` (in any case), or to an empty string,
+  no longer inverts the match. Before, any value other than `false` and `nil` inverted it
 
 ### Changed
 

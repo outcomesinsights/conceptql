@@ -75,16 +75,53 @@ describe ConceptQL::Operators::Match do
     end
   end
 
-  # Existing statements give invert_match as the string "true"
-  it "inverts the match for invert_match true and \"true\"" do
-    plain = cdb.query([ "match", { left: icd, right: icd } ]).sql
-    inverted = cdb.query([ "match", { left: icd, right: icd, invert_match: true } ]).sql
-    from_string = cdb.query([ "match", { left: icd, right: icd, invert_match: "true" } ]).sql
+  # Each CTE name ends in a counter and a random hex suffix
+  def masked_sql(statement)
+    cdb.query(statement).sql.gsub(/_\d+_\h{32}\b/, "_N_HEX")
+  end
 
-    _(plain).wont_include "WHERE NOT (EXISTS"
-    _(inverted).must_include "WHERE NOT (EXISTS"
-    # Each CTE name ends in a counter and a random hex suffix
-    _(from_string.gsub(/_\d+_\h{32}\b/, "_N_HEX")).must_equal inverted.gsub(/_\d+_\h{32}\b/, "_N_HEX")
+  def match_with(opts)
+    [ "match", { left: icd, right: icd }.merge(opts) ]
+  end
+
+  # Existing statements give invert_match as the string "true". The diagram
+  # editor's checkbox gives true or false (bead conceptql-zq2).
+  describe "invert_match" do
+    it "inverts the match for true and \"true\"" do
+      _(masked_sql(match_with({}))).wont_include "WHERE NOT (EXISTS"
+      _(masked_sql(match_with(invert_match: true))).must_include "WHERE NOT (EXISTS"
+      _(masked_sql(match_with(invert_match: "true"))).must_equal masked_sql(match_with(invert_match: true))
+    end
+
+    [ false, nil, "", "false", "FALSE", " False " ].each do |value|
+      it "does not invert the match for #{value.inspect}" do
+        _(masked_sql(match_with(invert_match: value))).must_equal masked_sql(match_with({}))
+      end
+    end
+  end
+
+  # The diagram editor's text field gives a column list as one string
+  describe "column lists as comma-separated strings" do
+    it "gives the same SQL for only_columns as a string and as an array" do
+      _(masked_sql(match_with(only_columns: "uuid, start_date"))).must_equal masked_sql(match_with(only_columns: %w[uuid start_date]))
+    end
+
+    it "gives the same SQL for except_columns as a string and as an array" do
+      _(masked_sql(match_with(except_columns: "label,end_date"))).must_equal masked_sql(match_with(except_columns: %w[label end_date]))
+    end
+
+    it "gives the same SQL for join_columns as a string and as an array" do
+      _(masked_sql(match_with(join_columns: " uuid "))).must_equal masked_sql(match_with(join_columns: [ "uuid" ]))
+    end
+
+    it "treats a blank join_columns as unset" do
+      _(masked_sql(match_with(join_columns: " "))).must_equal masked_sql(match_with({}))
+      _(errors_for(match_with(join_columns: "", only_columns: [ "uuid" ]))).must_be_nil
+    end
+
+    it "rejects a join_columns string next to an only_columns string" do
+      _(errors_for(match_with(join_columns: "uuid", only_columns: "uuid"))).must_equal [ [ "conflicting options", "join_columns", "only_columns" ] ]
+    end
   end
 
   describe "#null_safe_equal" do
