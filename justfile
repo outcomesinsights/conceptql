@@ -200,19 +200,17 @@ ci: lint fmt-check test-both hygiene
 [parallel]
 test-both: test test-duckdb
 
+# Formats every tracked file in every language here (treefmt.toml), including
+# RuboCop's safe autocorrections. The suite writes new expected-results files in
+# prettier's layout (test/prettier_json.rb), so they need no extra pass.
 # Rewrite files to canonical format. Run deliberately; never from a hook.
 fmt:
-    bundle exec rubocop --autocorrect
-    git ls-files "*.sh" | xargs -r shfmt -w
-    just --fmt --unstable
-    git ls-files "*.md" | xargs -r uvx --from mdformat --with mdformat-gfm --with mdformat-frontmatter mdformat
+    treefmt
 
-# Report format drift without changing anything. This is what the hooks run —
-# a formatter that rewrites files mid-commit changes what you already reviewed.
+# Fails if `fmt` would change anything. It formats the tree first and THEN fails
+# (fix-and-fail): re-stage what it changed. It never rewrites and succeeds.
 fmt-check:
-    git ls-files "*.sh" | xargs -r shfmt -d
-    just --fmt --check --unstable
-    git ls-files "*.md" | xargs -r uvx --from mdformat --with mdformat-gfm --with mdformat-frontmatter mdformat --check
+    treefmt --fail-on-change
 
 # What actually runs before a push. Defaults to the complete `ci`; point it at
 # something smaller ONLY where running complete CI locally is impractical.

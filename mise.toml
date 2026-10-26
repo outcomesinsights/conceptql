@@ -1,12 +1,15 @@
 # Tool pins for this repo's recipes, assembled from gator's standard/mise.toml
 # (ruled 2026-10-02). `just setup` runs `mise install`; a clone needs only git
 # and mise. Pins are major-only and copied byte for byte from the standard.
-# rubocop travels in the Gemfile; mdformat runs through uvx.
+# rubocop travels in the Gemfile; mdformat runs through uvx (the treefmt block).
 
 [tools]
 just = "1"
 uv = "0"
+"aqua:numtide/treefmt" = "2"
 shfmt = "3"
+prettier = "3"
+taplo = "0"
 shellcheck = "0"
 "aqua:rhysd/actionlint" = "1"
 zizmor = "1"

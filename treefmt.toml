@@ -1,0 +1,80 @@
+# The [global] table and the formatter blocks for the languages this repo has, copied
+# byte for byte from gator's standard/treefmt.toml (seed gator-rga). `just fmt` runs
+# treefmt; `just fmt-check` runs `treefmt --fail-on-change`.
+
+[global]
+excludes = [
+  # generated or owned by another tool
+  "*.lock",
+  "uv.lock",
+  "Gemfile.lock",
+  "package-lock.json",
+  "yarn.lock",
+  "renv.lock",
+  "*.min.*",
+  # other tools' stores: their formatters are their own business
+  ".beads/**",
+  ".seeds/**",
+  "claude_stuff/**",
+  "node_modules/**",
+  "vendor/**",
+  ".claude/worktrees/**",
+]
+
+# --- Ruby: omakase + Lint via the repo's tracked .rubocop.yml (gator-rga.1). -----------
+# --fail-level F: autocorrect what can be corrected and leave what cannot to `lint`, which
+# is the recipe that reports. Without it, one uncorrectable offense fails `fmt`.
+[formatter.rubocop]
+command = "bundle"
+options = [
+  "exec",
+  "rubocop",
+  "--autocorrect",
+  "--fail-level",
+  "F",
+  "--format",
+  "quiet",
+]
+includes = ["*.rb", "*.rake", "*.gemspec", "Gemfile", "Rakefile"]
+
+# --- Shell: shfmt on its defaults (S1: tabs, no .editorconfig). ------------------------
+[formatter.shfmt]
+command = "shfmt"
+options = ["-w"]
+includes = ["*.sh", "*.bash"]
+
+# --- Markdown: mdformat with the repo's TRACKED .mdformat.toml (gfm + frontmatter, ------
+# number = true). Without that file mdformat inherits ~/.mdformat.toml under HOME and
+# nothing elsewhere; the doctor reports the missing file. Run through uvx so it needs no
+# pin: mdformat is a PyPI tool and its plugins must live in the same environment --
+# uvx builds and caches that (0.3s warm, measured). uv is the baseline every clone has.
+[formatter.mdformat]
+command = "uvx"
+options = [
+  "--from",
+  "mdformat",
+  "--with",
+  "mdformat-gfm",
+  "--with",
+  "mdformat-frontmatter",
+  "mdformat",
+]
+includes = ["*.md"]
+
+# --- justfile -----------------------------------------------------------------------------
+[formatter.just]
+command = "just"
+options = ["--fmt", "--unstable", "--justfile"]
+includes = ["justfile", "Justfile", "*.just"]
+
+# --- YAML and JSON: prettier on its defaults (D4). ----------------------------------------
+[formatter.prettier]
+command = "prettier"
+options = ["--write"]
+includes = ["*.yml", "*.yaml", "*.json"]
+
+# --- TOML: taplo on its defaults (D4). ----------------------------------------------------
+[formatter.taplo]
+command = "taplo"
+options = ["fmt"]
+includes = ["*.toml"]
