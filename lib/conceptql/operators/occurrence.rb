@@ -124,8 +124,10 @@ module ConceptQL
         options[:group_by_date]
       end
 
+      # A blank at_least or within counts as not set. An editor can send
+      # a blank value for an empty field.
       def timed?
-        options[:at_least] || options[:within]
+        !(at_least_option || within_option).nil?
       end
 
       def matching_columns_plus(*columns)

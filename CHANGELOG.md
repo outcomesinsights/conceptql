@@ -63,6 +63,9 @@ All notable changes to this project will be documented in this file.
   `simple_visit` as `extract_metadata`
 - A vocabulary statement with `*` no longer warns about the format of its other codes. The check
   for `*` never ran, because `Vocabulary#select_all?` is private
+- `occurrence` with a blank or whitespace-only `at_least` or `within` (as an editor can send for
+  an empty field) gives the same rows as without the option. It used to take the timed query,
+  which returns other rows
 
 ### Changed
 
