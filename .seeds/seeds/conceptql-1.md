@@ -1,10 +1,12 @@
 ---
 id: conceptql-1
 title: CPT4_HCPCS merged vocabulary — ConceptQL integration (deferred)
-status: captured
+status: resolved
 type: decision
 created_at: 2026-06-04T17:06:48.933160+00:00
-updated_at: 2026-10-26T17:30:56.088990+00:00
+updated_at: 2026-10-26T20:07:50.147020+00:00
+resolved_at: 2026-10-26T20:07:50.147000+00:00
+resolution: "All four open questions are settled and shipped. (1) Wiring: CPT4_HCPCS is an optional third row of 'CPT or HCPCS' in config/multiple_vocabularies.csv:4 and keeps its own dynamic operator (ruled 2026-10-14). (2) Format regexps: bead conceptql-mxz (7803017c, 796032f3, merged 2026-10-26) set CPT4, HCPCS and CPT4_HCPCS to the vocabulary_formats validator rows (config/vocabularies.csv:9,10,25: ^\\w\\d{3}\\w$, ^[A-Za-z]\\d{4}$, ^\\w\\d{3}\\w$); M0201 is accepted (test/lib/conceptql/operators/code_format_test.rb). cpt_or_hcpcs now warns when every vocabulary rejects a code. (3) Namespace: conceptql-ydh (affe54fa). (4) Standardness: not a conceptql concern (descendants only for provenance and hospitalization). Efficacy: tweaking significant for (2): adopting the official rows exposed a warning-aggregation defect in MultipleVocabularies and a dead select_all? guard, both fixed in mxz; catchable in planning only by running the annotation tests against the new rows first."
 tags:
   - cpt
   - hcpcs
