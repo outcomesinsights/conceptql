@@ -5,6 +5,23 @@ on:
   pull_request:
 permissions: {}
 jobs:
+  # The same `just lint` (bundle exec rubocop) that `just ci` runs before a push.
+  lint:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1"
+      - run: just lint
   Run-PostgreSQL-Tests:
     permissions:
       contents: read
@@ -215,7 +232,7 @@ jobs:
   ci:
     if: always()
     permissions: {}
-    needs: [Run-PostgreSQL-Tests, Run-Spark-Tests, Run-DuckDB-Tests]
+    needs: [lint, Run-PostgreSQL-Tests, Run-Spark-Tests, Run-DuckDB-Tests]
     runs-on: ubuntu-latest
     steps:
       # Allowlists success: a skipped, cancelled or failed needed job (or any
