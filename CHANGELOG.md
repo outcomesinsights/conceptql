@@ -55,6 +55,13 @@ All notable changes to this project will be documented in this file.
   use `Database#lexicon`
 - The sequelizer dependency now admits 0.4.x (`>= 0.3.0, < 0.5`). The previous `< 0.4` bound
   rejected the released sequelizer 0.4.0. Gemfile.lock now resolves sequelizer 0.4.0.
+- Development dependencies are updated to their newest releases (2026-10-26), including the
+  duckdb gem 2.0.0.1, pg 1.7.0, rubocop 1.92.1, and the newest sequelizer, sequel-duckdb 0.4.1
+  and sequel-hexspace 2.1.0. The test suites pass on Postgres and DuckDB. `just test-duckdb`
+  pins the libduckdb library to 1.5.6 (override with `LIBDUCKDB_VERSION`). GitHub CI runs the
+  DuckDB suite against libduckdb 1.5.6 and 2.0.0
+- `just release-check` fails when a dependency is behind its newest allowed release. The release
+  procedure runs it first
 
 ## [0.3.0] - 2016-11-08
 

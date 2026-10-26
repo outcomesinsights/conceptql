@@ -1,5 +1,15 @@
 log_dir := "claude_stuff/test-logs"
 
+# The DuckDB C library that test-duckdb builds the duckdb gem against. The gem's
+# own version does not decide it: ruby-duckdb 2.x builds against libduckdb 1.4 or
+# newer. Local runs and the pre-push gate use the 1.5.x line, because 2.x showed
+# speed regressions. GitHub CI tests 1.5.x and 2.x (LIBDUCKDB_VERSION in the
+# DuckDB job's matrix), so the cut-over to 2.x is already tested when it comes.
+# 1.5.x reaches end of life in March 2027. Set LIBDUCKDB_VERSION to test another
+# release. Bundler does not rebuild an installed duckdb gem when it changes, so
+# run `gem pristine duckdb` after a switch.
+libduckdb_version := env("LIBDUCKDB_VERSION", "1.5.6")
+
 # CI's Postgres matrix sets SEQUELIZER_SEARCH_PATH and CONCEPTQL_DATA_MODEL to
 # run its other two configs.
 # Run gdm_wide (default quick test)
@@ -21,7 +31,8 @@ test *ARGS:
 # Tests write temp tables into the database file and the default source is a
 # PUBLISHED Dropbox share, so the source is never opened: each run copies it to a
 # scratch dir, verifies the copy against the committed checksum, tests the copy,
-# and deletes it. libduckdb is cached per version under ~/.cache/conceptql/libduckdb.
+# and deletes it. libduckdb (libduckdb_version) is cached per version under
+# ~/.cache/conceptql/libduckdb.
 # Part of `ci` (the pre-push gate). Override the source with DUCKDB_TEST_DATA_SOURCE.
 # Run the suite against DuckDB, as CI does (args: test files; default all)
 test-duckdb *ARGS:
@@ -44,18 +55,22 @@ test-duckdb *ARGS:
 
     [ "$(uname -s)-$(uname -m)" = Linux-x86_64 ] || { echo "linux-amd64 only, as in CI"; exit 1; }
 
-    # libduckdb version from the duckdb gem in Gemfile.lock, as CI's "Derive DuckDB Version"
-    version=$(sed -nE '/^GEM$/,/^$/ s/^    duckdb \(([0-9]+\.[0-9]+\.[0-9]+)[^)]*\)$/\1/p' Gemfile.lock)
-    [ -n "$version" ] || { echo "No duckdb gem in Gemfile.lock's GEM section"; exit 1; }
+    # DuckDB renamed the release file in 2.0: 1.x ships libduckdb-linux-amd64.zip,
+    # 2.x ships duckdb-shared-libs-linux-amd64.tar.gz. Both hold libduckdb.so and
+    # the headers at the top level.
+    version={{ libduckdb_version }}
     libdir="${XDG_CACHE_HOME:-$HOME/.cache}/conceptql/libduckdb/v${version}"
     if [ ! -f "$libdir/libduckdb.so" ]; then
-      echo "Downloading libduckdb v${version} to $libdir"
+      if [ "${version%%.*}" -ge 2 ]; then asset=duckdb-shared-libs-linux-amd64.tar.gz; else asset=libduckdb-linux-amd64.zip; fi
+      echo "Downloading libduckdb v${version} ($asset) to $libdir"
       rm -rf "$libdir.tmp"
       mkdir -p "$libdir.tmp"
-      curl -fsSL "https://github.com/duckdb/duckdb/releases/download/v${version}/libduckdb-linux-amd64.zip" \
-        -o "$libdir.tmp/libduckdb.zip"
-      unzip -q "$libdir.tmp/libduckdb.zip" -d "$libdir.tmp"
-      rm "$libdir.tmp/libduckdb.zip"
+      curl -fsSL "https://github.com/duckdb/duckdb/releases/download/v${version}/${asset}" -o "$libdir.tmp/$asset"
+      case "$asset" in
+        *.zip) unzip -q "$libdir.tmp/$asset" -d "$libdir.tmp" ;;
+        *.tar.gz) tar -xzf "$libdir.tmp/$asset" -C "$libdir.tmp" ;;
+      esac
+      rm "$libdir.tmp/$asset"
       mv "$libdir.tmp" "$libdir"
     fi
 

@@ -192,8 +192,8 @@ jobs:
           curl -fsSL --retry 3 --retry-delay 5 "$url" -o "$DUCKDB_TEST_DATA_PATH"
 
       # The recipe copies the fixture, checks its magic bytes and its checksum
-      # against .github/synpuf_test_data.sha256, downloads libduckdb for the
-      # duckdb gem in Gemfile.lock, installs the bundle and runs the suite.
+      # against .github/synpuf_test_data.sha256, downloads the libduckdb release
+      # the justfile pins, installs the bundle and runs the suite.
       - name: Run Tests
         run: just test-duckdb
         env:
