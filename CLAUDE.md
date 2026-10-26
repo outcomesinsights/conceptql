@@ -111,6 +111,20 @@ Minitest. Tests in `test/`, named `*_test.rb`. Runner is `test/all.rb` which glo
   3. Swap `dl=0` for `dl=1`, download the file, and check it with `sha256sum -c .github/synpuf_test_data.sha256` from the download's directory.
   4. `gh variable set DUCKDB_TEST_DATA_URL -R outcomesinsights/conceptql --body <dl=1 url>`, then re-run the failed CI job.
 
+## Releasing
+
+Releases are tag-based. A pushed `v*` tag runs `.github/workflows/release.yml`, which publishes to rubygems.org through RubyGems trusted publishing. No API key is stored anywhere. `rake release` (from `bundler/gem_tasks`) still exists, but it skips every check below.
+
+1. Bump `VERSION` in `lib/conceptql/version.rb`, run `bundle install` to update `Gemfile.lock`, and move the `[Unreleased]` entries in `CHANGELOG.md` under the new version.
+2. Land that commit on `main` and wait for the `Run Tests` workflow to pass on the push.
+3. Tag that commit and push the tag: `git tag v0.4.0 && git push origin v0.4.0`.
+
+The workflow refuses to publish unless the tag is `v` + `ConceptQL::VERSION`, the commit is on `main`, and a push-to-`main` run of `run_tests.yml` succeeded on that exact commit. It runs no test suite itself. If the tag was pushed before CI finished, re-run the release workflow once CI is green. Before it publishes, it installs the built gem into an empty `GEM_HOME` and checks that it loads, creates a `ConceptQL::Database`, and contains every file under `config/` and `schemas/`. After it publishes, it fails unless rubygems.org lists the new version.
+
+The older tags are date-shaped (`20.09.01`) and do not match `v*`. The first tag-based release is `v0.4.0`.
+
+One-time setup, done by a repository owner: register the trusted publisher on rubygems.org (owner `outcomesinsights`, repository `conceptql`, workflow `release.yml`, environment `release`). The environment must match the publish job's `environment:` exactly, or the token exchange fails. In the GitHub `release` environment, allow deployments only from `v*` tags.
+
 ## Key Constraints and Gotchas
 
 - **Sequel ORM only** — `activesupport` is included for utility helpers, NOT for ActiveRecord

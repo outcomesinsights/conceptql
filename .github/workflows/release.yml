@@ -1,0 +1,180 @@
+# Publishes conceptql to rubygems.org when a v* tag is pushed.
+#
+# To cut a release (the procedure is in CLAUDE.md, "Releasing"): bump VERSION in
+# lib/conceptql/version.rb, update Gemfile.lock and CHANGELOG.md, land that
+# commit on main, wait for the Run Tests workflow to go green on the push, then
+# push the matching tag:
+#   git tag v0.4.0 && git push origin v0.4.0
+#
+# The FILE NAME and the ENVIRONMENT are part of the rubygems.org trusted
+# publisher registration (owner outcomesinsights, repository conceptql,
+# workflow release.yml, environment release). Renaming this file, or changing
+# `environment:` on the publish job, makes rubygems refuse the token. No API
+# key is stored anywhere.
+#
+# No test suite runs here. The suite needs Postgres, Spark and a 2 GB DuckDB
+# fixture, so it stays in run_tests.yml, and this workflow requires a green
+# run of that workflow on the tagged commit instead (ruled 2026-10-02).
+#
+# Actions are pinned to commit SHAs (a tag can be moved to other code);
+# Dependabot keeps the pins current.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # CI never runs on a tag, so this job decides whether the tagged commit was
+  # tested. It fails closed: a tag pushed before CI finishes, a cancelled run,
+  # or an API error blocks the release. Re-run this workflow once CI is green.
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Refuse unless the tag matches ConceptQL::VERSION
+        id: version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version=$(ruby -e 'require "./lib/conceptql/version"; print ConceptQL::VERSION')
+          echo "tag=$TAG version.rb=$version"
+          if [[ "$TAG" != "v$version" ]]; then
+            echo "::error::Tag $TAG does not match ConceptQL::VERSION $version; refusing to publish"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      # Only main ships. Without this, a tag on a pull-request commit would
+      # publish code that never landed.
+      - name: Require the tagged commit to be on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          status=$(gh api "repos/$REPO/compare/$SHA...main" --jq .status)
+          echo "main relative to $SHA: $status"
+          if [[ "$status" != "ahead" && "$status" != "identical" ]]; then
+            echo "::error::$SHA is not on main ($status); refusing to publish"
+            exit 1
+          fi
+      # A successful run of the CI workflow FILE (Run Tests, whose aggregate
+      # job `ci` fails unless every test job succeeded), started by a push to
+      # main, for exactly this commit. Not any check named `ci`: pull-request
+      # runs report that name too, as can any workflow with a job called ci, or
+      # anything with statuses:write.
+      - name: Require a green CI run from a push to main on the tagged commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          ci=$(gh api "repos/$REPO/actions/workflows/run_tests.yml/runs?head_sha=$SHA&event=push&branch=main" \
+            --jq '[.workflow_runs[] | select(.path == ".github/workflows/run_tests.yml" and .head_sha == env.SHA)]
+                  | sort_by(.created_at) | last | (.conclusion // .status // "missing")')
+          echo "CI (push to main) on $SHA: $ci"
+          if [[ "$ci" != "success" ]]; then
+            echo "::error::CI on $SHA is '$ci'. Land the commit on main, let CI pass, then re-run this workflow."
+            exit 1
+          fi
+
+  # Holds publish rights, so it installs no bundle and runs no development
+  # dependency: Ruby, the gemspec, the built gem and its declared runtime
+  # dependencies, nothing else.
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: release
+    # Required by the OIDC token exchange; scoped to this job only.
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      VERSION: ${{ needs.verify.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        with:
+          ruby-version: "4.0"
+          bundler-cache: false
+      - name: Build the gem
+        run: gem build conceptql.gemspec --output "conceptql-${VERSION}.gem"
+      # conceptql reads config/ and schemas/ from the gem root, outside lib/,
+      # and the gemspec ships an allowlist of files. So prove the built gem is
+      # complete and works: install it, with only its declared runtime
+      # dependencies, into an empty GEM_HOME; load it from there, not from the
+      # checkout; require every tracked file under config/ and schemas/ to be
+      # in it; and create a ConceptQL::Database and generate SQL (the call
+      # that failed against sequelizer 0.2.0). That install, outside any
+      # lockfile, is deliberate (ruled 2026-10-01), hence the zizmor ignore.
+      - name: Check the built gem loads and resolves config/ and schemas/ when installed
+        run: | # zizmor: ignore[adhoc-packages]
+          set -euo pipefail
+          home=$(mktemp -d); empty=$(mktemp -d)
+          RUNTIME_FILES=$(git ls-files config schemas | tr '\n' ' ')
+          export RUNTIME_FILES
+          # GEM_PATH too, so already-installed gems cannot satisfy a dependency:
+          # with GEM_HOME alone, gem install sees the system's gems, skips them,
+          # and the load from the empty home below fails. Each runtime
+          # dependency is fetched from rubygems.org into the empty home.
+          export GEM_HOME="$home" GEM_PATH="$home"
+          gem install --no-document "conceptql-${VERSION}.gem"
+          cd "$empty"
+          ruby -e '
+            gem "conceptql"; require "conceptql"
+            dir = Gem.loaded_specs["conceptql"].gem_dir
+            abort "loaded #{dir}, not the built gem" unless dir.start_with?(ENV["GEM_HOME"])
+            abort "ConceptQL.root is #{ConceptQL.root}, not #{dir}" unless ConceptQL.root.to_s == dir
+            abort "config/ or schemas/ is not under #{dir}" unless [ConceptQL.config_dir, ConceptQL.schemas_dir].all? { |d| d.to_s.start_with?(dir) }
+            wanted = ENV.fetch("RUNTIME_FILES").split
+            abort "no tracked files under config/ and schemas/" if wanted.empty?
+            missing = wanted.reject { |f| File.file?(File.join(dir, f)) }
+            abort "missing from the built gem: #{missing.join(", ")}" unless missing.empty?
+            cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres))
+            operators = cdb.operators.size
+            abort "only #{operators} operators" if operators < 50
+            sql = cdb.query(["icd9", "412"]).sql
+            abort "unexpected SQL from the installed gem: #{sql}" unless sql.include?("SELECT")
+            puts "installed gem at #{dir}: #{wanted.size} config/schemas files, #{operators} operators"
+            puts sql[0, 200]'
+          "$home/bin/conceptql" help >/dev/null
+      # Trusted publishing: exchanges this job's OIDC token for a short-lived
+      # rubygems API key.
+      - uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0
+      # No retry. A failed push fails the run; investigate before re-running.
+      - name: Push to rubygems.org
+        run: gem push "conceptql-${VERSION}.gem"
+      # The run's colour is not the evidence; the version on rubygems.org is.
+      # Looked up as THIS release's exact version in the full version list
+      # (0.3.0 is already published, so a "latest" check could pass on the old
+      # gem), not latest.json, which omits pre-releases and can serve a stale
+      # version for minutes. Polled because rubygems' CDN can lag the push.
+      - name: Confirm rubygems.org serves the new version
+        run: |
+          for i in $(seq 1 30); do
+            found=$(curl -fsS https://rubygems.org/api/v1/versions/conceptql.json \
+              | jq -r --arg v "$VERSION" '[.[] | select(.number == $v)] | length' || true)
+            echo "attempt $i: rubygems lists $VERSION: ${found:-?}"
+            [[ "$found" == "1" ]] && exit 0
+            sleep 10
+          done
+          echo "::error::rubygems.org still does not list $VERSION"
+          exit 1
