@@ -36,7 +36,7 @@ Standard output columns: `person_id`, `criterion_id`, `criterion_table`, `criter
 ### RDBMS Adapters (`lib/conceptql/rdbms/`)
 
 - `Postgres` — primary platform, uses `DISTINCT ON`, materialized CTEs
-- `Presto` — Presto/Trino SQL dialect
+- `DuckDB` — uses `ROW_NUMBER()` in place of `DISTINCT ON`
 - `Spark` — via sequel-hexspace
 
 ### Behaviors (`lib/conceptql/behaviors/`)
@@ -145,7 +145,7 @@ One-time setup, done by a repository owner: register the trusted publisher on ru
 - **Sequel ORM only** — `activesupport` is included for utility helpers, NOT for ActiveRecord
 - **Tests require live databases** — no mock/in-memory option
 - **Operator registration is data-model-specific** — operators specify which data models they apply to
-- **Postgres-specific SQL** exists in `rdbms/postgres.rb` (`DISTINCT ON`, etc.) — queries built for Postgres won't work on Presto/Spark without the correct adapter
+- **Postgres-specific SQL** exists in `rdbms/postgres.rb` (`DISTINCT ON`, etc.) — queries built for Postgres won't work on DuckDB/Spark without the correct adapter
 - **Temp tables vs CTEs** — `CONCEPTQL_FORCE_TEMP_TABLES=true` forces temp tables; `CONCEPTQL_AVOID_CTES=true` disables CTEs
 - **The OI gems come from rubygems.org releases** (sequelizer `~> 0.4.0`, sequel-duckdb `~> 0.4.1`, sequel-hexspace `~> 2.1`). To test an unreleased change, point the Gemfile entry at a checkout with `path:` for that run and do not commit it
 - **`sequel-hexspace`** (Spark) is in an optional Gemfile group

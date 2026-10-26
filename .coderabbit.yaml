@@ -17,7 +17,7 @@ reviews:
   path_filters: []
   path_instructions:
     - path: "lib/conceptql/operators/**"
-      instructions: "These are algorithm operator nodes that generate SQL. Each operator must handle all supported RDBMS platforms (PostgreSQL, Athena/Presto, Spark). Check for platform-specific SQL generation."
+      instructions: "These are algorithm operator nodes that generate SQL. Each operator must handle all supported RDBMS platforms (PostgreSQL, DuckDB, Spark). Check for platform-specific SQL generation."
     - path: "**/*.rb"
       instructions: "This project uses Sequel ORM exclusively. SQL generation must go through Sequel's DSL, never raw SQL strings. Check for proper handling of platform differences via Sequelizer's supports_*/prefers_* methods."
   auto_review:

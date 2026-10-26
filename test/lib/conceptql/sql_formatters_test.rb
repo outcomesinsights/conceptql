@@ -36,7 +36,6 @@ describe ConceptQL::SqlFormatters do
   {
     ConceptQL::Rdbms::Generic => "sql-formatter",
     ConceptQL::Rdbms::Postgres => "sql-formatter -l postgresql",
-    ConceptQL::Rdbms::Presto => "sql-formatter -l postgresql",
     ConceptQL::Rdbms::Spark => "pg_format",
     ConceptQL::Rdbms::DuckDB => "pg_format"
   }.each do |klass, preferred|

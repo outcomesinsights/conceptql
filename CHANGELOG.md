@@ -68,6 +68,14 @@ All notable changes to this project will be documented in this file.
 - Docker test runs use the ghcr `test_data.jumper` image pinned by digest, the same one as CI, and
   run as the calling user, so they leave no root-owned files. The runner image drops Chrome's libraries
 
+### Removed
+
+- Presto support (breaking). `ConceptQL::Rdbms::Presto` and `database_type: :presto` are gone, so
+  `ConceptQL::Rdbms.generate(:presto)` raises "Unknown database_type". Its `primary_concepts`
+  emitted `DISTINCT ON`, which Presto does not support. The Rakefile's Presto scaffolding
+  (`test_script` and `driftr_script` namespaces, `convert`, `prestofy`, the Presto `cdb`) is
+  removed too. The default rake task is now `test` instead of `test_omopv4_plus`
+
 ## [0.3.0] - 2016-11-08
 
 ### Added
