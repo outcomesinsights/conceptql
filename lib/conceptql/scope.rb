@@ -313,6 +313,23 @@ module ConceptQL
       query
     end
 
+    # Removes duplicate CTE names, then puts each CTE after the CTEs that its
+    # SQL names as `"<other_name>"`.
+    #
+    # In production that string match finds no dependency. Scope#cte_name
+    # returns a Sequel::SQL::Identifier (a QualifiedIdentifier when temp
+    # tables go to a scratch database). String interpolation of one gives
+    # `#<Sequel::SQL::Identifier:0x...>`, not the name. Only a Symbol name
+    # matches, as in scope_test.rb. Spark also quotes with backticks.
+    #
+    # The order is correct anyway. recursive_extract_ctes appends the CTEs
+    # that a dataset reads before the dataset itself, and #ctes orders the
+    # labels by their recalls. So this method keeps the incoming order.
+    #
+    # If the match used ds.db.literal(other_name), a false positive would not
+    # be practical. Each name ends with the scope's counter and 32 random hex
+    # digits, and the closing quote stops a name from matching the start of a
+    # longer name.
     def sort_extracted_ctes(ctes)
       ctes = ctes.uniq(&:first)
 

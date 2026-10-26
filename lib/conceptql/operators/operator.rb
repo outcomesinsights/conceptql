@@ -199,10 +199,6 @@ module ConceptQL
         upstreams.flat_map { |upstream_op| upstream_op.code_list(db) }
       end
 
-      def dup_values(args)
-        self.class.new(nodifier, *args)
-      end
-
       def inspect
         "<##{self.class} upstreams=[#{upstreams.map(&:inspect).join(', ')}] arguments=[#{arguments.map(&:inspect).join(', ')}]>"
       end
@@ -241,14 +237,6 @@ module ConceptQL
 
       def sql(db)
         evaluate(db).sql
-      end
-
-      def optimized
-        dup_values(values.map { |x| x.is_a?(Operator) ? x.optimized : x })
-      end
-
-      def unionable?(_other)
-        false
       end
 
       def select_it(query, opts = {})

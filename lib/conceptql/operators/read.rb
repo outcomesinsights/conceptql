@@ -69,7 +69,6 @@ module ConceptQL
 
       class ReadOmopBase < ReadBase
         include ConceptQL::Vocabularies::Behaviors::Omopish
-        include ConceptQL::Vocabularies::Behaviors::Sourcish
 
         def vocabulary_id
           17
