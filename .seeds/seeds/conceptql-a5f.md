@@ -1,10 +1,12 @@
 ---
 id: conceptql-a5f
 title: Lexicon re-issues identical vocabulary queries per Database/export; remove the round trips, possibly with a cache that lives one Database
-status: captured
+status: resolved
 type: question
 created_at: 2026-09-29T03:04:20.735970+00:00
-updated_at: 2026-10-26T13:10:20.490524+00:00
+updated_at: 2026-10-26T19:45:31.378693+00:00
+resolved_at: 2026-10-26T19:45:31.378684+00:00
+resolution: "Shipped by bead conceptql-cqo (merge of 9e1a5b6f, 2026-10-26). The three vocabulary lookups that bypassed the cache are now cached lookups: vocabulary_is_empty? (lib/conceptql/lexicon.rb:24, reached from known_codes through a block at lexicon.rb:55), concept_ids_by_name (race) and concept_codes (find_bad_keywords). Probe rerun, cache on, gdm_wide/ohdsi_vocabs runs/distinct: vocabulary_is_empty? 108/16 -> 16/16, race 6/4 -> 4/4, provenance 6/1 -> 1/1; gdm/gdm_vocabs the same shape. Cache off unchanged; generated SQL identical. Efficacy: tweaking minor; the bead's design (emptiness check must reach the cache from inside the strategy) held. Still open, not vocabulary lookups: table_exists?/table_is_missing? probes repeat per call (602 runs, 1 distinct in gdm_wide), and Query#code_list raises NoMethodError on 4 invalid statements."
 tags:
   - lexicon
   - performance
