@@ -1,10 +1,12 @@
 ---
 id: conceptql-5e5
 title: 'Over-engineering audit 2026-10-07: cuts to make (all but 1, 2, 7)'
-status: captured
+status: resolved
 type: decision
 created_at: 2026-10-07T17:50:51.199585+00:00
-updated_at: 2026-10-26T17:30:56.948216+00:00
+updated_at: 2026-10-26T22:25:03.225972+00:00
+resolved_at: 2026-10-26T22:25:03.225963+00:00
+resolution: "The three items held back on 2026-10-07 are settled (2026-10-26). #1 JigsawTree: Ryan ruled to keep it; it stays at lib/conceptql/diagram.rb:154. #2 Presto/driftr Rakefile scaffolding: removed with Presto support in 5a37dbde (bead conceptql-wsf); Rakefile:52 is now 'task default: :test'. #7 query optimizer: deleted in 78ca8fc1 (bead conceptql-nte); no 'def optimized', 'unionable?' or Sourcish remains in lib. The three out-of-scope bugs were fixed by conceptql-66w (qualifier, String#glob, metadata) and selection_operators was removed. Efficacy: the audit's findings held; none needed rework."
 tags:
   - ponytail-audit
   - cleanup
