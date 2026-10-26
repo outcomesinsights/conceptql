@@ -4,9 +4,11 @@ require_relative "operator"
 
 module ConceptQL
   module Operators
+    # The base class of operators whose domains and columns are those of their
+    # upstreams (union, count, sum, numeric, dedup, episode, time_window and
+    # co_reported). It has no query method, so it does not register: pass_thru
+    # is not an operator name.
     class PassThru < Operator
-      register __FILE__
-
       basic_type :set
       no_desc
 
