@@ -2,26 +2,38 @@ name: Run Tests
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.seeds/**'
+      - '.beads/**'
+      - '.claude/**'
+      - 'claude_stuff/**'
   pull_request:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 permissions: {}
 jobs:
-  # The same `just lint` (bundle exec rubocop) that `just ci` runs before a push.
+  # The same lint, fmt-check and hygiene recipes that `just ci` runs before a push.
   lint:
     permissions:
       contents: read
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth 0: cog check in `lint` reads the commits since the last v* tag.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '4.0'
           bundler-cache: true
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
       - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
         with:
           just-version: "1"
-      - run: just lint
+      - run: just setup
+      - run: just lint fmt-check hygiene
   Run-PostgreSQL-Tests:
     permissions:
       contents: read
@@ -50,8 +62,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1"
       - name: Run Tests
-        run: docker compose run conceptql
+        run: just test
       - name: Upload Coverage
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -133,13 +148,12 @@ jobs:
   Run-DuckDB-Tests:
     permissions:
       contents: read
+    strategy:
+      matrix:
+        # 3.3 is the gemspec floor.
+        ruby: ['3.3', '3.4']
     runs-on: ubuntu-latest
     env:
-      SEQUELIZER_SEARCH_PATH: wide,slim,ohdsi_vocabs
-      CONCEPTQL_DATA_MODEL: gdm_wide
-      BUNDLE_WITH: duckdb
-      DUCKDB_VERSION: 1.5.0
-      DUCKDB_LIB_DIR: /tmp/libduckdb
       DUCKDB_TEST_DATA_PATH: /tmp/synpuf_test_data.duckdb
       DUCKDB_TEST_DATA_URL: ${{ vars.DUCKDB_TEST_DATA_URL }}
       DUCKDB_TEST_DATA_URL_SECRET: ${{ secrets.DUCKDB_TEST_DATA_URL }}
@@ -147,35 +161,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Derive DuckDB Version
-        run: |
-          version="$(ruby -e '
-            in_gem = false
-            File.foreach("Gemfile.lock") do |line|
-              in_gem = true if line == "GEM\n"
-              next unless in_gem
-              if line =~ /^    duckdb \(([^)]+)\)/
-                puts Regexp.last_match(1).split(".")[0, 3].join(".")
-                exit 0
-              end
-            end
-            exit 1
-          ')"
-          echo "DUCKDB_VERSION=$version" >> "$GITHUB_ENV"
       - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
-          ruby-version: '3.4'
-      - name: Install libduckdb
-        run: |
-          curl -fsSL \
-            "https://github.com/duckdb/duckdb/releases/download/v${DUCKDB_VERSION}/libduckdb-linux-amd64.zip" \
-            -o /tmp/libduckdb.zip
-          rm -rf "$DUCKDB_LIB_DIR"
-          mkdir -p "$DUCKDB_LIB_DIR"
-          unzip -q /tmp/libduckdb.zip -d "$DUCKDB_LIB_DIR"
-          echo "BUNDLE_BUILD__DUCKDB=--with-duckdb-include=$DUCKDB_LIB_DIR --with-duckdb-lib=$DUCKDB_LIB_DIR" >> "$GITHUB_ENV"
-          echo "LD_LIBRARY_PATH=$DUCKDB_LIB_DIR:${LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
-      - run: bundle install
+          ruby-version: ${{ matrix.ruby }}
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1"
 
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -201,33 +192,19 @@ jobs:
           # much later as "not a valid DuckDB database file".
           curl -fsSL --retry 3 --retry-delay 5 "$url" -o "$DUCKDB_TEST_DATA_PATH"
 
-      # Runs on cache hit as well as after a download, so a truncated or stale
-      # cached fixture is caught here rather than inside the test run.
-      - name: Verify DuckDB Data
-        run: |
-          # Magic-byte check first, purely for a readable failure. A dead or
-          # permission-gated Dropbox link answers 200 with an HTML page, which
-          # -f cannot catch and a size test happily accepts; the checksum below
-          # would reject it, but only after hashing 2 GB and with a message that
-          # says nothing about what actually went wrong.
-          magic=$(dd if="$DUCKDB_TEST_DATA_PATH" bs=1 skip=8 count=4 2>/dev/null)
-          if [ "$magic" != "DUCK" ]; then
-            echo "Not a DuckDB file: magic at offset 8 is '$magic', expected 'DUCK'."
-            echo "First bytes were:"
-            head -c 200 "$DUCKDB_TEST_DATA_PATH"
-            exit 1
-          fi
-          cd "$(dirname "$DUCKDB_TEST_DATA_PATH")"
-          sha256sum -c "${GITHUB_WORKSPACE}/.github/synpuf_test_data.sha256"
-      - run: bundle exec ruby test/all.rb
+      # The recipe copies the fixture, checks its magic bytes and its checksum
+      # against .github/synpuf_test_data.sha256, downloads libduckdb for the
+      # duckdb gem in Gemfile.lock, installs the bundle and runs the suite.
+      - name: Run Tests
+        run: just test-duckdb
         env:
-          SEQUELIZER_URL: duckdb://${{ env.DUCKDB_TEST_DATA_PATH }}
+          DUCKDB_TEST_DATA_SOURCE: ${{ env.DUCKDB_TEST_DATA_PATH }}
       - name: Upload Coverage
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: coverage-duckdb-${{ env.CONCEPTQL_DATA_MODEL }}
-          path: coverage/
+          name: coverage-duckdb-ruby-${{ matrix.ruby }}
+          path: claude_stuff/test-logs/duckdb/coverage/
           retention-days: 90
   ci:
     if: always()
