@@ -182,10 +182,11 @@ check-oi-pins lock="Gemfile.lock":
 # libduckdb is unavailable. Wired into the pre-push git hook; bypass with:
 #   git push --no-verify   (or SKIP_CI_GATE=1 git push)
 # Run `just test-full` to exercise all 3 Postgres configs manually.
-ci: fmt-check test test-duckdb hygiene
+ci: lint fmt-check test test-duckdb hygiene
 
 # Rewrite files to canonical format. Run deliberately; never from a hook.
 fmt:
+    bundle exec rubocop --autocorrect
     git ls-files "*.sh" | xargs -r shfmt -w
     just --fmt --unstable
     git ls-files "*.md" | xargs -r mdformat
@@ -201,9 +202,14 @@ fmt-check:
 # something smaller ONLY where running complete CI locally is impractical.
 pre-push: ci
 
+# Every non-rewriting check. Reports and never rewrites: rubocop's safe
+# autocorrections run in `fmt`, never here.
+lint:
+    bundle exec rubocop
+
 # Runs on every commit, so it must stay FAST — a sub-minute budget. Tests belong
 # here when they fit; lint alone when they do not. fmt-check never rewrites.
-pre-commit: fmt-check hygiene
+pre-commit: lint fmt-check hygiene
 
 # Content checks inherited from overcommit when it was removed (2026-09-12):
 # MergeConflicts, YamlSyntax, JsonSyntax. RuboCop and the test target were already
