@@ -76,9 +76,9 @@ jobs:
       - name: Download Spark
         if: steps.cache-spark.outputs.cache-hit != 'true'
         run: |
-          wget -q https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz
-          tar xzf spark-$SPARK_VERSION-bin-hadoop3.tgz
-          mv spark-$SPARK_VERSION-bin-hadoop3 ~/spark-$SPARK_VERSION
+          wget -q "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz"
+          tar xzf "spark-${SPARK_VERSION}-bin-hadoop3.tgz"
+          mv "spark-${SPARK_VERSION}-bin-hadoop3" ~/"spark-${SPARK_VERSION}"
 
       - uses: actions/cache@v6
         with:
@@ -92,7 +92,7 @@ jobs:
           curl -sSL "https://www.dropbox.com/scl/fi/bflehlmk1itwd352z0kjk/synpuf_test_data.tgz?rlkey=ogticol20oxvis5yzq37878z7&st=vydvpdyw&dl=1" > synpuf_test_data.tgz
           tar xzf synpuf_test_data.tgz
 
-      - run: ~/spark-$SPARK_VERSION/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
+      - run: ~/"spark-${SPARK_VERSION}"/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
       - run: bundle exec ruby test/all.rb
         env:
           CONCEPTQL_PARQUET_TEST_DIR: '/tmp/synpuf_test_data/{${{ matrix.search_path }}}'
@@ -204,14 +204,15 @@ jobs:
     needs: [Run-PostgreSQL-Tests, Run-Spark-Tests, Run-DuckDB-Tests]
     runs-on: ubuntu-latest
     steps:
-      - name: Check CI status
+      # Allowlists success: a skipped, cancelled or failed needed job (or any
+      # result GitHub adds later) fails this job, and so does an empty list.
+      # A skipped job ran no tests, so a green here must not hide it.
+      - name: Every needed job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
-            echo "One or more CI jobs failed"
-            exit 1
-          fi
-          if [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
-            echo "One or more CI jobs were cancelled"
-            exit 1
-          fi
+          [[ -n "$RESULTS" ]] || { echo "no needed job results; refusing to report green"; exit 1; }
+          for result in $RESULTS; do
+            [[ "$result" == "success" ]] || { echo "a needed job ended '$result'; refusing to report green"; exit 1; }
+          done
           echo "All CI jobs passed"
