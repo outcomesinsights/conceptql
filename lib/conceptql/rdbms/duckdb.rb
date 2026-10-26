@@ -13,8 +13,9 @@ module ConceptQL
         SqlFormatters::PG_FORMAT
       end
 
+      # DuckDB accepts WITH ... AS MATERIALIZED since v0.8.0.
       def supports_materialized?
-        false
+        true
       end
     end
   end

@@ -67,6 +67,9 @@ All notable changes to this project will be documented in this file.
   procedure runs it first
 - Docker test runs use the ghcr `test_data.jumper` image pinned by digest, the same one as CI, and
   run as the calling user, so they leave no root-owned files. The runner image drops Chrome's libraries
+- On DuckDB, operator CTEs are now `AS MATERIALIZED`, as on Postgres
+  (`ConceptQL::Rdbms::DuckDB#supports_materialized?` is true). DuckDB accepts the keyword since
+  v0.8.0. `just test-duckdb` passes against libduckdb 1.5.6
 
 ### Removed
 
