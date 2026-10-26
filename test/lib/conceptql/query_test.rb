@@ -109,5 +109,46 @@ describe ConceptQL::Query do
       query = CDB.query(%w[hcpcs A0000 A0021])
       _(query.code_list.map(&:code).sort).must_equal(%w[A0000 A0021])
     end
+
+    # These statements are invalid on purpose. Before conceptql-9gc, code_list
+    # raised NoMethodError on a missing operand of each one.
+    {
+      "after/anno_1.json" => "after: wrong option format (left, 412)",
+      "after/anno_2.json" => "after: required option not present (left)",
+      "after/anno_3.json" => "after: required option not present (right)",
+      "recall/anno_1.json" => "recall: no matching label (Heart Attack)",
+      "recall/anno_3.json" => "recall: no matching label (HA1)",
+      "recall/anno_4.json" => "recall: has no arguments",
+      "recall/anno_5.json" => "recall: has multiple arguments (foo, bar)",
+      "recall/anno_6.json" => "recall: no matching label (Qualifying Meyloma Dx)"
+    }.each do |file, expected_error|
+      it "should raise InvalidStatementError naming the errors for #{file}" do
+        statement = JSON.parse(File.read("test/statements/#{file}"))
+        error = _ { CDB.query(statement).code_list }.must_raise(ConceptQL::Query::InvalidStatementError)
+        _(error).must_be_kind_of(ConceptQL::Query::QueryError)
+        _(error.message).must_include("Invalid ConceptQL statement")
+        _(error.message).must_include(expected_error)
+        _(error.errors).wont_be_empty
+      end
+    end
+
+    it "should raise on a statement with errors even when its operator tree has every operand" do
+      error = _ { CDB.query([ "count", [ "icd9", "412" ], [ "icd9", "250.00" ] ]).code_list }
+              .must_raise(ConceptQL::Query::InvalidStatementError)
+      _(error.message).must_include("count: has multiple upstreams (icd9, icd9)")
+    end
+
+    it "should not raise on a statement with only warnings" do
+      query = CDB.query(%w[icd9 412 XYZ])
+      _(query.scope_annotate(skip_counts: true)[:warnings]).wont_be_empty
+      _(query.code_list.map(&:code)).must_equal(%w[412 XYZ])
+    end
+
+    it "should not change what a later annotate returns" do
+      statement = [ "union", %w[icd9 412 XYZ], %w[cpt 99214] ]
+      query = CDB.query(statement)
+      query.code_list
+      _(query.annotate).must_equal(CDB.query(statement).annotate)
+    end
   end
 end

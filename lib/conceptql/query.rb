@@ -10,12 +10,37 @@ module ConceptQL
   class Query
     class QueryError < StandardError
       def message
+        return super unless cause
+
         og_message = if cause.respond_to?(:full_message)
                        cause.full_message
         else
                        ([ cause.message ] + cause.backtrace).join("\n")
         end
         [ super, "OG ERROR:", og_message ].join("\n")
+      end
+    end
+
+    # Raised by #code_list when the statement has validation errors: the
+    # operator tree of an invalid statement can have missing operands, and a
+    # partial code list would look complete. #errors is the errors hash of
+    # #scope_annotate (operator name => list of [message, *details]).
+    class InvalidStatementError < QueryError
+      attr_reader :statement, :errors
+
+      def initialize(statement, errors)
+        @statement = statement
+        @errors = errors
+        super([ "Invalid ConceptQL statement, so it has no code list. Validation errors:",
+               *errors.flat_map { |op, op_errors| op_errors.map { |e| "  #{op}: #{describe(e)}" } },
+               "Statement: #{statement.inspect}" ].join("\n"))
+      end
+
+      private
+
+      def describe(error)
+        message, *details = error
+        details.empty? ? message.to_s : "#{message} (#{details.flatten.map(&:to_s).join(', ')})"
       end
     end
 
@@ -28,6 +53,7 @@ module ConceptQL
     def initialize(cdb, statement, opts = {})
       @cdb = cdb
       @statement, opts = extract_statement(statement, opts)
+      @opts = opts
       opts[:algorithm_fetcher] ||= proc do |alg|
         statement, description = db[:concepts].where(concept_id: alg).get(%i[statement label])
         statement = JSON.parse(statement) if statement.is_a?(String)
@@ -144,8 +170,21 @@ module ConceptQL
       operator.rdbms
     end
 
+    # Raises InvalidStatementError if the statement has validation errors.
+    # Warnings do not raise.
     def code_list(_ignored_db = nil)
+      errors = validation_errors
+      raise InvalidStatementError.new(statement, errors) unless errors.empty?
+
       operator.code_list(db).uniq
+    end
+
+    # The errors that #scope_annotate reports, the same check that callers use
+    # to decide whether a statement is valid. A fresh query runs it, because
+    # operators memoize #annotate and #validate, and this query's later
+    # #annotate calls must not get those results.
+    def validation_errors
+      Query.new(cdb, statement, @opts).scope_annotate(skip_counts: true)[:errors]
     end
 
     def drop_temp_tables(opts = {})

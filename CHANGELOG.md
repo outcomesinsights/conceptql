@@ -44,6 +44,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `Query#code_list` on a statement with validation errors raises `Query::InvalidStatementError`
+  (a `Query::QueryError` that names the errors) instead of NoMethodError or a partial code list
 - `require 'conceptql'` no longer connects to a database. It used to connect to whatever
   Sequelizer was configured for, to register an operator per vocabulary, so it crashed with no
   database configured and, on DuckDB, a second process could not load the library while another
