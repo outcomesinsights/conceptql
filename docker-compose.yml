@@ -13,6 +13,22 @@ services:
       - SEQUELIZER_RETRY_DELAY=5
       - SEQUELIZER_SEARCH_PATH
       - SEQUELIZER_URL=postgres://ryan:r@test_data/test_data
+      # The calling user cannot write the image's HOME (/) or its baked bundle
+      # (/usr/local/bundle). Bundler reads the baked gems through GEM_PATH (the
+      # trailing ':' keeps Ruby's default gems) and installs only the gems that
+      # Gemfile.lock adds into GEM_HOME, in this container's own writable layer.
+      # Git gems are cloned there too, so no clone crosses an image layer
+      # (bookworm's git refuses that: "fatal: hardlink different from source").
+      - HOME=/tmp
+      - GEM_HOME=/tmp/bundle
+      - "GEM_PATH=/usr/local/bundle:"
+    # Run as the calling user, so coverage/ and test/results/ stay owned by
+    # that user. The justfile exports both values. Without them the default is
+    # a user name that does not exist, so `run` fails ("unable to find user
+    # run-through-just-or-export-CONCEPTQL_UID") instead of running as root,
+    # and `down`, `ps` and `logs` still work.
+    # Rootless docker maps container root to the calling user: drop this line there.
+    user: "${CONCEPTQL_UID:-run-through-just-or-export-CONCEPTQL_UID}:${CONCEPTQL_GID:-run-through-just-or-export-CONCEPTQL_GID}"
     image: outcomesinsights/misc:conceptql.master.latest
     build:
       context: "."
@@ -20,14 +36,11 @@ services:
     command: sh -c "bundle && bundle exec ruby test/all.rb"
     volumes:
       - "${PWD}:/home/conceptql"
-      # Anonymous volume, seeded from the image on each run: keeps bundler's
-      # git clones off overlayfs. bookworm's git refuses a local clone whose
-      # hardlinks cross image layers ("fatal: hardlink different from source"),
-      # which breaks `bundle` whenever Gemfile.lock pins an OI gem commit that
-      # the image did not bake in.
-      - /usr/local/bundle
   test_data:
-    image: outcomesinsights/misc:test_data.ignitor
+    # Pinned by digest so local runs and CI test the same database: the
+    # 2026-10-02 build (FY2027 vocabulary rebuild). The package is private;
+    # CI logs in to ghcr.io with GITHUB_TOKEN (packages: read).
+    image: "ghcr.io/outcomesinsights/misc:test_data.jumper@sha256:f4275e287d615dfd2dd6f70f821f7967eaaec5bd571ae3f16925651acfe75b22"
     command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c work_mem=4GB -c shared_buffers=6GB -c effective_cache_size=6GB -c max_parallel_workers_per_gather=0
     shm_size: 6g
     expose:

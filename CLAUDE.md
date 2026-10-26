@@ -55,6 +55,8 @@ Tests require a **live database** with both data tables and vocabulary/lexicon t
 
 Use `docker-compose.yml` which spins up a `test_data` Postgres container with all required schemas and data. **You must set `SEQUELIZER_SEARCH_PATH` and `CONCEPTQL_DATA_MODEL`** — without them, vocab tables aren't visible and tests fail with `NoMethodError: undefined method 'concepts_table' for LexiconNoDB`.
 
+`just test` and `just test-full` run these. The container runs as the calling user, so raw `docker compose` also needs `CONCEPTQL_UID` and `CONCEPTQL_GID` exported (`id -u`, `id -g`). The justfile exports them. Without them, `docker compose run` fails with "unable to find user run-through-just-or-export-CONCEPTQL_UID".
+
 ```bash
 # GH Actions runs all 3 of these matrix configs — all must pass:
 
@@ -68,7 +70,7 @@ SEQUELIZER_SEARCH_PATH=slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose
 SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose run --rm conceptql
 ```
 
-The `test_data` image (`outcomesinsights/misc:test_data.ignitor`) contains:
+The `test_data` image (`ghcr.io/outcomesinsights/misc:test_data.jumper`, pinned by digest in `docker-compose.yml`) is a private ghcr.io package: run `docker login ghcr.io` once on a new host. To move to a new build, change the digest. It contains:
 
 - `slim` schema — GDM data tables (patients, clinical_codes, etc.)
 - `wide` schema — GDM wide tables (observations, supplemented_payer_reimbursements)

@@ -35,8 +35,10 @@ jobs:
       - run: just setup
       - run: just lint fmt-check hygiene
   Run-PostgreSQL-Tests:
+    # packages: read lets GITHUB_TOKEN pull the private test_data image from ghcr.io.
     permissions:
       contents: read
+      packages: read
     strategy:
       matrix:
         include:
@@ -55,12 +57,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Log into DockerHub
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
-        continue-on-error: true
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
         with:
           just-version: "1"
