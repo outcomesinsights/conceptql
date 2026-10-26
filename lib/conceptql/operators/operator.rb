@@ -86,6 +86,14 @@ module ConceptQL
           end
         end
 
+        # Declares inherited options that this operator does not support.
+        # They leave the operator's metadata, and a statement that sets one
+        # fails validation.
+        def unsupported_options(*names)
+          names.each { |name| remove_option(name) }
+          validations << [ :validate_unsupported_options, *names ]
+        end
+
         def inherited(subclass)
           super
           subclass.instance_variable_set(:@validations, validations.dup)
@@ -558,6 +566,15 @@ module ConceptQL
       def validate_required_options(*opts)
         opts.each do |opt|
           add_error("required option not present", opt.to_s) unless options.key?(opt)
+        end
+      end
+
+      # A blank value counts as not set, as in Occurrence#at_least_option
+      def validate_unsupported_options(*opts)
+        opts.each do |opt|
+          next if options[opt].to_s.strip.empty?
+
+          add_error("unsupported option", opt.to_s, options[opt])
         end
       end
 

@@ -1,0 +1,31 @@
+[
+  "first",
+  [
+    "icd9",
+    "412",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 48,
+            "n": 37
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  {
+    "at_least": "30d",
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["unsupported option", "at_least", "30d"]]
+    },
+    "name": "First"
+  }
+]
