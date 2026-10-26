@@ -120,5 +120,53 @@ describe ConceptQL::Scope do
       sql = query.sql
       _(sql.index('"label1" AS')).must_be :<, sql.index('"recall" AS')
     end
+
+    # Scope#cte_name returns Identifier names, and a QualifiedIdentifier name
+    # for a temp table in a scratch database.
+    describe "with identifier names" do
+      let(:sequel_db) { Sequel.mock(host: host) }
+      let(:scope) { ConceptQL::Scope.new }
+      let(:label) { Sequel.identifier("label_1_abc") }
+      let(:recall) { Sequel.identifier("recall_2_abc") }
+
+      def sorted_names(ctes)
+        scope.send(:sort_extracted_ctes, ctes).map(&:first)
+      end
+
+      it "moves a cte after the identifier it reads" do
+        ctes = [ [ recall, sequel_db.from(label) ], [ label, sequel_db[:patients] ] ]
+
+        _(sorted_names(ctes)).must_equal([ label, recall ])
+      end
+
+      it "moves a cte after the qualified identifier it reads" do
+        label = self.label.qualify(:jigsaw_temp)
+        recall = self.recall.qualify(:jigsaw_temp)
+        ctes = [ [ recall, sequel_db.from(label) ], [ label, sequel_db[:patients] ] ]
+
+        _(sorted_names(ctes)).must_equal([ label, recall ])
+      end
+
+      it "does not match a name inside a longer name" do
+        short = Sequel.identifier("label_1").qualify(:jigsaw_temp)
+        long = Sequel.identifier("label_10").qualify(:jigsaw_temp)
+        ctes = [ [ recall, sequel_db.from(long) ], [ long, sequel_db[:patients] ], [ short, sequel_db[:patients] ] ]
+
+        _(sorted_names(ctes)).must_equal([ long, recall, short ])
+      end
+
+      it "keeps an incoming order that is already correct" do
+        other = Sequel.identifier("other_3_abc")
+        ctes = [ [ label, sequel_db[:patients] ], [ recall, sequel_db.from(label) ], [ other, sequel_db[:patients] ] ]
+
+        _(sorted_names(ctes)).must_equal([ label, recall, other ])
+      end
+
+      it "raises when the ctes read each other in a cycle" do
+        ctes = [ [ recall, sequel_db.from(label) ], [ label, sequel_db.from(recall) ] ]
+
+        _ { sorted_names(ctes) }.must_raise(ConceptQL::Scope::CteCycleError)
+      end
+    end
   end
 end

@@ -17,6 +17,14 @@ module ConceptQL
   # API for Recall operators to fetch the results/domains from
   # labeled operators.
   class Scope
+    # Raised when the extracted CTEs read each other in a cycle, so no order
+    # puts every CTE after the CTEs it reads.
+    class CteCycleError < StandardError
+      def initialize(names)
+        super("These CTEs read each other in a cycle, so they have no valid order: #{names.join(', ')}")
+      end
+    end
+
     DEFAULT_COLUMN_FAMILY = "default"
 
     DEFAULT_COLUMNS = {
@@ -313,36 +321,36 @@ module ConceptQL
       query
     end
 
-    # Removes duplicate CTE names, then puts each CTE after the CTEs that its
-    # SQL names as `"<other_name>"`.
+    # Removes duplicate CTE names, then moves each CTE after the CTEs it reads.
     #
-    # In production that string match finds no dependency. Scope#cte_name
-    # returns a Sequel::SQL::Identifier (a QualifiedIdentifier when temp
-    # tables go to a scratch database). String interpolation of one gives
-    # `#<Sequel::SQL::Identifier:0x...>`, not the name. Only a Symbol name
-    # matches, as in scope_test.rb. Spark also quotes with backticks.
+    # A CTE reads another when its SQL contains the other's name as the
+    # adapter quotes it (ds.db.literal): "name" on Postgres and DuckDB,
+    # `name` on Spark, and "scratch"."name" for a temp table in a scratch
+    # database. The closing quote stops a name from matching the start of a
+    # longer name. Each name also ends with the scope's counter and 32 random
+    # hex digits, so a name does not appear in other SQL by accident.
     #
-    # The order is correct anyway. recursive_extract_ctes appends the CTEs
-    # that a dataset reads before the dataset itself, and #ctes orders the
-    # labels by their recalls. So this method keeps the incoming order.
-    #
-    # If the match used ds.db.literal(other_name), a false positive would not
-    # be practical. Each name ends with the scope's counter and 32 random hex
-    # digits, and the closing quote stops a name from matching the start of a
-    # longer name.
+    # The sort is stable: each step takes the first CTE whose dependencies are
+    # already placed. recursive_extract_ctes appends the CTEs that a dataset
+    # reads before the dataset itself, so an order that is already correct
+    # does not change. (sort_ctes sorts by layers, and would move CTEs.)
     def sort_extracted_ctes(ctes)
-      ctes = ctes.uniq(&:first)
-
-      deps = ctes.each_with_object({}) do |(name, ds), memo|
+      unsorted = ctes.uniq(&:first)
+      literals = unsorted.to_h { |name, ds| [ name, ds.db.literal(name) ] }
+      deps = unsorted.to_h do |name, ds|
         sql = ds.sql
-        memo[name] = ctes.filter_map do |(other_name, _)|
-          next if other_name == name
-
-          other_name if sql.include?(%("#{other_name}"))
-        end
+        [ name, literals.filter_map { |other, literal| other if other != name && sql.include?(literal) } ]
       end
 
-      sort_ctes([], ctes, deps)
+      sorted = []
+      until unsorted.empty?
+        placed = sorted.map(&:first)
+        index = unsorted.index { |name, _| (deps[name] - placed).empty? }
+        raise(CteCycleError, unsorted.map { |name, _| literals[name] }) unless index
+
+        sorted << unsorted.delete_at(index)
+      end
+      sorted
     end
 
     def with_ctes(op, db, options = {})
