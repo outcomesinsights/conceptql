@@ -10,7 +10,8 @@ module ConceptQL
     class OneInTwoOut < Operator
       include ConceptQL::Behaviors::SingleEvent
 
-      register __FILE__
+      # GDM only: omopv4_plus has no provenance vocabularies (conceptql-myp).
+      register __FILE__, :gdm, :gdm_wide
 
       desc "Identifies an event that appears either once in an inpatient setting or twice within a specified interval in an outpatient setting."
 
