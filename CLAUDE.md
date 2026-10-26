@@ -118,6 +118,13 @@ Minitest. Tests in `test/`, named `*_test.rb`. Runner is `test/all.rb` which glo
   3. Swap `dl=0` for `dl=1`, download the file, and check it with `sha256sum -c .github/synpuf_test_data.sha256` from the download's directory.
   4. `gh variable set DUCKDB_TEST_DATA_URL -R outcomesinsights/conceptql --body <dl=1 url>`, then re-run the failed CI job.
 
+### Spark fixture (pin and download link)
+
+CI's `Run-Spark-Tests` reads parquet files from `synpuf_test_data.tgz`, which vocabulation also publishes to Dropbox `Publicized/`. The job downloads it from the repo variable `SPARK_TEST_DATA_URL` and verifies it against `.github/synpuf_test_data.tgz.sha256` before it extracts it. The cache key is the hash of that pin file. No local recipe uses the tarball. The failures and the repairs are the same as for the DuckDB fixture:
+
+- **Checksum mismatch** (`synpuf_test_data.tgz: FAILED`). vocabulation republished the tarball. Re-pin it from the repo root with `(cd ~/Dropbox/Publicized && sha256sum synpuf_test_data.tgz) > .github/synpuf_test_data.tgz.sha256`. The Spark jobs on the next push test the new data.
+- **curl fails with an HTTP error**. The shared link is dead or team-only. Do steps 1 to 3 above with the path `/Publicized/synpuf_test_data.tgz` and the pin `.github/synpuf_test_data.tgz.sha256`. Then `gh variable set SPARK_TEST_DATA_URL -R outcomesinsights/conceptql --body <dl=1 url>`.
+
 ## Releasing
 
 Releases are tag-based. A pushed `v*` tag runs `.github/workflows/release.yml`, which publishes to rubygems.org through RubyGems trusted publishing. No API key is stored anywhere. `rake release` (from `bundler/gem_tasks`) still exists, but it skips every check below.
