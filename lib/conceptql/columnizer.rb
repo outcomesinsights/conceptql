@@ -16,7 +16,7 @@ module ConceptQL
 
       def sequelized
         col = name
-        if (q = options[:qualifer])
+        if (q = options[:qualifier])
           col = Sequel.qualify(q, col)
         end
 
