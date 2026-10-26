@@ -56,6 +56,8 @@ All notable changes to this project will be documented in this file.
   connects to a database. It now makes the parquet files of each directory in its glob ready.
   `conceptql scope_annotate` ignored the connection options, and `conceptql help` listed
   `simple_visit` as `extract_metadata`
+- A vocabulary statement with `*` no longer warns about the format of its other codes. The check
+  for `*` never ran, because `Vocabulary#select_all?` is private
 
 ### Changed
 
@@ -81,6 +83,14 @@ All notable changes to this project will be documented in this file.
 - The provenance and utilization operators (`provenance`, `one_in_two_out`, `hospitalization`,
   `hospice`, `snf`) are now GDM-only. On omopv4_plus they fail validation as an invalid operator
   instead of raising NoMethodError, and they are not in its metadata
+- Code format checks ("improperly formatted code") use the vocabulary_formats validator patterns.
+  CPT4, CPT4_HCPCS, HCPCS, ICD10, ICD10CM and ICD9Proc changed: CPT4 now accepts M0201, HCPCS
+  needs a leading letter, and the ICD patterns need a real dot. ATC, DRG, ICD03_Morphology,
+  ICD03_Topography, NDC, RxNorm and SNOMED are checked for the first time. ICD10PCS accepts only 7-character billable codes
+  with a real section character first (row ICD10PCS.BILLABLE), so Z561123 is now improperly
+  formatted
+- A `cpt_or_hcpcs` code gets a warning when every vocabulary rejects it, for any reason. It is
+  "improperly formatted" only when every vocabulary says so, and otherwise "unknown"
 
 ### Removed
 

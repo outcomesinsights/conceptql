@@ -79,4 +79,45 @@ describe ConceptQL::Operators::MultipleVocabularies do
       row.first[:operator] == "test"
     end)
   end
+
+  describe "code warnings" do
+    let(:operator) do
+      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
+                         .query(%w[cpt_or_hcpcs 99214 12345 AA0382 A9999]).operator
+    end
+
+    # Sets each vocabulary operator's warnings as validation would leave them.
+    def vocab_warnings(by_vocabulary)
+      operator.vocab_ops.each do |vocab_op|
+        vocab_op.instance_variable_set(:@warnings, by_vocabulary.fetch(vocab_op.op_name))
+      end
+      operator.code_warnings
+    end
+
+    it "calls a code unknown when one vocabulary rejects its format and another does not know it" do
+      warnings = vocab_warnings(
+        "cpt4" => [ [ "improperly formatted code", "AA0382" ], [ "unknown code(s)", "12345", "A9999" ] ],
+        "hcpcs" => [ [ "improperly formatted code", "99214", "12345", "AA0382" ], [ "unknown code(s)", "A9999" ] ]
+      )
+
+      _(warnings).must_equal [ [ "improperly formatted code", "AA0382" ], [ "unknown code(s)", "12345", "A9999" ] ]
+    end
+
+    it "does not warn about a code that one vocabulary accepts" do
+      warnings = vocab_warnings(
+        "cpt4" => [ [ "unknown code(s)", "12345" ] ],
+        "hcpcs" => [ [ "improperly formatted code", "99214", "12345" ] ]
+      )
+
+      _(warnings).must_equal [ [ "unknown code(s)", "12345" ] ]
+    end
+
+    it "keeps a vocabulary operator's own warnings intact" do
+      cpt4 = [ [ "unknown code(s)", "12345" ] ]
+      vocab_warnings("cpt4" => cpt4, "hcpcs" => [ [ "improperly formatted code", "12345" ] ])
+      operator.aggregate_messages([ cpt4 ])
+
+      _(cpt4).must_equal [ [ "unknown code(s)", "12345" ] ]
+    end
+  end
 end
