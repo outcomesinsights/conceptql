@@ -75,6 +75,9 @@ All notable changes to this project will be documented in this file.
 - On DuckDB, operator CTEs are now `AS MATERIALIZED`, as on Postgres
   (`ConceptQL::Rdbms::DuckDB#supports_materialized?` is true). DuckDB accepts the keyword since
   v0.8.0. `just test-duckdb` passes against libduckdb 1.5.6
+- The provenance and utilization operators (`provenance`, `one_in_two_out`, `hospitalization`,
+  `hospice`, `snf`) are now GDM-only. On omopv4_plus they fail validation as an invalid operator
+  instead of raising NoMethodError, and they are not in its metadata
 
 ### Removed
 

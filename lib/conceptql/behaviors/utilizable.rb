@@ -29,9 +29,8 @@ module ConceptQL
         "inpatient"
       end
 
+      # The operators that include this register for gdm and gdm_wide only.
       def query(db)
-        return db[:condition_occurrence].where(false) if omopv4_plus?
-
         gdm_it(db)
       end
 
