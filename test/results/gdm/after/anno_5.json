@@ -57,14 +57,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has arguments",
-          [
-            1
-          ]
-        ]
-      ]
+      "errors": [["has arguments", [1]]]
     },
     "name": "After"
   }

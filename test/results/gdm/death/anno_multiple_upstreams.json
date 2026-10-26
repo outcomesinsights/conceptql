@@ -37,15 +37,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has multiple upstreams",
-          [
-            "person",
-            "icd9"
-          ]
-        ]
-      ]
+      "errors": [["has multiple upstreams", ["person", "icd9"]]]
     },
     "name": "Death"
   }

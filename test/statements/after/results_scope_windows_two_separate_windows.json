@@ -3,20 +3,12 @@
   [
     "after",
     {
-      "left": [
-        "icd9",
-        "401.1"
-      ],
-      "right": [
-        "icd9",
-        "401.1"
-      ]
+      "left": ["icd9", "401.1"],
+      "right": ["icd9", "401.1"]
     }
   ],
   {
-    "person_ids": [
-      2
-    ],
+    "person_ids": [2],
     "window_table": [
       "union",
       [

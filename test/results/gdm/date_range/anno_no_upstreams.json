@@ -25,14 +25,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has upstreams",
-          [
-            "icd9"
-          ]
-        ]
-      ]
+      "errors": [["has upstreams", ["icd9"]]]
     },
     "name": "Date Range"
   }

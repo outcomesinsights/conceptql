@@ -8,11 +8,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has no upstream"
-        ]
-      ]
+      "errors": [["has no upstream"]]
     }
   }
 ]

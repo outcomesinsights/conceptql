@@ -1,10 +1,1 @@
-[
-  "union",
-  [
-    "icd9",
-    "412"
-  ],
-  [
-    "hospice"
-  ]
-]
+["union", ["icd9", "412"], ["hospice"]]

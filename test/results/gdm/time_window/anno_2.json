@@ -26,16 +26,8 @@
         }
       },
       "errors": [
-        [
-          "wrong option format",
-          "start",
-          2
-        ],
-        [
-          "wrong option format",
-          "end",
-          2
-        ]
+        ["wrong option format", "start", 2],
+        ["wrong option format", "end", 2]
       ]
     },
     "name": "Time Window"

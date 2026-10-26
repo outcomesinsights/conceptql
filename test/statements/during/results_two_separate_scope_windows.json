@@ -3,16 +3,10 @@
   [
     "during",
     {
-      "left": [
-        "icd9",
-        "401.1"
-      ],
+      "left": ["icd9", "401.1"],
       "right": [
         "time_window",
-        [
-          "icd9",
-          "401.1"
-        ],
+        ["icd9", "401.1"],
         {
           "start": "-1y",
           "end": "-1d"
@@ -21,9 +15,7 @@
     }
   ],
   {
-    "person_ids": [
-      2
-    ],
+    "person_ids": [2],
     "window_table": [
       "union",
       [

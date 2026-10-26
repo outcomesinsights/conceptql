@@ -11,14 +11,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has arguments",
-          [
-            "412"
-          ]
-        ]
-      ]
+      "errors": [["has arguments", ["412"]]]
     },
     "name": "Date Range"
   }

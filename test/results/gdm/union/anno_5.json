@@ -11,12 +11,7 @@
             "n": 0
           }
         },
-        "errors": [
-          [
-            "invalid operator",
-            "foo"
-          ]
-        ]
+        "errors": [["invalid operator", "foo"]]
       },
       "name": "Invalid"
     }

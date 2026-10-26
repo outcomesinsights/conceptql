@@ -2781,18 +2781,12 @@
               "label": ""
             }
           ],
-          [
-            "recall",
-            "outpt mm dx"
-          ]
+          ["recall", "outpt mm dx"]
         ],
         "label": "medical mm dx only"
       }
     ],
-    "right": [
-      "recall",
-      "medical mm dx only"
-    ],
+    "right": ["recall", "medical mm dx only"],
     "at_least": "42d",
     "label": "2nd op mm dx"
   },

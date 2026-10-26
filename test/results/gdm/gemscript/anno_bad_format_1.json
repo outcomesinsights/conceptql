@@ -10,13 +10,7 @@
           "n": 0
         }
       },
-      "warnings": [
-        [
-          "improperly formatted code",
-          "7992602",
-          "179926020"
-        ]
-      ]
+      "warnings": [["improperly formatted code", "7992602", "179926020"]]
     },
     "name": "Gemscript"
   }

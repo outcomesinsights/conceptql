@@ -1,8 +1,1 @@
-[
-  "place_of_service_filter",
-  [
-    "revenue_code",
-    "280"
-  ],
-  "21"
-]
+["place_of_service_filter", ["revenue_code", "280"], "21"]

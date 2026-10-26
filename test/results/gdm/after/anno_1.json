@@ -11,16 +11,8 @@
         }
       },
       "errors": [
-        [
-          "wrong option format",
-          "left",
-          "412"
-        ],
-        [
-          "wrong option format",
-          "right",
-          "time_window"
-        ]
+        ["wrong option format", "left", "412"],
+        ["wrong option format", "right", "time_window"]
       ]
     },
     "name": "After"

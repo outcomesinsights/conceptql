@@ -11,16 +11,8 @@
         }
       },
       "errors": [
-        [
-          "wrong option format",
-          "start",
-          "03/13/2008"
-        ],
-        [
-          "wrong option format",
-          "end",
-          "03/13/2008"
-        ]
+        ["wrong option format", "start", "03/13/2008"],
+        ["wrong option format", "end", "03/13/2008"]
       ]
     },
     "name": "Date Range"

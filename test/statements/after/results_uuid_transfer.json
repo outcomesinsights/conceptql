@@ -1,9 +1,7 @@
 [
   "contains",
   {
-    "left": [
-      "information_periods"
-    ],
+    "left": ["information_periods"],
     "right": [
       "icd9",
       "729.5",
@@ -11,8 +9,6 @@
         "uuid": "true"
       }
     ],
-    "include_rhs_columns": [
-      "uuid"
-    ]
+    "include_rhs_columns": ["uuid"]
   }
 ]

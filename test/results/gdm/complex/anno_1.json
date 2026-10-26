@@ -28,11 +28,7 @@
             "n": 0
           }
         },
-        "errors": [
-          [
-            "duplicate label"
-          ]
-        ]
+        "errors": [["duplicate label"]]
       },
       "name": "ICD-9 CM"
     }
@@ -49,11 +45,7 @@
             "n": 0
           }
         },
-        "errors": [
-          [
-            "duplicate label"
-          ]
-        ]
+        "errors": [["duplicate label"]]
       },
       "name": "ICD-9 CM"
     }

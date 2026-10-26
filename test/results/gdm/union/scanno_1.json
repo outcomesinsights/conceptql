@@ -1,10 +1,6 @@
 {
   "errors": {
-    "union": [
-      [
-        "has no upstream"
-      ]
-    ]
+    "union": [["has no upstream"]]
   },
   "warnings": {},
   "counts": {

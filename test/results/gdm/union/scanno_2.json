@@ -1,12 +1,7 @@
 {
   "errors": {},
   "warnings": {
-    "1": [
-      [
-        "improperly formatted code",
-        "XYS"
-      ]
-    ]
+    "1": [["improperly formatted code", "XYS"]]
   },
   "counts": {
     "1": {

@@ -26,14 +26,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "unrecognized keywords",
-          "carrier",
-          "garbage",
-          "other"
-        ]
-      ]
+      "errors": [["unrecognized keywords", "carrier", "garbage", "other"]]
     },
     "name": "Provenance"
   }

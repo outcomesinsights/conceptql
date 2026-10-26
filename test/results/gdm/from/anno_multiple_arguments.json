@@ -10,15 +10,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has multiple arguments",
-          [
-            "person",
-            "observation_period"
-          ]
-        ]
-      ]
+      "errors": [["has multiple arguments", ["person", "observation_period"]]]
     },
     "name": "From"
   }

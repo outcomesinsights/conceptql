@@ -1,21 +1,8 @@
 [
   "window",
-  [
-    "union",
-    [
-      "cpt4",
-      "99232"
-    ],
-    [
-      "hcpcs",
-      "A0425"
-    ]
-  ],
+  ["union", ["cpt4", "99232"], ["hcpcs", "A0425"]],
   {
-    "window_table": [
-      "icd9",
-      "412"
-    ],
+    "window_table": ["icd9", "412"],
     "adjust_window_start": "-2y",
     "adjust_window_end": "2y"
   }

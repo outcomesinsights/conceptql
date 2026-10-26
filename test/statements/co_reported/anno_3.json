@@ -1,11 +1,1 @@
-[
-  "co_reported",
-  [
-    "icd9",
-    "004.3"
-  ],
-  [
-    "cpt_or_hcpcs",
-    "69210"
-  ]
-]
+["co_reported", ["icd9", "004.3"], ["cpt_or_hcpcs", "69210"]]

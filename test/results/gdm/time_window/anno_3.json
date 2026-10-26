@@ -25,13 +25,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "wrong option format",
-          "start",
-          "-2b"
-        ]
-      ]
+      "errors": [["wrong option format", "start", "-2b"]]
     },
     "name": "Time Window"
   }

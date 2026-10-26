@@ -1,8 +1,1 @@
-[
-  "race",
-  "Black or African American",
-  [
-    "icd9",
-    "412"
-  ]
-]
+["race", "Black or African American", ["icd9", "412"]]

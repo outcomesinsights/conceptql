@@ -21,8 +21,5 @@
       "label": "A "
     }
   ],
-  [
-    "recall",
-    "a"
-  ]
+  ["recall", "a"]
 ]

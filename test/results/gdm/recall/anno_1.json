@@ -13,14 +13,7 @@
               "n": 0
             }
           },
-          "errors": [
-            [
-              "invalid label"
-            ],
-            [
-              "invalid label"
-            ]
-          ]
+          "errors": [["invalid label"], ["invalid label"]]
         },
         "name": "ICD-9 CM"
       }
@@ -36,12 +29,7 @@
               "n": 0
             }
           },
-          "errors": [
-            [
-              "no matching label",
-              "Heart Attack"
-            ]
-          ]
+          "errors": [["no matching label", "Heart Attack"]]
         },
         "name": "Recall"
       }

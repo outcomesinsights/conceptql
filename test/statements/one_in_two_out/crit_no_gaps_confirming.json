@@ -1,10 +1,6 @@
 [
   "one_in_two_out",
-  [
-    "icd9",
-    "401.9",
-    "272.4"
-  ],
+  ["icd9", "401.9", "272.4"],
   {
     "outpatient_minimum_gap": "",
     "outpatient_maximum_gap": "",

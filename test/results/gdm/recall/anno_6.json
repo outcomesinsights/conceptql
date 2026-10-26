@@ -18,12 +18,7 @@
                     "n": 0
                   }
                 },
-                "warnings": [
-                  [
-                    "improperly formatted code",
-                    "203.0x"
-                  ]
-                ]
+                "warnings": [["improperly formatted code", "203.0x"]]
               },
               "name": "ICD-9 CM"
             }
@@ -115,12 +110,7 @@
                       "n": 0
                     }
                   },
-                  "errors": [
-                    [
-                      "no matching label",
-                      "Qualifying Meyloma Dx"
-                    ]
-                  ]
+                  "errors": [["no matching label", "Qualifying Meyloma Dx"]]
                 },
                 "name": "Recall"
               }

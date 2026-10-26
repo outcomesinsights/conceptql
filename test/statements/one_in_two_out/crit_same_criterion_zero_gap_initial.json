@@ -2,16 +2,10 @@
   "one_in_two_out",
   [
     "union",
-    [
-      "icd9",
-      "585.6"
-    ],
+    ["icd9", "585.6"],
     [
       "time_window",
-      [
-        "icd9",
-        "585.6"
-      ],
+      ["icd9", "585.6"],
       {
         "start": "1m",
         "end": "1m"

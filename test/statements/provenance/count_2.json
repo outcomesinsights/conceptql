@@ -1,8 +1,1 @@
-[
-  "provenance",
-  [
-    "icd9",
-    "412"
-  ],
-  "carrier_claim:primary_or_first"
-]
+["provenance", ["icd9", "412"], "carrier_claim:primary_or_first"]

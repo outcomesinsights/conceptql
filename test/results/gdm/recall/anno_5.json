@@ -10,15 +10,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has multiple arguments",
-          [
-            "foo",
-            "bar"
-          ]
-        ]
-      ]
+      "errors": [["has multiple arguments", ["foo", "bar"]]]
     },
     "name": "Recall"
   }

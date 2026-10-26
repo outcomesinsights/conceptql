@@ -8,14 +8,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has no upstream"
-        ],
-        [
-          "has no arguments"
-        ]
-      ]
+      "errors": [["has no upstream"], ["has no arguments"]]
     },
     "name": "Nth Occurrence"
   }

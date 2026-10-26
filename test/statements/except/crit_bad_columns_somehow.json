@@ -6,30 +6,18 @@
       "left": [
         "except",
         {
-          "left": [
-            "icd9",
-            "424.1"
-          ],
+          "left": ["icd9", "424.1"],
           "right": [
             "after",
             {
-              "left": [
-                "icd9",
-                "424.1"
-              ],
-              "right": [
-                "icd9",
-                "729.5"
-              ],
+              "left": ["icd9", "424.1"],
+              "right": ["icd9", "729.5"],
               "within": "230d"
             }
           ]
         }
       ],
-      "right": [
-        "icd9",
-        "729.5"
-      ]
+      "right": ["icd9", "729.5"]
     }
   ],
   {

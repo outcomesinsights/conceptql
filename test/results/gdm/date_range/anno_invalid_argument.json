@@ -11,16 +11,8 @@
         }
       },
       "errors": [
-        [
-          "wrong option format",
-          "start",
-          1
-        ],
-        [
-          "wrong option format",
-          "end",
-          2
-        ]
+        ["wrong option format", "start", 1],
+        ["wrong option format", "end", 2]
       ]
     },
     "name": "Date Range"

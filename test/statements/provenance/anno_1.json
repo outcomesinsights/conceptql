@@ -1,8 +1,1 @@
-[
-  "provenance",
-  [
-    "icd9",
-    "412"
-  ],
-  "inpatient"
-]
+["provenance", ["icd9", "412"], "inpatient"]

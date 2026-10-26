@@ -23,12 +23,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "required option not present",
-          "right"
-        ]
-      ]
+      "errors": [["required option not present", "right"]]
     },
     "name": "After"
   }

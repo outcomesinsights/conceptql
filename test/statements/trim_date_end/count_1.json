@@ -1,15 +1,10 @@
 [
   "trim_date_end",
   {
-    "left": [
-      "information_periods"
-    ],
+    "left": ["information_periods"],
     "right": [
       "time_window",
-      [
-        "gender",
-        "male"
-      ],
+      ["gender", "male"],
       {
         "start": "2008-03-22",
         "end": "2008-03-22"

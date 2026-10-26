@@ -3,10 +3,10 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - '.seeds/**'
-      - '.beads/**'
-      - '.claude/**'
-      - 'claude_stuff/**'
+      - ".seeds/**"
+      - ".beads/**"
+      - ".claude/**"
+      - "claude_stuff/**"
   pull_request:
 concurrency:
   group: ci-${{ github.ref }}
@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
-          ruby-version: '4.0'
+          ruby-version: "4.0"
           bundler-cache: true
       - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
       - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
@@ -55,8 +55,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      -
-        name: Log into DockerHub
+      - name: Log into DockerHub
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         continue-on-error: true
         with:
@@ -100,13 +99,13 @@ jobs:
           persist-credentials: false
       - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
-          ruby-version: '4.0'
+          ruby-version: "4.0"
           bundler-cache: true
 
       - name: Set up Java
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
-          distribution: 'temurin'
+          distribution: "temurin"
           java-version: ${{ startsWith(matrix.spark_version, '4.') && '17' || '11' }}
 
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -136,7 +135,7 @@ jobs:
       - run: ~/"spark-${SPARK_VERSION}"/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
       - run: bundle exec ruby test/all.rb
         env:
-          CONCEPTQL_PARQUET_TEST_DIR: '/tmp/synpuf_test_data/{${{ matrix.search_path }}}'
+          CONCEPTQL_PARQUET_TEST_DIR: "/tmp/synpuf_test_data/{${{ matrix.search_path }}}"
           SEQUELIZER_URL: hexspace://localhost:10000/default
       - name: Upload Coverage
         if: always()
@@ -151,7 +150,7 @@ jobs:
     strategy:
       matrix:
         # 3.3 is the gemspec floor.
-        ruby: ['3.3', '3.4']
+        ruby: ["3.3", "3.4"]
     runs-on: ubuntu-latest
     env:
       DUCKDB_TEST_DATA_PATH: /tmp/synpuf_test_data.duckdb

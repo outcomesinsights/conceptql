@@ -8,9 +8,6 @@
         "label": 1
       }
     ],
-    "right": [
-      "recall",
-      "Heart Attack"
-    ]
+    "right": ["recall", "Heart Attack"]
   }
 ]

@@ -11,13 +11,7 @@
           "n": 2
         }
       },
-      "warnings": [
-        [
-          "improperly formatted code",
-          "A03821",
-          "3821"
-        ]
-      ]
+      "warnings": [["improperly formatted code", "A03821", "3821"]]
     },
     "name": "HCPCS"
   }

@@ -9,12 +9,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "no matching label",
-          "HA1"
-        ]
-      ]
+      "errors": [["no matching label", "HA1"]]
     },
     "name": "Recall"
   }

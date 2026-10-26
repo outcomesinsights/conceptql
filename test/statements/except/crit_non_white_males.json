@@ -1,13 +1,7 @@
 [
   "except",
   {
-    "left": [
-      "gender",
-      "Male"
-    ],
-    "right": [
-      "race",
-      "White"
-    ]
+    "left": ["gender", "Male"],
+    "right": ["race", "White"]
   }
 ]

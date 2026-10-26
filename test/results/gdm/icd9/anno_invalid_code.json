@@ -9,12 +9,7 @@
           "n": 0
         }
       },
-      "warnings": [
-        [
-          "improperly formatted code",
-          "XYS"
-        ]
-      ]
+      "warnings": [["improperly formatted code", "XYS"]]
     },
     "name": "ICD-9 CM"
   }

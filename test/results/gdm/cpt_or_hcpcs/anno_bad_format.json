@@ -14,15 +14,8 @@
         }
       },
       "warnings": [
-        [
-          "improperly formatted code",
-          "0382",
-          "AA0382"
-        ],
-        [
-          "unknown code(s)",
-          "12345"
-        ]
+        ["improperly formatted code", "0382", "AA0382"],
+        ["unknown code(s)", "12345"]
       ]
     },
     "name": "CPT or HCPCS"

@@ -11,12 +11,7 @@
             "n": 0
           }
         },
-        "warnings": [
-          [
-            "unknown code(s)",
-            "280"
-          ]
-        ]
+        "warnings": [["unknown code(s)", "280"]]
       },
       "name": "Revenue Code"
     }

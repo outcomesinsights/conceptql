@@ -39,12 +39,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "required option not present",
-          "left"
-        ]
-      ]
+      "errors": [["required option not present", "left"]]
     },
     "name": "After"
   }

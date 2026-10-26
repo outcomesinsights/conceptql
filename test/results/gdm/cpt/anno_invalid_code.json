@@ -10,12 +10,7 @@
           "n": 175
         }
       },
-      "warnings": [
-        [
-          "improperly formatted code",
-          "XYS"
-        ]
-      ]
+      "warnings": [["improperly formatted code", "XYS"]]
     },
     "name": "CPT"
   }

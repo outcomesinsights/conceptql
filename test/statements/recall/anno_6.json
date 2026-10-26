@@ -17,13 +17,7 @@
         ],
         "right": [
           "time_window",
-          [
-            "first",
-            [
-              "recall",
-              "Meyloma Dx"
-            ]
-          ],
+          ["first", ["recall", "Meyloma Dx"]],
           {
             "start": "0",
             "end": "90d"
@@ -38,10 +32,7 @@
         {
           "left": [
             "time_window",
-            [
-              "recall",
-              "Qualifying Meyloma Dx"
-            ],
+            ["recall", "Qualifying Meyloma Dx"],
             {
               "start": "-90d",
               "end": "0",
@@ -95,10 +86,7 @@
                 "label": "Other Tests"
               }
             ],
-            "right": [
-              "recall",
-              "Meyloma 90-day Lookback"
-            ]
+            "right": ["recall", "Meyloma 90-day Lookback"]
           }
         ]
       ]

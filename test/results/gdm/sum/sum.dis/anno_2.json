@@ -27,14 +27,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has arguments",
-          [
-            21
-          ]
-        ]
-      ]
+      "errors": [["has arguments", [21]]]
     }
   }
 ]

@@ -9,17 +9,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has no upstream"
-        ],
-        [
-          "has arguments",
-          [
-            "123"
-          ]
-        ]
-      ]
+      "errors": [["has no upstream"], ["has arguments", ["123"]]]
     },
     "name": "Union"
   }

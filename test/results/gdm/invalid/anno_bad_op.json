@@ -27,12 +27,7 @@
               "n": 0
             }
           },
-          "warnings": [
-            [
-              "improperly formatted code",
-              "ZZZZZZZ"
-            ]
-          ]
+          "warnings": [["improperly formatted code", "ZZZZZZZ"]]
         },
         "name": "ICD-9 CM"
       }
@@ -44,12 +39,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "invalid operator",
-          "bad_op"
-        ]
-      ]
+      "errors": [["invalid operator", "bad_op"]]
     },
     "name": "Invalid"
   }

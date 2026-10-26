@@ -7,8 +7,5 @@
       "label": "Heart Attack"
     }
   ],
-  [
-    "recall",
-    "Heart Attack"
-  ]
+  ["recall", "Heart Attack"]
 ]

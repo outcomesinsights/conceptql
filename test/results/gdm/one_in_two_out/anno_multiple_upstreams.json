@@ -40,15 +40,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "has multiple upstreams",
-          [
-            "icd9",
-            "icd9"
-          ]
-        ]
-      ]
+      "errors": [["has multiple upstreams", ["icd9", "icd9"]]]
     },
     "name": "One In Two Out"
   }

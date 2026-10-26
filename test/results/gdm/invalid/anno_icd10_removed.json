@@ -9,12 +9,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "invalid operator",
-          "icd10"
-        ]
-      ]
+      "errors": [["invalid operator", "icd10"]]
     },
     "name": "Invalid"
   }

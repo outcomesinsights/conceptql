@@ -2,10 +2,7 @@
   "first",
   [
     "union",
-    [
-      "recall",
-      "Codes"
-    ],
+    ["recall", "Codes"],
     [
       "icd9",
       "412",

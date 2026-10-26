@@ -9,12 +9,7 @@
           "n": 0
         }
       },
-      "errors": [
-        [
-          "required option not present",
-          "start"
-        ]
-      ]
+      "errors": [["required option not present", "start"]]
     },
     "name": "Date Range"
   }

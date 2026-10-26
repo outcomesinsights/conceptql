@@ -1,13 +1,7 @@
 [
   "concurrent_within",
-  [
-    "icd9",
-    "412"
-  ],
-  [
-    "cpt_or_hcpcs",
-    "99214"
-  ],
+  ["icd9", "412"],
+  ["cpt_or_hcpcs", "99214"],
   {
     "start": "1d",
     "end": "1d"

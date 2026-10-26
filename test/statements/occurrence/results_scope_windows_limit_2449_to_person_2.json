@@ -1,17 +1,8 @@
 [
   "window",
-  [
-    "occurrence",
-    2,
-    [
-      "icd9",
-      "244.9"
-    ]
-  ],
+  ["occurrence", 2, ["icd9", "244.9"]],
   {
-    "person_ids": [
-      2
-    ],
+    "person_ids": [2],
     "window_table": [
       "union",
       [

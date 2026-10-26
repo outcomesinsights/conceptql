@@ -10,17 +10,11 @@
             "left": [
               "except",
               {
-                "left": [
-                  "recall",
-                  "elig chemo2"
-                ],
+                "left": ["recall", "elig chemo2"],
                 "right": [
                   "during",
                   {
-                    "left": [
-                      "recall",
-                      "elig chemo2"
-                    ],
+                    "left": ["recall", "elig chemo2"],
                     "right": [
                       "time_window",
                       [
@@ -2944,9 +2938,7 @@
                                             ],
                                             "right": [
                                               "time_window",
-                                              [
-                                                "person"
-                                              ],
+                                              ["person"],
                                               {
                                                 "start": "18y-1d",
                                                 "end": "18y-1d"
@@ -2960,9 +2952,7 @@
                                           "end": "1y"
                                         }
                                       ],
-                                      "right": [
-                                        "information_periods"
-                                      ]
+                                      "right": ["information_periods"]
                                     }
                                   ],
                                   "right": [
@@ -2985,18 +2975,12 @@
                               "provenance",
                               "outpatient",
                               "carrier_claim",
-                              [
-                                "recall",
-                                "elig LC"
-                              ],
+                              ["recall", "elig LC"],
                               {
                                 "label": "LC OP"
                               }
                             ],
-                            "right": [
-                              "recall",
-                              "LC OP"
-                            ],
+                            "right": ["recall", "LC OP"],
                             "within": "1y",
                             "at_least": "30d"
                           }
@@ -3015,10 +2999,7 @@
             "right": [
               "during",
               {
-                "left": [
-                  "recall",
-                  "elig chemo2"
-                ],
+                "left": ["recall", "elig chemo2"],
                 "right": [
                   "time_window",
                   [
@@ -3240,10 +3221,7 @@
                           ],
                           "right": [
                             "time_window",
-                            [
-                              "recall",
-                              "elig chemo2"
-                            ],
+                            ["recall", "elig chemo2"],
                             {
                               "start": "-1m",
                               "end": "1y"
@@ -3260,18 +3238,12 @@
                           "provenance",
                           "outpatient",
                           "carrier_claim",
-                          [
-                            "recall",
-                            "elig NHL"
-                          ],
+                          ["recall", "elig NHL"],
                           {
                             "label": "NHL OP"
                           }
                         ],
-                        "right": [
-                          "recall",
-                          "NHL OP"
-                        ],
+                        "right": ["recall", "NHL OP"],
                         "within": "1y",
                         "at_least": "30d"
                       }
@@ -3290,10 +3262,7 @@
         "right": [
           "during",
           {
-            "left": [
-              "recall",
-              "elig chemo2"
-            ],
+            "left": ["recall", "elig chemo2"],
             "right": [
               "time_window",
               [
@@ -3343,10 +3312,7 @@
                       ],
                       "right": [
                         "time_window",
-                        [
-                          "recall",
-                          "elig chemo2"
-                        ],
+                        ["recall", "elig chemo2"],
                         {
                           "start": "-1m",
                           "end": "1y"
@@ -3363,18 +3329,12 @@
                       "provenance",
                       "outpatient",
                       "carrier_claim",
-                      [
-                        "recall",
-                        "elig ovarian"
-                      ],
+                      ["recall", "elig ovarian"],
                       {
                         "label": "ovarian op"
                       }
                     ],
-                    "right": [
-                      "recall",
-                      "ovarian op"
-                    ],
+                    "right": ["recall", "ovarian op"],
                     "within": "1y",
                     "at_least": "30d"
                   }
@@ -3392,10 +3352,7 @@
     "right": [
       "during",
       {
-        "left": [
-          "recall",
-          "elig chemo2"
-        ],
+        "left": ["recall", "elig chemo2"],
         "right": [
           "time_window",
           [
@@ -3468,10 +3425,7 @@
                   ],
                   "right": [
                     "time_window",
-                    [
-                      "recall",
-                      "elig chemo2"
-                    ],
+                    ["recall", "elig chemo2"],
                     {
                       "start": "-1m",
                       "end": "1y"
@@ -3488,18 +3442,12 @@
                   "provenance",
                   "outpatient",
                   "carrier_claim",
-                  [
-                    "recall",
-                    "elig breast"
-                  ],
+                  ["recall", "elig breast"],
                   {
                     "label": "breast op"
                   }
                 ],
-                "right": [
-                  "recall",
-                  "breast op"
-                ],
+                "right": ["recall", "breast op"],
                 "within": "1y",
                 "at_least": "30d"
               }

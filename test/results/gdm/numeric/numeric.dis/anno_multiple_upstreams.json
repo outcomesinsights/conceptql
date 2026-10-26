@@ -43,16 +43,8 @@
         }
       },
       "errors": [
-        [
-          "has multiple upstreams",
-          [
-            "icd9",
-            "icd9_procedure"
-          ]
-        ],
-        [
-          "has no arguments"
-        ]
+        ["has multiple upstreams", ["icd9", "icd9_procedure"]],
+        ["has no arguments"]
       ]
     }
   }
