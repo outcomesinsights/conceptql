@@ -10,7 +10,9 @@ module ConceptQL
       def_delegators :nodifier, :cdb
       def_delegators :cdb, :lexicon
       def_delegators :lexicon,
+                     :concept_codes,
                      :concept_ids,
+                     :concept_ids_by_name,
                      :concepts,
                      :concepts_table,
                      :concepts_by_name,

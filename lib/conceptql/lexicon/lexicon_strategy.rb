@@ -59,6 +59,15 @@ module ConceptQL
         .select_map(:id)
     end
 
+    # Every concept code in the vocabulary (or vocabularies).
+    def concept_codes(data_db, vocabulary_id)
+      concepts(data_db, vocabulary_id).select_map(:concept_code)
+    end
+
+    def concept_ids_by_name(data_db, names)
+      concepts_by_name(data_db, names).select_map(:id)
+    end
+
     # The mappings table will tell us what other concepts have been directly
     # mapped to the concepts passed in
     def related_concept_ids(data_db, *ids)
@@ -69,9 +78,11 @@ module ConceptQL
       other_ids + ids
     end
 
+    # A caller can answer "is the vocabulary empty?" with a block. The
+    # Lexicon does, so that the answer comes from its cache.
     def known_codes(data_db, vocabulary_id, codes)
       return codes if db_is_mock?(data_db)
-      return codes if vocabulary_is_empty?(data_db, vocabulary_id)
+      return codes if block_given? ? yield : vocabulary_is_empty?(data_db, vocabulary_id)
 
       concepts_ds(data_db, vocabulary_id, codes).select_map(:concept_code)
     rescue Sequel::DatabaseError
