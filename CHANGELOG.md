@@ -109,6 +109,10 @@ All notable changes to this project will be documented in this file.
   `Operator#optimized`, `Operator#unionable?`, `Operator#dup_values` and the
   `ConceptQL::Vocabularies::Behaviors::Sourcish` module are gone. Nothing in conceptql called
   `optimized`, so its union merging never ran, and the generated SQL does not change.
+- The `only_columns`, `except_columns` and `query_columns` options of `dedup` (breaking). No
+  statement could use them: with any column left out, the query failed, and from JSON they did
+  nothing or broke the SQL. Like any option an operator does not read, they are now ignored, and
+  dedup groups by every column
 
 ## [0.3.0] - 2016-11-08
 
