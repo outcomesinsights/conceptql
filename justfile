@@ -186,9 +186,9 @@ check-oi-pins lock="Gemfile.lock":
 # fails, never skips, when its fixture or libduckdb is unavailable. Run
 # `just test-full` for all 3 Postgres configs.
 #
-# The pre-push git hook runs this once, as `just pre-push`. Bypass with
-# `SKIP_GATE=1 git push`, which skips this gate and still publishes the beads.
-# `git push --no-verify` skips the beads publish too.
+# The pre-push hook (.githooks/pre-push, gator's standard) runs this at each pushed
+# commit, in a gate worktree under ~/.cache/gator-gate/, then publishes the beads
+# with bd-publish. A commit that already passed there is not re-run.
 # Lint, then the Postgres and DuckDB suites in parallel, then hygiene
 ci: lint fmt-check test-both hygiene
 
@@ -233,10 +233,22 @@ lint:
 setup:
     mise install
     bundle install
+    @if [ -d .beads ] && [ ! -d .beads/embeddeddolt ] && command -v bd >/dev/null 2>&1; then bd bootstrap; fi
+    @if [ -d .githooks ]; then git config core.hooksPath .githooks; fi
 
 # Runs on every commit, so it must stay FAST — a sub-minute budget. Tests belong
 # here when they fit; lint alone when they do not. fmt-check never rewrites.
-pre-commit: lint fmt-check hygiene
+pre-commit: lint fmt-check hygiene seeds-check
+
+# Gator's standard seeds-check: `seeds check --against-git` compares the seed store
+# with HEAD, so a seed body rewritten in place fails the commit. It belongs at commit
+# (at push it would compare HEAD~1 with HEAD only). It skips where there is no seed
+# store or no seeds binary (a clone without the nix tools).
+seeds-check:
+    #!/usr/bin/env sh
+    [ -d .seeds ] || exit 0
+    command -v seeds >/dev/null 2>&1 || exit 0
+    exec seeds check --against-git
 
 # Content checks inherited from overcommit when it was removed (2026-09-12):
 # MergeConflicts, YamlSyntax, JsonSyntax. RuboCop and the test target were already

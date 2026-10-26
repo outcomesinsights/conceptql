@@ -1,0 +1,43 @@
+#!/bin/sh
+# gator standard pre-commit hook -- identical in every repo; do not edit it here. What this repo
+# checks at commit is its justfile's `pre-commit` recipe; a deliberate difference goes in its
+# gator.toml. Source: gator/standard/githooks/. Armed by `just setup` (core.hooksPath=.githooks).
+#
+# Runs on the working tree, deliberately without prek: prek's stash hid and then discarded other
+# sessions' uncommitted edits (gator githooks review, 2026-10-08). Only the repo's own top-level
+# justfile is used -- just would otherwise search parent directories and run someone else's.
+
+# A hook started from inside another hook is a loop (a check that runs prek, a hook file or
+# `git commit`): refuse at once rather than recurse until the machine runs out of processes.
+if [ -n "${GATOR_HOOK:-}" ]; then
+  echo "pre-commit: started from inside the $GATOR_HOOK hook -- one of this repo's checks runs a git hook, prek or git commit; gator-doctor names it. Refusing rather than looping." >&2
+  exit 1
+fi
+export GATOR_HOOK=pre-commit
+# Git points these at THIS commit's staging area; a check that runs git in some other repo (a
+# test building a scratch repo) would otherwise write into this commit. The checks read the
+# working tree, so they do not need them.
+unset GIT_INDEX_FILE GIT_DIR GIT_WORK_TREE GIT_PREFIX
+top="$(git rev-parse --show-toplevel)" || exit 1
+cd "$top" || exit 1
+jf=""
+for f in justfile Justfile .justfile; do [ -f "$f" ] && jf="$f" && break; done
+if [ -z "$jf" ]; then
+  echo "pre-commit: no commit checks configured (no justfile)" >&2
+  exit 0
+fi
+command -v just >/dev/null 2>&1 || {
+  echo "pre-commit: just not on PATH -- run \`mise install\`" >&2
+  exit 1
+}
+out="$(just --justfile "./$jf" --working-directory . --summary 2>&1)" || {
+  echo "pre-commit: just cannot read ./$jf -- refusing the commit:" >&2
+  printf '%s\n' "$out" >&2
+  exit 1
+}
+# --show finds private and aliased recipes too; --summary lists neither.
+if just --justfile "./$jf" --working-directory . --show pre-commit >/dev/null 2>&1; then
+  exec just --justfile "./$jf" --working-directory . pre-commit
+fi
+echo "pre-commit: no commit checks configured (no pre-commit recipe)" >&2
+exit 0

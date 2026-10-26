@@ -1,0 +1,6 @@
+#!/bin/sh
+# gator standard post-merge hook -- deliberately does nothing. It exists so bd sees all five of its hook
+# names present: with any missing, `bd info` reports "Git hooks not installed -- Run: bd hooks
+# install", and following that advice ends with the standard hooks untracked (gator githooks
+# review, 2026-10-08). Source: gator/standard/githooks/.
+exit 0

@@ -1,0 +1,141 @@
+#!/bin/sh
+# gator standard pre-push hook -- identical in every repo; do not edit it here. What this repo
+# checks before a push is its justfile's `ci` recipe (or `push-gate`, when gator.toml declares
+# why the push runs less than ci). Source: gator/standard/githooks/. Armed by `just setup`.
+#
+# The check runs at EXACTLY the commit being pushed, in this checkout's gate worktree under
+# ~/.cache/gator-gate, so a push that passes here passes CI and nobody's working tree is involved.
+# Then the beads are published, refusing the push if they did not publish.
+if [ -n "${GATOR_HOOK:-}" ]; then
+  echo "pre-push: started from inside the $GATOR_HOOK hook -- one of this repo's checks runs a git hook, prek or git push; gator-doctor names it. Refusing rather than looping." >&2
+  exit 1
+fi
+export GATOR_HOOK=pre-push
+unset GIT_INDEX_FILE GIT_DIR GIT_WORK_TREE GIT_PREFIX GIT_QUARANTINE_PATH
+top="$(git rev-parse --show-toplevel)" || exit 1
+cd "$top" || exit 1
+refuse() {
+  echo "pre-push: $* -- not pushing" >&2
+  exit 1
+}
+J() { just --justfile "./$jf" --working-directory . "$@"; }
+
+# Git gives one line per ref: <local ref> <local sha> <remote ref> <remote sha>. Kept whole,
+# because bd-publish is handed the same stdin.
+refs=""
+[ -t 0 ] || refs="$(cat)"
+shas=""
+for c in $(printf '%s\n' "$refs" | while read -r _lref lsha rref _rsha; do
+  case "$lsha" in *[!0]*) ;; *) continue ;; esac # all zeros: a deletion, nothing to test
+  commit="$(git rev-parse --verify -q "$lsha^{commit}")" || continue # a tag on a tree or blob
+  case "$rref" in
+  refs/tags/*)
+    # A tag is tested only if CI will test it: GitHub runs the workflow files of the tagged
+    # commit, so when none of them triggers on tags, nothing checks this commit for the tag.
+    # Testing it anyway made an old release tag unpushable once its tests rotted (seeds,
+    # 2026-10-12). A false match (a `tags:` step input) only means testing it.
+    if ! git grep -qE '^[[:space:]]+tags:' "$commit" -- .github/workflows 2>/dev/null; then
+      echo "pre-push: ${rref#refs/tags/} at $(git rev-parse --short "$commit"): no workflow there runs on tag pushes -- not tested" >&2
+      continue
+    fi
+    ;;
+  esac
+  echo "$commit"
+done); do
+  case " $shas " in *" $c "*) ;; *) shas="$shas $c" ;; esac
+done
+if [ -z "$refs" ]; then
+  # Not started by `git push` (which always sends the list): by hand, or by another tool.
+  shas="$(git rev-parse HEAD)" || refuse "no refs on stdin and no HEAD to test"
+  echo "pre-push: no refs from git -- testing HEAD ($(git rev-parse --short HEAD))" >&2
+fi
+
+if [ -n "$shas" ]; then
+  command -v just >/dev/null 2>&1 || refuse "just not on PATH (run \`mise install\`)"
+  root="${XDG_CACHE_HOME:-$HOME/.cache}/gator-gate"
+  own="$(git rev-parse --absolute-git-dir)" || refuse "cannot resolve the git dir"
+  common="$(cd "$(git rev-parse --git-common-dir)" && pwd -P)" || refuse "cannot resolve the git dir"
+  # One gate per worktree, so linked worktrees never wait on each other.
+  gate="$root/$(printf %s "$own" | cksum | cut -d' ' -f1)"
+  lock="$gate.lock"
+  mkdir -p "$root" || refuse "cannot create $root"
+  if ! mkdir "$lock" 2>/dev/null; then
+    pid="$(cat "$lock/pid" 2>/dev/null)"
+    if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+      refuse "another push from this checkout (pid $pid) is using $gate"
+    fi
+    rm -rf "$lock" # left by a push that was killed outright
+    mkdir "$lock" 2>/dev/null || refuse "cannot take the lock $lock"
+  fi
+  echo $$ >"$lock/pid"
+  trap 'rm -rf "$lock"' EXIT
+  trap 'exit 1' INT TERM
+  # A gate that is not a worktree of THIS repo any more (a re-clone at the same path, or its
+  # registration pruned) is rebuilt rather than refusing every push from now on.
+  if [ -e "$gate" ]; then
+    theirs="$(cd "$gate" 2>/dev/null && cd "$(git rev-parse --git-common-dir 2>/dev/null)" 2>/dev/null && pwd -P)"
+    if [ "$theirs" != "$common" ]; then
+      rm -rf "$gate" "$gate.passed"
+      git worktree prune
+    fi
+  fi
+  if [ ! -e "$gate" ]; then
+    git worktree prune
+    git worktree add -q --detach "$gate" HEAD || refuse "cannot create the gate worktree $gate"
+  fi
+  for sha in $shas; do
+    short="$(git rev-parse --short "$sha")"
+    if grep -qx "$sha" "$gate.passed" 2>/dev/null; then
+      echo "pre-push: $short already passed in this gate -- not re-run" >&2
+      continue
+    fi
+    git -C "$gate" checkout -q --detach --force "$sha" || refuse "cannot check out $short in $gate"
+    git -C "$gate" clean -q -ffd # untracked files go; ignored build state (.venv, node_modules) stays
+    # Paths .gitattributes marks `worktree-share` (gitignored inputs the suite needs: caches,
+    # data, .env) are COPIED in, never linked, so nothing the check does can change this
+    # checkout's files. rsync copies only what changed since the last push.
+    git ls-files --others --ignored --exclude-standard --directory | while IFS= read -r entry; do
+      rel="${entry%/}"
+      a="$(git check-attr worktree-share -- "$rel/" | sed 's/.*: //')"
+      b="$(git check-attr worktree-share -- "$rel" | sed 's/.*: //')"
+      [ "$a" = set ] || [ "$b" = set ] || continue
+      command -v rsync >/dev/null 2>&1 || {
+        echo "pre-push: rsync not on PATH; cannot copy $rel into the gate" >&2
+        exit 1
+      }
+      if [ -d "$rel" ]; then
+        mkdir -p "$gate/$rel" && rsync -a --delete "$rel/" "$gate/$rel/" || exit 1
+      else
+        mkdir -p "$(dirname "$gate/$rel")" && rsync -a "$rel" "$gate/$rel" || exit 1
+      fi
+    done || refuse "cannot copy the worktree-share paths into $gate"
+    jf=""
+    for f in justfile Justfile .justfile; do [ -f "$gate/$f" ] && jf="$f" && break; done
+    if [ -z "$jf" ]; then
+      echo "pre-push: no justfile at $short -- nothing was checked before this push" >&2
+      continue
+    fi
+    if command -v mise >/dev/null 2>&1; then
+      for m in mise.toml .mise.toml; do [ -f "$gate/$m" ] && mise trust -q "$gate/$m" >/dev/null 2>&1; done
+    fi
+    out="$(cd "$gate" && J --summary 2>&1)" || refuse "just cannot read ./$jf at $short: $out"
+    recipe=""
+    for r in push-gate ci; do
+      (cd "$gate" && J --show "$r" >/dev/null 2>&1) && recipe="$r" && break
+    done
+    if [ -z "$recipe" ]; then
+      echo "pre-push: no ci recipe at $short -- nothing was checked before this push" >&2
+      continue
+    fi
+    echo "pre-push: just $recipe at $short (in $gate)" >&2
+    (cd "$gate" && J "$recipe") || refuse "\`just $recipe\` failed at $short (logs it wrote are under $gate)"
+    echo "$sha" >>"$gate.passed"
+  done
+fi
+
+[ -d .beads ] || exit 0
+if ! command -v bd-publish >/dev/null 2>&1; then
+  echo "beads: NOT published -- bd-publish not on PATH" >&2
+  exit 0
+fi
+printf '%s\n' "$refs" | bd-publish "$@"
