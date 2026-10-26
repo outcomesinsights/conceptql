@@ -47,6 +47,8 @@ All notable changes to this project will be documented in this file.
   `ConceptQL::Operators.static_operators`; vocabulary operators come from each Database
   (`ConceptQL::Database#operators`). `ConceptQL::Database.lexicon` (class method) is removed;
   use `Database#lexicon`
+- The sequelizer dependency now admits 0.4.x (`>= 0.3.0, < 0.5`). The previous `< 0.4` bound
+  rejected the released sequelizer 0.4.0. Gemfile.lock now resolves sequelizer 0.4.0.
 
 ## [0.3.0] - 2016-11-08
 

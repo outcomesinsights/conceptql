@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'json'
   spec.add_dependency 'logger'
   spec.add_dependency 'sequel', '~> 5.66'
-  spec.add_dependency 'sequelizer', '>= 0.3.0', '< 0.4'
+  spec.add_dependency 'sequelizer', '>= 0.3.0', '< 0.5'
   spec.add_dependency 'thor', '~> 1.0'
   spec.add_development_dependency 'bundler', '>= 2.0'
   spec.add_development_dependency 'climate_control'
