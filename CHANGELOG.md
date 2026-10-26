@@ -70,6 +70,12 @@ All notable changes to this project will be documented in this file.
 - `occurrence` with a blank or whitespace-only `at_least` or `within` (as an editor can send for
   an empty field) gives the same rows as without the option. It used to take the timed query,
   which returns other rows
+- `match` without `only_columns` compared every column with `=`, so two NULL values never matched
+  and a stream matched with itself kept nothing. It now compares the key columns (`person_id`,
+  `criterion_id`, `criterion_table`, `criterion_domain`, `start_date`, `uuid`, `window_id`) with
+  `=` and the other columns NULL-safe (`IS NOT DISTINCT FROM`, `<=>` on Spark). `match` also
+  ignored `join_columns`. It now compares only the person and the listed columns, as the other
+  two-stream operators do, and rejects `join_columns` next to `only_columns` or `except_columns`
 
 ### Changed
 

@@ -1,0 +1,7 @@
+[
+  "match",
+  {
+    "left": ["numeric", 2, ["icd9", "412"]],
+    "right": ["numeric", 2, ["icd9", "412"]]
+  }
+]
