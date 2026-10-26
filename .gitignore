@@ -49,3 +49,6 @@ claude_stuff/
 # Beads export — derived. The Dolt remote at refs/dolt/data is the store
 # and the backup; this file is kept on disk for local grep only.
 .beads/issues.jsonl
+
+# setup-ruby bundler-cache installs gems here on the runner; zizmor skips ignored paths.
+vendor/
