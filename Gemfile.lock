@@ -178,7 +178,7 @@ DEPENDENCIES
   bundler (>= 2.0)
   climate_control
   conceptql!
-  duckdb
+  duckdb (~> 2.0)
   minitest (~> 6.0)
   minitest-mock (~> 5.0)
   pg

@@ -13,8 +13,11 @@ gem "pg"
 gem "sequel-duckdb", "~> 0.4.1"
 gem "sequelizer", "~> 0.4.0"
 
+# Optional, because the gem compiles against libduckdb, which only the DuckDB
+# runs install (just test-duckdb, CI's DuckDB job). Gem 2.x only (Ryan,
+# 2026-10-26); it builds against libduckdb 1.4 or newer.
 group :duckdb, optional: true do
-  gem "duckdb"
+  gem "duckdb", "~> 2.0"
 end
 
 group :hexspace, optional: true do
