@@ -179,10 +179,59 @@ check-oi-pins lock="Gemfile.lock":
 # primary platform) and the DuckDB suite before allowing a push. The other 2
 # Postgres configs and Spark stay in remote CI as the last line of defense for
 # cross-env edge cases. test-duckdb fails, never skips, when its fixture or
-# libduckdb is unavailable. Wired into the pre-push git hook; bypass with:
-#   git push --no-verify   (or SKIP_CI_GATE=1 git push)
-# Run `just test-full` to exercise all 3 Postgres configs manually.
-ci: lint fmt-check test test-duckdb hygiene
+# libduckdb is unavailable. Run `just test-full` for all 3 Postgres configs.
+#
+# The two suites run concurrently, each to its own log in claude_stuff/test-logs/ci/.
+# They share no state: test uses the docker test_data database and writes
+# coverage/; test-duckdb tests a per-run copy of its fixture and writes its
+# coverage under claude_stuff/test-logs/duckdb/. A Ctrl-C reaches both.
+#
+# The pre-push git hook runs this once, as `just pre-push`. Bypass with
+# `SKIP_GATE=1 git push`, which skips this gate and still publishes the beads.
+# `git push --no-verify` skips the beads publish too.
+# Lint, then the Postgres and DuckDB suites in parallel, then hygiene
+ci: lint fmt-check && hygiene
+    #!/usr/bin/env bash
+    set -euo pipefail
+    dir={{ log_dir }}/ci
+    mkdir -p "$dir"
+    ts=$(date +%Y%m%d%H%M%S)
+    pg_log="$dir/${ts}-test.txt"
+    duck_log="$dir/${ts}-test-duckdb.txt"
+
+    echo "Running test (Postgres gdm_wide) and test-duckdb in parallel. Follow with:"
+    echo "  tail -f $pg_log"
+    echo "  tail -f $duck_log"
+    {{ just_executable() }} --justfile "{{ justfile() }}" test >"$pg_log" 2>&1 &
+    pg_pid=$!
+    {{ just_executable() }} --justfile "{{ justfile() }}" test-duckdb >"$duck_log" 2>&1 &
+    duck_pid=$!
+
+    pg_rc=0
+    duck_rc=0
+    wait "$pg_pid" || pg_rc=$?
+    wait "$duck_pid" || duck_rc=$?
+
+    echo ""
+    echo "=== Results ==="
+    for suite in "test:$pg_rc:$pg_log" "test-duckdb:$duck_rc:$duck_log"; do
+      IFS=: read -r name rc log <<<"$suite"
+      summary=$(grep -E '^[0-9]+ runs' "$log" || echo "NO SUMMARY FOUND")
+      if [ "$rc" -eq 0 ]; then
+        echo "  ✓ ${name}: ${summary}"
+      else
+        echo "  ✗ ${name} (exit $rc): ${summary}"
+        echo "    last lines of $log:"
+        tail -n 20 "$log" | sed 's/^/      /'
+      fi
+      echo "    log: $log"
+    done
+
+    if [ "$pg_rc" -ne 0 ] || [ "$duck_rc" -ne 0 ]; then
+      echo ""
+      echo "FAILED: one or more suites failed"
+      exit 1
+    fi
 
 # Rewrite files to canonical format. Run deliberately; never from a hook.
 fmt:
