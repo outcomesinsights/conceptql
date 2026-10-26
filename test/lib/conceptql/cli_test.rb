@@ -18,6 +18,18 @@ describe ConceptQL::CLI do
       _(out).wont_match(/selection_operators/)
       _(ConceptQL::CLI.all_commands.keys).wont_include("selection_operators")
     end
+
+    it "lists simple_visit under its own name" do
+      command = ConceptQL::CLI.all_commands.fetch("simple_visit")
+
+      _(command.usage).must_equal("simple_visit STATEMENT_FILE")
+      _(command.description).must_equal(
+        "Prints the operators, depth and selection-node count of the statement in STATEMENT_FILE"
+      )
+      out, = capture_io { ConceptQL::CLI.start([ "help" ]) }
+      _(out).must_match(/ simple_visit STATEMENT_FILE +# Prints the operators/)
+      _(out).wont_match(/extract_metadata/)
+    end
   end
 
   describe "scope_annotate" do

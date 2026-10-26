@@ -51,7 +51,8 @@ All notable changes to this project will be documented in this file.
 - CLI: `conceptql metadata` raised ArgumentError when it wrote metadata.json, and
   `CONCEPTQL_PARQUET_TEST_DIR` raised NoMethodError (`String#glob`) for every command that
   connects to a database. It now makes the parquet files of each directory in its glob ready.
-  `conceptql scope_annotate` ignored the connection options
+  `conceptql scope_annotate` ignored the connection options, and `conceptql help` listed
+  `simple_visit` as `extract_metadata`
 
 ### Changed
 

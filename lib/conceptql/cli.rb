@@ -116,7 +116,8 @@ module ConceptQL
       system("cat metadata.json | json_pp", out: "metadata_pp.json")
     end
 
-    desc "extract_metadata", "test visiting"
+    desc "simple_visit STATEMENT_FILE",
+         "Prints the operators, depth and selection-node count of the statement in STATEMENT_FILE"
     def simple_visit(statement_file)
       pp cdb(options).query(criteria_from_file(statement_file)).extract_metadata
     end
