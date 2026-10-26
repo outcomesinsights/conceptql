@@ -23,8 +23,6 @@ module ConceptQL
         end
         expr = exprs.inject(&:&)
 
-        order_cols = order_columns(op)
-
         rhs = query.db[get_table_window(query)]
 
         unless opts[:precalculated_window_id]
@@ -32,7 +30,7 @@ module ConceptQL
           rhs = rhs
                 .select_group(:person_id, :start_date, :end_date)
                 .select_append do
-                  row_number.function.over(order: order_cols)
+                  row_number.function.over(order: %i[person_id start_date end_date])
                             .as(:window_id)
                 end
         end
@@ -52,13 +50,6 @@ module ConceptQL
       # cannot push the window join (#call) below that function.
       def person_ids(db)
         db[get_table_window(nil)].select(:person_id)
-      end
-
-      def order_columns(op)
-        # Hack until Cloudera 6.1
-        %i[person_id start_date end_date].map do |c|
-          c == :person_id ? c : op.rdbms.partition_fix(c)
-        end
       end
 
       def remove_window_id(ds)
