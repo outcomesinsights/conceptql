@@ -1,0 +1,15 @@
+[
+  "except",
+  {
+    "left": ["icd9", "412", "410.01"],
+    "right": [
+      "time_window",
+      ["icd9", "412"],
+      {
+        "start": "1d",
+        "end": "1d"
+      }
+    ],
+    "ignore_dates": true
+  }
+]

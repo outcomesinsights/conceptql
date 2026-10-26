@@ -1,0 +1,11 @@
+[
+  "dedup",
+  [
+    "trim_date_end",
+    {
+      "left": ["icd9", "412"],
+      "right": ["icd9", "412"],
+      "compare_all": true
+    }
+  ]
+]
