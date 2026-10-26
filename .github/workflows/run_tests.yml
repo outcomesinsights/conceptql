@@ -151,6 +151,10 @@ jobs:
       matrix:
         # 3.3 is the gemspec floor.
         ruby: ["3.3", "3.4"]
+        # Local runs use 1.5.x (justfile libduckdb_version). 2.x is tested here
+        # so the cut-over is known to work. Drop 1.5.x when it reaches end of
+        # life (March 2027).
+        libduckdb: ["1.5.6", "2.0.0"]
     runs-on: ubuntu-latest
     env:
       DUCKDB_TEST_DATA_PATH: /tmp/synpuf_test_data.duckdb
@@ -193,16 +197,17 @@ jobs:
 
       # The recipe copies the fixture, checks its magic bytes and its checksum
       # against .github/synpuf_test_data.sha256, downloads the libduckdb release
-      # the justfile pins, installs the bundle and runs the suite.
+      # LIBDUCKDB_VERSION names, installs the bundle and runs the suite.
       - name: Run Tests
         run: just test-duckdb
         env:
           DUCKDB_TEST_DATA_SOURCE: ${{ env.DUCKDB_TEST_DATA_PATH }}
+          LIBDUCKDB_VERSION: ${{ matrix.libduckdb }}
       - name: Upload Coverage
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: coverage-duckdb-ruby-${{ matrix.ruby }}
+          name: coverage-duckdb-ruby-${{ matrix.ruby }}-libduckdb-${{ matrix.libduckdb }}
           path: claude_stuff/test-logs/duckdb/coverage/
           retention-days: 90
   ci:
