@@ -4,7 +4,6 @@ require_relative "../behaviors/drugish"
 require_relative "../behaviors/labish"
 require_relative "behaviors/gdmish"
 require_relative "behaviors/omopish"
-require_relative "behaviors/sourcish"
 require_relative "behaviors/costish"
 require_relative "../operators/vocabulary"
 
@@ -36,8 +35,6 @@ module ConceptQL
 
         get_klass do
           include Behaviors::Omopish
-
-          include Behaviors::Sourcish if entry.is_source?
 
           include Behaviors::Costish if entry.is_costish?
         end

@@ -102,6 +102,10 @@ All notable changes to this project will be documented in this file.
   (`test_script` and `driftr_script` namespaces, `convert`, `prestofy`, the Presto `cdb`) is
   removed too. The default rake task is now `test` instead of `test_omopv4_plus`
 - The `conceptql selection_operators` command, which had raised NameError since 2016.
+- The unused query optimizer (breaking for a caller of these methods). `Query#optimized`,
+  `Operator#optimized`, `Operator#unionable?`, `Operator#dup_values` and the
+  `ConceptQL::Vocabularies::Behaviors::Sourcish` module are gone. Nothing in conceptql called
+  `optimized`, so its union merging never ran, and the generated SQL does not change.
 
 ## [0.3.0] - 2016-11-08
 
