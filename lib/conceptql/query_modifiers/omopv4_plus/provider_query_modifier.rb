@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative '../query_modifier'
+require_relative "../query_modifier"
 
 module ConceptQL
   module QueryModifiers
     module Omopv4Plus
       class ProviderQueryModifier < QueryModifier
         def self.provided_columns
-          [:provider_id]
+          [ :provider_id ]
         end
 
         def self.has_required_columns?(cols)

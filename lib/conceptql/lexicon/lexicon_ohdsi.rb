@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lexicon_strategy'
+require_relative "lexicon_strategy"
 
 module ConceptQL
   class LexiconOhdsi < LexiconStrategy
@@ -32,7 +32,7 @@ module ConceptQL
           Sequel[:concept_id_2].as(:concept_2_id),
           :relationship_id
         )
-        .where { Sequel.function(:lower, :relationship_id) =~ 'is a' }
+        .where { Sequel.function(:lower, :relationship_id) =~ "is a" }
         .from_self
     end
 
@@ -43,7 +43,7 @@ module ConceptQL
       ).from_self
     end
 
-    def concepts_table(_data_db, some_schema = nil)
+    def concepts_table(_data_db, _some_schema = nil)
       db[:concept].select(
         Sequel[:concept_id].as(:id),
         :concept_code,

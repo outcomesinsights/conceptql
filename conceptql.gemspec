@@ -7,8 +7,8 @@ require 'conceptql/version'
 Gem::Specification.new do |spec|
   spec.name          = 'conceptql'
   spec.version       = ConceptQL::VERSION
-  spec.authors       = ['Ryan Duryea']
-  spec.email         = ['aguynamedryan@gmail.com']
+  spec.authors       = [ 'Ryan Duryea' ]
+  spec.email         = [ 'aguynamedryan@gmail.com' ]
   spec.summary       = 'Generate OMOP CDMv4-compatible queries from a ConceptQL file'
   spec.description   = 'ConceptQL is a query language for specifying queries to be run OMOP CDMv4 structured data'
   spec.homepage      = 'https://github.com/outcomesinsights/conceptql'
@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
                %w[bin/conceptql bin/conceptql_utils]
   spec.bindir        = 'bin'
   spec.executables   = %w[conceptql conceptql_utils]
-  spec.require_paths = ['lib']
+  spec.require_paths = [ 'lib' ]
 
   spec.add_dependency 'activesupport', '>= 6'
   spec.add_dependency 'csv'
@@ -40,6 +40,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rubocop', '~> 1.0'
   spec.add_development_dependency 'rubocop-minitest', '~> 0.25'
+  spec.add_development_dependency 'rubocop-rails-omakase', '~> 1.1'
+  spec.add_development_dependency 'rubocop-rake', '~> 0.7'
+  spec.add_development_dependency 'rubocop-sequel', '~> 0.4'
   spec.add_development_dependency 'simplecov', '~> 1.0'
   spec.add_development_dependency 'sqlite3', '~> 2.9'
 end

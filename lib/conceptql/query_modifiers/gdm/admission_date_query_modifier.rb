@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../query_modifier'
+require_relative "../query_modifier"
 
 module ConceptQL
   module QueryModifiers
@@ -14,7 +14,7 @@ module ConceptQL
         end
 
         def self.has_required_columns?(cols)
-          needed = [:collection_id]
+          needed = [ :collection_id ]
           found = needed & cols
           needed == found
         end

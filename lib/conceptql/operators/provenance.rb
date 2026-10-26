@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
-require_relative '../behaviors/provenanceable'
+require_relative "operator"
+require_relative "../behaviors/provenanceable"
 
 module ConceptQL
   module Operators
@@ -18,10 +18,10 @@ module ConceptQL
     class Provenance < Operator
       register __FILE__
 
-      desc 'Passes along records with the indicated provenance (e.g. inpatient, outpatient, file type).'
+      desc "Passes along records with the indicated provenance (e.g. inpatient, outpatient, file type)."
 
-      argument :provenance_types, label: 'Provenance Types', type: :codelist
-      category 'Filter Single Stream'
+      argument :provenance_types, label: "Provenance Types", type: :codelist
+      category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
@@ -47,7 +47,7 @@ module ConceptQL
         bad_keywords = find_bad_keywords(db, arguments)
         return unless bad_keywords.present?
 
-        add_error('unrecognized keywords', *bad_keywords.uniq)
+        add_error("unrecognized keywords", *bad_keywords.uniq)
       end
     end
   end

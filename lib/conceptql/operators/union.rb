@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'pass_thru'
+require_relative "pass_thru"
 
 module ConceptQL
   module Operators
@@ -54,9 +54,9 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc 'Combines sets of incoming records into a single large set of records.'
+      desc "Combines sets of incoming records into a single large set of records."
       allows_many_upstreams
-      category 'Combine Streams'
+      category "Combine Streams"
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments

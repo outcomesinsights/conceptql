@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../query_modifier'
+require_relative "../query_modifier"
 
 module ConceptQL
   module QueryModifiers
@@ -9,11 +9,11 @@ module ConceptQL
         attr_reader :source_column, :column
 
         def self.provided_columns
-          [:visit_source_concept_id]
+          [ :visit_source_concept_id ]
         end
 
         def self.has_required_columns?(cols)
-          needed = [:context_id]
+          needed = [ :context_id ]
           found = needed & cols
           needed == found
         end

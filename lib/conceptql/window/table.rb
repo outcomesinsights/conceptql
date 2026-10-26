@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 
 module ConceptQL
   module Window
@@ -90,7 +90,7 @@ module ConceptQL
         when Array
           cdb.query(table_window).query(force_temp_tables: false)
         when String
-          tables = table_window.split('.')
+          tables = table_window.split(".")
           tables.length == 2 ? Sequel.qualify(*tables) : Sequel.identifier(table_window)
         when Symbol
           Sequel[table_window]

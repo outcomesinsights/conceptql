@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -10,9 +10,9 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc 'Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming record set.'
+      desc "Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming record set."
       domains :observation_period
-      category 'Get Related Data'
+      category "Get Related Data"
       basic_type :selection
       validate_no_upstreams
 

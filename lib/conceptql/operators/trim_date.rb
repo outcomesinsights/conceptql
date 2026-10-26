@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'temporal_operator'
+require_relative "temporal_operator"
 
 module ConceptQL
   module Operators
@@ -54,10 +54,10 @@ module ConceptQL
       def right_stream_query(db)
         rh = if compare_all?
                super
-             else
-               occ = to_op([:occurrence, occurrence_number, right])
+        else
+               occ = to_op([ :occurrence, occurrence_number, right ])
                occ.evaluate(db)
-             end
+        end
         columnizer.apply(rh)
       end
 

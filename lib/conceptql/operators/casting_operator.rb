@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -25,13 +25,13 @@ module ConceptQL
     # Also, if a casting operator is passed no streams, it will return all the
     # rows in its table as records.
     class CastingOperator < Operator
-      category 'Get Related Data'
+      category "Get Related Data"
       basic_type :cast
       validate_at_most_one_upstream
       validate_no_arguments
 
       def domains(_db)
-        [domain]
+        [ domain ]
       end
 
       def domain

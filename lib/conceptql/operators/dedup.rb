@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'pass_thru'
+require_relative "pass_thru"
 
 module ConceptQL
   module Operators
     class Dedup < PassThru
       register __FILE__
 
-      desc 'Counts the number of records that exactly match across all columns.'
+      desc "Counts the number of records that exactly match across all columns."
       allows_one_upstream
       validate_one_upstream
 

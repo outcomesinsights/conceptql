@@ -32,7 +32,7 @@ module ConceptQL
 
         @codeset_only = operators.reject do |op|
           # We skip Unions because they don't count against codesets
-          op.op_name == 'union'
+          op.op_name == "union"
         end.map(&:class).map(&:basic_type).all? { |type| type == :selection }
       end
 
@@ -40,9 +40,9 @@ module ConceptQL
         operators.reverse.each.with_object({}) do |op, counts|
           counts[op] = if op.all_upstreams.empty?
                          1
-                       else
+          else
                          counts.values_at(*op.all_upstreams).max + 1
-                       end
+          end
         end.values.max
       end
 

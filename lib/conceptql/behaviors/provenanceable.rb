@@ -9,7 +9,7 @@ module ConceptQL
 
     def prov_of(db, ancestors)
       dm.descendants_of(db,
-                        dm.concept_ids(db, [dm.file_provenance_types_vocab, dm.code_provenance_types_vocab].flatten,
+                        dm.concept_ids(db, [ dm.file_provenance_types_vocab, dm.code_provenance_types_vocab ].flatten,
                                        ancestors))
     end
 
@@ -21,8 +21,8 @@ module ConceptQL
 
     def find_bad_keywords(db, codes)
       codes - dm.concepts(db,
-                          [dm.file_provenance_types_vocab,
-                           dm.code_provenance_types_vocab].flatten).select_map(:concept_code)
+                          [ dm.file_provenance_types_vocab,
+                           dm.code_provenance_types_vocab ].flatten).select_map(:concept_code)
     end
   end
 end

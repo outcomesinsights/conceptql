@@ -22,9 +22,9 @@ module ConceptQL
         doms = options[:domains]
         if doms.nil? || doms.empty?
           if dm.schema.key?(table_name)
-            [table_name]
+            [ table_name ]
           else
-            [:invalid]
+            [ :invalid ]
           end
         else
           doms.map(&:to_sym)
@@ -36,12 +36,12 @@ module ConceptQL
 
         name = values.first
         if name.is_a?(String)
-          table, column = name.split('__', 2)
+          table, column = name.split("__", 2)
           name = if column
                    Sequel.qualify(table, column)
-                 else
+          else
                    name.to_sym
-                 end
+          end
         end
         @table_name = name
       end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'generic'
+require_relative "generic"
 
 module ConceptQL
   module Rdbms
@@ -47,11 +47,11 @@ module ConceptQL
       end
 
       def analyze_temp_tables?
-        ENV['CONCEPTQL_PG_ANALYZE_TEMP_TABLES'] == 'true'
+        ENV["CONCEPTQL_PG_ANALYZE_TEMP_TABLES"] == "true"
       end
 
       def explain_temp_tables?
-        ENV['CONCEPTQL_PG_EXPLAIN_TEMP_TABLES'] == 'true'
+        ENV["CONCEPTQL_PG_EXPLAIN_TEMP_TABLES"] == "true"
       end
 
       def supports_materialized?

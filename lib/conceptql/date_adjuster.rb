@@ -1,37 +1,37 @@
 # frozen_string_literal: true
 
-require_relative '../conceptql'
+require_relative "../conceptql"
 
 module ConceptQL
   # Used to translate a string of terse date adjustments into a set of adjustments that are compatible with most RDBMSs
   class DateAdjuster
-    VALID_INPUT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /[ers]*([-+]?[\ddwmy]+)+/i,
-                                     /\s*/])}\z/.freeze
+    VALID_INPUT = /\A#{Regexp.union([ /START/i, /END/i, /\d{4}-\d{2}-\d{2}/, /[ers]*([-+]?[\ddwmy]+)+/i,
+                                     /\s*/ ])}\z/.freeze
 
     attr_reader :op, :str, :manipulator
 
     def initialize(op, str, opts = {})
-      str = str.strftime('%Y-%m-%d') if str.respond_to?(:strftime)
+      str = str.strftime("%Y-%m-%d") if str.respond_to?(:strftime)
       raise "Invalid adjustment string: #{str.pretty_inspect}" unless str.nil? || str =~ VALID_INPUT
 
       @op = op
-      @str = str || ''
+      @str = str || ""
       @manipulator = opts[:manipulator] || Sequel
     end
 
     def adjust(column, reverse = false)
-      return Sequel.expr(:end_date) if str.downcase == 'end'
-      return Sequel.expr(:start_date) if str.downcase == 'start'
-      return op.rdbms.cast_date(Date.parse(str).strftime('%Y-%m-%d')) if str =~ /^\d{4}-\d{2}-\d{2}$/
+      return Sequel.expr(:end_date) if str.downcase == "end"
+      return Sequel.expr(:start_date) if str.downcase == "start"
+      return op.rdbms.cast_date(Date.parse(str).strftime("%Y-%m-%d")) if str =~ /^\d{4}-\d{2}-\d{2}$/
 
       origin_column = column
 
       chrs = str.chars
       while (chr = chrs.shift) =~ /[res]/i
-        if chr.downcase == 'r'
+        if chr.downcase == "r"
           reverse = true
         else
-          origin_column = chr.downcase == 'e' ? :end_date : :start_date
+          origin_column = chr.downcase == "e" ? :end_date : :start_date
           origin_column = Sequel.qualify(column.table.to_sym, origin_column) if column.respond_to?(:table)
         end
       end
@@ -62,16 +62,16 @@ module ConceptQL
 
     def lookup
       {
-        'y' => :years,
-        'm' => :months,
-        'w' => :weeks,
-        'd' => :days
+        "y" => :years,
+        "m" => :months,
+        "w" => :weeks,
+        "d" => :days
       }
     end
 
     def parse(str, reverse)
       return [] if str.nil? || str.empty?
-      return [[lookup['d'], str.to_i]] if str.match(/^[-+]?\d+$/)
+      return [ [ lookup["d"], str.to_i ] ] if str.match(/^[-+]?\d+$/)
 
       str.downcase.scan(/([-+]?\d*[dwmy])/).map do |adjustment|
         adjustment = adjustment.first
@@ -79,13 +79,13 @@ module ConceptQL
         quantity = 1
         if adjustment.match(/\d/)
           quantity = adjustment.to_i
-        elsif adjustment.chars.first == '-'
+        elsif adjustment.chars.first == "-"
           quantity = -1
         end
         quantity *= -1 if reverse
 
         unit = lookup[adjustment.chars.last]
-        [unit, quantity]
+        [ unit, quantity ]
       end
     end
   end

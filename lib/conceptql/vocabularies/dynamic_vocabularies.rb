@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'csv'
-require_relative 'entry'
+require "csv"
+require_relative "entry"
 
 module ConceptQL
   module Vocabularies
@@ -43,8 +43,8 @@ module ConceptQL
       end
 
       def get_all_vocabs
-        vocabs = [ConceptQL.vocabularies_file_path,
-                  ConceptQL.custom_vocabularies_file_path].select(&:exist?).map do |path|
+        vocabs = [ ConceptQL.vocabularies_file_path,
+                  ConceptQL.custom_vocabularies_file_path ].select(&:exist?).map do |path|
                    CSV.foreach(path, headers: true, header_converters: :symbol).to_a
                  end.inject(:+).each do |v|
           v[:from_csv] = true

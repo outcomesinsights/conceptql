@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require 'conceptql/version'
-require 'conceptql/paths'
-require 'conceptql/utils'
-require 'conceptql/operators/operator'
-require 'conceptql/behaviors/code_lister'
-require 'conceptql/behaviors/timeless'
-require 'conceptql/behaviors/windowable'
-require 'conceptql/behaviors/utilizable'
-require 'conceptql/vocabularies/dynamic_vocabularies'
-require 'conceptql/visitors/metadata_extractor'
-require 'conceptql/query'
-require 'conceptql/database'
-require 'conceptql/data_model'
-require 'conceptql/columnizer'
-require 'conceptql/diagram'
+require "conceptql/version"
+require "conceptql/paths"
+require "conceptql/utils"
+require "conceptql/operators/operator"
+require "conceptql/behaviors/code_lister"
+require "conceptql/behaviors/timeless"
+require "conceptql/behaviors/windowable"
+require "conceptql/behaviors/utilizable"
+require "conceptql/vocabularies/dynamic_vocabularies"
+require "conceptql/visitors/metadata_extractor"
+require "conceptql/query"
+require "conceptql/database"
+require "conceptql/data_model"
+require "conceptql/columnizer"
+require "conceptql/diagram"
 
 # byebug is only required during development
 begin
-  require 'pry-byebug'
+  require "pry-byebug"
 rescue LoadError
   nil
 end
@@ -31,7 +31,7 @@ module ConceptQL
   DEFAULT_DATA_MODEL = :gdm
 
   def self.avoid_ctes?
-    ENV['CONCEPTQL_AVOID_CTES'] == 'true'
+    ENV["CONCEPTQL_AVOID_CTES"] == "true"
   end
 
   def self.metadata(cdb, opts = {})
@@ -43,13 +43,13 @@ module ConceptQL
 
   def self.categories
     [
-      'Select by Clinical Codes',
-      'Select by Property',
-      'Get Related Data',
-      'Modify Data',
-      'Combine Streams',
-      'Filter by Comparing',
-      'Filter Single Stream'
+      "Select by Clinical Codes",
+      "Select by Property",
+      "Get Related Data",
+      "Modify Data",
+      "Combine Streams",
+      "Filter by Comparing",
+      "Filter Single Stream"
     ].map.with_index do |name, priority|
       { name: name, priority: priority }
     end

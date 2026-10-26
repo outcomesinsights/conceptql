@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 module ConceptQL
   module DataModel
     class Omopv4Plus < Base

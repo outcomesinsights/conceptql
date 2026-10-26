@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'psych'
+require "forwardable"
+require "psych"
 
 module ConceptQL
   module DataModel
@@ -20,8 +20,8 @@ module ConceptQL
                      :known_codes,
                      :related_concept_ids
 
-      SCHEMAS = ConceptQL.schemas_dir.glob('*.yml').to_h do |schema_file|
-        [schema_file.basename('.*').to_s.to_sym, Psych.load_file(schema_file)]
+      SCHEMAS = ConceptQL.schemas_dir.glob("*.yml").to_h do |schema_file|
+        [ schema_file.basename(".*").to_s.to_sym, Psych.load_file(schema_file) ]
       end
 
       attr_reader :operator, :nodifier
@@ -127,11 +127,11 @@ module ConceptQL
 
         cols_hash = if table.nil? && opts[:query_columns].nil?
                       query_columns
-                    else
+        else
                       columns_in_table(table,
                                        opts).merge(modifier_columns(table,
                                                                     opts)).merge(nullified_columns(table, opts))
-                    end.dup
+        end.dup
 
         except_keys = opts[:except] || []
         if cols_hash.key?(:uuid)
@@ -172,7 +172,7 @@ module ConceptQL
           remainder -= applicable_query_modifiers(table).flat_map(&:provided_columns)
         end
 
-        Hash[remainder.map { |r| [r, rdbms.process(r, nil)] }]
+        Hash[remainder.map { |r| [ r, rdbms.process(r, nil) ] }]
       end
 
       def selectify(query, opts = {})
@@ -263,14 +263,14 @@ module ConceptQL
       def start_date_columns
         @start_date_columns ||= assign_column_to_table do |_table, columns|
           column = columns.select { |k| k =~ /start_date$/ }.first
-          column ||= columns.select { |k| k =~ /date$/ }.first
+          column || columns.select { |k| k =~ /date$/ }.first
         end
       end
 
       def end_date_columns
         @end_date_columns ||= assign_column_to_table do |_table, columns|
           column = columns.select { |k| k =~ /end_date$/ }.first
-          column ||= columns.select { |k| k =~ /date$/ }.first
+          column || columns.select { |k| k =~ /date$/ }.first
         end
       end
 
@@ -286,7 +286,7 @@ module ConceptQL
         @source_value_columns ||= assign_column_to_table do |table, columns|
           reggy = /#{table.to_s.split('_').first}_source_value$/
           column = columns.select { |k| k =~ reggy }.first
-          column ||= columns.select { |k| k =~ /source_value$/ }.first
+          column || columns.select { |k| k =~ /source_value$/ }.first
         end
       end
 
@@ -296,7 +296,7 @@ module ConceptQL
 
           reggy = /#{table.to_s.split('_').first}_source_vocabulary_id/
           column = columns.select { |k| k =~ reggy }.first
-          column ||= columns.select { |k| k =~ /_source_vocabulary_id/ }.first
+          column || columns.select { |k| k =~ /_source_vocabulary_id/ }.first
         end
       end
 
@@ -389,7 +389,7 @@ module ConceptQL
           ed = rdbms.cast_date(Sequel.function(:coalesce, Sequel.expr(ed),
                                                start_date_column(query, table))).as(:end_date)
         end
-        [sd, ed]
+        [ sd, ed ]
       end
 
       def table_to_sym(table)
@@ -435,12 +435,12 @@ module ConceptQL
           col = col.to_s
           next unless col =~ /concept_id/
 
-          table_parts = table.to_s.chomp('s').to_s.split('_')
+          table_parts = table.to_s.chomp("s").to_s.split("_")
 
-          possible_names = ['concept_id']
+          possible_names = [ "concept_id" ]
 
           until table_parts.empty?
-            possible_names.unshift([table_parts.join('_'), possible_names.last].join('_'))
+            possible_names.unshift([ table_parts.join("_"), possible_names.last ].join("_"))
             table_parts.pop
           end
 

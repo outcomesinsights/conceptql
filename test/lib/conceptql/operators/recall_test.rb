@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../../helper'
+require_relative "../../../helper"
 
 describe ConceptQL::Operators::Recall do
   # it "should produce correct SQL under omopv4_plus" do

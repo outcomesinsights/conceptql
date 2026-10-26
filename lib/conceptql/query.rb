@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'forwardable'
-require_relative 'scope'
-require_relative 'nodifier'
-require_relative 'sql_formatters'
+require "json"
+require "forwardable"
+require_relative "scope"
+require_relative "nodifier"
+require_relative "sql_formatters"
 
 module ConceptQL
   class Query
@@ -12,10 +12,10 @@ module ConceptQL
       def message
         og_message = if cause.respond_to?(:full_message)
                        cause.full_message
-                     else
-                       ([cause.message] + cause.backtrace).join("\n")
-                     end
-        [super, 'OG ERROR:', og_message].join("\n")
+        else
+                       ([ cause.message ] + cause.backtrace).join("\n")
+        end
+        [ super, "OG ERROR:", og_message ].join("\n")
       end
     end
 
@@ -31,7 +31,7 @@ module ConceptQL
       opts[:algorithm_fetcher] ||= proc do |alg|
         statement, description = db[:concepts].where(concept_id: alg).get(%i[statement label])
         statement = JSON.parse(statement) if statement.is_a?(String)
-        [statement, description]
+        [ statement, description ]
       end
       @nodifier = opts[:nodifier] || Nodifier.new(cdb, { database_type: cdb.database_type }.merge(opts))
     end
@@ -48,7 +48,7 @@ module ConceptQL
       cols = operator.dynamic_columns
       if opts[:cast]
         cols = query_cols.to_h do |column|
-          [column, operator.cast_column(column)]
+          [ column, operator.cast_column(column) ]
         end
       end
       cols
@@ -70,19 +70,19 @@ module ConceptQL
         drop_stmts = []
         if args.include?(:drop_tables)
           drop_stmts = stmts.map do |name, _|
-            [['drop', name].join('_'), db.send(:drop_table_sql, name, if_exists: true)]
+            [ [ "drop", name ].join("_"), db.send(:drop_table_sql, name, if_exists: true) ]
           end
         end
         create_stmts = stmts.map do |name, sql|
-          [name, db.send(:create_table_as_sql, name, sql, {})]
+          [ name, db.send(:create_table_as_sql, name, sql, {}) ]
         end
         stmts = drop_stmts + create_stmts
-        stmts.push([:query, sql])
+        stmts.push([ :query, sql ])
       end
 
       if args.include?(:formatted)
         stmts = stmts.map do |name, sql|
-          [name, format(sql)]
+          [ name, format(sql) ]
         end
       end
       Hash[stmts]
@@ -130,14 +130,14 @@ module ConceptQL
     def operator
       @operator ||= if statement.is_a?(Array)
                       if statement.first.is_a?(Array)
-                        Operators::Invalid.new(nodifier, 'invalid', errors: [['incomplete statement']])
+                        Operators::Invalid.new(nodifier, "invalid", errors: [ [ "incomplete statement" ] ])
                       else
                         nodifier.create(*statement)
                       end
-                    else
-                      Operators::Invalid.new(nodifier, 'invalid',
-                                             errors: [['invalid root operator', statement.inspect]])
-                    end
+      else
+                      Operators::Invalid.new(nodifier, "invalid",
+                                             errors: [ [ "invalid root operator", statement.inspect ] ])
+      end
     end
 
     def rdbms
@@ -159,10 +159,10 @@ module ConceptQL
     def extract_statement(stmt, opts)
       if !stmt.is_a?(Array)
         raise "Improper ConceptQL statement: Expected an Array, got a #{stmt.class}"
-      elsif stmt.first.to_s == 'window'
-        raise 'window operator needs a hash as the last item of the array.' unless stmt.last.is_a?(Hash)
+      elsif stmt.first.to_s == "window"
+        raise "window operator needs a hash as the last item of the array." unless stmt.last.is_a?(Hash)
         unless stmt.length == 3
-          raise 'window operator needs a ConceptQL statement followed by a hash as the last item of the array.'
+          raise "window operator needs a ConceptQL statement followed by a hash as the last item of the array."
         end
 
         opts[:scope_opts] = (opts[:scope_opts] || {})
@@ -171,7 +171,7 @@ module ConceptQL
       elsif stmt.length == 1 && stmt.first.is_a?(Array)
         extract_statement(stmt.first, opts)
       else
-        [stmt, opts]
+        [ stmt, opts ]
       end
     end
 

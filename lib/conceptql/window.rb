@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'window/table'
-require_relative 'window/date_range'
+require_relative "window/table"
+require_relative "window/date_range"
 
 module ConceptQL
   # Provides a singleton method which will return a series of scope windows

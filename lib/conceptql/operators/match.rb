@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'binary_operator_operator'
+require_relative "binary_operator_operator"
 
 module ConceptQL
   module Operators
     class Match < BinaryOperatorOperator
       register __FILE__
 
-      desc 'Keeps left hand records that share the same person, criterion_id, and criterion_domain with a right hand side record.'
+      desc "Keeps left hand records that share the same person, criterion_id, and criterion_domain with a right hand side record."
       default_query_columns
 
       def query(db)

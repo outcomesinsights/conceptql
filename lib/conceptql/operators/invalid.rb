@@ -14,7 +14,7 @@ module ConceptQL
       end
 
       def operator_name
-        @operator_name ||= arguments.shift.to_s || 'invalid'
+        @operator_name ||= arguments.shift.to_s || "invalid"
       end
 
       def query(_db)

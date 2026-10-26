@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
-require 'yaml'
+require_relative "operator"
+require "yaml"
 
 module ConceptQL
   module Operators
@@ -17,10 +17,10 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc 'Selects person records that match the given set of Race codes.'
-      argument :races, type: :codelist, vocab: 'Race'
+      desc "Selects person records that match the given set of Race codes."
+      argument :races, type: :codelist, vocab: "Race"
       domains :person
-      category 'Select by Property'
+      category "Select by Property"
       basic_type :selection
       validate_no_upstreams
       validate_at_least_one_argument
@@ -50,13 +50,13 @@ module ConceptQL
 
         concept_ids = dm.concepts_by_name(db, words).select_map(:id)
 
-        c_ids = (concept_ids + actual_ids).map { |i| [i, race_descendents[i]] }.flatten.compact.uniq.sort
+        c_ids = (concept_ids + actual_ids).map { |i| [ i, race_descendents[i] ] }.flatten.compact.uniq.sort
 
         c_ids = dm.related_concept_ids(db, c_ids) if gdm?
 
         q = db.from(source_table)
         if words.any? { |w| w.match(/unknown/i) }
-          c_ids += [0]
+          c_ids += [ 0 ]
           q = q.where(race_concept_id: nil)
         end
 

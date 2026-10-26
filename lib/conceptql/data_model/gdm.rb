@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 
 module ConceptQL
   module DataModel
@@ -15,10 +15,6 @@ module ConceptQL
           provenance_type: ConceptQL::QueryModifiers::Gdm::ProvenanceQueryModifier,
           value_as_number: ConceptQL::QueryModifiers::Gdm::LabQueryModifier
         }[column]
-      end
-
-      def make_table_id
-        :id
       end
 
       def person_id(table = nil)
@@ -125,7 +121,7 @@ module ConceptQL
 
           reggy = /#{table.to_s.split('_').first}_vocabulary_id/
           column = columns.select { |k| k =~ reggy }.first
-          column ||= columns.select { |k| k =~ /_vocabulary_id/ }.first
+          column || columns.select { |k| k =~ /_vocabulary_id/ }.first
         end
       end
 

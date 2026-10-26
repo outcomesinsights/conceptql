@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-$LOAD_PATH << 'lib'
+$LOAD_PATH << "lib"
 
-require 'thor'
-require 'sequelizer'
-require 'json'
-require 'csv'
-require 'logger'
-require 'conceptql'
-require_relative 'query'
+require "thor"
+require "sequelizer"
+require "json"
+require "csv"
+require "logger"
+require "conceptql"
+require_relative "query"
 
 module ConceptQL
   class CLI < Thor
@@ -16,31 +16,31 @@ module ConceptQL
 
     class_option :adapter,
                  aliases: :a,
-                 desc: 'adapter for database'
+                 desc: "adapter for database"
     class_option :host,
                  aliases: :h,
-                 banner: 'localhost',
-                 desc: 'host for database'
+                 banner: "localhost",
+                 desc: "host for database"
     class_option :username,
                  aliases: :u,
-                 desc: 'username for database'
+                 desc: "username for database"
     class_option :password,
                  aliases: :P,
-                 desc: 'password for database'
+                 desc: "password for database"
     class_option :port,
                  aliases: :p,
                  type: :numeric,
-                 banner: '5432',
-                 desc: 'port for database'
+                 banner: "5432",
+                 desc: "port for database"
     class_option :database,
                  aliases: :d,
-                 desc: 'database for database'
+                 desc: "database for database"
     class_option :search_path,
                  aliases: :s,
-                 desc: 'schema for database (PostgreSQL only)'
+                 desc: "schema for database (PostgreSQL only)"
 
-    desc 'run_statement statement_file',
-         'Reads the ConceptQL statement from the statement file and executes it against the DB'
+    desc "run_statement statement_file",
+         "Reads the ConceptQL statement from the statement file and executes it against the DB"
     def run_statement(statement_file)
       q = cdb(options).query(criteria_from_file(statement_file))
       puts q.sql
@@ -48,42 +48,42 @@ module ConceptQL
       pp q.query.all
     end
 
-    desc 'analyze statement_file',
-         'Reads the ConceptQL statement from the statement file and executes EXPLAIN ANALYZE against the DB'
+    desc "analyze statement_file",
+         "Reads the ConceptQL statement from the statement file and executes EXPLAIN ANALYZE against the DB"
     def analyze(statement_file)
       q = cdb(options).query(criteria_from_file(statement_file))
       puts JSON.pretty_generate(q.statement)
       puts q.sql(:formatted, :create_tables)
-      q.db.logger = db.loggers + [Logger.new($stdout).tap { |l| l.level = Logger::INFO }]
+      q.db.logger = db.loggers + [ Logger.new($stdout).tap { |l| l.level = Logger::INFO } ]
       puts q.analyze
     end
 
-    desc 'sql statement_file', 'Reads the ConceptQL statement from the statement file and prints the SQL out'
+    desc "sql statement_file", "Reads the ConceptQL statement from the statement file and prints the SQL out"
     def sql(statement_file)
       q = cdb(options).query(criteria_from_file(statement_file))
       puts q.sql(:formatted, :create_tables)
     end
 
-    desc 'code_list statement_file',
-         'Reads the ConceptQL statement from the statement file and prints the code list out'
+    desc "code_list statement_file",
+         "Reads the ConceptQL statement from the statement file and prints the code list out"
     def code_list(statement_file)
       q = cdb(options).query(criteria_from_file(statement_file))
       puts q.code_list
     end
 
-    desc 'annotate_statement', 'Reads in a statement and annotates it'
+    desc "annotate_statement", "Reads in a statement and annotates it"
     def annotate_statement(statement_file)
       q = ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file))
       pp q.annotate(skip_counts: true)
     end
 
-    desc 'scope_annotate', 'Reads in a statement and annotates it'
+    desc "scope_annotate", "Reads in a statement and annotates it"
     def scope_annotate(statement_file)
       q = ConceptQL::Query.new(cdb(nil), criteria_from_file(statement_file))
       pp q.scope_annotate(skip_counts: true)
     end
 
-    desc 'render_json STATEMENT_FILE',
+    desc "render_json STATEMENT_FILE",
          "Prints the statement(s) as a #{ConceptQL::Diagram::FORMAT} render tree (JSON) for the diagram renderer"
     long_desc <<~DESC
       STATEMENT_FILE holds one ConceptQL statement or an array of them (.json, or Ruby for any other extension).
@@ -93,70 +93,70 @@ module ConceptQL
       "counts": {<domain>: {"rows": Integer, "n": Integer}}, computed against the database
       given by the connection options (or sequelizer's configuration).
     DESC
-    option :counts, type: :boolean, default: false, desc: 'annotate with per-domain row/person counts (needs a DB)'
-    option :data_model, desc: 'data model: gdm, gdm_wide, omopv4_plus (default: $CONCEPTQL_DATA_MODEL or gdm)'
+    option :counts, type: :boolean, default: false, desc: "annotate with per-domain row/person counts (needs a DB)"
+    option :data_model, desc: "data model: gdm, gdm_wide, omopv4_plus (default: $CONCEPTQL_DATA_MODEL or gdm)"
     def render_json(statement_file)
       cdb = if options[:counts]
-              ConceptQL::Database.new(db(options.except('counts', 'data_model')),
+              ConceptQL::Database.new(db(options.except("counts", "data_model")),
                                       { data_model: options[:data_model] }.compact)
-            else
+      else
               ConceptQL::Diagram.default_cdb(options[:data_model])
-            end
+      end
       doc = ConceptQL::Diagram.render(criteria_from_file(statement_file), cdb: cdb, counts: options[:counts])
       puts JSON.pretty_generate(doc)
     end
 
-    desc 'metadata', 'Generates the metadata.js file for the JAM'
+    desc "metadata", "Generates the metadata.js file for the JAM"
     def metadata
-      File.write('metadata.js', "$metadata = #{ConceptQL.metadata(cdb(options), warn: true).to_json};")
-      File.write('metadata.json', ConceptQL.metadata.to_json)
-      return unless system('which', 'json_pp', out: File::NULL, err: File::NULL)
+      File.write("metadata.js", "$metadata = #{ConceptQL.metadata(cdb(options), warn: true).to_json};")
+      File.write("metadata.json", ConceptQL.metadata.to_json)
+      return unless system("which", "json_pp", out: File::NULL, err: File::NULL)
 
-      system('cat metadata.json | json_pp', out: 'metadata_pp.json')
+      system("cat metadata.json | json_pp", out: "metadata_pp.json")
     end
 
-    desc 'extract_metadata', 'test visiting'
+    desc "extract_metadata", "test visiting"
     def simple_visit(statement_file)
       pp cdb(options).query(criteria_from_file(statement_file)).extract_metadata
     end
 
-    desc 'selection_operators', 'Generates a TSV of all the selection operators'
+    desc "selection_operators", "Generates a TSV of all the selection operators"
     def selection_operators
-      require 'csv'
-      CSV.open('selection_operators.tsv', 'w', col_sep: "\t") do |csv|
-        csv << ['name']
+      require "csv"
+      CSV.open("selection_operators.tsv", "w", col_sep: "\t") do |csv|
+        csv << [ "name" ]
         ConceptQL.metadata[:operators].values.select do |v|
           v[:basic_type] == :selection
         end.map { |v| v[:preferred_name] }.each do |name|
-          csv << [name]
+          csv << [ name ]
         end
       end
 
-      CSV.open('domains.tsv', 'w', col_sep: "\t") do |csv|
-        csv << ['name']
+      CSV.open("domains.tsv", "w", col_sep: "\t") do |csv|
+        csv << [ "name" ]
         ConceptQL::Operators::TABLE_COLUMNS.each do |domain, columns|
           next unless columns.include?(:person_id)
           next if domain.to_s =~ /era\Z/
 
-          csv << [domain]
+          csv << [ domain ]
         end
       end
     end
 
-    desc 'dumpit', 'Dumps out test data into CSVs'
+    desc "dumpit", "Dumps out test data into CSVs"
     def dumpit(path)
       path = Pathname.new(path)
       path.mkpath unless path.exist?
-      headers_path = path / 'headers'
+      headers_path = path / "headers"
       headers_path.mkpath unless headers_path.exist?
       db.tables.each do |table|
         puts "Dumping #{table}..."
         ds = db[table]
         rows = ds.select_map(ds.columns)
-        CSV.open(path + "#{table}.csv", 'wb') do |csv|
+        CSV.open(path + "#{table}.csv", "wb") do |csv|
           rows.each { |row| csv << row }
         end
-        CSV.open(headers_path + "#{table}.csv", 'wb') do |csv|
+        CSV.open(headers_path + "#{table}.csv", "wb") do |csv|
           csv << ds.columns
         end
       end
@@ -166,7 +166,7 @@ module ConceptQL
 
     def criteria_from_file(file)
       case File.extname(file)
-      when '.json'
+      when ".json"
         JSON.parse(File.read(file))
       else
         eval(File.read(file))
@@ -174,10 +174,10 @@ module ConceptQL
     end
 
     def cdb(options)
-      _db = db(options)
-      cdb = ConceptQL::Database.new(_db)
-      if ENV['CONCEPTQL_PARQUET_TEST_DIR']
-        _db.make_ready(search_paths: Pathname.new(ENV['CONCEPTQL_PARQUET_TEST_DIR'].glob('*.parquet')))
+      data_db = db(options)
+      cdb = ConceptQL::Database.new(data_db)
+      if ENV["CONCEPTQL_PARQUET_TEST_DIR"]
+        data_db.make_ready(search_paths: Pathname.new(ENV["CONCEPTQL_PARQUET_TEST_DIR"].glob("*.parquet")))
       end
       cdb
     end

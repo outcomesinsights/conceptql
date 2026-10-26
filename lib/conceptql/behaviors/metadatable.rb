@@ -46,7 +46,7 @@ module ConceptQL
 
     def argument(name, options = {})
       (@arguments ||= [])
-      @arguments << [name, auto_label(name, options)]
+      @arguments << [ name, auto_label(name, options) ]
     end
 
     def option(name, options = {})
@@ -56,7 +56,7 @@ module ConceptQL
 
     def auto_label(name, opts = {})
       return opts if opts[:label]
-      return opts.merge(label: name.to_s.split('_').map(&:capitalize).join(' ')) unless opts[:type] == :codelist
+      return opts.merge(label: name.to_s.split("_").map(&:capitalize).join(" ")) unless opts[:type] == :codelist
 
       opts.merge(label: "#{pref_name} Codes")
     end
@@ -88,7 +88,7 @@ module ConceptQL
     end
 
     def just_class_name
-      to_s.split('::').last
+      to_s.split("::").last
     end
 
     def humanized_class_name
@@ -105,6 +105,7 @@ module ConceptQL
     end
 
     def inherited(upstream)
+      super
       (@options || {}).each do |name, opt|
         upstream.option name, opt
       end
@@ -128,7 +129,7 @@ module ConceptQL
     end
 
     def spec_id
-      "#{@conceptql_spec_id || pref_name} operator".gsub(/\s+/, '-').downcase
+      "#{@conceptql_spec_id || pref_name} operator".gsub(/\s+/, "-").downcase
     end
 
     def to_metadata(name, opts = {})
@@ -233,7 +234,7 @@ module ConceptQL
     end
 
     def no_desc
-      desc ''
+      desc ""
     end
   end
 end

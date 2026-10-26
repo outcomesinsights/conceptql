@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'zlib'
-require_relative '../behaviors/metadatable'
-require 'forwardable'
+require "zlib"
+require_relative "../behaviors/metadatable"
+require "forwardable"
 
 module ConceptQL
   module Operators
@@ -43,7 +43,7 @@ module ConceptQL
         def register(file, *data_models)
           data_models = STATIC_OPERATORS.keys if data_models.empty?
           data_models.each do |dm|
-            op_name = File.basename(file).sub(/\.rb\z/, '').downcase
+            op_name = File.basename(file).sub(/\.rb\z/, "").downcase
             Operators.static_operators[dm][op_name] = self
           end
         end
@@ -82,7 +82,7 @@ module ConceptQL
         validation_meths.each do |type|
           meth = :"validate_#{type}"
           define_method(meth) do |*args|
-            validations << [meth, *args]
+            validations << [ meth, *args ]
           end
         end
 
@@ -98,7 +98,7 @@ module ConceptQL
           # to it use the same code.
           if operator.label && !operator.errors
             operator.scope.add_operator(operator)
-            operator = Operators::Recall.new(operator.nodifier, 'recall', operator.label, replaced: true)
+            operator = Operators::Recall.new(operator.nodifier, "recall", operator.label, replaced: true)
           end
 
           operator
@@ -114,7 +114,7 @@ module ConceptQL
         @op_name = op_name
         @options = {}
         @options = @options.merge(ConceptQL::Utils.rekey(args.pop)) while args.last.is_a?(Hash)
-        args.reject! { |arg| arg.nil? || arg == '' }
+        args.reject! { |arg| arg.nil? || arg == "" }
         @upstreams, @arguments = args.partition { |arg| arg.is_a?(Array) || arg.is_a?(Operator) }
         @values = args
 
@@ -137,7 +137,7 @@ module ConceptQL
 
       def required_columns
         cols = self.class.required_columns || []
-        cols |= [:uuid] if options[:uuid]
+        cols |= [ :uuid ] if options[:uuid]
         cols
       end
 
@@ -160,7 +160,7 @@ module ConceptQL
         if (name = preferred_name)
           metadata[:name] = name
         end
-        res = [op_name, *annotate_values(db, opts)]
+        res = [ op_name, *annotate_values(db, opts) ]
 
         if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
           scope.with_ctes(self, db)
@@ -219,13 +219,13 @@ module ConceptQL
         pp.object_group self do
           unless pp_upstreams.empty?
             pp.breakable
-            pp.text '@upstreams='
+            pp.text "@upstreams="
             pp.pp pp_upstreams
             pp.comma_breakable unless arguments.empty?
           end
           unless arguments.empty?
             pp.breakable if pp_upstreams.empty?
-            pp.text '@arguments='
+            pp.text "@arguments="
             pp.pp arguments
           end
         end
@@ -281,11 +281,11 @@ module ConceptQL
       end
 
       def comments?
-        ENV['CONCEPTQL_ENABLE_COMMENTS'] == 'true'
+        ENV["CONCEPTQL_ENABLE_COMMENTS"] == "true"
       end
 
       def comment
-        PP.pp(self, ''.dup, 10)
+        PP.pp(self, "".dup, 10)
       end
 
       def override_columns
@@ -386,7 +386,7 @@ module ConceptQL
 
       def vocabularies
         if respond_to?(:vocab_entry)
-          [vocab_entry.omopv5_vocabulary_id]
+          [ vocab_entry.omopv5_vocabulary_id ]
         elsif upstreams.any?
           upstreams.flat_map(&:vocabularies).uniq
         else
@@ -439,9 +439,9 @@ module ConceptQL
         standard_columns.each do |column|
           additional_cols << if query_columns(query).include?(column)
                                column
-                             else
+          else
                                cast_column(column)
-                             end
+          end
         end
 
         additional_cols
@@ -480,26 +480,26 @@ module ConceptQL
       def determine_tables
         if upstreams.empty?
           if respond_to?(:table)
-            [table]
+            [ table ]
           else
-            [:invalid]
+            [ :invalid ]
           end
         else
           tables = upstreams.compact.map(&:tables).flatten.uniq
-          tables.empty? ? [:invalid] : tables
+          tables.empty? ? [ :invalid ] : tables
         end
       end
 
       def determine_domains(db)
         if upstreams.empty?
           if respond_to?(:domain)
-            [domain]
+            [ domain ]
           else
-            [:invalid]
+            [ :invalid ]
           end
         else
           doms = upstreams.compact.flat_map { |up| up.domains(db) }.uniq
-          doms.empty? ? [:invalid] : doms
+          doms.empty? ? [ :invalid ] : doms
         end
       end
 
@@ -515,7 +515,7 @@ module ConceptQL
         @errors = [] unless defined?(@errors)
         @warnings = [] unless defined?(@warnings)
 
-        add_error('invalid label') if label && !label.is_a?(String)
+        add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
         end
@@ -526,7 +526,7 @@ module ConceptQL
       end
 
       def validate_no_upstreams
-        add_error('has upstreams', upstream_operator_names) unless @upstreams.empty?
+        add_error("has upstreams", upstream_operator_names) unless @upstreams.empty?
       end
 
       def validate_one_upstream
@@ -535,15 +535,15 @@ module ConceptQL
       end
 
       def validate_at_most_one_upstream
-        add_error('has multiple upstreams', upstream_operator_names) if @upstreams.length > 1
+        add_error("has multiple upstreams", upstream_operator_names) if @upstreams.length > 1
       end
 
       def validate_at_least_one_upstream
-        add_error('has no upstream') if @upstreams.empty?
+        add_error("has no upstream") if @upstreams.empty?
       end
 
       def validate_no_arguments
-        add_error('has arguments', @arguments) unless @arguments.empty?
+        add_error("has arguments", @arguments) unless @arguments.empty?
       end
 
       def validate_one_argument
@@ -552,24 +552,24 @@ module ConceptQL
       end
 
       def validate_at_most_one_argument
-        add_error('has multiple arguments', @arguments) if @arguments.length > 1
+        add_error("has multiple arguments", @arguments) if @arguments.length > 1
       end
 
       def validate_at_least_one_argument
-        add_error('has no arguments') if @arguments.empty?
+        add_error("has no arguments") if @arguments.empty?
       end
 
       def validate_option(format, *opts)
         opts.each do |opt|
           next unless options.key?(opt)
 
-          add_error('wrong option format', opt.to_s, options[opt]) unless format === options[opt]
+          add_error("wrong option format", opt.to_s, options[opt]) unless format === options[opt]
         end
       end
 
       def validate_required_options(*opts)
         opts.each do |opt|
-          add_error('required option not present', opt.to_s) unless options.key?(opt)
+          add_error("required option not present", opt.to_s) unless options.key?(opt)
         end
       end
 
@@ -590,7 +590,7 @@ module ConceptQL
       def validate_codes_match
         return if bad_arguments.empty?
 
-        add_warning('improperly formatted code', *bad_arguments)
+        add_warning("improperly formatted code", *bad_arguments)
       end
 
       def additional_validation(_db, _opts = {})
@@ -647,7 +647,7 @@ module ConceptQL
         if scope.opts.dig(:window_opts, :window_table)
           %i[person_id window_id]
         else
-          [:person_id]
+          [ :person_id ]
         end
       end
 

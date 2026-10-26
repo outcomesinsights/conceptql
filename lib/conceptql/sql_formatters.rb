@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'sql_formatters/formatter'
+require_relative "sql_formatters/formatter"
 
 module ConceptQL
   module SqlFormatters
@@ -12,7 +12,7 @@ module ConceptQL
     # Formats with the rdbms's preferred formatter, else the first of the
     # fallbacks that is installed, else returns the SQL untouched.
     def self.format(sql, rdbms)
-      formatter = [rdbms.preferred_formatter, SQL_FORMATTER, SQLFORMAT, PG_FORMAT]
+      formatter = [ rdbms.preferred_formatter, SQL_FORMATTER, SQLFORMAT, PG_FORMAT ]
                   .compact
                   .map { |command| Formatter.new(command) }
                   .detect(&:available?)

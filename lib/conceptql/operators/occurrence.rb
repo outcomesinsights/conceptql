@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
-require_relative '../behaviors/single_event'
+require_relative "operator"
+require_relative "../behaviors/single_event"
 
 module ConceptQL
   module Operators
@@ -31,12 +31,12 @@ module ConceptQL
 
       register __FILE__
 
-      preferred_name 'Nth Occurrence'
+      preferred_name "Nth Occurrence"
 
       desc "Groups all records by person, then orders by start_date and finds the nth occurrence. Can be positive or negative, e.g 2 means 'second' and -3 means 'third from last'."
 
       argument :occurrence, type: :integer
-      category 'Filter Single Stream'
+      category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream
       validate_at_least_one_upstream
@@ -46,10 +46,10 @@ module ConceptQL
       option :within, type: :string,
                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
       option :group_by_date, type: :boolean,
-                             instructions: 'Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence'
+                             instructions: "Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence"
 
       def query_cols
-        dynamic_columns + [:rn]
+        dynamic_columns + [ :rn ]
       end
 
       def occurrence
@@ -99,7 +99,7 @@ module ConceptQL
         first = Sequel[:first]
         rest = Sequel[:rest]
 
-        joined_ds = first_ds.join(input_name, matching_columns_plus.map { |c| [c, c] }, table_alias: :rest) do
+        joined_ds = first_ds.join(input_name, matching_columns_plus.map { |c| [ c, c ] }, table_alias: :rest) do
           cond = rest[:global_rn] > first[:global_rn]
           cond &= rest[:start_date] >= adjust_date(at_least_option, first[:end_date]) if at_least_option
           cond &= rest[:start_date] <= adjust_date(within_option, first[:end_date]) if within_option
@@ -176,7 +176,7 @@ module ConceptQL
       def ordered_columns(*columns, qualifier: nil, allow_reverse: true)
         start_date = qualify_with(qualifier, :start_date)
         start_date = Sequel.send(asc_or_desc, start_date) if allow_reverse
-        order = [start_date]
+        order = [ start_date ]
         order += columns.map do |c|
           c = qualify_with(qualifier, c)
           c = Sequel.send(asc_or_desc, c) if allow_reverse

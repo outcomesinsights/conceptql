@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
-require 'date'
+require_relative "operator"
+require "date"
 
 module ConceptQL
   module Operators
@@ -16,12 +16,12 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      DATE_FORMAT = /\A#{Regexp.union([/START/i, /END/i, /\d{4}-\d{2}-\d{2}/])}\z/.freeze
+      DATE_FORMAT = /\A#{Regexp.union([ /START/i, /END/i, /\d{4}-\d{2}-\d{2}/ ])}\z/.freeze
 
-      desc 'Creates a set of all person records with the given start_date and end_date.'
+      desc "Creates a set of all person records with the given start_date and end_date."
       option :start, type: :string
       option :end, type: :string
-      category 'Select by Property'
+      category "Select by Property"
       basic_type :selection
       validate_no_upstreams
       validate_no_arguments
@@ -39,7 +39,7 @@ module ConceptQL
       end
 
       def domains(_db)
-        [:person]
+        [ :person ]
       end
 
       private
@@ -59,8 +59,8 @@ module ConceptQL
       # TODO: Select the earliest and latest dates of observation from
       # the proper CDM table to represent the start and end of data
       def date_from(db, str)
-        return db.from(period_table).get { |o| o.min(period_start_date(db)) } if str.upcase == 'START'
-        return db.from(period_table).get { |o| o.max(period_end_date(db)) } if str.upcase == 'END'
+        return db.from(period_table).get { |o| o.min(period_start_date(db)) } if str.upcase == "START"
+        return db.from(period_table).get { |o| o.max(period_end_date(db)) } if str.upcase == "END"
 
         str
       end

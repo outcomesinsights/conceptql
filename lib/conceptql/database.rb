@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'digest'
-require 'logger'
-require_relative 'lexicon'
+require "digest"
+require "logger"
+require_relative "lexicon"
 
 module ConceptQL
   class Database
@@ -27,20 +27,20 @@ module ConceptQL
       # Symbolize all keys and values
       @opts = ConceptQL::Utils.rekey(opts, rekey_values: true)
 
-      @opts[:data_model] ||= (ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
+      @opts[:data_model] ||= (ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
 
       self.class.db_extensions(db, @opts[:data_model], @opts[:use_cold_col])
       db_type = db ? db.database_type.to_sym : :postgres
 
       @lexicon = opts[:lexicon]
       if @lexicon && @opts[:cache_lookups]
-        raise ArgumentError, 'cache_lookups needs the Database to build its own Lexicon; do not pass lexicon:'
+        raise ArgumentError, "cache_lookups needs the Database to build its own Lexicon; do not pass lexicon:"
       end
 
-      @opts[:database_type] ||= (ENV['CONCEPTQL_DATABASE_TYPE'] || db_type).to_sym
+      @opts[:database_type] ||= (ENV["CONCEPTQL_DATABASE_TYPE"] || db_type).to_sym
       @opts[:scope_opts] = {
-        force_temp_tables: opts.fetch(:force_temp_tables, ENV['CONCEPTQL_FORCE_TEMP_TABLES'] == 'true'),
-        scratch_database: opts.fetch(:scratch_database, ENV['DOCKER_SCRATCH_DATABASE'])
+        force_temp_tables: opts.fetch(:force_temp_tables, ENV["CONCEPTQL_FORCE_TEMP_TABLES"] == "true"),
+        scratch_database: opts.fetch(:scratch_database, ENV["DOCKER_SCRATCH_DATABASE"])
       }.merge(opts[:scope_opts] || {})
       @opts[:scope_opts][:lexicon] = lexicon
 
@@ -51,7 +51,7 @@ module ConceptQL
     def query(statement, opts = {})
       opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
       if @opts[:share_utilization] && opts[:scope_opts][:table_prefix].to_s.empty?
-        raise ArgumentError, 'share_utilization needs a table_prefix in scope_opts, to name its tables'
+        raise ArgumentError, "share_utilization needs a table_prefix in scope_opts, to name its tables"
       end
 
       Query.new(self, ConceptQL::Utils.rekey(statement), @opts.merge(opts))
@@ -82,7 +82,7 @@ module ConceptQL
 
         db.extension(:cold_col)
         db.load_schema(ConceptQL.schemas_dir / "#{data_model}.yml")
-        db.load_schema(ConceptQL.schemas_dir / 'ohdsi_vocabs.yml')
+        db.load_schema(ConceptQL.schemas_dir / "ohdsi_vocabs.yml")
       end
 
       def lexicon_db
@@ -96,15 +96,15 @@ module ConceptQL
       # data db first and, when neither has the vocabulary tables, falls back
       # to LexiconNoDB, so no database (and no sqlite3 gem) is needed here.
       def make_lexicon_db
-        return unless ENV['LEXICON_URL']
+        return unless ENV["LEXICON_URL"]
 
         db_opts = {}
-        if ENV['CONCEPTQL_LOG_LEXICON']
-          log_path = Pathname.new('log') / 'conceptql_lexicon.log'
+        if ENV["CONCEPTQL_LOG_LEXICON"]
+          log_path = Pathname.new("log") / "conceptql_lexicon.log"
           log_path.dirname.mkpath
           db_opts[:logger] = Logger.new(log_path)
         end
-        lexicon_db = Sequel.connect(ENV['LEXICON_URL'], db_opts)
+        lexicon_db = Sequel.connect(ENV["LEXICON_URL"], db_opts)
         lexicon_db.extension(:date_arithmetic)
         lexicon_db
       end
@@ -137,7 +137,7 @@ module ConceptQL
     # the whole concept table. The caller drops it.
     def create_name_concepts_table
       table = opts[:name_concepts_table]
-      raise ArgumentError, 'create_name_concepts_table needs the name_concepts_table option' unless table
+      raise ArgumentError, "create_name_concepts_table needs the name_concepts_table option" unless table
 
       ids = data_model.name_concept_columns.flat_map do |source, columns|
         next [] unless db.table_exists?(source)
@@ -166,7 +166,7 @@ module ConceptQL
       return if db.table_exists?(name)
 
       @shared_utilization_mutex.synchronize { @shared_utilization_tables[key.sql] = name }
-      [name, key.sql]
+      [ name, key.sql ]
     end
 
     # Creates a shared_utilization_table that does not exist yet, when a

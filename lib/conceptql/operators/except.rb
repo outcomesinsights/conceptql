@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'binary_operator_operator'
+require_relative "binary_operator_operator"
 
 module ConceptQL
   module Operators
     class Except < BinaryOperatorOperator
       register __FILE__
 
-      desc 'Removes all incoming records that appear in the right hand set of records.'
+      desc "Removes all incoming records that appear in the right hand set of records."
       default_query_columns
 
       def query(db)

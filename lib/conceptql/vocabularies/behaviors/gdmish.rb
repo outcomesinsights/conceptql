@@ -11,7 +11,7 @@ module ConceptQL
         end
 
         def additional_columns(_db)
-          [Sequel.cast_string(domain.to_s).as(:criterion_domain)]
+          [ Sequel.cast_string(domain.to_s).as(:criterion_domain) ]
         end
       end
     end

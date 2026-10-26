@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
-require_relative '../date_adjuster'
-require_relative '../behaviors/provenanceable'
-require_relative '../behaviors/single_event'
+require_relative "operator"
+require_relative "../date_adjuster"
+require_relative "../behaviors/provenanceable"
+require_relative "../behaviors/single_event"
 
 module ConceptQL
   module Operators
@@ -12,22 +12,22 @@ module ConceptQL
 
       register __FILE__
 
-      desc 'Identifies an event that appears either once in an inpatient setting or twice within a specified interval in an outpatient setting.'
+      desc "Identifies an event that appears either once in an inpatient setting or twice within a specified interval in an outpatient setting."
 
       allows_one_upstream
       validate_one_upstream
       validate_no_arguments
-      category 'Filter Single Stream'
+      category "Filter Single Stream"
       basic_type :temporal
 
       option :inpatient_length_of_stay, type: :integer, min: 0, default: 0,
-                                        desc: 'Minimum length of inpatient stay (in days) required for inpatient event to be valid', label: 'Inpatient Length of Stay (Days)'
-      option :outpatient_minimum_gap, type: :string, default: '30d',
+                                        desc: "Minimum length of inpatient stay (in days) required for inpatient event to be valid", label: "Inpatient Length of Stay (Days)"
+      option :outpatient_minimum_gap, type: :string, default: "30d",
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
-      option :outpatient_maximum_gap, type: :string, default: '365d',
+      option :outpatient_maximum_gap, type: :string, default: "365d",
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
-      option :outpatient_event_to_return, type: :string, options: ['Initial Event', 'Confirming Event'],
-                                          default: 'Initial Event', desc: 'Which event to pass downstream'
+      option :outpatient_event_to_return, type: :string, options: [ "Initial Event", "Confirming Event" ],
+                                          default: "Initial Event", desc: "Which event to pass downstream"
 
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 
@@ -59,11 +59,11 @@ module ConceptQL
       private
 
       def initial_mode?
-        options[:outpatient_event_to_return] == 'Initial Event'
+        options[:outpatient_event_to_return] == "Initial Event"
       end
 
       def min_gap
-        (options[:outpatient_minimum_gap] || '30d').to_s
+        (options[:outpatient_minimum_gap] || "30d").to_s
       end
 
       def max_gap
@@ -88,7 +88,7 @@ module ConceptQL
         return Sequel[:start_date] if min_gap.empty? || keyword_gap?(min_gap)
 
         bound = adjusted(min_gap)
-        Sequel.case([[Sequel.expr(bound) > :start_date, bound], [Sequel.expr(bound) <= :start_date, :start_date]], nil)
+        Sequel.case([ [ Sequel.expr(bound) > :start_date, bound ], [ Sequel.expr(bound) <= :start_date, :start_date ] ], nil)
       end
 
       # The latest date a partner event may have, or nil for no limit.
@@ -108,7 +108,7 @@ module ConceptQL
       end
 
       def inpatient_condition
-        condition = build_where_from_codes(db, ['inpatient'])
+        condition = build_where_from_codes(db, [ "inpatient" ])
         return condition if options[:inpatient_length_of_stay].nil? || options[:inpatient_length_of_stay].to_i.zero?
 
         Sequel.&(condition, rdbms.days_between(:admission_date, :discharge_date) > options[:inpatient_length_of_stay].to_i)
@@ -117,17 +117,17 @@ module ConceptQL
       # The old self-join compared these columns with = and <>, so a NULL in
       # any of them kept an event from pairing.
       def outpatient_condition
-        not_null = (matching_columns + [:criterion_id]).map { |c| Sequel.~(c => nil) }
+        not_null = (matching_columns + [ :criterion_id ]).map { |c| Sequel.~(c => nil) }
         Sequel.&(build_where_from_codes(db, %w[carrier_claim outpatient]), *not_null)
       end
 
       def flag(condition)
-        Sequel.case([[condition, 1]], 0)
+        Sequel.case([ [ condition, 1 ] ], 0)
       end
 
       def condition_events
         db[stream.evaluate(db)]
-          .where(criterion_domain: 'condition_occurrence')
+          .where(criterion_domain: "condition_occurrence")
           .where(Sequel.|(inpatient_condition, outpatient_condition))
           .select(*query_cols)
           .select_append(flag(inpatient_condition).as(:is_inpatient), flag(outpatient_condition).as(:is_outpatient))
@@ -152,7 +152,7 @@ module ConceptQL
       end
 
       def tags
-        [LOWER, EVENT, UPPER, INPATIENT]
+        [ LOWER, EVENT, UPPER, INPATIENT ]
           .map { |tag| db.select(Sequel.as(tag, :tag)) }
           .inject { |all, one| all.union(one, all: true, from_self: false) }
       end
@@ -165,7 +165,7 @@ module ConceptQL
       end
 
       def copies
-        bound_tags = upper_bound ? [LOWER, UPPER] : [LOWER]
+        bound_tags = upper_bound ? [ LOWER, UPPER ] : [ LOWER ]
         condition_events
           .cross_join(tags, table_alias: :tags)
           .where(Sequel.|(
@@ -184,7 +184,7 @@ module ConceptQL
       # counts the bound intervals that are open at each event.
       def weight
         if initial_mode?
-          Sequel.case([[Sequel.&({ tag: EVENT }, { can_partner: 1 }), 1]], 0)
+          Sequel.case([ [ Sequel.&({ tag: EVENT }, { can_partner: 1 }), 1 ] ], 0)
         else
           Sequel.case({ LOWER => 1, UPPER => -1 }, 0, :tag)
         end
@@ -201,7 +201,7 @@ module ConceptQL
       # Counts from events with a different criterion_id only: the old
       # self-join excluded pairs that shared one.
       def counted_copies
-        same = matching_columns + [:criterion_id]
+        same = matching_columns + [ :criterion_id ]
         ds = copies.select_append((running_sum(matching_columns) - running_sum(same)).as(:partners))
         if initial_mode? && !upper_bound
           ds = ds.select_append((total_sum(matching_columns) - total_sum(same)).as(:all_partners))
@@ -216,14 +216,14 @@ module ConceptQL
       end
 
       def bound_partners(tag)
-        Sequel.function(:max, Sequel.case([[{ tag: tag }, :partners]], nil))
-              .over(partition: matching_columns + [:event_key])
+        Sequel.function(:max, Sequel.case([ [ { tag: tag }, :partners ] ], nil))
+              .over(partition: matching_columns + [ :event_key ])
       end
 
       def judged_copies
         return counted_copies unless initial_mode?
 
-        upper = upper_bound ? bound_partners(UPPER) : Sequel.function(:max, :all_partners).over(partition: matching_columns + [:event_key])
+        upper = upper_bound ? bound_partners(UPPER) : Sequel.function(:max, :all_partners).over(partition: matching_columns + [ :event_key ])
         counted_copies
           .select_append(bound_partners(LOWER).as(:lower_partners), upper.as(:upper_partners))
           .from_self
@@ -231,8 +231,8 @@ module ConceptQL
 
       def output_column(column)
         case column
-        when :start_date then Sequel.case([[{ tag: INPATIENT }, :admission_date]], :start_date).as(:start_date)
-        when :end_date then Sequel.case([[{ tag: INPATIENT }, :discharge_date]], :end_date).as(:end_date)
+        when :start_date then Sequel.case([ [ { tag: INPATIENT }, :admission_date ] ], :start_date).as(:start_date)
+        when :end_date then Sequel.case([ [ { tag: INPATIENT }, :discharge_date ] ], :end_date).as(:end_date)
         else column
         end
       end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -11,7 +11,7 @@ module ConceptQL
       desc "Selects admission records of type 'SNF'"
 
       def collection_type
-        'SNF'
+        "SNF"
       end
     end
   end

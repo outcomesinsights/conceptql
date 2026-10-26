@@ -3,6 +3,7 @@
 begin
   require 'bundler/gem_tasks'
 rescue LoadError
+  # Optional: the gem release tasks are not needed by the test tasks below.
 end
 
 run_spec = lambda do |data_model|
@@ -13,11 +14,11 @@ begin
   require 'rubocop/rake_task'
 
   RuboCop::RakeTask.new(:lint) do |task|
-    task.options = ['--display-cop-names']
+    task.options = [ '--display-cop-names' ]
   end
 
   RuboCop::RakeTask.new(:format) do |task|
-    task.options = ['--auto-correct-all']
+    task.options = [ '--auto-correct-all' ]
   end
 
   desc 'Run RuboCop with safe autocorrect'
@@ -51,19 +52,19 @@ desc 'Run tests with omopv4 data model'
 task default: :test_omopv4_plus
 
 desc "Ingests client's CSV file for custom vocabularies"
-task :make_vocabs_csv, [:csv_path] do |_t, args|
+task :make_vocabs_csv, [ :csv_path ] do |_t, args|
   require 'conceptql'
   require 'csv'
   require 'open-uri'
 
   known_vocabs = CSV.foreach(ConceptQL.vocabularies_file_path, headers: true,
                                                                header_converters: :symbol).to_h do |row|
-    [row[:id].downcase, row.to_hash]
+    [ row[:id].downcase, row.to_hash ]
   end
 
   amgen_vocabs = open(args.csv_path) do |amgen_csv_file|
     CSV.parse(amgen_csv_file.read, headers: true, header_converters: :symbol).to_h do |row|
-      [row[:vocabulary_short_name].downcase, row.to_hash]
+      [ row[:vocabulary_short_name].downcase, row.to_hash ]
     end
   end
 
@@ -92,16 +93,16 @@ task :make_vocabs_csv, [:csv_path] do |_t, args|
 end
 
 desc 'Show which columns can be ignored'
-task :ignorables, [:data_model] do |_t, args|
+task :ignorables, [ :data_model ] do |_t, args|
   require 'conceptql'
   dm = args[:data_model].to_sym
   ignorables = ConceptQL::DataModel.get(dm).schema.each_with_object([]) do |(table, table_info), iggies|
     if table_info[:ignorable]
-      iggies << [table.to_s, 'all columns']
+      iggies << [ table.to_s, 'all columns' ]
       next
     else
       table_info[:columns].map do |column_name, column_info|
-        iggies << [table.to_s, column_name.to_s] if column_info[:ignorable]
+        iggies << [ table.to_s, column_name.to_s ] if column_info[:ignorable]
       end
     end
   end
@@ -113,7 +114,7 @@ task :ignorables, [:data_model] do |_t, args|
 end
 
 desc 'Drop all tables/columns which can be ignored'
-task :drop_ignorables, [:data_model] do |_t, args|
+task :drop_ignorables, [ :data_model ] do |_t, args|
   require 'conceptql'
   require 'sequelizer'
   include Sequelizer
@@ -215,15 +216,15 @@ namespace :schemas do
       File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'ohdsi_vocabs')))
     end
     # task all: ['schemas/gdm.yml', 'schemas/gdm_wide.yml']
-    task all: ['schemas/ohdsi_vocabs.yml']
+    task all: [ 'schemas/ohdsi_vocabs.yml' ]
   end
 end
 
 namespace :test_script do
   require 'rake/clean'
 
-  ALL_SQL = 'build/sqls/all.sql'
-  ALL_PRESTO_SQL = 'build/sqls/all.presto.sql'
+  all_sql = 'build/sqls/all.sql'
+  all_presto_sql = 'build/sqls/all.presto.sql'
   stmt_files = FileList.new('test/statements/**/*.json') do |fl|
     fl.exclude(/anno_/)
   end
@@ -244,16 +245,16 @@ namespace :test_script do
     end
   end
 
-  file ALL_SQL => sql_files do |t|
-    File.write(t.name, t.prerequisites.map { |p| ["-- #{p}", File.read(p)].join("\n") }.join("\n"))
+  file all_sql => sql_files do |t|
+    File.write(t.name, t.prerequisites.map { |p| [ "-- #{p}", File.read(p) ].join("\n") }.join("\n"))
   end
 
-  file ALL_PRESTO_SQL => presto_sql_files do |t|
-    File.write(t.name, t.prerequisites.map { |p| ["-- #{p}", File.read(p)].join("\n") }.join("\n"))
+  file all_presto_sql => presto_sql_files do |t|
+    File.write(t.name, t.prerequisites.map { |p| [ "-- #{p}", File.read(p) ].join("\n") }.join("\n"))
   end
 
-  task default: ALL_PRESTO_SQL
-  CLEAN.include(sql_files, ALL_SQL, ALL_PRESTO_SQL)
+  task default: all_presto_sql
+  CLEAN.include(sql_files, all_sql, all_presto_sql)
 end
 
 namespace :driftr_script do
@@ -261,9 +262,9 @@ namespace :driftr_script do
   require_relative 'test/statement_tests'
   require 'json'
 
-  DRIFTR_SCRIPT = '/tmp/synpuf250_driftr.json'
-  task default: DRIFTR_SCRIPT
-  file DRIFTR_SCRIPT do |t|
+  driftr_script = '/tmp/synpuf250_driftr.json'
+  task default: driftr_script
+  file driftr_script do |t|
     connection_info = {
       adapter_name: 'presto',
       args: {

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'active_support/core_ext/hash/indifferent_access'
+require "json"
+require "active_support/core_ext/hash/indifferent_access"
 
 module ConceptQL
   # Converts ConceptQL statements into trees a diagram renderer can draw.
@@ -15,7 +15,7 @@ module ConceptQL
   # * JigsawTree -- the Jigsaw diagram editor's tree JSON (name, values,
   #   parameters, children), as produced by the editor's ConceptqlAdapter.
   module Diagram
-    FORMAT = 'conceptql-diagram/v1'
+    FORMAT = "conceptql-diagram/v1"
 
     class << self
       # The full `conceptql-diagram/v1` document for one or more statements.
@@ -42,7 +42,7 @@ module ConceptQL
         return [] if statements == []
         return statements if statements.first.is_a?(Array)
 
-        [statements]
+        [ statements ]
       end
     end
 
@@ -110,7 +110,7 @@ module ConceptQL
       def counts(annotation)
         (annotation[:counts] || {})
           .sort_by { |domain, _| domain.to_s }
-          .to_h { |domain, c| [domain.to_s, { rows: Integer(c[:rows] || 0), n: Integer(c[:n] || 0) }] }
+          .to_h { |domain, c| [ domain.to_s, { rows: Integer(c[:rows] || 0), n: Integer(c[:n] || 0) } ] }
       end
 
       def metadata_for(name)
@@ -200,7 +200,7 @@ module ConceptQL
       end
 
       def to_jigsaw_json
-        { name: 'root', children: statements.map { |s| build_node(s) } }
+        { name: "root", children: statements.map { |s| build_node(s) } }
       end
 
       private

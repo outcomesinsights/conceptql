@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'pass_thru'
+require_relative "pass_thru"
 
 module ConceptQL
   module Operators
@@ -29,7 +29,7 @@ module ConceptQL
       def query(db)
         db.from(unioned(db))
           .select_group(*(dynamic_columns - %i[start_date end_date criterion_id value_as_number]))
-          .select_append(Sequel.lit('?', 0).as(:criterion_id))
+          .select_append(Sequel.lit("?", 0).as(:criterion_id))
           .select_append { min(start_date).as(:start_date) }
           .select_append { max(end_date).as(:end_date) }
           .select_append { sum(value_as_number).as(:value_as_number) }

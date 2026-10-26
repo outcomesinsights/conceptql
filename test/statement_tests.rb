@@ -1,29 +1,29 @@
-require 'forwardable'
+require "forwardable"
 
 module ConceptQL
   class StatementResults
     class << self
       def create(test_name, cdb, statement, remove_window_id = false)
-        test_type = test_name.split('/').last.split('_').first
+        test_type = test_name.split("/").last.split("_").first
 
         case test_type
-        when 'crit'
+        when "crit"
           CriteriaIdsResults.new(cdb, statement, remove_window_id)
-        when 'anno'
+        when "anno"
           AnnotationResults.new(cdb, statement, remove_window_id)
-        when 'count'
+        when "count"
           CriteriaCountsResults.new(cdb, statement, remove_window_id)
-        when 'optcc'
+        when "optcc"
           OptimizedCriteriaCountsResults.new(cdb, statement, remove_window_id)
-        when 'scanno'
+        when "scanno"
           ScopeAnnotationResults.new(cdb, statement, remove_window_id)
-        when 'domains'
+        when "domains"
           DomainsResults.new(cdb, statement, remove_window_id)
-        when 'num'
+        when "num"
           NumericValuesResults.new(cdb, statement, remove_window_id)
-        when 'codes'
+        when "codes"
           CodeCheckResults.new(cdb, statement, remove_window_id)
-        when 'results'
+        when "results"
           ResultsResults.new(cdb, statement, remove_window_id)
         else
           raise "Invalid operation test prefix: #{test_type}"
@@ -42,15 +42,15 @@ module ConceptQL
     end
 
     def message
-      [test_name, message_part].compact.join(' -- ')
+      [ test_name, message_part ].compact.join(" -- ")
     end
 
     def cql_query
       @cql_query ||= if statement.is_a?(ConceptQL::Query)
                        statement
-                     else
+      else
                        cdb.query(statement)
-                     end
+      end
     end
 
     def query
@@ -145,9 +145,9 @@ module ConceptQL
       if cdb.data_model.data_model == :gdm_wide
         cols = ds.columns
         if cols.include?(:criterion_table)
-          ds = ds.select(*(cols - [:criterion_table]))
+          ds = ds.select(*(cols - [ :criterion_table ]))
                  .select_append(
-                   Sequel.case({ 'observations' => 'clinical_codes' }, :criterion_table,
+                   Sequel.case({ "observations" => "clinical_codes" }, :criterion_table,
                                :criterion_table).as(:criterion_table)
                  )
                  .from_self
@@ -155,9 +155,9 @@ module ConceptQL
                  .from_self
         end
         if cols.include?(:uuid)
-          ds = ds.select(*(cols - [:uuid]))
+          ds = ds.select(*(cols - [ :uuid ]))
                  .select_append(
-                   Sequel.function(:regexp_replace, :uuid, 'observations', 'clinical_codes').as(:uuid)
+                   Sequel.function(:regexp_replace, :uuid, "observations", "clinical_codes").as(:uuid)
                  )
                  .from_self
                  .select(*cols) # Preserve the original column order
@@ -188,7 +188,7 @@ module ConceptQL
   class StatementFileTest
     class << self
       def all(cdb, file_regexps = nil)
-        Pathname.glob('./test/statements/**/*').reject do |f|
+        Pathname.glob("./test/statements/**/*").reject do |f|
           f.directory? || (file_regexps.present? && Array(file_regexps).none? { |r| f.to_s =~ r })
         end.map { |f| ConceptQL::StatementFileTest.new(cdb, f) }
       end
@@ -214,8 +214,8 @@ module ConceptQL
     end
 
     def test_name
-      @test_name ||= [statement_file.dirname.basename, statement_file.basename]
-                     .join('/')
+      @test_name ||= [ statement_file.dirname.basename, statement_file.basename ]
+                     .join("/")
     end
 
     # Where a test's expected results live. A few expectations differ by
@@ -231,7 +231,7 @@ module ConceptQL
     def get_expected_results(results)
       path = expected_results_path
 
-      results.save(path) if ENV['CONCEPTQL_OVERWRITE_TEST_RESULTS']
+      results.save(path) if ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
 
       begin
         File.read(path)
@@ -242,10 +242,10 @@ module ConceptQL
     end
 
     def yield_a_test(results, expected, expect_message = nil, &block)
-      message_parts = [test_name]
+      message_parts = [ test_name ]
       message_parts << expect_message if expect_message
 
-      block.call(results, expected, test_name, message_parts.join(' '))
+      block.call(results, expected, test_name, message_parts.join(" "))
       results
     end
 
@@ -259,23 +259,23 @@ module ConceptQL
       basic_results.expected = expected_results
       basic_results.test_name = test_name
 
-      tests = [basic_results]
+      tests = [ basic_results ]
 
       # Check with scope windows, unless the test is already a scope window test
-      unless statement.first == 'window'
-        sw_statement = ['window', statement,
-                        { 'window_table' => ['date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' }] }]
+      unless statement.first == "window"
+        sw_statement = [ "window", statement,
+                        { "window_table" => [ "date_range", { "start" => "1900-01-01", "end" => "2100-12-31" } ] } ]
         sw = result_from(sw_statement, true)
         sw.expected = expected_results
         sw.test_name = test_name
-        sw.message_part = ' (with window table date range)'
+        sw.message_part = " (with window table date range)"
         tests << sw
 
-        sw_statement = ['window', statement, { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' }]
+        sw_statement = [ "window", statement, { "start_date" => "1900-01-01", "end_date" => "2100-12-31" } ]
         sw = result_from(sw_statement, true)
         sw.expected = expected_results
         sw.test_name = test_name
-        sw.message_part = ' (with window table)'
+        sw.message_part = " (with window table)"
         tests << sw
       end
       tests.each(&block)
@@ -283,10 +283,10 @@ module ConceptQL
       unless defined?(SKIP_SQL_GENERATION_TEST) && SKIP_SQL_GENERATION_TEST
         begin
           query(statement).sql(:create_tables)
-          query(['window', statement,
-                 { 'window_table' => ['date_range', { 'start' => '1900-01-01', 'end' => '2100-12-31' }] }]).sql(:create_tables)
-          query(['window', statement,
-                 { 'start_date' => '1900-01-01', 'end_date' => '2100-12-31' }]).sql(:create_tables)
+          query([ "window", statement,
+                 { "window_table" => [ "date_range", { "start" => "1900-01-01", "end" => "2100-12-31" } ] } ]).sql(:create_tables)
+          query([ "window", statement,
+                 { "start_date" => "1900-01-01", "end_date" => "2100-12-31" } ]).sql(:create_tables)
         rescue ConceptQL::Query::QueryError
           # Suppress this new issue
         end
@@ -305,8 +305,8 @@ module ConceptQL
         adapter = "#{DB.adapter_scheme}/#{DB.database_type}"
 
         FileUtils.mkdir_p(File.dirname(path))
-        File.open(path, 'ab') do |file|
-          file.puts([sha1, adapter, DB.opts[:database], Time.now, avg_time].join(','))
+        File.open(path, "ab") do |file|
+          file.puts([ sha1, adapter, DB.opts[:database], Time.now, avg_time ].join(","))
         end
       end
     rescue StandardError

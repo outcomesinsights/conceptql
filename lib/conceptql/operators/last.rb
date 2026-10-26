@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'occurrence'
+require_relative "occurrence"
 
 module ConceptQL
   module Operators
@@ -19,7 +19,7 @@ module ConceptQL
     class Last < Occurrence
       register __FILE__
 
-      desc 'For each person, passes along the record with the most recent start_date.'
+      desc "For each person, passes along the record with the most recent start_date."
 
       def occurrence
         -1

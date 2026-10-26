@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'vocabulary_class_factory'
+require_relative "vocabulary_class_factory"
 
 module ConceptQL
   module Vocabularies
@@ -97,24 +97,24 @@ module ConceptQL
       ].freeze
 
       COST_RELATED_VOCABS = [
-        'Revenue Code',
-        'DRG'
+        "Revenue Code",
+        "DRG"
       ].freeze
 
       def initialize(hash)
         @hash = hash
         @hash[:omopv5_vocabulary_id] ||= @hash[:id]
         @hash[:aliases_arr] ||= []
-        @hash[:aliases_arr] |= (@hash[:aliases] || '').split(';')
+        @hash[:aliases_arr] |= (@hash[:aliases] || "").split(";")
         @hash[:id] = @hash[:id].to_s.downcase
         @hash[:aliases_arr] << @hash[:id] if @hash[:id] =~ /\s/
-        @hash[:id] = translate_id(@hash[:id].gsub(/\W+/, '_'))
-        @hash[:aliases_arr] -= [@hash[:id]]
+        @hash[:id] = translate_id(@hash[:id].gsub(/\W+/, "_"))
+        @hash[:aliases_arr] -= [ @hash[:id] ]
       end
 
       def translate_id(id)
         {
-          'icd10' => 'icd10who'
+          "icd10" => "icd10who"
         }[id] || id
       end
 
@@ -138,7 +138,7 @@ module ConceptQL
 
       def to_hash
         METADATA_METHODS.to_h do |meth|
-          [meth, send(meth)]
+          [ meth, send(meth) ]
         end
       end
 

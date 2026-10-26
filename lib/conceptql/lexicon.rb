@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require_relative 'lexicon/lexicon_gdm'
-require_relative 'lexicon/lexicon_no_db'
-require_relative 'lexicon/lexicon_ohdsi'
+require "forwardable"
+require_relative "lexicon/lexicon_gdm"
+require_relative "lexicon/lexicon_no_db"
+require_relative "lexicon/lexicon_ohdsi"
 
 module ConceptQL
   class Lexicon
     extend Forwardable
-    attr_reader :strategy
 
     # Lookups that return plain values. With cache: true each result is kept
     # for the life of this Lexicon, which is the life of its Database, so the
@@ -40,17 +39,17 @@ module ConceptQL
 
         # Copy Array arguments so a caller that mutates one later cannot
         # change a key. Results are frozen so a mutation fails loudly.
-        key = [name, args.map { |arg| arg.is_a?(Array) ? arg.dup.freeze : arg }]
+        key = [ name, args.map { |arg| arg.is_a?(Array) ? arg.dup.freeze : arg } ]
         cache.fetch(key) { cache[key] = @strategy.public_send(name, *args).dup.freeze }
       end
     end
 
     def determine_strategy(lexicon_db, dataset_db)
-      [dataset_db, lexicon_db].compact.each do |db|
+      [ dataset_db, lexicon_db ].compact.each do |db|
         lexicon_classes.each do |klass|
           next unless klass.db_has_all_vocabulary_tables?(db)
 
-          return(klass.new(db))
+          return (klass.new(db))
         end
       end
       LexiconNoDB.new(Sequel.mock(host: :postgres))
@@ -58,8 +57,8 @@ module ConceptQL
 
     def lexicon_classes
       classes = []
-      classes << LexiconOhdsi unless ENV['LEXICON_GDM_ONLY']
-      classes << LexiconGDM unless ENV['LEXICON_OHDSI_ONLY']
+      classes << LexiconOhdsi unless ENV["LEXICON_GDM_ONLY"]
+      classes << LexiconGDM unless ENV["LEXICON_OHDSI_ONLY"]
       classes
     end
   end

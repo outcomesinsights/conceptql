@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'pass_thru'
+require_relative "pass_thru"
 
 module ConceptQL
   module Operators
@@ -17,10 +17,10 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc 'Passes along all events that were co-reported in the same record in the source data.'
+      desc "Passes along all events that were co-reported in the same record in the source data."
 
       allows_many_upstreams
-      category 'Combine Streams'
+      category "Combine Streams"
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments
@@ -36,7 +36,7 @@ module ConceptQL
 
       def gdm(db)
         contexteds = upstreams.map do |stream|
-          [stream.cte_name(:contextified), contextify(db, stream)]
+          [ stream.cte_name(:contextified), contextify(db, stream) ]
         end.to_h
 
         # Get all context_id's that are in all streams and do not share the same critierion_id

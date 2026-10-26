@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -17,10 +17,10 @@ module ConceptQL
     class PlaceOfServiceFilter < Operator
       register __FILE__
 
-      desc 'Passes along records that match one or more of the Medicare Place Of Service values.'
+      desc "Passes along records that match one or more of the Medicare Place Of Service values."
 
-      argument :places_of_service, type: :codelist, vocab: 'Place of Service'
-      category 'Filter Single Stream'
+      argument :places_of_service, type: :codelist, vocab: "Place of Service"
+      category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream
       validate_one_upstream
@@ -36,7 +36,7 @@ module ConceptQL
       private
 
       def place_of_service_concept_ids(db)
-        dm.concept_ids(db, 'Place of Service', arguments.map(&:to_s))
+        dm.concept_ids(db, "Place of Service", arguments.map(&:to_s))
       end
     end
   end

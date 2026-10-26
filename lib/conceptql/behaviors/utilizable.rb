@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/concern'
+require "active_support/concern"
 
 module ConceptQL
   module Behaviors
@@ -10,7 +10,7 @@ module ConceptQL
 
       included do
         domains :condition_occurrence
-        category 'Select by Property'
+        category "Select by Property"
         basic_type :selection
         validate_no_upstreams
         validate_no_arguments
@@ -26,7 +26,7 @@ module ConceptQL
       end
 
       def column_family
-        'inpatient'
+        "inpatient"
       end
 
       def query(db)
@@ -55,7 +55,7 @@ module ConceptQL
       def gdm_it(db)
         source_type_id = dm.concept_ids(db, dm.file_provenance_types_vocab, collection_type)
         all_source_type_ids = dm.descendants_of(db, source_type_id)
-        primary_id = dm.concept_ids(db, dm.code_provenance_types_vocab, 'primary')
+        primary_id = dm.concept_ids(db, dm.code_provenance_types_vocab, "primary")
         all_primary_ids = dm.descendants_of(db, primary_id)
         # condition_vocabularies = dm.vocabularies_query.where(domain: 'condition_occurrence').select_map(:id)
 
@@ -91,7 +91,7 @@ module ConceptQL
                           Sequel[:cl][:id].as(:collection_id)
                         )
                         .select_append(Sequel[:ROW_NUMBER].function.over(
-                          partition: [:admission_detail_id],
+                          partition: [ :admission_detail_id ],
                           order: [
                             Sequel[:pcon][:is_primary].desc,
                             Sequel[:cl][:id],
@@ -112,7 +112,7 @@ module ConceptQL
             Sequel[0]
           else
             Sequel.case(
-              [[{ Sequel[:provenance_concept_id] => all_primary_ids }, 1]],
+              [ [ { Sequel[:provenance_concept_id] => all_primary_ids }, 1 ] ],
               0
             )
           end
@@ -131,10 +131,10 @@ module ConceptQL
           # over all of the admission's rows, not the kept row's. See conceptql-evk.
           .select_append(
             Sequel[:ROW_NUMBER].function.over(
-              partition: [:admission_detail_id],
-              order: [Sequel[:is_primary].desc, Sequel[:collection_id], Sequel[:clinical_code_concept_id], Sequel[:id]]
+              partition: [ :admission_detail_id ],
+              order: [ Sequel[:is_primary].desc, Sequel[:collection_id], Sequel[:clinical_code_concept_id], Sequel[:id] ]
             ).as(:nummy),
-            Sequel.function(:max, :end_date).over(partition: [:admission_detail_id]).as(:admission_end_date)
+            Sequel.function(:max, :end_date).over(partition: [ :admission_detail_id ]).as(:admission_end_date)
           )
           .from_self
           .where(nummy: 1)
@@ -176,8 +176,8 @@ module ConceptQL
         {
           length_of_stay: (rdbms.days_between(Sequel[:admission_date],
                                               discharge_date_column) + 1).as(:length_of_stay),
-          criterion_table: Sequel.cast_string('collections').as(:criterion_table),
-          criterion_domain: Sequel.cast_string('condition_occurrence').as(:criterion_domain),
+          criterion_table: Sequel.cast_string("collections").as(:criterion_table),
+          criterion_domain: Sequel.cast_string("condition_occurrence").as(:criterion_domain),
           admission_source_value: Sequel[:admission_source_value],
           admission_source_description: Sequel[:admission_source_description],
           discharge_location_source_value: Sequel[:discharge_location_source_value],

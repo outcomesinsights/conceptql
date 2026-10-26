@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'temporal_operator'
+require_relative "temporal_operator"
 
 module ConceptQL
   module Operators

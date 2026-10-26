@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -11,7 +11,7 @@ module ConceptQL
       desc "Selects admission records of type 'inpatient'"
 
       def collection_type
-        'inpatient'
+        "inpatient"
       end
     end
   end

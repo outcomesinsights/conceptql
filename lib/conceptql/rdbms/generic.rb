@@ -6,15 +6,15 @@ module ConceptQL
       def process(column, value = nil)
         type = Scope::COLUMN_TYPES.fetch(column)
         new_column = case type
-                     when String, :String
+        when String, :String
                        Sequel.cast_string(value)
-                     when Date, :Date
+        when Date, :Date
                        cast_date(value)
-                     when Float, :Bigint, :Float
+        when Float, :Bigint, :Float
                        Sequel.cast_numeric(value, type)
-                     else
+        else
                        raise "Unexpected type: '#{type.inspect}' for column: '#{column}'"
-                     end
+        end
         new_column.as(column)
       end
 
@@ -45,7 +45,7 @@ module ConceptQL
 
       def uuid
         uuid_items
-          .zip([Sequel.cast_string('/')] * (uuid_items.length - 1))
+          .zip([ Sequel.cast_string("/") ] * (uuid_items.length - 1))
           .flatten
           .compact
           .inject(:+)

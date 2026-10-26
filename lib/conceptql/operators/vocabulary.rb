@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -8,16 +8,12 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::CodeLister
 
-      category 'Select by Clinical Codes'
+      category "Select by Clinical Codes"
       basic_type :selection
-      desc 'Selects records based on the given vocabulary.'
+      desc "Selects records based on the given vocabulary."
       validate_no_upstreams
       validate_at_least_one_argument
       validate_codes_match
-
-      def select_all?
-        arguments.include?('*')
-      end
 
       def source_table
         domain_map(op_name)
@@ -45,11 +41,11 @@ module ConceptQL
 
         return if missing_args.empty?
 
-        add_warning('unknown code(s)', *missing_args)
+        add_warning("unknown code(s)", *missing_args)
       end
 
       def describe_codes(db, codes)
-        return [['*', 'ALL CODES']] if select_all?
+        return [ [ "*", "ALL CODES" ] ] if select_all?
 
         found_codes = dm.concepts_to_codes(db, vocabulary_id, codes)
 
@@ -116,7 +112,7 @@ module ConceptQL
       end
 
       def select_all?
-        arguments.include?('*')
+        arguments.include?("*")
       end
 
       def preferred_name

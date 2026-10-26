@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../operators/vocabulary'
+require_relative "../../operators/vocabulary"
 
 module ConceptQL
   module Vocabularies
@@ -16,7 +16,7 @@ module ConceptQL
         end
 
         def column_to_search
-          vocab_entry.id == 'revenue_code' ? :revenue_code_source_value : :disease_class_source_value
+          vocab_entry.id == "revenue_code" ? :revenue_code_source_value : :disease_class_source_value
         end
       end
     end

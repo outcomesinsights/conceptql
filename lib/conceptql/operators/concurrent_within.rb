@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
-require_relative '../date_adjuster'
+require_relative "operator"
+require_relative "../date_adjuster"
 
 module ConceptQL
   module Operators
@@ -25,7 +25,7 @@ module ConceptQL
       validate_at_least_one_upstream
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
-      category 'Combine Streams'
+      category "Combine Streams"
       basic_type :set
       default_query_columns
 
@@ -42,7 +42,7 @@ module ConceptQL
         datasets = datasets.map do |ds|
           matching = ds.from_self(alias: :l)
 
-          (datasets - [ds]).each do |other|
+          (datasets - [ ds ]).each do |other|
             other = other
                     .from_self(alias: :r)
                     .where(adjusted_start_date <= Sequel[:r][:start_date])
@@ -50,7 +50,7 @@ module ConceptQL
                     .select(*matching_columns)
 
             matching = matching.where(other.where(matching_columns.map do |x|
-              [Sequel.qualify(:l, x), Sequel.qualify(:r, x)]
+              [ Sequel.qualify(:l, x), Sequel.qualify(:r, x) ]
             end).exists)
           end
 

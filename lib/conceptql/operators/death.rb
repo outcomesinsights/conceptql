@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'casting_operator'
+require_relative "casting_operator"
 
 module ConceptQL
   module Operators
@@ -9,7 +9,7 @@ module ConceptQL
 
       register __FILE__
 
-      desc 'Selects all death records'
+      desc "Selects all death records"
       domains :death
       allows_one_upstream
 
@@ -22,7 +22,7 @@ module ConceptQL
       end
 
       def i_point_at
-        [:person]
+        [ :person ]
       end
 
       def these_point_at_me

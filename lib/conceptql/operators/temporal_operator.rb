@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'binary_operator_operator'
-require_relative '../date_adjuster'
+require_relative "binary_operator_operator"
+require_relative "../date_adjuster"
 
 module ConceptQL
   module Operators
@@ -11,7 +11,7 @@ module ConceptQL
     # a Sequel expression to use for filtering.
     class TemporalOperator < BinaryOperatorOperator
       reset_categories
-      category 'Filter by Comparing'
+      category "Filter by Comparing"
       default_query_columns
 
       option :within, type: :string,

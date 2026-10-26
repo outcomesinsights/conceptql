@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-require 'sequelizer'
+require "sequelizer"
 
 DB = Object.new.extend(Sequelizer).db unless defined?(DB)

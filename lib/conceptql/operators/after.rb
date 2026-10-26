@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'temporal_operator'
+require_relative "temporal_operator"
 
 module ConceptQL
   module Operators
     class After < TemporalOperator
       register __FILE__
 
-      desc 'For each person, passes along left hand records with a start_date that occurs after the earliest end_date of a right hand record.'
+      desc "For each person, passes along left hand records with a start_date that occurs after the earliest end_date of a right hand record."
 
       allows_at_least_option
       within_skip :after
@@ -34,7 +34,7 @@ module ConceptQL
       end
 
       def compare_all?
-        !(options.keys & [:within]).empty?
+        !(options.keys & [ :within ]).empty?
       end
 
       def rhs_function

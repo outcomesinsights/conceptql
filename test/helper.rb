@@ -1,29 +1,29 @@
 # frozen_string_literal: true
 
-require 'simplecov'
+require "simplecov"
 SimpleCov.start do
   # `just test-duckdb` runs on the host after `just test` has left a root-owned
   # coverage/ behind (docker), so it writes its report somewhere it owns.
-  coverage_dir ENV.fetch('CONCEPTQL_COVERAGE_DIR', 'coverage')
-  add_filter '/test/'
+  coverage_dir ENV.fetch("CONCEPTQL_COVERAGE_DIR", "coverage")
+  add_filter "/test/"
   enable_coverage :branch
-  add_group('Missing') { |src| src.covered_percent < 100 }
-  add_group('Covered') { |src| src.covered_percent == 100 }
+  add_group("Missing") { |src| src.covered_percent < 100 }
+  add_group("Covered") { |src| src.covered_percent == 100 }
 end
 
-$LOAD_PATH << 'lib'
-require 'conceptql'
-ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
-require 'minitest/spec'
-require 'minitest/mock'
-require 'minitest/autorun'
+$LOAD_PATH << "lib"
+require "conceptql"
+ENV["MT_NO_PLUGINS"] = "1" # Work around stupid autoloading of plugins
+require "minitest/spec"
+require "minitest/mock"
+require "minitest/autorun"
 
 Minitest::Test.make_my_diffs_pretty!
 
 module Minitest
   class Spec
-    if ENV['TESTS_DIV_MOD']
-      div, mod = ENV['TESTS_DIV_MOD'].split(' ', 2).map(&:to_i)
+    if ENV["TESTS_DIV_MOD"]
+      div, mod = ENV["TESTS_DIV_MOD"].split(" ", 2).map(&:to_i)
       raise "invalid TESTS_DIV_MOD div: #{div}" unless div >= 2
       raise "invalid TESTS_DIV_MOD mod: #{mod} (div: #{div})" unless mod >= 0 && mod < div
 
@@ -42,16 +42,16 @@ module Minitest
 end
 
 def check_sequel(query, source, name)
-  file = Pathname.new('test') / 'fixtures' / source.to_s / "#{name}.txt"
+  file = Pathname.new("test") / "fixtures" / source.to_s / "#{name}.txt"
   actual_sql = query.sql
-  if !file.exist? || ENV['CONCEPTQL_OVERWRITE_TEST_RESULTS']
+  if !file.exist? || ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
     file.dirname.mkpath
     file.write(actual_sql)
   end
   reggy = file.read.chomp
-              .gsub('*', '\\*')
-              .gsub(' +', ' \\\\+')
-              .gsub('(', '\\(')
-              .gsub(')', '\\)')
+              .gsub("*", '\\*')
+              .gsub(" +", ' \\\\+')
+              .gsub("(", '\\(')
+              .gsub(")", '\\)')
   _(actual_sql).must_match(Regexp.new(reggy))
 end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/array/conversions'
-require 'active_support/core_ext/object/blank'
-require 'active_support/core_ext/string/inflections'
-require 'json'
-require 'open3'
-require 'timeout'
+require "active_support/core_ext/array/conversions"
+require "active_support/core_ext/object/blank"
+require "active_support/core_ext/string/inflections"
+require "json"
+require "open3"
+require "timeout"
 
 module ConceptQL
   module Utils
@@ -16,7 +16,7 @@ module ConceptQL
         when Hash
           Hash[
             h.map do |k, v|
-              [k.respond_to?(:to_sym) ? k.to_sym : k, rekey(v, opts)]
+              [ k.respond_to?(:to_sym) ? k.to_sym : k, rekey(v, opts) ]
             end
           ]
         when Sequel::Dataset
@@ -83,16 +83,16 @@ module ConceptQL
         tab = opts[:table] ? Sequel[opts[:table].to_sym] : Sequel
 
         strings = symbols.map do |symbol|
-          sub = '2000'
+          sub = "2000"
           col = Sequel.cast_string(tab[symbol])
           if symbol != :year_of_birth
-            sub = '01'
-            col = Sequel.function(:lpad, col, 2, '0')
+            sub = "01"
+            col = Sequel.function(:lpad, col, 2, "0")
           end
           Sequel.function(:coalesce, col, Sequel.expr(sub))
         end
 
-        strings_with_dashes = strings.zip(['-'] * (symbols.length - 1)).flatten.compact
+        strings_with_dashes = strings.zip([ "-" ] * (symbols.length - 1)).flatten.compact
         Sequel.join(strings_with_dashes)
       end
 
@@ -102,9 +102,9 @@ module ConceptQL
             info = column_info.slice(:type, :allow_null, :primary_key, :default, :comment)
             info[:null] = info.delete(:allow_null) ? nil : false
             info[:primary_key] = info.delete(:primary_key) ? true : nil
-            [column_name, info.compact]
+            [ column_name, info.compact ]
           end.to_h
-          [t, { columns: columns }]
+          [ t, { columns: columns } ]
         end.to_h
         schema.to_yaml
       end

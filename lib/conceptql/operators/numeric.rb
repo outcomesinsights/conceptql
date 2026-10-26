@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'pass_thru'
+require_relative "pass_thru"
 
 module ConceptQL
   module Operators
@@ -39,7 +39,7 @@ module ConceptQL
       end
 
       def domains(db)
-        stream.nil? ? [:person] : super
+        stream.nil? ? [ :person ] : super
       end
 
       # Without an upstream, Numeric emits exactly one row per patient via the

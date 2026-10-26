@@ -1,26 +1,26 @@
 # frozen_string_literal: true
 
-require_relative '../../db_helper'
+require_relative "../../db_helper"
 
 # Every ConceptQL::Database carries its own operator registry: vocabulary
 # operators built from config/vocabularies.csv and from that Database's own
 # lexicon, with the built-in operators merged over them.
-describe 'ConceptQL::Database#operators' do
+describe "ConceptQL::Database#operators" do
   def entry_id(row)
     ConceptQL::Vocabularies::Entry.new(row.to_hash.compact).id
   end
 
-  it 'lets a built-in operator win over a vocabulary of the same name' do
-    _(CDB.operators['gender']).must_equal ConceptQL::Operators::Gender
-    _(CDB.operators['race']).must_equal ConceptQL::Operators::Race
-    _(CDB.operators['ethnicity']).must_equal ConceptQL::Operators::Ethnicity
+  it "lets a built-in operator win over a vocabulary of the same name" do
+    _(CDB.operators["gender"]).must_equal ConceptQL::Operators::Gender
+    _(CDB.operators["race"]).must_equal ConceptQL::Operators::Race
+    _(CDB.operators["ethnicity"]).must_equal ConceptQL::Operators::Ethnicity
   end
 
-  it 'works for a Database with no connection' do
+  it "works for a Database with no connection" do
     operators = ConceptQL::Database.new(nil).operators
 
-    _(operators['icd9cm']).must_be :<=, ConceptQL::Operators::Vocabulary
-    _(operators['gender']).must_equal ConceptQL::Operators::Gender
+    _(operators["icd9cm"]).must_be :<=, ConceptQL::Operators::Vocabulary
+    _(operators["gender"]).must_equal ConceptQL::Operators::Gender
   end
 
   it "includes the test database's lexicon-only vocabularies" do
@@ -38,22 +38,22 @@ describe 'ConceptQL::Database#operators' do
     end
   end
 
-  it 'returns a frozen Hash' do
+  it "returns a frozen Hash" do
     _(CDB.operators).must_be :frozen?
     _(ConceptQL::Database.new(nil).operators).must_be :frozen?
   end
 
-  it 'takes the data model as an argument, defaulting to its own' do
+  it "takes the data model as an argument, defaulting to its own" do
     cdb = ConceptQL::Database.new(nil, data_model: :gdm)
 
     _(cdb.operators).must_be_same_as cdb.operators(:gdm)
-    _(cdb.operators(:omopv4_plus)['information_periods']).must_equal ConceptQL::Operators::InformationPeriods
+    _(cdb.operators(:omopv4_plus)["information_periods"]).must_equal ConceptQL::Operators::InformationPeriods
     _(cdb.operators(:omopv4_plus)).wont_be_same_as cdb.operators(:gdm)
   end
 
   describe "with a vocabulary only in one Database's lexicon" do
     let(:lexicon_db) do
-      Sequel.connect('sqlite:/').tap do |db|
+      Sequel.connect("sqlite:/").tap do |db|
         db.create_table!(:vocabulary) do
           String :vocabulary_id
           String :vocabulary_name
@@ -66,7 +66,7 @@ describe 'ConceptQL::Database#operators' do
           String :vocabulary_id
         end
         db.create_table!(:concept_relationship) { String :column }
-        db[:vocabulary].insert(vocabulary_id: 'EXAMPLE', vocabulary_name: 'Example Vocabulary')
+        db[:vocabulary].insert(vocabulary_id: "EXAMPLE", vocabulary_name: "Example Vocabulary")
       end
     end
 
@@ -77,19 +77,19 @@ describe 'ConceptQL::Database#operators' do
 
     let(:other_cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm) }
 
-    it 'has an operator for it, and another Database does not' do
-      _(cdb.operators['example']).must_be :<=, ConceptQL::Operators::Vocabulary
-      _(other_cdb.operators.key?('example')).must_equal false
+    it "has an operator for it, and another Database does not" do
+      _(cdb.operators["example"]).must_be :<=, ConceptQL::Operators::Vocabulary
+      _(other_cdb.operators.key?("example")).must_equal false
     end
 
-    it 'lets a query use it' do
+    it "lets a query use it" do
       _(cdb.query(%w[example 12]).sql).must_match(/'EXAMPLE'/)
     end
 
-    it 'lets a diagram use it' do
-      node = ConceptQL::Diagram.render([%w[example 12]], cdb: cdb)[:statements].first
+    it "lets a diagram use it" do
+      node = ConceptQL::Diagram.render([ %w[example 12] ], cdb: cdb)[:statements].first
 
-      _(node[:vocabularyId]).must_equal 'EXAMPLE'
+      _(node[:vocabularyId]).must_equal "EXAMPLE"
     end
   end
 end

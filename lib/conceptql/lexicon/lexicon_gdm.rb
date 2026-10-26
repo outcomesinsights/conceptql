@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lexicon_strategy'
+require_relative "lexicon_strategy"
 
 module ConceptQL
   class LexiconGDM < LexiconStrategy
@@ -25,14 +25,14 @@ module ConceptQL
     end
 
     def is_a_relationships(_data_db)
-      db[:mappings].where { Sequel.function(:lower, :relationship_id) =~ 'is_a' }
+      db[:mappings].where { Sequel.function(:lower, :relationship_id) =~ "is_a" }
     end
 
     def ancestors_table(_data_db)
       db[:ancestors]
     end
 
-    def concepts_table(_data_db, some_schema = nil)
+    def concepts_table(_data_db, _some_schema = nil)
       db[:concepts]
     end
 

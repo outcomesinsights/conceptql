@@ -12,7 +12,7 @@ module ConceptQL
       end
 
       def available?
-        system('which', command.first, out: File::NULL, err: File::NULL)
+        system("which", command.first, out: File::NULL, err: File::NULL)
       end
 
       def format(sql)

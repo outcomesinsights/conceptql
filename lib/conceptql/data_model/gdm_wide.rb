@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'gdm'
+require_relative "gdm"
 
 module ConceptQL
   module DataModel

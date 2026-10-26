@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lexicon_strategy'
+require_relative "lexicon_strategy"
 
 module ConceptQL
   # The strategy used when neither the dataset db nor the lexicon db has
@@ -27,7 +27,7 @@ module ConceptQL
     end
 
     def is_a_relationships(_data_db)
-      db[:mappings].where { Sequel.function(:lower, :relationship_id) =~ 'is_a' }
+      db[:mappings].where { Sequel.function(:lower, :relationship_id) =~ "is_a" }
     end
 
     def ancestors_table(_data_db)

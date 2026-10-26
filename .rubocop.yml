@@ -1,173 +1,31 @@
-inherit_from: .rubocop_todo.yml
-
-plugins:
-  - rubocop-minitest
-
+# Every Ruby repo, gems and apps alike (seed gator-rga.1, ruled 2026-10-02). Copy as
+# .rubocop.yml; the three lines marked PER REPO are the only ones that change.
+#
+# omakase is what `rails new` writes. It is NOT a whitelist: it disables TEN of RuboCop's
+# departments BY NAME (Bundler, Gemspec, Layout, Lint, Metrics, Naming, Performance, Rails,
+# Security, Style) and re-enables 44 Layout/Style cops inside them -- no Metrics, no
+# Documentation, the shape the Ruby core team's own configs have. A department it does NOT
+# name keeps its full default cop set, and every plugin on the PER REPO line below is such a
+# department: measured in sequel-hexspace (gator-b2m), rubocop-minitest 0.40.0 runs 51 of its
+# 55 cops under this config, while rubocop-rails runs 0 of 138 because Rails IS named. So the
+# plugins line is load-bearing, not decorative: each plugin brings its whole default set, and
+# an unwanted plugin cop is disabled below with a one-line reason (rule 6), never by dropping
+# the plugin. Measured by RUNNING `rubocop -a` on scratch copies, never by counting the JSON
+# `correctable` flag (that includes unsafe corrections -a refuses; it overstated
+# sequel-hexspace's yield, gator-no5): summarb and sequel-duckdb -> 0 left; sequel-hexspace
+# 5,530 of 5,544 corrected, 14 by hand (11 Lint/AssignmentInCondition, unsafe-only).
+# It leaves Lint OFF; the one addition below turns it on (49 real bugs fleet-wide when
+# measured). No .rubocop_todo.yml: delete it, autocorrect, fix the rest by hand, one commit,
+# .git-blame-ignore-revs.
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+plugins: [rubocop-minitest, rubocop-rake, rubocop-sequel]
+Lint:
+  Enabled: true
 AllCops:
-  TargetRubyVersion: 4.0
-  NewCops: enable
-  Exclude:
-    - 'vendor/**/*'
-    - 'bin/**/*'
-    - 'tmp/**/*'
-    - 'claude_stuff/**/*'
-
-Layout/IndentationWidth:
-  Width: 2
-
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
-
-Style/StringLiteralsInInterpolation:
-  EnforcedStyle: double_quotes
-
-Style/DefWithParentheses:
-  Enabled: false
-
-Style/MethodCallWithoutArgsParentheses:
-  Enabled: true
-
-Layout/LineLength:
-  Max: 120
-  AllowedPatterns: ['\A\s*#']
-  Exclude:
-    - '*.gemspec'
-    - 'test/**/*'
-    - 'Rakefile'
-    - 'lib/conceptql/behaviors/utilizable.rb'
-    - 'lib/conceptql/data_model/base.rb'
-    - 'lib/conceptql/operators/after.rb'
-    - 'lib/conceptql/operators/any_overlap.rb'
-    - 'lib/conceptql/operators/before.rb'
-    - 'lib/conceptql/operators/casting_operator.rb'
-    - 'lib/conceptql/operators/contains.rb'
-    - 'lib/conceptql/operators/during.rb'
-    - 'lib/conceptql/operators/episode.rb'
-    - 'lib/conceptql/operators/filter.rb'
-    - 'lib/conceptql/operators/information_periods.rb'
-    - 'lib/conceptql/operators/match.rb'
-    - 'lib/conceptql/operators/occurrence.rb'
-    - 'lib/conceptql/operators/one_in_two_out.rb'
-    - 'lib/conceptql/operators/operator.rb'
-    - 'lib/conceptql/operators/provider_filter.rb'
-    - 'lib/conceptql/operators/temporal_operator.rb'
-    - 'lib/conceptql/operators/time_window.rb'
-    - 'lib/conceptql/operators/trim_date_end.rb'
-    - 'lib/conceptql/operators/trim_date_start.rb'
-    - 'lib/conceptql/paths.rb'
-    - 'lib/conceptql/query_modifiers/gdm/drug_query_modifier.rb'
-    - 'lib/conceptql/query_modifiers/gdm/lab_query_modifier.rb'
-    - 'lib/conceptql/query_modifiers/gdm/provider_query_modifier.rb'
-    - 'lib/conceptql/query_modifiers/gdm_wide/drug_query_modifier.rb'
-    - 'lib/conceptql/query_modifiers/gdm_wide/lab_query_modifier.rb'
-    - 'lib/conceptql/scope.rb'
-
-Style/Documentation:
-  Enabled: false
-
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-Style/Lambda:
-  Enabled: false
-
-Style/ParallelAssignment:
-  Enabled: false
-
-Style/GuardClause:
-  Enabled: true
-
-Style/IfUnlessModifier:
-  Enabled: true
-
-Metrics/MethodLength:
-  Max: 25
-
-Metrics/ClassLength:
-  Max: 200
-
-Metrics/ModuleLength:
-  Max: 200
-
-Metrics/BlockLength:
-  Max: 50
-  Exclude:
-    - 'test/**/*'
-    - '*.gemspec'
-    - 'Rakefile'
-
-Style/ZeroLengthPredicate:
-  Enabled: false
-
-Naming/MemoizedInstanceVariableName:
-  Enabled: false
-
-Naming/MethodParameterName:
-  MinNameLength: 1
-
-Style/MultilineBlockChain:
-  Enabled: false
-
-Metrics/AbcSize:
-  Max: 35
-  Exclude:
-    - 'test/**/*'
-
-Metrics/CyclomaticComplexity:
-  Max: 15
-
-Metrics/PerceivedComplexity:
-  Max: 12
-
-Metrics/BlockNesting:
-  Max: 4
-
-Naming/PredicateMethod:
-  # multiple_vocabularies is a polymorphic operator hook exposed as
-  # Query#multiple_vocabularies, which t_shank calls; renaming it breaks callers.
-  AllowedMethods:
-    - call
-    - multiple_vocabularies
-
-Naming/AccessorMethodName:
-  Enabled: false
-
-Style/HashSyntax:
-  EnforcedStyle: ruby19
-  EnforcedShorthandSyntax: either
-
-Minitest/AssertEqual:
-  Enabled: true
-
-Minitest/RefuteEqual:
-  Enabled: true
-
-Layout/EmptyLinesAroundClassBody:
-  EnforcedStyle: empty_lines_except_namespace
-
-Layout/EmptyLinesAroundModuleBody:
-  EnforcedStyle: empty_lines_except_namespace
-
-Style/TrailingCommaInArguments:
-  EnforcedStyleForMultiline: comma
-
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: comma
-
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: comma
-
-Gemspec/DevelopmentDependencies:
-  Enabled: false
-
-Style/HashLikeCase:
-  Exclude:
-    - 'test/**/*'
-
-Lint/DuplicateBranch:
-  Exclude:
-    - 'test/**/*'
-
-Style/StringConcatenation:
-  Exclude:
-    - 'test/**/*'
+  # omakase curates new cops (they arrive with its gem bump), so this knob only reaches
+  # pending cops in Lint and the plugins: `enable` measured 111 offenses on sequel-duckdb,
+  # 108 of them Minitest/MultipleAssertions, a judgment cop. `disable` also silences the
+  # "not configured" notice RuboCop prints every run when the line is absent.
+  NewCops: disable
+  TargetRubyVersion: 3.3
+  Exclude: [vendor/**/*, bin/**/*, tmp/**/*, claude_stuff/**/*]

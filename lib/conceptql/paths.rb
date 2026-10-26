@@ -2,7 +2,7 @@
 
 # Pathname is core only from Ruby 4.0; on 3.x a clean `gem install` (no Bundler
 # preloading it) fails in ConceptQL.root without this. RuboCop targets 4.0.
-require 'pathname' # rubocop:disable Lint/RedundantRequireStatement
+require "pathname"
 
 module ConceptQL
   class << self
@@ -11,31 +11,31 @@ module ConceptQL
     end
 
     def schemas_dir
-      root / 'schemas'
+      root / "schemas"
     end
 
     def config_dir
-      root / 'config'
+      root / "config"
     end
 
     def vocabularies_file_path
-      ConceptQL.config_dir / 'vocabularies.csv'
+      ConceptQL.config_dir / "vocabularies.csv"
     end
 
     def multiple_vocabularies_file_path
-      ConceptQL.config_dir / 'multiple_vocabularies.csv'
+      ConceptQL.config_dir / "multiple_vocabularies.csv"
     end
 
     def custom_vocabularies_file_path
-      Pathname.new(ENV['CONCEPTQL_CUSTOM_VOCABULARIES'] || ConceptQL.config_dir / 'vocabularies.custom.csv')
+      Pathname.new(ENV["CONCEPTQL_CUSTOM_VOCABULARIES"] || ConceptQL.config_dir / "vocabularies.custom.csv")
     end
 
     def custom_multiple_vocabularies_file_path
-      Pathname.new(ENV['CONCEPTQL_CUSTOM_MULTIPLE_VOCABULARIES'] || ConceptQL.config_dir / 'multiple_vocabularies.custom.csv')
+      Pathname.new(ENV["CONCEPTQL_CUSTOM_MULTIPLE_VOCABULARIES"] || ConceptQL.config_dir / "multiple_vocabularies.custom.csv")
     end
 
     def race_file
-      ConceptQL.config_dir / 'race.yml'
+      ConceptQL.config_dir / "race.yml"
     end
   end
 end

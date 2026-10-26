@@ -12,8 +12,8 @@ module ConceptQL
         end
 
         def get_multiple_vocabularies
-          [ConceptQL.multiple_vocabularies_file_path,
-           ConceptQL.custom_multiple_vocabularies_file_path].select(&:exist?).map do |path|
+          [ ConceptQL.multiple_vocabularies_file_path,
+           ConceptQL.custom_multiple_vocabularies_file_path ].select(&:exist?).map do |path|
             CSV.foreach(path, headers: true, header_converters: :symbol).each_with_object({}) do |row, h|
               (h[operator_symbol(row[:operator])] ||= []) << row.to_hash
             end
@@ -27,7 +27,7 @@ module ConceptQL
         end
 
         def operator_symbol(word)
-          word.gsub(/\W+/, '_').downcase
+          word.gsub(/\W+/, "_").downcase
         end
 
         # This will override the to_metadata method and return the preferred name
@@ -46,13 +46,13 @@ module ConceptQL
 
       register_many
 
-      desc 'Selects records based on the given vocabularies.'
+      desc "Selects records based on the given vocabularies."
       argument :codes, type: :codelist
       basic_type :selection
-      category 'Select by Clinical Codes'
+      category "Select by Clinical Codes"
       validate_no_upstreams
       validate_at_least_one_argument
-      conceptql_spec_id 'vocabulary'
+      conceptql_spec_id "vocabulary"
 
       def query(db)
         # TODO: A much-more efficient method would be to find all those vocabs
@@ -100,7 +100,7 @@ module ConceptQL
 
       def aggregate_messages(message_sets)
         messages = message_sets.map do |message_set|
-          Hash[message_set.map { |message| [message.shift, message] }]
+          Hash[message_set.map { |message| [ message.shift, message ] }]
         end
 
         messages_keys = messages.map(&:keys).inject(:|)
@@ -111,7 +111,7 @@ module ConceptQL
 
         messages = messages.reject { |_, v| v.empty? }
 
-        messages.map { |k, v| [k, *v] }
+        messages.map { |k, v| [ k, *v ] }
       end
 
       def describe_codes(db, codes)
@@ -133,7 +133,7 @@ module ConceptQL
       def vocab_ops
         @vocab_ops ||= self.class.multiple_vocabularies[op_name].filter_map do |op_info|
           name = op_info[:vocabulary_id].to_s.downcase
-          next if op_info[:optional] == 'yes' && !nodifier.operators.key?(name)
+          next if op_info[:optional] == "yes" && !nodifier.operators.key?(name)
 
           nodifier.operators.fetch(name).new(nodifier, name, *arguments)
         end

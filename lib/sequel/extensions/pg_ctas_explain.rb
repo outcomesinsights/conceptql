@@ -12,8 +12,8 @@ module Sequel
     end
 
     def explain(sql, options = {})
-      operations = ['EXPLAIN']
-      operations << 'ANALYZE' if options[:analyze]
+      operations = [ "EXPLAIN" ]
+      operations << "ANALYZE" if options[:analyze]
       log_info(fetch("#{operations.join(' ')} #{sql}").map(:'QUERY PLAN').join("\r\n"))
     end
   end

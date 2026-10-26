@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../query_modifier'
+require_relative "../query_modifier"
 
 module ConceptQL
   module QueryModifiers
@@ -9,11 +9,11 @@ module ConceptQL
         attr_reader :join_id, :table, :source_column, :column
 
         def self.provided_columns
-          [:visit_source_concept_id]
+          [ :visit_source_concept_id ]
         end
 
         def self.has_required_columns?(cols)
-          needed = [:context_id]
+          needed = [ :context_id ]
           found = needed & cols
           needed == found
         end
@@ -29,8 +29,8 @@ module ConceptQL
         def modified_query
           return query unless dm.table_cols(source_table).include?(join_id)
 
-          left_alias = 'tab1'.to_sym
-          right_alias = 'tab2'.to_sym
+          left_alias = "tab1".to_sym
+          right_alias = "tab2".to_sym
 
           extra_table = query.db.from(table).select(Sequel.as(source_column, column), :id)
           ds = query.from_self(alias: left_alias)

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'English'
-require_relative 'window'
-require 'securerandom'
-require 'sequel'
+require "English"
+require_relative "window"
+require "securerandom"
+require "sequel"
 
 module ConceptQL
   # Scope coordinates the creation of any common table expressions that might
@@ -17,7 +17,7 @@ module ConceptQL
   # API for Recall operators to fetch the results/domains from
   # labeled operators.
   class Scope
-    DEFAULT_COLUMN_FAMILY = 'default'
+    DEFAULT_COLUMN_FAMILY = "default"
 
     DEFAULT_COLUMNS = {
       person_id: :Bigint,
@@ -100,7 +100,7 @@ module ConceptQL
       return unless force_temp_tables? && scratch_database.to_s.empty?
 
       raise ArgumentError,
-            'You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable'
+            "You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable"
     end
 
     def add_errors(key, errors)
@@ -134,7 +134,7 @@ module ConceptQL
       unless label.is_a?(String)
         op.instance_eval do
           @errors = []
-          add_error('invalid label')
+          add_error("invalid label")
         end
         return
       end
@@ -144,7 +144,7 @@ module ConceptQL
       if nested_recall?(label)
         op.instance_eval do
           @errors = []
-          add_error('nested recall')
+          add_error("nested recall")
         end
         return
       end
@@ -152,7 +152,7 @@ module ConceptQL
       if duplicate_label?(label) && !op.is_a?(Operators::Recall)
         op.instance_eval do
           @errors = []
-          add_error('duplicate label')
+          add_error("duplicate label")
         end
       end
 
@@ -186,7 +186,7 @@ module ConceptQL
       else
         ds = db.from(label_cte_name(label))
 
-        if ENV['CONCEPTQL_CHECK_COLUMNS']
+        if ENV["CONCEPTQL_CHECK_COLUMNS"]
           # Work around requests for columns by operators.  These
           # would fail because the CTE would not be defined.  You
           # don't want to define the CTE normally, but to allow the
@@ -207,7 +207,7 @@ module ConceptQL
     def domains(label, db)
       fetch_operator(label).domains(db)
     rescue StandardError
-      [:invalid]
+      [ :invalid ]
     end
 
     def sort_ctes(sorted, unsorted, deps)
@@ -236,6 +236,7 @@ module ConceptQL
 
     class CteExtractor < Sequel::ASTTransformer
       def initialize(scope, ctes)
+        super()
         @scope = scope
         @ctes = ctes
       end
@@ -276,7 +277,7 @@ module ConceptQL
           opts = w.except(:name, :dataset, :no_temp_table)
           # A shared table is created from its whole list, nested CTEs included.
           ds = w[SHARED_TABLE] ? w[:dataset] : recursive_extract_ctes(w[:dataset], ctes)
-          [w[:name], ds, opts]
+          [ w[:name], ds, opts ]
         end)
         # p [:rec_with, ctes.map(&:first), with]
         query = query.clone(with: keep.empty? ? nil : keep)
@@ -301,7 +302,7 @@ module ConceptQL
       end
 
       if (compounds = query.opts[:compounds])
-        query = query.clone(compounds: compounds.map { |t, ds, a| [t, recursive_extract_ctes(ds, ctes), a] })
+        query = query.clone(compounds: compounds.map { |t, ds, a| [ t, recursive_extract_ctes(ds, ctes), a ] })
         # p [:rec_compounds, ctes.map(&:first), compounds]
       end
 
@@ -328,7 +329,7 @@ module ConceptQL
     end
 
     def with_ctes(op, db, options = {})
-      raise 'recall operator use without matching label' unless valid?
+      raise "recall operator use without matching label" unless valid?
 
       query = op.evaluate(db)
       rdbms = op.rdbms
@@ -336,7 +337,7 @@ module ConceptQL
       query = query.from_self
       temp_tables = []
       ctes.each do |label, operator|
-        temp_tables << [label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables)]
+        temp_tables << [ label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables) ]
       end
       query = recursive_extract_ctes(query, temp_tables)
       shared_tables, temp_tables = temp_tables.partition { |_, _, with_opts| with_opts&.fetch(SHARED_TABLE, false) }
@@ -383,8 +384,8 @@ module ConceptQL
 
           define_method(:sql_statements) do |*args, &block|
             sql_statements = temp_tables.map do |table_name, ds|
-              [table_name, ds.sql]
-            end.compact.push([:query, sql(*args, &block)])
+              [ table_name, ds.sql ]
+            end.compact.push([ :query, sql(*args, &block) ])
             Hash[scope.shared_table_statements(shared_tables, op) + sql_statements]
           end
 
@@ -403,16 +404,16 @@ module ConceptQL
           temp_tables.each do |table_name, ds, with_opts|
             query = if with_opts.nil? || with_opts.empty?
                       query.with(table_name, ds)
-                    else
+            else
                       query.with(table_name, ds, with_opts)
-                    end
+            end
           end
         end
 
         scope = self
         query = query.with_extend do
           define_method(:sql_statements) do |*args, &block|
-            Hash[scope.shared_table_statements(shared_tables, op).push([:query, sql(*args, &block)])]
+            Hash[scope.shared_table_statements(shared_tables, op).push([ :query, sql(*args, &block) ])]
           end
 
           define_method(:drop_temp_tables) do |opts = {}|
@@ -477,13 +478,13 @@ module ConceptQL
     def cte_name(name, options = {})
       cte_parts = [
         opts[:table_prefix],
-        name.to_s.gsub(/\W+/, '_'),
+        name.to_s.gsub(/\W+/, "_"),
         $PROCESS_ID,
         @cte_name_next.call,
         SecureRandom.hex(16)
       ].compact
 
-      name = Sequel.identifier(cte_parts.join('_'))
+      name = Sequel.identifier(cte_parts.join("_"))
 
       name = name.qualify(scratch_database) if force_temp_tables?(options) && scratch_database
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -11,11 +11,11 @@ module ConceptQL
       validate_no_arguments
       validate_option Array, :left, :right
       validate_required_options :left, :right
-      category 'Filter by Comparing'
+      category "Filter by Comparing"
       basic_type :filter
 
       def upstreams
-        [left]
+        [ left ]
       end
 
       def code_list(db)
@@ -39,7 +39,7 @@ module ConceptQL
       end
 
       def all_upstreams
-        [left, right]
+        [ left, right ]
       end
 
       private
@@ -49,7 +49,7 @@ module ConceptQL
       end
 
       def join_columns(opts = {})
-        join_columns_option.map { |c| Sequel.expr([[Sequel[:l][c], Sequel[opts[:qualifier] || :r][c]]]) }
+        join_columns_option.map { |c| Sequel.expr([ [ Sequel[:l][c], Sequel[opts[:qualifier] || :r][c] ] ]) }
       end
 
       def join_columns_option
@@ -60,7 +60,7 @@ module ConceptQL
         h = {}
         h[:left] = left.annotate(db, opts) if left
         h[:right] = right.annotate(db, opts) if right
-        [options.merge(h), *arguments]
+        [ options.merge(h), *arguments ]
       end
 
       def create_upstreams

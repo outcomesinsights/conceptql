@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operators/operator'
+require_relative "operators/operator"
 
 module ConceptQL
   class Nodifier
@@ -17,28 +17,28 @@ module ConceptQL
     end
 
     def get_data_model(opts)
-      (opts[:data_model] || cdb.opts[:data_model] || ENV['CONCEPTQL_DATA_MODEL'] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
+      (opts[:data_model] || cdb.opts[:data_model] || ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
     end
 
     def create(operator, *values)
       operator = operator.to_s.downcase
-      if operator == 'algorithm'
+      if operator == "algorithm"
         statement, = algorithm_fetcher.call(values.first)
         if statement
           create(*statement)
         else
-          invalid_op(operator, values, 'invalid algorithm', values.first)
+          invalid_op(operator, values, "invalid algorithm", values.first)
         end
       elsif (klass = fetch_op(operator))
         klass.new(self, operator, *values)
       else
-        invalid_op(operator, values, 'invalid operator', operator)
+        invalid_op(operator, values, "invalid operator", operator)
       end
     end
 
     def to_metadata(opts = {})
       Hash[operators.map do |k, v|
-        [k, v.to_metadata(k, opts)]
+        [ k, v.to_metadata(k, opts) ]
       end.reject { |_k, v| v[:categories].empty? }.sort_by { |_k, v| v[:name] }]
     end
 
@@ -62,14 +62,14 @@ module ConceptQL
       @operator_aliases ||= operators.flat_map do |id, klass|
         next unless klass.aliases.present?
 
-        klass.aliases.map { |klass_alias| [klass_alias, id] }
+        klass.aliases.map { |klass_alias| [ klass_alias, id ] }
       end.compact.to_h
     end
 
     def invalid_op(operator, values, *error_args)
       options = values.pop if values.last.is_a?(Hash)
       options ||= {}
-      options = options.merge(errors: [error_args])
+      options = options.merge(errors: [ error_args ])
       values << options
       Operators::Invalid.new(self, operator, *values)
     end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../query_modifier'
+require_relative "../query_modifier"
 
 module ConceptQL
   module QueryModifiers
@@ -32,17 +32,17 @@ module ConceptQL
             ds = query.select_all
             ds = if ds.columns.include?(:provider_id)
                    ds
-                 elsif dm.table_cols(source_table).include?(:practitioner_id)
+            elsif dm.table_cols(source_table).include?(:practitioner_id)
                    ds.select_append(Sequel[:practitioner_id].as(:provider_id))
-                 else
+            else
                    ds.select_append(Sequel.cast(nil, :Bigint).as(:provider_id))
-                 end
+            end
             %i[role_type_concept_id context_specialty_concept_id practitioner_specialty_concept_id].each do |col|
               ds = if ds.columns.include?(col)
                      ds
-                   else
+              else
                      ds.select_append(Sequel.cast(nil, :Bigint).as(col))
-                   end
+              end
             end
             ds
           end.from_self

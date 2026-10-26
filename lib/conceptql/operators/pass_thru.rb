@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'operator'
+require_relative "operator"
 
 module ConceptQL
   module Operators
@@ -12,7 +12,7 @@ module ConceptQL
 
       def domains(db)
         doms = upstreams.compact.flat_map { |up| up.domains(db) }.uniq
-        doms.empty? ? [:invalid] : doms
+        doms.empty? ? [ :invalid ] : doms
       end
 
       def query_cols

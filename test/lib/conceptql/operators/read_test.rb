@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative '../../../helper'
+require_relative "../../../helper"
 
 describe ConceptQL::Operators::Read do
-  it 'be present in list of operators' do
-    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus).operators['read']).must_equal ConceptQL::Operators::Read
+  it "be present in list of operators" do
+    _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus).operators["read"]).must_equal ConceptQL::Operators::Read
   end
 
-  it 'should include measurement columns under GDM' do
+  it "should include measurement columns under GDM" do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
     _(db.query(%w[read xyz]).operator.required_columns).must_include(:range_high)
   end

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'binary_operator_operator'
+require_relative "binary_operator_operator"
 
 module ConceptQL
   module Operators
     class PersonFilter < BinaryOperatorOperator
       register __FILE__
 
-      desc 'Passes along left hand records with a corresponding person_id in the right hand records.'
+      desc "Passes along left hand records with a corresponding person_id in the right hand records."
       default_query_columns
 
       def query(db)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'pass_thru'
-require_relative '../date_adjuster'
+require_relative "pass_thru"
+require_relative "../date_adjuster"
 
 module ConceptQL
   module Operators
@@ -24,7 +24,7 @@ module ConceptQL
     class TimeWindow < PassThru
       register __FILE__
 
-      desc 'Adjusts start_date and end_date to create a new window of time for each record.'
+      desc "Adjusts start_date and end_date to create a new window of time for each record."
       option :start, type: :string,
                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.'
       option :end, type: :string,
@@ -33,7 +33,7 @@ module ConceptQL
       validate_one_upstream
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
-      category 'Modify Data'
+      category "Modify Data"
       basic_type :temporal
 
       def query(db)
