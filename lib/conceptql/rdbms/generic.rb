@@ -28,6 +28,13 @@ module ConceptQL
           .exists).from_self
       end
 
+      # True when lhs and rhs are equal or both are NULL. IS NOT DISTINCT
+      # FROM is standard SQL, and Postgres and DuckDB support it. Spark
+      # overrides this with its <=> operator.
+      def null_safe_equal(lhs, rhs)
+        Sequel.lit("(? IS NOT DISTINCT FROM ?)", lhs, rhs)
+      end
+
       def cast_date(date)
         Sequel.cast(date, Date)
       end

@@ -61,6 +61,12 @@ All notable changes to this project will be documented in this file.
   `simple_visit` as `extract_metadata`
 - A vocabulary statement with `*` no longer warns about the format of its other codes. The check
   for `*` never ran, because `Vocabulary#select_all?` is private
+- `match` without `only_columns` compared every column with `=`, so two NULL values never matched
+  and a stream matched with itself kept nothing. It now compares the key columns (`person_id`,
+  `criterion_id`, `criterion_table`, `criterion_domain`, `start_date`, `uuid`, `window_id`) with
+  `=` and the other columns NULL-safe (`IS NOT DISTINCT FROM`, `<=>` on Spark). `match` also
+  ignored `join_columns`. It now compares only the person and the listed columns, as the other
+  two-stream operators do, and rejects `join_columns` next to `only_columns` or `except_columns`
 
 ### Changed
 

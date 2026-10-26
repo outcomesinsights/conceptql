@@ -1,0 +1,49 @@
+[
+  "match",
+  {
+    "left": [
+      "icd9",
+      "412",
+      {
+        "uuid": true,
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 48,
+              "n": 37
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "right": [
+      "icd9",
+      "412",
+      {
+        "uuid": true,
+        "annotation": {
+          "counts": {
+            "condition_occurrence": {
+              "rows": 48,
+              "n": 37
+            }
+          }
+        },
+        "name": "ICD-9 CM"
+      }
+    ],
+    "join_columns": ["uuid"],
+    "only_columns": ["uuid"],
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["conflicting options", "join_columns", "only_columns"]]
+    },
+    "name": "Match"
+  }
+]
