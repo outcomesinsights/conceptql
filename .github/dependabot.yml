@@ -7,6 +7,12 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 10
+    # The OI gems are bumped on purpose, each with its own test run, not by
+    # Dependabot. `just release-check` reports when a newer release exists.
+    ignore:
+      - dependency-name: sequelizer
+      - dependency-name: sequel-duckdb
+      - dependency-name: sequel-hexspace
     groups:
       minor-and-patch:
         update-types: ["minor", "patch"]

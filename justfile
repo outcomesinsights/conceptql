@@ -163,12 +163,11 @@ bundle-update *ARGS:
 # the newest version conceptql could use:
 # - the lock is not current: `bundle lock --update --print` resolves the newest
 #   allowed versions without writing, and must match Gemfile.lock;
-# - a bound in conceptql.gemspec or the Gemfile excludes the newest release;
-# - an OI git gem is not at its branch HEAD (check-oi-pins).
+# - a bound in conceptql.gemspec or the Gemfile excludes the newest release.
 # A gem held back only by another gem's constraint is printed and does not fail,
 # because conceptql cannot change it. Fix a failure with `just bundle-update`.
 # Fail if any gem is behind the newest version conceptql could use
-release-check: check-oi-pins
+release-check:
     #!/usr/bin/env bash
     set -euo pipefail
     rc=0
@@ -197,40 +196,6 @@ release-check: check-oi-pins
       case "$verdict" in FAIL*) rc=1 ;; esac
     done <<<"$outdated"
     [ $rc -eq 0 ] && echo "ok   every gem is at the newest version conceptql allows"
-    exit $rc
-
-# `bundle update --source`, not `bundle lock --update`: the latter once bumped
-# sequel-duckdb's version to 0.2.1 but left its revision at the 0.1.0 commit, an
-# uninstallable lock (conceptql-stt). check-oi-pins then fails if any revision
-# still differs from its remote branch. A bundler local.<gem> override pins the
-# local checkout's HEAD instead, so the check also catches an unpushed one.
-# Re-pin this gem's OI git deps to their current main HEAD (review the diff)
-bump-oi: && check-oi-pins
-    bundle update --source sequelizer sequel-duckdb sequel-hexspace
-    @git --no-pager diff --stat -- Gemfile.lock
-
-# Fail unless every OI GIT block in the lock is pinned to its remote branch HEAD
-check-oi-pins lock="Gemfile.lock":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    pins=$(awk '/^[A-Z]/ { git = ($0 == "GIT"); remote = rev = ""; branch = "main" }
-      git && /^  remote: / { remote = $2 }
-      git && /^  revision: / { rev = $2 }
-      git && /^  branch: / { branch = $2 }
-      git && /^  specs:$/ && remote ~ /github\.com\/outcomesinsights\// { print remote, rev, branch }' "{{ lock }}")
-    [ -n "$pins" ] || { echo "No OI GIT blocks found in {{ lock }}"; exit 1; }
-    rc=0
-    while read -r remote rev branch; do
-      head=$(git ls-remote "$remote" "refs/heads/$branch" </dev/null | cut -f1)
-      if [ -z "$head" ]; then
-        echo "FAIL $remote: no refs/heads/$branch on the remote"; rc=1
-      elif [ "$rev" != "$head" ]; then
-        echo "FAIL $remote: locked at $rev but $branch is $head"; rc=1
-      else
-        echo "ok   $remote $rev"
-      fi
-    done <<<"$pins"
-    [ $rc -eq 0 ] || echo "{{ lock }} is not pinned to OI main: run 'bundle update --source <gem>' and re-check"
     exit $rc
 
 # Local pre-push CI gate. GitHub CI runs the same recipes: its lint job runs

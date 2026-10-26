@@ -120,7 +120,7 @@ Minitest. Tests in `test/`, named `*_test.rb`. Runner is `test/all.rb` which glo
 
 Releases are tag-based. A pushed `v*` tag runs `.github/workflows/release.yml`, which publishes to rubygems.org through RubyGems trusted publishing. No API key is stored anywhere. `rake release` (from `bundler/gem_tasks`) still exists, but it skips every check below.
 
-1. Run `just release-check`. It fails when `Gemfile.lock` is not the newest resolution, when our own gemspec or Gemfile bound excludes the newest release of a gem, or when a pin on an OI gem (sequelizer, sequel-duckdb, sequel-hexspace) is behind its default branch. A gem that another gem holds back is shown as `info` and does not fail. Fix every failure with `bundle update` or a bound change, and run `just ci` again, before step 2.
+1. Run `just release-check`. It fails when `Gemfile.lock` is not the newest resolution, or when our own gemspec or Gemfile bound excludes the newest release of a gem. This includes the OI gems (sequelizer, sequel-duckdb, sequel-hexspace), which the Gemfile takes from their rubygems.org releases. A gem that another gem holds back is shown as `info` and does not fail. Fix every failure with `bundle update` or a bound change, and run `just ci` again, before step 2.
 2. Bump `VERSION` in `lib/conceptql/version.rb`, run `bundle install` to update `Gemfile.lock`, and move the `[Unreleased]` entries in `CHANGELOG.md` under the new version.
 3. Land that commit on `main` and wait for the `Run Tests` workflow to pass on the push.
 4. Tag that commit and push the tag: `git tag v0.4.0 && git push origin v0.4.0`.
@@ -138,6 +138,6 @@ One-time setup, done by a repository owner: register the trusted publisher on ru
 - **Operator registration is data-model-specific** — operators specify which data models they apply to
 - **Postgres-specific SQL** exists in `rdbms/postgres.rb` (`DISTINCT ON`, etc.) — queries built for Postgres won't work on Presto/Spark without the correct adapter
 - **Temp tables vs CTEs** — `CONCEPTQL_FORCE_TEMP_TABLES=true` forces temp tables; `CONCEPTQL_AVOID_CTES=true` disables CTEs
-- **`sequelizer` loaded from GitHub `main` branch** (not a stable release pin)
-- **`sequel-hexspace`** also from GitHub — Spark support may be experimental
+- **The OI gems come from rubygems.org releases** (sequelizer `~> 0.4.0`, sequel-duckdb `~> 0.4.1`, sequel-hexspace `~> 2.1`). To test an unreleased change, point the Gemfile entry at a checkout with `path:` for that run and do not commit it
+- **`sequel-hexspace`** (Spark) is in an optional Gemfile group
 - **`Algorithm` operator** fetches stored ConceptQL statements from a `concepts` table — requires that table to exist
