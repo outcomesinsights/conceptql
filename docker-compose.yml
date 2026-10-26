@@ -27,7 +27,10 @@ services:
       # the image did not bake in.
       - /usr/local/bundle
   test_data:
-    image: outcomesinsights/misc:test_data.ignitor
+    # Pinned by digest so local runs and CI test the same database: the
+    # 2026-10-02 build (FY2027 vocabulary rebuild). The package is private;
+    # CI logs in to ghcr.io with GITHUB_TOKEN (packages: read).
+    image: "ghcr.io/outcomesinsights/misc:test_data.jumper@sha256:f4275e287d615dfd2dd6f70f821f7967eaaec5bd571ae3f16925651acfe75b22"
     command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c work_mem=4GB -c shared_buffers=6GB -c effective_cache_size=6GB -c max_parallel_workers_per_gather=0
     shm_size: 6g
     expose:

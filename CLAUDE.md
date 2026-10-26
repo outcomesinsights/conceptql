@@ -68,7 +68,7 @@ SEQUELIZER_SEARCH_PATH=slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose
 SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose run --rm conceptql
 ```
 
-The `test_data` image (`outcomesinsights/misc:test_data.ignitor`) contains:
+The `test_data` image (`ghcr.io/outcomesinsights/misc:test_data.jumper`, pinned by digest in `docker-compose.yml`) is a private ghcr.io package: run `docker login ghcr.io` once on a new host. To move to a new build, change the digest. It contains:
 
 - `slim` schema — GDM data tables (patients, clinical_codes, etc.)
 - `wide` schema — GDM wide tables (observations, supplemented_payer_reimbursements)
