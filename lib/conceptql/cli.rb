@@ -79,7 +79,7 @@ module ConceptQL
 
     desc "scope_annotate", "Reads in a statement and annotates it"
     def scope_annotate(statement_file)
-      q = ConceptQL::Query.new(cdb(nil), criteria_from_file(statement_file))
+      q = ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file))
       pp q.scope_annotate(skip_counts: true)
     end
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "climate_control"
+require "tempfile"
 require "tmpdir"
 require "fileutils"
 require_relative "../../db_helper"
@@ -16,6 +17,23 @@ describe ConceptQL::CLI do
       _(out).must_match(/^\s*\S+ metadata\b/)
       _(out).wont_match(/selection_operators/)
       _(ConceptQL::CLI.all_commands.keys).wont_include("selection_operators")
+    end
+  end
+
+  describe "scope_annotate" do
+    it "connects with the command's connection options" do
+      cli = ConceptQL::CLI.new([], { "database" => "from_options" })
+      seen = []
+      out = Tempfile.create([ "statement", ".json" ]) do |f|
+        f.write(JSON.generate(%w[icd9 412]))
+        f.flush
+        ClimateControl.modify(CONCEPTQL_PARQUET_TEST_DIR: nil) do
+          cli.stub(:db, ->(opts) { DB.tap { seen << opts } }) { capture_io { cli.scope_annotate(f.path) }.first }
+        end
+      end
+
+      _(seen.map { |opts| opts && opts["database"] }).must_equal([ "from_options" ])
+      _(out).must_match(/icd9/)
     end
   end
 
