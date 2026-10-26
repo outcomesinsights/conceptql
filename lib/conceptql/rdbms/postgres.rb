@@ -5,6 +5,7 @@ require_relative "generic"
 module ConceptQL
   module Rdbms
     class Postgres < Generic
+      # Returns from - to (see Generic#datediff).
       def datediff(from, to)
         Sequel.extract(:days, Sequel.cast(from, Time) - Sequel.cast(to, Time))
       end

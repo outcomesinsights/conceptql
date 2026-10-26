@@ -5,6 +5,9 @@ require_relative "generic"
 module ConceptQL
   module Rdbms
     class DuckDB < Generic
+      # Returns from - to (see Generic#datediff). DuckDB's
+      # datediff(part, startdate, enddate) returns enddate - startdate, so the
+      # arguments go in reversed.
       def datediff(from, to)
         Sequel.function(:datediff, "day", to, from)
       end

@@ -32,6 +32,8 @@ module ConceptQL
         Sequel.cast(date, Date)
       end
 
+      # The number of days from from_column to to_column: to_column - from_column.
+      # Note that datediff takes its arguments in the opposite order.
       def days_between(from_column, to_column)
         cast_date(to_column) - cast_date(from_column)
       end
@@ -65,6 +67,10 @@ module ConceptQL
         SqlFormatters::SQL_FORMATTER
       end
 
+      # Returns from - to in days, NOT to - from, so datediff(later, earlier)
+      # is positive. Every adapter keeps this order. This default emits
+      # Spark's datediff(endDate, startDate), which returns endDate - startDate,
+      # and Spark uses it as is. days_between(from, to) returns to - from.
       def datediff(from, to)
         Sequel.function(:datediff, from, to)
       end
