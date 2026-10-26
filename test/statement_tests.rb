@@ -1,4 +1,5 @@
 require "forwardable"
+require_relative "prettier_json"
 
 module ConceptQL
   class StatementResults
@@ -70,7 +71,8 @@ module ConceptQL
 
     def save(path, to_save = nil)
       FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, JSON.pretty_generate(to_save || fetch))
+      # In the layout `just fmt` gives it, so a new results file passes fmt-check.
+      File.write(path, PrettierJson.generate(to_save || fetch))
     end
 
     def pure_sql?
