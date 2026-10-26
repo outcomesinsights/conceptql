@@ -1,10 +1,12 @@
 ---
 id: conceptql-8u6
 title: 'Production Spark SQL from ConceptQL: ranked optimizations after adversarial review (2026-10-14)'
-status: captured
+status: resolved
 type: exploration
 created_at: 2026-10-14T17:05:51.210794+00:00
-updated_at: 2026-10-16T03:43:34.700410+00:00
+updated_at: 2026-10-26T17:26:41.934925+00:00
+resolved_at: 2026-10-26T17:26:41.934917+00:00
+resolution: "All ruled options shipped: option 1 hospitalization person filter (conceptql-dc0, 39dd6c15); option 3 one_in_two_out single read (conceptql-3ae 02d2c565, conceptql-7qo d9371d12); option 5 lexicon cache (conceptql-ogh, bbdac88d); vocabulary_id IN conjunct (conceptql-agx, 2822a16b); CPT4_HCPCS in 'CPT or HCPCS' (conceptql-ydh, affe54fa); option c cut-down name concept table (conceptql-auu, e1c308a1). Not pursued by Ryan's 2026-10-15 ruling: the MultipleVocabularies items, since that feature is being deprecated or removed. Option 2's remaining variants were superseded by option c. Efficacy: minor tweaks; the adversarial review held."
 tags:
   - performance
   - spark

@@ -1,10 +1,12 @@
 ---
 id: conceptql-873
 title: 'Hospitalization lists: build each once per export and reuse it across statements'
-status: captured
+status: resolved
 type: exploration
 created_at: 2026-10-16T20:27:35.377005+00:00
-updated_at: 2026-10-16T21:36:38.754703+00:00
+updated_at: 2026-10-26T17:23:58.378970+00:00
+resolved_at: 2026-10-26T17:23:58.378961+00:00
+resolution: "Shipped as share_utilization (bead conceptql-98p, merge 511edda9): ConceptQL::Database.new(db, share_utilization: true) and Database#shared_tables in lib/conceptql/database.rb; shared tables listed in Query#sql_statements per the 2026-10-16 ruling. Efficacy: significant tweak (create-on-read ruled first, then corrected to sql_statements because t_shank never reads rows through conceptql); a planning miss, catchable by checking the only caller's code path."
 ---
 
 ## Origin

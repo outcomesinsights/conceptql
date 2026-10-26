@@ -1,10 +1,12 @@
 ---
 id: conceptql-3wy
 title: 'DuckDB merges date + 30 days with date + 1 month in one SELECT list: report it upstream, and where does a workaround belong?'
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-15T02:56:27.272642+00:00
-updated_at: 2026-10-16T13:45:21.407232+00:00
+updated_at: 2026-10-26T17:23:58.958773+00:00
+resolved_at: 2026-10-26T17:23:58.958759+00:00
+resolution: "conceptql's questions are all ruled and discharged. Workaround ruled into sequel-duckdb (c139c5e, released in sequel-duckdb 0.4.1, which conceptql takes from rubygems since 79142762). Verified 2026-10-26: one_in_two_out differential 988 cases, 0 differences (claude_stuff/oito-diff-duckdb-released-20261026-092954.log); bead conceptql-a4j closed. Upstream report and the residual TIMESTAMPTZ case belong to sequel-duckdb seed sequel-duckdb-yzp (Ryan 2026-10-16: 'that's sequel duckdb's issue, not yours')."
 ---
 
 ## The defect

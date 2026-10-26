@@ -4,7 +4,7 @@ title: CPT4_HCPCS merged vocabulary — ConceptQL integration (deferred)
 status: captured
 type: decision
 created_at: 2026-06-04T17:06:48.933160+00:00
-updated_at: 2026-10-14T20:41:23.123203+00:00
+updated_at: 2026-10-26T17:30:56.088990+00:00
 tags:
   - cpt
   - hcpcs
@@ -29,3 +29,5 @@ OPEN (decide before implementing):
 - Standardness: merged concepts inherit standard_concept from source (can be S), so two standard concepts may exist for one meaning - implications for standard/descendant resolution + whether merged concepts need concept_ancestor / Maps-to rows (also deferred upstream).
 
 RULED 2026-10-14 (Ryan): "CPT4_HCPCS will be part of the cpt_or_hcpcs multi vocab and its own dynamic vocab operator. if you need a guard, add one." This answers the first open question: both. CPT4_HCPCS is a third row of "CPT or HCPCS" in config/multiple_vocabularies.csv, and it keeps the operator cpt4_hcpcs that DynamicVocabularies builds from any lexicon that carries it. The row is marked optional, so a Database whose lexicon lacks CPT4_HCPCS (for example the gdm_vocabs test schema) skips it. A missing required vocabulary still raises. In about a year "CPT or HCPCS" will use CPT4_HCPCS alone (Ryan, 2026-10-14). The format_regexp and standardness questions above stay open.
+
+RULED 2026-10-26 (Ryan): the format regexps come from the vocabulary_formats repo, the official source ('happy for you to submit feedback if you think they can be improved'). Bead conceptql-mxz now holds that work. The namespace question was settled by conceptql-ydh (affe54fa). Standardness does not affect conceptql: it resolves descendants only for provenance and hospitalization concepts, never for CPT or HCPCS codes, so the question is closed for conceptql and stays with the upstream vocabulary build.

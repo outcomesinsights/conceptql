@@ -4,7 +4,7 @@ title: 'Over-engineering audit 2026-10-07: cuts to make (all but 1, 2, 7)'
 status: captured
 type: decision
 created_at: 2026-10-07T17:50:51.199585+00:00
-updated_at: 2026-10-07T21:00:41.649582+00:00
+updated_at: 2026-10-26T17:30:56.948216+00:00
 tags:
   - ponytail-audit
   - cleanup
@@ -82,3 +82,7 @@ Pre-chain fix: conceptql-m5q. The test_data image's 2026-10-02 FY2027 rebuild sp
 Filed, not run: conceptql-pni (dead Chrome libs and the nokogiri build config in dockers/standard/Dockerfile; needs a decision about the published image tag).
 
 Still open here for deliberation: #1 (JigsawTree), #2 (Rakefile Presto/driftr + default task), #7 (dead optimizer). b8l noted that Query#optimized returns a stale cached dataset if called after #query, which is one more reason to delete it under #7.
+
+RULED 2026-10-26 (Ryan), finding 01: keep Diagram::JigsawTree and ship it in 0.4.0 as public API. It was added for the editor to adopt later. Findings 02 and 07 stay open.
+
+RULED 2026-10-26 (Ryan: include the remaining work in 0.4.0): item 02 goes with Presto removal (bead conceptql-wsf). Item 07, the dead query optimizer, is deleted before 0.4.0 (new bead).
