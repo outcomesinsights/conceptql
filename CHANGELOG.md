@@ -107,6 +107,10 @@ All notable changes to this project will be documented in this file.
   `Operator#optimized`, `Operator#unionable?`, `Operator#dup_values` and the
   `ConceptQL::Vocabularies::Behaviors::Sourcish` module are gone. Nothing in conceptql called
   `optimized`, so its union merging never ran, and the generated SQL does not change.
+- The `pass_thru` operator name, which never worked. `PassThru` had no query method, so a
+  statement that used it failed to generate SQL. A `pass_thru` statement is now an invalid
+  operator. The `PassThru` class stays as the base class of union, count, sum, numeric, dedup,
+  episode, time_window and co_reported.
 
 ## [0.3.0] - 2016-11-08
 
