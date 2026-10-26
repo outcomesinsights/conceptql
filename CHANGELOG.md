@@ -31,6 +31,12 @@ All notable changes to this project will be documented in this file.
   `scope_opts`. conceptql never drops these tables: the caller drops `shared_tables`. Off by
   default. On DuckDB, a t_shank prototype of this change cut one export with 40 hospitalization
   criteria from 6.85 to 5.10 minutes. Spark and Postgres timing are not measured.
+- Tag-based releases: pushing a `v*` tag runs `.github/workflows/release.yml`, which publishes the
+  gem to rubygems.org through RubyGems trusted publishing (no stored API key). It refuses unless the
+  tag equals `v` + `ConceptQL::VERSION`, the commit is on `main`, and the `Run Tests` workflow passed
+  on a push to `main` for that commit. Before publishing, it installs the built gem into an empty
+  `GEM_HOME` and checks that it loads and ships `config/` and `schemas/`. After publishing, it checks
+  that rubygems.org lists the version. See "Releasing" in `CLAUDE.md`.
 
 ### Fixed
 
