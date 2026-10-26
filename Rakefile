@@ -48,8 +48,8 @@ task :test_gdm do
   run_spec.call(:gdm)
 end
 
-desc 'Run tests with omopv4 data model'
-task default: :test_omopv4_plus
+desc 'Run the test suite (same as rake test)'
+task default: :test
 
 desc "Ingests client's CSV file for custom vocabularies"
 task :make_vocabs_csv, [ :csv_path ] do |_t, args|
@@ -155,50 +155,6 @@ task :diagnostics do
   pp db.tables
 end
 
-def cdb
-  @cdb ||= ConceptQL::Database.new(db, database_type: :presto)
-end
-
-def convert(from_file, to_file)
-  sql = [
-    cdb.query(JSON.parse(File.read(from_file))).sql,
-    ';'
-  ].join
-  # table_name = from_file.sub('test/statements', '').gsub('/', '_')
-  # ctas = db.send(:create_view_as_sql, sql)
-  File.write(to_file, sql)
-rescue ConceptQL::Query::QueryError
-  puts "#{from_file} puked"
-end
-
-def prestofy(sql)
-  tables = %w[
-    addresses
-    admission_details
-    clinical_codes
-    collections
-    concept
-    contexts
-    contexts_practitioners
-    costs
-    deaths
-    drug_exposure_details
-    facilities
-    information_periods
-    measurement_details
-    observations
-    patients
-    payer_reimbursements
-    practitioners
-  ].join('|')
-  tables_regexp = Regexp.new(%{"(#{tables})"})
-  sql
-    .gsub('AS text', 'AS VARCHAR')
-    .gsub(/AS float/i, 'AS DOUBLE')
-    .gsub(/make_interval\((\w+)s := (-?\d+)\)/, %q(interval '\2' \1))
-    .gsub(tables_regexp, %q("synpuf_250_ohdsi_wide_\1"))
-end
-
 Rake.application.options.trace_rules = true
 
 namespace :schemas do
@@ -217,106 +173,5 @@ namespace :schemas do
     end
     # task all: ['schemas/gdm.yml', 'schemas/gdm_wide.yml']
     task all: [ 'schemas/ohdsi_vocabs.yml' ]
-  end
-end
-
-namespace :test_script do
-  require 'rake/clean'
-
-  all_sql = 'build/sqls/all.sql'
-  all_presto_sql = 'build/sqls/all.presto.sql'
-  stmt_files = FileList.new('test/statements/**/*.json') do |fl|
-    fl.exclude(/anno_/)
-  end
-  sql_files = stmt_files.sub('test/statements', 'build/sqls/postgres').sub('.json', '.sql')
-  presto_sql_files = sql_files.sub('/postgres/', '/presto/')
-
-  stmt_files.zip(sql_files).each do |stmt_file, sql_file|
-    file sql_file => stmt_file do |t|
-      mkdir_p sql_file.pathmap('%d')
-      convert(t.source, t.name)
-    end
-  end
-
-  presto_sql_files.zip(sql_files) do |presto_sql_file, sql_file|
-    file presto_sql_file => sql_file do |_t|
-      mkdir_p presto_sql_file.pathmap('%d')
-      File.write(presto_sql_file, prestofy(File.read(sql_file)))
-    end
-  end
-
-  file all_sql => sql_files do |t|
-    File.write(t.name, t.prerequisites.map { |p| [ "-- #{p}", File.read(p) ].join("\n") }.join("\n"))
-  end
-
-  file all_presto_sql => presto_sql_files do |t|
-    File.write(t.name, t.prerequisites.map { |p| [ "-- #{p}", File.read(p) ].join("\n") }.join("\n"))
-  end
-
-  task default: all_presto_sql
-  CLEAN.include(sql_files, all_sql, all_presto_sql)
-end
-
-namespace :driftr_script do
-  require_relative 'lib/conceptql'
-  require_relative 'test/statement_tests'
-  require 'json'
-
-  driftr_script = '/tmp/synpuf250_driftr.json'
-  task default: driftr_script
-  file driftr_script do |t|
-    connection_info = {
-      adapter_name: 'presto',
-      args: {
-        host: 'presto.titan.jsaw.io',
-        port: 80,
-        catalog: 'hive',
-        schema: 'default',
-        user: 'whoever'
-      },
-      preamble: [
-        'CREATE SCHEMA IF NOT EXISTS jtemp'
-      ]
-    }
-    tests_h = {}
-    # ConceptQL::StatementFileTest.all(cdb, %r{icd9/crit_1.json}).each do |file_test|
-    ConceptQL::StatementFileTest.all(cdb).each do |file_test|
-      file_test.each_test do |results|
-        unless results.pure_sql?
-          puts "Skip #{results.message}"
-          next
-        end
-
-        puts "Make #{results.message}"
-
-        view_name = results.message.gsub(/\W+/, '_')
-        from_view = cdb.db.send(
-          :create_view_sql,
-          view_name.to_sym,
-          results.prep.sql,
-          replace: true,
-          dont_record: true
-        )
-        sqls = results.cql_query.sql_statements(:drop_tables, :create_tables).merge(query: from_view)
-        sqls = sqls.values.map { |sql| prestofy(sql) }
-
-        tests_h[results.message] = {
-          sql: sqls,
-          expectations: {
-            view_name => {
-              type: 'json',
-              contents: JSON.parse(results.expected)
-            }
-          }
-        }
-      end
-    end
-
-    h = {
-      connection_info: connection_info,
-      tests: tests_h
-    }
-
-    File.write(t.name, JSON.pretty_generate(h))
   end
 end

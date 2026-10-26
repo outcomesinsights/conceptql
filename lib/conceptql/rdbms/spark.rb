@@ -12,24 +12,6 @@ module ConceptQL
       def preferred_formatter
         SqlFormatters::PG_FORMAT
       end
-
-      def primary_concepts(db, all_primary_ids)
-        db[Sequel[:clinical_codes].as(:pcc)]
-          .where(provenance_concept_id: all_primary_ids)
-          .select(
-            Sequel[:pcc][:collection_id].as(:collection_id),
-            Sequel[:pcc][:clinical_code_concept_id].as(:concept_id),
-            Sequel[:pcc][:clinical_code_source_value].as(:concept_code),
-            Sequel[:pcc][:clinical_code_vocabulary_id].as(:vocabulary_id),
-            Sequel[true].as(:is_primary)
-          )
-          .select_append(Sequel[:ROW_NUMBER].function.over(
-            partition: :collection_id,
-            order: [ Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id] ]
-          ).as(:nummy))
-          .from_self
-          .where(nummy: 1)
-      end
     end
   end
 end

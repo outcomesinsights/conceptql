@@ -5,22 +5,9 @@ require_relative "generic"
 module ConceptQL
   module Rdbms
     class Postgres < Generic
-      def days_between(from_column, to_column)
-        cast_date(to_column) - cast_date(from_column)
-      end
-
+      # Returns from - to (see Generic#datediff).
       def datediff(from, to)
         Sequel.extract(:days, Sequel.cast(from, Time) - Sequel.cast(to, Time))
-      end
-
-      def create_options(_scope, _ds)
-        opts = {}
-        opts[:analyze] = opts[:explain] = explain_temp_tables?
-        opts
-      end
-
-      def drop_options
-        {}
       end
 
       def post_create(db, table_name)
@@ -31,6 +18,8 @@ module ConceptQL
         SqlFormatters::POSTGRES
       end
 
+      # DISTINCT ON is Postgres-only. The other adapters inherit
+      # Generic#primary_concepts, which uses ROW_NUMBER() instead.
       def primary_concepts(db, all_primary_ids)
         db[Sequel[:clinical_codes].as(:pcc)]
           .where(provenance_concept_id: all_primary_ids)
@@ -43,7 +32,7 @@ module ConceptQL
           )
           .order(Sequel[:pcc][:collection_id], Sequel[:pcc][:clinical_code_concept_id])
           .from_self
-          .distinct(:collection_id) # This generates DISTINCT ON which is PostgreSQL-specific
+          .distinct(:collection_id)
       end
 
       def analyze_temp_tables?

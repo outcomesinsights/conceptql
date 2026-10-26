@@ -26,4 +26,13 @@ describe ConceptQL::Rdbms::DuckDB do
       _(result).must_match(/WHERE \("nummy" = 1\)/i)
     end
   end
+
+  describe "#supports_materialized?" do
+    it "marks operator CTEs AS MATERIALIZED" do
+      cdb = ConceptQL::Database.new(db, data_model: :gdm, database_type: :duckdb)
+      sql = cdb.query(%w[gender male]).sql
+
+      _(sql).must_match(/WITH "gender_\d+_1_\w+" AS MATERIALIZED/i)
+    end
+  end
 end
