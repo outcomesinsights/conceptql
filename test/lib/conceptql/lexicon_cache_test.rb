@@ -195,9 +195,12 @@ describe "ConceptQL::Lexicon lookup cache" do
           @calls = Hash.new(0)
         end
 
+        # The answers to give, in order; after the last one, "not missing".
+        attr_accessor :missing_answers
+
         def table_is_missing?(_data_db)
           @calls[:table_is_missing?] += 1
-          false
+          Array(missing_answers).shift || false
         end
 
         def concepts(_data_db, _vocabulary_id, codes = [])
@@ -218,6 +221,17 @@ describe "ConceptQL::Lexicon lookup cache" do
       _(table_strategy.calls[:concepts]).must_equal 2
     end
 
+    it "checks a missing concept table again, and not after it appears" do
+      lexicon = ConceptQL::Lexicon.new(nil, strategy: table_strategy, cache: true)
+      table_strategy.missing_answers = [ true ]
+
+      _(lexicon.table_is_missing?(nil)).must_equal true
+      _(lexicon.table_is_missing?(nil)).must_equal false
+      _(lexicon.table_is_missing?(nil)).must_equal false
+
+      _(table_strategy.calls[:table_is_missing?]).must_equal 2
+    end
+
     it "checks the concept table every time when caching is off" do
       lexicon = ConceptQL::Lexicon.new(nil, strategy: table_strategy)
 
@@ -236,6 +250,7 @@ describe "ConceptQL::Lexicon lookup cache" do
       Object.new.tap do |db|
         calls = Hash.new(0)
         db.define_singleton_method(:calls) { calls }
+        db.define_singleton_method(:tables) { tables }
         db.define_singleton_method(:table_exists?) do |table|
           calls[table] += 1
           tables.include?(table)
@@ -267,8 +282,23 @@ describe "ConceptQL::Lexicon lookup cache" do
         _(cdb.source_table_exists?(partial, :observations)).must_equal false
       end
 
+      # Only tables that exist are remembered; missing ones are asked again.
       _(full.calls).must_equal(patients: 1, clinical_codes: 1)
-      _(partial.calls).must_equal(patients: 1, clinical_codes: 1, observations: 1)
+      _(partial.calls).must_equal(patients: 1, clinical_codes: 2, observations: 2)
+    end
+
+    it "asks again after a missing table, and not after it appears" do
+      cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide, cache_lookups: true)
+      db = counting_db
+
+      # A transient error looks the same: Sequel's table_exists? answers false.
+      _(cdb.source_table_exists?(db, :observations)).must_equal false
+      _(cdb.source_table_exists?(db, :observations)).must_equal false
+      _(db.calls).must_equal(observations: 2)
+
+      db.tables << :observations
+      2.times { _(cdb.source_table_exists?(db, :observations)).must_equal true }
+      _(db.calls).must_equal(observations: 3)
     end
 
     it "gives each Database its own answers" do

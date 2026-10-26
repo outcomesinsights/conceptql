@@ -112,14 +112,17 @@ module ConceptQL
     end
 
     # Whether a data model's source table exists in db. With cache_lookups on,
-    # each answer is kept per db and table for the life of this Database, as
-    # the Lexicon keeps its lookups. Only the data model's fixed source tables
+    # a table that exists is remembered per db and table for the life of this
+    # Database, as the Lexicon keeps its lookups. A missing table is checked
+    # again on every call: Sequel's table_exists? also answers false on a
+    # database error, and one transient error must not turn off the database
+    # checks for the whole export. Only the data model's fixed source tables
     # come here, never a table that conceptql creates during a run.
     def source_table_exists?(db, table)
       return db.table_exists?(table) unless @source_tables
 
       key = [ db, table ]
-      @source_tables.fetch(key) { @source_tables[key] = db.table_exists?(table) }
+      @source_tables.fetch(key) { db.table_exists?(table) && (@source_tables[key] = true) }
     end
 
     def lexicon
