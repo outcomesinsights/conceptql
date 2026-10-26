@@ -62,6 +62,8 @@ All notable changes to this project will be documented in this file.
   DuckDB suite against libduckdb 1.5.6 and 2.0.0
 - `just release-check` fails when a dependency is behind its newest allowed release. The release
   procedure runs it first
+- Docker test runs use the ghcr `test_data.jumper` image pinned by digest, the same one as CI, and
+  run as the calling user, so they leave no root-owned files. The runner image drops Chrome's libraries
 
 ## [0.3.0] - 2016-11-08
 
