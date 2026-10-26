@@ -40,18 +40,3 @@ module Minitest
     end
   end
 end
-
-def check_sequel(query, source, name)
-  file = Pathname.new("test") / "fixtures" / source.to_s / "#{name}.txt"
-  actual_sql = query.sql
-  if !file.exist? || ENV["CONCEPTQL_OVERWRITE_TEST_RESULTS"]
-    file.dirname.mkpath
-    file.write(actual_sql)
-  end
-  reggy = file.read.chomp
-              .gsub("*", '\\*')
-              .gsub(" +", ' \\\\+')
-              .gsub("(", '\\(')
-              .gsub(")", '\\)')
-  _(actual_sql).must_match(Regexp.new(reggy))
-end
