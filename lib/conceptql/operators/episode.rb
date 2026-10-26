@@ -129,7 +129,9 @@ module ConceptQL
       end
 
       ##
-      # Method to generate Impala/PostgreSQL specific sequel to add a particular timeframe (days, months, etc) to a date
+      # Adds `by` units of `timeframe` (days, months, etc) to the date `from`.
+      # PostgreSQL and DuckDB multiply a one-unit INTERVAL; other databases
+      # (Spark) use the INTERVAL n unit form.
       #
 
       def date_adjust_add(db, from, by, timeframe)

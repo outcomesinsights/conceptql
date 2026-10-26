@@ -27,7 +27,6 @@ Gemfile.local.lock
 doc/.?????????*
 .ci/logs/
 .ci/cids/
-.ci.Gemfile.lock
 .byebug_history
 .specstory/
 .claude/

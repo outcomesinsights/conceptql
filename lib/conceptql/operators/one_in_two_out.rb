@@ -250,7 +250,7 @@ module ConceptQL
           .select_append do |o|
           o.row_number.function.over(partition: matching_columns,
                                      order: [
-                                       rdbms.partition_fix(:start_date), :criterion_id
+                                       :start_date, :criterion_id
                                      ]).as(:rn)
         end
           .from_self
