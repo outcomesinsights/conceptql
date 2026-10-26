@@ -91,16 +91,41 @@ module ConceptQL
         []
       end
 
+      # The per-code warnings a Vocabulary operator gives, from most to least
+      # specific. See #code_warnings.
+      BAD_FORMAT = "improperly formatted code"
+      UNKNOWN_CODE = "unknown code(s)"
+      CODE_WARNINGS = [ BAD_FORMAT, UNKNOWN_CODE ].freeze
+
       def additional_validation(db, opts = {})
         vocab_ops.each { |vo| vo.valid?(db, opts) }
 
         @errors += aggregate_messages(vocab_ops.map(&:errors))
-        @warnings += aggregate_messages(vocab_ops.map(&:warnings))
+        @warnings += aggregate_messages(vocab_ops.map { |vo| vo.warnings.reject { |w| CODE_WARNINGS.include?(w.first) } })
+        @warnings += code_warnings
+      end
+
+      # A code gets a warning only when every vocabulary rejects it, for any
+      # reason. It is an improperly formatted code only when every vocabulary
+      # says so. When at least one vocabulary accepts its format but does not
+      # know it, it is an unknown code. (12345 is badly formatted for HCPCS but
+      # a well-formed, unknown CPT4 code, so it is unknown.)
+      def code_warnings
+        verdicts = vocab_ops.map do |vo|
+          vo.warnings.each_with_object({}) do |(message, *codes), verdict|
+            codes.each { |code| verdict[code] ||= message } if CODE_WARNINGS.include?(message)
+          end
+        end
+
+        rejected = arguments.uniq.select { |code| verdicts.all? { |verdict| verdict.key?(code) } }
+        bad_format, unknown = rejected.partition { |code| verdicts.all? { |verdict| verdict[code] == BAD_FORMAT } }
+
+        [ [ BAD_FORMAT, *bad_format ], [ UNKNOWN_CODE, *unknown ] ].reject { |warning| warning.length == 1 }
       end
 
       def aggregate_messages(message_sets)
         messages = message_sets.map do |message_set|
-          Hash[message_set.map { |message| [ message.shift, message ] }]
+          message_set.to_h { |message, *args| [ message, args ] }
         end
 
         messages_keys = messages.map(&:keys).inject(:|)
