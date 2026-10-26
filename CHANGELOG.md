@@ -48,6 +48,11 @@ All notable changes to this project will be documented in this file.
 - Spark CI downloads its test data from the repo variable `SPARK_TEST_DATA_URL` and checks it
   against `.github/synpuf_test_data.tgz.sha256` before it extracts it. The hardcoded Dropbox link
   it used was dead
+- CLI: `conceptql metadata` raised ArgumentError when it wrote metadata.json, and
+  `CONCEPTQL_PARQUET_TEST_DIR` raised NoMethodError (`String#glob`) for every command that
+  connects to a database. It now makes the parquet files of each directory in its glob ready.
+  `conceptql scope_annotate` ignored the connection options, and `conceptql help` listed
+  `simple_visit` as `extract_metadata`
 
 ### Changed
 
@@ -78,6 +83,7 @@ All notable changes to this project will be documented in this file.
   emitted `DISTINCT ON`, which Presto does not support. The Rakefile's Presto scaffolding
   (`test_script` and `driftr_script` namespaces, `convert`, `prestofy`, the Presto `cdb`) is
   removed too. The default rake task is now `test` instead of `test_omopv4_plus`
+- The `conceptql selection_operators` command, which had raised NameError since 2016.
 
 ## [0.3.0] - 2016-11-08
 

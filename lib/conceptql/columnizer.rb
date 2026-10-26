@@ -16,7 +16,7 @@ module ConceptQL
 
       def sequelized
         col = name
-        if (q = options[:qualifer])
+        if (q = options[:qualifier])
           col = Sequel.qualify(q, col)
         end
 
@@ -67,7 +67,7 @@ module ConceptQL
         select_method = :select_append
       end
 
-      return if ungrouped.empty?
+      return query if ungrouped.empty?
 
       query.send(select_method, *ungrouped.map(&:sequelized))
     end

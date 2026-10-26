@@ -79,7 +79,7 @@ module ConceptQL
 
     desc "scope_annotate", "Reads in a statement and annotates it"
     def scope_annotate(statement_file)
-      q = ConceptQL::Query.new(cdb(nil), criteria_from_file(statement_file))
+      q = ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file))
       pp q.scope_annotate(skip_counts: true)
     end
 
@@ -108,39 +108,18 @@ module ConceptQL
 
     desc "metadata", "Generates the metadata.js file for the JAM"
     def metadata
-      File.write("metadata.js", "$metadata = #{ConceptQL.metadata(cdb(options), warn: true).to_json};")
-      File.write("metadata.json", ConceptQL.metadata.to_json)
+      json = ConceptQL.metadata(cdb(options), warn: true).to_json
+      File.write("metadata.js", "$metadata = #{json};")
+      File.write("metadata.json", json)
       return unless system("which", "json_pp", out: File::NULL, err: File::NULL)
 
       system("cat metadata.json | json_pp", out: "metadata_pp.json")
     end
 
-    desc "extract_metadata", "test visiting"
+    desc "simple_visit STATEMENT_FILE",
+         "Prints the operators, depth and selection-node count of the statement in STATEMENT_FILE"
     def simple_visit(statement_file)
       pp cdb(options).query(criteria_from_file(statement_file)).extract_metadata
-    end
-
-    desc "selection_operators", "Generates a TSV of all the selection operators"
-    def selection_operators
-      require "csv"
-      CSV.open("selection_operators.tsv", "w", col_sep: "\t") do |csv|
-        csv << [ "name" ]
-        ConceptQL.metadata[:operators].values.select do |v|
-          v[:basic_type] == :selection
-        end.map { |v| v[:preferred_name] }.each do |name|
-          csv << [ name ]
-        end
-      end
-
-      CSV.open("domains.tsv", "w", col_sep: "\t") do |csv|
-        csv << [ "name" ]
-        ConceptQL::Operators::TABLE_COLUMNS.each do |domain, columns|
-          next unless columns.include?(:person_id)
-          next if domain.to_s =~ /era\Z/
-
-          csv << [ domain ]
-        end
-      end
     end
 
     desc "dumpit", "Dumps out test data into CSVs"
@@ -176,8 +155,9 @@ module ConceptQL
     def cdb(options)
       data_db = db(options)
       cdb = ConceptQL::Database.new(data_db)
-      if ENV["CONCEPTQL_PARQUET_TEST_DIR"]
-        data_db.make_ready(search_paths: Pathname.new(ENV["CONCEPTQL_PARQUET_TEST_DIR"].glob("*.parquet")))
+      # A glob of directories, in search path order: "/data/{wide,slim}".
+      if (parquet_dirs = ENV["CONCEPTQL_PARQUET_TEST_DIR"])
+        data_db.make_ready(search_path: Dir[parquet_dirs].map { |dir| Pathname.new(dir).glob("*.parquet") })
       end
       cdb
     end
