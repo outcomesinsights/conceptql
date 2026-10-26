@@ -643,6 +643,14 @@ module ConceptQL
       def use_inner_join?
         options[:inner_join]
       end
+
+      # The names in an option that lists columns (join_columns, only_columns
+      # and so on), as symbols. A JSON statement gives them as strings, and
+      # Sequel renders a String as a string literal, not as a column. Call it
+      # only for options that name columns: other options are free-form.
+      def column_names_option(name)
+        options[name]&.map(&:to_sym)
+      end
     end
   end
 end
