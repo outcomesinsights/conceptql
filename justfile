@@ -120,6 +120,11 @@ test-full:
     ts=$(date +%Y%m%d%H%M%S)
     mkdir -p {{ log_dir }}/gdm_wide {{ log_dir }}/gdm_ohdsi {{ log_dir }}/gdm_vocabs
 
+    # Create or recreate test_data once, before the parallel runs. When its image
+    # or config has changed, each `docker compose run` would try to recreate it,
+    # and the losers fail with "container name ... is already in use".
+    docker compose up -d test_data
+
     echo "Running all 3 CI matrix configs in parallel..."
 
     SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide \
