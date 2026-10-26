@@ -144,6 +144,46 @@ test-full:
 bundle-update *ARGS:
     bundle update {{ ARGS }}
 
+# Run before every release (CLAUDE.md, Releasing). Fails when a gem is behind
+# the newest version conceptql could use:
+# - the lock is not current: `bundle lock --update --print` resolves the newest
+#   allowed versions without writing, and must match Gemfile.lock;
+# - a bound in conceptql.gemspec or the Gemfile excludes the newest release;
+# - an OI git gem is not at its branch HEAD (check-oi-pins).
+# A gem held back only by another gem's constraint is printed and does not fail,
+# because conceptql cannot change it. Fix a failure with `just bundle-update`.
+# Fail if any gem is behind the newest version conceptql could use
+release-check: check-oi-pins
+    #!/usr/bin/env bash
+    set -euo pipefail
+    rc=0
+    fresh=$(bundle lock --update --print 2>/dev/null)
+    if ! diff -u Gemfile.lock <(printf '%s\n' "$fresh") >/dev/null; then
+      echo "FAIL Gemfile.lock is not current. \`bundle lock --update\` would change:"
+      diff -u Gemfile.lock <(printf '%s\n' "$fresh") | grep -E '^[-+]    [a-z]' | sed 's/^/  /' || true
+      rc=1
+    fi
+    outdated=$(bundle outdated --parseable 2>/dev/null || true)
+    while IFS= read -r line; do
+      [ -n "$line" ] || continue
+      verdict=$(printf '%s\n' "$line" | FRESH="$fresh" ruby -e '
+        line = $stdin.read
+        name = line[/\A(\S+)/, 1]
+        newest = line[/newest ([^\s,]+)/, 1]
+        requested = line[/requested ([^)]+)/, 1]
+        if requested && !Gem::Requirement.new(requested.split(", ")).satisfied_by?(Gem::Version.new(newest))
+          puts "FAIL #{name} #{newest} is excluded by our own bound \"#{requested}\""
+        elsif ENV.fetch("FRESH").include?("\n    #{name} (#{newest}")
+          puts "behind #{name}: #{newest} is allowed but not locked"
+        else
+          puts "info #{name} #{newest} is held back by another gem"
+        end')
+      echo "$verdict"
+      case "$verdict" in FAIL*) rc=1 ;; esac
+    done <<<"$outdated"
+    [ $rc -eq 0 ] && echo "ok   every gem is at the newest version conceptql allows"
+    exit $rc
+
 # `bundle update --source`, not `bundle lock --update`: the latter once bumped
 # sequel-duckdb's version to 0.2.1 but left its revision at the 0.1.0 commit, an
 # uninstallable lock (conceptql-stt). check-oi-pins then fails if any revision

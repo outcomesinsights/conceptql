@@ -120,9 +120,10 @@ Minitest. Tests in `test/`, named `*_test.rb`. Runner is `test/all.rb` which glo
 
 Releases are tag-based. A pushed `v*` tag runs `.github/workflows/release.yml`, which publishes to rubygems.org through RubyGems trusted publishing. No API key is stored anywhere. `rake release` (from `bundler/gem_tasks`) still exists, but it skips every check below.
 
-1. Bump `VERSION` in `lib/conceptql/version.rb`, run `bundle install` to update `Gemfile.lock`, and move the `[Unreleased]` entries in `CHANGELOG.md` under the new version.
-2. Land that commit on `main` and wait for the `Run Tests` workflow to pass on the push.
-3. Tag that commit and push the tag: `git tag v0.4.0 && git push origin v0.4.0`.
+1. Run `just release-check`. It fails when `Gemfile.lock` is not the newest resolution, when our own gemspec or Gemfile bound excludes the newest release of a gem, or when a pin on an OI gem (sequelizer, sequel-duckdb, sequel-hexspace) is behind its default branch. A gem that another gem holds back is shown as `info` and does not fail. Fix every failure with `bundle update` or a bound change, and run `just ci` again, before step 2.
+2. Bump `VERSION` in `lib/conceptql/version.rb`, run `bundle install` to update `Gemfile.lock`, and move the `[Unreleased]` entries in `CHANGELOG.md` under the new version.
+3. Land that commit on `main` and wait for the `Run Tests` workflow to pass on the push.
+4. Tag that commit and push the tag: `git tag v0.4.0 && git push origin v0.4.0`.
 
 The workflow refuses to publish unless the tag is `v` + `ConceptQL::VERSION`, the commit is on `main`, and a push-to-`main` run of `run_tests.yml` succeeded on that exact commit. It runs no test suite itself. If the tag was pushed before CI finished, re-run the release workflow once CI is green. Before it publishes, it installs the built gem into an empty `GEM_HOME` and checks that it loads, creates a `ConceptQL::Database`, and contains every file under `config/` and `schemas/`. After it publishes, it fails unless rubygems.org lists the new version.
 
