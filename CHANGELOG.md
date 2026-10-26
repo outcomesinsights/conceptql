@@ -45,6 +45,9 @@ All notable changes to this project will be documented in this file.
   database configured and, on DuckDB, a second process could not load the library while another
   held the file
 - Bug with PlaceOfServiceFilter and other procedure_cost-based operators (#84)
+- Spark CI downloads its test data from the repo variable `SPARK_TEST_DATA_URL` and checks it
+  against `.github/synpuf_test_data.tgz.sha256` before it extracts it. The hardcoded Dropbox link
+  it used was dead
 
 ### Changed
 

@@ -125,13 +125,24 @@ jobs:
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: /tmp/synpuf_test_data
-          key: synpuf-test-data-v8
+          # Keyed on the tarball's pinned checksum, like the DuckDB fixture:
+          # re-pinning .github/synpuf_test_data.tgz.sha256 invalidates the cache.
+          key: synpuf-test-data-spark-${{ hashFiles('.github/synpuf_test_data.tgz.sha256') }}
         id: cache-synpuf-test-data
       - name: Download Data
         if: steps.cache-synpuf-test-data.outputs.cache-hit != 'true'
+        env:
+          SPARK_TEST_DATA_URL: ${{ vars.SPARK_TEST_DATA_URL }}
         run: |
+          if [ -z "$SPARK_TEST_DATA_URL" ]; then
+            echo "Missing SPARK_TEST_DATA_URL repo variable"
+            exit 1
+          fi
           cd /tmp
-          curl -sSL "https://www.dropbox.com/scl/fi/bflehlmk1itwd352z0kjk/synpuf_test_data.tgz?rlkey=ogticol20oxvis5yzq37878z7&st=vydvpdyw&dl=1" > synpuf_test_data.tgz
+          # -f so an HTTP error fails here. Without it, a dead Dropbox link
+          # wrote an HTML page to the file and tar failed with "not in gzip format".
+          curl -fsSL --retry 3 --retry-delay 5 "$SPARK_TEST_DATA_URL" -o synpuf_test_data.tgz
+          sha256sum -c "$GITHUB_WORKSPACE/.github/synpuf_test_data.tgz.sha256"
           tar xzf synpuf_test_data.tgz
 
       - run: ~/"spark-${SPARK_VERSION}"/sbin/start-thriftserver.sh --driver-memory 5G && sleep 20
