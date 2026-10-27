@@ -2,9 +2,8 @@
 
 require_relative "../../../helper"
 
-# Operator#column_names_option reads an option that lists columns. The
-# diagram editor's text field gives the list as one comma-separated string,
-# and a statement gives an array (bead conceptql-zq2).
+# Operator#column_names_option reads an option that lists columns. The list
+# is an array or one comma-separated string (bead conceptql-zq2).
 # No live database: the mock never answers a query.
 describe "Operator#column_names_option" do
   let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide) }

@@ -666,9 +666,9 @@ module ConceptQL
       # Sequel renders a String as a string literal, not as a column. Call it
       # only for options that name columns: other options are free-form.
       #
-      # The value is an Array or a comma-separated String, because the
-      # diagram editor's text field gives a String. A blank String is an
-      # unset option, so it gives nil.
+      # The value is an Array or a comma-separated String, such as
+      # "uuid, start_date". A blank String is an unset option, so it gives
+      # nil.
       def column_names_option(name)
         value = options[name]
         if value.is_a?(String)
