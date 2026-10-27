@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-26
+
 ### Added
 
 - `conceptql render_json STATEMENT_FILE [--counts] [--data-model=...]` prints statements as a
