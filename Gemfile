@@ -10,7 +10,7 @@ gem "pg"
 # (jigsaw_builder-da6). Before 1.0 a minor release may break, so the 0.x gems
 # are held to their minor line. To test an unreleased change, point the entry
 # at a checkout with `path:` for that run, and do not commit it.
-gem "sequel-duckdb", "~> 0.4.1"
+gem "sequel-duckdb", "~> 0.4.2"
 gem "sequelizer", "~> 0.4.0"
 
 # Optional, because the gem compiles against libduckdb, which only the DuckDB

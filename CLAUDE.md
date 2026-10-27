@@ -150,6 +150,6 @@ One-time setup, done by a repository owner: register the trusted publisher on ru
 - **Operator registration is data-model-specific** — operators specify which data models they apply to
 - **Postgres-specific SQL** exists in `rdbms/postgres.rb` (`DISTINCT ON`, etc.) — queries built for Postgres won't work on DuckDB/Spark without the correct adapter
 - **Temp tables vs CTEs** — `CONCEPTQL_FORCE_TEMP_TABLES=true` forces temp tables; `CONCEPTQL_AVOID_CTES=true` disables CTEs
-- **The OI gems come from rubygems.org releases** (sequelizer `~> 0.4.0`, sequel-duckdb `~> 0.4.1`, sequel-hexspace `~> 2.1`). To test an unreleased change, point the Gemfile entry at a checkout with `path:` for that run and do not commit it
+- **The OI gems come from rubygems.org releases** (sequelizer `~> 0.4.0`, sequel-duckdb `~> 0.4.2`, sequel-hexspace `~> 2.1`). To test an unreleased change, point the Gemfile entry at a checkout with `path:` for that run and do not commit it
 - **`sequel-hexspace`** (Spark) is in an optional Gemfile group
 - **`Algorithm` operator** fetches stored ConceptQL statements from a `concepts` table — requires that table to exist

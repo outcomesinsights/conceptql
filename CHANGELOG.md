@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- The development dependency sequel-duckdb is now `~> 0.4.2` (was `~> 0.4.1`). 0.4.2 fixes
+  `create_or_replace_view` and drops support for the duckdb gem 1.5.x, which conceptql
+  already did not use.
+
 ## [0.4.0] - 2026-10-26
 
 ### Added
