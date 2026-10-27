@@ -52,29 +52,6 @@ describe ConceptQL::Operators::Match do
     _(errors_for([ "match", { left: icd, right: icd, join_columns: [ "uuid" ] } ])).must_be_nil
   end
 
-  # Before bead conceptql-zq2 the metadata listed none of the options that
-  # match reads, so the diagram editor could not offer them.
-  describe "metadata" do
-    let(:match_options) { ConceptQL.metadata(cdb)[:operators]["match"][:options] }
-
-    it "declares the options that match reads" do
-      _(match_options.keys).must_equal %i[label left right only_columns except_columns join_columns invert_match]
-    end
-
-    it "declares the column lists as strings and invert_match as a boolean" do
-      types = match_options.slice(:only_columns, :except_columns, :join_columns, :invert_match).transform_values { |o| o[:type] }
-
-      _(types).must_equal(only_columns: :string, except_columns: :string, join_columns: :string, invert_match: :boolean)
-    end
-
-    it "gives the new options no default and does not make them required" do
-      %i[only_columns except_columns join_columns invert_match].each do |name|
-        _(match_options[name].keys).wont_include :default
-        _(match_options[name].keys).wont_include :required
-      end
-    end
-  end
-
   # Each CTE name ends in a counter and a random hex suffix
   def masked_sql(statement)
     cdb.query(statement).sql.gsub(/_\d+_\h{32}\b/, "_N_HEX")
@@ -84,8 +61,8 @@ describe ConceptQL::Operators::Match do
     [ "match", { left: icd, right: icd }.merge(opts) ]
   end
 
-  # Existing statements give invert_match as the string "true". The diagram
-  # editor's checkbox gives true or false (bead conceptql-zq2).
+  # Existing statements give invert_match as the string "true". A caller can
+  # also give true or false (bead conceptql-zq2).
   describe "invert_match" do
     it "inverts the match for true and \"true\"" do
       _(masked_sql(match_with({}))).wont_include "WHERE NOT (EXISTS"
@@ -100,7 +77,7 @@ describe ConceptQL::Operators::Match do
     end
   end
 
-  # The diagram editor's text field gives a column list as one string
+  # A column list can be one comma-separated string
   describe "column lists as comma-separated strings" do
     it "gives the same SQL for only_columns as a string and as an array" do
       _(masked_sql(match_with(only_columns: "uuid, start_date"))).must_equal masked_sql(match_with(only_columns: %w[uuid start_date]))

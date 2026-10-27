@@ -76,17 +76,10 @@ All notable changes to this project will be documented in this file.
   `=` and the other columns NULL-safe (`IS NOT DISTINCT FROM`, `<=>` on Spark). `match` also
   ignored `join_columns`. It now compares only the person and the listed columns, as the other
   two-stream operators do, and rejects `join_columns` next to `only_columns` or `except_columns`
-- The `match` metadata now lists the options that `match` reads: `only_columns`,
-  `except_columns` and `join_columns` (type `string`, because the metadata has no list type) and
-  `invert_match` (type `boolean`). Before, `ConceptQL.metadata` listed none of them, so the
-  diagram editor could not offer them
-- The metadata of the temporal operators (`before`, `after`, `during`, `any_overlap`, `contains`,
-  `equal`, `trim_date_start` and `trim_date_end`) now lists `join_columns` (type `string`), which
-  they read. `filter`, `except` and `person_filter` do not read it and do not list it
 - An option that lists columns (`only_columns`, `except_columns` and `join_columns` on `match`,
   and `join_columns` on the temporal operators and `trim_date_start`/`trim_date_end`) also
-  accepts a comma-separated string, as the diagram editor's text field gives it. A blank string
-  is an unset option. Before, a string raised NoMethodError
+  accepts a comma-separated string, such as `"uuid, start_date"`. A blank string is an unset
+  option. Before, a string raised NoMethodError
 - `match` with `invert_match` set to the string `"false"` (in any case), or to an empty string,
   no longer inverts the match. Before, any value other than `false` and `nil` inverted it
 

@@ -17,11 +17,11 @@ module ConceptQL
       option :within, type: :string,
                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
 
-      # Read through BinaryOperatorOperator#join_columns_option by #query here
-      # and by TrimDate#query, so every temporal operator reads it. match
-      # declares its own; filter, except and person_filter do not read it.
-      option :join_columns, type: :string,
-                            instructions: "Comma-separated column names. Compare a left hand record only with the right hand records that have the same person and the same values in these columns."
+      # The temporal operators read join_columns through
+      # BinaryOperatorOperator#join_columns_option, but do not declare it with
+      # `option`: only t_shank gives it, and a declared option would appear in
+      # ConceptQL.metadata, so the diagram editor would offer it (Ryan,
+      # 2026-10-26).
 
       validate_option DateAdjuster::VALID_INPUT, :within, :at_least
 
