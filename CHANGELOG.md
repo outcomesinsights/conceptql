@@ -80,6 +80,9 @@ All notable changes to this project will be documented in this file.
   `except_columns` and `join_columns` (type `string`, because the metadata has no list type) and
   `invert_match` (type `boolean`). Before, `ConceptQL.metadata` listed none of them, so the
   diagram editor could not offer them
+- The metadata of the temporal operators (`before`, `after`, `during`, `any_overlap`, `contains`,
+  `equal`, `trim_date_start` and `trim_date_end`) now lists `join_columns` (type `string`), which
+  they read. `filter`, `except` and `person_filter` do not read it and do not list it
 - An option that lists columns (`only_columns`, `except_columns` and `join_columns` on `match`,
   and `join_columns` on the temporal operators and `trim_date_start`/`trim_date_end`) also
   accepts a comma-separated string, as the diagram editor's text field gives it. A blank string
