@@ -665,8 +665,17 @@ module ConceptQL
       # and so on), as symbols. A JSON statement gives them as strings, and
       # Sequel renders a String as a string literal, not as a column. Call it
       # only for options that name columns: other options are free-form.
+      #
+      # The value is an Array or a comma-separated String, because the
+      # diagram editor's text field gives a String. A blank String is an
+      # unset option, so it gives nil.
       def column_names_option(name)
-        options[name]&.map(&:to_sym)
+        value = options[name]
+        if value.is_a?(String)
+          value = value.split(",").map(&:strip).reject(&:empty?)
+          return nil if value.empty?
+        end
+        value&.map(&:to_sym)
       end
     end
   end

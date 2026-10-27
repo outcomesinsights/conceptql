@@ -12,6 +12,19 @@ module ConceptQL
       desc "Keeps left hand records that have the same values as a right hand side record. By default, every column is compared. only_columns or except_columns narrows that set, and join_columns compares only the person and the listed columns. Two NULL values count as the same value."
       default_query_columns
 
+      # Each column list is an array of column names or a comma-separated
+      # string (see Operator#column_names_option). The metadata has no list
+      # type that the diagram editor can show, so they are declared as
+      # :string, the type of the editor's plain text field.
+      option :only_columns, type: :string,
+                            instructions: "Comma-separated column names. Compare only these columns. Cannot be used with Join Columns."
+      option :except_columns, type: :string,
+                              instructions: "Comma-separated column names. Compare every column except these. Cannot be used with Join Columns."
+      option :join_columns, type: :string,
+                            instructions: "Comma-separated column names. Compare only the person and these columns. Cannot be used with Only Columns or Except Columns."
+      option :invert_match, type: :boolean,
+                            instructions: "Keep the left hand records that have no matching right hand record."
+
       # These columns identify a record and are never NULL, so match compares
       # them with =. It compares every other column NULL-safe: the value
       # columns are often NULL, and with = a NULL never equals a NULL.
@@ -37,11 +50,14 @@ module ConceptQL
       # join_columns has the meaning that BinaryOperatorOperator gives it:
       # the person (and window) columns plus the listed columns.
       def determine_columns
-        return (matching_columns + options[:join_columns].map(&:to_sym)).uniq if options[:join_columns]
+        join_columns = column_names_option(:join_columns)
+        return (matching_columns + join_columns).uniq if join_columns
 
+        only_columns = column_names_option(:only_columns)
+        except_columns = column_names_option(:except_columns)
         columns = dynamic_columns
-        columns &= options[:only_columns].map(&:to_sym) if options[:only_columns]
-        columns -= options[:except_columns].map(&:to_sym) if options[:except_columns]
+        columns &= only_columns if only_columns
+        columns -= except_columns if except_columns
         columns
       end
 
@@ -51,8 +67,11 @@ module ConceptQL
         meth == :where ? :exclude : :where
       end
 
+      # Existing statements give the string "true". The string "false" (in any
+      # case, with any spaces around it) and a blank value do not invert.
       def invert_match
-        options[:invert_match]
+        text = options[:invert_match].to_s.strip
+        !(text.empty? || text.casecmp?("false"))
       end
 
       private
@@ -68,9 +87,9 @@ module ConceptQL
       # join_columns sets the whole column set, so only_columns and
       # except_columns would have no effect next to it.
       def additional_validation(_db, _opts = {})
-        return unless options[:join_columns]
+        return unless column_names_option(:join_columns)
 
-        conflicts = %i[only_columns except_columns].select { |name| options[name] }
+        conflicts = %i[only_columns except_columns].select { |name| column_names_option(name) }
         add_error("conflicting options", "join_columns", *conflicts.map(&:to_s)) unless conflicts.empty?
       end
     end
