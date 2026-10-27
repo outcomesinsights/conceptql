@@ -133,7 +133,7 @@ CI's `Run-Spark-Tests` reads parquet files from `synpuf_test_data.tgz`, which vo
 Releases are tag-based. A pushed `v*` tag runs `.github/workflows/release.yml`, which publishes to rubygems.org through RubyGems trusted publishing. No API key is stored anywhere. `rake release` (from `bundler/gem_tasks`) still exists, but it skips every check below.
 
 1. Run `just release-check`. It fails when `Gemfile.lock` is not the newest resolution, or when our own gemspec or Gemfile bound excludes the newest release of a gem. This includes the OI gems (sequelizer, sequel-duckdb, sequel-hexspace), which the Gemfile takes from their rubygems.org releases. A gem that another gem holds back is shown as `info` and does not fail. Fix every failure with `bundle update` or a bound change, and run `just ci` again, before step 2.
-2. Run `git cliff --bumped-version` for the next version (`cliff.toml` holds the 0.x bump rules). Bump `VERSION` in `lib/conceptql/version.rb`, run `bundle install` to update `Gemfile.lock`, and move the `[Unreleased]` entries in `CHANGELOG.md` under the new version.
+2. Run `git cliff --bumped-version` for the next version (`cliff.toml` holds the 0.x bump rules). Its `tag_pattern` is gator's standard `^v…`, so it reads only `v` tags and works from `v0.4.0` on. Before that tag exists, it fails, because the older tags have no `v`. 0.4.0 itself was confirmed with a temporary `^v?` pattern. Bump `VERSION` in `lib/conceptql/version.rb`, run `bundle install` to update `Gemfile.lock`, and move the `[Unreleased]` entries in `CHANGELOG.md` under the new version.
 3. Land that commit on `main` and wait for the `Run Tests` workflow to pass on the push.
 4. Tag that commit and push the tag: `git tag v0.4.0 && git push origin v0.4.0`.
 

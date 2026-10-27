@@ -104,14 +104,7 @@ protect_breaking_commits = true
 # sorts numerically and PEP 440 normalises it). Without it seeds' alpha train is invisible:
 # --bumped-version answered v0.7.0 instead of v0.7.0-a.10. Undotted rc1 / a8 stay rejected
 # (measured on a seeds clone and the gator-2x6 fixture, 2026-10-08).
-#
-# conceptql only: the leading `v` is optional (`^v?`), unlike canon. The gem-version
-# tags before the first tag-based release are unprefixed (0.0.4 .. 0.3.0); v0.4.0 is
-# the first `v` tag. With canon's `^v`, git-cliff finds no release, guesses 0.1.0 and
-# errors that 0.1.0 does not match the pattern. Keep the `?` after v0.4.0 too: it
-# keeps the older releases as release boundaries in a full render. The legacy release-train tags are renamed to train/<name>,
-# which this pattern rejects (conceptql-580).
-tag_pattern = "^v?[0-9]+\\.[0-9]+\\.[0-9]+(-[a-z]+\\.[0-9]+)?$"
+tag_pattern = "^v[0-9]+\\.[0-9]+\\.[0-9]+(-[a-z]+\\.[0-9]+)?$"
 topo_order = false
 sort_commits = "newest"
 
