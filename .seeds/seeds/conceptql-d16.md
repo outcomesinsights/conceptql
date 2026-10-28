@@ -1,10 +1,10 @@
 ---
 id: conceptql-d16
-title: Replace ConceptQL's external SQL formatters with an in-process formatter (sleek_rb)
+title: Replace ConceptQL's external SQL formatters with an in-process formatter (sequel-sqlformat)
 status: captured
 type: decision
 created_at: 2026-10-28T18:01:16.376953+00:00
-updated_at: 2026-10-28T18:01:29.005669+00:00
+updated_at: 2026-10-28T18:26:53.068529+00:00
 ---
 
 ## Problem
@@ -82,3 +82,28 @@ Known limit: the crate works on tokens and does not parse. With `uppercase: true
 ## Links
 
 - Bead conceptql-9ux holds the defect: one formatter process per statement. This seed holds the choice of formatter that fixes it.
+
+## RULED 2026-10-28 (Ryan): the gem is sequel-sqlformat, a Sequel extension
+
+The name changed twice on 2026-10-28. `sleek_rb` became `sqlformat_rb`, because the gem wraps the `sqlformat` crate and not the sleek CLI. Then Ryan pivoted it to a Sequel extension, so that any Sequel database or dataset can return formatted SQL. He chose one gem over two (a separate binding gem plus a pure-Ruby extension gem): one repo, one cross-compile release pipeline.
+
+No existing gem does this. Sequel's own `pretty_table` prints result rows, and `sequel_pretty_print` makes `pp` print model objects. Neither formats SQL text.
+
+- Repo: `jigsaw/main/gems/sequel-sqlformat`, 5 local commits, not on GitHub yet.
+- API: `DB.extension :sqlformat` adds `Database#format_sql(sql, **opts)` and `Dataset#formatted_sql(**opts)`. `Sequel::SQLFormat.format(sql, ...)` works with no database.
+- The dialect comes from `database_type`: postgres → `:postgresql`, mssql → `:sqlserver`, everything else (DuckDB, Spark, SQLite) → `:generic`.
+- Options: the connect hash (`Sequel.connect(url, sqlformat: {uppercase: true})`), `DB.sqlformat_options=`, or per call. Unknown keys raise ArgumentError.
+- The defaults changed to the crate's own: indent 2, keyword case kept (`uppercase: nil`), 1 line between statements. ConceptQL will pass its own options.
+- 29 minitest tests, rubocop and clippy clean. `just ci` passes, and so does the push gate dry run at HEAD. gitleaks finds nothing.
+- It follows gator's githooks standard from its first commit. Ryan opened the migration to it; gator recorded the final name in its commit 168e53f.
+- Releases: a source gem plus precompiled gems for x86_64-linux, aarch64-linux, x86_64-darwin and arm64-darwin, for Ruby 3.3, 3.4 and 4.0, through RubyGems trusted publishing.
+
+Re-verified through the extension on the big algorithm (78 statements for each dialect):
+
+```
+stmts         dialect=postgresql only whitespace changed 78/78  pg_query same tree=78  8.8 ms for all
+stmts-duckdb  dialect=generic    only whitespace changed 78/78  pg_query same tree=n/a  8.7 ms for all
+stmts-spark   dialect=generic    only whitespace changed 78/78  pg_query same tree=n/a  8.4 ms for all
+```
+
+Side finding sent to gator and filed there as gator-2u7: gator's standard `cog check` line for untagged repos (`HEAD~20..HEAD`) fails below 21 commits, so a new repo cannot make its first commit.
