@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-28
+
 ### Changed
 
 - `Query#sql(:formatted)` formats SQL inside the Ruby process with the new runtime dependency
