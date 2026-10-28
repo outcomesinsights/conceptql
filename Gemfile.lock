@@ -36,7 +36,7 @@ GEM
     coderay (1.1.3)
     concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
-    csv (3.3.6)
+    csv (3.3.7)
     dotenv (3.2.0)
     drb (2.2.3)
     duckdb (2.0.0.1)
@@ -46,7 +46,7 @@ GEM
       thrift (>= 0.25)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
-    io-console (0.9.4)
+    io-console (0.9.5)
     json (3.1.0)
     kvcsv (0.1.0)
       csv (~> 3.0)
@@ -222,13 +222,13 @@ CHECKSUMS
   conceptql (0.4.0)
   concurrent-ruby (1.3.8) sha256=b2f1be836e968ccc78ccfce277ea79c72a88633f22306782c16ff23fb415d1e1
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
-  csv (3.3.6) sha256=aba61e7e507a66f03d45cb1f3c4b6359861c3504038b422962875dce099e4456
+  csv (3.3.7) sha256=15a3f16f6628da8664d455eb634e7f22031bcf53044923caf56975109e71b9f8
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   duckdb (2.0.0.1) sha256=42ab690bbddeee5fca445c27e25b97459e9ee87820cac993566474f2bf91358d
   hexspace (0.4.0) sha256=db73543c1e174624c09b86f41f17905fd7d13663842d154ae2effb1cc53112a8
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
-  io-console (0.9.4) sha256=a403304f32928ee85e56d457b4612ca43f2703b561a3258844992bd24085fbb1
+  io-console (0.9.5) sha256=83dd9bbf4c4680416629245b39cd4212eb5f4d9a4ea91804870c1f6b846414d5
   json (3.1.0) sha256=3ce7ccf8fde58960177a3a756c31f292a4c1e1dedee884547096a5b0604e3bd8
   kvcsv (0.1.0) sha256=70da2393cfaca58a20a0b77a8ce43168b4d06cd927e789977f8d066f2c60b636
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
