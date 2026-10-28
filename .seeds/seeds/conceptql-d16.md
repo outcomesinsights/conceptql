@@ -1,10 +1,12 @@
 ---
 id: conceptql-d16
 title: Replace ConceptQL's external SQL formatters with an in-process formatter (sequel-sqlformat)
-status: captured
+status: resolved
 type: decision
 created_at: 2026-10-28T18:01:16.376953+00:00
-updated_at: 2026-10-28T19:23:47.490737+00:00
+updated_at: 2026-10-28T20:12:26.406545+00:00
+resolved_at: 2026-10-28T20:12:26.406534+00:00
+resolution: Shipped in conceptql 0.4.1 with sequel-sqlformat 0.1.0; big algorithm formats in 0.13 s instead of 8.3 s.
 ---
 
 ## Problem
@@ -113,3 +115,9 @@ Side finding sent to gator and filed there as gator-2u7: gator's standard `cog c
 ConceptQL switches to the released sequel-sqlformat gem, and the four external formatters go away: sql-formatter, sqlformat (Python), pg_format, and each adapter's preferred_formatter. They are not kept as fallbacks, because sequel-sqlformat never fails on unknown syntax. Bead conceptql-1i0 holds the work. Bead conceptql-9ux now depends on it.
 
 This answers the first item under "Not ruled" above. The second item (which platforms get precompiled gems) was ruled earlier the same day: x86_64-linux, aarch64-linux, x86_64-darwin and arm64-darwin.
+
+SHIPPED 2026-10-28: conceptql 0.4.1 is released (tag v0.4.1 at 3e68755b, fix commit c2686656, bead conceptql-1i0). Query#sql(:formatted) calls Sequel::SQLFormat.format with dialect_for(database_type), indent 2 and uppercase keywords. The external formatters, preferred_formatter and Utils.timed_capture are removed, and the test image no longer installs sqlformat.
+
+Measured with the shipped code on titan: big_algo.json (78 statements), sql(:formatted, :create_tables), best of 5: postgres 0.134 s, duckdb 0.130 s, spark 0.130 s. Before: about 8.3 s.
+
+New test test/lib/conceptql/query_format_test.rb checks that only whitespace and keyword case change, for each database type. A negative control showed that its normalizer catches a changed literal, identifier or token. Local just ci passed (726 runs each on Postgres and DuckDB), and GitHub CI passed 13 of 13 jobs, Spark included. JDE got the release facts and was asked to update its Gemfile.lock.
