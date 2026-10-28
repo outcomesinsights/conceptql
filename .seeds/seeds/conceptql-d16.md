@@ -4,7 +4,7 @@ title: Replace ConceptQL's external SQL formatters with an in-process formatter 
 status: captured
 type: decision
 created_at: 2026-10-28T18:01:16.376953+00:00
-updated_at: 2026-10-28T18:26:53.068529+00:00
+updated_at: 2026-10-28T19:23:47.490737+00:00
 ---
 
 ## Problem
@@ -107,3 +107,9 @@ stmts-spark   dialect=generic    only whitespace changed 78/78  pg_query same tr
 ```
 
 Side finding sent to gator and filed there as gator-2u7: gator's standard `cog check` line for untagged repos (`HEAD~20..HEAD`) fails below 21 commits, so a new repo cannot make its first commit.
+
+## RULED 2026-10-28 (Ryan): remove the external formatters
+
+ConceptQL switches to the released sequel-sqlformat gem, and the four external formatters go away: sql-formatter, sqlformat (Python), pg_format, and each adapter's preferred_formatter. They are not kept as fallbacks, because sequel-sqlformat never fails on unknown syntax. Bead conceptql-1i0 holds the work. Bead conceptql-9ux now depends on it.
+
+This answers the first item under "Not ruled" above. The second item (which platforms get precompiled gems) was ruled earlier the same day: x86_64-linux, aarch64-linux, x86_64-darwin and arm64-darwin.
