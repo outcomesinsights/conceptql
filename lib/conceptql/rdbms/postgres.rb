@@ -14,10 +14,6 @@ module ConceptQL
         db.vacuum_table(table_name, analyze: true) if analyze_temp_tables?
       end
 
-      def preferred_formatter
-        SqlFormatters::POSTGRES
-      end
-
       # DISTINCT ON is Postgres-only. The other adapters inherit
       # Generic#primary_concepts, which uses ROW_NUMBER() instead.
       def primary_concepts(db, all_primary_ids)

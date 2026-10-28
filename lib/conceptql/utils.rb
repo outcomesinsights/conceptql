@@ -4,8 +4,6 @@ require "active_support/core_ext/array/conversions"
 require "active_support/core_ext/object/blank"
 require "active_support/core_ext/string/inflections"
 require "json"
-require "open3"
-require "timeout"
 
 module ConceptQL
   module Utils
@@ -29,47 +27,6 @@ module ConceptQL
 
           h
         end
-      end
-
-      def timed_capture(*commands)
-        # Heavily adapted from:
-        # https://gist.github.com/lpar/1032297#gistcomment-1738285
-        opts = extract_opts!(commands)
-        timeout = opts.fetch(:timeout)
-
-        stdin, stdout, stderr, wait_thread = Open3.popen3(*commands)
-        wait_thread[:timed_out] = false
-        stdin.puts opts[:stdin_data] if opts[:stdin_data]
-        stdin.close
-
-        # Purposefully NOT using Timeout.rb because in general it is a dangerous API!
-        # http://blog.headius.com/2008/02/rubys-threadraise-threadkill-timeoutrb.html
-        Thread.new do
-          sleep timeout
-          if wait_thread.alive?
-            begin
-              wait_thread[:timed_out] = true
-              # please note: we are assuming the command will create ONE process (not handling subprocs / proc groups)
-              command = "kill -9 #{wait_thread.pid}"
-              system(command)
-            rescue(Errno::ESRCH)
-              # Do nothing!
-            end
-          end
-        end
-
-        if (es = wait_thread.value.exitstatus) && !es.zero?
-          raise stderr.read
-        end
-
-        out = stdout.read
-        stdout.close
-
-        if wait_thread[:timed_out]
-          raise Timeout::Error, "Command #{commands} failed to complete after #{timeout} seconds"
-        end
-
-        out
       end
 
       def extract_opts!(arr)

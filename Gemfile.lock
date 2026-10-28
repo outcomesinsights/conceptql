@@ -7,6 +7,7 @@ PATH
       json
       logger
       sequel (~> 5.66)
+      sequel-sqlformat (~> 0.1)
       sequelizer (>= 0.3.0, < 0.5)
       thor (~> 1.0)
 
@@ -81,6 +82,9 @@ GEM
     rack (3.2.7)
     rainbow (3.1.1)
     rake (13.4.2)
+    rake-compiler-dock (1.12.0)
+    rb_sys (0.9.130)
+      rake-compiler-dock (= 1.12.0)
     regexp_parser (2.13.1)
     reline (0.7.0)
       io-console (~> 0.5)
@@ -132,6 +136,17 @@ GEM
       hexspace (>= 0.4, < 0.5)
       sequel (~> 5.0)
       thrift (>= 0.25, < 0.26)
+    sequel-sqlformat (0.1.0)
+      rb_sys (~> 0.9)
+      sequel (~> 5.0)
+    sequel-sqlformat (0.1.0-aarch64-linux)
+      sequel (~> 5.0)
+    sequel-sqlformat (0.1.0-arm64-darwin)
+      sequel (~> 5.0)
+    sequel-sqlformat (0.1.0-x86_64-darwin)
+      sequel (~> 5.0)
+    sequel-sqlformat (0.1.0-x86_64-linux)
+      sequel (~> 5.0)
     sequelizer (0.4.0)
       dotenv (>= 2.1, < 4.0)
       kvcsv (~> 0.1)
@@ -171,6 +186,7 @@ PLATFORMS
   x86-linux-gnu
   x86-linux-musl
   x86_64-darwin
+  x86_64-linux
   x86_64-linux-gnu
   x86_64-linux-musl
 
@@ -238,6 +254,8 @@ CHECKSUMS
   rack (3.2.7) sha256=93e13e1c24f93556671d85d2d79fa228c3485815c50d7e2f265b5330c6528fb7
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
+  rake-compiler-dock (1.12.0) sha256=f13205c2738f3d2053afcd03491a9e4541b22a59a0bfc53fc8bc883bd8188023
+  rb_sys (0.9.130) sha256=7d486d99c1da02635515deaf9860fc5aea90bb4ab2589b2deec7fdc7d3548615
   regexp_parser (2.13.1) sha256=5aedb6b7c35688f51e86eef17a15374dfd287c83f4ca644b2c5f3ec50a33b44b
   reline (0.7.0) sha256=5b012d8e55dbf9d450f12bde2cf7d15ff546ae80b3f8f3b30e570d431815583d
   rubocop (1.92.1) sha256=a905381a5344215a79abcfe80f6c94366447e6a55347c9a525b5a24990e33f62
@@ -253,6 +271,11 @@ CHECKSUMS
   sequel (5.109.0) sha256=e0d1d474442d620c8497d7f4851c0cc3a277920519051b8014b2877aa55efffe
   sequel-duckdb (0.4.2) sha256=6418bdc2db239dd5f7ef75796230ab05a2f60d992902d007a1f177e3f71b0f92
   sequel-hexspace (2.1.0) sha256=7815928e52aeb000f1d1b2236401b7dafc57a87cd86c67fc243df15823c67c1c
+  sequel-sqlformat (0.1.0) sha256=239395e5c09bd5704e018256f1871f28533174beba97d032247379ba4788af75
+  sequel-sqlformat (0.1.0-aarch64-linux) sha256=7a5a570f2b2f75fd079e2127009800df223a07a24299721991590b8740c29782
+  sequel-sqlformat (0.1.0-arm64-darwin) sha256=b13bdf4f4d0a2b47049caa68b7d1ebf86bb7472a0343b317443557fe1dff58d4
+  sequel-sqlformat (0.1.0-x86_64-darwin) sha256=aebbe1eeb5fa96f7462cc04852f597bca65ed179502c5c283c08a7b9d5c18cda
+  sequel-sqlformat (0.1.0-x86_64-linux) sha256=d83de529978632ee6cf61ccf03193a9393590d2b934fde3db544558e20d63512
   sequelizer (0.4.0) sha256=972072cd15100cd150e4e28c8fb918c359d5c4610deea5aa9b7079ee5a2d3964
   simplecov (1.3.2) sha256=2a22ec1759f1b8db60881a2e038758956fc69ef93ed669be0bde0678de6d0e85
   sqlite3 (2.10.2) sha256=f1ea68cd3287f8a49f39a088ac9e4bd0ef4e7f394c3d4a60dd4c7e44b0566964

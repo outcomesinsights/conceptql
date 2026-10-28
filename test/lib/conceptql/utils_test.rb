@@ -33,17 +33,6 @@ describe ConceptQL::Utils do
     end
   end
 
-  describe ".timed_capture" do
-    it "should timeout if process takes too long" do
-      assert_raises(Timeout::Error) { ConceptQL::Utils.timed_capture("sleep", "10", timeout: 1) }
-    end
-
-    it "should not timeout if process is fast enough" do
-      value = ConceptQL::Utils.timed_capture("echo", "-n", "hi", timeout: 1)
-      assert_equal "hi", value
-    end
-  end
-
   describe ".assemble_date" do
     let(:db) { Sequel.mock }
     it "should preface with table if provided" do

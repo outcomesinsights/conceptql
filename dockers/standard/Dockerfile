@@ -8,7 +8,6 @@ ENV PATH="/root/.local/bin:${PATH}"
 # hadolint ignore=DL3008
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   libpq-dev git krb5-user krb5-config build-essential pkg-config libyaml-dev \
-  sqlformat \
   && rm -rf /var/lib/apt/lists/*
 
 # Configure Git to handle hardlinks properly

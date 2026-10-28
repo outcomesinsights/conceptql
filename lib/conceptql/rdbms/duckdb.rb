@@ -12,10 +12,6 @@ module ConceptQL
         Sequel.function(:datediff, "day", to, from)
       end
 
-      def preferred_formatter
-        SqlFormatters::PG_FORMAT
-      end
-
       # DuckDB accepts WITH ... AS MATERIALIZED since v0.8.0.
       def supports_materialized?
         true

@@ -4,7 +4,7 @@ require "json"
 require "forwardable"
 require_relative "scope"
 require_relative "nodifier"
-require_relative "sql_formatters"
+require "sequel/sqlformat"
 
 module ConceptQL
   class Query
@@ -208,8 +208,11 @@ module ConceptQL
       end
     end
 
+    # Formats inside the Ruby process with the sequel-sqlformat gem (the Rust
+    # sqlformat crate). It changes only whitespace and keyword case, and it never
+    # fails on unknown syntax, so DuckDB and Spark SQL format too.
     def format(sql)
-      SqlFormatters.format(sql, rdbms)
+      Sequel::SQLFormat.format(sql, dialect: Sequel::SQLFormat.dialect_for(cdb.database_type), indent: 2, uppercase: true)
     end
   end
 end

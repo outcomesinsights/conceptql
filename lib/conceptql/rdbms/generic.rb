@@ -59,10 +59,6 @@ module ConceptQL
         end
       end
 
-      def preferred_formatter
-        SqlFormatters::SQL_FORMATTER
-      end
-
       # Returns from - to in days, NOT to - from, so datediff(later, earlier)
       # is positive. Every adapter keeps this order. This default emits
       # Spark's datediff(endDate, startDate), which returns endDate - startDate,
