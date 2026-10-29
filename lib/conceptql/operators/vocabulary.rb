@@ -38,10 +38,23 @@ module ConceptQL
         args -= bad_arguments
 
         missing_args = args - dm.known_codes(db, vocabulary_id, args)
+        add_warning("unknown code(s)", *missing_args) unless missing_args.empty?
 
-        return if missing_args.empty?
+        warn_about_reused_codes(db, args - missing_args)
+      end
 
-        add_warning("unknown code(s)", *missing_args)
+      # A code that the vocabulary reused for a new meaning selects records of
+      # both meanings: DRG 410 selects chemotherapy stays before 2007-10-01 and
+      # biliary tract procedures after it (conceptql-ttk). Each item names the
+      # code and all of its names, so the user sees the problem without a
+      # vocabulary lookup.
+      def warn_about_reused_codes(db, codes)
+        meanings = dm.code_meanings(db, vocabulary_id, codes)
+        reused = codes.filter_map do |code|
+          names = meanings[code.downcase]
+          "#{code}: #{names.join(' | ')}" if names
+        end
+        add_warning("code(s) with more than one meaning", *reused) unless reused.empty?
       end
 
       def describe_codes(db, codes)

@@ -10,7 +10,13 @@
             "rows": 0,
             "n": 0
           }
-        }
+        },
+        "warnings": [
+          [
+            "code(s) with more than one meaning",
+            "001: Craniotomy Age >17 Except For Trauma | Craniotomy Age >17 with Complications, Comorbidities | Heart transplant or implant of heart assist system w MCC"
+          ]
+        ]
       },
       "name": "DRG"
     }

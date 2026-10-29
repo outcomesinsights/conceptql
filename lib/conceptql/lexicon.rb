@@ -14,6 +14,7 @@ module ConceptQL
     # cache never outlives one export (seed conceptql-a5f). Methods that return
     # datasets are not cached: their query runs later, in the caller.
     CACHED_LOOKUPS = %i[
+      code_meanings
       concept_codes
       concept_ids
       concept_ids_by_name
@@ -43,7 +44,7 @@ module ConceptQL
       @cache = {} if cache
     end
 
-    (CACHED_LOOKUPS - %i[concepts_to_codes known_codes table_is_missing?]).each do |name|
+    (CACHED_LOOKUPS - %i[code_meanings concepts_to_codes known_codes table_is_missing?]).each do |name|
       define_method(name) do |*args|
         lookup(name, args) { @strategy.public_send(name, *args) }
       end
@@ -62,6 +63,13 @@ module ConceptQL
     def concepts_to_codes(data_db, vocabulary_id, codes = [])
       lookup(:concepts_to_codes, [ data_db, vocabulary_id, codes ]) do
         @strategy.concepts_to_codes(data_db, vocabulary_id, codes) { table_is_missing?(data_db) }
+      end
+    end
+
+    # Like concepts_to_codes, it asks about the concept table through the block.
+    def code_meanings(data_db, vocabulary_id, codes)
+      lookup(:code_meanings, [ data_db, vocabulary_id, codes ]) do
+        @strategy.code_meanings(data_db, vocabulary_id, codes) { table_is_missing?(data_db) }
       end
     end
 

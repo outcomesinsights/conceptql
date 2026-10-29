@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Annotate warns about a selected code that has more than one meaning in the vocabulary, with
+  the warning "code(s) with more than one meaning". Each item names the code and all of its
+  distinct names, for example DRG 410, which meant chemotherapy until 2007-09-30 and a biliary
+  tract procedure after that. `Lexicon#code_meanings` is the new cached lookup behind it.
+
 ### Changed
 
 - The `co_reported` description now says that a source record is kept only if every upstream

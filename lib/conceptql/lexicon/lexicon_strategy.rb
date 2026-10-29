@@ -98,6 +98,26 @@ module ConceptQL
       concepts(db, vocabulary_id, codes).select_map(%i[concept_code concept_text])
     end
 
+    # The distinct names of each code that has more than one name, as
+    # { downcased code => [name, ...] } with the names sorted. A vocabulary
+    # can reuse a code for a new meaning: DRG 410 meant chemotherapy until
+    # 2007-09-30 and a biliary tract procedure after that. OHDSI keeps each
+    # meaning as its own concept row, and the GDM vocabulary keeps both names.
+    # Names that differ only in case or spacing count as one name.
+    # A caller can answer "is the concept table missing?" with a block.
+    def code_meanings(data_db, vocabulary_id, codes)
+      return {} if codes.blank? || db.nil? || db_is_mock?(data_db)
+      return {} if block_given? ? yield : table_is_missing?(data_db)
+
+      concepts(db, vocabulary_id, codes)
+        .select_map(%i[concept_code concept_text])
+        .group_by { |code, _| code.downcase }
+        .transform_values { |rows| rows.map(&:last).compact.uniq { |name| name.downcase.split.join(" ") }.sort }
+        .select { |_, names| names.length > 1 }
+    rescue Sequel::DatabaseError
+      {}
+    end
+
     def vocabulary_is_empty?(data_db, vocabulary_id)
       concepts_table(data_db).where(vocabulary_id: vocabulary_id).count.zero?
     end
