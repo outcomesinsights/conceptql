@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- The `co_reported` description now says that a source record is kept only if every upstream
+  stream has an event in it, and that the events of all streams in any other record are
+  dropped without a warning. The spec has a new `co_reported` section that says the same. The
+  operator's behavior does not change. Applications that show operator descriptions (the
+  Jigsaw diagram editor) show the new text.
+
 ## [0.4.1] - 2026-10-28
 
 ### Changed

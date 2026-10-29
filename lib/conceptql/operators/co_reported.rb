@@ -17,7 +17,10 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc "Passes along all events that were co-reported in the same record in the source data."
+      desc "Passes along the events of its upstream streams that were reported in the same source record " \
+           "(the same context in GDM, the same visit in OMOP). A record is kept only if every upstream stream " \
+           "has at least one event in it. If any one upstream has no event in a record, the events of all " \
+           "streams in that record are dropped, without a warning."
 
       allows_many_upstreams
       category "Combine Streams"

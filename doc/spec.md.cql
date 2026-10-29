@@ -610,6 +610,31 @@ And just to show how multiple streams behave:
 ]
 ```
 
+## Co-reported Events
+
+### co_reported
+
+`co_reported` passes along the events of its upstream streams that were reported in the same source record, for example on the same claim. In GDM data the source record is the event's context (`context_id`). In OMOP data it is the event's visit (`visit_occurrence_id`).
+
+A source record is kept only if every upstream stream has at least one event in it. If any one upstream has no event in a record, `co_reported` drops the events of **all** streams in that record. The drop is silent: the operator gives no warning and does not report how many records it removed.
+
+For example, a claim with a diabetes diagnosis and no office-visit procedure contributes nothing to the statement below, not even its diagnosis. In the test data, ICD-9 250.00 has 1,036 events and CPT 99214 has 1,073 events, but only 49 records have both, so `co_reported` returns 98 events.
+
+```ConceptQL
+# Yields the diabetes diagnoses and the office-visit procedures that were reported in the same source record
+[
+  "co_reported",
+  [
+    "icd9",
+    "250.00"
+  ],
+  [
+    "cpt",
+    "99214"
+  ]
+]
+```
+
 ## Time-oriented Operators
 
 All results in a stream carry a start_date and end_date with them.  All temporal comparisons of streams use these two date columns.  Each result in a stream derives its start and end date from its corresponding row in its table of origin.
