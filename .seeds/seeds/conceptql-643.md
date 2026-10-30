@@ -4,7 +4,7 @@ title: sort_extracted_ctes builds SQL for every CTE to find dependencies (about 
 status: captured
 type: idea
 created_at: 2026-10-29T20:43:42.822503+00:00
-updated_at: 2026-10-30T11:51:56.560021+00:00
+updated_at: 2026-10-30T12:24:34.237363+00:00
 tags:
   - algorithm-survey
   - performance
@@ -46,3 +46,11 @@ plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 ```
 
 RULED 2026-10-30 (Ryan): profile annotate on the slow algorithm (ac4efe58) first, then decide. No code change before the profile.
+
+PROFILE 2026-10-30 (current main 8a1aaa85, ac4efe58 on native_sample_5000, DuckDB 1.5.6, titan-lock perf, logs /home/ryan/projects/outins/jigsaw/main/gems/conceptql/.claude/worktrees/profile-643/claude_stuff/profile-643-\*.log):
+
+- annotate with counts: 2.84, 3.39, 2.76 s (survey on 0.4.1: 62 s). It used the one-query path: all 143 operators countable, one statement of 268 KB, 265 CTEs, 100 IN-lists.
+- One-query path split: DuckDB execution 1.8-1.95 s (count statement 1.56-1.74 s); with_ctes 1.1 s over 2 root-query builds, of which sort_extracted_ctes 0.61-0.64 s; literalize 0.2 s. #sql calls: 851 top-level (33 MB) against 53,209 (2,976 MB) on the forced per-operator path.
+- Forced per-operator path (what Spark, temp tables and uncountable statements still use): 78-83 s; sort_extracted_ctes 29.4 s of it. Hot line scope.rb:357 (filter_map with other != name): CTE names are Sequel.identifier objects, so each comparison runs Sequel Expression#== (46.6% of samples); scope.rb:363 Array#- 12-14%.
+- Also seen: Operator#evaluate is not memoized, so build_dataset evaluates the tree twice (one_query_counts.rb:68, :73); gdm.rb:119 source_vocabulary_ids recomputes on every call (= instead of ||=).
+  Conclusion: on DuckDB and Postgres the 62 s is gone. This seed idea now matters only where counting falls back per operator, mainly Spark.

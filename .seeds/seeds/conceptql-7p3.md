@@ -4,7 +4,7 @@ title: How does a ConceptQL statement lock in the meaning of a code that has had
 status: captured
 type: question
 created_at: 2026-10-30T11:51:55.643472+00:00
-updated_at: 2026-10-30T12:00:36.764119+00:00
+updated_at: 2026-10-30T12:24:35.349523+00:00
 ---
 
 ## Question
@@ -53,3 +53,5 @@ RULED 2026-10-30 (Ryan), answering three questions:
 - Today's drg operator: "Deprecate drg entirely". drg warns now (like count) and becomes an error in a later release; authors move to ms_drg or cms_drg.
 - The ETL finding (one concept ID per source code regardless of event date): tell the ETL repo's session; conceptql does not depend on the fix.
   The reused-code warning becomes unnecessary for DRG once drg is deprecated; HCPCS AC is the only other reused code.
+
+UPDATE 2026-10-30 (roobetl session): roobetl filed seed roobetl-deh ("Concept lookup ignores the event date: reused codes get one concept for all dates"), not ruled. Current roobetl (get_concept_lookup in lib/roobetl/transformations/modifier_function.rb) groups by lower(concept_code) and takes max(concept_id) with no date, so current output holds the HIGHEST concept ID for a reused code; the test fixtures (lowest ID) probably came from an older ETL. Either way the stored ID does not show the meaning, which supports selecting DRG events by code plus event date.

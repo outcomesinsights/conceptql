@@ -4,7 +4,7 @@ title: Send each concept-ID list once and merge identical CTEs (planning is 0.8 
 status: captured
 type: idea
 created_at: 2026-10-29T20:43:43.871479+00:00
-updated_at: 2026-10-30T11:51:57.063020+00:00
+updated_at: 2026-10-30T12:24:34.802088+00:00
 tags:
   - algorithm-survey
   - performance
@@ -45,3 +45,5 @@ plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 ```
 
 RULED 2026-10-30 (Ryan): decide after the annotate profile that seed conceptql-643 asked for.
+
+PROFILE 2026-10-30 (see seed conceptql-643 for setup and logs): DuckDB planning is 70-75% of both the plain query (planning 1.05-1.44 s of 1.41-1.85 s; 236 KB, 264 CTEs, 99 IN-lists, 1,306 plan nodes) and the one-query count statement (planning 1.78-2.00 s of 2.55-2.84 s). The count statement is about half of annotate. The evidence supports this seed idea as the larger remaining cost. Machine load during the runs was 61-67% mean CPU on 40 cores, so absolute times are noisy.
