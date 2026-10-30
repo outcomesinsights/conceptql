@@ -114,6 +114,12 @@ describe ConceptQL::Operators::Numeric do
           _(cdb.query([ "numeric", "criterion_id", [ "icd9", "412" ] ]).sql).must_match(/CAST\("criterion_id" AS Float\) AS "value_as_number"/)
         end
 
+        # Postgres folds only unquoted names, and the SQL quotes the name, so
+        # the SQL must spell the column as the rows do (bead conceptql-4bd).
+        it "reads a column named in another case by its real name in the SQL" do
+          _(cdb.query([ "numeric", "Criterion_ID", [ "icd9", "412" ] ]).sql).must_match(/CAST\("criterion_id" AS Float\) AS "value_as_number"/)
+        end
+
         it "accepts a number" do
           _(errors_for(cdb, [ "numeric", 1, [ "icd9", "412" ] ])).must_be_nil
           _(errors_for(cdb, [ "numeric", "-2.5", [ "icd9", "412" ] ])).must_be_nil
@@ -163,6 +169,10 @@ describe ConceptQL::Operators::Numeric do
 
         it "reads the column from the person table in the SQL" do
           _(cdb.query([ "numeric", "gender_concept_id" ]).sql).must_match(/CAST\("gender_concept_id" AS Float\) AS "value_as_number" FROM "patients"/)
+        end
+
+        it "reads a column named in another case by its real name in the SQL" do
+          _(cdb.query([ "numeric", "Gender_Concept_ID" ]).sql).must_match(/CAST\("gender_concept_id" AS Float\) AS "value_as_number" FROM "patients"/)
         end
 
         it "accepts a number" do

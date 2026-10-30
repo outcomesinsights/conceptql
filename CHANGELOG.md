@@ -145,6 +145,11 @@ All notable changes to this project will be documented in this file.
   Before, it named the result of `current_schema()`. The consumers attach the dataset and
   set the search path `memory.main,dataset.<schema>`, so that name was `main`, which is not
   the dataset's schema. The constructor keyword `schema:` is now `schemas:`.
+- `numeric` with a column name in another case than the column's own
+  (`["numeric", "Value_As_Number", stream]`) now runs on Postgres. Validation accepted the
+  name, because the match ignores case, but the SQL quoted the name as written, and Postgres
+  found no such column. The SQL now uses the column's own name, so validation and the SQL
+  agree on every database.
 
 ## [0.5.0] - 2026-10-29
 

@@ -60,10 +60,18 @@ module ConceptQL
       # and such a statement runs on them today.
       def additional_validation(_db, _opts = {})
         name = column_argument
-        return if name.nil?
-        return if readable_columns.any? { |column| column.to_s.casecmp?(name) }
+        return if name.nil? || matched_column
 
         add_error("unknown column", name)
+      end
+
+      # The column that the argument names, spelled as the rows spell it, or
+      # nil when the argument names no readable column. The SQL quotes the
+      # name, and Postgres folds only unquoted names, so the SQL must use this
+      # spelling for a match in another case to run there too.
+      def matched_column
+        name = column_argument
+        name && readable_columns.find { |column| column.to_s.casecmp?(name) }
       end
 
       # With an upstream, a column name is read from the upstream's rows
@@ -108,7 +116,7 @@ module ConceptQL
         if !value || is_a_number?(value)
           Sequel.cast_numeric(value, Float)
         else
-          Sequel.identifier(value)
+          Sequel.identifier(matched_column || value)
         end
       end
 
