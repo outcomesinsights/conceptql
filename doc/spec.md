@@ -33,7 +33,7 @@ GDM keeps the data in a small number of tables:
 - deaths
   - One row for each recorded death
 
-ConceptQL supports two variants of GDM. The data model `gdm` reads clinical codes from clinical_codes. The data model `gdm_wide` reads them from observations, a wide table that holds the same rows as clinical_codes with the columns of their contexts and collections joined on. ConceptQL looks up codes, such as ICD-9 412, in a vocabulary database to find their concept IDs.
+ConceptQL supports two variants of GDM. The data model `gdm` reads clinical codes from clinical_codes. The data model `gdm_wide` reads them from observations, a wide table that holds the same rows as clinical_codes with the columns of their contexts and collections joined on. ConceptQL looks up codes, such as ICD-9 412, in a vocabulary database to find their concept IDs. When the data database is a real database, and neither its search path nor the database at LEXICON_URL has the vocabulary tables, ConceptQL raises an error instead of running, because without a vocabulary every code would match no rows.
 
 For instance, using ConceptQL we can take a statement that looks like this:
 
@@ -921,16 +921,24 @@ There are situations when the date columns associated with a result should have 
 
 - Takes 2 arguments
   - First argument is the stream on which to operate
-  - Second argument is a hash with two keys: [:start, :end] each with a value in the following format: "(-?\\d+[dmy])+"
+  - Second argument is a hash with two keys: [:start, :end] each with a value in the following format: "[res]\*([-+]?\\d\*[dwmy])+" or "[res]\*[-+]?\\d+"
+    - d is days, w is weeks (7 days), m is months and y is years
+    - A unit without a number means 1 of that unit
     - Both start and end must be defined, even if you are only adjusting one of the dates
   - Some examples
     - 30d => 30 days
     - 20 => 20 days
     - d => 1 day
+    - 2w => 2 weeks (14 days)
     - 1y => 1 year
     - -1m => -1 month
     - 10d3m => 3 months and 10 days
     - -2y10m-3d => -2 years, +10 months, -3 days
+  - An optional prefix of the letters r, e and s comes before the amounts
+    - r reverses the adjustment: each amount counts back instead of forward, so R365d means 365 days before the date and R-1m means 1 month after it
+    - e adjusts from the result's end_date, so E30d means end_date + 30 days
+    - s adjusts from the result's start_date, so S7d means start_date + 7 days
+    - Without e or s, the start value adjusts start_date and the end value adjusts end_date
   - A bare number means days, also after an r, e or s prefix: R365, E30 and S7 mean the same as R365d, E30d and S7d
   - The start or end value can also be '', '0', or nil
     - This will leave the date unaffected
@@ -1101,6 +1109,26 @@ Person streams carry a patient's date of birth in their date columns. This makes
 | 149       | 28518        | observations    | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
 | 152       | 82988        | observations    | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
 | 152       | 84298        | observations    | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
+
+### trim_date_end and trim_date_start
+
+- trim_date_end takes a left stream and a right stream. For each person, it trims the end_date of each left record to the earliest start_date of the person's right records.
+  - A left record whose start_date comes after that right start_date is discarded.
+  - A left record passes through unchanged when its person has no right records, or when that right start_date comes after its end_date.
+- trim_date_start trims the other end. For each person, it trims the start_date of each left record to the latest end_date of the person's right records.
+  - A left record whose end_date comes before that right end_date is discarded.
+  - A left record passes through unchanged when its person has no right records, or when that right end_date comes before its start_date.
+- With compare_all: true, trim_date_end and trim_date_start compare each left record with every right record of the person (and of the join_columns), not only with the person's first or last right record, and return each left record once.
+  - trim_date_end trims its end_date to the earliest right start_date on or after its start_date.
+  - trim_date_start trims its start_date to the latest right end_date on or before its end_date.
+  - A left record is discarded only when it has right records and none of them qualifies.
+
+### Window tables
+
+- The `window` statement runs a statement inside windows: `["window", <statement>, {"window_table": <window table>}]`.
+- The window table has the columns person_id, start_date and end_date. It is the name of a table or a ConceptQL statement.
+- Each selection operator keeps only the results whose person has a window and whose start_date falls in that window. The column window_id of a result identifies its window.
+- If the window table is a ConceptQL statement with errors, annotate reports them under window_table and counts nothing. Running the statement raises InvalidStatementError.
 
 ## Type Conversion
 

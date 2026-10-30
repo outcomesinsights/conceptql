@@ -12,8 +12,10 @@ All notable changes to this project will be documented in this file.
   caches its lookups. It never reads `LEXICON_URL`. Pass it as
   `ConceptQL::Database.new(db, lexicon: lexicon)`, without `cache_lookups`. When the dataset
   lacks one of the tables, it raises `ConceptQL::Lexicon::MissingVocabularyError`, whose
-  message names the missing tables, the schemas that it searched and the search path. For a Postgres
-  or Spark db it returns nil, and the Database chooses its lexicon as before.
+  message names the missing tables, the schemas that it searched and the search path. The
+  error's `missing_tables` attribute holds the missing tables, and its `schemas` attribute
+  holds the searched schemas, each as `catalog.schema`. `for_dataset` returns nil for a
+  Postgres or Spark db, and the Database chooses its lexicon as before.
 - `sum` takes the boolean option `group_by_person`. With it, `sum` gives one person result
   for each person (and window): `person_id`, `criterion_domain` `person`, `criterion_table`
   of the person table (as a cast to `person` gives them), `criterion_id` 0, the earliest
@@ -38,8 +40,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **Breaking: a Database on a real database without vocabulary raises
-  `ConceptQL::Lexicon::NoVocabularyError`.** `ConceptQL::Database.new(db)` raises it when `db`
+- **Breaking:** a Database on a real database without vocabulary raises
+  `ConceptQL::Lexicon::NoVocabularyError`. `ConceptQL::Database.new(db)` raises it when `db`
   is a real database (not nil and not a Sequel mock) and neither `db` nor the `LEXICON_URL`
   database has all the OHDSI vocabulary tables (`concept`, `concept_ancestor`,
   `concept_relationship`, `vocabulary`) or all the GDM ones (`ancestors`, `concepts`,
@@ -50,26 +52,81 @@ All notable changes to this project will be documented in this file.
   kind in each database searched, whether `LEXICON_URL` is set, and the fixes. `#searches`
   holds the same facts. A Database with no db or a Sequel mock (diagram and SQL rendering)
   still uses no vocabulary, and a Database given `lexicon:` (for example
-  `ConceptQL::Lexicon.for_dataset(db)`) is unaffected. `Lexicon::MissingVocabularyError` is now a
+  `ConceptQL::Lexicon.for_dataset(db)`) is unaffected. `Lexicon::MissingVocabularyError` is a
   subclass of `NoVocabularyError`, so one `rescue` covers both.
-- **Breaking: the plain query raises `ConceptQL::InvalidStatementError` for a statement with
-  validation errors.** `Query#query`, `#sql` and `#sql_statements`, and `#all`, `#count`,
+- **Breaking:** the plain query raises `ConceptQL::InvalidStatementError` for a statement with
+  validation errors. `Query#query`, `#sql` and `#sql_statements`, and `#all`, `#count`,
   `#execute`, `#order` and `#analyze` through `#query`, now validate the statement first,
   as `#code_list` already did. The error's message lists each error that `annotate` shows,
   with the name of its operator. `#errors` holds the same errors as the `errors` hash of
-  `scope_annotate`, and `#statement` holds the statement. Warnings, such as the `count`
-  deprecation or an unknown code, do not raise. Before, an invalid statement could crash
-  while it built (`provider_filter` without `roles` raised NoMethodError, and an unknown
-  operator raised RuntimeError `Invalid#query called`). It could also build SQL that
-  silently returned fewer rows. `provenance` ignored an unrecognized keyword, such as a
-  concept ID or `inpatient:primary_or_first`, and `count` ignored every upstream after the
-  first. Those statements now raise. The error is a `Query::QueryError`, and its old name
-  `ConceptQL::Query::InvalidStatementError` still works. `annotate` does not change.
-- **Behavior change: the code formats come from vocabulary_formats.** conceptql no longer keeps
-  its own format patterns. A code that does not match its vocabulary's format is still the
-  warning `improperly formatted code`, which names the code, as in 0.5.0. The statement stays
-  valid: `annotate` counts the operator, the plain query and `Query#code_list` run, and the
-  malformed code matches no rows. There is no prefix matching (`["icd9", "410*"]` does not
+  `scope_annotate`, and `#statement` holds the statement. Warnings do not raise. Examples of
+  warnings are the `count` and `drg` deprecations, an unknown code and an improperly formatted
+  code. Before, an invalid statement could crash while it built (`provider_filter` without
+  `roles` raised NoMethodError, and an unknown operator raised RuntimeError
+  `Invalid#query called`). It could also build SQL that silently returned fewer rows.
+  `provenance` ignored an unrecognized keyword, such as a concept ID or
+  `inpatient:primary_or_first`, and `count` ignored every upstream after the first. Those
+  statements now raise. An invalid window table and an empty statement also raise it (see
+  Fixed). The error is a `Query::QueryError`, and its old name
+  `ConceptQL::Query::InvalidStatementError` still works. `annotate` does not raise.
+- **Breaking:** `numeric` without an upstream fails validation when its column name is not a
+  column of the person table. That form (`["numeric", "<name>"]`) reads the column from the
+  person table (`patients` in gdm and gdm_wide). A name that the table lacks is now the
+  validation error `["unknown column", "<name>"]`, and `annotate` runs no counting query for
+  the operator. This includes a column that only stream rows have, such as `criterion_id`. In
+  0.5.0 on DuckDB, `["numeric", "criterion_id"]` ran and returned 249 rows on the test data.
+  Now it fails validation, and its plain query raises `ConceptQL::InvalidStatementError`. A
+  name that is neither a column of the person table nor an output column, such as
+  `no_such_column`, also failed in 0.5.0, but only at run time. The match ignores case, as
+  DuckDB and Spark do.
+- **Breaking:** `filter`, `except` and `person_filter` with an `as` option fail validation with
+  `["unsupported option", "as", <value>]`. None of them has an `as` option. In 0.5.0, the
+  statement passed validation and ran as a plain filter, except or person_filter, so a user
+  who meant to cast both streams got other rows with no warning. Now the plain query of such a
+  statement raises `ConceptQL::InvalidStatementError`. A blank `as` counts as not set. Other
+  options that these operators read but do not declare (`ignore_dates` for filter and except,
+  and the t_shank-only options) still validate.
+- **Breaking:** `union` removes exact duplicate rows. A row that arrives from more than one
+  upstream comes out once, because every stream is a set. Before, `union` joined its
+  non-vocabulary upstreams with `UNION ALL`, so
+  `["union", ["first", ["icd9", "412"]], ["icd9", "412"]]` returned each first MI twice. Two
+  rows are duplicates only when every column is equal, `label` included. The duplicate
+  removal is expensive on large data, so `union` keeps `UNION ALL` when no row can come from
+  two of its upstreams: when the upstreams are vocabulary operators, `cpt_or_hcpcs`-style
+  operators and unions of them, and each pair has different domains or different
+  vocabularies. Statements that union a labeled operator with a `recall` of it return fewer
+  rows.
+- **Breaking:** `trim_date_end` and `trim_date_start` with `compare_all` return one row for
+  each left row. With `compare_all`, each left row is compared with every right row of the
+  person (and of the `join_columns`). `trim_date_end` now trims the end_date to the earliest
+  right start_date on or after the left start_date. `trim_date_start` trims the start_date to
+  the latest right end_date on or before the left end_date (each date as `within` moves it,
+  when `within` is given). Before, the left row came out once for each such
+  right row: trimmed by each one, and also untrimmed when a right row started after the left
+  row ended. For example,
+  `["trim_date_end", {"left": ["icd9", "412"], "right": ["cpt", "99214"], "compare_all": true}]`
+  returned event 523 twice, with the end dates 2008-03-17 and 2008-03-21, and now returns it
+  once, with 2008-03-17. With `["icd9", "412"]` as both the left and the right, `trim_date_end`
+  returned 60 rows for 48 left events, and now returns 48. Which left rows come out does not
+  change: a left row is dropped only when it has right rows and none of them passes, and a
+  left row without right rows passes through unchanged. t_shank sets `compare_all` for its
+  baseline windows. Statements that count the rows of such a trim count fewer rows.
+- **Breaking:** a date adjustment that is a bare number now acts as the same number of days
+  with the unit `d`. With an `r`, `e` or `s` prefix, `R365` means 365 days back from the origin, `E30` means `end_date` +
+  30 days, and `S7` means `start_date` + 7 days, the same as `R365d`, `E30d` and `S7d`. In
+  0.5.0, these strings gave no adjustment and no error. t_shank puts `R` before lookbacks and
+  blackout periods, so a lookback of `R365` was a lookback of zero days. ConceptQL now also
+  reverses a bare number where it reverses an adjustment with a unit, such as `365d`. Those
+  places are the `within` of a temporal operator, the `at_least` of `before`, and the `start`
+  of `concurrent_within`. In 0.5.0, these options added a bare number to the date, and now
+  they count it back from the date. So a statement with such a value selects a different date
+  range than in 0.5.0. `DateAdjuster#adjustments` also no longer returns the result of an
+  earlier call that had a different `reverse` value.
+- The code formats come from vocabulary_formats. conceptql no longer keeps its own format
+  patterns. A code that does not match its vocabulary's format is still the warning
+  `improperly formatted code`, which names the code, as in 0.5.0. The statement stays valid:
+  `annotate` counts the operator, the plain query and `Query#code_list` run, and the
+  malformed code matches no rows. A code is never a prefix (`["icd9", "410*"]` does not
   select `410.00`), and a bare `"*"` still selects every code. A `cpt_or_hcpcs`-style operator
   gives the warning only when every one of its vocabularies rejects the code's format.
   `config/vocabulary_formats.tsv` is a copy of the published table of the public repository
@@ -77,24 +134,15 @@ All notable changes to this project will be documented in this file.
   commit. `just vocabulary-formats <ref>` refreshes both. Each vocabulary uses its default row
   (the row whose `vocabulary_id` is the vocabulary's id), anchored as `\A(?:pattern)\z`. A
   vocabulary without a row gets no format check, and an unknown code in it is still the warning
-  `unknown code(s)`. Compared with the old patterns: LOINC and Gemscript are no longer checked,
-  so standard LOINC codes such as `20-8` and `1-8` are accepted. ICD10PCS accepts the hierarchy
-  codes of 1 to 7 characters (`0016`). NDC accepts only the 11-digit claims form, so the
-  9-digit product codes (`003630641`) and the alphanumeric codes (`00019N068`) now get the
-  format warning. RxNorm Extension, ICDO3 and EDI, which come from the lexicon, are now
-  checked. The other patterns are unchanged. `config/vocabularies.csv` has no `format_regexp`
-  column, and a `format_regexp` column in a custom vocabularies file is ignored. The
-  `format_regexp` of a vocabulary entry's metadata is the anchored pattern from
+  `unknown code(s)`. Compared with 0.5.0: LOINC and Gemscript are no longer checked, so
+  standard LOINC codes such as `20-8` and `1-8` no longer get the format warning. ICD10PCS
+  accepts the hierarchy codes of 1 to 7 characters (`0016`). NDC accepts only the 11-digit
+  claims form, so the 9-digit product codes (`003630641`) and the alphanumeric codes
+  (`00019N068`) now get the format warning. RxNorm Extension, ICDO3 and EDI, which come from
+  the lexicon, are now checked. The other patterns are unchanged. `config/vocabularies.csv`
+  has no `format_regexp` column, and a `format_regexp` column in a custom vocabularies file is
+  ignored. The `format_regexp` of a vocabulary entry's metadata is the anchored pattern from
   vocabulary_formats.
-- `union` removes exact duplicate rows: a row that arrives from more than one upstream
-  comes out once, because every stream is a set. Before, `union` joined its non-vocabulary
-  upstreams with `UNION ALL`, so `["union", ["first", ["icd9", "412"]], ["icd9", "412"]]`
-  returned each first MI twice. Two rows are duplicates only when every column is equal,
-  `label` included. The duplicate removal is expensive on large data, so `union` keeps
-  `UNION ALL` when no row can come from two of its upstreams: when the upstreams are
-  vocabulary operators, `cpt_or_hcpcs`-style operators and unions of them, and each pair
-  has different domains or different vocabularies. Statements that union a labeled
-  operator with a `recall` of it return fewer rows.
 - `occurrence` with `at_least` returns each row once, because every stream is a set. Each
   earlier row of a person picks its nth row, and with `at_least` several earlier rows can pick
   the same row. Before, that row came out once for each earlier row that picked it, so
@@ -116,9 +164,12 @@ All notable changes to this project will be documented in this file.
   query, which evaluated all of its upstream operators again. The counts and the output
   shape do not change, and an operator with no rows still reports zeros. Spark does not
   honor `MATERIALIZED`, so it keeps one counting query for each operator. The old path is
-  also used for a statement with an operator that annotate does not count (an invalid
-  operator, for example) and with temp tables (`force_temp_tables`). `skip_counts: true`
-  runs no counting query, as before.
+  also used when the statement has an operator that annotate does not count (an invalid
+  operator, for example), when temp tables replace the CTEs (`force_temp_tables`), and when
+  `CONCEPTQL_AVOID_CTES=true` turns the CTEs off. It is also used when the Database has the
+  `share_utilization` option and the statement has a `hospitalization`, `snf` or `hospice`
+  operator, because the shared tables are not CTEs. `skip_counts: true` runs no counting
+  query, as before.
 - The gemspec accepts sequelizer 0.5 (`>= 0.3.0, < 0.6`; before, `< 0.5`), so an
   application can use sequelizer 0.5's `dataset_db` and `with_dataset` with conceptql.
   conceptql calls neither of them, and the parts of sequelizer that conceptql uses did not
@@ -126,14 +177,22 @@ All notable changes to this project will be documented in this file.
   `with_dataset`, so call `ConceptQL::Lexicon.for_dataset` and run the queries inside that
   block. conceptql's own Gemfile stays on the sequelizer 0.4 release.
 - The SQL of a statement is smaller and takes less time to plan. The rows do not change.
-  - CTEs with the same SQL merge into one. A statement evaluates some operators more than
-    once (a `recall`, for example), and each evaluation used to add its own copy.
-  - An IN list of at least `ConceptQL::Scope::CONCEPT_LIST_MIN_ITEMS` (1,000)
-    integers, such as a list of provenance concept IDs, goes to the database once, as a
-    materialized `VALUES` CTE that each copy of the list reads. A shorter list stays an IN list.
+  - CTEs with the same SQL and the same WITH options merge into one. A statement evaluates
+    some operators more than once (a `recall`, for example), and each evaluation used to add
+    its own copy.
+  - An IN or NOT IN list of at least `ConceptQL::Scope::CONCEPT_LIST_MIN_ITEMS` (1,000)
+    integers, such as a list of provenance concept IDs, goes to the database once. It becomes
+    a `VALUES` CTE that each copy of the list reads. The CTE is `MATERIALIZED` on the
+    databases that support it, which excludes Spark. A shorter list stays an IN list.
   - On a 111-operator production algorithm, DuckDB planning of the plain query fell from
     0.81 s to 0.57 s and `annotate` with counts from 2.7 s to 2.0 s. Postgres planning of the
     same statement on the test data fell from 485 ms to 156 ms.
+- The specification (`doc/spec.md`) describes the changed `union` and `filter`, the new
+  `ms_drg` and `cms_drg`, the `count` and `drg` deprecations, and `sum` with
+  `group_by_person`. It gives the full format of a date adjustment, with the unit `w` and the
+  prefixes `r`, `e` and `s`. New sections describe `trim_date_end` and `trim_date_start`
+  (with `compare_all`) and the `window` statement with a window table. It says that ConceptQL
+  raises an error when it finds no vocabulary for a real database.
 
 ### Deprecated
 
@@ -143,8 +202,10 @@ All notable changes to this project will be documented in this file.
   error. To count the events of each person, use
   `["sum", ["numeric", 1, <stream>], {"group_by_person": true}]`. Without `group_by_person`,
   `sum` splits the count of one person over several rows when the events have different
-  source values. The operator metadata of `count` says `deprecated: true`. The new
-  class-level declaration `deprecated` marks an operator.
+  source values. `ConceptQL::Operators::Count.to_metadata` says `deprecated: true`.
+  `ConceptQL.metadata` does not list `count`, because it lists only the operators that have a
+  category, and `count` has none. The new class-level declaration `deprecated` marks an
+  operator.
 - The `drg` operator is deprecated. A DRG code can have two meanings, and `drg` selects the
   events of both. A statement that uses `drg` still runs and returns the same rows.
   Annotation adds the warning `deprecated operator` on `drg`, and a later release will make
@@ -154,15 +215,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- A date adjustment that is a bare number with an `r`, `e` or `s` prefix now means days.
-  `R365` means 365 days back from the origin, `E30` means `end_date` + 30 days, and `S7` means
-  `start_date` + 7 days, the same as `R365d`, `E30d` and `S7d`. Before, these strings gave no
-  adjustment and no error, so a lookback of `R365` (t_shank puts `R` before lookbacks and
-  blackout periods) was a lookback of zero days. A bare number is now also reversed where
-  ConceptQL reverses an adjustment, as `365d` is: the `within` of a temporal operator, the
-  `at_least` of `before`, and the `start` of `concurrent_within` now count a bare number back
-  from the date. Before, they added it. `DateAdjuster#adjustments` also no longer returns the
-  result of an earlier call that had a different `reverse` value.
 - An empty statement (`[]`) is now an invalid statement. `validation_errors` and
   `scope_annotate` report the error `{"invalid" => [["empty statement"]]}`, and `query`, `sql`
   and the other methods that build SQL raise `ConceptQL::InvalidStatementError`. This also
@@ -173,15 +225,16 @@ All notable changes to this project will be documented in this file.
   `LEXICON_URL` database. A mock answers yes to every table check, so the Lexicon chose the
   mock as an OHDSI vocabulary that has no rows, and every vocabulary from the lexicon was an
   invalid operator. Now the Lexicon never searches a mock data database for vocabulary tables.
-  Without `LEXICON_URL`, a mock still gets `LexiconNoDB` and raises nothing.
-- `annotate` no longer raises when the window table of a `window` statement is an invalid
-  ConceptQL statement. `scope_annotate` reports the window table's errors under the key
-  `window_table`, and each message starts with the name of its operator (for example
+  Without `LEXICON_URL`, a mock gets `LexiconNoDB`, and `ConceptQL::Database.new` raises no
+  `NoVocabularyError` for it.
+- `annotate` reports the errors of a window table that is an invalid ConceptQL statement.
+  `scope_annotate` reports them under the key `window_table`, and each message starts with
+  the name of its operator (for example
   `["provider_filter: required option not present", "roles"]`). `annotate` then counts
-  nothing, because every count joins the window table. Before, a counted `annotate` raised the
-  window table's `InvalidStatementError`, and `annotate` without counts reported no error. The
-  plain query of the outer statement still raises `InvalidStatementError`, now with these
-  errors and the outer statement.
+  nothing, because every count joins the window table. The plain query of the outer
+  statement raises `InvalidStatementError` with these errors and the outer statement. In
+  0.5.0, `annotate` did not validate the window table, so it reported no error for it, and a
+  counted `annotate` built the window table's SQL without a check.
 - `inner_join` and `include_rhs_columns` no longer return a row more than once. With either
   option, a temporal operator (for example `during`, `contains` or `any_overlap`) joins each
   left row to every matching right row, and it gave one copy of the left row for each match.
@@ -190,21 +243,6 @@ All notable changes to this project will be documented in this file.
   out once. With `include_rhs_columns`, rows that differ in a right-side column are different
   rows, so a left row still comes out once for each different value, such as each right
   `uuid`.
-- **Behavior change: `trim_date_end` and `trim_date_start` with `compare_all` return one row
-  for each left row.** With `compare_all`, each left row is compared with every right row of
-  the person (and of the `join_columns`). `trim_date_end` now trims the end_date to the
-  earliest right start_date on or after the left start_date, and `trim_date_start` trims the
-  start_date to the latest right end_date on or before the left end_date (each date as
-  `within` moves it, when it is given). Before, the left
-  row came out once for each such right row: trimmed by each one, and also untrimmed when a
-  right row started after the left row ended. For example,
-  `["trim_date_end", {"left": ["icd9", "412"], "right": ["cpt", "99214"], "compare_all": true}]`
-  returned event 523 twice, with the end dates 2008-03-17 and 2008-03-21, and now returns it
-  once, with 2008-03-17. With `["icd9", "412"]` as both the left and the right, `trim_date_end`
-  returned 60 rows for 48 left events, and now returns 48. Which left rows come out does not
-  change: a left row is dropped only when it has right rows and none of them passes, and a
-  left row without right rows passes through unchanged. Statements that count the rows of
-  such a trim count fewer rows.
 - Building a statement's SQL no longer runs a query to learn a dataset's columns. Before,
   `occurrence` with `group_by_date` over a labeled upstream failed on every database with
   "Table with name <label> does not exist" (Postgres: "relation ... does not exist"): it asked
@@ -223,17 +261,12 @@ All notable changes to this project will be documented in this file.
   error. The column is read from the rows that the upstream emits, not from the tables that
   the upstream reads. Every stream emits the same columns, so an upstream that mixes tables
   (a `union` of two domains, for example) gets the same check. The match ignores case, as
-  DuckDB and Spark do. `numeric` without an upstream and a column name
-  (`["numeric", "no_such_column"]`) gets the same error when the person table (`patients`
-  in gdm and gdm_wide) lacks that column. That form reads the column from the person
-  table, so a column that only stream rows have, such as `criterion_id`, is also an
-  unknown column there.
-- `filter`, `except` and `person_filter` with an `as` option now fail validation with
-  `["unsupported option", "as", <value>]`. None of them has an `as` option. Before, the
-  statement passed validation and ran as a plain filter, except or person_filter, so a user
-  who meant to cast both streams got other rows with no warning. A blank `as` counts as not
-  set. Other options that these operators read but do not declare (`ignore_dates` for
-  filter and except, and the t_shank-only options) still validate.
+  DuckDB and Spark do. `numeric` without an upstream gets the same check against the person
+  table (see Changed).
+- `numeric` with a column name in another case than the column's own
+  (`["numeric", "Value_As_Number", stream]`) now runs on Postgres. Before, the SQL quoted the
+  name as written, and Postgres found no such column. The SQL now uses the column's own name,
+  so validation and the SQL agree on every database.
 - `Query#annotate` now gives each operator's counts (`annotation[:counts]`) in domain-name
   order, with both counting paths (one SQL statement, or a query for each operator). Before,
   the order came from the database, and the zero counts of domains with no rows came last.
@@ -247,19 +280,6 @@ All notable changes to this project will be documented in this file.
   `hospitalization` records (table `collections`, domain `condition_occurrence`) matched
   `icd9` records from `observations`: `filter(icd9 "*" by hospitalization, ignore_dates)`
   kept 8 such records on the test data, and now keeps none.
-- `ConceptQL::Lexicon::MissingVocabularyError` now names the schemas that were searched for
-  the vocabulary tables, each as `catalog.schema`, and its `schemas` attribute holds them.
-  Before, it named the result of `current_schema()`. The consumers attach the dataset and
-  set the search path `memory.main,dataset.<schema>`, so that name was `main`, which is not
-  the dataset's schema. The constructor keyword `schema:` is now `schemas:`.
-- `numeric` with a column name in another case than the column's own
-  (`["numeric", "Value_As_Number", stream]`) now runs on Postgres. Validation accepted the
-  name, because the match ignores case, but the SQL quoted the name as written, and Postgres
-  found no such column. The SQL now uses the column's own name, so validation and the SQL
-  agree on every database.
-- `just spec` no longer leaves a truncated diagram in `doc/spec/` when it is interrupted or
-  `dot` fails. It draws each diagram into a temporary file in the same directory and renames
-  that file over the diagram only after `dot` succeeds.
 
 ## [0.5.0] - 2026-10-29
 
