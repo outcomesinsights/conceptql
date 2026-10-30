@@ -29,6 +29,19 @@ All notable changes to this project will be documented in this file.
   dropped without a warning. It no longer mentions OMOP visits. The spec has a new `co_reported` section that says the same. The
   operator's behavior does not change. Applications that show operator descriptions (the
   Jigsaw diagram editor) show the new text.
+- The specification (`doc/spec.md` and its source `doc/spec.md.cql`) now describes GDM
+  instead of OMOP CDM v4. Every example statement now validates on `gdm_wide`. Each example
+  table comes from the DuckDB test fixture, with the columns `criterion_table` and
+  `criterion_domain` instead of `criterion_type`. The diagrams are drawn again from the same
+  data. Examples that used removed operators (`intersect`, `complement`, `primary_diagnosis`,
+  `place_of_service_code`, `visit_occurrence`, `procedure_cost`, `payer`, `value`,
+  `greater_than`) now use `filter`, `provenance`, `hospitalization`, `co_reported` and
+  `numeric_filter`, or are removed. The removed sections are "Intersect", "Complement",
+  "Casting to a visit_occurrence", "Cast all the Things!", the intersect question in
+  "Discussion about Set Operators", and "How to Handle fact_relationship Table from CDMv5".
+  The new sections are "Filter" and "Casting to death". The Appendix C proposal "Filter
+  Operator" is now "`as` Option for Filter", because the filter operator exists. "Time Windows" is now a `##` section,
+  so that no section is larger than about 23 KB.
 
 ## [0.4.1] - 2026-10-28
 

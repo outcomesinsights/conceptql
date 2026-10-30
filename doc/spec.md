@@ -15,12 +15,31 @@ Outcomes Insights intends to build a vast library of research algorithms and app
 
 We developed ConceptQL to address these two issues.
 
-We are writing a tool that can read research algorithms defined in ConceptQL. The tool can create a diagram for the algorithm which makes it easy to visualize and understand. The tool can also translate the algorithm into a SQL query which runs against data structured in [OMOP's Common Data Model (CDM)](http://omop.org/CDM). The purpose of the CDM is to standardize the format and content of observational data, so standardized applications, tools and methods can be applied to them.
+We are writing a tool that can read research algorithms defined in ConceptQL. The tool can create a diagram for the algorithm which makes it easy to visualize and understand. The tool can also translate the algorithm into a SQL query which runs against data structured in the Generalized Data Model (GDM). GDM standardizes the format of observational healthcare data, such as claims, so that the same algorithm can run against many data sources.
+
+GDM keeps the data in a small number of tables:
+
+- patients
+  - One row for each patient, with the date of birth, gender, race, and ethnicity
+- clinical_codes
+  - One row for each code that a source record reports for a patient, such as a diagnosis, a procedure, a drug, or a lab test, with a start date and an end date
+- contexts
+  - One row for each source record, such as a claim or a claim line
+  - Each clinical code points at the context that reported it
+- collections
+  - One row for each group of contexts, such as a hospital stay
+- information_periods
+  - The date ranges for which the data source has information about a patient
+- deaths
+  - One row for each recorded death
+
+ConceptQL supports two variants of GDM. The data model `gdm` reads clinical codes from clinical_codes. The data model `gdm_wide` reads them from observations, a wide table that holds the same rows as clinical_codes with the columns of their contexts and collections joined on. ConceptQL looks up codes, such as ICD-9 412, in a vocabulary database to find their concept IDs.
 
 For instance, using ConceptQL we can take a statement that looks like this:
 
 ```YAML
-:icd9: '412'
+- icd9
+- '412'
 ```
 
 And generate a diagram that looks like this:
@@ -34,28 +53,33 @@ And generate a diagram that looks like this:
 
 ![](spec/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
-And generate SQL that looks like this:
+And generate SQL that looks like this (simplified from the SQL that ConceptQL generates for `gdm_wide`, where 44820864 is the concept ID of ICD-9 412):
 
 ```SQL
-SELECT *
-FROM cdm_data.condition_occurrence AS co
-JOIN vocabulary.source_to_concept_map AS scm ON (c.condition_concept_id = scm.target_concept_id)
-WHERE scm.source_code IN ('412')
-AND scm.source_vocabulary_id = 2
-AND scm.source_code = co.condition_source_value
+SELECT
+  "patient_id" AS "person_id",
+  "id" AS "criterion_id",
+  'observations' AS "criterion_table",
+  'condition_occurrence' AS "criterion_domain",
+  "start_date",
+  "end_date",
+  "clinical_code_source_value" AS "source_value"
+FROM "observations"
+WHERE "clinical_code_vocabulary_id" = 'ICD9CM'
+  AND "clinical_code_concept_id" IN (44820864)
 ```
 
 As stated above, one of the goals of ConceptQL is to make it easy to assemble fairly complex queries without having to roll up our sleeves and write raw SQL. To accommodate this complexity, ConceptQL itself has some complexities of its own. That said, we believe ConceptQL will help researchers define, hone, and share their research algorithms.
@@ -68,10 +92,11 @@ I find seeing examples to be the quickest way to get a sense of a language. Here
 
 ```YAML
 # Example 1: A simple example in YAML
-# This is just a simple hash with a key of :icd9 and a value of 412
-# This example will search the condition_occurrence table for all conditions that match the ICD-9 code 412.
+# This is just a simple array: the name of an operator, icd9, followed by its argument, 412
+# This example will search the clinical codes for all conditions that match the ICD-9 code 412.
 ---
-:icd9: '412'
+- icd9
+- '412'
 ```
 
 ### ConceptQL Diagrams
@@ -85,20 +110,20 @@ Reading ConceptQL in YAML or JSON seems hard to me. I prefer to explore ConceptQ
 
 ```
 
-![](spec/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)
+![All Conditions Matching MI](spec/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
 Each oval depicts a "operator", or rather, a ConceptQL expression. An arrow between a pair of operators indicates that the results from the operator on the tail of the arrow pass on to the operator at the head of the arrow. A simple example should help here:
 
@@ -110,20 +135,20 @@ Each oval depicts a "operator", or rather, a ConceptQL expression. An arrow betw
 
 ```
 
-![](spec/39d6a8eb71cae51b1d6937c97134e51f04fd47c54535ff0915fe6a8b4f197fb2.png)
+![First Office Visit Per Patient](spec/39d6a8eb71cae51b1d6937c97134e51f04fd47c54535ff0915fe6a8b4f197fb2.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 2         | 48           | procedure_occurrence | 2009-07-03 | 2009-07-03 | 99214        |
-| 5         | 118          | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99214        |
-| 6         | 167          | procedure_occurrence | 2009-09-12 | 2009-09-12 | 99214        |
-| 7         | 376          | procedure_occurrence | 2008-08-13 | 2008-08-13 | 99214        |
-| 8         | 609          | procedure_occurrence | 2008-02-27 | 2008-02-27 | 99214        |
-| 9         | 652          | procedure_occurrence | 2009-09-11 | 2009-09-11 | 99214        |
-| 10        | 681          | procedure_occurrence | 2009-05-09 | 2009-05-09 | 99214        |
-| 11        | 758          | procedure_occurrence | 2008-06-17 | 2008-06-17 | 99214        |
-| 12        | 847          | procedure_occurrence | 2008-02-11 | 2008-02-11 | 99214        |
-| 13        | 1102         | procedure_occurrence | 2008-01-24 | 2008-01-24 | 99214        |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 2         | 58127        | observations    | procedure_occurrence | 2009-07-03 | 2009-07-03 | 99214        |
+| 5         | 38313        | observations    | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99214        |
+| 6         | 48992        | observations    | procedure_occurrence | 2009-09-12 | 2009-09-12 | 99214        |
+| 7         | 63797        | observations    | procedure_occurrence | 2008-08-13 | 2008-08-13 | 99214        |
+| 8         | 55871        | observations    | procedure_occurrence | 2008-02-27 | 2008-02-27 | 99214        |
+| 9         | 45498        | observations    | procedure_occurrence | 2009-09-11 | 2009-09-11 | 99214        |
+| 10        | 48752        | observations    | procedure_occurrence | 2009-05-09 | 2009-05-09 | 99214        |
+| 11        | 73107        | observations    | procedure_occurrence | 2008-06-17 | 2008-06-17 | 99214        |
+| 12        | 71635        | observations    | procedure_occurrence | 2008-02-11 | 2008-02-11 | 99214        |
+| 13        | 74458        | observations    | procedure_occurrence | 2008-01-24 | 2008-01-24 | 99214        |
 
 The diagram above reads "get all procedures that match the CPT 99214 (Office Visit) and then filter them down to the first occurrence for each person". The diagram is much more terse than that and to accurately read the diagram, you need a lot of implicit knowledge about how each operator operates. Fortunately, this document will (hopefully) impart that knowledge to you.
 
@@ -137,30 +162,26 @@ The trailing arrow in the diagrams serves as a reminder that ConceptQL yields a 
 
 ### Streams have Types
 
-You might have noticed that the operators and edges in the diagrams often have a color. That color represents what "type" of stream the operator or edge represents. There are many types in ConceptQL, and you'll notice they are __strongly__ correlated with the tables found in [CDM v4.0](http://omop.org/CDM):
+You might have noticed that the operators and edges in the diagrams often have a color. That color represents what "type" of stream the operator or edge represents. A stream's type is the domain of its results. Each result reports its type in the criterion_domain column. These are the most common types, with their colors in the diagrams:
 
 - condition_occurrence
   - red
 - death
   - brown
-- drug_cost
-  - TBD
 - drug_exposure
   - purple
 - observation
-  - TBD
-- payer_plan_period
-  - TBD
+  - magenta
+- observation_period
+  - gray
 - person
   - blue
-- procedure_cost
-  - gold
 - procedure_occurrence
   - green
-- visit_occurrence
-  - orange
 
-Each stream has a point of origin (essentially, the table from which we pulled the results for a stream). Based on that origin, each stream will have a particular type. The stream carries this type information as it moves through each operator. When certain operators, particularly set and temporal operators, need to perform filtering, they can use this type information to determine how to best filter a stream. There will be much more discussion about types woven throughout this document. For now, it is sufficient to know that each stream has a type.
+A stream that carries more than one type is black.
+
+Each stream has a point of origin: the selection operator that pulled its results out of the database. Based on that origin, each stream will have a particular type. The type does not always match the table. Most results come from the clinical codes table, and a vocabulary operator gives its results the domain of its vocabulary. For example, `icd9` yields condition_occurrence results and `cpt` yields procedure_occurrence results, but both read the same table. Results from patients are person results, results from deaths are death results, and results from information_periods are observation_period results. The stream carries this type information as it moves through each operator. When certain operators, particularly set and temporal operators, need to perform filtering, they can use this type information to determine how to best filter a stream. There will be much more discussion about types woven throughout this document. For now, it is sufficient to know that each stream has a type.
 
 You'll also notice that the trailing arrow(s) at the end of the diagrams indicate which types of streams are ultimately passed on at the end of a ConceptQL statement.
 
@@ -168,9 +189,9 @@ You'll also notice that the trailing arrow(s) at the end of the diagrams indicat
 
 Though I think that a "stream" is a helpful abstraction when thinking in ConceptQL, on a few occasions we need to know what's going on under the hood.
 
-Every table in the CDM structure has a surrogate key column (an ID column). When we execute a ConceptQL statement, the "streams" that are generated by the statement are just sets of these IDs for rows that matched the ConceptQL criteria. So each stream is just a set of IDs that point back to some rows in one of the CDM tables. When a stream has a "type" it is really just that the stream contains IDs associated with its table of origin.
+Every table in GDM has a surrogate key column, id. When we execute a ConceptQL statement, the "streams" that are generated by the statement are just sets of these IDs for rows that matched the ConceptQL criteria. Each result carries the ID of its row in the criterion_id column and the name of its table of origin in the criterion_table column. So each stream is just a set of IDs that point back to some rows in the GDM tables. The "type" of a stream is the criterion_domain of its results.
 
-So when we execute this ConceptQL statement, the resulting "stream" is all the person IDs for all male patients in the database:
+So when we execute this ConceptQL statement, the resulting "stream" is all the patient IDs for all male patients in the database:
 
 ```YAML
 ---
@@ -179,48 +200,48 @@ So when we execute this ConceptQL statement, the resulting "stream" is all the p
 
 ```
 
-![](spec/c82077b9455d0f9abc2c45ee1a298e38b99c9ce9cd685f65d87b376d7718d7ad.png)
+![All Male Patients](spec/c82077b9455d0f9abc2c45ee1a298e38b99c9ce9cd685f65d87b376d7718d7ad.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date   | source_value     |
-| --------- | ------------ | -------------- | ---------- | ---------- | ---------------- |
-| 1         | 1            | person         | 1923-05-01 | 1923-05-01 | 00013D2EFD8E45D1 |
-| 2         | 2            | person         | 1943-01-01 | 1943-01-01 | 00016F745862898F |
-| 4         | 4            | person         | 1941-06-01 | 1941-06-01 | 00021CA6FF03E670 |
-| 5         | 5            | person         | 1936-08-01 | 1936-08-01 | 00024B3D2352D2D0 |
-| 6         | 6            | person         | 1943-10-01 | 1943-10-01 | 0002DAE1C81CC70D |
-| 7         | 7            | person         | 1922-07-01 | 1922-07-01 | 0002F28CE057345B |
-| 8         | 8            | person         | 1935-09-01 | 1935-09-01 | 000308435E3E5B76 |
-| 12        | 12           | person         | 1929-06-01 | 1929-06-01 | 00048EF1F4791C68 |
-| 14        | 14           | person         | 1934-05-01 | 1934-05-01 | 00052705243EA128 |
-| 16        | 16           | person         | 1934-01-01 | 1934-01-01 | 0007E57CC13CE880 |
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 1         | 1            | patients        | person           | 1923-05-01 | 1923-05-01 | 00013D2EFD8E45D1 |
+| 2         | 2            | patients        | person           | 1943-01-01 | 1943-01-01 | 00016F745862898F |
+| 4         | 4            | patients        | person           | 1941-06-01 | 1941-06-01 | 00021CA6FF03E670 |
+| 5         | 5            | patients        | person           | 1936-08-01 | 1936-08-01 | 00024B3D2352D2D0 |
+| 6         | 6            | patients        | person           | 1943-10-01 | 1943-10-01 | 0002DAE1C81CC70D |
+| 7         | 7            | patients        | person           | 1922-07-01 | 1922-07-01 | 0002F28CE057345B |
+| 8         | 8            | patients        | person           | 1935-09-01 | 1935-09-01 | 000308435E3E5B76 |
+| 12        | 12           | patients        | person           | 1929-06-01 | 1929-06-01 | 00048EF1F4791C68 |
+| 14        | 14           | patients        | person           | 1934-05-01 | 1934-05-01 | 00052705243EA128 |
+| 16        | 16           | patients        | person           | 1934-01-01 | 1934-01-01 | 0007E57CC13CE880 |
 
-When we execute this ConceptQL statement, the resulting "stream" is all condition_occurrence IDs that match ICD-9 799.22:
+When we execute this ConceptQL statement, the resulting "stream" is the IDs of all clinical codes that match ICD-9 486 (pneumonia), with the type condition_occurrence:
 
 ```YAML
 ---
 - icd9
-- '799.22'
+- '486'
 
 ```
 
-![](spec/05f9b844571ffceeed2def3025fb60c68552817b8b73d3c8a76939dbc08b7c65.png)
+![All Condition Occurrences that match ICD-9 486](spec/346fab7e13a927b7e8b42795ef1a9da5af9ab9140d3415a7a9dfeab4af44c1d9.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 273       | 33363        | condition_occurrence | 2010-06-17 | 2010-06-17 | 799.22       |
-| 440       | 51450        | condition_occurrence | 2009-01-12 | 2009-01-12 | 799.22       |
-| 1783      | 206904       | condition_occurrence | 2008-03-08 | 2008-03-08 | 799.22       |
-| 1830      | 211909       | condition_occurrence | 2010-06-24 | 2010-06-24 | 799.22       |
-| 2086      | 238625       | condition_occurrence | 2008-05-24 | 2008-05-24 | 799.22       |
-| 2272      | 260093       | condition_occurrence | 2009-09-19 | 2009-09-19 | 799.22       |
-| 2525      | 288414       | condition_occurrence | 2009-04-17 | 2009-04-17 | 799.22       |
-| 2772      | 317847       | condition_occurrence | 2009-09-08 | 2009-09-08 | 799.22       |
-| 2924      | 334949       | condition_occurrence | 2009-01-24 | 2009-01-24 | 799.22       |
-| 4072      | 473603       | condition_occurrence | 2008-05-15 | 2008-05-15 | 799.22       |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 14        | 1727         | observations    | condition_occurrence | 2008-09-12 | 2008-09-12 | 486          |
+| 14        | 38866        | observations    | condition_occurrence | 2009-04-05 | 2009-04-05 | 486          |
+| 17        | 31480        | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          |
+| 19        | 57559        | observations    | condition_occurrence | 2008-02-02 | 2008-02-03 | 486          |
+| 23        | 28373        | observations    | condition_occurrence | 2009-08-18 | 2009-08-18 | 486          |
+| 23        | 40349        | observations    | condition_occurrence | 2009-12-20 | 2009-12-20 | 486          |
+| 23        | 35166        | observations    | condition_occurrence | 2010-02-17 | 2010-02-17 | 486          |
+| 25        | 79304        | observations    | condition_occurrence | 2009-07-08 | 2009-07-08 | 486          |
+| 27        | 86462        | observations    | condition_occurrence | 2010-09-30 | 2010-09-30 | 486          |
+| 28        | 42706        | observations    | condition_occurrence | 2009-09-12 | 2009-09-12 | 486          |
 
 Generally, I find it helpful to just think of those queries generating a "stream of people" or a "stream of conditions" and not worry about the table of origin or the fact that they are just IDs.
 
-When a ConceptQL statement is executed, it yields a final set of streams that are just all the IDs that passed through all the criteria. What is done with that set of IDs is up to the user who assembled the ConceptQL statement. If a user gathers all 799.22 Conditions, they will end up with a set of condition_occurrence_ids. They could take those IDs and do all sorts of things like:
+When a ConceptQL statement is executed, it yields a final set of streams that are just all the IDs that passed through all the criteria. What is done with that set of IDs is up to the user who assembled the ConceptQL statement. If a user gathers all 486 Conditions, they will end up with a set of clinical code IDs. They could take those IDs and do all sorts of things like:
 
 - Gather the first and last date of occurrence per person
 - Count the number of occurrences per person
@@ -231,7 +252,7 @@ This kind of aggregation and analysis is beyond the scope of ConceptQL. ConceptQ
 
 ## Selection Operators
 
-Selection operators are the parts of a ConceptQL query that search for specific values within the CDM data, e.g. searching the condition_occurrence table for a diagnosis of an old myocardial infarction (ICD-9 412) is a selection. Selection operators are always leaf operators.
+Selection operators are the parts of a ConceptQL query that search for specific values within the GDM data, e.g. searching the clinical codes for a diagnosis of an old myocardial infarction (ICD-9 412) is a selection. Selection operators are always leaf operators.
 
 There are _many_ selection operators. A list of currently implemented operators is available in Appendix A.
 
@@ -241,16 +262,16 @@ Virtually all other operators add, remove, filter, or otherwise alter streams of
 
 ## Set Operators
 
-Because streams represent sets of results, its makes sense to include a operators that operate on sets
+Because streams represent sets of results, its makes sense to include a operators that operate on sets. ConceptQL has three of them: union, filter, and except. It has no intersect operator and no complement operator.
 
 ### Union
 
 - Takes any number of upstream operators and aggregates their streams
   - Unions together streams with identical types
     - Think of streams with the same type flowing together into a single stream
-    - We're really just gathering the union of all IDs for identically-typed streams
+    - Union does not remove duplicates: a result that arrives from two upstream operators can appear twice
   - Streams with the different types flow along together concurrently without interacting
-    - It does not make sense to union, say, condition_occurrence_ids with visit_occurrence_ids, so streams with different types won't mingle together, but will continue to flow downstream in parallel
+    - It does not make sense to union, say, condition_occurrence results with procedure_occurrence results, so streams with different types won't mingle together, but will continue to flow downstream in parallel
 
 ```YAML
 ---
@@ -258,24 +279,24 @@ Because streams represent sets of results, its makes sense to include a operator
 - - icd9
   - '412'
 - - icd9
-  - '799.22'
+  - '486'
 
 ```
 
-![](spec/ea935ac31f3b57ff373646780a1fba34a38c9e086dc771eb7fc16c65a7e20cfc.png)
+![Two streams of the same type (condition_occurrence) joined into a single stream](spec/79939bbb392a2152f20243f018abe44b681393ea0412e06b282dcaa4647476e1.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 14        | 1727         | observations    | condition_occurrence | 2008-09-12 | 2008-09-12 | 486          |
+| 14        | 38866        | observations    | condition_occurrence | 2009-04-05 | 2009-04-05 | 486          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 17        | 31480        | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          |
+| 19        | 57559        | observations    | condition_occurrence | 2008-02-02 | 2008-02-03 | 486          |
+| 23        | 28373        | observations    | condition_occurrence | 2009-08-18 | 2009-08-18 | 486          |
+| 23        | 40349        | observations    | condition_occurrence | 2009-12-20 | 2009-12-20 | 486          |
+| 23        | 35166        | observations    | condition_occurrence | 2010-02-17 | 2010-02-17 | 486          |
 
 ```YAML
 ---
@@ -284,26 +305,26 @@ Because streams represent sets of results, its makes sense to include a operator
   - - icd9
     - '412'
   - - icd9
-    - '799.22'
-- - place_of_service_code
-  - '21'
+    - '486'
+- - cpt
+  - '99231'
 
 ```
 
-![](spec/f766f2e3aa13420e3ba0f823ac7956b311ed7c6c20be26b72324fadd87f36712.png)
+![Two streams of the same type (condition_occurrence) joined into a single stream, then a different stream (procedure_occurrence) flows concurrently](spec/4e59dcff780ca34a7e99631e5ad063c11dc7bfe19b14050523cb4f58387b5b81.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 2         | 92691        | observations    | procedure_occurrence | 2008-10-20 | 2008-10-20 | 99231        |
+| 7         | 72498        | observations    | procedure_occurrence | 2009-12-24 | 2010-01-02 | 99231        |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 13        | 65589        | observations    | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99231        |
+| 14        | 1727         | observations    | condition_occurrence | 2008-09-12 | 2008-09-12 | 486          |
+| 14        | 38866        | observations    | condition_occurrence | 2009-04-05 | 2009-04-05 | 486          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 17        | 31480        | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          |
+| 17        | 53417        | observations    | procedure_occurrence | 2008-04-05 | 2008-04-05 | 99231        |
 
 ```YAML
 ---
@@ -311,213 +332,66 @@ Because streams represent sets of results, its makes sense to include a operator
 - - icd9
   - '412'
 - - icd9
-  - '799.22'
-- - place_of_service_code
-  - '21'
+  - '486'
+- - cpt
+  - '99231'
 
 ```
 
-![](spec/a79274742cf6fac6f6c9f4a0eb651aeb452f9c43b537c8e6ccaefecd05b7105c.png)
+![Two streams of the same type (condition_occurrence) joined into a single stream, along with a different stream (procedure_occurrence) flows concurrently (same as above example)](spec/5f87dd446147760f348e0e72e1abb72b8be1966e147951cff87e846b87f2d7f7.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 2         | 92691        | observations    | procedure_occurrence | 2008-10-20 | 2008-10-20 | 99231        |
+| 7         | 72498        | observations    | procedure_occurrence | 2009-12-24 | 2010-01-02 | 99231        |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 13        | 65589        | observations    | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99231        |
+| 14        | 1727         | observations    | condition_occurrence | 2008-09-12 | 2008-09-12 | 486          |
+| 14        | 38866        | observations    | condition_occurrence | 2009-04-05 | 2009-04-05 | 486          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 17        | 31480        | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          |
+| 17        | 53417        | observations    | procedure_occurrence | 2008-04-05 | 2008-04-05 | 99231        |
 
-### Intersect
+### Filter
 
-1. Group incoming streams by type
-2. For each group of same-type streams
-   a. Intersect all streams, yielding a single stream that contains only those IDs common to those streams
-3. A single stream for each incoming type is sent downstream
-   a. If only a single stream of a type is upstream, that stream is essentially unaltered as it is passed downstream
+This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream. It passes along each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same person_id, criterion_id, criterion_domain, start_date, and end_date. The operator discards all results in the right-hand stream. Use filter to keep only the results that two streams have in common, as an intersection would.
 
 ```YAML
 ---
-- intersect
-- - icd9
-  - '412'
-- - primary_diagnosis
-  - true
-
-```
-
-![](spec/af5ae3787e80bf0771f18f1a04fe4c5d9291e1e0f963ac408a7bc198d2f1ee28.png)
-
-`No Results.  Statement is experimental.`
-
-```YAML
----
-- intersect
-- - icd9
-  - '412'
-- - gender
-  - Male
-
-```
-
-![](spec/514f263e976d07c0d9e0a86c79bcbdcddc7d444d7b72135294ad78758effd28f.png)
-
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
-
-```YAML
----
-- intersect
-- - icd9
-  - '412'
-- - primary_diagnosis
-  - true
-- - gender
-  - Male
-- - race
-  - White
-
-```
-
-![](spec/11f57941951bad5a75f9a16f38a31a3c6bf3046a475aac6e398e780892fab4ad.png)
-
-`No Results.  Statement is experimental.`
-
-### Complement
-
-This operator will take the complement of each set of IDs in the incoming streams.
-
-```YAML
----
-- complement
-- - icd9
-  - '412'
-
-```
-
-![](spec/c2157d8a6b73abe4f22ba5042159f32502c74bf6d762be28d2df6831586822c7.png)
-
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 1         | 1            | condition_occurrence | 2010-03-12 | 2010-03-13 | 780.2        |
-| 1         | 2            | condition_occurrence | 2010-03-12 | 2010-03-13 | 788.20       |
-| 1         | 3            | condition_occurrence | 2010-03-12 | 2010-03-13 | V45.01       |
-| 1         | 4            | condition_occurrence | 2010-03-12 | 2010-03-13 | 428.0        |
-| 1         | 5            | condition_occurrence | 2010-03-12 | 2010-03-13 | 272.0        |
-| 1         | 6            | condition_occurrence | 2010-03-12 | 2010-03-13 | 401.9        |
-| 1         | 7            | condition_occurrence | 2010-03-12 | 2010-03-13 | V45.02       |
-| 1         | 8            | condition_occurrence | 2010-03-12 | 2010-03-13 | 733.00       |
-| 1         | 9            | condition_occurrence | 2010-03-12 | 2010-03-13 | E933.0       |
-| 1         | 10           | condition_occurrence | 2008-09-04 | 2008-09-04 | V58.41       |
-
-If you're familiar with set operations, the complement of a union is the intersect of the complements of the items unioned. So in our world, these next two examples are identical:
-
-```YAML
----
-- complement
-- - union
+- filter
+- :left:
+  - provenance
   - - icd9
     - '412'
-  - - primary_diagnosis
-    - true
-
-```
-
-![](spec/02f44ad35d266ddd0a4df1691d26bf4a297b30604fc3f44b0391d6d852d23a9f.png)
-
-`No Results.  Statement is experimental.`
-
-```YAML
----
-- intersect
-- - complement
-  - - icd9
+  - inpatient
+  :right:
+  - during
+  - :left:
+    - icd9
     - '412'
-- - complement
-  - - primary_diagnosis
-    - true
+    :right:
+    - date_range
+    - :start: '2009-01-01'
+      :end: '2009-12-31'
 
 ```
 
-![](spec/a4450e8c0fe0e2fde92fe9bd61952f907b1976c1aa3ba963b809bed079d42b09.png)
+![All MI Conditions from inpatient records that also occurred in 2009](spec/5180287351cc692b438dc0b13d0fc5d7ef068c716429ecea6a81f18443fe63e0.png)
 
-`No Results.  Statement is experimental.`
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+| 88        | 1572         | observations    | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| 161       | 963          | observations    | condition_occurrence | 2009-10-25 | 2009-10-29 | 412          |
+| 177       | 507          | observations    | condition_occurrence | 2009-06-13 | 2009-06-16 | 412          |
 
-But please be aware that this behavior of complement only affects streams of the same type. If more than one stream is involved, you need to evaluate the effects of complement on a stream-by-stream basis:
-
-```YAML
----
-- complement
-- - union
-  - - icd9
-    - '412'
-  - - primary_diagnosis
-    - true
-  - - cpt
-    - '99214'
-
-```
-
-![](spec/dbc66b3ae6bd7123d77dd04b64f8a24498d048725a55c5340b15f5ae0a1ff307.png)
-
-`No Results.  Statement is experimental.`
-
-```YAML
----
-- intersect
-- - complement
-  - - icd9
-    - '412'
-- - complement
-  - - primary_diagnosis
-    - true
-- - complement
-  - - cpt
-    - '99214'
-
-```
-
-![](spec/a9b4528726adec2a90f3f00139d8d0492f13c51f03c2f9ed6a5134b1b26b44a9.png)
-
-`No Results.  Statement is experimental.`
-
-```YAML
----
-- union
-- - intersect
-  - - complement
-    - - icd9
-      - '412'
-  - - complement
-    - - primary_diagnosis
-      - true
-- - complement
-  - - cpt
-    - '99214'
-
-```
-
-![](spec/a4bc7382a1154ea9856544fd48418f3dd9ce474ca94b8859fc323749c6cc1f55.png)
-
-`No Results.  Statement is experimental.`
+The `provenance` operator in this example passes along the results that come from a given kind of source record, here inpatient records.
 
 ### Except
 
-This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream. The operator matches like-type streams between the left-hand and right-hand streams. The operator removes any results in the left-hand stream if they appear in the right-hand stream. The operator passes only results for the left-hand stream downstream. The operator discards all results in the right-hand stream. For example:
+This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream. The operator removes any results in the left-hand stream if they appear in the right-hand stream. Two results are the same when they have the same criterion_id, criterion_table, start_date, and end_date. The operator passes only results for the left-hand stream downstream. The operator discards all results in the right-hand stream. For example:
 
 ```YAML
 ---
@@ -526,31 +400,29 @@ This operator takes two sets of incoming streams, a left-hand stream and a right
   - icd9
   - '412'
   :right:
-  - primary_diagnosis
-  - true
+  - provenance
+  - - icd9
+    - '412'
+  - inpatient
 
 ```
 
-![](spec/462153be527b28dc2cb5259c0aec62e1f529e8b60dc6e9c23fd1e06e8be933c9.png)
+![All Conditions that are MI unless they come from inpatient records](spec/4daefcd16621b00dc32e8e9e14bca04025f2e37539b319b22175bb8d80452a8a.png)
 
-`No Results.  Statement is experimental.`
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 88        | 73803        | observations    | condition_occurrence | 2009-05-30 | 2009-05-30 | 412          |
+| 90        | 33940        | observations    | condition_occurrence | 2010-05-26 | 2010-05-26 | 412          |
 
-```YAML
----
-- intersect
-- - icd9
-  - '412'
-- - complement
-  - - primary_diagnosis
-    - true
-
-```
-
-![](spec/da450cdd0c94a1301bd98560339a45caa8041e09974352a56ecfb144e9a5e4d4.png)
-
-`No Results.  Statement is experimental.`
-
-If the left-hand stream has no types that match the right-hand stream, the left-hand stream passes through unaffected:
+A result in one stream cannot match a result of a different type, so if the left-hand stream has no types that match the right-hand stream, the left-hand stream passes through unaffected:
 
 ```YAML
 ---
@@ -564,20 +436,20 @@ If the left-hand stream has no types that match the right-hand stream, the left-
 
 ```
 
-![](spec/253845fe6162621af407ebd110296ff4f6d8a3f23ec75dfb4ea8cda30be71262.png)
+![All Conditions that are MI](spec/253845fe6162621af407ebd110296ff4f6d8a3f23ec75dfb4ea8cda30be71262.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 6354      | 730080       | condition_occurrence | 2009-05-22 | 2009-05-22 | 412          |
-| 405       | 47310        | condition_occurrence | 2010-04-21 | 2010-04-21 | 412          |
-| 37067     | 4195911      | condition_occurrence | 2009-02-26 | 2009-02-26 | 412          |
-| 31965     | 3622631      | condition_occurrence | 2008-05-09 | 2008-05-09 | 412          |
-| 62025     | 6984372      | condition_occurrence | 2009-08-24 | 2009-08-24 | 412          |
-| 7548      | 861875       | condition_occurrence | 2010-08-19 | 2010-09-08 | 412          |
-| 72056     | 8102530      | condition_occurrence | 2008-02-14 | 2008-02-17 | 412          |
-| 29548     | 3346625      | condition_occurrence | 2008-02-12 | 2008-02-19 | 412          |
-| 51224     | 5768620      | condition_occurrence | 2010-04-21 | 2010-04-21 | 412          |
-| 62051     | 6987562      | condition_occurrence | 2009-06-16 | 2009-06-16 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
 And just to show how multiple streams behave:
 
@@ -594,16 +466,29 @@ And just to show how multiple streams behave:
     - '99214'
   :right:
   - union
-  - - primary_diagnosis
-    - true
+  - - provenance
+    - - icd9
+      - '412'
+    - inpatient
   - - race
     - White
 
 ```
 
-![](spec/f0c734b099841a754ae0366afb00e992ad4814479b65e4a7de23c6e3dd85c09a.png)
+![Passes three streams downstream: a stream of Conditions that are MI but not from inpatient records, a stream of People that are Male but not White, and a stream of Procedures that are office visits (this stream is completely unaffected by the right hand stream)](spec/0e33b527af36923e0d4f9ccca73bcffcc5274cf5bf652a9bed71427b4e616bf5.png)
 
-`No Results.  Statement is experimental.`
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ---------------- |
+| 2         | 58127        | observations    | procedure_occurrence | 2009-07-03 | 2009-07-03 | 99214            |
+| 2         | 83339        | observations    | procedure_occurrence | 2009-12-02 | 2009-12-02 | 99214            |
+| 4         | 4            | patients        | person               | 1941-06-01 | 1941-06-01 | 00021CA6FF03E670 |
+| 5         | 38313        | observations    | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99214            |
+| 5         | 76788        | observations    | procedure_occurrence | 2009-07-04 | 2009-07-04 | 99214            |
+| 5         | 63847        | observations    | procedure_occurrence | 2009-12-21 | 2009-12-21 | 99214            |
+| 6         | 6            | patients        | person               | 1943-10-01 | 1943-10-01 | 0002DAE1C81CC70D |
+| 6         | 48992        | observations    | procedure_occurrence | 2009-09-12 | 2009-09-12 | 99214            |
+| 6         | 76651        | observations    | procedure_occurrence | 2010-02-23 | 2010-02-23 | 99214            |
+| 7         | 63797        | observations    | procedure_occurrence | 2008-08-13 | 2008-08-13 | 99214            |
 
 ### Discussion about Set Operators
 
@@ -621,85 +506,23 @@ And just to show how multiple streams behave:
   - - icd9
     - '412'
   - - death
-    - true
 
 ```
 
-![](spec/1102fa717b1c2df67af5220bf3ae219afafd79be7bba0c117e301983385ada52.png)
+![First occurrence of either MI or Death for each patient](spec/3bf7022e9a06d0b25d7e66f30508c7ac68453b51bbede666c94d7988f681bcad.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 16        | 16           | death                | 2010-12-01 | 2010-12-01 |              |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
-
-##### Q. Why aren't all streams passed forward unaltered? Why union like-typed streams?
-
-- The way Intersect works, if we passed like-typed streams forward without unioning them, Intersect would end up intersecting the two un-unioned like-type streams and that's not what we intended
-- Essentially, these two diagrams would be identical:
-
-```YAML
----
-- intersect
-- - union
-  - - icd9
-    - '412'
-  - - icd9
-    - '799.22'
-- - cpt
-  - '99214'
-
-```
-
-![](spec/d64993258ffbef9406d9ab9136de7af530626b3a69e9eeb75835e11f11dabf62.png)
-
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
-
-```YAML
----
-- intersect
-- - intersect
-  - - icd9
-    - '412'
-  - - icd9
-    - '799.22'
-- - cpt
-  - '99214'
-
-```
-
-![](spec/defbd0b853d895802663f507761ad297d82e167f516c6082686a2a19b76012c5.png)
-
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 2         | 48           | procedure_occurrence | 2009-07-03 | 2009-07-03 | 99214        |
-| 2         | 95           | procedure_occurrence | 2009-12-02 | 2009-12-02 | 99214        |
-| 5         | 118          | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99214        |
-| 5         | 134          | procedure_occurrence | 2009-12-21 | 2009-12-21 | 99214        |
-| 5         | 144          | procedure_occurrence | 2009-07-04 | 2009-07-04 | 99214        |
-| 6         | 167          | procedure_occurrence | 2009-09-12 | 2009-09-12 | 99214        |
-| 6         | 176          | procedure_occurrence | 2010-02-23 | 2010-02-23 | 99214        |
-| 7         | 291          | procedure_occurrence | 2009-09-27 | 2009-09-27 | 99214        |
-| 7         | 350          | procedure_occurrence | 2010-05-23 | 2010-05-23 | 99214        |
-| 7         | 357          | procedure_occurrence | 2008-09-21 | 2008-09-21 | 99214        |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 16        | 1            | deaths          | death                | 2010-12-01 | 2010-12-01 |              |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 26        | 2            | deaths          | death                | 2009-07-01 | 2009-07-01 |              |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 65        | 3            | deaths          | death                | 2009-01-01 | 2009-01-01 |              |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
 
 ## Co-reported Events
 
@@ -718,15 +541,31 @@ For example, a claim with a diabetes diagnosis and no office-visit procedure con
   - '250.00'
 - - cpt
   - '99214'
+
 ```
+
+![Yields the diabetes diagnoses and the office-visit procedures that were reported in the same source record](spec/dfc63bee1d9f447450c764cc505def315209de4c752ce49f4cb3779dd28b1001.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 25        | 93217        | observations    | condition_occurrence | 2008-09-18 | 2008-09-18 | 25000        |
+| 25        | 93220        | observations    | procedure_occurrence | 2008-09-18 | 2008-09-18 | 99214        |
+| 31        | 87695        | observations    | condition_occurrence | 2008-06-17 | 2008-06-17 | 25000        |
+| 31        | 87696        | observations    | procedure_occurrence | 2008-06-17 | 2008-06-17 | 99214        |
+| 40        | 81973        | observations    | condition_occurrence | 2009-05-01 | 2009-05-01 | 25000        |
+| 40        | 81993        | observations    | procedure_occurrence | 2009-05-01 | 2009-05-01 | 99214        |
+| 44        | 44702        | observations    | condition_occurrence | 2008-01-10 | 2008-01-10 | 25000        |
+| 44        | 44715        | observations    | procedure_occurrence | 2008-01-10 | 2008-01-10 | 99214        |
+| 58        | 35093        | observations    | condition_occurrence | 2009-06-15 | 2009-06-15 | 25000        |
+| 58        | 35095        | observations    | procedure_occurrence | 2009-06-15 | 2009-06-15 | 99214        |
 
 ## Time-oriented Operators
 
 All results in a stream carry a start_date and end_date with them. All temporal comparisons of streams use these two date columns. Each result in a stream derives its start and end date from its corresponding row in its table of origin.
 
-For instance, a visit_occurrence result derives its start_date from visit_start_date and its end_date from visit_end_date.
+For instance, a condition_occurrence result derives its start_date and end_date from the start_date and end_date columns of its row in the clinical codes table.
 
-If a result comes from a table that only has a single date value, the result derives both its start_date and end_date from that single date, e.g. an observation result derives both its start_date and end_date from its corresponding row's observation_date.
+If a result comes from a table that only has a single date value, the result derives both its start_date and end_date from that single date, e.g. a death result derives both its start_date and end_date from the date column of its row in deaths.
 
 The person stream is a special case. Person results use the person's date of birth as the start_date and end_date. This may sound strange, but we will explain below why this makes sense.
 
@@ -749,26 +588,26 @@ When looking at a set of results for a person, perhaps we want to select just th
 ```YAML
 ---
 - occurrence
-- 3
+- 2
 - - icd9
   - '412'
 
 ```
 
-![](spec/328467a6a419c7c05e299b8097e5e000686068ded8dc6d5f2e2de6f51976c315.png)
+![For each patient, select the Condition that represents the second occurrence of an MI](spec/267385650ec29b77f30e5da3d7103c5ce6982947722d939dfc3ea8e5d030ce59.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 487       | 56319        | condition_occurrence | 2009-01-15 | 2009-01-19 | 412          |
-| 506       | 59000        | condition_occurrence | 2010-07-19 | 2010-07-19 | 412          |
-| 629       | 73033        | condition_occurrence | 2010-09-20 | 2010-09-20 | 412          |
-| 985       | 114982       | condition_occurrence | 2009-09-29 | 2009-09-29 | 412          |
-| 1336      | 156290       | condition_occurrence | 2009-10-03 | 2009-10-03 | 412          |
-| 1779      | 206548       | condition_occurrence | 2010-02-09 | 2010-02-09 | 412          |
-| 2475      | 282601       | condition_occurrence | 2009-02-28 | 2009-02-28 | 412          |
-| 2529      | 289044       | condition_occurrence | 2010-07-18 | 2010-07-19 | 412          |
-| 2942      | 337181       | condition_occurrence | 2010-01-22 | 2010-01-22 | 412          |
-| 3206      | 365939       | condition_occurrence | 2009-03-25 | 2009-03-25 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 88        | 73803        | observations    | condition_occurrence | 2009-05-30 | 2009-05-30 | 412          |
+| 152       | 84298        | observations    | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
+| 177       | 507          | observations    | condition_occurrence | 2009-06-13 | 2009-06-16 | 412          |
+| 187       | 87583        | observations    | condition_occurrence | 2010-12-26 | 2010-12-26 | 412          |
+| 212       | 34052        | observations    | condition_occurrence | 2009-10-07 | 2009-10-07 | 412          |
+| 213       | 15005        | observations    | condition_occurrence | 2010-02-07 | 2010-02-07 | 412          |
+| 214       | 83257        | observations    | condition_occurrence | 2009-11-12 | 2009-11-12 | 412          |
+| 220       | 20660        | observations    | condition_occurrence | 2009-10-31 | 2009-10-31 | 412          |
+| 223       | 39893        | observations    | condition_occurrence | 2008-10-31 | 2008-10-31 | 412          |
 
 #### first
 
@@ -782,20 +621,20 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 ```
 
-![](spec/04491942fcbd741982514f9eb12aeecf3d54b5b69a2b50c8331f7700169d5521.png)
+![For each patient, select the Condition that represents the first occurrence of an MI](spec/04491942fcbd741982514f9eb12aeecf3d54b5b69a2b50c8331f7700169d5521.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
-| 88        | 10443        | condition_occurrence | 2010-05-26 | 2010-05-26 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+| 88        | 1572         | observations    | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
 
 #### last
 
@@ -809,20 +648,20 @@ When looking at a set of results for a person, perhaps we want to select just th
 
 ```
 
-![](spec/ebacbd092e3d1a3c7b745a381e51e8ff9d63a21db23a16940193e18e57bc866f.png)
+![For each patient, select the Condition that represents the last occurrence of an MI](spec/ebacbd092e3d1a3c7b745a381e51e8ff9d63a21db23a16940193e18e57bc866f.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 10196        | condition_occurrence | 2009-05-30 | 2009-05-30 | 412          |
-| 88        | 10443        | condition_occurrence | 2010-05-26 | 2010-05-26 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+| 88        | 73803        | observations    | condition_occurrence | 2009-05-30 | 2009-05-30 | 412          |
 
 ### Date Literals
 
@@ -897,20 +736,20 @@ When comparing results in L against a date range, results in L continue downstre
 
 ```
 
-![](spec/ba90ef705f7be91c53c5eb4a81a439fa0f7c48532214bd3db3cc5c069160543e.png)
+![All MIs for the year 2010](spec/ba90ef705f7be91c53c5eb4a81a439fa0f7c48532214bd3db3cc5c069160543e.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 88        | 10443        | condition_occurrence | 2010-05-26 | 2010-05-26 | 412          |
-| 108       | 13741        | condition_occurrence | 2010-06-27 | 2010-06-27 | 412          |
-| 149       | 17774        | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
-| 183       | 21619        | condition_occurrence | 2010-12-26 | 2010-12-26 | 412          |
-| 206       | 24437        | condition_occurrence | 2010-02-07 | 2010-02-07 | 412          |
-| 209       | 24989        | condition_occurrence | 2010-06-22 | 2010-06-23 | 412          |
-| 231       | 28188        | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 255       | 31542        | condition_occurrence | 2010-11-21 | 2010-11-21 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 90        | 33940        | observations    | condition_occurrence | 2010-05-26 | 2010-05-26 | 412          |
+| 109       | 89334        | observations    | condition_occurrence | 2010-07-06 | 2010-07-06 | 412          |
+| 110       | 62592        | observations    | condition_occurrence | 2010-06-27 | 2010-06-27 | 412          |
+| 152       | 84298        | observations    | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
+| 187       | 87583        | observations    | condition_occurrence | 2010-12-26 | 2010-12-26 | 412          |
+| 213       | 15005        | observations    | condition_occurrence | 2010-02-07 | 2010-02-07 | 412          |
+| 217       | 56467        | observations    | condition_occurrence | 2010-06-22 | 2010-06-23 | 412          |
+| 239       | 49718        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
 
 When comparing results in L against a set of results in R, the temporal operator compares results in stream L against results in stream R on a person-by-person basis.
 
@@ -925,14 +764,21 @@ When comparing results in L against a set of results in R, the temporal operator
   - icd9
   - '412'
   :right:
-  - payer
-  - Part A
+  - hospitalization
 
 ```
 
-![](spec/ed039f82867241393b1a6a7153d3690461103934c72c1f3eaa3d99a12bb40885.png)
+![All MIs that occurred during a hospitalization](spec/9524ac806e9ac1dd97132bc6b66a793536b9d8fa31d7ded9f54fba018e6288aa.png)
 
-`No Results.  Statement is experimental.`
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+| 88        | 1572         | observations    | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
+| 161       | 963          | observations    | condition_occurrence | 2009-10-25 | 2009-10-29 | 412          |
+| 177       | 507          | observations    | condition_occurrence | 2009-06-13 | 2009-06-16 | 412          |
+| 230       | 523          | observations    | condition_occurrence | 2008-03-14 | 2008-03-21 | 412          |
 
 #### Edge behaviors
 
@@ -953,24 +799,24 @@ If we're looking for events in L that occur before events in R, then any event i
   - '412'
   :right:
   - icd9
-  - '799.22'
+  - '486'
 
 ```
 
-![](spec/ee283d6a4b69cf10da2df703be3a16830be9cd8cd4f68c5f7afdf558ea28fa76.png)
+![All MIs that occurred before a patient's last case of pneumonia (486)](spec/fc3b7c03816cc84fd92931b2cd0eb279e3fba5851e1ce15d4f084a1a3f04feba.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 53785     | 6053034      | condition_occurrence | 2008-07-18 | 2008-07-18 | 412          |
-| 4289      | 496274       | condition_occurrence | 2008-07-19 | 2008-07-19 | 412          |
-| 103062    | 11580605     | condition_occurrence | 2008-08-28 | 2008-08-28 | 412          |
-| 12524     | 1422629      | condition_occurrence | 2009-08-25 | 2009-08-25 | 412          |
-| 20306     | 2302248      | condition_occurrence | 2010-01-04 | 2010-01-04 | 412          |
-| 81188     | 9131971      | condition_occurrence | 2010-02-15 | 2010-02-15 | 412          |
-| 81188     | 9132070      | condition_occurrence | 2009-11-07 | 2009-11-07 | 412          |
-| 97169     | 10930462     | condition_occurrence | 2008-02-05 | 2008-02-05 | 412          |
-| 98040     | 11029333     | condition_occurrence | 2008-10-02 | 2008-10-02 | 412          |
-| 98040     | 11029388     | condition_occurrence | 2008-08-09 | 2008-08-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 96        | 20748        | observations    | condition_occurrence | 2008-09-21 | 2008-09-24 | 412          |
+| 109       | 89334        | observations    | condition_occurrence | 2010-07-06 | 2010-07-06 | 412          |
+| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
+| 149       | 28518        | observations    | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
+| 152       | 82988        | observations    | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
 
 If this is not the behavior you desire, use one of the sequence operators to select which event in R should be the one used to do comparison
 
@@ -983,30 +829,30 @@ If this is not the behavior you desire, use one of the sequence operators to sel
   :right:
   - first
   - - icd9
-    - '799.22'
+    - '486'
 
 ```
 
-![](spec/de589af36fa854e006a1563c93e644e2210f2a5616babb779f7f38aadb6c1ed7.png)
+![All MIs that occurred before a patient's first case of pneumonia (486)](spec/bd129d7a0fc5b3ee6610f990e4d8a6c604825e11ed04123c202595a08f917438.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 53785     | 6053034      | condition_occurrence | 2008-07-18 | 2008-07-18 | 412          |
-| 4289      | 496274       | condition_occurrence | 2008-07-19 | 2008-07-19 | 412          |
-| 103062    | 11580605     | condition_occurrence | 2008-08-28 | 2008-08-28 | 412          |
-| 12524     | 1422629      | condition_occurrence | 2009-08-25 | 2009-08-25 | 412          |
-| 20306     | 2302248      | condition_occurrence | 2010-01-04 | 2010-01-04 | 412          |
-| 81188     | 9131971      | condition_occurrence | 2010-02-15 | 2010-02-15 | 412          |
-| 81188     | 9132070      | condition_occurrence | 2009-11-07 | 2009-11-07 | 412          |
-| 97169     | 10930462     | condition_occurrence | 2008-02-05 | 2008-02-05 | 412          |
-| 98040     | 11029333     | condition_occurrence | 2008-10-02 | 2008-10-02 | 412          |
-| 98040     | 11029388     | condition_occurrence | 2008-08-09 | 2008-08-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 96        | 20748        | observations    | condition_occurrence | 2008-09-21 | 2008-09-24 | 412          |
+| 109       | 89334        | observations    | condition_occurrence | 2010-07-06 | 2010-07-06 | 412          |
+| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
+| 149       | 28518        | observations    | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
+| 152       | 82988        | observations    | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
+| 213       | 55557        | observations    | condition_occurrence | 2009-06-07 | 2009-06-07 | 412          |
 
-### Time Windows
+## Time Windows
 
 There are situations when the date columns associated with a result should have their values shifted forward or backward in time to make a comparison with another set of dates.
 
-#### time_window
+### time_window
 
 - Takes 2 arguments
   - First argument is the stream on which to operate
@@ -1032,7 +878,7 @@ There are situations when the date columns associated with a result should have 
 - during
 - :left:
   - icd9
-  - '799.22'
+  - '486'
   :right:
   - time_window
   - - icd9
@@ -1042,17 +888,20 @@ There are situations when the date columns associated with a result should have 
 
 ```
 
-![](spec/8101d9b89d9ba8070d585432707b43a8acdb4c2a3e9d37c3f7114b5e3ea9e800.png)
+![All Diagnoses of Pneumonia (ICD-9 486) within 30 days of an MI](spec/c01589dc9f64d7ad8ef808d7471d19abec29f06771b06da7f3f884f3ea2fdc43.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 2086      | 238625       | condition_occurrence | 2008-05-24 | 2008-05-24 | 799.22       |
-| 5121      | 590274       | condition_occurrence | 2009-03-26 | 2009-04-04 | 799.22       |
-| 11427     | 1298251      | condition_occurrence | 2008-09-06 | 2008-09-06 | 799.22       |
-| 16432     | 1870381      | condition_occurrence | 2009-02-16 | 2009-02-16 | 799.22       |
-| 37733     | 4272148      | condition_occurrence | 2010-03-09 | 2010-03-09 | 799.22       |
-| 54141     | 6093274      | condition_occurrence | 2010-06-13 | 2010-06-13 | 799.22       |
-| 110498    | 12420479     | condition_occurrence | 2009-04-30 | 2009-04-30 | 799.22       |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 17        | 31480        | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          |
+| 38        | 47462        | observations    | condition_occurrence | 2010-02-24 | 2010-02-24 | 486          |
+| 38        | 47463        | observations    | condition_occurrence | 2010-02-24 | 2010-02-24 | 486          |
+| 38        | 47464        | observations    | condition_occurrence | 2010-02-24 | 2010-02-24 | 486          |
+| 60        | 988          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 486          |
+| 77        | 62783        | observations    | condition_occurrence | 2010-10-17 | 2010-10-17 | 486          |
+| 110       | 81700        | observations    | condition_occurrence | 2010-06-18 | 2010-06-19 | 486          |
+| 172       | 87537        | observations    | condition_occurrence | 2009-01-25 | 2009-01-25 | 486          |
+| 214       | 59068        | observations    | condition_occurrence | 2009-10-23 | 2009-10-23 | 486          |
+| 220       | 47310        | observations    | condition_occurrence | 2008-11-26 | 2008-11-26 | 486          |
 
 ```YAML
 ---
@@ -1064,20 +913,20 @@ There are situations when the date columns associated with a result should have 
 
 ```
 
-![](spec/15268bc45993d3f57ccf915877f91e48bdee684f24faa614249915833cac4af9.png)
+![Shift the window for all MIs back by 2 years](spec/15268bc45993d3f57ccf915877f91e48bdee684f24faa614249915833cac4af9.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2006-08-25 | 2006-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2007-04-30 | 2007-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2008-02-12 | 2008-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2006-06-05 | 2006-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2007-07-19 | 2007-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2007-07-25 | 2007-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2006-11-16 | 2006-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2008-10-06 | 2008-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2007-01-28 | 2007-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2007-01-03 | 2007-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2006-10-29 | 2006-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2006-08-25 | 2006-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2007-04-30 | 2007-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2008-02-12 | 2008-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2006-06-05 | 2006-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2007-07-19 | 2007-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2007-07-25 | 2007-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2006-11-16 | 2006-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2008-10-06 | 2008-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2007-01-28 | 2007-01-30 | 412          |
 
 ```YAML
 ---
@@ -1089,45 +938,44 @@ There are situations when the date columns associated with a result should have 
 
 ```
 
-![](spec/cc960a268d51ccf2ebde657d36848f780213834844900018bce3d111843f7b0f.png)
+![Expand the dates for all MIs to a window ranging from 2 months and 2 days prior to 1 year and 3 days after the MI](spec/cc960a268d51ccf2ebde657d36848f780213834844900018bce3d111843f7b0f.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-06-23 | 2009-08-28 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-02-26 | 2010-05-03 | 412          |
-| 37        | 4359         | condition_occurrence | 2009-12-10 | 2011-02-15 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-04-03 | 2009-06-08 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-05-17 | 2010-07-25 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-05-23 | 2010-07-28 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-09-14 | 2009-11-19 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-08-04 | 2011-10-09 | 412          |
-| 79        | 8618         | condition_occurrence | 2008-11-26 | 2010-02-02 | 412          |
-| 86        | 9882         | condition_occurrence | 2008-11-01 | 2010-01-12 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-08-27 | 2009-11-01 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-06-23 | 2009-08-28 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-02-26 | 2010-05-03 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2009-12-10 | 2011-02-15 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-04-03 | 2009-06-08 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-05-17 | 2010-07-25 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-05-23 | 2010-07-28 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-09-14 | 2009-11-19 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-08-04 | 2011-10-09 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2008-11-26 | 2010-02-02 | 412          |
 
 ```YAML
 ---
 - time_window
-- - place_of_service_code
-  - '21'
+- - hospitalization
 - :start: ''
   :end: start
 
 ```
 
-![](spec/886bf85249a704668a55c5161bceaac10be4a41a94b91606f49851dfa017526c.png)
+![Collapse all hospitalizations' date ranges down to just the date of admission by leaving start_date unaffected and setting end_date to start_date](spec/aff055a65bcf745c075dc3f80b567ab40f1ce74cb9bcb4976d8044761b8aed32.png)
 
-| person_id | criterion_id | criterion_type   | start_date | end_date   | source_value |
-| --------- | ------------ | ---------------- | ---------- | ---------- | ------------ |
-| 1         | 1            | visit_occurrence | 2010-03-12 | 2010-03-12 | Inpatient    |
-| 2         | 8            | visit_occurrence | 2009-09-17 | 2009-09-17 | Inpatient    |
-| 2         | 9            | visit_occurrence | 2009-04-12 | 2009-04-12 | Inpatient    |
-| 2         | 10           | visit_occurrence | 2010-06-26 | 2010-06-26 | Inpatient    |
-| 2         | 11           | visit_occurrence | 2009-08-31 | 2009-08-31 | Inpatient    |
-| 14        | 507          | visit_occurrence | 2008-09-12 | 2008-09-12 | Inpatient    |
-| 17        | 729          | visit_occurrence | 2010-05-22 | 2010-05-22 | Inpatient    |
-| 17        | 730          | visit_occurrence | 2008-09-19 | 2008-09-19 | Inpatient    |
-| 17        | 731          | visit_occurrence | 2010-06-02 | 2010-06-02 | Inpatient    |
-| 17        | 732          | visit_occurrence | 2010-06-16 | 2010-06-16 | Inpatient    |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 1         | 95           | collections     | condition_occurrence | 2010-03-12 | 2010-03-12 | V4501        |
+| 2         | 37           | collections     | condition_occurrence | 2009-04-12 | 2009-04-12 | 2724         |
+| 2         | 96           | collections     | condition_occurrence | 2009-08-31 | 2009-08-31 | 7092         |
+| 2         | 12           | collections     | condition_occurrence | 2009-09-17 | 2009-09-17 | 32723        |
+| 2         | 43           | collections     | condition_occurrence | 2010-06-26 | 2010-06-26 | 7856         |
+| 14        | 151          | collections     | condition_occurrence | 2008-09-12 | 2008-09-12 | 2724         |
+| 17        | 93           | collections     | condition_occurrence | 2008-09-19 | 2008-09-19 | 33811        |
+| 17        | 83           | collections     | condition_occurrence | 2010-05-22 | 2010-05-22 | 5845         |
+| 17        | 122          | collections     | condition_occurrence | 2010-06-02 | 2010-06-02 | 4280         |
+| 17        | 124          | collections     | condition_occurrence | 2010-06-16 | 2010-06-16 | V4365        |
 
 ```YAML
 ---
@@ -1139,22 +987,22 @@ There are situations when the date columns associated with a result should have 
 
 ```
 
-![](spec/6705af65d728c0d5c50d6c4d46253017a91eb459dbb1f40f92449f05d5562f4a.png)
+![Nonsensical, but allowed: swap the start_date and end_date for a range](spec/6705af65d728c0d5c50d6c4d46253017a91eb459dbb1f40f92449f05d5562f4a.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-22 | 2009-07-19 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-30 | 2009-01-28 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-09 | 2009-01-03 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-22 | 2009-07-19 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-30 | 2009-01-28 | 412          |
 
-#### Temporal Operators and Person Streams
+### Temporal Operators and Person Streams
 
 Person streams carry a patient's date of birth in their date columns. This makes them almost useless when they are part of the L stream of a temporal operator. But person streams are useful as the R stream. By `time_window`ing the patient's date of birth, we can filter based on the patient's age like so:
 
@@ -1173,24 +1021,26 @@ Person streams carry a patient's date of birth in their date columns. This makes
 
 ```
 
-![](spec/68fac940a32c7e40caacf8e560c61da552d57633d015ba98f2e98ec040a00c5b.png)
+![All MIs that occurred after a male patient's 50th birthday](spec/68fac940a32c7e40caacf8e560c61da552d57633d015ba98f2e98ec040a00c5b.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 92077     | 10363643     | condition_occurrence | 2010-03-08 | 2010-03-08 | 412          |
-| 66609     | 7497031      | condition_occurrence | 2009-05-25 | 2009-05-28 | 412          |
-| 13729     | 1563187      | condition_occurrence | 2008-06-13 | 2008-06-13 | 412          |
-| 10876     | 1237925      | condition_occurrence | 2008-09-13 | 2008-09-13 | 412          |
-| 10876     | 1237830      | condition_occurrence | 2008-02-02 | 2008-02-03 | 412          |
-| 54683     | 6153652      | condition_occurrence | 2008-10-24 | 2008-10-28 | 412          |
-| 16106     | 1833669      | condition_occurrence | 2009-07-06 | 2009-07-13 | 412          |
-| 68518     | 7706073      | condition_occurrence | 2009-02-22 | 2009-02-22 | 412          |
-| 52736     | 5937885      | condition_occurrence | 2008-05-07 | 2008-05-07 | 412          |
-| 62215     | 7004785      | condition_occurrence | 2008-06-10 | 2008-06-10 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 93        | 82295        | observations    | condition_occurrence | 2009-11-08 | 2009-11-08 | 412          |
+| 96        | 20748        | observations    | condition_occurrence | 2008-09-21 | 2008-09-24 | 412          |
+| 109       | 89334        | observations    | condition_occurrence | 2010-07-06 | 2010-07-06 | 412          |
+| 110       | 62592        | observations    | condition_occurrence | 2010-06-27 | 2010-06-27 | 412          |
+| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
+| 149       | 28518        | observations    | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
+| 152       | 82988        | observations    | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
+| 152       | 84298        | observations    | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
 
 ## Type Conversion
 
-There are situations where it is appropriate to convert the type of a stream of results into a different type. In programmer parlance, we say "typecasting" or "casting", which is the terminology we'll use here. A good analogy and mnemonic for casting is to think of taking a piece of metal, say a candle holder, melting it down, and recasting it into, say, a lamp. We'll do something similar with streams. We'll take, for example, a visit_occurrence stream and recast it into a stream of person.
+There are situations where it is appropriate to convert the type of a stream of results into a different type. In programmer parlance, we say "typecasting" or "casting", which is the terminology we'll use here. A good analogy and mnemonic for casting is to think of taking a piece of metal, say a candle holder, melting it down, and recasting it into, say, a lamp. We'll do something similar with streams. We'll take, for example, a condition_occurrence stream and recast it into a stream of person.
+
+ConceptQL has two casting operators: person and death. GDM has no visit table to cast to. To find conditions and procedures that were reported in the same source record, such as the same claim, use the co_reported operator (see Co-reported Events).
 
 ### Casting to person
 
@@ -1205,140 +1055,68 @@ There are situations where it is appropriate to convert the type of a stream of 
 
 ```
 
-![](spec/8ed478d8c81a58a202d0c51348fca246df206fc24a0567b163d4e0bdab56ca46.png)
+![All People Who Had an MI](spec/8ed478d8c81a58a202d0c51348fca246df206fc24a0567b163d4e0bdab56ca46.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date   | source_value     |
-| --------- | ------------ | -------------- | ---------- | ---------- | ---------------- |
-| 251       | 251          | person         | 1928-10-01 | 1928-10-01 | 008645209D3E025E |
-| 66532     | 66532        | person         | 1943-04-01 | 1943-04-01 | 96AB8ADC5FA7AD8C |
-| 64221     | 64221        | person         | 1934-04-01 | 1934-04-01 | 916F76F7FDF6B6CF |
-| 111839    | 111839       | person         | 1938-12-01 | 1938-12-01 | FDE56ED4546D17F6 |
-| 25643     | 25643        | person         | 1916-06-01 | 1916-06-01 | 39BA7D25EC6D1B14 |
-| 79317     | 79317        | person         | 1943-02-01 | 1943-02-01 | B441BDCB76C7C267 |
-| 108128    | 108128       | person         | 1935-02-01 | 1935-02-01 | F58409ED69652B4A |
-| 77900     | 77900        | person         | 1934-05-01 | 1934-05-01 | B0E710725FE3FE97 |
-| 61145     | 61145        | person         | 1942-07-01 | 1942-07-01 | 8A595528CF5E2859 |
-| 18149     | 18149        | person         | 1946-09-01 | 1946-09-01 | 28AFD67E63039098 |
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 11        | 11           | patients        | person           | 1934-02-01 | 1934-02-01 | 000489E7EAAD463F |
+| 17        | 17           | patients        | person           | 1919-09-01 | 1919-09-01 | 0007F12A492FD25D |
+| 38        | 38           | patients        | person           | 1922-12-01 | 1922-12-01 | 001731EB127233DA |
+| 54        | 54           | patients        | person           | 1931-02-01 | 1931-02-01 | 001CAFF084B21E14 |
+| 60        | 60           | patients        | person           | 1925-07-01 | 1925-07-01 | 001EA2F4DB30F105 |
+| 66        | 66           | patients        | person           | 1920-04-01 | 1920-04-01 | 0021B3C854C968C8 |
+| 73        | 73           | patients        | person           | 1925-09-01 | 1925-09-01 | 00237322613CFC3C |
+| 77        | 77           | patients        | person           | 1929-03-01 | 1929-03-01 | 00244B6D9AB50F9B |
+| 81        | 81           | patients        | person           | 1940-06-01 | 1940-06-01 | 0024E5A7B7272E75 |
+| 88        | 88           | patients        | person           | 1922-05-01 | 1922-05-01 | 00291F39917544B1 |
 
-### Casting to a visit_occurrence
+### Casting to death
 
-- It is common to look for a set of conditions that coincide with a set of procedures
-- Gathering conditions yields a condition stream, gathering procedures yields a procedure stream
-  - It is not possible to compare those two streams directly using AND
-  - It is possible to compare the streams temporally, but CDM provides a visit_occurrence table to explicitly tie a set of conditions to a set of procedures
-- Casting both streams to visit_occurrence streams allows us to gather all visit_occurrences for which a set of conditions/procedures occurred in the same visit
-
-```YAML
----
-- intersect
-- - visit_occurrence
-  - - icd9
-    - '412'
-- - visit_occurrence
-  - - cpt
-    - '99214'
-
-```
-
-![](spec/62323426e381ec21c967971a67e1f4a6d89dae92154bd937284e00b67f67fdd3.png)
-
-| person_id | criterion_id | criterion_type   | start_date | end_date   | source_value |
-| --------- | ------------ | ---------------- | ---------- | ---------- | ------------ |
-| 59633     | 2958903      | visit_occurrence | 2010-07-08 | 2010-07-08 | Office       |
-| 8462      | 423786       | visit_occurrence | 2008-08-24 | 2008-08-24 | Office       |
-| 48614     | 2410554      | visit_occurrence | 2009-06-05 | 2009-06-05 | Office       |
-| 92639     | 4587768      | visit_occurrence | 2009-04-25 | 2009-04-25 | Office       |
-| 46156     | 2292353      | visit_occurrence | 2008-06-18 | 2008-06-18 | Office       |
-| 105614    | 5223564      | visit_occurrence | 2008-02-03 | 2008-02-03 | Office       |
-| 21343     | 1061266      | visit_occurrence | 2008-04-25 | 2008-04-25 | Office       |
-| 62315     | 3086112      | visit_occurrence | 2008-05-27 | 2008-05-27 | Office       |
-| 18286     | 914814       | visit_occurrence | 2010-02-10 | 2010-02-10 | Office       |
-| 27340     | 1365178      | visit_occurrence | 2009-06-17 | 2009-06-17 | Office       |
-
-Many tables have a foreign key (FK) reference to the visit_occurrence table. If we cast a result to a visit_occurrence, and its table of origin has a visit_occurrence_id FK column, the result becomes a visit_occurrence result corresponding to the row pointed to by visit_occurrence_id. If the row's visit_occurrence_id is NULL, the result is discarded from the stream.
-
-If the result's table of origin has no visit_occurrence_id column, we will instead replace the result with ALL visit_occurrences for the person assigned to the result. This allows us to convert between a person stream and visit_occurrence stream and back. E.g. we can get all male patients, then ask for their visit_occurrences later downstream.
-
-```YAML
----
-- visit_occurrence
-- - gender
-  - Male
-
-```
-
-![](spec/e8630103287f7c9d28eff40b3b1826e24846e776b877f7b8554257acbe621e1c.png)
-
-| person_id | criterion_id | criterion_type   | start_date | end_date   | source_value |
-| --------- | ------------ | ---------------- | ---------- | ---------- | ------------ |
-| 10295     | 516092       | visit_occurrence | 2008-04-08 | 2008-04-08 | Outpatient   |
-| 10295     | 516093       | visit_occurrence | 2008-07-28 | 2008-07-28 | Outpatient   |
-| 10295     | 516094       | visit_occurrence | 2009-05-27 | 2009-05-27 | Outpatient   |
-| 10295     | 516095       | visit_occurrence | 2008-09-03 | 2008-09-03 | Outpatient   |
-| 10295     | 516096       | visit_occurrence | 2008-05-31 | 2008-05-31 | Outpatient   |
-| 10295     | 516097       | visit_occurrence | 2008-09-13 | 2008-09-13 | Outpatient   |
-| 10295     | 516098       | visit_occurrence | 2008-08-23 | 2008-08-23 | Outpatient   |
-| 10295     | 516099       | visit_occurrence | 2008-04-28 | 2008-04-28 | Office       |
-| 10295     | 516100       | visit_occurrence | 2009-03-26 | 2009-03-26 | Office       |
-| 10295     | 516101       | visit_occurrence | 2009-09-22 | 2009-09-22 | Office       |
-
-### Casting Loses All Original Information
-
-After a result undergoes casting, it loses its original information. E.g. casting a visit_occurrence to a person loses the visit_occurrence information and resets the start_date and end_date columns to the person's date of birth. As a side note, this is actually handy if a stream’s dates have been altered by a time_window operator and you want the original dates later on. Just cast the stream to its same type and it will regain its original dates.
-
-### Cast all the Things!
-
-Although casting to visit_occurrence and person are the most common types of casting, we can cast to and from any of the types in the ConceptQL system.
-
-The general rule will be that if the source type has a defined relationship with the target type, we'll cast using that relationship, e.g. casting visit_occurrences to procedures will turn all visit_occurrence results into the set of procedure results that point at those original visit_occurrences. But if there is no direct relationship, we'll do a generous casting, e.g. casting observations to procedures will return all procedures for all persons in the observation stream.
-
-INSERT HANDY TABLE SHOWING CONVERSION MATRIX HERE
-
-```YAML
----
-- procedure_cost
-- - intersect
-  - - cpt
-    - '70012'
-  - - procedure
-    - - intersect
-      - - place_of_service_code
-        - '21'
-      - - visit_occurrence
-        - - icd9
-          - '412'
-
-```
-
-![](spec/6a34c0ef589c9c976fe41f3e67e799e198499f5b9c3ebfd240fb91f73e893573.png)
-
-`No Results.  Statement is experimental.`
-
-### Casting as a way to fetch all rows
-
-The casting operator doubles as a way to fetch all rows for a single type. Provide the casting operator with an argument of `true` (instead of an upstream operator) to get all rows as results:
+- Replaces each result with the death record of the result's person
+- A person with no death record yields no results
 
 ```YAML
 ---
 - death
-- true
+- - icd9
+  - '412'
 
 ```
 
-![](spec/e9b384fa7dec5f1a06479c4b289e06b1e60e4f23f7630aff6d03c52595f500f8.png)
+![The Deaths of All People Who Had an MI](spec/8b20c1a598c4d0f7cae613f707f5eaa90da3293d7ac24bb5b12df278a8e69d57.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date   | source_value |
-| --------- | ------------ | -------------- | ---------- | ---------- | ------------ |
-| 16        | 16           | death          | 2010-12-01 | 2010-12-01 |              |
-| 177       | 177          | death          | 2010-07-01 | 2010-07-01 |              |
-| 293       | 293          | death          | 2010-01-01 | 2010-01-01 |              |
-| 306       | 306          | death          | 2010-05-01 | 2010-05-01 |              |
-| 375       | 375          | death          | 2010-03-01 | 2010-03-01 |              |
-| 429       | 429          | death          | 2010-03-01 | 2010-03-01 |              |
-| 450       | 450          | death          | 2010-11-01 | 2010-11-01 |              |
-| 555       | 555          | death          | 2010-11-01 | 2010-11-01 |              |
-| 565       | 565          | death          | 2010-06-01 | 2010-06-01 |              |
-| 603       | 603          | death          | 2010-06-01 | 2010-06-01 |              |
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ------------ |
+| 190       | 7            | deaths          | death            | 2009-09-01 | 2009-09-01 |              |
+
+### Casting Loses All Original Information
+
+After a result undergoes casting, it loses its original information. E.g. casting a condition_occurrence to a person loses the condition information and resets the start_date and end_date columns to the person's date of birth. As a side note, this is actually handy if a person stream's dates have been altered by a time_window operator and you want the original dates later on. Just cast the stream to person again and it will regain the date of birth.
+
+### Casting as a way to fetch all rows
+
+The casting operator doubles as a way to fetch all rows for a single type. Provide the casting operator with no upstream operator to get all rows as results:
+
+```YAML
+---
+- death
+
+```
+
+![All death results in the database](spec/e281558c677a04df02e53dcc7fd6497a0d831e4037560cd13942b67ab10f98f4.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ------------ |
+| 16        | 1            | deaths          | death            | 2010-12-01 | 2010-12-01 |              |
+| 26        | 2            | deaths          | death            | 2009-07-01 | 2009-07-01 |              |
+| 65        | 3            | deaths          | death            | 2009-01-01 | 2009-01-01 |              |
+| 119       | 4            | deaths          | death            | 2008-09-01 | 2008-09-01 |              |
+| 166       | 5            | deaths          | death            | 2008-07-01 | 2008-07-01 |              |
+| 181       | 6            | deaths          | death            | 2010-07-01 | 2010-07-01 |              |
+| 190       | 7            | deaths          | death            | 2009-09-01 | 2009-09-01 |              |
+| 191       | 8            | deaths          | death            | 2009-09-01 | 2009-09-01 |              |
+| 201       | 9            | deaths          | death            | 2008-05-01 | 2008-05-01 |              |
+| 215       | 10           | deaths          | death            | 2008-01-01 | 2008-01-01 |              |
 
 This comes in handy for situations like these:
 
@@ -1350,24 +1128,19 @@ This comes in handy for situations like these:
   - Male
   :right:
   - death
-  - true
 
 ```
 
-![](spec/58113a57a37431a402d2547369eba3a481bf1dbbfd82dc384406a5c91f6df01f.png)
+![All Male patients who died](spec/bb369188911f61bfd851f575d6e8dcc96f1328f4b58721e3fb32932985db1025.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date   | source_value     |
-| --------- | ------------ | -------------- | ---------- | ---------- | ---------------- |
-| 55510     | 55510        | person         | 1930-08-01 | 1930-08-01 | 7D34060FA1EF58C6 |
-| 74808     | 74808        | person         | 1927-02-01 | 1927-02-01 | A9BE60D395FEE13D |
-| 32780     | 32780        | person         | 1961-09-01 | 1961-09-01 | 49BF11D11CEF2328 |
-| 87909     | 87909        | person         | 1934-04-01 | 1934-04-01 | C7727009E7DDF6B8 |
-| 43890     | 43890        | person         | 1920-03-01 | 1920-03-01 | 6309F87AE1E03227 |
-| 46052     | 46052        | person         | 1941-09-01 | 1941-09-01 | 67D8035124FE474E |
-| 88540     | 88540        | person         | 1952-08-01 | 1952-08-01 | C8E882134C354ADF |
-| 10616     | 10616        | person         | 1946-07-01 | 1946-07-01 | 179C0EDEB061D6E3 |
-| 74892     | 74892        | person         | 1927-02-01 | 1927-02-01 | A9F0108311BE3424 |
-| 84318     | 84318        | person         | 1938-06-01 | 1938-06-01 | BF7387DC991F39A9 |
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 16        | 16           | patients        | person           | 1934-01-01 | 1934-01-01 | 0007E57CC13CE880 |
+| 65        | 65           | patients        | person           | 1936-01-01 | 1936-01-01 | 0021940CF994C374 |
+| 181       | 181          | patients        | person           | 1939-11-01 | 1939-11-01 | 005E0AB5172E715F |
+| 190       | 190          | patients        | person           | 1939-07-01 | 1939-07-01 | 0060C263DA4EBBAF |
+| 191       | 191          | patients        | person           | 1928-12-01 | 1928-12-01 | 0061141AB18FFA96 |
+| 201       | 201          | patients        | person           | 1949-06-01 | 1949-06-01 | 00653DC86A0E30D8 |
 
 ## Filtering by People
 
@@ -1387,20 +1160,20 @@ Unlike the `except` operator, the person_filter operator will use all types of a
 
 ```
 
-![](spec/0360fc0c2b7a88fd82ffc4d13387b76766649d5d42aa8f9349bbf60a81ac6119.png)
+![All MI Conditions for people who are male](spec/0360fc0c2b7a88fd82ffc4d13387b76766649d5d42aa8f9349bbf60a81ac6119.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 92077     | 10363643     | condition_occurrence | 2010-03-08 | 2010-03-08 | 412          |
-| 66609     | 7497031      | condition_occurrence | 2009-05-25 | 2009-05-28 | 412          |
-| 13729     | 1563187      | condition_occurrence | 2008-06-13 | 2008-06-13 | 412          |
-| 10876     | 1237925      | condition_occurrence | 2008-09-13 | 2008-09-13 | 412          |
-| 10876     | 1237830      | condition_occurrence | 2008-02-02 | 2008-02-03 | 412          |
-| 54683     | 6153652      | condition_occurrence | 2008-10-24 | 2008-10-28 | 412          |
-| 16106     | 1833669      | condition_occurrence | 2009-07-06 | 2009-07-13 | 412          |
-| 33793     | 3829115      | condition_occurrence | 2008-01-17 | 2008-01-21 | 412          |
-| 68518     | 7706073      | condition_occurrence | 2009-02-22 | 2009-02-22 | 412          |
-| 52736     | 5937885      | condition_occurrence | 2008-05-07 | 2008-05-07 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 93        | 82295        | observations    | condition_occurrence | 2009-11-08 | 2009-11-08 | 412          |
+| 96        | 20748        | observations    | condition_occurrence | 2008-09-21 | 2008-09-24 | 412          |
+| 109       | 89334        | observations    | condition_occurrence | 2010-07-06 | 2010-07-06 | 412          |
+| 110       | 62592        | observations    | condition_occurrence | 2010-06-27 | 2010-06-27 | 412          |
+| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
+| 149       | 28518        | observations    | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
+| 152       | 82988        | observations    | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
+| 152       | 84298        | observations    | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
 
 But we can get crazier. The right-hand side doesn't have to be a person stream. If a non-person stream is used in the right-hand side, the person_filter will cast all right-hand streams to person first and use the union of those streams:
 
@@ -1416,20 +1189,20 @@ But we can get crazier. The right-hand side doesn't have to be a person stream. 
 
 ```
 
-![](spec/26fd52b5ac55438dd9f81b4a3f3913f1058c9f225c8a5e129007c1e9413d5881.png)
+![All MI Conditions for people who had an office visit at some point in the data](spec/26fd52b5ac55438dd9f81b4a3f3913f1058c9f225c8a5e129007c1e9413d5881.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 92077     | 10363643     | condition_occurrence | 2010-03-08 | 2010-03-08 | 412          |
-| 108031    | 12142323     | condition_occurrence | 2009-11-25 | 2009-11-25 | 412          |
-| 56414     | 6351863      | condition_occurrence | 2008-11-15 | 2008-11-15 | 412          |
-| 66609     | 7497031      | condition_occurrence | 2009-05-25 | 2009-05-28 | 412          |
-| 10876     | 1237830      | condition_occurrence | 2008-02-02 | 2008-02-03 | 412          |
-| 10876     | 1237925      | condition_occurrence | 2008-09-13 | 2008-09-13 | 412          |
-| 33463     | 3787772      | condition_occurrence | 2009-08-08 | 2009-08-08 | 412          |
-| 48678     | 5484541      | condition_occurrence | 2009-09-09 | 2009-09-09 | 412          |
-| 54683     | 6153652      | condition_occurrence | 2008-10-24 | 2008-10-28 | 412          |
-| 68518     | 7706073      | condition_occurrence | 2009-02-22 | 2009-02-22 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
 ```YAML
 ---
@@ -1444,20 +1217,20 @@ But we can get crazier. The right-hand side doesn't have to be a person stream. 
 
 ```
 
-![](spec/e1cb0863b21e14256d61a54200316791f6547c78ba2f0156c110f4500f9bbd49.png)
+![All MI Conditions for people who had an office visit at some point in the data (an explicit representation of what's happening in the diagram above)](spec/e1cb0863b21e14256d61a54200316791f6547c78ba2f0156c110f4500f9bbd49.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 92077     | 10363643     | condition_occurrence | 2010-03-08 | 2010-03-08 | 412          |
-| 108031    | 12142323     | condition_occurrence | 2009-11-25 | 2009-11-25 | 412          |
-| 56414     | 6351863      | condition_occurrence | 2008-11-15 | 2008-11-15 | 412          |
-| 66609     | 7497031      | condition_occurrence | 2009-05-25 | 2009-05-28 | 412          |
-| 10876     | 1237830      | condition_occurrence | 2008-02-02 | 2008-02-03 | 412          |
-| 10876     | 1237925      | condition_occurrence | 2008-09-13 | 2008-09-13 | 412          |
-| 33463     | 3787772      | condition_occurrence | 2009-08-08 | 2009-08-08 | 412          |
-| 48678     | 5484541      | condition_occurrence | 2009-09-09 | 2009-09-09 | 412          |
-| 54683     | 6153652      | condition_occurrence | 2008-10-24 | 2008-10-28 | 412          |
-| 68518     | 7706073      | condition_occurrence | 2009-02-22 | 2009-02-22 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
 ```YAML
 ---
@@ -1474,20 +1247,20 @@ But we can get crazier. The right-hand side doesn't have to be a person stream. 
 
 ```
 
-![](spec/5d331d74c460d75814b2d3138a9b7d90b5ddb2dcd85e1f5f260d183745fc3a1e.png)
+![All MI Conditions for people who are Male OR had an office visit at some point in the data](spec/5d331d74c460d75814b2d3138a9b7d90b5ddb2dcd85e1f5f260d183745fc3a1e.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
 And don't forget the left-hand side can have multiple types of streams:
 
@@ -1506,20 +1279,20 @@ And don't forget the left-hand side can have multiple types of streams:
 
 ```
 
-![](spec/c93dd18894a245a5647f99e1867d3779e4cd34c9c8f8860600ff0c837a5ffa53.png)
+![Yields two streams: a stream of all MI Conditions for people who are Male and a stream of all office visit Procedures for people who are Male](spec/c93dd18894a245a5647f99e1867d3779e4cd34c9c8f8860600ff0c837a5ffa53.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 91        | 10865        | condition_occurrence | 2009-11-08 | 2009-11-08 | 412          |
-| 108       | 13741        | condition_occurrence | 2010-06-27 | 2010-06-27 | 412          |
-| 128       | 15149        | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
-| 146       | 17041        | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
-| 149       | 17772        | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
-| 149       | 17774        | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
-| 158       | 18412        | condition_occurrence | 2009-10-25 | 2009-10-29 | 412          |
-| 183       | 21619        | condition_occurrence | 2010-12-26 | 2010-12-26 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 2         | 58127        | observations    | procedure_occurrence | 2009-07-03 | 2009-07-03 | 99214        |
+| 2         | 83339        | observations    | procedure_occurrence | 2009-12-02 | 2009-12-02 | 99214        |
+| 5         | 38313        | observations    | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99214        |
+| 5         | 76788        | observations    | procedure_occurrence | 2009-07-04 | 2009-07-04 | 99214        |
+| 5         | 63847        | observations    | procedure_occurrence | 2009-12-21 | 2009-12-21 | 99214        |
+| 6         | 48992        | observations    | procedure_occurrence | 2009-09-12 | 2009-09-12 | 99214        |
+| 6         | 76651        | observations    | procedure_occurrence | 2010-02-23 | 2010-02-23 | 99214        |
+| 7         | 63797        | observations    | procedure_occurrence | 2008-08-13 | 2008-08-13 | 99214        |
+| 7         | 59555        | observations    | procedure_occurrence | 2008-09-21 | 2008-09-21 | 99214        |
+| 7         | 71597        | observations    | procedure_occurrence | 2008-09-22 | 2008-09-22 | 99214        |
 
 ## Sub-algorithms within a Larger Algorithm
 
@@ -1534,27 +1307,23 @@ Any ConceptQL operator can be assigned a label. The label simply provides a way 
 - Takes 1 argument
   - The "label" of an operator from which you'd like to pull the exact same set of results
 
-A stream must be `define`d before `recall` can use it.
+A stream must have a `label` before `recall` can use it.
 
 ```YAML
 ---
 - first
 - - union
-  - - intersect
-    - - visit_occurrence
-      - - icd9
-        - '412'
-      - :label: Heart Attack Visit
-    - - place_of_service_code
-      - '21'
+  - - provenance
+    - - icd9
+      - '412'
+      - :label: Heart Attack
+    - inpatient
   - - before
     - :left:
-      - intersect
+      - provenance
       - - recall
-        - Heart Attack Visit
-      - - complement
-        - - place_of_service_code
-          - 21
+        - Heart Attack
+      - outpatient
       - :label: Outpatient Heart Attack
       :right:
       - time_window
@@ -1566,128 +1335,126 @@ A stream must be `define`d before `recall` can use it.
 
 ```
 
-![](spec/4a3b47ed1c54f96ebdae693d41c36c51884c4546ef799a4108085708fb7b964e.png)
+![Save away a stream of results to build the 1 inpatient, 2 outpatient pattern used in claims data algorithms](spec/30e432f256d528ee828a7d97e550e110277841bce042da718ee253134dbeaf3f.png)
 
-| person_id | criterion_id | criterion_type   | start_date | end_date   | source_value |
-| --------- | ------------ | ---------------- | ---------- | ---------- | ------------ |
-| 59        | 2705         | visit_occurrence | 2009-07-19 | 2009-07-22 | Inpatient    |
-| 79        | 3847         | visit_occurrence | 2009-01-28 | 2009-01-30 | Inpatient    |
-| 86        | 4378         | visit_occurrence | 2009-01-03 | 2009-01-09 | Inpatient    |
-| 128       | 6640         | visit_occurrence | 2008-03-22 | 2008-03-23 | Inpatient    |
-| 158       | 8108         | visit_occurrence | 2009-10-25 | 2009-10-29 | Inpatient    |
-| 173       | 8806         | visit_occurrence | 2009-06-13 | 2009-06-16 | Inpatient    |
-| 222       | 11783        | visit_occurrence | 2008-03-14 | 2008-03-21 | Inpatient    |
-| 260       | 13972        | visit_occurrence | 2010-05-29 | 2010-06-21 | Inpatient    |
-| 352       | 18458        | visit_occurrence | 2008-07-02 | 2008-07-09 | Inpatient    |
-| 407       | 20925        | visit_occurrence | 2008-08-25 | 2008-08-27 | Inpatient    |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+| 88        | 1572         | observations    | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
+| 161       | 963          | observations    | condition_occurrence | 2009-10-25 | 2009-10-29 | 412          |
+| 177       | 507          | observations    | condition_occurrence | 2009-06-13 | 2009-06-16 | 412          |
+| 230       | 523          | observations    | condition_occurrence | 2008-03-14 | 2008-03-21 | 412          |
+
+ConceptQL also has a `one_in_two_out` operator that implements this pattern in a single operator.
 
 ## Algorithms within Algorithms
 
-One of the main motivations behind keeping ConceptQL so flexible is to allow users to build ConceptQL statements from other ConceptQL statements. This section loosely describes how this feature will work. Its actual execution and implementation will differ from what is presented here.
+One of the main motivations behind keeping ConceptQL so flexible is to allow users to build ConceptQL statements from other ConceptQL statements. This section describes how this feature works.
 
-Say a ConceptQL statement gathers all visit_occurrences where a patient had an MI and a Hospital encounter (CPT 99231):
+Say a ConceptQL statement gathers all pneumonia diagnoses (ICD-9 486) and hospital visits (CPT 99232, subsequent hospital care) that were reported in the same source record:
 
 ```YAML
 ---
-- intersect
-- - visit_occurrence
-  - - icd9
-    - '412'
-- - visit_occurrence
-  - - cpt
-    - '99231'
+- co_reported
+- - icd9
+  - '486'
+- - cpt
+  - '99232'
 
 ```
 
-![](spec/5d6ff62038b75d6f240d65f35d1520a131c221f47d3801554c8c2be5d528ebb0.png)
+![All Pneumonia Diagnoses and Hospital Visits reported in the same source record](spec/814fa803d0ba09d73b7bb33177d043c26b681f5c621e9d76dc5c2e18dc852770.png)
 
-| person_id | criterion_id | criterion_type   | start_date | end_date   | source_value |
-| --------- | ------------ | ---------------- | ---------- | ---------- | ------------ |
-| 108335    | 5357904      | visit_occurrence | 2009-12-07 | 2009-12-07 | Office       |
-| 23251     | 1158016      | visit_occurrence | 2009-07-24 | 2009-07-24 | Office       |
-| 13270     | 662308       | visit_occurrence | 2010-07-23 | 2010-07-25 | Office       |
-| 24119     | 1199980      | visit_occurrence | 2008-11-30 | 2008-12-05 | Office       |
-| 91102     | 4511328      | visit_occurrence | 2008-09-01 | 2008-09-01 | Office       |
-| 3646      | 184096       | visit_occurrence | 2009-01-09 | 2009-01-09 | Office       |
-| 21338     | 1061186      | visit_occurrence | 2008-07-11 | 2008-07-11 | Office       |
-| 86004     | 4256504      | visit_occurrence | 2008-04-18 | 2008-04-18 | Office       |
-| 112447    | 5561049      | visit_occurrence | 2008-12-22 | 2008-12-25 | Office       |
-| 20229     | 1009400      | visit_occurrence | 2008-09-06 | 2008-09-06 | Office       |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 63        | 61990        | observations    | condition_occurrence | 2009-07-02 | 2009-07-04 | 486          |
+| 63        | 61991        | observations    | condition_occurrence | 2009-07-02 | 2009-07-04 | 486          |
+| 63        | 61994        | observations    | procedure_occurrence | 2009-07-02 | 2009-07-04 | 99232        |
+| 63        | 61995        | observations    | procedure_occurrence | 2009-07-02 | 2009-07-04 | 99232        |
+| 83        | 38139        | observations    | condition_occurrence | 2008-03-02 | 2008-03-02 | 486          |
+| 83        | 38140        | observations    | procedure_occurrence | 2008-03-02 | 2008-03-02 | 99232        |
+| 85        | 80214        | observations    | condition_occurrence | 2008-08-24 | 2008-08-30 | 486          |
+| 85        | 80215        | observations    | condition_occurrence | 2008-08-24 | 2008-08-30 | 486          |
+| 85        | 80216        | observations    | procedure_occurrence | 2008-08-24 | 2008-08-30 | 99232        |
+| 85        | 80217        | observations    | procedure_occurrence | 2008-08-24 | 2008-08-30 | 99232        |
 
-If we wanted to gather all costs for all procedures for those visits, we could use the "algorithm" operator to represent the algorithm defined above in a new concept:
-
-```YAML
----
-- procedure_cost
-- - algorithm
-  - |2-
-
-    All Visits
-    where a Patient had
-    both an MI and
-    a Hospital Encounter
-
-```
-
-![](spec/eb8f5511f7d88bd0f8ba73420fc10f7c78405db7f4373d778a827058707f888e.png)
-
-`No Results.  Statement is experimental.`
-
-The color and edge coming from the algorithm operator are black to denote that we don't know what types or streams are coming from the concept. In reality, any program that uses ConceptQL can ask the algorithm represented by the algorithm operator for the concept's types. The result of nesting one algorithm within another is exactly the same had we taken algorithm operator and replaced it with the ConceptQL statement for the algorithm it represents.
+The "algorithm" operator represents a stored ConceptQL statement in a new statement. It takes the ID of the stored statement. ConceptQL reads the stored statement from the `statement` column of the `concepts` table, in the row whose `concept_id` is that ID. So, assuming that the ID 2031 represents the algorithm defined above, we could gather all the people with those records like this:
 
 ```YAML
 ---
-- procedure_cost
-- - intersect
-  - - visit_occurrence
-    - - icd9
-      - '412'
-  - - visit_occurrence
-    - - cpt
-      - '99231'
-
-```
-
-![](spec/6b48534236697d1ccfa1f5403764782f9d228f9eb706789cfa80203882b7b13a.png)
-
-`No Results.  Statement is experimental.`
-
-In the actual implementation of the algorithm operator, each ConceptQL statement will have a unique identifier which the algorithm operator will use. So, assuming that the ID 2031 represents the algorithm we want to gather all procedure costs for, our example should really read:
-
-```YAML
----
-- procedure_cost
+- person
 - - algorithm
   - 2031
 
 ```
 
-![](spec/067241a3579767a802d4f8e20fd35b60adbe377c9a6512ef135f164a5accfb27.png)
+![All People with a Pneumonia Diagnosis and a Hospital Visit reported in the same source record](spec/eaa8e3fcbe133f6962f97ae3de3714e943d5e38c3e1cecfe62c5a1972866228f.png)
 
-`No Results.  Statement is experimental.`
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 63        | 63           | patients        | person           | 1964-05-01 | 1964-05-01 | 00205821D74AA7D8 |
+| 83        | 83           | patients        | person           | 1963-05-01 | 1963-05-01 | 002578091E1953AF |
+| 85        | 85           | patients        | person           | 1937-01-01 | 1937-01-01 | 0025ACAB19F5DEC0 |
+| 141       | 141          | patients        | person           | 1933-04-01 | 1933-04-01 | 0040CF7315D51D01 |
+| 143       | 143          | patients        | person           | 1945-05-01 | 1945-05-01 | 00422125F788CC20 |
+| 149       | 149          | patients        | person           | 1943-02-01 | 1943-02-01 | 0045A5AFF076CBE6 |
+| 150       | 150          | patients        | person           | 1936-01-01 | 1936-01-01 | 0046020E72E1CBFD |
+| 176       | 176          | patients        | person           | 1939-03-01 | 1939-03-01 | 0057DAC8F6C528CB |
+| 178       | 178          | patients        | person           | 1928-06-01 | 1928-06-01 | 0058B2A556D74DC2 |
+| 214       | 214          | patients        | person           | 1914-07-01 | 1914-07-01 | 006D1BD234E5C844 |
+
+ConceptQL replaces the algorithm operator with the stored statement when it reads the statement, so the diagram above shows the stored statement. The result of nesting one algorithm within another is exactly the same had we taken algorithm operator and replaced it with the ConceptQL statement for the algorithm it represents.
+
+```YAML
+---
+- person
+- - co_reported
+  - - icd9
+    - '486'
+  - - cpt
+    - '99232'
+
+```
+
+![All People with a Pneumonia Diagnosis and a Hospital Visit reported in the same source record (same as above)](spec/2b0e2bd4016c9888be0d4f3afe2e71d57a05796cbb396a786e447b33f5428897.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 63        | 63           | patients        | person           | 1964-05-01 | 1964-05-01 | 00205821D74AA7D8 |
+| 83        | 83           | patients        | person           | 1963-05-01 | 1963-05-01 | 002578091E1953AF |
+| 85        | 85           | patients        | person           | 1937-01-01 | 1937-01-01 | 0025ACAB19F5DEC0 |
+| 141       | 141          | patients        | person           | 1933-04-01 | 1933-04-01 | 0040CF7315D51D01 |
+| 143       | 143          | patients        | person           | 1945-05-01 | 1945-05-01 | 00422125F788CC20 |
+| 149       | 149          | patients        | person           | 1943-02-01 | 1943-02-01 | 0045A5AFF076CBE6 |
+| 150       | 150          | patients        | person           | 1936-01-01 | 1936-01-01 | 0046020E72E1CBFD |
+| 176       | 176          | patients        | person           | 1939-03-01 | 1939-03-01 | 0057DAC8F6C528CB |
+| 178       | 178          | patients        | person           | 1928-06-01 | 1928-06-01 | 0058B2A556D74DC2 |
+| 214       | 214          | patients        | person           | 1914-07-01 | 1914-07-01 | 006D1BD234E5C844 |
 
 ## Values
 
-A result can carry forward three different types of values, modeled after the behavior of the observation table:
+A result can carry forward three different types of values:
 
-- value_as_numeric
-  - For values like lab values, counts of occurrence of results, cost information
+- value_as_number
+  - For values like lab values, counts of occurrence of results, or sums
 - value_as_string
-  - For value_as_string from observation table, or notes captured in EHR data
+  - For values that are text, such as a lab result that is text
 - value_as_concept_id
-  - For values that are like factors from the observation value_as_concept_id column
+  - For values that are concepts, such as a coded lab result
 
-By default, all value fields are set to NULL, unless a selection operator is explicitly written to populate one or more of those fields.
+By default, all value fields are set to NULL, unless an operator is explicitly written to populate one or more of those fields.
 
 There are many operations that can be performed on the value_as\_\* columns and as those operations are implemented, this section will grow.
 
-For now we'll cover some of the general behavior of the value_as_numeric column and it's associated operators.
+For now we'll cover some of the general behavior of the value_as_number column and it's associated operators.
 
 ### numeric
 
 - Takes 2 arguments
   - A stream
-  - And a numeric value or a symbol representing the name of a column in CDM
+  - And a numeric value
 
 Passing streams through a `numeric` operator changes the number stored in the value column:
 
@@ -1700,68 +1467,22 @@ Passing streams through a `numeric` operator changes the number stored in the va
 
 ```
 
-![](spec/d39452b58257c95a7cba07afed4877417b0c227f3690e2bff22c9eca89eac845.png)
+![All MIs, setting value_as_number to 2](spec/d39452b58257c95a7cba07afed4877417b0c227f3690e2bff22c9eca89eac845.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value | value_as_number |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ | --------------- |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          | 2.0             |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          | 2.0             |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          | 2.0             |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          | 2.0             |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          | 2.0             |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          | 2.0             |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          | 2.0             |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          | 2.0             |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          | 2.0             |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          | 2.0             |
 
-`numeric` can also take a column name instead of a number. It will derive the results row's value from the value stored in the column specified.
-
-```YAML
----
-- numeric
-- paid_copay
-- - procedure_cost
-  - - cpt
-    - '99214'
-
-```
-
-![](spec/3f46dee4d775d1a29d52b68af6552f8ea3abd8303094e749714fc77bd7958155.png)
-
-`No Results.  Statement is experimental.`
-
-If something nonsensical happens, like the column specified isn't present in the table pointed to by a result row, value_as_numeric in the result row will be unaffected:
-
-```YAML
----
-- value
-- paid_copay
-- - icd9
-  - '412'
-
-```
-
-![](spec/2b57886a9cba66bb696e4b399c51ad0dc95cd64b952709fafc819a79d573f09e.png)
-
-`No Results.  Statement is experimental.`
-
-Or if the column specified exists, but refers to a non-numerical column, we'll set the value to 0
-
-```YAML
----
-- value
-- stop_reason
-- - icd9
-  - '412'
-
-```
-
-![](spec/7b9db2986ab9ada45cfb9451ef87ff1a2d99c908083334b7ccdceb8a92387fa9.png)
-
-`No Results.  Statement is experimental.`
-
-With a `numeric` operator defined, we could introduce a sum operator that will sum by patient and type. This allows us to implement the Charlson comorbidity algorithm:
+With a `numeric` operator defined, we can use the `sum` operator to sum the values for each patient and type. This allows us to implement the Charlson comorbidity algorithm:
 
 ```YAML
 ---
@@ -1782,48 +1503,49 @@ With a `numeric` operator defined, we could introduce a sum operator that will s
 
 ![](spec/ba572c4f4dbade65be55f141df16cf7b3e7d09e0aec4e4e5debc4f2075277371.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date   | source_value     |
-| --------- | ------------ | -------------- | ---------- | ---------- | ---------------- |
-| 20485     | 0            | person         | 1939-04-01 | 1939-04-01 | 2DDD007275DD21E0 |
-| 79028     | 0            | person         | 1959-02-01 | 1959-02-01 | B392FC430DF921CD |
-| 100859    | 0            | person         | 1956-05-01 | 1956-05-01 | E52898242C537BA0 |
-| 14065     | 0            | person         | 1946-11-01 | 1946-11-01 | 1F60AFE3D4FBB0F8 |
-| 19728     | 0            | person         | 1929-03-01 | 1929-03-01 | 2C18DC0853458E88 |
-| 6249      | 0            | person         | 1941-03-01 | 1941-03-01 | 0DD88DF606E34410 |
-| 81868     | 0            | person         | 1942-09-01 | 1942-09-01 | BA17E53F3EB2C999 |
-| 111550    | 0            | person         | 1943-06-01 | 1943-06-01 | FD35C56E74BFB4AB |
-| 93771     | 0            | person         | 1941-01-01 | 1941-01-01 | D4BF3A123E98674C |
-| 92853     | 0            | person         | 1932-06-01 | 1932-06-01 | D2945588C9CE4481 |
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     | value_as_number |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- | --------------- |
+| 11        | 0            | patients        | person           | 1934-02-01 | 1934-02-01 | 000489E7EAAD463F | 1.0             |
+| 17        | 0            | patients        | person           | 1919-09-01 | 1919-09-01 | 0007F12A492FD25D | 3.0             |
+| 34        | 0            | patients        | person           | 1919-10-01 | 1919-10-01 | 00151A878F9A2C0D | 2.0             |
+| 38        | 0            | patients        | person           | 1922-12-01 | 1922-12-01 | 001731EB127233DA | 1.0             |
+| 54        | 0            | patients        | person           | 1931-02-01 | 1931-02-01 | 001CAFF084B21E14 | 1.0             |
+| 55        | 0            | patients        | person           | 1924-12-01 | 1924-12-01 | 001D0E59C94130D3 | 2.0             |
+| 60        | 0            | patients        | person           | 1925-07-01 | 1925-07-01 | 001EA2F4DB30F105 | 1.0             |
+| 66        | 0            | patients        | person           | 1920-04-01 | 1920-04-01 | 0021B3C854C968C8 | 1.0             |
+| 73        | 0            | patients        | person           | 1925-09-01 | 1925-09-01 | 00237322613CFC3C | 1.0             |
+| 77        | 0            | patients        | person           | 1929-03-01 | 1929-03-01 | 00244B6D9AB50F9B | 1.0             |
 
 ### Counting
 
-It might be helpful to count the number of occurrences of a result row in a stream. A simple "count" operator could group identical rows and store the number of occurrences in the value_as_numeric column.
+The `count` operator groups identical results and stores the number of results in each group in the value_as_number column. Two results are identical only when all of their columns match, including criterion_id. So `count` does not count the events of each person. Casting a stream to person first does not help, because the cast yields one result for each person.
 
-I need examples of algorithms that could benefit from this operator. I'm concerned that we'll want to roll up occurrences by person most of the time and that would require us to first cast streams to person before passing the person stream to count.
+To count the events of each person, set value_as_number to 1 with `numeric`, and then use `sum`:
 
 ```YAML
 ---
-- count
-- - person
+- sum
+- - numeric
+  - 1
   - - icd9
-    - '799.22'
+    - '486'
 
 ```
 
-![](spec/ff7d5b5573d09bd7c4cdd3aeda124d18bf82ec46673a62881b399a75d69f3f53.png)
+![Count the number of times each person had pneumonia](spec/385ede8312e323fa1ae2337c303c8e89f252ebcb8ba229961fa3af1a3caec886.png)
 
-| person_id | criterion_id | criterion_type | start_date | end_date   | source_value     |
-| --------- | ------------ | -------------- | ---------- | ---------- | ---------------- |
-| 84506     | 84506        | person         | 1946-11-01 | 1946-11-01 | BFD9934105A902C5 |
-| 8511      | 8511         | person         | 1934-02-01 | 1934-02-01 | 12F9E8CFD305414D |
-| 58597     | 58597        | person         | 1922-11-01 | 1922-11-01 | 84841824E5D1516F |
-| 17481     | 17481        | person         | 1952-04-01 | 1952-04-01 | 272C688CA4CFC78F |
-| 79930     | 79930        | person         | 1940-04-01 | 1940-04-01 | B5AA192186CEFC33 |
-| 83321     | 83321        | person         | 1928-06-01 | 1928-06-01 | BD49BED9C6228FA1 |
-| 111134    | 111134       | person         | 1960-05-01 | 1960-05-01 | FC4C2599EA86941A |
-| 112745    | 112745       | person         | 1959-07-01 | 1959-07-01 | FFFA950301FCA748 |
-| 11368     | 11368        | person         | 1955-08-01 | 1955-08-01 | 19546CD71F65766E |
-| 24243     | 24243        | person         | 1930-01-01 | 1930-01-01 | 3695943370154829 |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value | value_as_number |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ | --------------- |
+| 14        | 0            | observations    | condition_occurrence | 2008-09-12 | 2009-04-05 | 486          | 2.0             |
+| 17        | 0            | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          | 1.0             |
+| 19        | 0            | observations    | condition_occurrence | 2008-02-02 | 2008-02-03 | 486          | 1.0             |
+| 23        | 0            | observations    | condition_occurrence | 2009-08-18 | 2010-02-17 | 486          | 3.0             |
+| 25        | 0            | observations    | condition_occurrence | 2009-07-08 | 2009-07-08 | 486          | 1.0             |
+| 27        | 0            | observations    | condition_occurrence | 2010-09-30 | 2010-09-30 | 486          | 1.0             |
+| 28        | 0            | observations    | condition_occurrence | 2009-09-12 | 2009-09-12 | 486          | 1.0             |
+| 38        | 0            | observations    | condition_occurrence | 2010-02-24 | 2010-02-24 | 486          | 3.0             |
+| 44        | 0            | observations    | condition_occurrence | 2009-09-07 | 2010-08-30 | 486          | 6.0             |
+| 51        | 0            | observations    | condition_occurrence | 2008-03-08 | 2008-10-18 | 486          | 2.0             |
 
 We could do dumb things like count the number of times a row shows up in a union:
 
@@ -1833,72 +1555,118 @@ We could do dumb things like count the number of times a row shows up in a union
 - - union
   - - icd9
     - '412'
-  - - primary_diagnosis
-    - true
+  - - provenance
+    - - icd9
+      - '412'
+    - inpatient
 
 ```
 
-![](spec/7aa76b4d29874719466c2cbafc9936e9f12e504bf31e1a09d26ca3fffa8ba1a6.png)
+![All rows with a value of 2 would be rows that were both MI and from an inpatient record](spec/ecede6b94c97cf0b036a664e4df704d119be7c31607a1defe6eb77f294fd1393.png)
 
-`No Results.  Statement is experimental.`
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value | value_as_number |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ | --------------- |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          | 1               |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          | 1               |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          | 1               |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          | 1               |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          | 1               |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          | 2               |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          | 1               |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          | 1               |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          | 1               |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          | 2               |
 
 #### Numeric Value Comparison
 
-Acts like any other binary operator. L and R streams, joined by person. Any L that pass comparison go downstream. R is thrown out. Comparison based on result row's value column.
+The `numeric_filter` operator takes one stream. It passes along the results whose value_as_number is in a range, and it drops results whose value_as_number is NULL. It takes two options, and both are inclusive:
 
-- Less than
-- Less than or equal
-- Equal
-- Greater than or equal
-- Greater than
-- Not equal
-
-### numeric as selection operator
-
-Numeric doesn't have to take a stream. If it doesn't have a stream as an argument, it acts like a selection operator much like date_range
+- greater_than_or_equal_to
+- less_than_or_equal_to
 
 ```YAML
 ---
-- greater_than
-- :left:
-  - count
-  - - person
-    - - icd9
-      - '412'
-  :right:
-  - numeric
-  - 1
+- person
+- - numeric_filter
+  - - sum
+    - - numeric
+      - 1
+      - - icd9
+        - '412'
+  - :greater_than_or_equal_to: 2
 
 ```
 
-![](spec/c1d0402862221d85aceedc7d76b3f82149b612cbd972f14d0ca9011e1e2c455c.png)
+![People with more than 1 MI](spec/0d8546d33c77d25b522ae23b74c87bf9ee77f5564c6de688af8a2b270b615cfb.png)
 
-`No Results.  Statement is experimental.`
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     | value_as_number |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- | --------------- |
+| 17        | 17           | patients        | person           | 1919-09-01 | 1919-09-01 | 0007F12A492FD25D |                 |
+| 88        | 88           | patients        | person           | 1922-05-01 | 1922-05-01 | 00291F39917544B1 |                 |
+| 152       | 152          | patients        | person           | 1927-07-01 | 1927-07-01 | 00490754761BC1C2 |                 |
+| 177       | 177          | patients        | person           | 1939-02-01 | 1939-02-01 | 0057EDCE5B633B19 |                 |
+| 187       | 187          | patients        | person           | 1936-01-01 | 1936-01-01 | 006084B3FA2A151C |                 |
+| 212       | 212          | patients        | person           | 1940-01-01 | 1940-01-01 | 006B004741EB5AE9 |                 |
+| 213       | 213          | patients        | person           | 1940-02-01 | 1940-02-01 | 006C7FC30305A339 |                 |
+| 214       | 214          | patients        | person           | 1914-07-01 | 1914-07-01 | 006D1BD234E5C844 |                 |
+| 220       | 220          | patients        | person           | 1927-11-01 | 1927-11-01 | 0070946DE04C2014 |                 |
+| 223       | 223          | patients        | person           | 1926-05-01 | 1926-05-01 | 0071E2E641B73233 |                 |
+
+### numeric as selection operator
+
+Numeric doesn't have to take a stream. If it doesn't have a stream as an argument, it acts like a selection operator much like date_range. It yields one person result for each patient, with value_as_number set to its value.
+
+```YAML
+---
+- numeric
+- 1
+
+```
+
+![All patients, each with value_as_number set to 1](spec/3d6b85dbd283c27fa65bc58746c7fe1e58ab76962e72460dbcf85e336bf47e51.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     | value_as_number |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- | --------------- |
+| 1         | 1            | patients        | person           | 1923-05-01 | 1923-05-01 | 00013D2EFD8E45D1 | 1.0             |
+| 2         | 2            | patients        | person           | 1943-01-01 | 1943-01-01 | 00016F745862898F | 1.0             |
+| 3         | 3            | patients        | person           | 1936-09-01 | 1936-09-01 | 0001FDD721E223DC | 1.0             |
+| 4         | 4            | patients        | person           | 1941-06-01 | 1941-06-01 | 00021CA6FF03E670 | 1.0             |
+| 5         | 5            | patients        | person           | 1936-08-01 | 1936-08-01 | 00024B3D2352D2D0 | 1.0             |
+| 6         | 6            | patients        | person           | 1943-10-01 | 1943-10-01 | 0002DAE1C81CC70D | 1.0             |
+| 7         | 7            | patients        | person           | 1922-07-01 | 1922-07-01 | 0002F28CE057345B | 1.0             |
+| 8         | 8            | patients        | person           | 1935-09-01 | 1935-09-01 | 000308435E3E5B76 | 1.0             |
+| 9         | 9            | patients        | person           | 1976-09-01 | 1976-09-01 | 000345A39D4157C9 | 1.0             |
+| 10        | 10           | patients        | person           | 1938-10-01 | 1938-10-01 | 00036A21B65B0206 | 1.0             |
 
 #### sum
 
 - Takes a stream of results and does some wild things
-  - Groups all results by person and type
-    - Sums the value_as_numeric column within that grouping
+  - Groups the results by all of their columns except criterion_id, start_date, end_date, and value_as_number, which puts the results of each person and type in one group when they share a source_value
+    - Sums the value_as_number column within that grouping
     - Sets start_date to the earliest start_date in the group
     - Sets the end_date to the most recent end_date in the group
-    - Sets selection_id to 0 since there is no particular single row that the result refers to anymore
+    - Sets criterion_id to 0 since there is no particular single row that the result refers to anymore
 
 ## Appendix A - Selection Operators
 
-| Operator Name         | Stream Type          | Arguments                        | Returns                                                               |
-| --------------------- | -------------------- | -------------------------------- | --------------------------------------------------------------------- |
-| cpt                   | procedure_occurrence | 1 or more CPT codes              | All results whose source_value match any of the CPT codes             |
-| icd9                  | condition_occurrence | 1 or more ICD-9 codes            | All results whose source_value match any of the ICD-9 codes           |
-| icd9_procedure        | procedure_occurrence | 1 or more ICD-9 procedure codes  | All results whose source_value match any of the ICD-9 procedure codes |
-| icd10                 | condition_occurrence | 1 or more ICD-10                 | All results whose source_value match any of the ICD-10 codes          |
-| hcpcs                 | procedure_occurrence | 1 or more HCPCS codes            | All results whose source_value match any of the HCPCS codes           |
-| gender                | person               | 1 or more gender concept_ids     | All results whose gender_concept_id match any of the concept_ids      |
-| loinc                 | observation          | 1 or more LOINC codes            | All results whose source_value match any of the LOINC codes           |
-| place_of_service_code | visit_occurrence     | 1 or more place of service codes | All results whose place of service matches any of the codes           |
-| race                  | person               | 1 or more race concept_ids       | All results whose race_concept_id match any of the concept_ids        |
-| rxnorm                | drug_exposure        | 1 or more RxNorm IDs             | All results whose drug_concept_id match any of the RxNorm IDs         |
-| snomed                | condition_occurrence | 1 or more SNOMED codes           | All results whose source_value match any of the SNOMED codes          |
+ConceptQL creates a vocabulary operator for each vocabulary in its vocabulary list (`config/vocabularies.csv`) and in its vocabulary database. This table lists the most common selection operators.
+
+| Operator Name       | Stream Type          | Arguments                                | Returns                                                        |
+| ------------------- | -------------------- | ---------------------------------------- | -------------------------------------------------------------- |
+| cpt                 | procedure_occurrence | 1 or more CPT codes                      | All clinical codes that match any of the CPT codes             |
+| icd9                | condition_occurrence | 1 or more ICD-9-CM diagnosis codes       | All clinical codes that match any of the ICD-9 codes           |
+| icd9_procedure      | procedure_occurrence | 1 or more ICD-9-CM procedure codes       | All clinical codes that match any of the ICD-9 procedure codes |
+| icd10cm             | condition_occurrence | 1 or more ICD-10-CM codes                | All clinical codes that match any of the ICD-10-CM codes       |
+| hcpcs               | procedure_occurrence | 1 or more HCPCS codes                    | All clinical codes that match any of the HCPCS codes           |
+| loinc               | observation          | 1 or more LOINC codes                    | All clinical codes that match any of the LOINC codes           |
+| ndc                 | drug_exposure        | 1 or more NDC codes                      | All clinical codes that match any of the NDC codes             |
+| rxnorm              | drug_exposure        | 1 or more RxNorm codes                   | All clinical codes that match any of the RxNorm codes          |
+| snomed              | condition_occurrence | 1 or more SNOMED codes                   | All clinical codes that match any of the SNOMED codes          |
+| gender              | person               | 1 or more of Male, Female, and Unknown   | All patients whose gender matches any of the arguments         |
+| race                | person               | 1 or more race names or race concept IDs | All patients whose race matches any of the arguments           |
+| death               | death                | None                                     | All death records                                              |
+| information_periods | observation_period   | None                                     | All information periods                                        |
+| date_range          | person               | A start date and an end date             | One result for each patient, with the given dates              |
 
 ## Appendix B - Algorithm Showcase
 
@@ -1906,7 +1674,7 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 
 ### Acute Kidney Injury - Narrow Definition and diagnositc procedure
 
-- ICD-9 of 584
+- ICD-9 of 584 (584.5 through 584.9)
 - AND
   - ICD-9 procedure codes of 39.95 or 54.98 within 60 days after diagnosis
 - AND NOT
@@ -1920,12 +1688,20 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
   - except
   - :left:
     - icd9
-    - '584'
+    - '584.5'
+    - '584.6'
+    - '584.7'
+    - '584.8'
+    - '584.9'
     :right:
     - after
     - :left:
       - icd9
-      - '584'
+      - '584.5'
+      - '584.6'
+      - '584.7'
+      - '584.8'
+      - '584.9'
       :right:
       - icd9
       - V45.1
@@ -1943,14 +1719,16 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 
 ```
 
-![](spec/44ec6743d5d77d15b8a487c2058bf3e455d34adc91c46ea05767f6e0e471a75e.png)
+![](spec/58b1555ee5f9e9b2d2adfca6683c2c1e29498347e207e7406b1fe3265ba619b4.png)
 
-`No Results found.`
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 153       | 102          | observations    | condition_occurrence | 2010-01-29 | 2010-02-08 | 5849         |
 
 ### Mortality after Myocardial Infarction #3
 
 - Person Died
-- And Occurrence of 410\* prior to death
+- And Occurrence of an acute MI (ICD-9 410.x1, initial episode of care) prior to death
 - And either
   - MI diagnosis within 30 days prior to 410
   - MI therapy within 60 days after 410
@@ -1962,10 +1740,18 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
   - before
   - :left:
     - icd9
-    - 410*
+    - '410.01'
+    - '410.11'
+    - '410.21'
+    - '410.31'
+    - '410.41'
+    - '410.51'
+    - '410.61'
+    - '410.71'
+    - '410.81'
+    - '410.91'
     :right:
     - death
-    - true
   :right:
   - union
   - - time_window
@@ -2018,9 +1804,12 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 
 ```
 
-![](spec/307a8b5a7edd6e42f8be16523a4c939faf1a0533385c861d7004b6af8addd7d1.png)
+![](spec/f6b358f3006c217809558dc8b9ebe7060623ac72068a96fdf5b72240d8aed13a.png)
 
-`No Results found.`
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 191       | 64752        | observations    | condition_occurrence | 2008-03-11 | 2008-03-11 | 41071        |
+| 191       | 89727        | observations    | condition_occurrence | 2008-12-27 | 2008-12-27 | 41071        |
 
 ### GI Ulcer Hospitalization 2 (5000001002)
 
@@ -2028,18 +1817,26 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
 - Hospitalization at time of diagnostic code
 - At least one diagnostic procedure during same hospitalization
 
+GDM has no visit table. In this statement, co_reported keeps the ulcer diagnoses and the diagnostic procedures that were reported in the same source record. Then during keeps those that occurred during a hospitalization. A shared source record is stricter than a shared hospitalization.
+
 ```YAML
 ---
-- union
-- - place_of_service_code
-  - '21'
-- - visit_occurrence
+- during
+- :left:
+  - co_reported
   - - icd9
-    - '410'
-- - visit_occurrence
+    - '531.00'
+    - '531.40'
+    - '531.90'
+    - '532.40'
+    - '532.90'
+    - '533.40'
+    - '533.90'
+    - '534.40'
+    - '534.90'
   - - union
     - - cpt
-      - 0008T
+      - '0008T'
       - 3142F
       - '43205'
       - '43236'
@@ -2063,23 +1860,14 @@ Here I take some algorithms from [OMOP's Health Outcomes of Interest](http://omo
       - 50320-1
       - 5177-1
       - 7901-2
+  :right:
+  - hospitalization
 
 ```
 
-![](spec/99392f56dfb0e5be3f45a12a7f1ba846d094e430f526dfeaa30b606837cd34c0.png)
+![GI Ulcer diagnoses and diagnostic procedures reported in the same source record during a hospitalization](spec/1f7c9cec3ac4993fb25c83a889d5a2ddf1739e8cf58fb922a59b141e2b4a7cf4.png)
 
-| person_id | criterion_id | criterion_type   | start_date | end_date   | source_value |
-| --------- | ------------ | ---------------- | ---------- | ---------- | ------------ |
-| 1         | 1            | visit_occurrence | 2010-03-12 | 2010-03-13 | Inpatient    |
-| 2         | 8            | visit_occurrence | 2009-09-17 | 2009-09-20 | Inpatient    |
-| 2         | 9            | visit_occurrence | 2009-04-12 | 2009-04-18 | Inpatient    |
-| 2         | 10           | visit_occurrence | 2010-06-26 | 2010-07-01 | Inpatient    |
-| 2         | 11           | visit_occurrence | 2009-08-31 | 2009-09-02 | Inpatient    |
-| 14        | 507          | visit_occurrence | 2008-09-12 | 2008-09-12 | Inpatient    |
-| 17        | 729          | visit_occurrence | 2010-05-22 | 2010-06-12 | Inpatient    |
-| 17        | 730          | visit_occurrence | 2008-09-19 | 2008-09-22 | Inpatient    |
-| 17        | 731          | visit_occurrence | 2010-06-02 | 2010-06-06 | Inpatient    |
-| 17        | 732          | visit_occurrence | 2010-06-16 | 2010-06-19 | Inpatient    |
+`No Results found.`
 
 ## Appendix C - Under Development
 
@@ -2098,7 +1886,7 @@ ConceptQL is not yet fully specified. These are modifications/enhancements that 
 5. How do we want to look up standard vocab concepts?
    - I think Marc’s approach is a bit heavy-handed
 
-Some statements maybe very useful and it would be handy to reuse the bulk of the statement, but perhaps vary just a few things about it. ConceptQL supports the idea of using variables to represent sub-expressions. The variable operator is used as a place holder to say "some criteria set belongs here". That variable can be defined in another part of the criteria set and will be used in all places the variable operator appears.
+Some statements maybe very useful and it would be handy to reuse the bulk of the statement, but perhaps vary just a few things about it. ConceptQL could use variables to represent sub-expressions. A variable operator would be a place holder to say "some criteria set belongs here". That variable could be defined in another part of the criteria set and would be used in all places the variable operator appears. ConceptQL does not have a variable operator. The `label` option and the `recall` operator reuse a stream within one statement.
 
 ### Future Work for Define and Recall
 
@@ -2137,75 +1925,27 @@ I'm considering defaulting each value_as\_\* column to some value.
 
 ```
 
-![](spec/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)
+![All MIs, defaulting value_as_number to 1, value_as_concept_id to the concept ID for 412, value_as_string to the source code](spec/f6b4fc31703cfb6327bbbd4614af8bb72da6d39fa3d53ada63a70157f2fad80e.png)
 
-| person_id | criterion_id | criterion_type       | start_date | end_date   | source_value |
-| --------- | ------------ | -------------------- | ---------- | ---------- | ------------ |
-| 17        | 1712         | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 1829         | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 37        | 4359         | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 53        | 5751         | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 59        | 6083         | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 64        | 6902         | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 71        | 7865         | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 75        | 8397         | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 79        | 8618         | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-| 86        | 9882         | condition_occurrence | 2009-01-03 | 2009-01-09 | 412          |
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
-### Filter Operator
+### `as` Option for Filter
 
-Inspired by person_filter, why not just have a "filter" operator that filters L by R. Takes L, R, and an "as" option. As option temporarily casts the L and R streams to the type specified by :as and then does person by person comparison, only keeping rows that occur on both sides. Handy for keeping procedures that coincide with conditions without fully casting the streams:
-
-```YAML
----
-- filter
-- :left:
-  - cpt
-  - '99214'
-  :right:
-  - icd9
-  - '799.22'
-  :as: visit_occurrence
-
-```
-
-![](spec/c5329a7f4937096a57b2e01efb9d542f84a4e2329a1e9381d08c630583ccad37.png)
-
-`No Results found.`
-
-person_filter then becomes a special case of general filter:
-
-```YAML
----
-- filter
-- :left:
-  - cpt
-  - '99214'
-  :right:
-  - icd9
-  - '799.22'
-  :as: person
-
-```
-
-![](spec/9139440329dcb815df89bc70182c3827868402a74ff64d0253706dcaff723dca.png)
-
-`No Results found.`
-
-Filter operator is the opposite of Except. It only includes L if R matches.
+The filter operator (see Set Operators) keeps left-hand results that also appear in the right-hand stream. An `as` option could temporarily cast the left-hand and right-hand streams to the type it names, and then keep the left-hand results whose cast results appear on both sides. That would be handy for keeping procedures that coincide with conditions without fully casting the streams. With `"as": "person"`, filter would behave like person_filter. ConceptQL does not have this option.
 
 ### AS option for Except
 
-Just like Filter has an :as option, add one to Except operator. This would simplify some of the algorithms I've developed.
-
-### How to Handle fact_relationship Table from CDMv5
-
-Each relationship type could be a binary operator box read as L \<relationship> R. E.g. L 'downstream of' R would take a L stream and only pass on downstreams of rows in R stream.
-
-We could implement a single operator that takes a relationship as an argument (on top of the L and R arguments) or we could create a operator class for each relationship. I think it would be better to have a single relationship operator class and take the relationship as the argument.
-
-The next question is: how do we actually join the two streams? I suppose we could translate each "type" into a "domain" and then join where l.domain = domain_concept_id_1 and l.entity_id = fact_id_1 and R.domain = domain_concept_id_2 and R.entity_id = fact_id_2 where the relationship chosen = relationship_concept_id.
-
-Yup, that should work. Phew!
+Like the proposed `as` option for filter, add an `as` option to the Except operator. This would simplify some of the algorithms I've developed.
 
 \[^AIA\]: J. Allen. Maintaining knowledge about temporal intervals. Communications of the ACM (1983) vol. 26 (11) pp. 832-843
