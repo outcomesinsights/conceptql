@@ -33,11 +33,13 @@ module ConceptQL
 
       attr_reader :nodifier, :values, :options, :arguments, :upstreams, :op_name, :errors, :warnings
 
-      # The per-code messages of a Vocabulary operator. A code that does not
-      # match its vocabulary's format is an error (Ryan ruled 2026-10-29, seed
-      # conceptql-0eb). The formats come from vocabulary_formats
-      # (Vocabularies::Formats); a vocabulary without one is not checked. A
-      # well-formed code that the vocabulary does not know is only a warning.
+      # The per-code warnings of a Vocabulary operator. A code that does not
+      # match its vocabulary's format is a warning, and the statement stays
+      # valid (Ryan ruled 2026-10-30, seeds conceptql-0eb and conceptql-ysx).
+      # The malformed code matches no rows. The formats come from
+      # vocabulary_formats (Vocabularies::Formats); a vocabulary without one
+      # is not checked. A well-formed code that the vocabulary does not know
+      # is also a warning.
       BAD_FORMAT = "improperly formatted code"
       UNKNOWN_CODE = "unknown code(s)"
 
@@ -614,7 +616,7 @@ module ConceptQL
       def validate_codes_match
         return if bad_arguments.empty?
 
-        add_error(BAD_FORMAT, *bad_arguments)
+        add_warning(BAD_FORMAT, *bad_arguments)
       end
 
       def additional_validation(_db, _opts = {})

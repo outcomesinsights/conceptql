@@ -39,7 +39,7 @@ describe "vocabulary code formats" do
   def badly_formatted(statement)
     operator = cdb.query(statement).operator
     operator.valid?(cdb.db)
-    operator.errors.select { |message, *| message == "improperly formatted code" }.flat_map { |_, *codes| codes }
+    operator.warnings.select { |message, *| message == "improperly formatted code" }.flat_map { |_, *codes| codes }
   end
 
   # operator => [real codes, malformed codes]
@@ -84,7 +84,7 @@ describe "vocabulary code formats" do
   # The NDC default row is the 11-digit claims form. The fixture's 9-digit
   # product codes and the alphanumeric codes (rows NDC.COMPLETE and
   # NDC.ALPHANUM) are real concept_codes, but the default row rejects them.
-  it "rejects the 9-digit and alphanumeric NDC forms, as the NDC default row does" do
+  it "flags the 9-digit and alphanumeric NDC forms, as the NDC default row does" do
     _(badly_formatted(%w[ndc 003630641 00019N068 43742164901])).must_equal %w[003630641 00019N068]
   end
 
@@ -101,23 +101,34 @@ describe "vocabulary code formats" do
     _(badly_formatted(%w[icd10cm e58 y36.101a])).must_be_empty
   end
 
-  # Ryan ruled 2026-10-29 (seed conceptql-0eb): a malformed code is a
-  # validation error, not a warning. There is no prefix matching.
+  # Ryan ruled 2026-10-30 (seeds conceptql-0eb and conceptql-ysx), reversing
+  # the ruling of 2026-10-29: a malformed code is a warning, not a validation
+  # error, and the statement stays valid. There is no prefix matching.
   describe "a malformed code" do
-    it "fails validation with an error that names the code" do
-      _(cdb.query(%w[icd9 410*]).validation_errors).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
+    # The format warnings of scope_annotate. The lexicon above has no codes,
+    # so every well-formed code also gets the warning "unknown code(s)".
+    def format_warnings(statement)
+      cdb.query(statement).scope_annotate(skip_counts: true)[:warnings]
+         .transform_values { |warnings| warnings.select { |message, *| message == "improperly formatted code" } }
+         .reject { |_, warnings| warnings.empty? }
+    end
+
+    it "is a warning that names the code, and the statement stays valid" do
+      _(cdb.query(%w[icd9 410*]).validation_errors).must_equal({})
+      _(format_warnings(%w[icd9 410*])).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
     end
 
     it "names only the malformed codes" do
-      _(cdb.query(%w[icd9 412 410* 000.00]).validation_errors)
-        .must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
+      _(cdb.query(%w[icd9 412 410* 412.0]).validation_errors).must_equal({})
+      _(format_warnings(%w[icd9 412 410* 412.0])).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
     end
 
-    it "is an error for a multiple-vocabulary operator only when every vocabulary rejects its format" do
-      _(cdb.query(%w[cpt_or_hcpcs 99214 A0382 AA0382]).validation_errors)
+    it "is a warning for a multiple-vocabulary operator only when every vocabulary rejects its format" do
+      _(cdb.query(%w[cpt_or_hcpcs 99214 A0382 AA0382]).validation_errors).must_equal({})
+      _(format_warnings(%w[cpt_or_hcpcs 99214 A0382 AA0382]))
         .must_equal("cpt_or_hcpcs" => [ [ "improperly formatted code", "AA0382" ] ])
       # 12345 is malformed for HCPCS but a well-formed CPT4 code.
-      _(cdb.query(%w[cpt_or_hcpcs 12345]).validation_errors).must_equal({})
+      _(format_warnings(%w[cpt_or_hcpcs 12345])).must_equal({})
     end
 
     it "leaves the select-all wildcard valid" do

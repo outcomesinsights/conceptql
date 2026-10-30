@@ -31,11 +31,8 @@ module ConceptQL
         vocab_entry.predominant_domains.map(&:to_sym)
       end
 
-      # A malformed code does not stop the checks of the well-formed codes, so
-      # an unknown code next to it still gets its warning. Any other error does.
       def additional_validation(db, opts = {})
-        return if no_db?(db, opts) || select_all?
-        return unless errors.all? { |message, *| message == BAD_FORMAT }
+        return unless add_warnings?(db, opts) && !select_all?
 
         args = arguments.dup
         args -= bad_arguments

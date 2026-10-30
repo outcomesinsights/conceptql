@@ -6,11 +6,11 @@
     "annotation": {
       "counts": {
         "procedure_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": 1073,
+          "n": 175
         }
       },
-      "errors": [["improperly formatted code", "XYS"]]
+      "warnings": [["improperly formatted code", "XYS"]]
     },
     "name": "CPT"
   }
