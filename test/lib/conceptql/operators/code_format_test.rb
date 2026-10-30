@@ -36,7 +36,7 @@ describe "vocabulary code formats" do
   def badly_formatted(statement)
     operator = cdb.query(statement).operator
     operator.valid?(cdb.db)
-    operator.warnings.select { |message, *| message == "improperly formatted code" }.flat_map { |_, *codes| codes }
+    operator.errors.select { |message, *| message == "improperly formatted code" }.flat_map { |_, *codes| codes }
   end
 
   # operator => [real codes, malformed codes]
@@ -73,6 +73,31 @@ describe "vocabulary code formats" do
   it "ignores case, as before" do
     _(badly_formatted(%w[hcpcs a0382])).must_be_empty
     _(badly_formatted(%w[icd10cm e58 y36.101a])).must_be_empty
+  end
+
+  # Ryan ruled 2026-10-29 (seed conceptql-0eb): a malformed code is a
+  # validation error, not a warning. There is no prefix matching.
+  describe "a malformed code" do
+    it "fails validation with an error that names the code" do
+      _(cdb.query(%w[icd9 410*]).validation_errors).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
+    end
+
+    it "names only the malformed codes" do
+      _(cdb.query(%w[icd9 412 410* 000.00]).validation_errors)
+        .must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
+    end
+
+    it "is an error for a multiple-vocabulary operator only when every vocabulary rejects its format" do
+      _(cdb.query(%w[cpt_or_hcpcs 99214 A0382 AA0382]).validation_errors)
+        .must_equal("cpt_or_hcpcs" => [ [ "improperly formatted code", "AA0382" ] ])
+      # 12345 is malformed for HCPCS but a well-formed CPT4 code.
+      _(cdb.query(%w[cpt_or_hcpcs 12345]).validation_errors).must_equal({})
+    end
+
+    it "leaves the select-all wildcard valid" do
+      _(cdb.query(%w[icd9 *]).validation_errors).must_equal({})
+      _(cdb.query(%w[cpt_or_hcpcs *]).validation_errors).must_equal({})
+    end
   end
 
   it "does not check formats in a select-all statement" do

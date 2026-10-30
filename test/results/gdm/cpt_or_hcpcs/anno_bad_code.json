@@ -7,14 +7,12 @@
     "annotation": {
       "counts": {
         "procedure_occurrence": {
-          "rows": 1073,
-          "n": 175
+          "rows": 0,
+          "n": 0
         }
       },
-      "warnings": [
-        ["improperly formatted code", "123"],
-        ["unknown code(s)", "12345"]
-      ]
+      "errors": [["improperly formatted code", "123"]],
+      "warnings": [["unknown code(s)", "12345"]]
     },
     "name": "CPT or HCPCS"
   }

@@ -105,36 +105,36 @@ module ConceptQL
         []
       end
 
-      # The per-code warnings a Vocabulary operator gives, from most to least
-      # specific. See #code_warnings.
-      BAD_FORMAT = "improperly formatted code"
-      UNKNOWN_CODE = "unknown code(s)"
-      CODE_WARNINGS = [ BAD_FORMAT, UNKNOWN_CODE ].freeze
-
+      # Each vocabulary operator judges each code: an error for a malformed
+      # code (BAD_FORMAT), a warning for an unknown one (UNKNOWN_CODE). This
+      # operator gives one verdict over all of them. See #rejected_codes.
       def additional_validation(db, opts = {})
         vocab_ops.each { |vo| vo.valid?(db, opts) }
+        bad_format, unknown = rejected_codes
 
-        @errors += aggregate_messages(vocab_ops.map(&:errors))
-        @warnings += aggregate_messages(vocab_ops.map { |vo| vo.warnings.reject { |w| CODE_WARNINGS.include?(w.first) } })
-        @warnings += code_warnings
+        @errors += aggregate_messages(vocab_ops.map { |vo| vo.errors.reject { |message, *| message == BAD_FORMAT } })
+        add_error(BAD_FORMAT, *bad_format) unless bad_format.empty?
+        @warnings += aggregate_messages(vocab_ops.map { |vo| vo.warnings.reject { |message, *| message == UNKNOWN_CODE } })
+        add_warning(UNKNOWN_CODE, *unknown) unless unknown.empty?
       end
 
-      # A code gets a warning only when every vocabulary rejects it, for any
-      # reason. It is an improperly formatted code only when every vocabulary
-      # says so. When at least one vocabulary accepts its format but does not
-      # know it, it is an unknown code. (12345 is badly formatted for HCPCS but
-      # a well-formed, unknown CPT4 code, so it is unknown.)
-      def code_warnings
+      # The malformed codes and the unknown codes, in that order. A code is
+      # rejected only when every vocabulary rejects it, for any reason. It is
+      # malformed only when every vocabulary says so. When at least one
+      # vocabulary accepts its format but does not know it, it is unknown.
+      # (12345 is malformed for HCPCS but a well-formed, unknown CPT4 code, so
+      # it is unknown.)
+      def rejected_codes
         verdicts = vocab_ops.map do |vo|
-          vo.warnings.each_with_object({}) do |(message, *codes), verdict|
-            codes.each { |code| verdict[code] ||= message } if CODE_WARNINGS.include?(message)
+          messages = vo.errors.select { |message, *| message == BAD_FORMAT } +
+                     vo.warnings.select { |message, *| message == UNKNOWN_CODE }
+          messages.each_with_object({}) do |(message, *codes), verdict|
+            codes.each { |code| verdict[code] ||= message }
           end
         end
 
         rejected = arguments.uniq.select { |code| verdicts.all? { |verdict| verdict.key?(code) } }
-        bad_format, unknown = rejected.partition { |code| verdicts.all? { |verdict| verdict[code] == BAD_FORMAT } }
-
-        [ [ BAD_FORMAT, *bad_format ], [ UNKNOWN_CODE, *unknown ] ].reject { |warning| warning.length == 1 }
+        rejected.partition { |code| verdicts.all? { |verdict| verdict[code] == BAD_FORMAT } }
       end
 
       def aggregate_messages(message_sets)

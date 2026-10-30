@@ -7,11 +7,11 @@
     "annotation": {
       "counts": {
         "procedure_occurrence": {
-          "rows": 3,
-          "n": 2
+          "rows": 0,
+          "n": 0
         }
       },
-      "warnings": [["improperly formatted code", "A03821", "3821"]]
+      "errors": [["improperly formatted code", "A03821", "3821"]]
     },
     "name": "HCPCS"
   }
