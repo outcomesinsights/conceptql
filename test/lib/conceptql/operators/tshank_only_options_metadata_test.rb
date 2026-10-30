@@ -15,7 +15,7 @@ describe "t_shank-only options in ConceptQL.metadata" do
   let(:tshank_only) { %i[only_columns except_columns join_columns invert_match] }
   let(:readers) { %w[after any_overlap before contains during equal match trim_date_end trim_date_start] }
 
-  %i[gdm gdm_wide omopv4_plus].each do |dm|
+  %i[gdm gdm_wide].each do |dm|
     describe dm.to_s do
       let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: dm) }
       let(:operators_metadata) { ConceptQL.metadata(cdb)[:operators] }

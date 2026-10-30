@@ -38,11 +38,6 @@ task :test do
   ruby 'test/all.rb'
 end
 
-desc 'Run tests with omopv4_plus data model'
-task :test_omopv4_plus do
-  run_spec.call(:omopv4_plus)
-end
-
 desc 'Run tests with gdm data model'
 task :test_gdm do
   run_spec.call(:gdm)
@@ -73,7 +68,6 @@ task :make_vocabs_csv, [ :csv_path ] do |_t, args|
     amgen_vocab = amgen_vocabs[key]
     new_vocab = {
       id: amgen_vocab[:vocabulary_short_name],
-      omopv4_vocabulary_id: amgen_vocab[:vocabulary_id],
       vocabulary_full_name: amgen_vocab[:vocabulary_long_name],
       vocabulary_short_name: amgen_vocab[:vocabulary_short_name],
       domain: amgen_vocab[:omop_table],

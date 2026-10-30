@@ -31,7 +31,6 @@ Standard output columns: `person_id`, `criterion_id`, `criterion_table`, `criter
 
 - `gdm` — Generalized Data Model (slim variant)
 - `gdm_wide` — GDM wide variant (slim + wide schemas)
-- `omopv4_plus` — OMOP CDM v4+
 
 ### RDBMS Adapters (`lib/conceptql/rdbms/`)
 
@@ -96,10 +95,9 @@ CONCEPTQL_DATA_MODEL=gdm_wide bundle exec ruby test/all.rb
 bundle exec rake        # the default task, the same as rake test
 bundle exec rake test   # as CI: data model + database from the environment
 bundle exec rake test_gdm
-bundle exec rake test_omopv4_plus
 ```
 
-`rake test_gdm` and `rake test_omopv4_plus` set only `CONCEPTQL_DATA_MODEL`. The database and the search path still come from the environment. `rake test_omopv4_plus` fails against `test_data`, because that fixture has no OMOP tables. No OMOP fixture exists, so CI does not run it. When an expected-results file is missing, the suite writes a new one, so a failed run like this one leaves untracked files under `test/results/`.
+`rake test_gdm` sets only `CONCEPTQL_DATA_MODEL`. The database and the search path still come from the environment. When an expected-results file is missing, the suite writes a new one, so a run against the wrong fixture leaves untracked files under `test/results/`.
 
 Default values from `bin/run_tests`:
 

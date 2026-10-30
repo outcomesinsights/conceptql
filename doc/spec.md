@@ -705,7 +705,7 @@ And just to show how multiple streams behave:
 
 ### co_reported
 
-`co_reported` passes along the events of its upstream streams that were reported in the same source record, for example on the same claim. In GDM data the source record is the event's context (`context_id`). In OMOP data it is the event's visit (`visit_occurrence_id`).
+`co_reported` passes along the events of its upstream streams that were reported in the same source record, for example on the same claim. The source record is the event's context (`context_id`).
 
 A source record is kept only if every upstream stream has at least one event in it. If any one upstream has no event in a record, `co_reported` drops the events of **all** streams in that record. The drop is silent: the operator gives no warning and does not report how many records it removed.
 

@@ -52,13 +52,6 @@ describe ConceptQL::Operators::MultipleVocabularies do
     _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm).operators.key?("icd10")).must_equal false
   end
 
-  it "should produce correct SQL under omopv4_plus" do
-    db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :omopv4_plus)
-    sql = db.query(%w[cpt_or_hcpcs 99214]).sql
-    _(sql).must_match(/"procedure_source_vocabulary_id" = 4/)
-    _(sql).must_match(/"procedure_source_vocabulary_id" = 5/)
-  end
-
   it "should read operators from a custom file" do
     assert_empty(ConceptQL::Operators::MultipleVocabularies.get_multiple_vocabularies.select do |_key, row|
       row.first[:operator] == "test"

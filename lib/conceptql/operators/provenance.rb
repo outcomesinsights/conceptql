@@ -16,8 +16,7 @@ module ConceptQL
     #
     # Multiple provenances can be specified at once
     class Provenance < Operator
-      # GDM only: omopv4_plus has no provenance vocabularies (conceptql-myp).
-      register __FILE__, :gdm, :gdm_wide
+      register __FILE__
 
       desc "Passes along records with the indicated provenance (e.g. inpatient, outpatient, file type)."
 

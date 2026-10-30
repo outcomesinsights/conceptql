@@ -8,9 +8,9 @@ module ConceptQL
       @db = db
     end
 
-    # A lookup is always scoped to a vocabulary. `vocabulary_id` is polymorphic:
-    # a String, an Integer (ReadOmop reports 17), or an Array of vocabulary names
-    # (the provenance-type pairs), which Sequel turns into an IN clause.
+    # A lookup is always scoped to a vocabulary. `vocabulary_id` is a String or
+    # an Array of vocabulary names (the provenance-type pairs), which Sequel turns
+    # into an IN clause.
     #
     # There is deliberately no wildcard. `'*'` is meaningful elsewhere in the
     # operator family, but only in `arguments` — Vocabulary#select_all? reads it

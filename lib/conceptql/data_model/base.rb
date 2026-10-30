@@ -48,77 +48,12 @@ module ConceptQL
         db[table]
       end
 
-      # The data columns whose concept ids the display-name joins look up, by
-      # table. A data model without those joins has none.
-      def name_concept_columns
-        {}
-      end
-
-      def query_modifier_for(column)
-        {
-          visit_source_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::PoSQueryModifier,
-          provider_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
-          context_specialty_concept_id: ConceptQL::QueryModifiers::Omopv4Plus::ProviderQueryModifier,
-          drug_name: ConceptQL::QueryModifiers::Omopv4Plus::DrugQueryModifier,
-          admission_date: ConceptQL::QueryModifiers::Omopv4Plus::AdmissionDateQueryModifier,
-          provenance_type: ConceptQL::QueryModifiers::Omopv4Plus::ProvenanceQueryModifier
-        }[column]
-      end
-
-      def criterion_id
-        :criterion_id
-      end
-
-      def table_id(table = nil)
-        return :person_id if table.to_sym == :death
-
-        :criterion_id if table.nil?
-      end
-
-      def person_table
-        :person
-      end
-
-      def make_table_id(table)
-        "#{table}_id".to_sym
-      end
-
       def make_fk_id(table)
         make_table_id(table)
       end
 
-      def person_id(table)
-        case table.to_sym
-        when :procedure_cost, :drug_cost
-          nil
-        else
-          :person_id
-        end
-      end
-
       def schema
         SCHEMAS[data_model]
-      end
-
-      def data_model
-        :omopv4_plus
-      end
-
-      def pk_by_domain(domain)
-        case domain.to_sym
-        when :death
-          :person_id
-        when :procedure_cost
-          :procedure_occurrence_id
-        when :drug_cost
-          :drug_exposure_id
-        else
-          "#{domain}_id".to_sym
-        end
-      end
-
-      def fk_by_domain(domain)
-        "#{domain}_id".to_sym
       end
 
       def query_columns
@@ -232,10 +167,6 @@ module ConceptQL
         }
       end
 
-      def table_to_domain(table)
-        table
-      end
-
       def replace(replace_hash)
         return {} unless replace_hash
 
@@ -277,14 +208,6 @@ module ConceptQL
         end
       end
 
-      def start_date_column(query, domain)
-        start_date_columns.merge(person: person_date_of_birth(query))[domain]
-      end
-
-      def end_date_column(query, domain)
-        end_date_columns.merge(person: person_date_of_birth(query))[domain]
-      end
-
       def source_value_columns
         @source_value_columns ||= assign_column_to_table do |table, columns|
           reggy = /#{table.to_s.split('_').first}_source_value$/
@@ -293,79 +216,8 @@ module ConceptQL
         end
       end
 
-      def source_vocabulary_ids
-        @source_vocabulary_ids = assign_column_to_table do |table, columns|
-          next if %w[person death].any? { |tn| table.to_s =~ /#{tn}/ }
-
-          reggy = /#{table.to_s.split('_').first}_source_vocabulary_id/
-          column = columns.select { |k| k =~ reggy }.first
-          column || columns.select { |k| k =~ /_source_vocabulary_id/ }.first
-        end
-      end
-
-      def id_columns
-        @id_columns ||= assign_column_to_table do |table, columns|
-          reggy = /#{table}_id/
-          columns.select { |k| k =~ reggy }.first
-        end
-      end
-
-      def id_column(table)
-        id_columns[table]
-      end
-
-      def type_concept_id_columns
-        @type_concept_id_columns ||= assign_column_to_table do |_table, columns|
-          columns.select { |c| c =~ /_type_concept_id$/ }.first
-        end
-      end
-
-      def type_concept_id_column(domain)
-        type_concept_id_columns[table_by_domain(domain)]
-      end
-
-      def table_by_domain(domain)
-        domain
-      end
-
-      def period_table
-        :observation_period
-      end
-
       def source_value_column(table)
         source_value_columns[table]
-      end
-
-      def code_provenance_type_column(_query, domain)
-        {
-          condition_occurrence: :condition_type_concept_id,
-          death: :death_type_concept_id,
-          drug_exposure: :drug_type_concept_id,
-          observation: :observation_type_concept_id,
-          procedure_occurrence: :procedure_type_concept_id
-        }[domain]
-      end
-
-      def file_provenance_type_column(_query, domain)
-        {
-          condition_occurrence: :condition_type_concept_id,
-          death: :death_type_concept_id,
-          drug_exposure: :drug_type_concept_id,
-          observation: :observation_type_concept_id,
-          procedure_occurrence: :procedure_type_concept_id
-        }[domain]
-      end
-
-      def provider_id_column(_query, domain)
-        {
-          condition_occurrence: :associated_provider_id,
-          death: :death_type_concept_id,
-          drug_exposure: :prescribing_provider_id,
-          observation: :associated_provider_id,
-          person: :provider_id,
-          procedure_occurrence: :associated_provider_id,
-          provider: :provider_id
-        }[domain]
       end
 
       def place_of_service_concept_id_column(_query, domain)
@@ -373,15 +225,6 @@ module ConceptQL
         return Sequel.cast(:visit_source_concept_id, :Bigint) if table_cols(domain).include?(pos_table_fk)
 
         nil
-      end
-
-      def pos_table_fk
-        :visit_occurrence_id
-      end
-
-      def person_date_of_birth(_query)
-        rdbms.cast_date(ConceptQL::Utils.assemble_date(:year_of_birth, :month_of_birth, :day_of_birth,
-                                                       database_type: nodifier.database_type))
       end
 
       def date_columns(query, table = nil)
@@ -429,10 +272,6 @@ module ConceptQL
         source_vocabulary_ids[table_to_sym(table)]
       end
 
-      def table_is_missing?(db)
-        !(source_table_exists?(db, :observation_period) && source_table_exists?(db, :condition_occurrence))
-      end
-
       def concept_id(table)
         table_cols(table).find do |col|
           col = col.to_s
@@ -451,12 +290,6 @@ module ConceptQL
             col == name
           end
         end
-      end
-
-      def information_period_where_clause(arguments)
-        return if arguments.empty?
-
-        { plan_source_value: arguments }
       end
     end
   end

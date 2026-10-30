@@ -170,8 +170,6 @@ module ConceptQL
       end
 
       def override_columns
-        return unless gdm?
-
         {
           length_of_stay: (rdbms.days_between(Sequel[:admission_date],
                                               discharge_date_column) + 1).as(:length_of_stay),

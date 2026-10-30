@@ -23,9 +23,7 @@ module ConceptQL
       end
 
       def source_table
-        tab = dm.table_by_domain(domain)
-        tab = :payer_plan_period if tab == :observation_period && arguments.present?
-        tab
+        dm.table_by_domain(domain)
       end
 
       def where_clause

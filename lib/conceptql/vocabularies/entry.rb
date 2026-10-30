@@ -9,7 +9,6 @@ module ConceptQL
 
       METHODS = %i[
         id
-        omopv4_vocabulary_id
         omopv5_vocabulary_id
         domain
         vocabulary_short_name
@@ -27,11 +26,6 @@ module ConceptQL
         preferred_name
         predominant_domains
       ]
-
-      COST_RELATED_VOCABS = [
-        "Revenue Code",
-        "DRG"
-      ].freeze
 
       def initialize(hash)
         @hash = hash
@@ -52,12 +46,6 @@ module ConceptQL
 
       def merge(other_entry)
         self.class.new(hash.merge(other_entry.hash))
-      end
-
-      def belongs_in_omopv4_plus?
-        @belongs_in_omopv4_plus ||= (!from_lexicon? || from_csv?) \
-          && has_domain? \
-          && visible?
       end
 
       def to_hash
@@ -114,20 +102,12 @@ module ConceptQL
         hash[:domain] =~ /drug_exposure/i
       end
 
-      def is_costish?
-        belongs_in_omopv4_plus? && COST_RELATED_VOCABS.include?(omopv5_vocabulary_id)
-      end
-
       def visible?
         !hidden?
       end
 
       def omopv5_id
         omopv5_vocabulary_id || id
-      end
-
-      def omopv4_id
-        omopv4_vocabulary_id
       end
 
       def get_klasses

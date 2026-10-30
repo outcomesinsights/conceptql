@@ -47,8 +47,8 @@ describe "ConceptQL::Database#operators" do
     cdb = ConceptQL::Database.new(nil, data_model: :gdm)
 
     _(cdb.operators).must_be_same_as cdb.operators(:gdm)
-    _(cdb.operators(:omopv4_plus)["information_periods"]).must_equal ConceptQL::Operators::InformationPeriods
-    _(cdb.operators(:omopv4_plus)).wont_be_same_as cdb.operators(:gdm)
+    _(cdb.operators(:gdm_wide)["information_periods"]).must_equal ConceptQL::Operators::InformationPeriods
+    _(cdb.operators(:gdm_wide)).wont_be_same_as cdb.operators(:gdm)
   end
 
   describe "with a vocabulary only in one Database's lexicon" do

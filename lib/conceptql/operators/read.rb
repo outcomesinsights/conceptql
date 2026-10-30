@@ -18,17 +18,7 @@ module ConceptQL
       conceptql_spec_id "vocabulary"
 
       def query(db)
-        gdm? ? gdm(db) : omopv4(db)
-      end
-
-      def gdm(db)
         ops(db).first.evaluate(db)
-      end
-
-      def omopv4(db)
-        streams = ops(db).map { |op| op.evaluate(db) }
-
-        streams.inject { |q, query| q.union(query, all: true) }.from_self
       end
 
       def domains(db)
@@ -36,7 +26,7 @@ module ConceptQL
       end
 
       def query_cols
-        gdm? ? ops.first.query_cols : ops.map(&:query_cols).flatten.uniq
+        ops.first.query_cols
       end
 
       def required_columns
@@ -53,38 +43,9 @@ module ConceptQL
         ops.flat_map { |op| op.describe_codes(db, codes) }
       end
 
-      def klasses
-        @klasses ||= {
-          condition_occurrence: ReadCondition,
-          procedure_occurrence: ReadProcedure,
-          drug_exposure: ReadDrug,
-          observation: ReadObservation
-        }
-      end
-
       class ReadBase < ConceptQL::Operators::Vocabulary
         preferred_name "READ"
         argument :read_codes, type: :codelist, vocab: "Read"
-      end
-
-      class ReadOmopBase < ReadBase
-        include ConceptQL::Vocabularies::Behaviors::Omopish
-
-        def vocabulary_id
-          17
-        end
-
-        def source_table
-          table
-        end
-
-        def domain
-          table
-        end
-
-        def domains(_db)
-          Array(domain)
-        end
       end
 
       class ReadGDM < ReadBase
@@ -101,66 +62,6 @@ module ConceptQL
 
         def domains(_db)
           [ :condition_occurrence ]
-        end
-      end
-
-      class ReadCondition < ReadOmopBase
-        def table
-          :procedure_occurrence
-        end
-
-        def source_column
-          :procedure_source_value
-        end
-
-        def concept_column
-          :procedure_concept_id
-        end
-      end
-
-      class ReadProcedure < ReadOmopBase
-        def table
-          :procedure_occurrence
-        end
-
-        def source_column
-          :procedure_source_value
-        end
-
-        def concept_column
-          :procedure_concept_id
-        end
-      end
-
-      class ReadObservation < ReadOmopBase
-        include ConceptQL::Behaviors::Labish
-
-        def table
-          :observation
-        end
-
-        def source_column
-          :observation_source_value
-        end
-
-        def concept_column
-          :observation_concept_id
-        end
-      end
-
-      class ReadDrug < ReadOmopBase
-        include ConceptQL::Behaviors::Drugish
-
-        def table
-          :drug_exposure
-        end
-
-        def source_column
-          :drug_source_value
-        end
-
-        def concept_column
-          :drug_concept_id
         end
       end
     end

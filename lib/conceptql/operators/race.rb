@@ -38,11 +38,7 @@ module ConceptQL
       end
 
       def source_table
-        if gdm?
-          :patients
-        else
-          :person
-        end
+        :patients
       end
 
       def query(db)
@@ -52,7 +48,7 @@ module ConceptQL
 
         c_ids = (concept_ids + actual_ids).map { |i| [ i, race_descendents[i] ] }.flatten.compact.uniq.sort
 
-        c_ids = dm.related_concept_ids(db, c_ids) if gdm?
+        c_ids = dm.related_concept_ids(db, c_ids)
 
         q = db.from(source_table)
         if words.any? { |w| w.match(/unknown/i) }

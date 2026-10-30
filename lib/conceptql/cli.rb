@@ -94,7 +94,7 @@ module ConceptQL
       given by the connection options (or sequelizer's configuration).
     DESC
     option :counts, type: :boolean, default: false, desc: "annotate with per-domain row/person counts (needs a DB)"
-    option :data_model, desc: "data model: gdm, gdm_wide, omopv4_plus (default: $CONCEPTQL_DATA_MODEL or gdm)"
+    option :data_model, desc: "data model: gdm, gdm_wide (default: $CONCEPTQL_DATA_MODEL or gdm)"
     def render_json(statement_file)
       cdb = if options[:counts]
               ConceptQL::Database.new(db(options.except("counts", "data_model")),

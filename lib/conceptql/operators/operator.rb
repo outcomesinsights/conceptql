@@ -9,7 +9,7 @@ module ConceptQL
     # Built-in operators only: the classes that call Operator.register when
     # their file loads. Vocabulary operators are not in here; each
     # ConceptQL::Database builds its own from its lexicon (Database#operators).
-    STATIC_OPERATORS = { omopv4_plus: {}, gdm: {}, gdm_wide: {} }.freeze
+    STATIC_OPERATORS = { gdm: {}, gdm_wide: {} }.freeze
 
     SELECTED_COLUMNS = %i[person_id
                           criterion_id
@@ -348,14 +348,6 @@ module ConceptQL
         end
       end
 
-      def omopv4_plus?
-        data_model == :omopv4_plus
-      end
-
-      def gdm?
-        %i[gdm gdm_wide].include?(data_model)
-      end
-
       def wide?
         %i[gdm_wide].include?(data_model)
       end
@@ -467,10 +459,10 @@ module ConceptQL
         cast_column(:file_provenance_type, dm.provenance_type_column(query, table))
       end
 
-      def provider_id(query, table)
+      def provider_id(query, _table)
         return :provider_id if query_columns(query).include?(:provider_id)
 
-        cast_column(:provider_id, dm.provider_id_column(query, table))
+        cast_column(:provider_id)
       end
 
       def determine_tables

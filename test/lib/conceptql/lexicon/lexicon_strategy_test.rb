@@ -37,18 +37,11 @@ describe ConceptQL::LexiconStrategy do
   end
 
   describe "#concepts accepts every shape callers actually pass" do
-    # The guard must not be a type check: these three shapes are all live.
+    # The guard must not be a type check: both shapes are live.
     it "accepts a String vocabulary and filters on it" do
       sql = lexicon.concepts(db, "ICD9CM").sql
 
       _(sql).must_match(/"vocabulary_id" = 'ICD9CM'/)
-    end
-
-    # ReadOmop#vocabulary_id returns the Integer 17.
-    it "accepts an Integer vocabulary" do
-      sql = lexicon.concepts(db, 17).sql
-
-      _(sql).must_match(/"vocabulary_id" = 17/)
     end
 
     # utilizable.rb and provenanceable.rb pass the provenance-type pairs, which

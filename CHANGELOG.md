@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+
+- **Breaking:** the `omopv4_plus` data model (OMOP CDM v4) is gone. ConceptQL now supports
+  only `gdm` and `gdm_wide`. A `ConceptQL::Database` created with `data_model: :omopv4_plus`
+  raises `ConceptQL::DataModel::UnsupportedError`, which says that the model was removed.
+  The OMOP query modifiers, `schemas/omopv4_plus.yml`, the OMOP part of the `read` operator,
+  the OMOP and cost vocabulary behaviors, the `omopv4_vocabulary_id` column of
+  `config/vocabularies.csv` and the rake task `test_omopv4_plus` are removed with it. The
+  OHDSI vocabularies (`ohdsi_vocabs`) are not affected. The SQL for `gdm` and `gdm_wide` does
+  not change.
+
 ### Added
 
 - Annotate warns about a selected code that has more than one meaning in the vocabulary, with
@@ -15,7 +26,7 @@ All notable changes to this project will be documented in this file.
 
 - The `co_reported` description now says that a source record is kept only if every upstream
   stream has an event in it, and that the events of all streams in any other record are
-  dropped without a warning. The spec has a new `co_reported` section that says the same. The
+  dropped without a warning. It no longer mentions OMOP visits. The spec has a new `co_reported` section that says the same. The
   operator's behavior does not change. Applications that show operator descriptions (the
   Jigsaw diagram editor) show the new text.
 

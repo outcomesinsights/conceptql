@@ -18,7 +18,7 @@ module ConceptQL
       end
 
       desc "Passes along the events of its upstream streams that were reported in the same source record " \
-           "(the same context in GDM, the same visit in OMOP). A record is kept only if every upstream stream " \
+           "(the same context). A record is kept only if every upstream stream " \
            "has at least one event in it. If any one upstream has no event in a record, the events of all " \
            "streams in that record are dropped, without a warning."
 
@@ -30,14 +30,6 @@ module ConceptQL
       require_column :context_id
 
       def query(db)
-        if gdm?
-          gdm(db)
-        else
-          events_with_common_visits(db).inject { |q, query| q.union(query, all: true) }
-        end
-      end
-
-      def gdm(db)
         contexteds = upstreams.map do |stream|
           [ stream.cte_name(:contextified), contextify(db, stream) ]
         end.to_h
@@ -86,28 +78,6 @@ module ConceptQL
         # .select_all(:s)
         # .select_append(Sequel[:c][:context_id].as(:context_id))
         # .from_self
-      end
-
-      private
-
-      def visit_occurrence_ids_in_common(db)
-        @visit_occurrence_ids_in_common ||= upstream_queries(db).map do |q|
-          q.select(:visit_occurrence_id)
-        end.inject do |q, query|
-          q.from_self(alias: :tab1)
-           .join(query.as(:tab2), visit_occurrence_id: :visit_occurrence_id)
-           .select(Sequel[:tab1][:visit_occurrence_id].as(:visit_occurrence_id))
-        end
-      end
-
-      def events_with_common_visits(db)
-        upstream_queries(db).map { |q| q.where(visit_occurrence_id: visit_occurrence_ids_in_common(db)).from_self }
-      end
-
-      def upstream_queries(db)
-        @upstream_queries ||= upstreams.map do |expression|
-          expression.evaluate(db).select(*query_cols).from_self
-        end
       end
     end
   end

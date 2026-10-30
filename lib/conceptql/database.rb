@@ -28,6 +28,7 @@ module ConceptQL
       @opts = ConceptQL::Utils.rekey(opts, rekey_values: true)
 
       @opts[:data_model] ||= (ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
+      ConceptQL::DataModel.assert_supported!(@opts[:data_model])
 
       self.class.db_extensions(db, @opts[:data_model], @opts[:use_cold_col])
       db_type = db ? db.database_type.to_sym : :postgres
@@ -139,6 +140,7 @@ module ConceptQL
     # differs from this Database's.
     def operators(data_model = opts[:data_model])
       data_model = data_model.to_sym
+      ConceptQL::DataModel.assert_supported!(data_model)
       @operators ||= {}
       @operators[data_model] ||= begin
         vocabulary_operators = Vocabularies::DynamicVocabularies.new(lexicon).operators(data_model)

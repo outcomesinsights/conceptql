@@ -5,8 +5,7 @@ require_relative "operator"
 module ConceptQL
   module Operators
     class Snf < Operator
-      # GDM only: omopv4_plus has no provenance vocabularies (conceptql-myp).
-      register __FILE__, :gdm, :gdm_wide
+      register __FILE__
       include ConceptQL::Behaviors::Utilizable
 
       desc "Selects admission records of type 'SNF'"
