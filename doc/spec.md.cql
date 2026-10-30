@@ -719,6 +719,7 @@ There are situations when the date columns associated with a result should have 
         - -1m => -1 month
         - 10d3m => 3 months and 10 days
         - -2y10m-3d => -2 years, +10 months, -3 days
+    - A bare number means days, also after an r, e or s prefix: R365, E30 and S7 mean the same as R365d, E30d and S7d
     - The start or end value can also be '', '0', or nil
         - This will leave the date unaffected
     - The start or end value can also be the string 'start' or 'end'
