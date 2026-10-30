@@ -2,6 +2,6 @@
   "person_filter",
   {
     "left": ["gender", "Male"],
-    "right": ["death", true]
+    "right": ["death"]
   }
 ]

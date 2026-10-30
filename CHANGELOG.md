@@ -17,6 +17,19 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking: the plain query raises `ConceptQL::InvalidStatementError` for a statement with
+  validation errors.** `Query#query`, `#sql` and `#sql_statements`, and `#all`, `#count`,
+  `#execute`, `#order` and `#analyze` through `#query`, now validate the statement first,
+  as `#code_list` already did. The error's message lists each error that `annotate` shows,
+  with the name of its operator. `#errors` holds the same errors as the `errors` hash of
+  `scope_annotate`, and `#statement` holds the statement. Warnings, such as the `count`
+  deprecation or an unknown code, do not raise. Before, an invalid statement could crash
+  while it built (`provider_filter` without `roles` raised NoMethodError, and an unknown
+  operator raised RuntimeError `Invalid#query called`). It could also build SQL that
+  silently returned fewer rows. `provenance` ignored an unrecognized keyword, such as a
+  concept ID or `inpatient:primary_or_first`, and `count` ignored every upstream after the
+  first. Those statements now raise. The error is a `Query::QueryError`, and its old name
+  `ConceptQL::Query::InvalidStatementError` still works. `annotate` does not change.
 - **Behavior change: statements that only warned now fail validation.** A code that does not
   match its vocabulary's format (for example `["icd9", "410*"]`) is now the validation error
   `improperly formatted code`, which names the code. Before, it was only a warning, and the
@@ -25,7 +38,7 @@ All notable changes to this project will be documented in this file.
   of its vocabularies rejects the code's format. A well-formed code that the vocabulary does not
   know is still only the warning `unknown code(s)`, also next to a malformed code. Like any
   invalid operator, an operator with a malformed code, and every operator that uses it, gets no
-  counts, and `Query#code_list` raises `ConceptQL::Query::InvalidStatementError`.
+  counts, and the plain query and `Query#code_list` raise `ConceptQL::InvalidStatementError`.
 - `union` removes exact duplicate rows: a row that arrives from more than one upstream
   comes out once, because every stream is a set. Before, `union` joined its non-vocabulary
   upstreams with `UNION ALL`, so `["union", ["first", ["icd9", "412"]], ["icd9", "412"]]`

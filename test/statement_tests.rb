@@ -69,10 +69,21 @@ module ConceptQL
       pure_sql? ? prep.all : prep
     end
 
+    # What a test compares with its expected results. The plain query raises
+    # InvalidStatementError for a statement with validation errors, so the
+    # result of such a statement is its errors. A test of an invalid statement
+    # records them in its expected results on purpose. Any other test that
+    # becomes invalid fails, because its expected results hold no errors.
+    def outcome
+      fetch
+    rescue ConceptQL::InvalidStatementError => e
+      { invalid_statement: e.errors }
+    end
+
     def save(path, to_save = nil)
       FileUtils.mkdir_p(File.dirname(path))
       # In the layout `just fmt` gives it, so a new results file passes fmt-check.
-      File.write(path, PrettierJson.generate(to_save || fetch))
+      File.write(path, PrettierJson.generate(to_save || outcome))
     end
 
     def pure_sql?

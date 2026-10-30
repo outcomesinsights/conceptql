@@ -21,29 +21,39 @@ module ConceptQL
         [ super, "OG ERROR:", og_message ].join("\n")
       end
     end
+  end
 
-    # Raised by #code_list when the statement has validation errors: the
-    # operator tree of an invalid statement can have missing operands, and a
-    # partial code list would look complete. #errors is the errors hash of
-    # #scope_annotate (operator name => list of [message, *details]).
-    class InvalidStatementError < QueryError
-      attr_reader :statement, :errors
+  # Raised when a Query builds the SQL of a statement (#query, #sql,
+  # #sql_statements, and #all, #count, #execute, #order and #analyze through
+  # #query) or its code list (#code_list), and the statement has validation
+  # errors. An invalid statement can crash while it builds, or build SQL that
+  # silently returns fewer rows. Warnings do not raise.
+  #
+  # #errors is the errors hash that #scope_annotate reports (operator name =>
+  # list of [message, *details]), so it holds the errors that annotate shows.
+  # #statement is the statement that the Query holds.
+  class InvalidStatementError < Query::QueryError
+    attr_reader :statement, :errors
 
-      def initialize(statement, errors)
-        @statement = statement
-        @errors = errors
-        super([ "Invalid ConceptQL statement, so it has no code list. Validation errors:",
-               *errors.flat_map { |op, op_errors| op_errors.map { |e| "  #{op}: #{describe(e)}" } },
-               "Statement: #{statement.inspect}" ].join("\n"))
-      end
-
-      private
-
-      def describe(error)
-        message, *details = error
-        details.empty? ? message.to_s : "#{message} (#{details.flatten.map(&:to_s).join(', ')})"
-      end
+    def initialize(statement, errors)
+      @statement = statement
+      @errors = errors
+      super([ "Invalid ConceptQL statement. Validation errors:",
+             *errors.flat_map { |op, op_errors| op_errors.map { |e| "  #{op}: #{describe(e)}" } },
+             "Statement: #{statement.inspect}" ].join("\n"))
     end
+
+    private
+
+    def describe(error)
+      message, *details = error
+      details.empty? ? message.to_s : "#{message} (#{details.flatten.map(&:to_s).join(', ')})"
+    end
+  end
+
+  class Query
+    # The name of InvalidStatementError in 0.4.0 to 0.5.0.
+    InvalidStatementError = ConceptQL::InvalidStatementError
 
     extend Forwardable
     def_delegators :query, :all, :count, :execute, :order
@@ -67,7 +77,9 @@ module ConceptQL
       query(explain: true, analyze: true).analyze
     end
 
+    # Raises InvalidStatementError if the statement has validation errors.
     def query(opts = {})
+      validate!
       (@queries ||= {})[opts] ||= nodifier.scope.with_ctes(operator, db, opts)
     end
 
@@ -113,6 +125,8 @@ module ConceptQL
         end
       end
       Hash[stmts]
+    rescue InvalidStatementError
+      raise
     rescue StandardError
       raise QueryError, "Failed to generate SQL for #{statement.inspect}"
     end
@@ -169,12 +183,11 @@ module ConceptQL
       operator.rdbms
     end
 
-    # Raises InvalidStatementError if the statement has validation errors.
-    # Warnings do not raise.
+    # Raises InvalidStatementError if the statement has validation errors:
+    # the operator tree of an invalid statement can have missing operands,
+    # and a partial code list would look complete. Warnings do not raise.
     def code_list(_ignored_db = nil)
-      errors = validation_errors
-      raise InvalidStatementError.new(statement, errors) unless errors.empty?
-
+      validate!
       operator.code_list(db).uniq
     end
 
@@ -193,6 +206,19 @@ module ConceptQL
     private
 
     attr_reader :cdb, :nodifier
+
+    # Raises InvalidStatementError if #validation_errors is not empty. The
+    # statement and the opts of a Query do not change, so it checks once.
+    # Warnings do not raise. cause: nil keeps an error that a caller is
+    # handling out of the message (QueryError#message prints the cause).
+    def validate!
+      return if @valid
+
+      errors = validation_errors
+      raise InvalidStatementError.new(statement, errors), cause: nil unless errors.empty?
+
+      @valid = true
+    end
 
     def extract_statement(stmt, opts)
       if !stmt.is_a?(Array)

@@ -1,1 +1,5 @@
-[]
+{
+  "invalid_statement": {
+    "provenance": [["unrecognized keywords", "38000204"]]
+  }
+}
