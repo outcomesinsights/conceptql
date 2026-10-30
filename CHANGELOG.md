@@ -46,6 +46,11 @@ All notable changes to this project will be documented in this file.
   the upstream reads. Every stream emits the same columns, so an upstream that mixes tables
   (a `union` of two domains, for example) gets the same check. The match ignores case, as
   DuckDB and Spark do. `numeric` without an upstream is not checked.
+- `filter` with an `as` option now fails validation with
+  `["unsupported option", "as", <value>]`. Filter has no `as` option. Before, the statement
+  passed validation and ran as a plain filter, so a user who meant to cast both streams got
+  other rows with no warning. A blank `as` counts as not set. Other options that filter
+  reads but does not declare (`ignore_dates`, and the t_shank-only options) still validate.
 
 ## [0.5.0] - 2026-10-29
 

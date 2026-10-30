@@ -10,6 +10,11 @@ module ConceptQL
       desc "Keeps left hand records that share the same person, criterion_id, and criterion_domain with a right hand side record."
       default_query_columns
 
+      # An `as` option would cast both streams before the comparison. Filter
+      # has no such option, and a statement that sets one fails validation
+      # instead of running as a plain filter (bead conceptql-8ac).
+      unsupported_options :as
+
       def query(db)
         rhs = right.evaluate(db)
         rhs = rhs.from_self.select_group(*columns)
