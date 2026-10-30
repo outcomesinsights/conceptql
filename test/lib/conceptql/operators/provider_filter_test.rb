@@ -39,9 +39,9 @@ describe ConceptQL::Operators::ProviderFilter do
 
     it "should find specialty_concept_id and role_type_concept_id in procedure_occurrence table for NDC codes" do
       db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: dm)
-      _(db.query([ "provider_filter", %w[ndc 0123456789],
+      _(db.query([ "provider_filter", %w[ndc 01234567890],
                   { "specialties" => "38004458", "roles" => "38004459" } ]).sql).must_match(/specialty_concept_id/)
-      _(db.query([ "provider_filter", %w[ndc 0123456789],
+      _(db.query([ "provider_filter", %w[ndc 01234567890],
                   { "specialties" => "38004458", "roles" => "38004459" } ]).sql).must_match(/role_type_concept_id/)
     end
 

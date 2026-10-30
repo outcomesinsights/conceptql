@@ -1,7 +1,7 @@
 [
   "any_overlap",
   {
-    "left": ["ndc", "0000000000"],
+    "left": ["ndc", "00000000000"],
     "right": [
       "after",
       {

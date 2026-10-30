@@ -48,6 +48,81 @@ describe ConceptQL::Query do
     end).must_raise
   end
 
+  # conceptql-g2v: the plain query validates the statement first. Each of
+  # these statements comes from jde's survey of production algorithms. Before,
+  # the first one crashed with NoMethodError, the second one silently ignored
+  # the keyword and returned no rows, and the third one raised RuntimeError.
+  describe "building the SQL of an invalid statement" do
+    {
+      "provider_filter without roles" => [
+        [ "provider_filter", [ "icd9", "412" ], { "specialties" => "*" } ],
+        { "provider_filter" => [ [ "required option not present", "roles" ] ] },
+        "provider_filter: required option not present (roles)"
+      ],
+      "provenance with an unknown keyword" => [
+        [ "provenance", [ "icd9", "412" ], "inpatient:primary_or_first" ],
+        { "provenance" => [ [ "unrecognized keywords", "inpatient:primary_or_first" ] ] },
+        "provenance: unrecognized keywords (inpatient:primary_or_first)"
+      ],
+      "provenance with a concept ID" => [
+        [ "provenance", [ "icd9", "412" ], "38000204" ],
+        { "provenance" => [ [ "unrecognized keywords", "38000204" ] ] },
+        "provenance: unrecognized keywords (38000204)"
+      ],
+      "an unknown operator" => [
+        [ "union", [ "usrds_first_transplant" ], [ "icd9", "412" ] ],
+        { "usrds_first_transplant" => [ [ "invalid operator", "usrds_first_transplant" ] ] },
+        "usrds_first_transplant: invalid operator (usrds_first_transplant)"
+      ]
+    }.each do |name, (statement, errors, line)|
+      { sql: ->(q) { q.sql }, query: ->(q) { q.query }, sql_statements: ->(q) { q.sql_statements(:create_tables) },
+        all: ->(q) { q.all } }.each do |meth, call|
+        it "raises InvalidStatementError from ##{meth} for #{name}" do
+          error = _ { call.(CDB.query(statement)) }.must_raise(ConceptQL::InvalidStatementError)
+          _(error.errors).must_equal(errors)
+          _(error.statement).must_equal(CDB.query(statement).statement)
+          _(error.message).must_include("Invalid ConceptQL statement")
+          _(error.message).must_include("  #{line}")
+          _(error.cause).must_be_nil
+        end
+      end
+
+      it "raises InvalidStatementError for #{name} inside a window" do
+        window = [ "window", statement, { "start_date" => "1900-01-01", "end_date" => "2100-12-31" } ]
+        error = _ { CDB.query(window).sql }.must_raise(ConceptQL::InvalidStatementError)
+        _(error.errors).must_equal(errors)
+      end
+
+      it "does not change what annotate returns for #{name}" do
+        query = CDB.query(statement)
+        _ { query.sql }.must_raise(ConceptQL::InvalidStatementError)
+        _(query.annotate).must_equal(CDB.query(statement).annotate)
+      end
+    end
+
+    it "keeps the 0.4.0 names: a Query::QueryError, also named Query::InvalidStatementError" do
+      _(ConceptQL::Query::InvalidStatementError).must_be_same_as(ConceptQL::InvalidStatementError)
+      _(ConceptQL::InvalidStatementError.ancestors).must_include(ConceptQL::Query::QueryError)
+    end
+
+    it "builds the SQL of a valid statement" do
+      _(CDB.query([ "icd9", "412" ]).sql).must_match(/SELECT/i)
+    end
+
+    {
+      "the count deprecation" => [ "count", [ "icd9", "412" ] ],
+      "an unknown code" => [ "icd9", "412", "000.00" ]
+    }.each do |name, statement|
+      it "builds the SQL of a statement whose only warning is #{name}" do
+        annotation = CDB.query(statement).scope_annotate(skip_counts: true)
+        _(annotation[:errors]).must_be_empty
+        _(annotation[:warnings]).wont_be_empty
+        _(CDB.query(statement).sql).must_match(/SELECT/i)
+        _(CDB.query(statement).count).must_be_kind_of(Integer)
+      end
+    end
+  end
+
   describe "#code_list" do
     it "should handle nil for a DB" do
       ClimateControl.modify(LEXICON_URL: nil) do

@@ -31,8 +31,8 @@ describe ConceptQL::Operators do
     it "should produce correct results for #{file_test.test_name}" do
       file_test.each_test do |results|
         my_time_it(results.message) do
-          # debugger if JSON.parse(results.fetch.to_json) != JSON.parse(results.expected)
-          _(JSON.parse(results.fetch.to_json)).must_equal(JSON.parse(results.expected), results.message)
+          # debugger if JSON.parse(results.outcome.to_json) != JSON.parse(results.expected)
+          _(JSON.parse(results.outcome.to_json)).must_equal(JSON.parse(results.expected), results.message)
         end
       end
     end

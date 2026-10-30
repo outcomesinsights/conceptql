@@ -1,1 +1,5 @@
-[]
+{
+  "invalid_statement": {
+    "provenance": [["unrecognized keywords", "carrier_claim:primary_or_first"]]
+  }
+}
