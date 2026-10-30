@@ -90,6 +90,14 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `inner_join` and `include_rhs_columns` no longer return a row more than once. With either
+  option, a temporal operator (for example `during`, `contains` or `any_overlap`) joins each
+  left row to every matching right row, and it gave one copy of the left row for each match.
+  On the DuckDB test data, `during` of `icd9 412` in `information_periods` with
+  `include_rhs_columns: ["criterion_domain"]` gave 176 rows for 48 records. Each row now comes
+  out once. With `include_rhs_columns`, rows that differ in a right-side column are different
+  rows, so a left row still comes out once for each different value, such as each right
+  `uuid`.
 - Building a statement's SQL no longer runs a query to learn a dataset's columns. Before,
   `occurrence` with `group_by_date` over a labeled upstream failed on every database with
   "Table with name <label> does not exist" (Postgres: "relation ... does not exist"): it asked
