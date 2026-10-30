@@ -145,6 +145,17 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- An empty statement (`[]`) is now an invalid statement. `validation_errors` and
+  `scope_annotate` report the error `{"invalid" => [["empty statement"]]}`, and `query`, `sql`
+  and the other methods that build SQL raise `ConceptQL::InvalidStatementError`. This also
+  applies to an empty operand (`["union", [], ["icd9", "412"]]`), to `[[]]`, to a `window`
+  around `[]`, and to an `algorithm` whose stored statement is `[]`. Before, each of these
+  raised `ArgumentError` in `Nodifier#create`.
+- A `ConceptQL::Database` on a Sequel mock (`Sequel.mock`) now reads its vocabulary from the
+  `LEXICON_URL` database. A mock answers yes to every table check, so the Lexicon chose the
+  mock as an OHDSI vocabulary that has no rows, and every vocabulary from the lexicon was an
+  invalid operator. Now the Lexicon never searches a mock data database for vocabulary tables.
+  Without `LEXICON_URL`, a mock still gets `LexiconNoDB` and raises nothing.
 - `annotate` no longer raises when the window table of a `window` statement is an invalid
   ConceptQL statement. `scope_annotate` reports the window table's errors under the key
   `window_table`, and each message starts with the name of its operator (for example

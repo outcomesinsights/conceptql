@@ -67,6 +67,30 @@ describe ConceptQL::Lexicon::NoVocabularyError do
       end
     end
 
+    # conceptql-0xz: a Sequel mock answers yes to every table_exists?, so it
+    # was chosen as an OHDSI vocabulary that has no rows, and the LEXICON_URL
+    # database was never searched. Every lexicon vocabulary was then an
+    # invalid operator.
+    it "uses the LEXICON_URL database for a Sequel mock" do
+      lexicon_db = sqlite_lexicon_db
+      lexicon_db[:vocabulary].insert(vocabulary_id: "Lexicon Only Test", vocabulary_name: "Lexicon only test")
+      with_lexicon_db(lexicon_db) do
+        cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
+        _(cdb.lexicon.strategy).must_equal :ohdsi
+        _(cdb.lexicon.vocabularies_query.db).must_be_same_as lexicon_db
+        _(cdb.operators.keys).must_include "lexicon_only_test"
+        _(cdb.query([ "lexicon_only_test", "X1" ]).validation_errors).must_be_empty
+      end
+    ensure
+      lexicon_db&.disconnect
+    end
+
+    it "uses LexiconNoDB for a Sequel mock without LEXICON_URL" do
+      with_lexicon_db(nil) do
+        _(ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm).lexicon.strategy).must_equal :no_db
+      end
+    end
+
     it "does not raise for a Sequel mock whose tables never exist" do
       mock = Sequel.mock(host: :postgres, fetch: proc { raise Sequel::DatabaseError, "no such table" })
       with_lexicon_db(nil) do

@@ -76,6 +76,18 @@ describe ConceptQL::Query do
         [ "union", [ "usrds_first_transplant" ], [ "icd9", "412" ] ],
         { "usrds_first_transplant" => [ [ "invalid operator", "usrds_first_transplant" ] ] },
         "usrds_first_transplant: invalid operator (usrds_first_transplant)"
+      ],
+      # conceptql-e7y: the JDE algorithm clia_lab_use has the statement [].
+      # Before, every method crashed with ArgumentError in Nodifier#create.
+      "an empty statement" => [
+        [],
+        { "invalid" => [ [ "empty statement" ] ] },
+        "invalid: empty statement"
+      ],
+      "an empty operand" => [
+        [ "union", [], [ "icd9", "412" ] ],
+        { "invalid" => [ [ "empty statement" ] ] },
+        "invalid: empty statement"
       ]
     }.each do |name, (statement, errors, line)|
       { sql: ->(q) { q.sql }, query: ->(q) { q.query }, sql_statements: ->(q) { q.sql_statements(:create_tables) },
@@ -101,6 +113,25 @@ describe ConceptQL::Query do
         _ { query.sql }.must_raise(ConceptQL::InvalidStatementError)
         _(query.annotate).must_equal(CDB.query(statement).annotate)
       end
+    end
+
+    # conceptql-e7y: t_shank and jde validate stored statements, so an empty
+    # one must be reported, not raise. [[]] unwraps to [].
+    [ [], [ [] ], [ "union", [], [ "icd9", "412" ] ] ].each do |statement|
+      it "reports #{statement.inspect} as an empty statement from #validation_errors" do
+        _(CDB.query(statement).validation_errors).must_equal("invalid" => [ [ "empty statement" ] ])
+      end
+    end
+
+    it "reports an empty statement without a database" do
+      cdb = ConceptQL::Database.new(nil, data_model: :gdm)
+      _(cdb.query([]).validation_errors).must_equal("invalid" => [ [ "empty statement" ] ])
+      _ { cdb.query([]).sql }.must_raise(ConceptQL::InvalidStatementError)
+    end
+
+    it "reports an algorithm whose stored statement is empty" do
+      query = CDB.query([ "algorithm", "clia_lab_use" ], algorithm_fetcher: ->(_alg) { [ [], "CLIA lab use" ] })
+      _(query.validation_errors).must_equal("invalid" => [ [ "empty statement" ] ])
     end
 
     it "keeps the 0.4.0 names: a Query::QueryError, also named Query::InvalidStatementError" do

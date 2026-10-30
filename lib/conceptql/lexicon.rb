@@ -251,8 +251,11 @@ module ConceptQL
     # The first lexicon kind whose tables are all in the data db (dataset_db)
     # or else the lexicon db. When neither has them, LexiconNoDB, but only
     # for a database-less caller: a real data db raises NoVocabularyError.
+    # A Sequel mock data db is not searched: it answers yes to every
+    # table_exists?, so it would hide the lexicon db behind a vocabulary
+    # that has no rows.
     def determine_strategy(lexicon_db, dataset_db)
-      [ dataset_db, lexicon_db ].compact.each do |db|
+      [ (dataset_db if real_database?(dataset_db)), lexicon_db ].compact.each do |db|
         lexicon_classes.each do |klass|
           next unless klass.db_has_all_vocabulary_tables?(db)
 
