@@ -659,8 +659,14 @@ module ConceptQL
         table = Sequel[table] if table.is_a?(Symbol)
         expr = exprs.inject(&:&)
         if use_inner_join?
+          # The join gives one copy of a left row for each matching right row.
+          # Every stream is a set (seed conceptql-0eb), so remove the copies.
+          # A caller can append right columns to the select list (temporal
+          # include_rhs_columns), and DISTINCT covers them: rows that differ
+          # by a right column stay (bead conceptql-3pr).
           ds.join(table.as(:r), expr)
             .select(*query_cols.map { |c| Sequel[:l][c] })
+            .distinct
         else
           rdbms.semi_join(ds, table, *exprs)
         end
