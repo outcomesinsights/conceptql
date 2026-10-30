@@ -181,6 +181,9 @@ module ConceptQL
           cur_counts = counts[domain] ||= { rows: 0, n: 0 }
           scope.add_counts(scope_key, domain, cur_counts)
         end
+        # The database returns its groups in no fixed order, and the zero
+        # counts above come last. Sort them, so each run gives the same order.
+        annotation[:counts] = counts.sort.to_h
 
         if defined?(@warnings) && !warnings.empty?
           annotation[:warnings] = warnings
