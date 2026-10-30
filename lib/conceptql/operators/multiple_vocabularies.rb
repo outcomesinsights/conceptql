@@ -106,9 +106,9 @@ module ConceptQL
       end
 
       # The per-code warnings a Vocabulary operator gives, from most to least
-      # specific (Operator::BAD_FORMAT, Operator::UNKNOWN_CODE). See
+      # specific (Operator::BAD_FORMATS, Operator::UNKNOWN_CODE). See
       # #code_warnings.
-      CODE_WARNINGS = [ BAD_FORMAT, UNKNOWN_CODE ].freeze
+      CODE_WARNINGS = [ *BAD_FORMATS, UNKNOWN_CODE ].freeze
 
       def additional_validation(db, opts = {})
         vocab_ops.each { |vo| vo.valid?(db, opts) }
@@ -131,7 +131,7 @@ module ConceptQL
         end
 
         rejected = arguments.uniq.select { |code| verdicts.all? { |verdict| verdict.key?(code) } }
-        bad_format, unknown = rejected.partition { |code| verdicts.all? { |verdict| verdict[code] == BAD_FORMAT } }
+        bad_format, unknown = rejected.partition { |code| verdicts.all? { |verdict| BAD_FORMATS.include?(verdict[code]) } }
 
         [ [ BAD_FORMAT, *bad_format ], [ UNKNOWN_CODE, *unknown ] ].reject { |warning| warning.length == 1 }
       end

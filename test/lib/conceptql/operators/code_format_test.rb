@@ -36,10 +36,13 @@ describe "vocabulary code formats" do
                                                           lexicon: ConceptQL::Lexicon.new(lexicon_db))
   end
 
+  # The NDC warning adds a reason after the plain text (bead conceptql-28h),
+  # so this matches the start of the message.
   def badly_formatted(statement)
     operator = cdb.query(statement).operator
     operator.valid?(cdb.db)
-    operator.warnings.select { |message, *| message == "improperly formatted code" }.flat_map { |_, *codes| codes }
+    operator.warnings.select { |message, *| message.start_with?("improperly formatted code") }
+            .flat_map { |_, *codes| codes }
   end
 
   # operator => [real codes, malformed codes]
@@ -86,6 +89,29 @@ describe "vocabulary code formats" do
   # NDC.ALPHANUM) are real concept_codes, but the default row rejects them.
   it "flags the 9-digit and alphanumeric NDC forms, as the NDC default row does" do
     _(badly_formatted(%w[ndc 003630641 00019N068 43742164901])).must_equal %w[003630641 00019N068]
+  end
+
+  # Claims carry the 11-digit package NDC. jde scanned the 601.9M NDC rows of
+  # the active Jigsaw claims: 99.99% have 11 digits, and none is a 9-digit
+  # product code (bead conceptql-28h, seed conceptql-ysx). So the NDC warning
+  # says why the code matches nothing. The text starts with the plain
+  # warning, which the JDE algorithm spec looks for.
+  describe "the format warning text" do
+    def format_warning(statement)
+      cdb.query(statement).scope_annotate(skip_counts: true)[:warnings]
+         .fetch(statement.first)
+         .find { |message, *| message.start_with?("improperly formatted code") }
+    end
+
+    it "says why an NDC code in another form matches no rows" do
+      _(format_warning(%w[ndc 003630641])).must_equal [
+        "improperly formatted code (claims use 11-digit package NDCs, so it matches no rows)", "003630641"
+      ]
+    end
+
+    it "is unchanged for another vocabulary" do
+      _(format_warning(%w[icd9 410*])).must_equal [ "improperly formatted code", "410*" ]
+    end
   end
 
   it "accepts M0201, which the old CPT4 pattern rejected" do

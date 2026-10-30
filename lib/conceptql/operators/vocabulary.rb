@@ -144,6 +144,10 @@ module ConceptQL
         @code_regexp
       end
 
+      def bad_format_message
+        vocab_entry.omopv5_id == "NDC" ? NDC_BAD_FORMAT : BAD_FORMAT
+      end
+
       def vocabulary_id
         @vocabulary_id ||= translated_vocabulary_id
       end

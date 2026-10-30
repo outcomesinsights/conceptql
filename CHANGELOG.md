@@ -143,6 +143,11 @@ All notable changes to this project will be documented in this file.
   has no `format_regexp` column, and a `format_regexp` column in a custom vocabularies file is
   ignored. The `format_regexp` of a vocabulary entry's metadata is the anchored pattern from
   vocabulary_formats.
+- The format warning of an NDC code says why the code matches nothing:
+  `improperly formatted code (claims use 11-digit package NDCs, so it matches no rows)`. The
+  claims carry the 11-digit package NDC, so a code in another form selects no rows. The
+  warning keeps its shape, the message and then the codes, and the message still starts with
+  `improperly formatted code`. The other vocabularies keep the plain text.
 - `occurrence` with `at_least` returns each row once, because every stream is a set. Each
   earlier row of a person picks its nth row, and with `at_least` several earlier rows can pick
   the same row. Before, that row came out once for each earlier row that picked it, so
@@ -221,6 +226,11 @@ All notable changes to this project will be documented in this file.
   applies to an empty operand (`["union", [], ["icd9", "412"]]`), to `[[]]`, to a `window`
   around `[]`, and to an `algorithm` whose stored statement is `[]`. Before, each of these
   raised `ArgumentError` in `Nodifier#create`.
+- The statement `[nil]` or `[""]` reports its error under the key `invalid`:
+  `{"invalid" => [["invalid operator", ""]]}`. Before, the key was `""`.
+- `Operators::Invalid#operator_name` gives the operator name of the statement (`nope_op` for
+  `["nope_op", "412"]`), and `invalid` when the statement has no name. Before, it removed the
+  first code from the arguments and gave that code (`412`).
 - A `ConceptQL::Database` on a Sequel mock (`Sequel.mock`) now reads its vocabulary from the
   `LEXICON_URL` database. A mock answers yes to every table check, so the Lexicon chose the
   mock as an OHDSI vocabulary that has no rows, and every vocabulary from the lexicon was an
