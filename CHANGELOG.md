@@ -41,6 +41,12 @@ All notable changes to this project will be documented in this file.
   `["occurrence", 2, ["icd9", ...], {"at_least": "30d"}]` returned 2366 rows, of which only
   1163 were distinct. The same rows come out, and only the copies are gone. Statements that
   count the rows of such an `occurrence` count fewer rows.
+- `trim_date_end` and `trim_date_start` with `compare_all` return each row once, because every
+  stream is a set. With `compare_all`, each left row is trimmed by every right row of the
+  person, and two right rows can trim it to the same date. Before, that row came out once for
+  each such right row. With `["icd9", "412"]` as both the left and the right, `trim_date_end`
+  returned 60 rows, of which only 50 were distinct. The same rows come out, and only the copies
+  are gone. Statements that count the rows of such a trim count fewer rows.
 - `cpt_or_hcpcs` joins its vocabulary branches (CPT4, HCPCS and CPT4_HCPCS) with `UNION ALL`
   instead of `UNION`. Each branch selects the rows of a different vocabulary, so no row can
   come from two branches. The duplicate removal was the most expensive step of a
