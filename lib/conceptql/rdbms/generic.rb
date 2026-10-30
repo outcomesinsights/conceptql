@@ -83,6 +83,13 @@ module ConceptQL
         false
       end
 
+      # True if an IN subquery may sit in a SELECT-list expression, such as
+      # the CASE flags of One In Two Out. Scope#with_ctes reads a long IN list
+      # from its list CTE there only when this is true.
+      def supports_in_subquery_in_select?
+        true
+      end
+
       def create_options(_scope, _ds)
         opts = {}
         opts[:analyze] = opts[:explain] = explain_temp_tables?
