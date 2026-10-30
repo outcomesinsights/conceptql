@@ -1,0 +1,19 @@
+[
+  "ms_drg",
+  "205",
+  "000",
+  "1",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["improperly formatted code", "1"]],
+      "warnings": [["unknown code(s)", "000"]]
+    },
+    "name": "MS-DRG"
+  }
+]

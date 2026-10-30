@@ -19,6 +19,7 @@ module ConceptQL
                      :concepts_by_name,
                      :concepts_ds,
                      :concepts_to_codes,
+                     :concepts_to_codes_in_class,
                      :descendants_of,
                      :known_codes,
                      :related_concept_ids

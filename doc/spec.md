@@ -256,6 +256,43 @@ Selection operators are the parts of a ConceptQL query that search for specific 
 
 There are _many_ selection operators. A list of currently implemented operators is available in Appendix A.
 
+### DRG Codes
+
+CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning: DRG 205 meant a liver disorder in CMS-DRG and means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a clinical code does not record which meaning applied. So a statement names the DRG system, and ConceptQL selects by the code and by the start_date of the clinical code:
+
+- `ms_drg` selects the DRG codes whose start_date is on or after 2007-10-01.
+- `cms_drg` selects the DRG codes whose start_date is before 2007-10-01.
+
+```YAML
+---
+- ms_drg
+- '205'
+
+```
+
+![All MS-DRG 205 events: other respiratory system diagnoses with a major complication or comorbidity](spec/2f8919588f782c227a2d45b6579a2bf51059bf3a38e5a5524b3edb06e0be9900.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 17        | 1365         | observations    | procedure_occurrence | 2010-06-02 | 2010-06-06 | 205          |
+| 68        | 18           | observations    | procedure_occurrence | 2008-04-19 | 2008-04-23 | 205          |
+| 95        | 603          | observations    | procedure_occurrence | 2008-08-27 | 2008-09-01 | 205          |
+
+```YAML
+---
+- cms_drg
+- '205'
+
+```
+
+![All CMS-DRG 205 events (a liver disorder): none, because the test data starts in December 2007](spec/ba330009cc3750e3d781ff6f4a52b1a4e7c6e440b1f950b8e43419f10b1e56dc.png)
+
+`No Results found.`
+
+Both operators check codes as other vocabulary operators do: a DRG code has 3 digits, and a code that the DRG vocabulary does not have gets a warning. When the vocabulary records the system of each meaning (the OHDSI concept class MS-DRG or DRG), the code list of a statement names each code by its meaning in the operator's system. Otherwise it names the code by all of its meanings.
+
+The `drg` operator is deprecated. It selects the DRG codes of both systems, whatever the date. It still runs, but annotation shows a warning on it, and a later release will make it an error.
+
 ## All Other Operators i.e. Mutation Operators
 
 Virtually all other operators add, remove, filter, or otherwise alter streams of results. They are discussed in this section.
@@ -1661,25 +1698,27 @@ Numeric doesn't have to take a stream. If it doesn't have a stream as an argumen
 
 ConceptQL creates a vocabulary operator for each vocabulary in its vocabulary list (`config/vocabularies.csv`) and in its vocabulary database. This table lists the most common selection operators.
 
-| Operator Name       | Stream Type          | Arguments                                | Returns                                                        |
-| ------------------- | -------------------- | ---------------------------------------- | -------------------------------------------------------------- |
-| cpt                 | procedure_occurrence | 1 or more CPT codes                      | All clinical codes that match any of the CPT codes             |
-| icd9                | condition_occurrence | 1 or more ICD-9-CM diagnosis codes       | All clinical codes that match any of the ICD-9 codes           |
-| icd9_procedure      | procedure_occurrence | 1 or more ICD-9-CM procedure codes       | All clinical codes that match any of the ICD-9 procedure codes |
-| icd10cm             | condition_occurrence | 1 or more ICD-10-CM codes                | All clinical codes that match any of the ICD-10-CM codes       |
-| hcpcs               | procedure_occurrence | 1 or more HCPCS codes                    | All clinical codes that match any of the HCPCS codes           |
-| loinc               | observation          | 1 or more LOINC codes                    | All clinical codes that match any of the LOINC codes           |
-| ndc                 | drug_exposure        | 1 or more NDC codes                      | All clinical codes that match any of the NDC codes             |
-| rxnorm              | drug_exposure        | 1 or more RxNorm codes                   | All clinical codes that match any of the RxNorm codes          |
-| snomed              | condition_occurrence | 1 or more SNOMED codes                   | All clinical codes that match any of the SNOMED codes          |
-| gender              | person               | 1 or more of Male, Female, and Unknown   | All patients whose gender matches any of the arguments         |
-| race                | person               | 1 or more race names or race concept IDs | All patients whose race matches any of the arguments           |
-| death               | death                | None                                     | All death records                                              |
-| information_periods | observation_period   | None                                     | All information periods                                        |
-| date_range          | person               | A start date and an end date             | One result for each patient, with the given dates              |
-| hospitalization     | condition_occurrence | None                                     | All inpatient admissions                                       |
-| hospice             | condition_occurrence | None                                     | All hospice admissions                                         |
-| snf                 | condition_occurrence | None                                     | All skilled nursing facility admissions                        |
+| Operator Name       | Stream Type          | Arguments                                | Returns                                                              |
+| ------------------- | -------------------- | ---------------------------------------- | -------------------------------------------------------------------- |
+| cpt                 | procedure_occurrence | 1 or more CPT codes                      | All clinical codes that match any of the CPT codes                   |
+| icd9                | condition_occurrence | 1 or more ICD-9-CM diagnosis codes       | All clinical codes that match any of the ICD-9 codes                 |
+| icd9_procedure      | procedure_occurrence | 1 or more ICD-9-CM procedure codes       | All clinical codes that match any of the ICD-9 procedure codes       |
+| icd10cm             | condition_occurrence | 1 or more ICD-10-CM codes                | All clinical codes that match any of the ICD-10-CM codes             |
+| hcpcs               | procedure_occurrence | 1 or more HCPCS codes                    | All clinical codes that match any of the HCPCS codes                 |
+| ms_drg              | procedure_occurrence | 1 or more DRG codes                      | All clinical codes from 2007-10-01 that match any of the DRG codes   |
+| cms_drg             | procedure_occurrence | 1 or more DRG codes                      | All clinical codes before 2007-10-01 that match any of the DRG codes |
+| loinc               | observation          | 1 or more LOINC codes                    | All clinical codes that match any of the LOINC codes                 |
+| ndc                 | drug_exposure        | 1 or more NDC codes                      | All clinical codes that match any of the NDC codes                   |
+| rxnorm              | drug_exposure        | 1 or more RxNorm codes                   | All clinical codes that match any of the RxNorm codes                |
+| snomed              | condition_occurrence | 1 or more SNOMED codes                   | All clinical codes that match any of the SNOMED codes                |
+| gender              | person               | 1 or more of Male, Female, and Unknown   | All patients whose gender matches any of the arguments               |
+| race                | person               | 1 or more race names or race concept IDs | All patients whose race matches any of the arguments                 |
+| death               | death                | None                                     | All death records                                                    |
+| information_periods | observation_period   | None                                     | All information periods                                              |
+| date_range          | person               | A start date and an end date             | One result for each patient, with the given dates                    |
+| hospitalization     | condition_occurrence | None                                     | All inpatient admissions                                             |
+| hospice             | condition_occurrence | None                                     | All hospice admissions                                               |
+| snf                 | condition_occurrence | None                                     | All skilled nursing facility admissions                              |
 
 hospitalization, hospice and snf select admissions. On gdm, they read collections and admission_details. On gdm_wide, they read observations, but their results still have criterion_table collections. Their results have criterion_domain condition_occurrence, because GDM has no visit or admission domain. primary_concept_id, source_value and source_vocabulary_id hold one code of the admission that has primary provenance. That code is usually a diagnosis, but it can be a procedure or a DRG. When the admission has no code with primary provenance, these three columns are NULL. Because the results have the condition_occurrence type, union combines them with the results of condition operators such as icd9 into one stream.
 

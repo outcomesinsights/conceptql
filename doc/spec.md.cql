@@ -187,6 +187,33 @@ Selection operators are the parts of a ConceptQL query that search for specific 
 
 There are _many_ selection operators.  A list of currently implemented operators is available in Appendix A.
 
+### DRG Codes
+
+CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system.  Most codes got a new meaning: DRG 205 meant a liver disorder in CMS-DRG and means other respiratory system diagnoses in MS-DRG.  One vocabulary, DRG, holds the codes of both systems, and a clinical code does not record which meaning applied.  So a statement names the DRG system, and ConceptQL selects by the code and by the start_date of the clinical code:
+
+- `ms_drg` selects the DRG codes whose start_date is on or after 2007-10-01.
+- `cms_drg` selects the DRG codes whose start_date is before 2007-10-01.
+
+```ConceptQL
+# All MS-DRG 205 events: other respiratory system diagnoses with a major complication or comorbidity
+[
+  "ms_drg",
+  "205"
+]
+```
+
+```ConceptQL
+# All CMS-DRG 205 events (a liver disorder): none, because the test data starts in December 2007
+[
+  "cms_drg",
+  "205"
+]
+```
+
+Both operators check codes as other vocabulary operators do: a DRG code has 3 digits, and a code that the DRG vocabulary does not have gets a warning.  When the vocabulary records the system of each meaning (the OHDSI concept class MS-DRG or DRG), the code list of a statement names each code by its meaning in the operator's system.  Otherwise it names the code by all of its meanings.
+
+The `drg` operator is deprecated.  It selects the DRG codes of both systems, whatever the date.  It still runs, but annotation shows a warning on it, and a later release will make it an error.
+
 ## All Other Operators i.e. Mutation Operators
 
 Virtually all other operators add, remove, filter, or otherwise alter streams of results.  They are discussed in this section.
@@ -1283,6 +1310,8 @@ ConceptQL creates a vocabulary operator for each vocabulary in its vocabulary li
 | icd9_procedure | procedure_occurrence | 1 or more ICD-9-CM procedure codes | All clinical codes that match any of the ICD-9 procedure codes |
 | icd10cm | condition_occurrence | 1 or more ICD-10-CM codes | All clinical codes that match any of the ICD-10-CM codes |
 | hcpcs  | procedure_occurrence | 1 or more HCPCS codes | All clinical codes that match any of the HCPCS codes |
+| ms_drg | procedure_occurrence | 1 or more DRG codes | All clinical codes from 2007-10-01 that match any of the DRG codes |
+| cms_drg | procedure_occurrence | 1 or more DRG codes | All clinical codes before 2007-10-01 that match any of the DRG codes |
 | loinc | observation | 1 or more LOINC codes | All clinical codes that match any of the LOINC codes |
 | ndc | drug_exposure | 1 or more NDC codes | All clinical codes that match any of the NDC codes |
 | rxnorm | drug_exposure | 1 or more RxNorm codes | All clinical codes that match any of the RxNorm codes |

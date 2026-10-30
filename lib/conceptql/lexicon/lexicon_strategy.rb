@@ -118,6 +118,14 @@ module ConceptQL
       {}
     end
 
+    # The [code, name] pairs of the codes whose concept is in one concept
+    # class, or nil when the lexicon keeps no concept classes. Only the OHDSI
+    # vocabulary keeps them (LexiconOhdsi). ms_drg and cms_drg name a code by
+    # its meaning in their own DRG system with it (DrgSystems).
+    def concepts_to_codes_in_class(_data_db, _vocabulary_id, _concept_class_id, _codes)
+      nil
+    end
+
     def vocabulary_is_empty?(data_db, vocabulary_id)
       concepts_table(data_db).where(vocabulary_id: vocabulary_id).count.zero?
     end

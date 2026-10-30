@@ -59,6 +59,21 @@ module ConceptQL
       !db.table_exists?(:concept)
     end
 
+    # A caller can answer "is the concept table missing?" with a block. A
+    # concept table without concept_class_id answers nil, as a lexicon
+    # without classes does.
+    def concepts_to_codes_in_class(data_db, vocabulary_id, concept_class_id, codes)
+      return nil if codes.blank? || db_is_mock?(data_db)
+      return nil if block_given? ? yield : table_is_missing?(data_db)
+
+      db[:concept]
+        .where(vocabulary_id: vocabulary_id, concept_class_id: concept_class_id)
+        .where(Sequel.function(:lower, :concept_code) => codes.map(&:downcase))
+        .select_map(%i[concept_code concept_name])
+    rescue Sequel::DatabaseError
+      nil
+    end
+
     def strategy
       :ohdsi
     end

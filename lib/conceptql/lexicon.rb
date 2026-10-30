@@ -19,6 +19,7 @@ module ConceptQL
       concept_ids
       concept_ids_by_name
       concepts_to_codes
+      concepts_to_codes_in_class
       descendants_of
       known_codes
       related_concept_ids
@@ -100,7 +101,7 @@ module ConceptQL
       @cache = {} if cache
     end
 
-    (CACHED_LOOKUPS - %i[code_meanings concepts_to_codes known_codes table_is_missing?]).each do |name|
+    (CACHED_LOOKUPS - %i[code_meanings concepts_to_codes concepts_to_codes_in_class known_codes table_is_missing?]).each do |name|
       define_method(name) do |*args|
         lookup(name, args) { @strategy.public_send(name, *args) }
       end
@@ -119,6 +120,13 @@ module ConceptQL
     def concepts_to_codes(data_db, vocabulary_id, codes = [])
       lookup(:concepts_to_codes, [ data_db, vocabulary_id, codes ]) do
         @strategy.concepts_to_codes(data_db, vocabulary_id, codes) { table_is_missing?(data_db) }
+      end
+    end
+
+    # Like concepts_to_codes, it asks about the concept table through the block.
+    def concepts_to_codes_in_class(data_db, vocabulary_id, concept_class_id, codes)
+      lookup(:concepts_to_codes_in_class, [ data_db, vocabulary_id, concept_class_id, codes ]) do
+        @strategy.concepts_to_codes_in_class(data_db, vocabulary_id, concept_class_id, codes) { table_is_missing?(data_db) }
       end
     end
 

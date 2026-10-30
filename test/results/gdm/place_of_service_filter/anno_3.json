@@ -13,6 +13,10 @@
         },
         "warnings": [
           [
+            "deprecated operator",
+            "drg will become an error in a later release. A DRG code can have two meanings, and drg selects the events of both. Use ms_drg for the MS-DRG meaning (events from 2007-10-01) or cms_drg for the CMS-DRG meaning (events before 2007-10-01)."
+          ],
+          [
             "code(s) with more than one meaning",
             "001: Craniotomy Age >17 Except For Trauma | Craniotomy Age >17 with Complications, Comorbidities | Heart transplant or implant of heart assist system w MCC"
           ]

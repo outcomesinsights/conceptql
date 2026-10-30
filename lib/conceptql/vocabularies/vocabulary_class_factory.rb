@@ -3,6 +3,7 @@
 require_relative "../behaviors/drugish"
 require_relative "../behaviors/labish"
 require_relative "behaviors/gdmish"
+require_relative "drg_systems"
 require_relative "../operators/vocabulary"
 
 module ConceptQL
@@ -61,6 +62,10 @@ module ConceptQL
           include ConceptQL::Behaviors::Labish if entry.is_labish?
 
           include ConceptQL::Behaviors::Drugish if entry.is_drugish?
+
+          include DrgSystems::OperatorBehavior if DrgSystems.system(entry.id)
+
+          deprecated DrgSystems::DRG_DEPRECATION if entry.id == DrgSystems::DRG_OPERATOR
 
           def vocab_entry
             self.class.entry

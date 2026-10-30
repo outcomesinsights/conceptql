@@ -1,0 +1,17 @@
+[
+  "ms_drg",
+  "001",
+  "205",
+  "410",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 3,
+          "n": 3
+        }
+      }
+    },
+    "name": "MS-DRG"
+  }
+]
