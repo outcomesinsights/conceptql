@@ -8,7 +8,7 @@ PATH
       logger
       sequel (~> 5.66)
       sequel-sqlformat (~> 0.1)
-      sequelizer (>= 0.3.0, < 0.5)
+      sequelizer (>= 0.3.0, < 0.6)
       thor (~> 1.0)
 
 GEM
