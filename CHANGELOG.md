@@ -56,6 +56,12 @@ All notable changes to this project will be documented in this file.
   who meant to cast both streams got other rows with no warning. A blank `as` counts as not
   set. Other options that these operators read but do not declare (`ignore_dates` for
   filter and except, and the t_shank-only options) still validate.
+- `Query#annotate` now gives each operator's counts (`annotation[:counts]`) in domain-name
+  order, with both counting paths (one SQL statement, or a query for each operator). Before,
+  the order came from the database, and the zero counts of domains with no rows came last.
+  On DuckDB, the order of a multi-domain operator's domains changed from run to run, so a
+  diagram drawn from the counts could change between identical runs. The keys and the
+  numbers are the same as before.
 
 ## [0.5.0] - 2026-10-29
 

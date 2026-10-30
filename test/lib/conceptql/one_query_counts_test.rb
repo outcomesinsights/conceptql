@@ -84,6 +84,27 @@ describe ConceptQL::OneQueryCounts do
     _(annotated).must_equal(CDB.query(statement).annotate)
   end
 
+  # Both domains have rows, so the database decides their order. DuckDB
+  # returns its groups in a different order from run to run.
+  let(:both_domains) { [ "union", %w[icd9 412], %w[cpt 99214] ] }
+  # Only procedure_occurrence has rows. Operator#annotate adds the zero
+  # counts of condition_occurrence after the counts that the database gives.
+  let(:one_domain_empty) { [ "union", %w[cpt 99214], empty_code ] }
+
+  it "orders a multi-domain operator's counts by domain name with one SQL statement" do
+    skip_on_spark
+    [ both_domains, one_domain_empty ].each do |stmt|
+      _(counts_of(CDB.query(stmt).annotate).keys).must_equal(%i[condition_occurrence procedure_occurrence], stmt.inspect)
+    end
+  end
+
+  it "orders a multi-domain operator's counts by domain name with a query for each operator" do
+    skip_on_spark
+    [ both_domains, one_domain_empty ].each do |stmt|
+      _(counts_of(CDB.query(stmt, database_type: :spark).annotate).keys).must_equal(%i[condition_occurrence procedure_occurrence], stmt.inspect)
+    end
+  end
+
   it "counts nothing with skip_counts" do
     skip_on_spark
     statements = counting_statements { CDB.query(statement).annotate(skip_counts: true) }
