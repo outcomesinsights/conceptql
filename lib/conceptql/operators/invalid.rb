@@ -8,13 +8,19 @@ module ConceptQL
       no_desc
       default_query_columns
 
+      # The statement [nil] or [""] has no operator name. It is named
+      # "invalid", as an empty statement is, so it does not report its error
+      # under the key "" (bead conceptql-1ci).
       def initialize(*args)
         super
+        @op_name = "invalid" if op_name.to_s.empty?
         @errors = @options.delete(:errors)
       end
 
+      # The name in the statement. Operator#operator_name would give the class
+      # name, "invalid", for every unknown operator.
       def operator_name
-        @operator_name ||= arguments.shift.to_s || "invalid"
+        op_name
       end
 
       def query(_db)

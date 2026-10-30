@@ -226,6 +226,11 @@ All notable changes to this project will be documented in this file.
   applies to an empty operand (`["union", [], ["icd9", "412"]]`), to `[[]]`, to a `window`
   around `[]`, and to an `algorithm` whose stored statement is `[]`. Before, each of these
   raised `ArgumentError` in `Nodifier#create`.
+- The statement `[nil]` or `[""]` reports its error under the key `invalid`:
+  `{"invalid" => [["invalid operator", ""]]}`. Before, the key was `""`.
+- `Operators::Invalid#operator_name` gives the operator name of the statement (`nope_op` for
+  `["nope_op", "412"]`), and `invalid` when the statement has no name. Before, it removed the
+  first code from the arguments and gave that code (`412`).
 - A `ConceptQL::Database` on a Sequel mock (`Sequel.mock`) now reads its vocabulary from the
   `LEXICON_URL` database. A mock answers yes to every table check, so the Lexicon chose the
   mock as an OHDSI vocabulary that has no rows, and every vocabulary from the lexicon was an
