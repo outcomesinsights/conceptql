@@ -4,6 +4,7 @@ require "json"
 require "forwardable"
 require_relative "scope"
 require_relative "nodifier"
+require_relative "one_query_counts"
 require "sequel/sqlformat"
 
 module ConceptQL
@@ -116,7 +117,11 @@ module ConceptQL
       raise QueryError, "Failed to generate SQL for #{statement.inspect}"
     end
 
+    # With counts on, DuckDB and Postgres count every operator with one SQL
+    # statement (OneQueryCounts). Operators memoize #annotate, so a later call
+    # with other opts returns the first result.
     def annotate(opts = {})
+      nodifier.scope.one_query_counts = OneQueryCounts.new(operator, db, opts)
       operator.annotate(db, opts)
     end
 

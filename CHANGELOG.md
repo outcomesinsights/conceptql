@@ -13,6 +13,17 @@ All notable changes to this project will be documented in this file.
   one branch repeats (for example, through a window table with repeated rows) now stays,
   as it does for `cpt` and `hcpcs`. A custom multiple-vocabularies file that lists one
   vocabulary twice keeps `UNION` for that operator.
+- `Query#annotate` and `Query#scope_annotate` with counts on now count every operator with
+  one SQL statement on DuckDB and Postgres. The statement holds the root query's
+  `MATERIALIZED` CTEs and a `UNION ALL` of one count for each operator's CTE. An operator
+  that the root query does not evaluate (a vocabulary operator that `union` combines with
+  others) adds its own CTE to the statement. Before, each operator ran its own counting
+  query, which evaluated all of its upstream operators again. The counts and the output
+  shape do not change, and an operator with no rows still reports zeros. Spark does not
+  honor `MATERIALIZED`, so it keeps one counting query for each operator. The old path is
+  also used for a statement with an operator that annotate does not count (an invalid
+  operator, for example) and with temp tables (`force_temp_tables`). `skip_counts: true`
+  runs no counting query, as before.
 
 ## [0.5.0] - 2026-10-29
 
