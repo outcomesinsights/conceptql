@@ -4,7 +4,7 @@ title: Use UNION ALL where union inputs cannot overlap (a cpt_or_hcpcs wildcard 
 status: captured
 type: idea
 created_at: 2026-10-29T20:43:43.358238+00:00
-updated_at: 2026-10-29T20:43:43.358238+00:00
+updated_at: 2026-10-30T01:24:54.630211+00:00
 tags:
   - algorithm-survey
   - performance
@@ -45,3 +45,16 @@ statements: 1259; plain ok 1253; annotate ok 1256
 annotate_s: median 0.058  p90 0.234  p99 1.005  max 57.934  sum 200.7
 plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 ```
+
+RULED 2026-10-29 (Ryan, relayed by the jigsaw-diagram-editor session): this seed comes BEFORE the one-query counting mode. The question was "Fix the wildcard cost first ... ConceptQL's nut seed come before the one-query mode?", and Ryan answered "sure".
+
+The reason is a full-dataset measurement on 2026-10-29. It was read-only, plain query, threads=8, memory_limit=8GB, on seer_medicare_all_cancer_2024_enriched_20261027/gdm.duckdb (417.1 GB, 1,747,534 patients, 2,043,400,528 observation rows).
+
+- The 7 statements with a `cpt_or_hcpcs "*"` style wildcard took 318 to 1,044 s. Two ran out of memory, and each spilled 120 to 280 GB.
+- threads=32 with memory_limit=64GB made them only 1.1 to 3 times faster (best 166 s), and they still spilled 62 to 207 GB.
+- SQL build stayed under 1.3 s, so execution is the whole cost. Selective statements stayed under 1 s.
+- The ratio of full to sample execution time was 164 to 927 for the wildcard statements, and 50 to 118 for the heavy statements without a wildcard.
+- Statement ids: a82a4bb4, 7b49eaf0, b8e9fd6c, 0b174142, 68300d6a, 11aac29e, fdde7ce2.
+- The full ruling and the table are in JDE seed jde-c0y.1 (the round 4 and round 5 updates).
+
+This orders the work. It does not authorize building it: the change still goes through a bead.
