@@ -1,0 +1,21 @@
+[
+  "window",
+  [
+    "icd9",
+    "729.5",
+    {
+      "uuid": "true"
+    }
+  ],
+  {
+    "person_ids": [6, 7, 8],
+    "window_table": [
+      "date_range",
+      {
+        "start": "2008-01-01",
+        "end": "2009-12-31",
+        "label": "Study period"
+      }
+    ]
+  }
+]

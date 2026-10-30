@@ -73,7 +73,10 @@ module ConceptQL
         additional_order_columns = []
 
         if grouped?
-          one_date_ds = ds.from_self.where(rn: 1).from_self.select_remove(:rn)
+          # Name the columns to keep. select_remove(:rn) asked the database
+          # for them, and the CTE of a labeled upstream does not exist while
+          # the SQL is built (bead conceptql-6k8).
+          one_date_ds = ds.from_self.where(rn: 1).from_self.select(*dynamic_columns)
           ds = one_date_ds.select_append(
             Sequel[:ROW_NUMBER].function.over(
               partition: matching_columns_plus,

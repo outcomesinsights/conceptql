@@ -2,6 +2,21 @@ require "forwardable"
 require_relative "prettier_json"
 
 module ConceptQL
+  # Building a statement's SQL must run no query. Sequel's Dataset#columns!
+  # asks the database for the columns of a dataset, and the CTE of a labeled
+  # upstream does not exist while the SQL is built (bead conceptql-6k8).
+  # StatementFileTest#load_check records each call while it builds the SQL and
+  # fails the test on any.
+  module ColumnsQueryRecorder
+    def columns!
+      if (calls = Thread.current[:conceptql_columns_queries])
+        calls << caller_locations.map(&:to_s).find { |l| l.include?("/lib/conceptql/") }.to_s
+      end
+      super
+    end
+  end
+  Sequel::Dataset.prepend(ColumnsQueryRecorder)
+
   class StatementResults
     class << self
       def create(test_name, cdb, statement, remove_window_id = false)
@@ -294,6 +309,7 @@ module ConceptQL
       tests.each(&block)
 
       unless defined?(SKIP_SQL_GENERATION_TEST) && SKIP_SQL_GENERATION_TEST
+        columns_queries = Thread.current[:conceptql_columns_queries] = []
         begin
           query(statement).sql(:create_tables)
           query([ "window", statement,
@@ -302,6 +318,11 @@ module ConceptQL
                  { "start_date" => "1900-01-01", "end_date" => "2100-12-31" } ]).sql(:create_tables)
         rescue ConceptQL::Query::QueryError
           # Suppress this new issue
+        ensure
+          Thread.current[:conceptql_columns_queries] = nil
+        end
+        unless columns_queries.empty?
+          raise "Building the SQL for #{test_name} asked the database for columns at: #{columns_queries.uniq.join(', ')}"
         end
       end
 

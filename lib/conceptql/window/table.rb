@@ -25,8 +25,11 @@ module ConceptQL
 
         rhs = query.db[get_table_window(query)]
 
+        # select_group replaces the select list, so rhs needs no
+        # remove_window_id. Its select_remove asked the database for the
+        # columns of the window table while the SQL was built (bead
+        # conceptql-6k8).
         unless opts[:precalculated_window_id]
-          rhs = remove_window_id(rhs)
           rhs = rhs
                 .select_group(:person_id, :start_date, :end_date)
                 .select_append do
@@ -37,7 +40,7 @@ module ConceptQL
 
         rhs = rhs.as(:r)
 
-        remove_window_id(query)
+        remove_window_id(query, op.dynamic_columns)
           .from_self(alias: :l)
           .join(rhs, expr)
           .select_all(:l)
@@ -52,12 +55,18 @@ module ConceptQL
         db[get_table_window(nil)].select(:person_id)
       end
 
-      def remove_window_id(ds)
+      # columns: the names of the columns of ds, when the caller knows them.
+      # For a ds without a select list, select_remove asks the database for
+      # them, and a table that ds reads may not exist while the SQL is built
+      # (bead conceptql-6k8).
+      def remove_window_id(ds, columns = nil)
         cols = ds.opts[:select]
         if cols && !cols.empty? && cols.any? { |c| !c.is_a?(Symbol) }
           # When select has non-symbol expressions (e.g. CAST...AS),
           # select_remove can't match them by symbol name, so filter manually
           ds.select(*cols.reject { |c| window_id_column?(c) })
+        elsif columns && cols.blank?
+          ds.select(*(columns - [ :window_id ]))
         else
           ds.select_remove(:window_id)
         end
