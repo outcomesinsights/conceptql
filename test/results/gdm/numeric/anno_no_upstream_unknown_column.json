@@ -1,0 +1,16 @@
+[
+  "numeric",
+  "no_such_column",
+  {
+    "annotation": {
+      "counts": {
+        "person": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["unknown column", "no_such_column"]]
+    },
+    "name": "Numeric"
+  }
+]
