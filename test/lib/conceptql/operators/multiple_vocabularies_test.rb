@@ -128,6 +128,19 @@ describe ConceptQL::Operators::MultipleVocabularies do
       _(warnings).must_equal [ [ "unknown code(s)", "12345" ] ]
     end
 
+    # The NDC format warning carries a reason (bead conceptql-28h). A custom
+    # multiple_vocabularies file can put NDC beside other vocabularies, and
+    # its format verdict must still count as a format verdict.
+    it "counts the NDC format warning as a format verdict" do
+      ndc = "improperly formatted code (claims use 11-digit package NDCs, so it matches no rows)"
+      warnings = vocab_warnings(
+        "cpt4" => [ [ ndc, "AA0382" ] ],
+        "hcpcs" => [ [ "improperly formatted code", "AA0382" ] ]
+      )
+
+      _(warnings).must_equal [ [ "improperly formatted code", "AA0382" ] ]
+    end
+
     it "keeps a vocabulary operator's own warnings intact" do
       cpt4 = [ [ "unknown code(s)", "12345" ] ]
       vocab_warnings("cpt4" => cpt4, "hcpcs" => [ [ "improperly formatted code", "12345" ] ])

@@ -143,6 +143,11 @@ All notable changes to this project will be documented in this file.
   has no `format_regexp` column, and a `format_regexp` column in a custom vocabularies file is
   ignored. The `format_regexp` of a vocabulary entry's metadata is the anchored pattern from
   vocabulary_formats.
+- The format warning of an NDC code says why the code matches nothing:
+  `improperly formatted code (claims use 11-digit package NDCs, so it matches no rows)`. The
+  claims carry the 11-digit package NDC, so a code in another form selects no rows. The
+  warning keeps its shape, the message and then the codes, and the message still starts with
+  `improperly formatted code`. The other vocabularies keep the plain text.
 - `occurrence` with `at_least` returns each row once, because every stream is a set. Each
   earlier row of a person picks its nth row, and with `at_least` several earlier rows can pick
   the same row. Before, that row came out once for each earlier row that picked it, so

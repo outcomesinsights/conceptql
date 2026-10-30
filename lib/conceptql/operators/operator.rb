@@ -41,6 +41,12 @@ module ConceptQL
       # is not checked. A well-formed code that the vocabulary does not know
       # is also a warning.
       BAD_FORMAT = "improperly formatted code"
+      # Claims carry the 11-digit package NDC (jde found no 9-digit product
+      # code in 601.9M claim NDCs, seed conceptql-ysx), so the NDC warning
+      # says why the code matches nothing. It starts with BAD_FORMAT, which
+      # the JDE algorithm spec looks for (bead conceptql-28h).
+      NDC_BAD_FORMAT = "#{BAD_FORMAT} (claims use 11-digit package NDCs, so it matches no rows)"
+      BAD_FORMATS = [ BAD_FORMAT, NDC_BAD_FORMAT ].freeze
       UNKNOWN_CODE = "unknown code(s)"
 
       option :label, type: :string
@@ -616,7 +622,12 @@ module ConceptQL
       def validate_codes_match
         return if bad_arguments.empty?
 
-        add_warning(BAD_FORMAT, *bad_arguments)
+        add_warning(bad_format_message, *bad_arguments)
+      end
+
+      # The text of the format warning. Vocabulary gives the NDC its reason.
+      def bad_format_message
+        BAD_FORMAT
       end
 
       def additional_validation(_db, _opts = {})
