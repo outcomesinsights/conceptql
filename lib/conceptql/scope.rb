@@ -269,14 +269,16 @@ module ConceptQL
 
     # Takes the CTEs out of the datasets in an expression, and replaces its
     # long IN lists with concept lists. With datasets: false, it leaves the
-    # datasets as they are (for a SELECT list).
+    # datasets as they are (for a SELECT list). With concept_lists: false, it
+    # leaves the IN lists as they are.
     class CteExtractor < Sequel::ASTTransformer
-      def initialize(scope, ctes, db, datasets: true)
+      def initialize(scope, ctes, db, datasets: true, concept_lists: true)
         super()
         @scope = scope
         @ctes = ctes
         @db = db
         @datasets = datasets
+        @concept_lists = concept_lists
       end
 
       private
@@ -284,7 +286,7 @@ module ConceptQL
       def v(o)
         if o.is_a?(Sequel::Dataset)
           @datasets ? @scope.recursive_extract_ctes(o, @ctes) : o
-        elsif @scope.concept_list?(o)
+        elsif @concept_lists && @scope.concept_list?(o)
           @scope.concept_list_condition(o, @db, @ctes, v(o.args.first))
         else
           super
@@ -376,9 +378,12 @@ module ConceptQL
       end
 
       # One In Two Out flags its events with CASE expressions on the same
-      # provenance lists as its WHERE.
+      # provenance lists as its WHERE. Spark rejects an IN subquery in a
+      # SELECT list, so there the lists stay IN lists. @select_concept_lists
+      # is nil when with_ctes did not run (a direct call), and nil rewrites.
       if (select = query.opts[:select])
-        query = query.clone(select: CteExtractor.new(self, ctes, query.db, datasets: false).transform(select))
+        extractor = CteExtractor.new(self, ctes, query.db, datasets: false, concept_lists: @select_concept_lists != false)
+        query = query.clone(select: extractor.transform(select))
       end
 
       query
@@ -493,6 +498,7 @@ module ConceptQL
       rdbms = op.rdbms
       # A concept list is read by many CTEs, so it runs once.
       @concept_list_options = rdbms.supports_materialized? ? { materialized: true } : {}
+      @select_concept_lists = rdbms.supports_in_subquery_in_select?
 
       query = query.from_self
       temp_tables = []

@@ -205,7 +205,9 @@ All notable changes to this project will be documented in this file.
   - An IN or NOT IN list of at least `ConceptQL::Scope::CONCEPT_LIST_MIN_ITEMS` (1,000)
     integers, such as a list of provenance concept IDs, goes to the database once. It becomes
     a `VALUES` CTE that each copy of the list reads. The CTE is `MATERIALIZED` on the
-    databases that support it, which excludes Spark. A shorter list stays an IN list.
+    databases that support it, which excludes Spark. A shorter list stays an IN list. On
+    Spark, a list in a SELECT-list expression (the CASE flags of `one_in_two_out`) stays an
+    IN list, because Spark accepts an IN subquery only in a filter or a join.
   - On a 111-operator production algorithm, DuckDB planning of the plain query fell from
     0.81 s to 0.57 s and `annotate` with counts from 2.7 s to 2.0 s. Postgres planning of the
     same statement on the test data fell from 485 ms to 156 ms.
