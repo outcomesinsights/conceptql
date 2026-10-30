@@ -17,8 +17,8 @@ describe "the deprecated count operator" do
   let(:deprecation) do
     [
       "deprecated operator",
-      "count will become an error in a later release. " \
-      "To count the events of each person, use numeric 1 and then sum."
+      "count will become an error in a later release. To count the events of each person, " \
+      'use ["sum", ["numeric", 1, <stream>], {"group_by_person": true}].'
     ]
   end
 
@@ -31,7 +31,7 @@ describe "the deprecated count operator" do
   end
 
   it "gives no warning for the numeric and sum idiom" do
-    _(warnings_for([ "sum", [ "numeric", 1, [ "icd9", "412" ] ] ]).to_h).must_be_empty
+    _(warnings_for([ "sum", [ "numeric", 1, [ "icd9", "412" ] ], { "group_by_person" => true } ]).to_h).must_be_empty
   end
 
   # count has no category, so ConceptQL.metadata leaves it out, as it leaves
