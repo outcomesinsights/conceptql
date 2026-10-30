@@ -134,7 +134,16 @@ module ConceptQL
     # With counts on, DuckDB and Postgres count every operator with one SQL
     # statement (OneQueryCounts). Operators memoize #annotate, so a later call
     # with other opts returns the first result.
+    #
+    # The errors of the window table's own statement are reported under
+    # "window_table" (see #window_table_errors). Then nothing is counted,
+    # because every count joins the window table, and building its SQL raises.
     def annotate(opts = {})
+      window_errors = window_table_errors
+      unless window_errors.empty?
+        nodifier.scope.add_errors("window_table", window_errors)
+        opts = opts.merge(skip_counts: true)
+      end
       nodifier.scope.one_query_counts = OneQueryCounts.new(operator, db, opts)
       operator.annotate(db, opts)
     end
@@ -218,6 +227,20 @@ module ConceptQL
       raise InvalidStatementError.new(statement, errors), cause: nil unless errors.empty?
 
       @valid = true
+    end
+
+    # The validation errors of the window table's statement, when the window
+    # table is a ConceptQL statement (an Array, as Window::Table reads it), as
+    # one list of [message, *details]. Each message starts with the name of
+    # the operator that reported it. A table name has no errors.
+    def window_table_errors
+      scope_opts = nodifier.scope.opts
+      window_table = scope_opts.merge(scope_opts[:window_opts] || {})[:window_table]
+      return [] unless window_table.is_a?(Array)
+
+      cdb.query(window_table).validation_errors.flat_map do |op, op_errors|
+        op_errors.map { |message, *details| [ "#{op}: #{message}", *details ] }
+      end
     end
 
     def extract_statement(stmt, opts)

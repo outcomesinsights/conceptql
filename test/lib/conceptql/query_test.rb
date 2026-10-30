@@ -28,24 +28,27 @@ describe ConceptQL::Query do
     _(CDB.opts).must_equal(og_opts)
   end
 
+  # Before conceptql-fy3 this test called criteria_ids, which no file
+  # defines, so must_raise caught the NoMethodError and the test passed for any
+  # statement. The ICD-9 code was "203.0x", a second error, so the recall was
+  # not the only reason to raise. Now the unknown label is the only error.
   it "should raise error if attempting to execute invalid recall" do
-    _(proc do
-      criteria_ids(
-        [ "after",
-         { left: [ "during",
-                  { left: [ "occurrence", 4, [ "icd9", "203.0x", { "label" => "Meyloma Dx" } ] ],
-                    right: [ "time_window", [ "first", [ "recall", "Meyloma Dx" ] ],
-                            { "start" => "0", "end" => "90d" } ] } ],
-           right: [ "union",
-                   [ "during",
-                    { left: [ "time_window", [ "recall", "Qualifying Meyloma Dx" ], { "start" => "-90d", "end" => "0", "label" => "Meyloma 90-day Lookback" } ],
-                      right: [ "cpt", "38220", "38221", "85102", "85095", "3155F", "85097", "88237", "88271", "88275",
-                              "88291", "88305", { "label" => "Bone Marrow" } ] } ],
-                   [ "occurrence", 2, [ "during",
-                                      { left: [ "cpt", "84156", "84166", "86335", "84155", "84165", "86334", "83883", "81264", "82784", "82785", "82787", "82040", "82232", "77074", "77075", "83615", { "label" => "Other Tests" } ],
-                                        right: [ "recall", "Meyloma 90-day Lookback" ] } ] ] ] } ]
-      )
-    end).must_raise
+    statement = [ "after",
+                  { left: [ "during",
+                            { left: [ "occurrence", 4, [ "icd9", "203.00", { "label" => "Meyloma Dx" } ] ],
+                              right: [ "time_window", [ "first", [ "recall", "Meyloma Dx" ] ],
+                                       { "start" => "0", "end" => "90d" } ] } ],
+                    right: [ "union",
+                             [ "during",
+                               { left: [ "time_window", [ "recall", "Qualifying Meyloma Dx" ], { "start" => "-90d", "end" => "0", "label" => "Meyloma 90-day Lookback" } ],
+                                 right: [ "cpt", "38220", "38221", "85102", "85095", "3155F", "85097", "88237", "88271", "88275",
+                                          "88291", "88305", { "label" => "Bone Marrow" } ] } ],
+                             [ "occurrence", 2, [ "during",
+                                                  { left: [ "cpt", "84156", "84166", "86335", "84155", "84165", "86334", "83883", "81264", "82784", "82785", "82787", "82040", "82232", "77074", "77075", "83615", { "label" => "Other Tests" } ],
+                                                    right: [ "recall", "Meyloma 90-day Lookback" ] } ] ] ] } ]
+
+    error = _ { CDB.query(statement).all }.must_raise(ConceptQL::InvalidStatementError)
+    _(error.errors).must_equal("recall" => [ [ "no matching label", "Qualifying Meyloma Dx" ] ])
   end
 
   # conceptql-g2v: the plain query validates the statement first. Each of
@@ -120,6 +123,50 @@ describe ConceptQL::Query do
         _(CDB.query(statement).sql).must_match(/SELECT/i)
         _(CDB.query(statement).count).must_be_kind_of(Integer)
       end
+    end
+  end
+
+  # conceptql-fy3: the window table's own statement is a second statement.
+  # Annotate reports its errors under "window_table" and does not count, because
+  # every count joins the window table. The plain query of the outer statement
+  # raises with the same errors. Before, a counted annotate raised the window
+  # table's InvalidStatementError, and annotate without counts reported nothing.
+  describe "a window whose window table statement is invalid" do
+    let(:statement) do
+      [ "window", [ "icd9", "412" ],
+        { "window_table" => [ "provider_filter", [ "icd9", "412" ], { "specialties" => "*" } ] } ]
+    end
+    let(:errors) do
+      { "window_table" => [ [ "provider_filter: required option not present", "roles" ] ] }
+    end
+
+    it "reports the window table's errors from a counted scope_annotate" do
+      _(CDB.query(statement).scope_annotate[:errors]).must_equal(errors)
+    end
+
+    it "reports the window table's errors from scope_annotate without counts" do
+      _(CDB.query(statement).scope_annotate(skip_counts: true)[:errors]).must_equal(errors)
+    end
+
+    it "annotates with counts and does not count" do
+      _(CDB.query(statement).annotate).must_equal(
+        [ "icd9", "412", { annotation: { counts: { condition_occurrence: { rows: 0, n: 0 } } }, name: "ICD-9 CM" } ]
+      )
+    end
+
+    it "raises InvalidStatementError for the outer statement from the plain query" do
+      query = CDB.query(statement)
+      error = _ { query.sql }.must_raise(ConceptQL::InvalidStatementError)
+      _(error.errors).must_equal(errors)
+      _(error.statement).must_equal(query.statement)
+      _(error.message).must_include("  window_table: provider_filter: required option not present (roles)")
+    end
+
+    it "reports the errors of a window table inside a window table" do
+      nested = [ "window", [ "icd9", "412" ], { "window_table" => statement } ]
+      _(CDB.query(nested).scope_annotate[:errors]).must_equal(
+        "window_table" => [ [ "window_table: provider_filter: required option not present", "roles" ] ]
+      )
     end
   end
 
