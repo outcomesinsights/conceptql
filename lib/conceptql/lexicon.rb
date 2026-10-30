@@ -83,7 +83,8 @@ module ConceptQL
 
     # The schemas, as "catalog.schema", where DuckDB looks for a table named
     # without a schema. DuckDB reports a set search path in that form. The
-    # consumers attach the dataset and search "memory.main,dataset.<schema>",
+    # consumers attach the dataset and search, for example,
+    # "memory.main,dataset_<schema>.<schema>" (sequelizer 0.5 with_dataset),
     # so current_schema() alone ("main") would name the wrong schema. With no
     # search path set, DuckDB searches the current schema (and its own system
     # schemas, which hold no dataset tables).
