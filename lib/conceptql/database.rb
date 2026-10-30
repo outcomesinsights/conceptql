@@ -95,8 +95,10 @@ module ConceptQL
       end
 
       # The LEXICON_URL database, or nil when it is unset. Lexicon tries the
-      # data db first and, when neither has the vocabulary tables, falls back
-      # to LexiconNoDB, so no database (and no sqlite3 gem) is needed here.
+      # data db first. When neither has the vocabulary tables, a real data db
+      # raises Lexicon::NoVocabularyError, and a db-less Database (db nil or a
+      # Sequel mock) falls back to LexiconNoDB, so no database (and no sqlite3
+      # gem) is needed here.
       def make_lexicon_db
         return unless ENV["LEXICON_URL"]
 
@@ -126,6 +128,9 @@ module ConceptQL
       @source_tables.fetch(key) { db.table_exists?(table) && (@source_tables[key] = true) }
     end
 
+    # The Lexicon passed as lexicon:, or one built from the data db and the
+    # LEXICON_URL database. Database.new calls it, so a real data db without
+    # vocabulary tables raises Lexicon::NoVocabularyError there.
     def lexicon
       @lexicon ||= Lexicon.new(self.class.lexicon_db, db, cache: @opts[:cache_lookups])
     end

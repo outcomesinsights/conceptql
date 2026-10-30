@@ -192,28 +192,31 @@ describe ConceptQL::Query do
                                                 ])
     end
 
-    it "should return codes even if database search_path is bad" do
+    # Before conceptql-brm this test was "should return codes even if
+    # database search_path is bad": a real database with no vocabulary fell
+    # back to LexiconNoDB without a word, and code_list listed the codes. Seed
+    # conceptql-ysx ruled (option A) that such a Database raises, and code
+    # lists are not exempt.
+    it "raises NoVocabularyError, before any code list, when the database search_path is bad" do
       ClimateControl.modify(LEXICON_URL: nil) do
         seq_db = Sequel.connect(DB.opts.except(:after_connect).merge(search_path: "bad_path"))
-        db = ConceptQL::Database.new(seq_db)
-        query = db.query([ "union", %w[cpt 80230], [ "icd9", "250.00", "250.02" ] ])
-        expected = [
-          "CPT 80230",
-          "ICD-9 CM 250.00",
-          "ICD-9 CM 250.02"
-        ]
-        _(query.code_list.map(&:to_s)).must_equal(expected)
+        _ { ConceptQL::Database.new(seq_db) }.must_raise ConceptQL::Lexicon::NoVocabularyError
+      ensure
+        seq_db&.disconnect
       end
     end
 
+    # Before conceptql-brm this test read a second connection with the search
+    # path "bad_path". Postgres's after_connect restored the real search path,
+    # but on DuckDB that connection had no vocabulary and now raises
+    # NoVocabularyError. A "*" needs no vocabulary, so the suite's own
+    # Database serves.
     it "should return asterisk when selecting all" do
-      seq_db = Sequel.connect(DB.opts.merge(search_path: "bad_path"))
-      db = ConceptQL::Database.new(seq_db)
-      query = db.query([ "union", [ "cpt", "*" ], [ "icd9", "250.00", "*" ] ])
-      _(query.code_list(seq_db).map(&:to_s)).must_equal([
-                                                          "CPT *: ALL CODES",
-                                                          "ICD-9 CM *: ALL CODES"
-                                                        ])
+      query = CDB.query([ "union", [ "cpt", "*" ], [ "icd9", "250.00", "*" ] ])
+      _(query.code_list(DB).map(&:to_s)).must_equal([
+                                                      "CPT *: ALL CODES",
+                                                      "ICD-9 CM *: ALL CODES"
+                                                    ])
     end
 
     it "should return codes from vocabulary-based operators even with no db" do

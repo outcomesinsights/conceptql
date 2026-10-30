@@ -38,6 +38,20 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking: a Database on a real database without vocabulary raises
+  `ConceptQL::Lexicon::NoVocabularyError`.** `ConceptQL::Database.new(db)` raises it when `db`
+  is a real database (not nil and not a Sequel mock) and neither `db` nor the `LEXICON_URL`
+  database has all the OHDSI vocabulary tables (`concept`, `concept_ancestor`,
+  `concept_relationship`, `vocabulary`) or all the GDM ones (`ancestors`, `concepts`,
+  `mappings`, `vocabularies`). Before, such a Database silently used no vocabulary: every code
+  matched no rows and the unknown-code warnings turned off, so `["icd9", "412"]` returned 0
+  rows instead of 48. Code lists are not exempt. The message names the data database (never
+  its user or password), its search path on Postgres and DuckDB, the missing tables of each
+  kind in each database searched, whether `LEXICON_URL` is set, and the fixes. `#searches`
+  holds the same facts. A Database with no db or a Sequel mock (diagram and SQL rendering)
+  still uses no vocabulary, and a Database given `lexicon:` (for example
+  `ConceptQL::Lexicon.for_dataset(db)`) is unaffected. `Lexicon::MissingVocabularyError` is now a
+  subclass of `NoVocabularyError`, so one `rescue` covers both.
 - **Breaking: the plain query raises `ConceptQL::InvalidStatementError` for a statement with
   validation errors.** `Query#query`, `#sql` and `#sql_statements`, and `#all`, `#count`,
   `#execute`, `#order` and `#analyze` through `#query`, now validate the statement first,

@@ -36,13 +36,95 @@ module ConceptQL
                    :vocabularies,
                    :vocabularies_query
 
+    # The key of each lexicon kind in NoVocabularyError::Search#missing_tables.
+    LEXICON_KINDS = { LexiconOhdsi => :ohdsi, LexiconGDM => :gdm }.freeze
+
     # The cached results keyed on [method, arguments], or nil when caching is
     # off. Its size is the number of distinct lookups.
     attr_reader :cache
 
+    # No database that ConceptQL searched has the vocabulary tables. Without
+    # them every code compiles to 1 = 0 and the unknown-code checks turn off,
+    # so a query on real data would return no rows without a word.
+    #
+    # ConceptQL::Database raises it (through Lexicon.new) when its data
+    # database is real, which is not nil and not a Sequel mock, and neither
+    # that database nor the LEXICON_URL database has all the tables of one
+    # lexicon kind. A database-less Database keeps LexiconNoDB.
+    # MissingVocabularyError (Lexicon.for_dataset) is a subclass, so one
+    # rescue covers both.
+    class NoVocabularyError < StandardError
+      # One database that was searched. +role+ is :data_database (the
+      # Database's own db), :lexicon_url (the LEXICON_URL database) or
+      # :dataset (Lexicon.for_dataset). +database+ names it without a user or
+      # a password. +search_path+ is the search path that the unqualified
+      # table names resolved through, or nil where the adapter has none.
+      # +missing_tables+ maps each lexicon kind (:ohdsi, :gdm) that was
+      # looked for to its tables that were not found.
+      Search = Data.define(:role, :database, :search_path, :missing_tables)
+
+      ROLES = {
+        data_database: "the data database",
+        lexicon_url: "the LEXICON_URL database",
+        dataset: "the DuckDB dataset"
+      }.freeze
+
+      attr_reader :searches
+
+      def initialize(message = nil, searches: [])
+        @searches = searches
+        super(message)
+      end
+
+      # The error for a ConceptQL::Database whose data database is real.
+      # +database_type+ is the data database's, and chooses the advice.
+      # +lexicon_url_searched+ is false when LEXICON_URL is not set.
+      # +only+ is the LEXICON_*_ONLY variable that narrowed the kinds, or nil.
+      def self.for_database(searches, database_type:, lexicon_url_searched:, only: nil)
+        data = searches.first
+        lines = [
+          "ConceptQL::Database found no vocabulary tables for its data database (#{data.database}).",
+          "Without them every code would match no rows and unknown codes would not be reported, " \
+          "so the Database refuses to start.",
+          "It searched:"
+        ]
+        lines.concat(searches.map { |search| "  - #{describe_search(search)}" })
+        lines << "  - LEXICON_URL is not set, so no lexicon database was searched." unless lexicon_url_searched
+        lines << "#{only} is set, so only the #{only.delete_prefix("LEXICON_").delete_suffix("_ONLY")} tables were looked for." if only
+        lines << "Fix it in one of these ways:"
+        lines.concat(advice(database_type).map { |line| "  - #{line}" })
+        new(lines.join("\n"), searches: searches)
+      end
+
+      def self.describe_search(search)
+        where = ROLES.fetch(search.role)
+        where += " (#{search.database})" unless search.role == :data_database
+        where += ", through the search path #{search.search_path.inspect}" if search.search_path
+        missing = search.missing_tables.map do |kind, tables|
+          "#{kind.to_s.upcase} tables #{tables.join(", ")} are missing"
+        end
+        "#{where}: #{missing.join("; ")}."
+      end
+      private_class_method :describe_search
+
+      def self.advice(database_type)
+        dataset = "Build the lexicon from the DuckDB dataset itself: " \
+                  "ConceptQL::Database.new(db, lexicon: ConceptQL::Lexicon.for_dataset(db))."
+        search_path = "Put the schema that holds the vocabulary tables on the data database's " \
+                      "search path (in the test data, ohdsi_vocabs or gdm_vocabs)."
+        lexicon_url = "Set LEXICON_URL to a database that has the vocabulary tables."
+        case database_type
+        when :duckdb then [ dataset, search_path, lexicon_url ]
+        when :postgres then [ search_path, lexicon_url ]
+        else [ lexicon_url ]
+        end
+      end
+      private_class_method :advice
+    end
+
     # A DuckDB dataset lacks one or more of the OHDSI vocabulary tables, so
     # Lexicon.for_dataset cannot make the dataset its own lexicon.
-    class MissingVocabularyError < StandardError
+    class MissingVocabularyError < NoVocabularyError
       attr_reader :missing_tables, :schemas
 
       # +missing_tables+ are the vocabulary tables that were not found.
@@ -52,11 +134,14 @@ module ConceptQL
       def initialize(missing_tables, schemas:, search_path:)
         @missing_tables = missing_tables
         @schemas = schemas
+        search = Search.new(role: :dataset, database: "schemas #{schemas.join(", ")}",
+                            search_path: search_path, missing_tables: { ohdsi: missing_tables })
         super("The DuckDB dataset (schemas #{schemas.map(&:inspect).join(", ")}) " \
               "has no vocabulary table #{missing_tables.join(", ")}. " \
               "A DuckDB dataset is its own lexicon: ConceptQL reads " \
               "#{LexiconOhdsi::VOCABULARY_TABLES.join(", ")} only from it, and never from LEXICON_URL. " \
-              "The tables were looked up without a schema, through the search path #{search_path.inspect}.")
+              "The tables were looked up without a schema, through the search path #{search_path.inspect}.",
+              searches: [ search ])
       end
     end
 
@@ -163,6 +248,9 @@ module ConceptQL
     end
     private :lookup
 
+    # The first lexicon kind whose tables are all in the data db (dataset_db)
+    # or else the lexicon db. When neither has them, LexiconNoDB, but only
+    # for a database-less caller: a real data db raises NoVocabularyError.
     def determine_strategy(lexicon_db, dataset_db)
       [ dataset_db, lexicon_db ].compact.each do |db|
         lexicon_classes.each do |klass|
@@ -171,8 +259,60 @@ module ConceptQL
           return (klass.new(db))
         end
       end
+      raise no_vocabulary_error(lexicon_db, dataset_db) if real_database?(dataset_db)
+
       LexiconNoDB.new(Sequel.mock(host: :postgres))
     end
+
+    # Not nil and not a Sequel mock: the diagram renderer and SQL rendering
+    # use those, and they have no vocabulary on purpose.
+    def real_database?(db)
+      !db.nil? && db.adapter_scheme != :mock
+    end
+
+    def no_vocabulary_error(lexicon_db, dataset_db)
+      searches = [ search(:data_database, dataset_db) ]
+      searches << search(:lexicon_url, lexicon_db) if lexicon_db
+      only = %w[LEXICON_OHDSI_ONLY LEXICON_GDM_ONLY].find { |name| ENV[name] }
+      NoVocabularyError.for_database(searches, database_type: dataset_db.database_type.to_sym,
+                                               lexicon_url_searched: !lexicon_db.nil?, only: only)
+    end
+
+    def search(role, db)
+      missing = lexicon_classes.to_h do |klass|
+        [ LEXICON_KINDS.fetch(klass), klass::VOCABULARY_TABLES.reject { |table| db.table_exists?(table) } ]
+      end
+      NoVocabularyError::Search.new(role: role, database: describe_database(db),
+                                    search_path: search_path_of(db), missing_tables: missing)
+    end
+
+    # The database's type, name and host, never its user or password. A
+    # DuckDB database is named by its file, which DuckDB reports itself:
+    # Sequel's URL parsing drops the leading "/" of a duckdb:///path.
+    def describe_database(db)
+      name = db.opts[:database]
+      if db.database_type.to_sym == :duckdb
+        name = db.from(Sequel.function(:duckdb_databases))
+                 .where(database_name: Sequel.function(:current_database))
+                 .get(:path) || ":memory:"
+      end
+      host = db.opts[:host].to_s
+      [ "#{db.database_type} database",
+        (name.to_s.inspect if name),
+        ("on host #{host.inspect}" unless host.empty?) ].compact.join(" ")
+    end
+
+    # The search path that a table named without a schema resolves through:
+    # Postgres's search_path setting, DuckDB's searched schemas as
+    # "catalog.schema", or nil for an adapter without one.
+    def search_path_of(db)
+      case db.database_type.to_sym
+      when :postgres then db.get(Sequel.function(:current_setting, "search_path"))
+      when :duckdb
+        self.class.send(:searched_schemas, db, db.get(Sequel.function(:current_setting, "search_path"))).join(",")
+      end
+    end
+    private :real_database?, :no_vocabulary_error, :search, :describe_database, :search_path_of
 
     def lexicon_classes
       classes = []
