@@ -80,6 +80,13 @@ All notable changes to this project will be documented in this file.
   On DuckDB, the order of a multi-domain operator's domains changed from run to run, so a
   diagram drawn from the counts could change between identical runs. The keys and the
   numbers are the same as before.
+- `filter` now matches a left record only to a right record with the same
+  `criterion_table`, as well as the same person, `criterion_id` and `criterion_domain`. A
+  `criterion_id` is an id within its table. Before, a record matched a record from another
+  table of the same domain whenever their ids were equal. For example,
+  `hospitalization` records (table `collections`, domain `condition_occurrence`) matched
+  `icd9` records from `observations`: `filter(icd9 "*" by hospitalization, ignore_dates)`
+  kept 8 such records on the test data, and now keeps none.
 
 ## [0.5.0] - 2026-10-29
 
