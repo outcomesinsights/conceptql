@@ -79,11 +79,17 @@ module ConceptQL
     end
 
     # The root query, and the name of the CTE in its WITH list that holds the
-    # rows of each operator (nil when it has none).
+    # rows of each operator (nil when it has none). An operator's CTE that
+    # Scope#merge_identical_ctes removed is read through the CTE that
+    # replaced it.
     def root_query(extra = [])
       query = scope.with_ctes(root, db, extra: extra)
       with_names = Array(query.opts[:with]).map { |w| w[:name] }
-      [ query, @operators.map { |op| scope.cte_names(op).reverse.find { |name| with_names.include?(name) } } ]
+      merged = query.opts.fetch(Scope::MERGED_CTES, {})
+      relations = @operators.map do |op|
+        scope.cte_names(op).reverse_each.map { |name| merged.fetch(name, name) }.find { |name| with_names.include?(name) }
+      end
+      [ query, relations ]
     end
 
     # Every operator that #annotate visits: the statement's tree, and the

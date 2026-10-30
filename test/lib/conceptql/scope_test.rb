@@ -168,5 +168,99 @@ describe ConceptQL::Scope do
         _ { sorted_names(ctes) }.must_raise(ConceptQL::Scope::CteCycleError)
       end
     end
+
+    describe "long IN lists" do
+      let(:sequel_db) { Sequel.mock(host: host) }
+      let(:scope) { ConceptQL::Scope.new }
+      let(:ids) { (1..ConceptQL::Scope::CONCEPT_LIST_MIN_ITEMS).to_a }
+
+      def extract(query)
+        ctes = []
+        query = scope.send(:recursive_extract_ctes, query, ctes)
+        [ query.sql, ctes.uniq(&:first) ]
+      end
+
+      it "sends each list once, as a CTE that each copy reads" do
+        flag = Sequel.case([ [ Sequel.expr(z: ids), 1 ] ], 0).as(:flag)
+        query = sequel_db[:a].where(x: ids).select(:x, flag).union(sequel_db[:b].exclude(y: ids))
+        sql, ctes = extract(query)
+
+        _(ctes.length).must_equal(1)
+        name, list, with_opts = ctes.first
+        list_name = sequel_db.literal(name)
+        _(list_name).must_match(/\A"concept_list_/)
+        _(list.sql).must_equal("SELECT * FROM (VALUES #{ids.map { "(#{_1})" }.join(', ')}) AS \"t\"(\"concept_id\")")
+        _(with_opts).must_equal({})
+        _(sql).wont_match(/\(1, 2, 3/)
+        reader = "(SELECT \"concept_id\" FROM #{list_name})"
+        _(sql.scan("(\"x\" IN #{reader})").length).must_equal(1)
+        _(sql.scan("(\"y\" NOT IN #{reader})").length).must_equal(1)
+        _(sql.scan("CASE WHEN (\"z\" IN #{reader})").length).must_equal(1)
+      end
+
+      it "keeps a shorter list, and a list that is not all integers, as an IN list" do
+        sql, ctes = extract(sequel_db[:a].where(x: ids.drop(1)).where(y: ids.map(&:to_s)))
+
+        _(ctes).must_be_empty
+        _(sql).must_include('"x" IN (2, 3, 4,')
+        _(sql).must_include(%q["y" IN ('1', '2',])
+      end
+    end
+
+    describe "merging ctes with the same sql" do
+      let(:sequel_db) { Sequel.mock(host: host) }
+      let(:scope) { ConceptQL::Scope.new }
+      let(:a1) { Sequel.identifier("a_1_abc") }
+      let(:a2) { Sequel.identifier("a_2_abc") }
+      let(:b1) { Sequel.identifier("b_3_abc") }
+      let(:b2) { Sequel.identifier("b_4_abc") }
+      let(:root) { Sequel.identifier("root_5_abc") }
+      # root reads b1 and b2, which read the two copies of a.
+      let(:ctes) do
+        [ [ a1, sequel_db[:patients] ], [ b1, sequel_db.from(a1) ],
+          [ a2, sequel_db[:patients] ], [ b2, sequel_db.from(a2) ],
+          [ root, sequel_db.from(b1).union(sequel_db.from(b2)) ] ]
+      end
+
+      def merge(ctes, root_sql = 'SELECT * FROM "root_5_abc"')
+        scope.send(:merge_identical_ctes, ctes, root_sql)
+      end
+
+      it "keeps one cte of each sql, and the readers of a removed cte read the kept one" do
+        entries, merged = merge(ctes)
+
+        _(entries.map(&:first)).must_equal([ a1, b1, root ])
+        _(merged).must_equal({ a2 => a1, b2 => b1 })
+        _(entries.last[1].sql).must_equal(
+          'SELECT * FROM (SELECT * FROM "b_3_abc" UNION SELECT * FROM "b_3_abc") AS "t1"'
+        )
+      end
+
+      # b2 reads a2, which is kept, so b2 differs from b1 and is kept too.
+      it "keeps a cte that the root query reads" do
+        entries, merged = merge(ctes, 'SELECT * FROM "root_5_abc", "a_2_abc"')
+
+        _(entries.map(&:first)).must_equal([ a1, b1, a2, b2, root ])
+        _(merged).must_be_empty
+      end
+
+      it "does not merge ctes with different WITH options" do
+        entries, merged = merge([ [ a1, sequel_db[:patients], { materialized: true } ], [ a2, sequel_db[:patients] ] ])
+
+        _(entries.map(&:first)).must_equal([ a1, a2 ])
+        _(merged).must_be_empty
+      end
+
+      it "merges the ctes of operators that a statement evaluates twice" do
+        cdb = ConceptQL::Database.new(sequel_db, data_model: :gdm_wide)
+        query = cdb.query([ "union", [ "ADMSRCE", "12", { label: "l1" } ], %w[recall l1], %w[recall l1] ]).query
+        sqls = query.opts[:with].map { |w| w[:dataset].sql }
+
+        # The statement builds three recall CTEs with the same SQL.
+        _(query.opts[ConceptQL::Scope::MERGED_CTES].length).must_equal(2)
+        _(sqls.uniq.length).must_equal(sqls.length)
+        _(query.sql.scan(/"recall_\w+" AS/).length).must_equal(1)
+      end
+    end
   end
 end
