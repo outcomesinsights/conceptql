@@ -1,0 +1,7 @@
+[
+  "filter",
+  {
+    "left": ["icd9", "*"],
+    "right": ["hospitalization"]
+  }
+]

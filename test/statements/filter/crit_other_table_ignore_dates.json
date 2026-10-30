@@ -1,0 +1,8 @@
+[
+  "filter",
+  {
+    "left": ["icd9", "*"],
+    "right": ["hospitalization"],
+    "ignore_dates": true
+  }
+]
