@@ -4,7 +4,7 @@ title: 'Spec rewrite findings: six questionable ConceptQL behaviors and an uncom
 status: resolved
 type: question
 created_at: 2026-10-30T02:01:24.978057+00:00
-updated_at: 2026-10-30T11:39:10.787831+00:00
+updated_at: 2026-10-30T14:17:38.110000+00:00
 resolved_at: 2026-10-30T11:39:10.787822+00:00
 resolution: All items ruled 2026-10-29. Built by beads conceptql-jib (union dedup), conceptql-5zg (malformed code is an error), conceptql-lif (hospitalization domain documented), conceptql-fun (filter compares criterion_table), conceptql-i3n and conceptql-1jy (occurrence and trim_date dedup), conceptql-9l1 (spec regenerator and just spec).
 ---
@@ -52,3 +52,5 @@ UPDATE 2026-10-29 (bead conceptql-lif agent, probe on the DuckDB fixture, gdm_wi
 The domain label lets hospitalization combine with condition streams in union (one type). In filter it caused false matches, because filter ignored criterion_table: filed as bead conceptql-fun. except already compares criterion_table.
 
 The ruling "Keep, document it" stands until Ryan revisits it. The spec sentence (bead conceptql-lif) states the facts above, including that the primary code can be a procedure or a DRG.
+
+RULED 2026-10-30 (Ryan), reversing item 4 of 2026-10-29 ("Make it an error"): a code that does not match its vocabulary format is a WARNING again, and the statement stays valid. In the JDE session: "we should warn on non-11 digit NDC, but the algorithm is still valid. The point of a vocabulary format check in ConceptQL is to _warn_ about possible issues, not reject the statement as invalid. I misunderstood the question. I thought format check was a warning only and I think that's how it used to behave, yes?" Confirmed in the conceptql session: "yes, bad code format is a warning". Fact: through 0.5.0 it was a warning (v0.4.1 operator.rb:599 add_warning "improperly formatted code"); commit 1bc89d65 (unreleased) made it an error.

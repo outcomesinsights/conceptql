@@ -4,7 +4,7 @@ title: 'Adversarial review of the unreleased round: findings that needed rulings
 status: captured
 type: decision
 created_at: 2026-10-30T12:39:07.024787+00:00
-updated_at: 2026-10-30T13:47:37.184079+00:00
+updated_at: 2026-10-30T14:17:38.838345+00:00
 ---
 
 ## Context
@@ -26,3 +26,5 @@ RULED 2026-10-30 (Ryan), after bead conceptql-bns:
 
 - NDC: "strict 11". conceptql keeps vocabulary_formats' default NDC row (\\d{11}), so 9-digit product codes, codes that lost leading zeros, hyphenated codes and HCPCS codes in an ndc operator are validation errors. jde's count (survey of 1,259 current production algorithms, 2026-10-29 copy): 10 algorithms have non-11-digit NDC codes: 7 Drafts, 1 Finalized (entrectinib: HCPCS J9170-J9172 in an ndc operator), 2 Retired; 8,001 codes. None of them can match the 11-digit codes claims rows store.
 - No vocabulary lexicon on a real database: "option A". Today Lexicon#determine_strategy silently falls back to LexiconNoDB when neither the data db nor LEXICON_URL has the vocabulary tables; every code becomes 1 = 0 and the unknown-code checks turn off, so ["icd9","412"] returns 0 rows instead of 48 with no error. Ruled: ConceptQL::Database raises a clear error when it has a real data database (not nil, not mock) and finds no vocabulary. Rejected: (B) per-operator validation errors, (C) provenance only, (D) documentation only.
+
+RULED 2026-10-30 (Ryan), reversing item 4 of 2026-10-29 ("Make it an error"): a code that does not match its vocabulary format is a WARNING again, and the statement stays valid. In the JDE session: "we should warn on non-11 digit NDC, but the algorithm is still valid. The point of a vocabulary format check in ConceptQL is to _warn_ about possible issues, not reject the statement as invalid. I misunderstood the question. I thought format check was a warning only and I think that's how it used to behave, yes?" Confirmed in the conceptql session: "yes, bad code format is a warning". Fact: through 0.5.0 it was a warning (v0.4.1 operator.rb:599 add_warning "improperly formatted code"); commit 1bc89d65 (unreleased) made it an error. The NDC ruling ("strict 11") still holds, but a non-11-digit NDC now gives a warning, not an error.
