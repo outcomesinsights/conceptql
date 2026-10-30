@@ -98,7 +98,12 @@ module ConceptQL
           Sequel.function(:max, :episode_end_date).as(:end_date)
         )
 
-        # Episodes streams return null for criterion_id,table, and domain which messes up uuid generation so we had to add constants to these values
+        # An episode has no criterion_id, criterion_table or criterion_domain
+        # of its own, so these constants name it in every output row. They
+        # were added because a NULL part made the uuid NULL. The uuid now
+        # gives a NULL part as an empty string (bead conceptql-18n), but the
+        # constants stay, because they are part of each episode row: the
+        # expected results in test/results/gdm/episode/ show them.
         episode_summary = episode_summary.from_self.select_append(
           Sequel[0].cast_numeric.as(:criterion_id),
           Sequel.cast_string("episode").as(:criterion_table),

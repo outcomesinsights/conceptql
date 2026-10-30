@@ -854,6 +854,7 @@ Person streams carry a patient's date of birth in their date columns.  This make
 - trim_date_start trims the other end.  For each person, it trims the start_date of each left record to the latest end_date of the person's right records.
     - A left record whose end_date comes before that right end_date is discarded.
     - A left record passes through unchanged when its person has no right records, or when that right end_date comes before its start_date.
+- With join_columns, the person's right records are the right records of the person with the same join_columns values as the left record.
 - With compare_all: true, trim_date_end and trim_date_start compare each left record with every right record of the person (and of the join_columns), not only with the person's first or last right record, and return each left record once.
     - trim_date_end trims its end_date to the earliest right start_date on or after its start_date.
     - trim_date_start trims its start_date to the latest right end_date on or before its end_date.

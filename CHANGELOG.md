@@ -111,6 +111,23 @@ All notable changes to this project will be documented in this file.
   change: a left row is dropped only when it has right rows and none of them passes, and a
   left row without right rows passes through unchanged. t_shank sets `compare_all` for its
   baseline windows. Statements that count the rows of such a trim count fewer rows.
+- **Breaking:** `trim_date_end` and `trim_date_start` with `join_columns` and without
+  `compare_all` trim each left row by the first (`trim_date_end`) or last (`trim_date_start`)
+  right row of its person and its `join_columns` values. That is the grouping that
+  `compare_all` uses. Before, the operator took the person's first or last right row and only
+  then joined on the `join_columns`, so a left row whose join values differed from that row's
+  found no right row and passed through untrimmed. For example, `trim_date_end` with
+  `["icd9", "412", {"uuid": true}]` as the left, the same events 30 days earlier as the right,
+  and `"join_columns": ["uuid"]` returned 11 of the 48 events, one for each event that was
+  not the first of its person, and now returns none. t_shank sets `compare_all` whenever it
+  gives `join_columns`, so its exports do not change.
+- **Breaking:** the `uuid` column (the option `uuid`) gives a NULL part as an empty string.
+  The uuid joins `person_id`, `criterion_id`, `criterion_table`, `start_date` and `end_date`
+  with `/`. Before, one NULL part, such as an event without an `end_date`, made the whole uuid
+  NULL. A NULL uuid matches nothing, so `trim_date_end` or `trim_date_start` with
+  `"join_columns": ["uuid"]` passed such a window through untrimmed. Now an event without an
+  `end_date` has a uuid such as `1/2/observations/2008-03-10/`. A uuid without a NULL part
+  does not change.
 - **Breaking:** a date adjustment that is a bare number now acts as the same number of days
   with the unit `d`. With an `r`, `e` or `s` prefix, `R365` means 365 days back from the origin, `E30` means `end_date` +
   30 days, and `S7` means `start_date` + 7 days, the same as `R365d`, `E30d` and `S7d`. In
