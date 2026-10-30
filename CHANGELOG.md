@@ -35,6 +35,12 @@ All notable changes to this project will be documented in this file.
   vocabulary operators, `cpt_or_hcpcs`-style operators and unions of them, and each pair
   has different domains or different vocabularies. Statements that union a labeled
   operator with a `recall` of it return fewer rows.
+- `occurrence` with `at_least` returns each row once, because every stream is a set. Each
+  earlier row of a person picks its nth row, and with `at_least` several earlier rows can pick
+  the same row. Before, that row came out once for each earlier row that picked it, so
+  `["occurrence", 2, ["icd9", ...], {"at_least": "30d"}]` returned 2366 rows, of which only
+  1163 were distinct. The same rows come out, and only the copies are gone. Statements that
+  count the rows of such an `occurrence` count fewer rows.
 - `cpt_or_hcpcs` joins its vocabulary branches (CPT4, HCPCS and CPT4_HCPCS) with `UNION ALL`
   instead of `UNION`. Each branch selects the rows of a different vocabulary, so no row can
   come from two branches. The duplicate removal was the most expensive step of a
