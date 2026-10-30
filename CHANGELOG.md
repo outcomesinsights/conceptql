@@ -150,6 +150,9 @@ All notable changes to this project will be documented in this file.
   name, because the match ignores case, but the SQL quoted the name as written, and Postgres
   found no such column. The SQL now uses the column's own name, so validation and the SQL
   agree on every database.
+- `just spec` no longer leaves a truncated diagram in `doc/spec/` when it is interrupted or
+  `dot` fails. It draws each diagram into a temporary file in the same directory and renames
+  that file over the diagram only after `dot` succeeds.
 
 ## [0.5.0] - 2026-10-29
 
