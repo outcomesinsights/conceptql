@@ -4,7 +4,7 @@ title: 'Spec rewrite findings: six questionable ConceptQL behaviors and an uncom
 status: captured
 type: question
 created_at: 2026-10-30T02:01:24.978057+00:00
-updated_at: 2026-10-30T02:36:36.631060+00:00
+updated_at: 2026-10-30T05:40:39.220764+00:00
 ---
 
 Found 2026-10-29 by the agent that rewrote doc/spec.md for GDM (bead conceptql-p3i). It ran every spec example against the DuckDB test fixture (gdm_wide, OHDSI lexicon). None of these is fixed. Each needs a ruling: defect (file a bead) or intended (document it).
@@ -44,3 +44,9 @@ RULED 2026-10-29 (Ryan, answering the questions on items 3, 4 and 6):
 - Item 4: "Make it an error". No prefix matching. A malformed code fails validation instead of only warning, so a statement cannot silently return 0 rows.
 - Item 6: "Every stream is a set". No operator emits two identical rows. union removes exact duplicates and skips the removal only where its inputs provably cannot overlap (the conceptql-5pz rule). Row counts change for statements that union overlapping non-vocabulary inputs.
   Also ruled: conceptql 0.5.0 (released 2026-10-29 while the counting work was still in flight) stays published, and peers may bump to it. The counting work ships in a later release.
+
+UPDATE 2026-10-29 (bead conceptql-lif agent, probe on the DuckDB fixture, gdm_wide): Item 3's premise "they carry a primary diag, right?" holds for most rows, not all. primary_concept_id holds the admission's code with "primary" provenance (JS_CODE_PROV_TYPE `primary` and its descendants, which include procedure types as well as condition types). hospitalization returns 153 rows: 116 ICD9CM diagnoses, 22 ICD9Proc procedures, 15 DRG codes, 0 NULL. The code does not prefer a diagnosis: wide mode keeps the lowest collection_id, then the lowest concept id; slim mode keeps the lowest concept id.
+
+The domain label lets hospitalization combine with condition streams in union (one type). In filter it caused false matches, because filter ignored criterion_table: filed as bead conceptql-fun. except already compares criterion_table.
+
+The ruling "Keep, document it" stands until Ryan revisits it. The spec sentence (bead conceptql-lif) states the facts above, including that the primary code can be a procedure or a DRG.
