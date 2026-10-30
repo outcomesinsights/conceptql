@@ -1,0 +1,998 @@
+[
+  {
+    "criterion_domain": "person",
+    "value_as_number": 1.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 2.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 3.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 4.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 5.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 6.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 7.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 8.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 9.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 10.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 11.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 12.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 13.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 14.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 15.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 16.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 17.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 18.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 19.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 20.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 21.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 22.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 23.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 24.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 25.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 26.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 27.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 28.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 29.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 30.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 31.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 32.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 33.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 34.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 35.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 36.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 37.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 38.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 39.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 40.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 41.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 42.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 43.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 44.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 45.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 46.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 47.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 48.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 49.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 50.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 51.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 52.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 53.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 54.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 55.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 56.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 57.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 58.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 59.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 60.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 61.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 62.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 63.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 64.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 65.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 66.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 67.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 68.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 69.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 70.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 71.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 72.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 73.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 74.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 75.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 76.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 77.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 78.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 79.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 80.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 81.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 82.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 83.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 84.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 85.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 86.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 87.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 88.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 89.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 90.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 91.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 92.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 93.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 94.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 95.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 96.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 97.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 98.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 99.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 100.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 101.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 102.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 103.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 104.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 105.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 106.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 107.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 108.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 109.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 110.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 111.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 112.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 113.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 114.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 115.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 116.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 117.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 118.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 119.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 120.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 121.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 122.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 123.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 124.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 125.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 126.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 127.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 128.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 129.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 130.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 131.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 132.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 133.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 134.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 135.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 136.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 137.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 138.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 139.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 140.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 141.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 142.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 143.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 144.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 145.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 146.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 147.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 148.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 149.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 150.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 151.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 152.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 153.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 154.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 155.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 156.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 157.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 158.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 159.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 160.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 161.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 162.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 163.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 164.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 165.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 166.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 167.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 168.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 169.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 170.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 171.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 172.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 173.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 174.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 175.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 176.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 177.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 178.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 179.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 180.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 181.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 182.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 183.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 184.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 185.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 186.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 187.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 188.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 189.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 190.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 191.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 192.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 193.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 194.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 195.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 196.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 197.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 198.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 199.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 200.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 201.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 202.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 203.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 204.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 205.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 206.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 207.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 208.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 209.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 210.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 211.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 212.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 213.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 214.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 215.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 216.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 217.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 218.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 219.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 220.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 221.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 222.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 223.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 224.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 225.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 226.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 227.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 228.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 229.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 230.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 231.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 232.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 233.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 234.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 235.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 236.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 237.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 238.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 239.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 240.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 241.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 242.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 243.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 244.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 245.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 246.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 247.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 248.0
+  },
+  {
+    "criterion_domain": "person",
+    "value_as_number": 249.0
+  }
+]

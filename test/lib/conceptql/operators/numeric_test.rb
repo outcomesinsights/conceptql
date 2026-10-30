@@ -118,9 +118,56 @@ describe ConceptQL::Operators::Numeric do
           _(errors_for(cdb, [ "numeric", 1, [ "icd9", "412" ] ])).must_be_nil
           _(errors_for(cdb, [ "numeric", "-2.5", [ "icd9", "412" ] ])).must_be_nil
         end
+      end
+    end
+  end
 
-        it "does not check a column name without an upstream" do
-          _(errors_for(cdb, [ "numeric", "quantity" ])).must_be_nil
+  # Without an upstream, a column name in the argument is read from the
+  # person table (SELECT ... FROM patients, in gdm and gdm_wide). A name
+  # outside that table's columns fails at run time, so validation reports it
+  # (bead conceptql-oyi).
+  describe "column name argument without an upstream" do
+    def errors_for(cdb, statement)
+      cdb.query(statement).annotate.last[:annotation][:errors]
+    end
+
+    %i[gdm gdm_wide].each do |data_model|
+      describe "in #{data_model}" do
+        let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: data_model) }
+
+        it "reports a column that the person table lacks, by name" do
+          _(errors_for(cdb, [ "numeric", "no_such_column" ])).must_equal [ [ "unknown column", "no_such_column" ] ]
+        end
+
+        it "reports a column that only the upstream rows have" do
+          _(errors_for(cdb, [ "numeric", "criterion_id" ])).must_equal [ [ "unknown column", "criterion_id" ] ]
+        end
+
+        it "runs no SQL to validate" do
+          query = cdb.query([ "numeric", "no_such_column" ])
+          query.operator
+          cdb.db.sqls # Sequel's mock returns and clears the lexicon's setup queries
+
+          query.annotate(skip_counts: true)
+
+          _(cdb.db.sqls).must_equal []
+        end
+
+        it "accepts a column of the person table" do
+          _(errors_for(cdb, [ "numeric", "gender_concept_id" ])).must_be_nil
+        end
+
+        it "accepts a column name in another case, as DuckDB and Spark do" do
+          _(errors_for(cdb, [ "numeric", "Gender_Concept_ID" ])).must_be_nil
+        end
+
+        it "reads the column from the person table in the SQL" do
+          _(cdb.query([ "numeric", "gender_concept_id" ]).sql).must_match(/CAST\("gender_concept_id" AS Float\) AS "value_as_number" FROM "patients"/)
+        end
+
+        it "accepts a number" do
+          _(errors_for(cdb, [ "numeric", 1 ])).must_be_nil
+          _(errors_for(cdb, [ "numeric", "-2.5" ])).must_be_nil
         end
       end
     end

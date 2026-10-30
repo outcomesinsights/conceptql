@@ -45,7 +45,11 @@ All notable changes to this project will be documented in this file.
   error. The column is read from the rows that the upstream emits, not from the tables that
   the upstream reads. Every stream emits the same columns, so an upstream that mixes tables
   (a `union` of two domains, for example) gets the same check. The match ignores case, as
-  DuckDB and Spark do. `numeric` without an upstream is not checked.
+  DuckDB and Spark do. `numeric` without an upstream and a column name
+  (`["numeric", "no_such_column"]`) gets the same error when the person table (`patients`
+  in gdm and gdm_wide) lacks that column. That form reads the column from the person
+  table, so a column that only stream rows have, such as `criterion_id`, is also an
+  unknown column there.
 - `filter` with an `as` option now fails validation with
   `["unsupported option", "as", <value>]`. Filter has no `as` option. Before, the statement
   passed validation and ran as a plain filter, so a user who meant to cast both streams got

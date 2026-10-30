@@ -54,19 +54,29 @@ module ConceptQL
 
       private
 
+      # A column name in the argument must be a column of the rows it is read
+      # from, or the statement fails at run time. The match ignores case,
+      # because DuckDB and Spark resolve an identifier without regard to case,
+      # and such a statement runs on them today.
+      def additional_validation(_db, _opts = {})
+        name = column_argument
+        return if name.nil?
+        return if readable_columns.any? { |column| column.to_s.casecmp?(name) }
+
+        add_error("unknown column", name)
+      end
+
       # With an upstream, a column name is read from the upstream's rows
       # (SELECT ... FROM (<upstream>)), not from the tables the upstream
       # reads. Every stream emits the same columns, the scope's query columns,
       # so one check covers an upstream that mixes tables, such as a union of
-      # two domains. A name outside them fails at run time. The match ignores
-      # case, because DuckDB and Spark resolve an identifier without regard
-      # to case, and such a statement runs on them today.
-      def additional_validation(_db, _opts = {})
-        name = column_argument
-        return if stream.nil? || name.nil?
-        return if scope.query_columns.any? { |column| column.to_s.casecmp?(name) }
+      # two domains. Without an upstream, the name is read from the person
+      # table that as_criterion selects from, so it must be one of that
+      # table's columns in the data model's schema.
+      def readable_columns
+        return scope.query_columns if stream
 
-        add_error("unknown column", name)
+        dm.table_cols(dm.table_by_domain(:person))
       end
 
       def with_kids(db)
