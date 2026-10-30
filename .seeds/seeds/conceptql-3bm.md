@@ -1,10 +1,12 @@
 ---
 id: conceptql-3bm
 title: A Draft algorithm uses usrds_first_transplant, an operator conceptql never had
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-29T20:43:41.783357+00:00
-updated_at: 2026-10-30T11:41:55.835667+00:00
+updated_at: 2026-10-30T11:51:57.960172+00:00
+resolved_at: 2026-10-30T11:51:57.960165+00:00
+resolution: "Ryan 2026-10-30: USRDS support is not planned; the Draft is a Jigsaw data problem. conceptql's part is the clear invalid-statement error from bead conceptql-g2v."
 tags:
   - algorithm-survey
   - validation

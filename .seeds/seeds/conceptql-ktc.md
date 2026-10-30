@@ -4,7 +4,7 @@ title: Send each concept-ID list once and merge identical CTEs (planning is 0.8 
 status: captured
 type: idea
 created_at: 2026-10-29T20:43:43.871479+00:00
-updated_at: 2026-10-29T20:43:43.871479+00:00
+updated_at: 2026-10-30T11:51:57.063020+00:00
 tags:
   - algorithm-survey
   - performance
@@ -43,3 +43,5 @@ statements: 1259; plain ok 1253; annotate ok 1256
 annotate_s: median 0.058  p90 0.234  p99 1.005  max 57.934  sum 200.7
 plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 ```
+
+RULED 2026-10-30 (Ryan): decide after the annotate profile that seed conceptql-643 asked for.

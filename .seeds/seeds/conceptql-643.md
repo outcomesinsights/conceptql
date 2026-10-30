@@ -4,7 +4,7 @@ title: sort_extracted_ctes builds SQL for every CTE to find dependencies (about 
 status: captured
 type: idea
 created_at: 2026-10-29T20:43:42.822503+00:00
-updated_at: 2026-10-29T20:43:42.822503+00:00
+updated_at: 2026-10-30T11:51:56.560021+00:00
 tags:
   - algorithm-survey
   - performance
@@ -44,3 +44,5 @@ statements: 1259; plain ok 1253; annotate ok 1256
 annotate_s: median 0.058  p90 0.234  p99 1.005  max 57.934  sum 200.7
 plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 ```
+
+RULED 2026-10-30 (Ryan): profile annotate on the slow algorithm (ac4efe58) first, then decide. No code change before the profile.

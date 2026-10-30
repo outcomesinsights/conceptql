@@ -4,7 +4,7 @@ title: How noisy may the reused-code warning be? 60% of DRG codes in use have mo
 status: captured
 type: question
 created_at: 2026-10-29T21:08:16.452855+00:00
-updated_at: 2026-10-29T21:08:26.830696+00:00
+updated_at: 2026-10-30T11:51:56.115467+00:00
 tags:
   - conceptql-ttk
   - validation
@@ -59,3 +59,5 @@ Dates exist only in the OHDSI vocabulary source. The statement tests share one e
 - (d) Add the dates of each meaning on the OHDSI source, with any of the above.
 
 Recommendation: (c) with (d), because 60% of the DRG codes in use would otherwise warn, and most of those warnings are noise on post-2007 data. Until Ryan rules, (a) stays as built.
+
+RULED 2026-10-30 (Ryan) on the warning form: none of the options. Ryan: "this feels like a weird approach -- if I have an algorithm with renumbered codes, its behavior changes based on datast its applied to? this feels bad. conceptql statements are supposed to be definitive, explicit, and consistent and we are not doing this here. We need to not only concsider the warning, but how conceptql locks in the correct codes". The warning is now part of the question in seed conceptql-7p3. The warning stays as built until then.
