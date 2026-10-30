@@ -4,7 +4,7 @@ title: A Draft algorithm uses usrds_first_transplant, an operator conceptql neve
 status: captured
 type: question
 created_at: 2026-10-29T20:43:41.783357+00:00
-updated_at: 2026-10-29T20:43:41.783357+00:00
+updated_at: 2026-10-30T11:41:55.835667+00:00
 tags:
   - algorithm-survey
   - validation
@@ -44,3 +44,5 @@ statements: 1259; plain ok 1253; annotate ok 1256
 annotate_s: median 0.058  p90 0.234  p99 1.005  max 57.934  sum 200.7
 plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 ```
+
+RULED 2026-10-30 (Ryan): the plain query (Query#sql / #query) validates first and raises one clear error, ConceptQL::InvalidStatementError, listing the same errors annotate shows. An invalid statement that returns rows today (a bad provenance keyword) raises instead. provider_filter keeps roles required: no default. Build before the next release.

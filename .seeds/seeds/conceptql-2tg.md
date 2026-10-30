@@ -4,7 +4,7 @@ title: 'Grouped occurrence over a labeled stream fails: select_remove queries a 
 status: captured
 type: question
 created_at: 2026-10-29T20:43:40.603164+00:00
-updated_at: 2026-10-29T20:43:40.603164+00:00
+updated_at: 2026-10-30T11:41:54.390217+00:00
 tags:
   - algorithm-survey
   - bug
@@ -54,3 +54,5 @@ statements: 1259; plain ok 1253; annotate ok 1256
 annotate_s: median 0.058  p90 0.234  p99 1.005  max 57.934  sum 200.7
 plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 ```
+
+RULED 2026-10-30 (Ryan): fix it and find similar bugs. Replace select_remove with an explicit column list, search every operator for other database queries during SQL building and fix them as one class, and test a labeled upstream under group_by_date on each adapter. Build before the next release.
