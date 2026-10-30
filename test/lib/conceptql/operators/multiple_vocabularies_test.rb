@@ -15,6 +15,29 @@ describe ConceptQL::Operators::MultipleVocabularies do
     _(sql).must_match(/"clinical_code_vocabulary_id" = 'CPT4'/)
   end
 
+  # Each vocabulary branch selects different rows, so a duplicate-removing
+  # UNION only costs time (conceptql-5pz).
+  it "joins the vocabulary branches with UNION ALL" do
+    db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide)
+
+    [ %w[cpt_or_hcpcs *], %w[cpt_or_hcpcs 99214 A0382] ].each do |statement|
+      sql = db.query(statement).sql
+      _(sql.scan(/\bUNION\b/).length).must_equal 1
+      _(sql).must_match(/\bUNION ALL\b/)
+    end
+  end
+
+  it "keeps UNION when two branches select the same vocabulary" do
+    operator = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
+                                  .query(%w[cpt_or_hcpcs 99214]).operator
+    cpt4 = operator.vocab_ops.first
+    operator.instance_variable_set(:@vocab_ops, [ cpt4, cpt4.class.new(cpt4.nodifier, cpt4.op_name, "99214") ])
+
+    sql = operator.sql(Sequel.mock(host: :postgres))
+    _(sql).must_match(/\bUNION\b/)
+    _(sql).wont_match(/\bUNION ALL\b/)
+  end
+
   it "skips CPT4_HCPCS on a Database whose lexicon lacks it" do
     db = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
 
