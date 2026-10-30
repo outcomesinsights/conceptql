@@ -90,6 +90,14 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `annotate` no longer raises when the window table of a `window` statement is an invalid
+  ConceptQL statement. `scope_annotate` reports the window table's errors under the key
+  `window_table`, and each message starts with the name of its operator (for example
+  `["provider_filter: required option not present", "roles"]`). `annotate` then counts
+  nothing, because every count joins the window table. Before, a counted `annotate` raised the
+  window table's `InvalidStatementError`, and `annotate` without counts reported no error. The
+  plain query of the outer statement still raises `InvalidStatementError`, now with these
+  errors and the outer statement.
 - `inner_join` and `include_rhs_columns` no longer return a row more than once. With either
   option, a temporal operator (for example `during`, `contains` or `any_overlap`) joins each
   left row to every matching right row, and it gave one copy of the left row for each match.
