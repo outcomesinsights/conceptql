@@ -59,9 +59,23 @@ module ConceptQL
         # sharing a common table and feed them into a single single query,
         # but I think this would require some revamping of Vocabulary, and I'm
         # just not interested in taking that on right now.
+        all = disjoint_vocabularies?
         vocab_ops.map { |vo| vo.evaluate(db) }.inject do |union, q|
-          union.union(q.from_self)
+          union.union(q.from_self, all: all)
         end
+      end
+
+      # Each vocabulary operator selects only the rows whose vocabulary column
+      # holds its own vocabulary. A row holds one vocabulary, and each output
+      # row carries its source row's id as criterion_id, so operators with
+      # different vocabularies on one column never produce the same row. Then
+      # UNION ALL skips a duplicate removal that is expensive on large data
+      # (conceptql-5pz). A repeated row inside one branch now passes through,
+      # as it does for a single vocabulary operator and for union. A custom
+      # file can list one vocabulary twice, so those branches keep UNION.
+      def disjoint_vocabularies?
+        conditions = vocab_ops.map(&:vocabulary_condition)
+        conditions.map(&:keys).uniq.length == 1 && conditions.uniq.length == conditions.length
       end
 
       def domains(_db)

@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- `cpt_or_hcpcs` joins its vocabulary branches (CPT4, HCPCS and CPT4_HCPCS) with `UNION ALL`
+  instead of `UNION`. Each branch selects the rows of a different vocabulary, so no row can
+  come from two branches. The duplicate removal was the most expensive step of a
+  `cpt_or_hcpcs "*"` query, and it ran out of memory on full SEER-Medicare data. A row that
+  one branch repeats (for example, through a window table with repeated rows) now stays,
+  as it does for `cpt` and `hcpcs`. A custom multiple-vocabularies file that lists one
+  vocabulary twice keeps `UNION` for that operator.
+
 ## [0.5.0] - 2026-10-29
 
 ### Removed
