@@ -50,11 +50,12 @@ All notable changes to this project will be documented in this file.
   in gdm and gdm_wide) lacks that column. That form reads the column from the person
   table, so a column that only stream rows have, such as `criterion_id`, is also an
   unknown column there.
-- `filter` with an `as` option now fails validation with
-  `["unsupported option", "as", <value>]`. Filter has no `as` option. Before, the statement
-  passed validation and ran as a plain filter, so a user who meant to cast both streams got
-  other rows with no warning. A blank `as` counts as not set. Other options that filter
-  reads but does not declare (`ignore_dates`, and the t_shank-only options) still validate.
+- `filter`, `except` and `person_filter` with an `as` option now fail validation with
+  `["unsupported option", "as", <value>]`. None of them has an `as` option. Before, the
+  statement passed validation and ran as a plain filter, except or person_filter, so a user
+  who meant to cast both streams got other rows with no warning. A blank `as` counts as not
+  set. Other options that these operators read but do not declare (`ignore_dates` for
+  filter and except, and the t_shank-only options) still validate.
 
 ## [0.5.0] - 2026-10-29
 

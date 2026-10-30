@@ -10,6 +10,11 @@ module ConceptQL
       desc "Removes all incoming records that appear in the right hand set of records."
       default_query_columns
 
+      # An `as` option would cast both streams before the comparison. Except
+      # has no such option, and a statement that sets one fails validation
+      # instead of running as a plain except (bead conceptql-dlq).
+      unsupported_options :as
+
       def query(db)
         cols_to_compare = %i[
           criterion_id
