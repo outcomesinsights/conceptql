@@ -20,7 +20,13 @@ module ConceptQL
       (opts[:data_model] || cdb.opts[:data_model] || ENV["CONCEPTQL_DATA_MODEL"] || ConceptQL::DEFAULT_DATA_MODEL).to_sym
     end
 
-    def create(operator, *values)
+    # An empty statement ([], as a whole statement, an operand, or the stored
+    # statement of an algorithm) has no operator. It becomes an Invalid
+    # operator with the error "empty statement", so validation reports it.
+    def create(*statement)
+      return Operators::Invalid.new(self, "invalid", errors: [ [ "empty statement" ] ]) if statement.empty?
+
+      operator, *values = statement
       operator = operator.to_s.downcase
       if operator == "algorithm"
         statement, = algorithm_fetcher.call(values.first)

@@ -148,6 +148,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- An empty statement (`[]`) is now an invalid statement. `validation_errors` and
+  `scope_annotate` report the error `{"invalid" => [["empty statement"]]}`, and `query`, `sql`
+  and the other methods that build SQL raise `ConceptQL::InvalidStatementError`. This also
+  applies to an empty operand (`["union", [], ["icd9", "412"]]`), to `[[]]`, to a `window`
+  around `[]`, and to an `algorithm` whose stored statement is `[]`. Before, each of these
+  raised `ArgumentError` in `Nodifier#create`.
 - `annotate` no longer raises when the window table of a `window` statement is an invalid
   ConceptQL statement. `scope_annotate` reports the window table's errors under the key
   `window_table`, and each message starts with the name of its operator (for example
