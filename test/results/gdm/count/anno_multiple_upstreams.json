@@ -38,7 +38,13 @@
           "n": 0
         }
       },
-      "errors": [["has multiple upstreams", ["icd9", "icd9"]]]
+      "errors": [["has multiple upstreams", ["icd9", "icd9"]]],
+      "warnings": [
+        [
+          "deprecated operator",
+          "count will become an error in a later release. To count the events of each person, use numeric 1 and then sum."
+        ]
+      ]
     },
     "name": "Count"
   }

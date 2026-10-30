@@ -1185,7 +1185,7 @@ With a `numeric` operator defined, we can use the `sum` operator to sum the valu
 
 ### Counting
 
-The `count` operator groups identical results and stores the number of results in each group in the value_as_number column.  Two results are identical only when all of their columns match, including criterion_id.  So `count` does not count the events of each person.  Casting a stream to person first does not help, because the cast yields one result for each person.
+The `count` operator is deprecated.  It still runs, but annotation shows a warning on it, and a later release will make it an error.  `count` groups identical results and stores the number of results in each group in the value_as_number column.  Two results are identical only when all of their columns match, including criterion_id.  Every stream is a set, so `count` returns 1 for nearly every result.  It does not count the events of each person.
 
 To count the events of each person, set value_as_number to 1 with `numeric`, and then use `sum`:
 
@@ -1199,30 +1199,6 @@ To count the events of each person, set value_as_number to 1 with `numeric`, and
     [
       "icd9",
       "486"
-    ]
-  ]
-]
-```
-
-Because every stream is a set, `count` over a union cannot show how many upstreams a row came from. Union passes along each row once:
-
-```ConceptQL
-# Every row has a value of 1, also the MIs from an inpatient record, which arrive from both upstreams
-[
-  "count",
-  [
-    "union",
-    [
-      "icd9",
-      "412"
-    ],
-    [
-      "provenance",
-      [
-        "icd9",
-        "412"
-      ],
-      "inpatient"
     ]
   ]
 ]

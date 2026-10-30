@@ -1546,7 +1546,7 @@ With a `numeric` operator defined, we can use the `sum` operator to sum the valu
 
 ### Counting
 
-The `count` operator groups identical results and stores the number of results in each group in the value_as_number column. Two results are identical only when all of their columns match, including criterion_id. So `count` does not count the events of each person. Casting a stream to person first does not help, because the cast yields one result for each person.
+The `count` operator is deprecated. It still runs, but annotation shows a warning on it, and a later release will make it an error. `count` groups identical results and stores the number of results in each group in the value_as_number column. Two results are identical only when all of their columns match, including criterion_id. Every stream is a set, so `count` returns 1 for nearly every result. It does not count the events of each person.
 
 To count the events of each person, set value_as_number to 1 with `numeric`, and then use `sum`:
 
@@ -1574,36 +1574,6 @@ To count the events of each person, set value_as_number to 1 with `numeric`, and
 | 38        | 0            | observations    | condition_occurrence | 2010-02-24 | 2010-02-24 | 486          | 3.0             |
 | 44        | 0            | observations    | condition_occurrence | 2009-09-07 | 2010-08-30 | 486          | 6.0             |
 | 51        | 0            | observations    | condition_occurrence | 2008-03-08 | 2008-10-18 | 486          | 2.0             |
-
-Because every stream is a set, `count` over a union cannot show how many upstreams a row came from. Union passes along each row once:
-
-```YAML
----
-- count
-- - union
-  - - icd9
-    - '412'
-  - - provenance
-    - - icd9
-      - '412'
-    - inpatient
-
-```
-
-![Every row has a value of 1, also the MIs from an inpatient record, which arrive from both upstreams](spec/ecede6b94c97cf0b036a664e4df704d119be7c31607a1defe6eb77f294fd1393.png)
-
-| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value | value_as_number |
-| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ | --------------- |
-| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          | 1               |
-| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          | 1               |
-| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          | 1               |
-| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          | 1               |
-| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          | 1               |
-| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          | 1               |
-| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          | 1               |
-| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          | 1               |
-| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          | 1               |
-| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          | 1               |
 
 #### Numeric Value Comparison
 

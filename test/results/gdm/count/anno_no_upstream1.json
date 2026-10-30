@@ -8,7 +8,13 @@
           "n": 0
         }
       },
-      "errors": [["has no upstream"]]
+      "errors": [["has no upstream"]],
+      "warnings": [
+        [
+          "deprecated operator",
+          "count will become an error in a later release. To count the events of each person, use numeric 1 and then sum."
+        ]
+      ]
     },
     "name": "Count"
   }

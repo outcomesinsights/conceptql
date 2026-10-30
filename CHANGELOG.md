@@ -66,6 +66,15 @@ All notable changes to this project will be documented in this file.
   operator, for example) and with temp tables (`force_temp_tables`). `skip_counts: true`
   runs no counting query, as before.
 
+### Deprecated
+
+- The `count` operator is deprecated. Every stream is a set, so `count` returns 1 for nearly
+  every row. A statement that uses `count` still runs and returns the same rows. Annotation
+  adds the warning `deprecated operator` on `count`, and a later release will make it an
+  error. To count the events of each person, use `numeric` 1 and then `sum`. The operator
+  metadata of `count` says `deprecated: true`. The new class-level declaration `deprecated`
+  marks an operator.
+
 ### Fixed
 
 - `numeric` with an upstream and a column name (`["numeric", "quantity", stream]`) now
