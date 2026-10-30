@@ -18,7 +18,8 @@ Gem::Specification.new do |spec|
 
   # Allowlist, not `git ls-files`: ship only what the gem reads at runtime.
   # config/ and schemas/ live at the gem root (ConceptQL.root), not under lib/.
-  spec.files = %w[CHANGELOG.md LICENSE README.md] +
+  # doc/spec.md is the specification that ConceptQL.spec_path returns.
+  spec.files = %w[CHANGELOG.md LICENSE README.md doc/spec.md] +
                Dir['lib/**/*.rb'] + Dir['config/*'] + Dir['schemas/*'] +
                %w[bin/conceptql bin/conceptql_utils]
   spec.bindir        = 'bin'

@@ -37,5 +37,11 @@ module ConceptQL
     def race_file
       ConceptQL.config_dir / "race.yml"
     end
+
+    # The ConceptQL specification, shipped in the gem for applications that
+    # serve it to readers (the Jigsaw diagram editor serves it over MCP).
+    def spec_path
+      root / "doc" / "spec.md"
+    end
   end
 end

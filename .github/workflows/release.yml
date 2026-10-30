@@ -121,15 +121,15 @@ jobs:
       # and the gemspec ships an allowlist of files. So prove the built gem is
       # complete and works: install it, with only its declared runtime
       # dependencies, into an empty GEM_HOME; load it from there, not from the
-      # checkout; require every tracked file under config/ and schemas/ to be
-      # in it; and create a ConceptQL::Database and generate SQL (the call
+      # checkout; require every tracked file under config/ and schemas/, and
+      # doc/spec.md (ConceptQL.spec_path), to be in it; and create a ConceptQL::Database and generate SQL (the call
       # that failed against sequelizer 0.2.0). That install, outside any
       # lockfile, is deliberate (ruled 2026-10-01), hence the zizmor ignore.
       - name: Check the built gem loads and resolves config/ and schemas/ when installed
         run: | # zizmor: ignore[adhoc-packages]
           set -euo pipefail
           home=$(mktemp -d); empty=$(mktemp -d)
-          RUNTIME_FILES=$(git ls-files config schemas | tr '\n' ' ')
+          RUNTIME_FILES=$(git ls-files config schemas doc/spec.md | tr '\n' ' ')
           export RUNTIME_FILES
           # GEM_PATH too, so already-installed gems cannot satisfy a dependency:
           # with GEM_HOME alone, gem install sees the system's gems, skips them,
@@ -143,7 +143,8 @@ jobs:
             dir = Gem.loaded_specs["conceptql"].gem_dir
             abort "loaded #{dir}, not the built gem" unless dir.start_with?(ENV["GEM_HOME"])
             abort "ConceptQL.root is #{ConceptQL.root}, not #{dir}" unless ConceptQL.root.to_s == dir
-            abort "config/ or schemas/ is not under #{dir}" unless [ConceptQL.config_dir, ConceptQL.schemas_dir].all? { |d| d.to_s.start_with?(dir) }
+            abort "config/, schemas/ or the spec is not under #{dir}" unless [ConceptQL.config_dir, ConceptQL.schemas_dir, ConceptQL.spec_path].all? { |d| d.to_s.start_with?(dir) }
+            abort "ConceptQL.spec_path #{ConceptQL.spec_path} is not a file" unless ConceptQL.spec_path.file?
             wanted = ENV.fetch("RUNTIME_FILES").split
             abort "no tracked files under config/ and schemas/" if wanted.empty?
             missing = wanted.reject { |f| File.file?(File.join(dir, f)) }

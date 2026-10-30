@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- The gem ships the specification, `doc/spec.md`. `ConceptQL.spec_path` returns its path, so
+  applications can serve it without building a path into the gem directory. The Jigsaw
+  diagram editor serves it to agents over MCP.
 - Annotate warns about a selected code that has more than one meaning in the vocabulary, with
   the warning "code(s) with more than one meaning". Each item names the code and all of its
   distinct names, for example DRG 410, which meant chemotherapy until 2007-09-30 and a biliary
