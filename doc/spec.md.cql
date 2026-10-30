@@ -1187,10 +1187,10 @@ With a `numeric` operator defined, we can use the `sum` operator to sum the valu
 
 The `count` operator is deprecated.  It still runs, but annotation shows a warning on it, and a later release will make it an error.  `count` groups identical results and stores the number of results in each group in the value_as_number column.  Two results are identical only when all of their columns match, including criterion_id.  Every stream is a set, so `count` returns 1 for nearly every result.  It does not count the events of each person.
 
-To count the events of each person, set value_as_number to 1 with `numeric`, and then use `sum`:
+To count the events of each person, set value_as_number to 1 with `numeric`, and then use `sum` with its `group_by_person` option.  `sum` gives one person result for each person, and value_as_number holds the number of events.  Without `group_by_person`, `sum` puts the results of one person in several groups when they have different source_values, so the count of the person is split over several results.
 
 ```ConceptQL
-# Count the number of times each person had pneumonia
+# Count the number of times each person had a heart attack or diabetes
 [
   "sum",
   [
@@ -1198,9 +1198,14 @@ To count the events of each person, set value_as_number to 1 with `numeric`, and
     1,
     [
       "icd9",
-      "486"
+      "412",
+      "414.01",
+      "250.00"
     ]
-  ]
+  ],
+  {
+    "group_by_person": true
+  }
 ]
 ```
 
@@ -1226,7 +1231,10 @@ The `numeric_filter` operator takes one stream.  It passes along the results who
           "icd9",
           "412"
         ]
-      ]
+      ],
+      {
+        "group_by_person": true
+      }
     ],
     {
       "greater_than_or_equal_to": 2
@@ -1255,6 +1263,14 @@ Numeric doesn't have to take a stream.  If it doesn't have a stream as an argume
         - Sets start_date to the earliest start_date in the group
         - Sets the end_date to the most recent end_date in the group
         - Sets criterion_id to 0 since there is no particular single row that the result refers to anymore
+- Takes one option, `group_by_person`, which is true or false.  When it is true, `sum` puts all of the results of each person in one group, whatever their type and source_value.  It gives one person result for each person:
+    - person_id is the person
+    - criterion_domain is person and criterion_table is the person table, as a cast to `person` gives them
+    - criterion_id is 0
+    - start_date is the earliest start_date and end_date is the most recent end_date of the person's results
+    - value_as_number is the sum of the value_as_number column of the person's results
+    - The other columns, such as source_value, are NULL
+    - In a window table, `sum` gives one result for each person and window
 
 ## Appendix A - Selection Operators
 
@@ -1280,7 +1296,7 @@ ConceptQL creates a vocabulary operator for each vocabulary in its vocabulary li
 | hospice | condition_occurrence | None | All hospice admissions |
 | snf | condition_occurrence | None | All skilled nursing facility admissions |
 
-hospitalization, hospice and snf select admissions from collections.  Their results have criterion_table collections and criterion_domain condition_occurrence, because GDM has no visit or admission domain.  primary_concept_id, source_value and source_vocabulary_id hold the admission's code with primary provenance.  That code is usually a diagnosis, but it can be a procedure or a DRG.  Because the results have the condition_occurrence type, union combines them with the results of condition operators such as icd9 into one stream.
+hospitalization, hospice and snf select admissions.  On gdm, they read collections and admission_details.  On gdm_wide, they read observations, but their results still have criterion_table collections.  Their results have criterion_domain condition_occurrence, because GDM has no visit or admission domain.  primary_concept_id, source_value and source_vocabulary_id hold one code of the admission that has primary provenance.  That code is usually a diagnosis, but it can be a procedure or a DRG.  When the admission has no code with primary provenance, these three columns are NULL.  Because the results have the condition_occurrence type, union combines them with the results of condition operators such as icd9 into one stream.
 
 ## Appendix B - Algorithm Showcase
 

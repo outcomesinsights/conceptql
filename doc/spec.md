@@ -1548,7 +1548,7 @@ With a `numeric` operator defined, we can use the `sum` operator to sum the valu
 
 The `count` operator is deprecated. It still runs, but annotation shows a warning on it, and a later release will make it an error. `count` groups identical results and stores the number of results in each group in the value_as_number column. Two results are identical only when all of their columns match, including criterion_id. Every stream is a set, so `count` returns 1 for nearly every result. It does not count the events of each person.
 
-To count the events of each person, set value_as_number to 1 with `numeric`, and then use `sum`:
+To count the events of each person, set value_as_number to 1 with `numeric`, and then use `sum` with its `group_by_person` option. `sum` gives one person result for each person, and value_as_number holds the number of events. Without `group_by_person`, `sum` puts the results of one person in several groups when they have different source_values, so the count of the person is split over several results.
 
 ```YAML
 ---
@@ -1556,24 +1556,27 @@ To count the events of each person, set value_as_number to 1 with `numeric`, and
 - - numeric
   - 1
   - - icd9
-    - '486'
+    - '412'
+    - '414.01'
+    - '250.00'
+- :group_by_person: true
 
 ```
 
-![Count the number of times each person had pneumonia](spec/385ede8312e323fa1ae2337c303c8e89f252ebcb8ba229961fa3af1a3caec886.png)
+![Count the number of times each person had a heart attack or diabetes](spec/8324a33ed37a82d29fb36ba9ed6fe84b445b7589af1c0c016813d2d98b2c6d75.png)
 
-| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value | value_as_number |
-| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ | --------------- |
-| 14        | 0            | observations    | condition_occurrence | 2008-09-12 | 2009-04-05 | 486          | 2.0             |
-| 17        | 0            | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          | 1.0             |
-| 19        | 0            | observations    | condition_occurrence | 2008-02-02 | 2008-02-03 | 486          | 1.0             |
-| 23        | 0            | observations    | condition_occurrence | 2009-08-18 | 2010-02-17 | 486          | 3.0             |
-| 25        | 0            | observations    | condition_occurrence | 2009-07-08 | 2009-07-08 | 486          | 1.0             |
-| 27        | 0            | observations    | condition_occurrence | 2010-09-30 | 2010-09-30 | 486          | 1.0             |
-| 28        | 0            | observations    | condition_occurrence | 2009-09-12 | 2009-09-12 | 486          | 1.0             |
-| 38        | 0            | observations    | condition_occurrence | 2010-02-24 | 2010-02-24 | 486          | 3.0             |
-| 44        | 0            | observations    | condition_occurrence | 2009-09-07 | 2010-08-30 | 486          | 6.0             |
-| 51        | 0            | observations    | condition_occurrence | 2008-03-08 | 2008-10-18 | 486          | 2.0             |
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value | value_as_number |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ------------ | --------------- |
+| 2         | 0            | patients        | person           | 2009-05-11 | 2009-07-31 |              | 3.0             |
+| 3         | 0            | patients        | person           | 2009-11-17 | 2009-11-17 |              | 1.0             |
+| 5         | 0            | patients        | person           | 2009-06-28 | 2009-06-28 |              | 1.0             |
+| 6         | 0            | patients        | person           | 2010-09-26 | 2010-09-26 |              | 1.0             |
+| 7         | 0            | patients        | person           | 2008-04-23 | 2010-07-24 |              | 30.0            |
+| 8         | 0            | patients        | person           | 2008-10-17 | 2009-07-16 |              | 3.0             |
+| 9         | 0            | patients        | person           | 2010-08-01 | 2010-09-12 |              | 2.0             |
+| 11        | 0            | patients        | person           | 2008-06-17 | 2009-11-12 |              | 4.0             |
+| 12        | 0            | patients        | person           | 2009-04-20 | 2009-05-21 |              | 3.0             |
+| 13        | 0            | patients        | person           | 2008-03-05 | 2010-09-08 |              | 9.0             |
 
 #### Numeric Value Comparison
 
@@ -1591,11 +1594,12 @@ The `numeric_filter` operator takes one stream. It passes along the results whos
       - 1
       - - icd9
         - '412'
+    - :group_by_person: true
   - :greater_than_or_equal_to: 2
 
 ```
 
-![People with more than 1 MI](spec/0d8546d33c77d25b522ae23b74c87bf9ee77f5564c6de688af8a2b270b615cfb.png)
+![People with more than 1 MI](spec/6613c788b33483210fbc0c40fdcab5942bd3fca204c8a188ae176d51435041b0.png)
 
 | person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     | value_as_number |
 | --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- | --------------- |
@@ -1644,6 +1648,14 @@ Numeric doesn't have to take a stream. If it doesn't have a stream as an argumen
     - Sets start_date to the earliest start_date in the group
     - Sets the end_date to the most recent end_date in the group
     - Sets criterion_id to 0 since there is no particular single row that the result refers to anymore
+- Takes one option, `group_by_person`, which is true or false. When it is true, `sum` puts all of the results of each person in one group, whatever their type and source_value. It gives one person result for each person:
+  - person_id is the person
+  - criterion_domain is person and criterion_table is the person table, as a cast to `person` gives them
+  - criterion_id is 0
+  - start_date is the earliest start_date and end_date is the most recent end_date of the person's results
+  - value_as_number is the sum of the value_as_number column of the person's results
+  - The other columns, such as source_value, are NULL
+  - In a window table, `sum` gives one result for each person and window
 
 ## Appendix A - Selection Operators
 
@@ -1669,7 +1681,7 @@ ConceptQL creates a vocabulary operator for each vocabulary in its vocabulary li
 | hospice             | condition_occurrence | None                                     | All hospice admissions                                         |
 | snf                 | condition_occurrence | None                                     | All skilled nursing facility admissions                        |
 
-hospitalization, hospice and snf select admissions from collections. Their results have criterion_table collections and criterion_domain condition_occurrence, because GDM has no visit or admission domain. primary_concept_id, source_value and source_vocabulary_id hold the admission's code with primary provenance. That code is usually a diagnosis, but it can be a procedure or a DRG. Because the results have the condition_occurrence type, union combines them with the results of condition operators such as icd9 into one stream.
+hospitalization, hospice and snf select admissions. On gdm, they read collections and admission_details. On gdm_wide, they read observations, but their results still have criterion_table collections. Their results have criterion_domain condition_occurrence, because GDM has no visit or admission domain. primary_concept_id, source_value and source_vocabulary_id hold one code of the admission that has primary provenance. That code is usually a diagnosis, but it can be a procedure or a DRG. When the admission has no code with primary provenance, these three columns are NULL. Because the results have the condition_occurrence type, union combines them with the results of condition operators such as icd9 into one stream.
 
 ## Appendix B - Algorithm Showcase
 
