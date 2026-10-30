@@ -1,0 +1,16 @@
+[
+  "contains",
+  {
+    "left": ["information_periods"],
+    "right": [
+      "icd9",
+      "729.5",
+      {
+        "person_ids": [2, 6, 8],
+        "uuid": "true",
+        "label": "Limb pain"
+      }
+    ],
+    "include_rhs_columns": ["uuid"]
+  }
+]

@@ -77,6 +77,17 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Building a statement's SQL no longer runs a query to learn a dataset's columns. Before,
+  `occurrence` with `group_by_date` over a labeled upstream failed on every database with
+  "Table with name <label> does not exist" (Postgres: "relation ... does not exist"): it asked
+  the database for the columns of the labeled operator's CTE, and that CTE does not exist
+  while the SQL is built. A `recall` of the label later in the statement did not help. The
+  same kind of query ran in three other places. `include_rhs_columns` on a temporal operator
+  (for example `contains`) failed the same way when its right side was labeled. A
+  `window_table` scope window and the provider columns of an operator that reads the person
+  table ran the query on every build. Each of these now names its columns, so no query runs.
+  The test suite now fails when building any test statement's SQL asks the database for
+  columns.
 - `numeric` with an upstream and a column name (`["numeric", "quantity", stream]`) now
   fails validation when the upstream's rows lack that column. The error is
   `["unknown column", "<name>"]`, so `annotate` reports it and runs no counting query.

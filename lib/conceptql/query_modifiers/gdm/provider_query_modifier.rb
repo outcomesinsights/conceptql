@@ -29,20 +29,20 @@ module ConceptQL
                    Sequel[:p][:specialty_concept_id].as(:practitioner_specialty_concept_id)
                  )
           else
+            # The data model names the columns of the source table. ds.columns
+            # asked the database for them while the SQL was built (bead
+            # conceptql-6k8).
+            cols = dm.table_cols(source_table)
             ds = query.select_all
-            ds = if ds.columns.include?(:provider_id)
+            ds = if cols.include?(:provider_id)
                    ds
-            elsif dm.table_cols(source_table).include?(:practitioner_id)
+            elsif cols.include?(:practitioner_id)
                    ds.select_append(Sequel[:practitioner_id].as(:provider_id))
             else
                    ds.select_append(Sequel.cast(nil, :Bigint).as(:provider_id))
             end
             %i[role_type_concept_id context_specialty_concept_id practitioner_specialty_concept_id].each do |col|
-              ds = if ds.columns.include?(col)
-                     ds
-              else
-                     ds.select_append(Sequel.cast(nil, :Bigint).as(col))
-              end
+              ds = ds.select_append(Sequel.cast(nil, :Bigint).as(col)) unless cols.include?(col)
             end
             ds
           end.from_self

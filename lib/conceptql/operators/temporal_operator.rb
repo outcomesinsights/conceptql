@@ -99,8 +99,12 @@ module ConceptQL
       def apply_selectors(ds, opts = {})
         return ds unless include_rhs_columns
 
-        ds = ds.select_remove(*include_rhs_columns).select_append(*rhs_columns(opts)) if include_rhs_columns
-        ds
+        # A dataset without a select list reads an upstream, so it has the
+        # scope's columns. Name them: select_remove would ask the database
+        # for them, and the CTE of a labeled upstream does not exist while
+        # the SQL is built (bead conceptql-6k8).
+        ds = ds.select(*dynamic_columns) if ds.opts[:select].blank?
+        ds.select_remove(*include_rhs_columns).select_append(*rhs_columns(opts))
       end
 
       def rhs_columns(opts)
