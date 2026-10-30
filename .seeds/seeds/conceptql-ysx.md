@@ -4,7 +4,7 @@ title: 'Adversarial review of the unreleased round: findings that needed rulings
 status: captured
 type: decision
 created_at: 2026-10-30T12:39:07.024787+00:00
-updated_at: 2026-10-30T14:17:38.838345+00:00
+updated_at: 2026-10-30T14:33:06.266527+00:00
 ---
 
 ## Context
@@ -28,3 +28,7 @@ RULED 2026-10-30 (Ryan), after bead conceptql-bns:
 - No vocabulary lexicon on a real database: "option A". Today Lexicon#determine_strategy silently falls back to LexiconNoDB when neither the data db nor LEXICON_URL has the vocabulary tables; every code becomes 1 = 0 and the unknown-code checks turn off, so ["icd9","412"] returns 0 rows instead of 48 with no error. Ruled: ConceptQL::Database raises a clear error when it has a real data database (not nil, not mock) and finds no vocabulary. Rejected: (B) per-operator validation errors, (C) provenance only, (D) documentation only.
 
 RULED 2026-10-30 (Ryan), reversing item 4 of 2026-10-29 ("Make it an error"): a code that does not match its vocabulary format is a WARNING again, and the statement stays valid. In the JDE session: "we should warn on non-11 digit NDC, but the algorithm is still valid. The point of a vocabulary format check in ConceptQL is to _warn_ about possible issues, not reject the statement as invalid. I misunderstood the question. I thought format check was a warning only and I think that's how it used to behave, yes?" Confirmed in the conceptql session: "yes, bad code format is a warning". Fact: through 0.5.0 it was a warning (v0.4.1 operator.rb:599 add_warning "improperly formatted code"); commit 1bc89d65 (unreleased) made it an error. The NDC ruling ("strict 11") still holds, but a non-11-digit NDC now gives a warning, not an error.
+
+UPDATE 2026-10-30 (jde NDC claims survey, not ruled): jde scanned every active Jigsaw dataset (18 Postgres, 28 Spark, 2 DuckDB; 601.9M NDC rows). 99.99% of NDC rows are 11 all-digit codes. No 9-digit product code and no 10-digit, blank or NULL value appears in any claims data. The 1,161 rows of 7 to 9 digits (two SEER-Medicare datasets) are 11-digit NDCs with leading zeros dropped. So a non-11-digit NDC in a statement matches no claims row. This supports the warning ruling.
+
+Open suggestion from jde: make the NDC warning text say why, e.g. "claims use 11-digit package NDCs; a 9-digit product code matches nothing". Not ruled. Source: JDE claude_stuff/ndc-claims-survey-20261030-070839.csv.
