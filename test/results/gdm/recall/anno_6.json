@@ -18,7 +18,7 @@
                     "n": 0
                   }
                 },
-                "errors": [["improperly formatted code", "203.0x"]]
+                "warnings": [["improperly formatted code", "203.0x"]]
               },
               "name": "ICD-9 CM"
             }

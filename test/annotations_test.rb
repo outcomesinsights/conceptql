@@ -10,8 +10,7 @@ describe ConceptQL::Operators do
     ConceptQL::Database.new(DB)
   end
 
-  # A well-formed code that the vocabulary does not know stays a warning
-  # (seed conceptql-0eb). Only a malformed code fails validation.
+  # A well-formed code that the vocabulary does not know is a warning.
   describe "a well-formed unknown code" do
     it "only warns" do
       query = cdb.query(%w[icd9 412 000.00])
@@ -21,8 +20,31 @@ describe ConceptQL::Operators do
 
     it "still warns next to a malformed code" do
       annotation = cdb.query(%w[icd9 410* 000.00]).scope_annotate(skip_counts: true)
-      _(annotation[:errors]).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
-      _(annotation[:warnings]).must_equal("icd9" => [ [ "unknown code(s)", "000.00" ] ])
+      _(annotation[:errors]).must_equal({})
+      _(annotation[:warnings]).must_equal(
+        "icd9" => [ [ "improperly formatted code", "410*" ], [ "unknown code(s)", "000.00" ] ]
+      )
+    end
+  end
+
+  # Ryan ruled 2026-10-30 (seeds conceptql-0eb and conceptql-ysx): a code that
+  # does not match its vocabulary's format is a warning, and the statement
+  # stays valid. The malformed code matches no rows. There is no prefix
+  # matching, so 410* does not select 410.00.
+  describe "a malformed code" do
+    it "warns and leaves the statement valid" do
+      query = cdb.query(%w[icd9 410*])
+      _(query.validation_errors).must_equal({})
+      _(query.scope_annotate[:warnings]).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
+      _(query.scope_annotate[:counts]).must_equal("icd9" => { condition_occurrence: { rows: 0, n: 0 } })
+    end
+
+    it "does not stop annotate from counting the operator's other codes" do
+      annotation = cdb.query(%w[icd9 412 410*]).annotate.last[:annotation]
+      _(annotation[:errors]).must_be_nil
+      _(annotation[:warnings]).must_equal([ [ "improperly formatted code", "410*" ] ])
+      _(annotation[:counts]).must_equal(cdb.query(%w[icd9 412]).annotate.last[:annotation][:counts])
+      _(annotation[:counts][:condition_occurrence][:rows]).must_be :>, 0
     end
   end
 
@@ -44,9 +66,9 @@ describe ConceptQL::Operators do
       db = ConceptQL::Database.new(nil)
       query = db.query([ "union", %w[cpt 0000], [ "icd9", "00.00" ] ])
       _(query.scope_annotate(skip_counts: true)).must_equal(
-        { errors: { "cpt" => [ [ "improperly formatted code", "0000" ] ],
-                    "icd9" => [ [ "improperly formatted code", "00.00" ] ] },
-          warnings: {},
+        { errors: {},
+          warnings: { "cpt" => [ [ "improperly formatted code", "0000" ] ],
+                      "icd9" => [ [ "improperly formatted code", "00.00" ] ] },
           counts: { "cpt" => { procedure_occurrence: { rows: 0, n: 0 } },
                     "icd9" => { condition_occurrence: { rows: 0, n: 0 } },
                     "union" => { procedure_occurrence: { rows: 0, n: 0 },
