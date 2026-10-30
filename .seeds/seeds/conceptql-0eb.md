@@ -4,7 +4,7 @@ title: 'Spec rewrite findings: six questionable ConceptQL behaviors and an uncom
 status: captured
 type: question
 created_at: 2026-10-30T02:01:24.978057+00:00
-updated_at: 2026-10-30T02:01:24.978057+00:00
+updated_at: 2026-10-30T02:12:38.690459+00:00
 ---
 
 Found 2026-10-29 by the agent that rewrote doc/spec.md for GDM (bead conceptql-p3i). It ran every spec example against the DuckDB test fixture (gdm_wide, OHDSI lexicon). None of these is fixed. Each needs a ruling: defect (file a bead) or intended (document it).
@@ -26,3 +26,14 @@ Found 2026-10-29 by the agent that rewrote doc/spec.md for GDM (bead conceptql-p
 ## The spec regenerator is not committed
 
 The agent rebuilt the 2017 diagram renderer (layout, colors, graphviz `dot`) and a harness that runs every ConceptQL block in doc/spec.md.cql. Diagram file names are the SHA256 of the statement's Ruby 2 `inspect` with symbol keys. The scripts are only in an ignored scratch directory of the primary checkout (`claude_stuff/spec-tools/`: knit.rb, spec_harness.rb, spec_blocks.rb, ops.rb, old_inspect.rb). The next spec edit needs them. Options: (a) commit them as a `just spec` recipe with a test, (b) leave them out and regenerate by hand next time. Recommendation: (a).
+
+RULED 2026-10-29 (Ryan): "1. fix 2. fix 3. they carry a primary diag, right? what other domain would you give them? 4. what would you do in addition to the warning? 5. ok 6. should union dedup? what's your sense of the overall behavior we should adhere to 7. yes commit and recipe"
+
+- Item 1 (numeric with a column name fails at run time): fix. Bead filed.
+- Item 2 (filter accepts an unknown `as` option): fix. Bead filed.
+- Item 5 (icd10 removed from Appendix A): accepted as done.
+- Item 7 (spec regenerator): commit it with a `just` recipe. Bead filed.
+- Items 3, 4 and 6 are open questions back to Ryan, answered in the session on 2026-10-29:
+  - Item 3: yes. Utilizable sets criterion_domain to condition_occurrence and carries primary_concept_id, the admission's primary diagnosis. GDM has no visit or admission domain. A new domain would change how union groups streams (Union's Combiner groups by domain) and how the diagram editor colors them. Recommendation: keep condition_occurrence and say so in the spec. Not a defect.
+  - Item 4: recommendation: support a trailing `*` as a prefix wildcard (`410*` selects every code in the vocabulary that starts with 410), resolved through the lexicon like any code list, and keep the warning only for a prefix that matches no code.
+  - Item 6: today union keeps exact duplicate rows from non-vocabulary inputs (it joins them with UNION ALL), while vocabulary inputs of one domain are merged into one WHERE clause and cpt_or_hcpcs uses a duplicate-removing UNION. Recommendation: every stream is a set, so no operator emits two identical rows; union removes exact duplicates, and skips the removal only where its inputs are provably disjoint (the bead conceptql-5pz rule). This changes the row counts of statements that union overlapping non-vocabulary inputs.
