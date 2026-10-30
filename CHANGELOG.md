@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
   caches its lookups. It never reads `LEXICON_URL`. Pass it as
   `ConceptQL::Database.new(db, lexicon: lexicon)`, without `cache_lookups`. When the dataset
   lacks one of the tables, it raises `ConceptQL::Lexicon::MissingVocabularyError`, whose
-  message names the missing tables, the current schema and the search path. For a Postgres
+  message names the missing tables, the schemas that it searched and the search path. For a Postgres
   or Spark db it returns nil, and the Database chooses its lexicon as before.
 
 ### Changed
@@ -140,6 +140,11 @@ All notable changes to this project will be documented in this file.
   `hospitalization` records (table `collections`, domain `condition_occurrence`) matched
   `icd9` records from `observations`: `filter(icd9 "*" by hospitalization, ignore_dates)`
   kept 8 such records on the test data, and now keeps none.
+- `ConceptQL::Lexicon::MissingVocabularyError` now names the schemas that were searched for
+  the vocabulary tables, each as `catalog.schema`, and its `schemas` attribute holds them.
+  Before, it named the result of `current_schema()`. The consumers attach the dataset and
+  set the search path `memory.main,dataset.<schema>`, so that name was `main`, which is not
+  the dataset's schema. The constructor keyword `schema:` is now `schemas:`.
 
 ## [0.5.0] - 2026-10-29
 
