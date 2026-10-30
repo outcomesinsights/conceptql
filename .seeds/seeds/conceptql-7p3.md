@@ -4,7 +4,7 @@ title: How does a ConceptQL statement lock in the meaning of a code that has had
 status: captured
 type: question
 created_at: 2026-10-30T11:51:55.643472+00:00
-updated_at: 2026-10-30T11:57:55.394128+00:00
+updated_at: 2026-10-30T12:00:36.764119+00:00
 ---
 
 ## Question
@@ -46,3 +46,10 @@ FACTS 2026-10-30 (read-only research agent; logs claude_stuff/code-meaning-probe
 - conceptql selects by vocabulary + every concept ID whose code matches (lib/conceptql/lexicon/lexicon_strategy.rb:20-34, 57-60; operators/vocabulary.rb:111-124). No date, class or invalid_reason filter; clinical_code_source_value is never used for selection.
 
 Consequence: the stored concept ID does not say which meaning applied, so pinning a concept ID in the statement cannot select the right events with today's ETL. What does say the meaning is the code plus the event date (which coding system was in force).
+
+RULED 2026-10-30 (Ryan), answering three questions:
+
+- How a statement names a DRG meaning: "One operator per DRG system". New operators ms_drg (events from 2007-10-01) and cms_drg (events before 2007-10-01). Each selects the DRG code AND the event dates of its system, so ["ms_drg","010"] always means the MS-DRG meaning. Rejected: pinning a concept ID per code (needs OHDSI dates, which have gaps and overlaps), and fixing the ETL first.
+- Today's drg operator: "Deprecate drg entirely". drg warns now (like count) and becomes an error in a later release; authors move to ms_drg or cms_drg.
+- The ETL finding (one concept ID per source code regardless of event date): tell the ETL repo's session; conceptql does not depend on the fix.
+  The reused-code warning becomes unnecessary for DRG once drg is deprecated; HCPCS AC is the only other reused code.
