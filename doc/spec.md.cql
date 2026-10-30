@@ -1300,6 +1300,11 @@ ConceptQL creates a vocabulary operator for each vocabulary in its vocabulary li
 | death | death | None | All death records |
 | information_periods | observation_period | None | All information periods |
 | date_range | person | A start date and an end date | One result for each patient, with the given dates |
+| hospitalization | condition_occurrence | None | All inpatient admissions |
+| hospice | condition_occurrence | None | All hospice admissions |
+| snf | condition_occurrence | None | All skilled nursing facility admissions |
+
+hospitalization, hospice and snf select admissions from collections.  Their results have criterion_table collections and criterion_domain condition_occurrence, because GDM has no visit or admission domain.  primary_concept_id, source_value and source_vocabulary_id hold the admission's code with primary provenance.  That code is usually a diagnosis, but it can be a procedure or a DRG.  Because the results have the condition_occurrence type, union combines them with the results of condition operators such as icd9 into one stream.
 
 ## Appendix B - Algorithm Showcase
 
