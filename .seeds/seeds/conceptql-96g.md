@@ -4,7 +4,7 @@ title: Drop the omopv4_plus (OMOP CDM) data model from conceptql?
 status: captured
 type: question
 created_at: 2026-10-30T00:05:17.586094+00:00
-updated_at: 2026-10-30T00:05:24.652912+00:00
+updated_at: 2026-10-30T01:13:57.617352+00:00
 relationships:
   - target_id: conceptql-chr
     rel_type: questioned-by
@@ -45,3 +45,5 @@ Ryan, 2026-10-29: "I'm thinking we can probably drop OMOP support". Not ruled ye
 ## Recommendation
 
 (a), after one check: confirm that no production Jigsaw database uses `omopv4_plus`. If one does, use (b). The model has no fixture and no CI, and it is already partly broken, so a deprecation period protects no tested user.
+
+RULED 2026-10-29 (Ryan): "remove omoop now -- I don't want to support any changes for it, notify t_shank we're ripping omopv4\* out". Option (a): remove `omopv4_plus` from conceptql now, with no deprecation release. The production check in the attached question is moot: the model is unsupported from now on.
