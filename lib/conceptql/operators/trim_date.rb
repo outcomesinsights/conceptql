@@ -14,6 +14,15 @@ module ConceptQL
     #
     # If the RHS record's start_date is later than the LHS end_date, the LHS
     # record is passed thru unaffected.
+    #
+    # With compare_all (only t_shank gives it), each LHS record is compared
+    # with every RHS record of the person and of the join_columns, not only
+    # with the person's first (trim_date_end) or last (trim_date_start) RHS
+    # record. Each LHS record comes out once, trimmed by the nearest RHS
+    # record that passes: the earliest start_date on or after its start_date
+    # (trim_date_end), or the latest end_date on or before its end_date
+    # (trim_date_start). An LHS record is discarded only when it has RHS
+    # records and none of them passes.
     class TrimDate < TemporalOperator
       desc <<~EOF
         Trims the end_date of the left hand records (LHR) by the earliest
@@ -38,17 +47,11 @@ module ConceptQL
                .left_join(Sequel.as(right_stream_query(db), :r), join_columns.inject(&:&))
                .where(where_criteria)
 
+        ds = nearest_trim_date(ds) if compare_all?
+
         ds = dm.selectify(ds, qualifier: :l, replace: replacement_columns)
 
         ds = apply_selectors(ds)
-
-        # With compare_all, each left row joins every right row of the person,
-        # and two right rows can trim it to the same date: the same start_date,
-        # or both past the left row's date range. The join gives one copy per
-        # right row, so remove the copies (every stream is a set, seed
-        # conceptql-0eb). Without compare_all, the right side has one row per
-        # person, so no copies can come out.
-        ds = ds.distinct if compare_all?
 
         ds.from_self
       end
@@ -57,6 +60,25 @@ module ConceptQL
 
       def compare_all?
         options[:compare_all]
+      end
+
+      # With compare_all, each left row joins every right row of the person
+      # (and of the join columns), and the where clause keeps the right rows
+      # that pass. Group those back to one row for each left row, and keep
+      # the nearest passing trim date (trim_function). A left row without a
+      # right row has a NULL trim date, so it passes through unchanged (bead
+      # conceptql-x6m, seed conceptql-ysx). Every stream is a set, so left
+      # rows that are equal in every column come out once (seed conceptql-0eb).
+      def nearest_trim_date(ds)
+        ds.select_group(*dynamic_columns.map { |column| Sequel[:l][column] })
+          .select_append(Sequel.function(trim_function, trim_bound).as(:trim_bound))
+          .from_self(alias: :l)
+      end
+
+      # The trim date of the joined right row, or the nearest one of the left
+      # row when compare_all grouped the right rows.
+      def trim_date_column
+        compare_all? ? Sequel[:l][:trim_bound] : trim_bound
       end
 
       def right_stream_query(db)

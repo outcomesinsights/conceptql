@@ -29,10 +29,6 @@
   },
   {
     "criterion_domain": "condition_occurrence",
-    "criterion_id": 1572
-  },
-  {
-    "criterion_domain": "condition_occurrence",
     "criterion_id": 15005
   },
   {
@@ -106,10 +102,6 @@
   {
     "criterion_domain": "condition_occurrence",
     "criterion_id": 47130
-  },
-  {
-    "criterion_domain": "condition_occurrence",
-    "criterion_id": 48449
   },
   {
     "criterion_domain": "condition_occurrence",

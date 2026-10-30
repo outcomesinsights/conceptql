@@ -62,12 +62,6 @@ All notable changes to this project will be documented in this file.
   `["occurrence", 2, ["icd9", ...], {"at_least": "30d"}]` returned 2366 rows, of which only
   1163 were distinct. The same rows come out, and only the copies are gone. Statements that
   count the rows of such an `occurrence` count fewer rows.
-- `trim_date_end` and `trim_date_start` with `compare_all` return each row once, because every
-  stream is a set. With `compare_all`, each left row is trimmed by every right row of the
-  person, and two right rows can trim it to the same date. Before, that row came out once for
-  each such right row. With `["icd9", "412"]` as both the left and the right, `trim_date_end`
-  returned 60 rows, of which only 50 were distinct. The same rows come out, and only the copies
-  are gone. Statements that count the rows of such a trim count fewer rows.
 - `cpt_or_hcpcs` joins its vocabulary branches (CPT4, HCPCS and CPT4_HCPCS) with `UNION ALL`
   instead of `UNION`. Each branch selects the rows of a different vocabulary, so no row can
   come from two branches. The duplicate removal was the most expensive step of a
@@ -108,6 +102,21 @@ All notable changes to this project will be documented in this file.
   out once. With `include_rhs_columns`, rows that differ in a right-side column are different
   rows, so a left row still comes out once for each different value, such as each right
   `uuid`.
+- **Behavior change: `trim_date_end` and `trim_date_start` with `compare_all` return one row
+  for each left row.** With `compare_all`, each left row is compared with every right row of
+  the person (and of the `join_columns`). `trim_date_end` now trims the end_date to the
+  earliest right start_date on or after the left start_date, and `trim_date_start` trims the
+  start_date to the latest right end_date on or before the left end_date (each date as
+  `within` moves it, when it is given). Before, the left
+  row came out once for each such right row: trimmed by each one, and also untrimmed when a
+  right row started after the left row ended. For example,
+  `["trim_date_end", {"left": ["icd9", "412"], "right": ["cpt", "99214"], "compare_all": true}]`
+  returned event 523 twice, with the end dates 2008-03-17 and 2008-03-21, and now returns it
+  once, with 2008-03-17. With `["icd9", "412"]` as both the left and the right, `trim_date_end`
+  returned 60 rows for 48 left events, and now returns 48. Which left rows come out does not
+  change: a left row is dropped only when it has right rows and none of them passes, and a
+  left row without right rows passes through unchanged. Statements that count the rows of
+  such a trim count fewer rows.
 - Building a statement's SQL no longer runs a query to learn a dataset's columns. Before,
   `occurrence` with `group_by_date` over a labeled upstream failed on every database with
   "Table with name <label> does not exist" (Postgres: "relation ... does not exist"): it asked
