@@ -105,6 +105,22 @@ describe ConceptQL::OneQueryCounts do
     end
   end
 
+  # The two Recalls build CTEs with the same SQL, and Scope#with_ctes keeps
+  # only one of them. Each Recall still counts from the CTE that is kept.
+  it "counts the operators whose CTEs merged with one SQL statement" do
+    skip_on_spark
+    stmt = [ "union", [ "icd9", "412", { label: "l1" } ], %w[recall l1], [ "first", %w[recall l1] ] ]
+    annotated = nil
+    statements = counting_statements { annotated = CDB.query(stmt).annotate }
+    _, _, recall, first = annotated
+
+    _(statements.length).must_equal(1)
+    _(recall.first).must_equal("recall")
+    _(counts_of(recall)[:condition_occurrence][:rows]).must_be :>, 0
+    _(counts_of(recall)).must_equal(own_counts(%w[icd9 412]))
+    _(counts_of(first[1])).must_equal(own_counts(%w[icd9 412]))
+  end
+
   it "counts nothing with skip_counts" do
     skip_on_spark
     statements = counting_statements { CDB.query(statement).annotate(skip_counts: true) }

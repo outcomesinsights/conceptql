@@ -257,22 +257,64 @@ module ConceptQL
       true
     end
 
+    # An IN list of at least this many integers (concept IDs, mostly) goes to
+    # the database once, as a CTE that each copy of the list reads
+    # (concept_list_condition). Postgres spends planning time on each copy of
+    # a long IN list: one 111-operator algorithm spent 485 ms planning 52
+    # copies of 2,442-item provenance lists, and 156 ms with one CTE for each
+    # list. A shorter list stays an IN list, because a list CTE can change the
+    # Postgres plan for the worse: with a 231-item list as a CTE, the count
+    # statement of a test statement ran in 36 ms instead of 14 ms.
+    CONCEPT_LIST_MIN_ITEMS = 1000
+
+    # Takes the CTEs out of the datasets in an expression, and replaces its
+    # long IN lists with concept lists. With datasets: false, it leaves the
+    # datasets as they are (for a SELECT list).
     class CteExtractor < Sequel::ASTTransformer
-      def initialize(scope, ctes)
+      def initialize(scope, ctes, db, datasets: true)
         super()
         @scope = scope
         @ctes = ctes
+        @db = db
+        @datasets = datasets
       end
 
       private
 
       def v(o)
         if o.is_a?(Sequel::Dataset)
-          @scope.recursive_extract_ctes(o, @ctes)
+          @datasets ? @scope.recursive_extract_ctes(o, @ctes) : o
+        elsif @scope.concept_list?(o)
+          @scope.concept_list_condition(o, @db, @ctes, v(o.args.first))
         else
           super
         end
       end
+    end
+
+    # True for an IN or NOT IN condition on a list of at least
+    # CONCEPT_LIST_MIN_ITEMS integers.
+    def concept_list?(expr)
+      expr.is_a?(Sequel::SQL::BooleanExpression) && %i[IN NOT\ IN].include?(expr.op) &&
+        (list = expr.args[1]).is_a?(Array) && list.length >= CONCEPT_LIST_MIN_ITEMS && list.all?(Integer)
+    end
+
+    # expr (a concept_list? condition) with its list replaced by a subquery
+    # of the CTE that holds the list. Each distinct list has one CTE in the
+    # scope, which joins ctes. The rows are the same: the list has no NULL.
+    def concept_list_condition(expr, db, ctes, column)
+      ids = expr.args[1]
+      name = (@concept_lists ||= {})[ids] ||= cte_name(:concept_list)
+      ctes << [ name, concept_list_dataset(db, ids), @concept_list_options || {} ]
+      Sequel::SQL::BooleanExpression.new(expr.op, column, db.from(name).select(:concept_id))
+    end
+
+    # One concept_id column with a row for each ID, in SQL that Postgres,
+    # DuckDB and Spark all accept.
+    def concept_list_dataset(db, ids)
+      rows = ids.map { |id| "(#{db.literal(id)})" }.join(", ")
+      alias_sql = "#{db.literal(Sequel.identifier(:t))}(#{db.literal(Sequel.identifier(:concept_id))})"
+      db.dataset.with_sql("SELECT * FROM (VALUES #{rows}) AS #{alias_sql}")
     end
 
     def recursive_extract_cte_expr(t, ctes)
@@ -330,7 +372,13 @@ module ConceptQL
       end
 
       if (where = query.opts[:where])
-        query = query.clone(where: CteExtractor.new(self, ctes).transform(where))
+        query = query.clone(where: CteExtractor.new(self, ctes, query.db).transform(where))
+      end
+
+      # One In Two Out flags its events with CASE expressions on the same
+      # provenance lists as its WHERE.
+      if (select = query.opts[:select])
+        query = query.clone(select: CteExtractor.new(self, ctes, query.db, datasets: false).transform(select))
       end
 
       query
@@ -350,22 +398,89 @@ module ConceptQL
     # reads before the dataset itself, so an order that is already correct
     # does not change. (sort_ctes sorts by layers, and would move CTEs.)
     def sort_extracted_ctes(ctes)
-      unsorted = ctes.uniq(&:first)
-      literals = unsorted.to_h { |name, ds| [ name, ds.db.literal(name) ] }
-      deps = unsorted.to_h do |name, ds|
-        sql = ds.sql
-        [ name, literals.filter_map { |other, literal| other if other != name && sql.include?(literal) } ]
+      sorted_ctes_with_sql(ctes).map(&:entry)
+    end
+
+    # One extracted CTE in sorted_ctes_with_sql: its [name, dataset, WITH
+    # options] entry, its name as the adapter quotes it, its SQL, and the
+    # quoted names of the CTEs that its SQL reads.
+    SortedCte = Struct.new(:entry, :literal, :sql, :reads)
+
+    # The work of sort_extracted_ctes. It keeps each CTE's SQL, so that
+    # merge_identical_ctes does not build it again. The names are compared as
+    # quoted strings: a comparison of two Sequel identifiers is much slower.
+    def sorted_ctes_with_sql(ctes)
+      unsorted = ctes.uniq(&:first).map do |entry|
+        name, ds = entry
+        SortedCte.new(entry, ds.db.literal(name), ds.sql)
+      end
+      literals = unsorted.map(&:literal)
+      unsorted.each do |cte|
+        cte.reads = literals.select { |literal| !literal.equal?(cte.literal) && cte.sql.include?(literal) }
       end
 
       sorted = []
+      placed = Set.new
       until unsorted.empty?
-        placed = sorted.map(&:first)
-        index = unsorted.index { |name, _| (deps[name] - placed).empty? }
-        raise(CteCycleError, unsorted.map { |name, _| literals[name] }) unless index
+        index = unsorted.index { |cte| cte.reads.all? { |literal| placed.include?(literal) } }
+        raise(CteCycleError, unsorted.map(&:literal)) unless index
 
-        sorted << unsorted.delete_at(index)
+        cte = unsorted.delete_at(index)
+        placed << cte.literal
+        sorted << cte
       end
       sorted
+    end
+
+    # The opts key of the query that with_ctes returns. Its value maps the
+    # name of each CTE that merge_identical_ctes removed to the name of the
+    # CTE that the query reads in its place.
+    MERGED_CTES = :conceptql_merged_ctes
+
+    # Sorts the extracted CTEs (sort_extracted_ctes) and keeps one CTE of each
+    # group of CTEs with the same SQL and WITH options. A statement evaluates
+    # some operators more than once (a Recall, or an operator that reads its
+    # upstream twice), and each evaluation gives its CTE a new name. Each
+    # reader of a removed CTE reads the kept one instead. The CTEs come in
+    # dependency order, so a CTE's SQL is compared after the CTEs it reads are
+    # renamed. Thus two CTEs that read two copies of one CTE merge too.
+    #
+    # The CTEs that root_sql reads are never removed, because the root query
+    # is a dataset, not SQL text, and its names are not renamed.
+    #
+    # Each kept CTE's dataset becomes its SQL text (Dataset#with_sql), so the
+    # final query does not build that SQL again.
+    #
+    # Returns the kept [name, dataset, WITH options] entries in dependency
+    # order, and a Hash of each removed name to the name that replaces it.
+    def merge_identical_ctes(ctes, root_sql)
+      renames = {}
+      merged = {}
+      kept = {}
+      pattern = nil
+      pattern_size = 0
+      entries = sorted_ctes_with_sql(ctes).filter_map do |cte|
+        name, ds, with_opts = cte.entry
+        sql = cte.sql
+        if cte.reads.any? { |literal| renames.key?(literal) }
+          unless pattern_size == renames.length
+            pattern = Regexp.union(renames.keys)
+            pattern_size = renames.length
+          end
+          sql = sql.gsub(pattern, renames)
+        end
+
+        key = [ sql, with_opts ]
+        if (same = kept[key]) && !root_sql.include?(cte.literal)
+          renames[cte.literal] = same.literal
+          merged[name] = same.entry.first
+          next
+        end
+
+        kept[key] ||= cte
+        [ name, ds.db.dataset.with_sql(sql), with_opts ]
+      end
+      [ entries, merged ]
     end
 
     # The CTEs of each dataset in extra (an evaluated operator) join the WITH
@@ -376,6 +491,8 @@ module ConceptQL
       query = op.evaluate(db)
       extra.each { |ds| query = query.clone(with: query.opts[:with] + ds.opts[:with]) }
       rdbms = op.rdbms
+      # A concept list is read by many CTEs, so it runs once.
+      @concept_list_options = rdbms.supports_materialized? ? { materialized: true } : {}
 
       query = query.from_self
       temp_tables = []
@@ -385,7 +502,8 @@ module ConceptQL
       query = recursive_extract_ctes(query, temp_tables)
       shared_tables, temp_tables = temp_tables.partition { |_, _, with_opts| with_opts&.fetch(SHARED_TABLE, false) }
       shared_tables = shared_tables.uniq(&:first)
-      temp_tables = sort_extracted_ctes(temp_tables)
+      temp_tables, merged = merge_identical_ctes(temp_tables, query.sql)
+      query = query.clone(MERGED_CTES => merged)
 
       if force_temp_tables?(options)
         scope = self

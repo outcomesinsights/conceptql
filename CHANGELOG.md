@@ -95,6 +95,15 @@ All notable changes to this project will be documented in this file.
   also used for a statement with an operator that annotate does not count (an invalid
   operator, for example) and with temp tables (`force_temp_tables`). `skip_counts: true`
   runs no counting query, as before.
+- The SQL of a statement is smaller and takes less time to plan. The rows do not change.
+  - CTEs with the same SQL merge into one. A statement evaluates some operators more than
+    once (a `recall`, for example), and each evaluation used to add its own copy.
+  - An IN list of at least `ConceptQL::Scope::CONCEPT_LIST_MIN_ITEMS` (1,000)
+    integers, such as a list of provenance concept IDs, goes to the database once, as a
+    materialized `VALUES` CTE that each copy of the list reads. A shorter list stays an IN list.
+  - On a 111-operator production algorithm, DuckDB planning of the plain query fell from
+    0.81 s to 0.57 s and `annotate` with counts from 2.7 s to 2.0 s. Postgres planning of the
+    same statement on the test data fell from 485 ms to 156 ms.
 
 ### Deprecated
 
