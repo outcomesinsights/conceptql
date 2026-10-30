@@ -95,6 +95,12 @@ All notable changes to this project will be documented in this file.
   also used for a statement with an operator that annotate does not count (an invalid
   operator, for example) and with temp tables (`force_temp_tables`). `skip_counts: true`
   runs no counting query, as before.
+- The gemspec accepts sequelizer 0.5 (`>= 0.3.0, < 0.6`; before, `< 0.5`), so an
+  application can use sequelizer 0.5's `dataset_db` and `with_dataset` with conceptql.
+  conceptql calls neither of them, and the parts of sequelizer that conceptql uses did not
+  change in 0.5. In sequelizer 0.5, an unqualified table name reads a dataset only inside
+  `with_dataset`, so call `ConceptQL::Lexicon.for_dataset` and run the queries inside that
+  block. conceptql's own Gemfile stays on the sequelizer 0.4 release.
 
 ### Deprecated
 
