@@ -4,7 +4,7 @@ title: How does a ConceptQL statement lock in the meaning of a code that has had
 status: captured
 type: question
 created_at: 2026-10-30T11:51:55.643472+00:00
-updated_at: 2026-10-30T11:51:55.643472+00:00
+updated_at: 2026-10-30T11:57:55.394128+00:00
 ---
 
 ## Question
@@ -36,3 +36,13 @@ Earlier in this session (2026-10-29) Ryan asked "how, in conceptql do we indicat
 ## Facts needed before ruling
 
 How the vocabularies (OHDSI and GDM) store a code with more than one meaning (concept rows, IDs, validity dates); how data rows reference a code (concept ID or code string, and whether the ETL picks the meaning by date); and how the drg operator and other vocabulary operators resolve a code to rows.
+
+FACTS 2026-10-30 (read-only research agent; logs claude_stuff/code-meaning-probe-20261030-0453\*.log .. -045649.log in the primary checkout):
+
+- OHDSI vocabulary: each meaning of a code is its own concept row with its own concept_id, valid_start_date, valid_end_date and concept_class_id ('DRG' for the pre-2007 CMS system, 604 rows, all invalid_reason D; 'MS-DRG', 848 rows). One vocabulary_id 'DRG' covers both systems. GDM vocabulary (gdm_vocabs.concepts) has the same IDs but no dates and no class, and lacks 90 OHDSI DRG rows.
+- Affected vocabularies that conceptql selects on: DRG (529 of 895 codes have more than one row) and HCPCS (1 code, AC). ICD9CM, ICD10CM, ICD9Proc, ICD10PCS, CPT4, NDC, LOINC, RxNorm, SNOMED and Revenue Code have none.
+- Validity windows do not give one meaning per date: 28 DRG codes have overlapping windows (DRG 107: two old-DRG meanings 1998-2005); on 2010-01-01, 142 codes have no valid row and 22 have two or more. DRG 519/520 MS-DRG rows start 2014-10-01, leaving a 2007-10..2014-09 gap.
+- Data rows (slim.clinical_codes, wide.observations) store clinical_code_concept_id, clinical_code_source_value and clinical_code_vocabulary_id. The ETL maps each source code to ONE concept ID regardless of the event date: 95 of 153 DRG rows (all 2008-2010) hold an old-DRG concept that had ended 2007-09-30 (example: code 010 on 2008-08-01 holds "Nervous System Neoplasms" instead of MS-DRG "Pancreas transplant"). 97 of 113 reused-code rows hold the lowest ID. NDC 4032, HCPCS 189, CPT4 147 and ICD9CM 118 rows also hold a concept not valid on the event date.
+- conceptql selects by vocabulary + every concept ID whose code matches (lib/conceptql/lexicon/lexicon_strategy.rb:20-34, 57-60; operators/vocabulary.rb:111-124). No date, class or invalid_reason filter; clinical_code_source_value is never used for selection.
+
+Consequence: the stored concept ID does not say which meaning applied, so pinning a concept ID in the statement cannot select the right events with today's ETL. What does say the meaning is the code plus the event date (which coding system was in force).
