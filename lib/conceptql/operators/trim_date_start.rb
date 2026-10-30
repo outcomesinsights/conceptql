@@ -32,7 +32,17 @@ module ConceptQL
       end
 
       def replacement_columns
-        { start_date: Sequel.function(:greatest, l_start_date, Sequel.function(:coalesce, within_end, l_start_date)) }
+        { start_date: Sequel.function(:greatest, l_start_date, Sequel.function(:coalesce, trim_date_column, l_start_date)) }
+      end
+
+      # The date that trims a left row, from one right row.
+      def trim_bound
+        within_end
+      end
+
+      # With compare_all, the nearest trim date of the right rows that pass.
+      def trim_function
+        :max
       end
 
       def occurrence_number
