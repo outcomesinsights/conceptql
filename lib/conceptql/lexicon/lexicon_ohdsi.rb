@@ -4,9 +4,12 @@ require_relative "lexicon_strategy"
 
 module ConceptQL
   class LexiconOhdsi < LexiconStrategy
+    # The OHDSI vocabulary tables. A db that has all four can be the lexicon.
+    VOCABULARY_TABLES = %i[concept concept_ancestor concept_relationship vocabulary].freeze
+
     class << self
       def db_has_all_vocabulary_tables?(db)
-        %i[concept_ancestor concept concept_relationship vocabulary].all? { |t| db.table_exists?(t) }
+        VOCABULARY_TABLES.all? { |t| db.table_exists?(t) }
       end
     end
 

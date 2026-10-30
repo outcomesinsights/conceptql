@@ -39,6 +39,46 @@ module ConceptQL
     # off. Its size is the number of distinct lookups.
     attr_reader :cache
 
+    # A DuckDB dataset lacks one or more of the OHDSI vocabulary tables, so
+    # Lexicon.for_dataset cannot make the dataset its own lexicon.
+    class MissingVocabularyError < StandardError
+      attr_reader :missing_tables
+
+      # +missing_tables+ are the vocabulary tables that were not found.
+      # +schema+ is the db's current schema and +search_path+ the DuckDB
+      # search path that the unqualified table names resolved through.
+      def initialize(missing_tables, schema:, search_path:)
+        @missing_tables = missing_tables
+        super("The DuckDB dataset (schema #{schema.inspect}) has no vocabulary table #{missing_tables.join(", ")}. " \
+              "A DuckDB dataset is its own lexicon: ConceptQL reads " \
+              "#{LexiconOhdsi::VOCABULARY_TABLES.join(", ")} only from it, and never from LEXICON_URL. " \
+              "The tables were looked up without a schema, through the search path #{search_path.inspect}.")
+      end
+    end
+
+    # The lexicon of a DuckDB dataset: the OHDSI vocabulary tables of db
+    # itself, found without a schema through db's search path. LEXICON_URL is
+    # never read. The Lexicon caches its lookups for its own life. Pass it to
+    # ConceptQL::Database.new(db, lexicon: lexicon), without cache_lookups.
+    #
+    # Raises MissingVocabularyError when db lacks any of the tables, because a
+    # DuckDB dataset never falls back to another lexicon.
+    #
+    # Returns nil for a Postgres or Spark db. The caller then builds its
+    # Database without lexicon:, and the Database chooses one as before.
+    def self.for_dataset(db)
+      return unless db.database_type.to_sym == :duckdb
+
+      missing = LexiconOhdsi::VOCABULARY_TABLES.reject { |table| db.table_exists?(table) }
+      unless missing.empty?
+        raise MissingVocabularyError.new(missing,
+                                         schema: db.get(Sequel.function(:current_schema)),
+                                         search_path: db.get(Sequel.function(:current_setting, "search_path")))
+      end
+
+      new(nil, db, strategy: LexiconOhdsi.new(db), cache: true)
+    end
+
     def initialize(lexicon_db, dataset_db = nil, strategy: nil, cache: false)
       @strategy = strategy || determine_strategy(lexicon_db, dataset_db)
       @cache = {} if cache

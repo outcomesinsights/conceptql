@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `ConceptQL::Lexicon.for_dataset(db)` makes a DuckDB dataset its own lexicon. The returned
+  Lexicon reads the OHDSI vocabulary tables (`concept`, `concept_ancestor`,
+  `concept_relationship` and `vocabulary`) from `db` itself, through its search path, and
+  caches its lookups. It never reads `LEXICON_URL`. Pass it as
+  `ConceptQL::Database.new(db, lexicon: lexicon)`, without `cache_lookups`. When the dataset
+  lacks one of the tables, it raises `ConceptQL::Lexicon::MissingVocabularyError`, whose
+  message names the missing tables, the current schema and the search path. For a Postgres
+  or Spark db it returns nil, and the Database chooses its lexicon as before.
+
 ### Changed
 
 - `cpt_or_hcpcs` joins its vocabulary branches (CPT4, HCPCS and CPT4_HCPCS) with `UNION ALL`
