@@ -71,8 +71,10 @@ module ConceptQL
         vocabulary_long_name || vocabulary_short_name
       end
 
+      # A preferred_name in the hash wins: ms_drg and cms_drg select vocabulary
+      # DRG, but each is named after its own DRG system.
       def preferred_name
-        omopv5_id || id
+        hash[:preferred_name] || omopv5_id || id
       end
 
       def aliases

@@ -1,0 +1,614 @@
+[
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 4
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 12
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 18
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 31
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 42
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 53
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 64
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 81
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 93
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 104
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 115
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 124
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 132
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 141
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 152
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 166
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 169
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 188
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 191
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 211
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 221
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 234
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 248
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 256
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 272
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 276
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 292
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 302
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 318
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 326
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 336
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 343
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 350
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 362
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 368
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 382
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 390
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 402
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 409
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 419
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 434
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 437
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 461
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 469
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 476
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 500
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 503
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 525
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 529
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 544
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 561
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 572
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 578
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 590
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 603
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 614
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 622
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 642
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 643
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 657
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 672
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 675
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 685
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 703
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 714
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 723
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 740
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 744
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 757
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 767
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 772
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 786
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 799
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 821
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 822
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 839
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 848
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 870
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 883
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 899
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 905
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 919
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 935
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 946
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 954
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 959
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 980
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 982
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 996
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1004
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1017
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1026
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1047
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1057
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1063
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1080
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1082
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1095
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1107
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1120
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1124
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1143
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1154
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1157
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1166
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1190
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1191
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1204
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1212
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1226
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1233
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1247
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1263
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1271
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1277
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1289
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1302
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1320
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1323
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1346
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1350
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1365
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1372
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1392
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1402
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1423
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1426
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1435
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1447
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1456
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1481
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1489
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1495
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1511
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1517
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1533
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1546
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1554
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1568
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1591
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1603
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1615
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1623
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1636
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1650
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1663
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1676
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1687
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1700
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1719
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1721
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1732
+  },
+  {
+    "criterion_domain": "procedure_occurrence",
+    "criterion_id": 1742
+  }
+]

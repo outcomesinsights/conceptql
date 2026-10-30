@@ -22,6 +22,19 @@ All notable changes to this project will be documented in this file.
   of each person. Without the option, `sum` groups as before: by every column except the
   dates, `criterion_id` and `value_as_number`, so one person can get several rows. A value
   other than true or false is the validation error `wrong option format`.
+- The operators `ms_drg` and `cms_drg` select DRG events by DRG system. CMS renumbered the
+  DRG codes on 2007-10-01, when MS-DRG replaced CMS-DRG, and reused most codes for new
+  meanings. An event row does not record which meaning applied, so each operator selects the
+  DRG code and the event dates of its system: `ms_drg` selects the events whose `start_date`
+  is on or after 2007-10-01, and `cms_drg` the events before that day. The day is the
+  constant `ConceptQL::Vocabularies::DrgSystems::MS_DRG_START_DATE`. Both operators look up
+  concept IDs in the DRG vocabulary as `drg` does, so they work with the OHDSI and the GDM
+  lexicons. They check codes against the DRG format of vocabulary_formats (3 digits) and warn
+  about unknown codes as `drg` does. They never give the warning
+  `code(s) with more than one meaning`. A code list names each code by its meaning in the
+  operator's system when the lexicon keeps OHDSI concept classes (`MS-DRG` or `DRG`), and by
+  all of its names otherwise. The operator metadata lists both operators in the category of
+  `drg`, with the preferred names `MS-DRG` and `CMS-DRG`.
 
 ### Changed
 
@@ -112,6 +125,12 @@ All notable changes to this project will be documented in this file.
   `sum` splits the count of one person over several rows when the events have different
   source values. The operator metadata of `count` says `deprecated: true`. The new
   class-level declaration `deprecated` marks an operator.
+- The `drg` operator is deprecated. A DRG code can have two meanings, and `drg` selects the
+  events of both. A statement that uses `drg` still runs and returns the same rows.
+  Annotation adds the warning `deprecated operator` on `drg`, and a later release will make
+  it an error. Use `ms_drg` for the MS-DRG meaning (events from 2007-10-01) or `cms_drg` for
+  the CMS-DRG meaning (events before 2007-10-01). The operator metadata of `drg` says
+  `deprecated: true`.
 
 ### Fixed
 

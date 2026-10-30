@@ -47,9 +47,10 @@ describe "the deprecated count operator" do
       _(deprecated_in_metadata("count")).must_equal true
     end
 
-    it "does not say that any other operator is deprecated" do
+    # drg is deprecated too (bead conceptql-alw).
+    it "says no operator other than count and drg is deprecated" do
       _(deprecated_in_metadata("sum")).must_be_nil
-      _(operators.keys.reject { |name| deprecated_in_metadata(name).nil? }).must_equal [ "count" ]
+      _(operators.keys.reject { |name| deprecated_in_metadata(name).nil? }.sort).must_equal %w[count drg]
     end
   end
 end

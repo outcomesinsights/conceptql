@@ -12,8 +12,15 @@ describe "the warning for codes with more than one meaning" do
     cdb.query(statement).annotate.last[:annotation][:warnings]
   end
 
+  # drg is deprecated (bead conceptql-alw), so every drg statement also has
+  # this warning. It comes first.
+  let(:drg_deprecation) do
+    [ "deprecated operator", ConceptQL::Vocabularies::DrgSystems::DRG_DEPRECATION ]
+  end
+
   it "names each reused code and all of its meanings" do
     _(warnings_for(CDB, %w[drg 410 492 870])).must_equal [
+      drg_deprecation,
       [
         "code(s) with more than one meaning",
         "410: Biliary tract proc except only cholecyst w or w/o c.d.e. w/o CC/MCC | " \
@@ -25,8 +32,15 @@ describe "the warning for codes with more than one meaning" do
     ]
   end
 
-  it "gives no warning for a code with one meaning" do
-    _(warnings_for(CDB, %w[drg 870])).must_be_nil
+  # ms_drg and cms_drg select one DRG system each, so a code reused across
+  # the two systems has one meaning for them (bead conceptql-alw).
+  it "gives no warning for a DRG code reused across the two DRG systems with ms_drg or cms_drg" do
+    _(warnings_for(CDB, %w[ms_drg 410 492 870])).must_be_nil
+    _(warnings_for(CDB, %w[cms_drg 410 492 870])).must_be_nil
+  end
+
+  it "gives no reused-code warning for a code with one meaning" do
+    _(warnings_for(CDB, %w[drg 870])).must_equal [ drg_deprecation ]
   end
 
   describe "with a small OHDSI lexicon" do
@@ -65,7 +79,7 @@ describe "the warning for codes with more than one meaning" do
     end
   end
 
-  it "gives no warning and no error without a lexicon" do
-    _(warnings_for(ConceptQL::Database.new(nil), %w[drg 410])).must_be_nil
+  it "gives no reused-code warning and no error without a lexicon" do
+    _(warnings_for(ConceptQL::Database.new(nil), %w[drg 410])).must_equal [ drg_deprecation ]
   end
 end

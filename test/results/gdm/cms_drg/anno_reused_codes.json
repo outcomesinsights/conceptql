@@ -1,0 +1,17 @@
+[
+  "cms_drg",
+  "001",
+  "205",
+  "410",
+  {
+    "annotation": {
+      "counts": {
+        "procedure_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    },
+    "name": "CMS-DRG"
+  }
+]
