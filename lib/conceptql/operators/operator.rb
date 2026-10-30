@@ -34,9 +34,10 @@ module ConceptQL
       attr_reader :nodifier, :values, :options, :arguments, :upstreams, :op_name, :errors, :warnings
 
       # The per-code messages of a Vocabulary operator. A code that does not
-      # match its vocabulary's format_regexp is an error (Ryan ruled
-      # 2026-10-29, seed conceptql-0eb). A well-formed code that the vocabulary
-      # does not know is only a warning.
+      # match its vocabulary's format is an error (Ryan ruled 2026-10-29, seed
+      # conceptql-0eb). The formats come from vocabulary_formats
+      # (Vocabularies::Formats); a vocabulary without one is not checked. A
+      # well-formed code that the vocabulary does not know is only a warning.
       BAD_FORMAT = "improperly formatted code"
       UNKNOWN_CODE = "unknown code(s)"
 

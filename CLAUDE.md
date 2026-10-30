@@ -26,6 +26,8 @@ ConceptQL::Database -> Query -> Nodifier -> Operator tree -> Sequel dataset -> S
 
 ~50 operator classes, each producing a Sequel dataset. Operators self-register via `register(__FILE__, :gdm, :gdm_wide)` into `Operators.static_operators`, keyed by data model. Vocabulary operators are not registered at load: each `ConceptQL::Database` builds its own from `config/vocabularies.csv` and its own lexicon, and `Database#operators(data_model)` merges the built-ins over them. Every lookup goes through `cdb.operators`; `require 'conceptql'` touches no database. Unregistered operators return `Invalid`.
 
+A vocabulary operator checks the format of its codes against the default row of its vocabulary in `config/vocabulary_formats.tsv`, a pinned copy of the published table of `outcomesinsights/vocabulary_formats` (`ConceptQL::Vocabularies::Formats`). `config/vocabulary_formats.sha` records the commit, and `just vocabulary-formats <ref>` refreshes both. A vocabulary without a row is not checked. Do not add format patterns to conceptql: a wrong pattern is fixed in vocabulary_formats, and then the copy is refreshed.
+
 Standard output columns: `person_id`, `criterion_id`, `criterion_table`, `criterion_domain`, `start_date`, `end_date`, `value_as_number`, `value_as_string`, `value_as_concept_id`, `units_source_value`, `source_value`.
 
 ### Data Models (`lib/conceptql/data_model/`)

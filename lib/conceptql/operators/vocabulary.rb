@@ -140,8 +140,8 @@ module ConceptQL
         unless defined?(@code_regexp)
           @code_regexp = nil
 
-          if (reg_str = vocab_entry.format_regexp)
-            @code_regexp = Regexp.union(Regexp.new(reg_str, Regexp::IGNORECASE), /\A\*\Z/)
+          if (format = Vocabularies::Formats.regexp(vocab_entry.omopv5_id))
+            @code_regexp = Regexp.union(format, /\A\*\Z/)
           end
         end
         @code_regexp

@@ -11,7 +11,8 @@
           "n": 0
         }
       },
-      "errors": [["improperly formatted code", "Z561123", "561123", "AA561123"]]
+      "errors": [["improperly formatted code", "AA561123"]],
+      "warnings": [["unknown code(s)", "Z561123", "561123"]]
     },
     "name": "ICD-10 PCS"
   }

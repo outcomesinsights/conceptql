@@ -39,6 +39,21 @@ All notable changes to this project will be documented in this file.
   know is still only the warning `unknown code(s)`, also next to a malformed code. Like any
   invalid operator, an operator with a malformed code, and every operator that uses it, gets no
   counts, and the plain query and `Query#code_list` raise `ConceptQL::InvalidStatementError`.
+- **Behavior change: the code formats come from vocabulary_formats.** conceptql no longer
+  keeps its own format patterns. `config/vocabulary_formats.tsv` is a copy of the published
+  table of the public repository `outcomesinsights/vocabulary_formats`, and
+  `config/vocabulary_formats.sha` records its commit. `just vocabulary-formats <ref>`
+  refreshes both. Each vocabulary uses its default row (the row whose `vocabulary_id` is the
+  vocabulary's id), anchored as `\A(?:pattern)\z`. A vocabulary without a row gets no format
+  check, and an unknown code in it is still the warning `unknown code(s)`. Compared with the
+  old patterns: LOINC and Gemscript are no longer checked, so standard LOINC codes such as
+  `20-8` and `1-8` are accepted. ICD10PCS accepts the hierarchy codes of 1 to 7 characters
+  (`0016`). NDC accepts only the 11-digit claims form, so the 9-digit product codes
+  (`003630641`) and the alphanumeric codes (`00019N068`) are now format errors. RxNorm
+  Extension, ICDO3 and EDI, which come from the lexicon, are now checked. The other patterns
+  are unchanged. `config/vocabularies.csv` has no `format_regexp` column, and a
+  `format_regexp` column in a custom vocabularies file is ignored. The `format_regexp` of a
+  vocabulary entry's metadata is the anchored pattern from vocabulary_formats.
 - `union` removes exact duplicate rows: a row that arrives from more than one upstream
   comes out once, because every stream is a set. Before, `union` joined its non-vocabulary
   upstreams with `UNION ALL`, so `["union", ["first", ["icd9", "412"]], ["icd9", "412"]]`
