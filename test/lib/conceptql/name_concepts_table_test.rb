@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "securerandom"
 require_relative "../../db_helper"
 
 # The display-name joins read a cut-down concept table when the Database has
@@ -8,7 +9,9 @@ describe "ConceptQL::Database name_concepts_table" do
   name_joins = %w[dose_con ing_con unit_con concept_con asc dlc]
   # A drug and two lab results in the test data that have concept names.
   statement = [ "union", %w[ndc 60429015703], %w[loinc 4548-4 72166-2], [ "hospitalization" ] ]
-  table = :conceptql_test_name_concepts
+  # just test-full runs three configs at once against one test_data database,
+  # so each run makes its own table (bead conceptql-qv2).
+  table = :"conceptql_test_name_concepts_#{SecureRandom.hex(4)}"
 
   def mock_cdb(data_model, opts = {})
     ConceptQL::Database.new(Sequel.mock(host: :postgres), opts.merge(data_model: data_model))
