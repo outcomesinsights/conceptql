@@ -17,6 +17,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- `union` removes exact duplicate rows: a row that arrives from more than one upstream
+  comes out once, because every stream is a set. Before, `union` joined its non-vocabulary
+  upstreams with `UNION ALL`, so `["union", ["first", ["icd9", "412"]], ["icd9", "412"]]`
+  returned each first MI twice. Two rows are duplicates only when every column is equal,
+  `label` included. The duplicate removal is expensive on large data, so `union` keeps
+  `UNION ALL` when no row can come from two of its upstreams: when the upstreams are
+  vocabulary operators, `cpt_or_hcpcs`-style operators and unions of them, and each pair
+  has different domains or different vocabularies. Statements that union a labeled
+  operator with a `recall` of it return fewer rows.
 - `cpt_or_hcpcs` joins its vocabulary branches (CPT4, HCPCS and CPT4_HCPCS) with `UNION ALL`
   instead of `UNION`. Each branch selects the rows of a different vocabulary, so no row can
   come from two branches. The duplicate removal was the most expensive step of a

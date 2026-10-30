@@ -70,10 +70,54 @@ module ConceptQL
 
         queries += Combiner.new(combinables).queries(db)
 
+        all = disjoint_upstreams?
         queries.map! { |ds| ds.from_self.select(*query_cols).from_self }
         queries.inject do |q, query|
-          q.union(query, all: true)
+          q.union(query, all: all)
         end
+      end
+
+      # The (criterion_domain, vocabulary condition) pairs of every row this
+      # union can emit, or nil when an upstream does not fix them at build
+      # time. See #disjoint_upstreams?.
+      def branches
+        upstream_branches = upstreams.map { |upstream| branches_of(upstream) }
+        upstream_branches.flatten(1) if upstream_branches.all?
+      end
+
+      private
+
+      # Every stream is a set (seed conceptql-0eb), so union removes the rows
+      # that arrive from more than one upstream: UNION, not UNION ALL. The
+      # duplicate removal is expensive on large data (conceptql-5pz), so union
+      # skips it when no row can arrive from two of its queries. It proves
+      # that only for vocabulary operators, cpt_or_hcpcs-style operators and
+      # unions of them, because each of their rows carries the operator's
+      # domain as criterion_domain and comes from a row of its vocabulary.
+      # Two rows with different domains differ, and so do two rows of one
+      # domain (one table) from different vocabularies of one column. Any
+      # other upstream can overlap anything, so union removes duplicates.
+      def disjoint_upstreams?
+        combinables, individuals = upstreams.partition { |upstream| upstream.is_a?(Vocabulary) }
+        queries = individuals.map { |upstream| branches_of(upstream) }
+        queries += combinables.group_by(&:domain).values.map { |combos| combos.flat_map { |c| branches_of(c) } }
+        return false unless queries.all?
+
+        queries.combination(2).all? do |one, other|
+          one.product(other).all? { |a, b| disjoint_branches?(a, b) }
+        end
+      end
+
+      def branches_of(upstream)
+        case upstream
+        when Vocabulary then [ [ upstream.domain, upstream.vocabulary_condition ] ]
+        when MultipleVocabularies then upstream.vocab_ops.flat_map { |vo| branches_of(vo) }
+        when Union then upstream.branches
+        end
+      end
+
+      def disjoint_branches?((domain, condition), (other_domain, other_condition))
+        domain != other_domain || (condition.keys == other_condition.keys && condition != other_condition)
       end
     end
   end

@@ -200,7 +200,9 @@ Because streams represent sets of results, its makes sense to include a operator
 - Takes any number of upstream operators and aggregates their streams
     - Unions together streams with identical types
         - Think of streams with the same type flowing together into a single stream
-        - Union does not remove duplicates: a result that arrives from two upstream operators can appear twice
+        - Union removes duplicates: a result that arrives from more than one upstream operator appears once
+            - Every stream is a set, so no operator passes along two identical results
+            - Two results are identical when they have the same value in every column, label included
     - Streams with the different types flow along together concurrently without interacting
         - It does not make sense to union, say, condition_occurrence results with procedure_occurrence results, so streams with different types won't mingle together, but will continue to flow downstream in parallel
 
@@ -256,6 +258,24 @@ Because streams represent sets of results, its makes sense to include a operator
   [
     "cpt",
     "99231"
+  ]
+]
+```
+
+```ConceptQL
+# The first MI of each patient is also one of the patient's MIs, so it appears once: the union holds the same results as icd9 412 alone
+[
+  "union",
+  [
+    "first",
+    [
+      "icd9",
+      "412"
+    ]
+  ],
+  [
+    "icd9",
+    "412"
   ]
 ]
 ```
@@ -1184,10 +1204,10 @@ To count the events of each person, set value_as_number to 1 with `numeric`, and
 ]
 ```
 
-We could do dumb things like count the number of times a row shows up in a union:
+Because every stream is a set, `count` over a union cannot show how many upstreams a row came from. Union passes along each row once:
 
 ```ConceptQL
-# All rows with a value of 2 would be rows that were both MI and from an inpatient record
+# Every row has a value of 1, also the MIs from an inpatient record, which arrive from both upstreams
 [
   "count",
   [
