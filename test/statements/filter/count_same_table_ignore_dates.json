@@ -1,0 +1,8 @@
+[
+  "filter",
+  {
+    "left": ["hospitalization"],
+    "right": ["hospitalization"],
+    "ignore_dates": true
+  }
+]

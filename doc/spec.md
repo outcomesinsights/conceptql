@@ -383,7 +383,7 @@ Because streams represent sets of results, its makes sense to include a operator
 
 ### Filter
 
-This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream. It passes along each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same person_id, criterion_id, criterion_domain, start_date, and end_date. The operator discards all results in the right-hand stream. Use filter to keep only the results that two streams have in common, as an intersection would.
+This operator takes two sets of incoming streams, a left-hand stream and a right-hand stream. It passes along each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date, and end_date. A criterion_id identifies a result only within its criterion_table, so results from two tables never match, even when their ids are equal. The operator discards all results in the right-hand stream. Use filter to keep only the results that two streams have in common, as an intersection would.
 
 ```YAML
 ---
