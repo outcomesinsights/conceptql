@@ -17,6 +17,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Behavior change: statements that only warned now fail validation.** A code that does not
+  match its vocabulary's format (for example `["icd9", "410*"]`) is now the validation error
+  `improperly formatted code`, which names the code. Before, it was only a warning, and the
+  statement silently returned no rows for that code. There is no prefix matching. A bare `"*"`
+  still selects every code. A `cpt_or_hcpcs`-style operator gives the error only when every one
+  of its vocabularies rejects the code's format. A well-formed code that the vocabulary does not
+  know is still only the warning `unknown code(s)`, also next to a malformed code. Like any
+  invalid operator, an operator with a malformed code, and every operator that uses it, gets no
+  counts, and `Query#code_list` raises `ConceptQL::Query::InvalidStatementError`.
 - `union` removes exact duplicate rows: a row that arrives from more than one upstream
   comes out once, because every stream is a set. Before, `union` joined its non-vocabulary
   upstreams with `UNION ALL`, so `["union", ["first", ["icd9", "412"]], ["icd9", "412"]]`

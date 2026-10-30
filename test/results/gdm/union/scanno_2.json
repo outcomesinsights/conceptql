@@ -1,13 +1,13 @@
 {
-  "errors": {},
-  "warnings": {
+  "errors": {
     "1": [["improperly formatted code", "XYS"]]
   },
+  "warnings": {},
   "counts": {
     "1": {
       "condition_occurrence": {
-        "rows": 48,
-        "n": 37
+        "rows": 0,
+        "n": 0
       }
     },
     "2": {
@@ -18,8 +18,8 @@
     },
     "union": {
       "condition_occurrence": {
-        "rows": 1596,
-        "n": 189
+        "rows": 0,
+        "n": 0
       }
     }
   }

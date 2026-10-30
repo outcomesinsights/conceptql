@@ -120,7 +120,9 @@ describe ConceptQL::Query do
       "recall/anno_3.json" => "recall: no matching label (HA1)",
       "recall/anno_4.json" => "recall: has no arguments",
       "recall/anno_5.json" => "recall: has multiple arguments (foo, bar)",
-      "recall/anno_6.json" => "recall: no matching label (Qualifying Meyloma Dx)"
+      "recall/anno_6.json" => "recall: no matching label (Qualifying Meyloma Dx)",
+      # A malformed code is an error (seed conceptql-0eb).
+      "icd9/anno_invalid_code.json" => "icd9: improperly formatted code (XYS)"
     }.each do |file, expected_error|
       it "should raise InvalidStatementError naming the errors for #{file}" do
         statement = JSON.parse(File.read("test/statements/#{file}"))
@@ -138,14 +140,16 @@ describe ConceptQL::Query do
       _(error.message).must_include("count: has multiple upstreams (icd9, icd9)")
     end
 
+    # 000.00 is a well-formed ICD-9 code that the vocabulary does not know, so
+    # it is only a warning. A malformed code is an error (seed conceptql-0eb).
     it "should not raise on a statement with only warnings" do
-      query = CDB.query(%w[icd9 412 XYZ])
+      query = CDB.query(%w[icd9 412 000.00])
       _(query.scope_annotate(skip_counts: true)[:warnings]).wont_be_empty
-      _(query.code_list.map(&:code)).must_equal(%w[412 XYZ])
+      _(query.code_list.map(&:code)).must_equal(%w[412 000.00])
     end
 
     it "should not change what a later annotate returns" do
-      statement = [ "union", %w[icd9 412 XYZ], %w[cpt 99214] ]
+      statement = [ "union", %w[icd9 412 000.00], %w[cpt 99214] ]
       query = CDB.query(statement)
       query.code_list
       _(query.annotate).must_equal(CDB.query(statement).annotate)

@@ -150,14 +150,24 @@ describe ConceptQL::Diagram do
       )
     end
 
-    # scope_annotate keys warnings by operator name, so these two nodes would
-    # share one entry there; the render tree keeps them apart.
-    it "keeps warnings on the one of two same-named nodes that has them" do
+    # scope_annotate keys errors and warnings by operator name, so these two
+    # nodes would share one entry there; the render tree keeps them apart.
+    # A malformed code is an error (seed conceptql-0eb).
+    it "keeps errors on the one of two same-named nodes that has them" do
       statement = [ "union", %w[icd9 412], [ "icd9", "00.00" ] ]
 
       _(render(statement)[:statements].first[:children]).must_equal(
-        [ icd9("412"), icd9("00.00", warnings: [ [ "improperly formatted code", "00.00" ] ]) ]
+        [ icd9("412"), icd9("00.00", errors: [ [ "improperly formatted code", "00.00" ] ]) ]
       )
+    end
+
+    # Only a database check gives a warning: 000.00 is a well-formed ICD-9 code
+    # that the vocabulary does not know.
+    it "keeps warnings on the one of two same-named nodes that has them" do
+      statement = [ "union", %w[icd9 412], [ "icd9", "000.00" ] ]
+      children = render(statement, cdb: CDB)[:statements].first[:children]
+
+      _(children.map { |child| child[:warnings] }).must_equal([ nil, [ [ "unknown code(s)", "000.00" ] ] ])
     end
 
     it "renders each statement of a list, in order" do
