@@ -86,9 +86,9 @@ module ConceptQL
           end
         end
 
-        # Declares inherited options that this operator does not support.
-        # They leave the operator's metadata, and a statement that sets one
-        # fails validation.
+        # Declares options that this operator does not support, inherited or
+        # not. An inherited one leaves the operator's metadata, and a
+        # statement that sets any of them fails validation.
         def unsupported_options(*names)
           names.each { |name| remove_option(name) }
           validations << [ :validate_unsupported_options, *names ]
