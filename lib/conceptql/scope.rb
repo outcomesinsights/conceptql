@@ -496,10 +496,18 @@ module ConceptQL
 
       query = query.from_self
       temp_tables = []
-      ctes.each do |label, operator|
-        temp_tables << [ label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables) ]
+      # With CONCEPTQL_AVOID_CTES, each operator is a subquery
+      # (Operator#evaluate) and Scope#from inlines each labeled operator, so
+      # nothing is extracted and a long IN list stays an IN list. Only the
+      # shared tables (add_shared_table) remain.
+      if ConceptQL.avoid_ctes?
+        temp_tables.concat(@shared_tables || [])
+      else
+        ctes.each do |label, operator|
+          temp_tables << [ label_cte_name(label), recursive_extract_ctes(operator.evaluate(db), temp_tables) ]
+        end
+        query = recursive_extract_ctes(query, temp_tables)
       end
-      query = recursive_extract_ctes(query, temp_tables)
       shared_tables, temp_tables = temp_tables.partition { |_, _, with_opts| with_opts&.fetch(SHARED_TABLE, false) }
       shared_tables = shared_tables.uniq(&:first)
       temp_tables, merged = merge_identical_ctes(temp_tables, query.sql)
@@ -561,13 +569,11 @@ module ConceptQL
           end
         end
       else
-        unless ConceptQL.avoid_ctes?
-          temp_tables.each do |table_name, ds, with_opts|
-            query = if with_opts.nil? || with_opts.empty?
-                      query.with(table_name, ds)
-            else
-                      query.with(table_name, ds, with_opts)
-            end
+        temp_tables.each do |table_name, ds, with_opts|
+          query = if with_opts.nil? || with_opts.empty?
+                    query.with(table_name, ds)
+          else
+                    query.with(table_name, ds, with_opts)
           end
         end
 
@@ -583,6 +589,14 @@ module ConceptQL
       end
 
       shared_tables.empty? ? query : create_shared_tables_on_read(query, shared_tables, op)
+    end
+
+    # With CONCEPTQL_AVOID_CTES, Behaviors::Utilizable#evaluate records each
+    # shared table here, because with_ctes extracts no WITH entry to find it
+    # in. Returns a dataset that reads the table.
+    def add_shared_table(db, name, list)
+      (@shared_tables ||= []) << [ name, list, { SHARED_TABLE => true } ]
+      db[name]
     end
 
     # The sql_statements entries that create the shared tables that do not

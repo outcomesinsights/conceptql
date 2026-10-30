@@ -40,3 +40,28 @@ module Minitest
     end
   end
 end
+
+# The SQL of a statement depends on CONCEPTQL_AVOID_CTES. A describe block that
+# checks the SQL of one mode includes SqlMode::CTES or SqlMode::AVOID_CTES, and
+# each of its tests runs in that mode, whatever mode the suite runs in. The
+# variable is restored after each test.
+module SqlMode
+  def self.with(value)
+    Module.new do
+      define_method(:setup) do
+        @sql_mode_saved = ENV.fetch("CONCEPTQL_AVOID_CTES", nil)
+        ENV["CONCEPTQL_AVOID_CTES"] = value
+        super()
+      end
+
+      define_method(:teardown) do
+        super()
+      ensure
+        ENV["CONCEPTQL_AVOID_CTES"] = @sql_mode_saved
+      end
+    end
+  end
+
+  CTES = with(nil)
+  AVOID_CTES = with("true")
+end

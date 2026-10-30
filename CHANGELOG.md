@@ -215,6 +215,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `CONCEPTQL_AVOID_CTES=true` works again. Since 2022, each operator read its rows from a CTE
+  of its own, but in this mode the statement had no WITH list. So the database refused the
+  SQL of every statement because the CTE did not exist. Now each operator is a
+  subquery in this mode, and a long concept list stays an IN list. The operators `occurrence`
+  (with `at_least` or `within`) and `co_reported` still use CTEs of their own, inside their
+  subquery. With the Database's `share_utilization` option, the statement reads the shared
+  table as in the default mode. The SQL of the default mode is unchanged.
 - An empty statement (`[]`) is now an invalid statement. `validation_errors` and
   `scope_annotate` report the error `{"invalid" => [["empty statement"]]}`, and `query`, `sql`
   and the other methods that build SQL raise `ConceptQL::InvalidStatementError`. This also

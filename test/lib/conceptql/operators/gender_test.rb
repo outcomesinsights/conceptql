@@ -16,6 +16,8 @@ describe ConceptQL::Operators::Gender do
   end
 
   describe "under gdm" do
+    include SqlMode::CTES
+
     let(:db) do
       ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
     end
