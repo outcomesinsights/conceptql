@@ -4,7 +4,7 @@ title: sort_extracted_ctes builds SQL for every CTE to find dependencies (about 
 status: captured
 type: idea
 created_at: 2026-10-29T20:43:42.822503+00:00
-updated_at: 2026-10-30T12:24:34.237363+00:00
+updated_at: 2026-10-30T12:39:08.013386+00:00
 tags:
   - algorithm-survey
   - performance
@@ -54,3 +54,5 @@ PROFILE 2026-10-30 (current main 8a1aaa85, ac4efe58 on native_sample_5000, DuckD
 - Forced per-operator path (what Spark, temp tables and uncountable statements still use): 78-83 s; sort_extracted_ctes 29.4 s of it. Hot line scope.rb:357 (filter_map with other != name): CTE names are Sequel.identifier objects, so each comparison runs Sequel Expression#== (46.6% of samples); scope.rb:363 Array#- 12-14%.
 - Also seen: Operator#evaluate is not memoized, so build_dataset evaluates the tree twice (one_query_counts.rb:68, :73); gdm.rb:119 source_vocabulary_ids recomputes on every call (= instead of ||=).
   Conclusion: on DuckDB and Postgres the 62 s is gone. This seed idea now matters only where counting falls back per operator, mainly Spark.
+
+NOTE 2026-10-30: the profile logs listed above were deleted when the profiling worktree was removed. The numbers in this seed are the remaining record.
