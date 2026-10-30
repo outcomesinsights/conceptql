@@ -1,10 +1,12 @@
 ---
 id: conceptql-e8n
 title: What should the count operator do now that every stream is a set?
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-30T05:17:08.048015+00:00
-updated_at: 2026-10-30T11:18:01.375304+00:00
+updated_at: 2026-10-30T11:39:10.290752+00:00
+resolved_at: 2026-10-30T11:39:10.290742+00:00
+resolution: "Ruled (a) deprecate on 2026-10-30. Bead conceptql-0v4 merged (e91ed35a): count warns 'deprecated operator' in annotation and its metadata says deprecated: true."
 ---
 
 ## Question

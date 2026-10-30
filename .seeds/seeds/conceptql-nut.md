@@ -1,10 +1,12 @@
 ---
 id: conceptql-nut
 title: Use UNION ALL where union inputs cannot overlap (a cpt_or_hcpcs wildcard pays a 2.1M-row duplicate removal)
-status: captured
+status: resolved
 type: idea
 created_at: 2026-10-29T20:43:43.358238+00:00
-updated_at: 2026-10-30T01:24:54.630211+00:00
+updated_at: 2026-10-30T11:39:12.110557+00:00
+resolved_at: 2026-10-30T11:39:12.110550+00:00
+resolution: 'Built by bead conceptql-5pz: cpt_or_hcpcs joins its vocabulary branches with UNION ALL when they cannot overlap; union applies the same rule (bead conceptql-jib).'
 tags:
   - algorithm-survey
   - performance

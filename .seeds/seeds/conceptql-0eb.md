@@ -1,10 +1,12 @@
 ---
 id: conceptql-0eb
 title: 'Spec rewrite findings: six questionable ConceptQL behaviors and an uncommitted spec regenerator'
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-30T02:01:24.978057+00:00
-updated_at: 2026-10-30T05:40:39.220764+00:00
+updated_at: 2026-10-30T11:39:10.787831+00:00
+resolved_at: 2026-10-30T11:39:10.787822+00:00
+resolution: All items ruled 2026-10-29. Built by beads conceptql-jib (union dedup), conceptql-5zg (malformed code is an error), conceptql-lif (hospitalization domain documented), conceptql-fun (filter compares criterion_table), conceptql-i3n and conceptql-1jy (occurrence and trim_date dedup), conceptql-9l1 (spec regenerator and just spec).
 ---
 
 Found 2026-10-29 by the agent that rewrote doc/spec.md for GDM (bead conceptql-p3i). It ran every spec example against the DuckDB test fixture (gdm_wide, OHDSI lexicon). None of these is fixed. Each needs a ruling: defect (file a bead) or intended (document it).

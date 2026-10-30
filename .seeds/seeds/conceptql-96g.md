@@ -1,10 +1,12 @@
 ---
 id: conceptql-96g
 title: Drop the omopv4_plus (OMOP CDM) data model from conceptql?
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-30T00:05:17.586094+00:00
-updated_at: 2026-10-30T01:13:57.617352+00:00
+updated_at: 2026-10-30T11:39:11.313569+00:00
+resolved_at: 2026-10-30T11:39:11.313549+00:00
+resolution: omopv4_plus removed by bead conceptql-z09 (merged af3b2803), released in 0.5.0.
 relationships:
   - target_id: conceptql-chr
     rel_type: questioned-by
