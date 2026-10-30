@@ -1,0 +1,5 @@
+[
+  "sum",
+  ["numeric", 1, ["icd9", "412", "414.01", "250.00"]],
+  { "group_by_person": true }
+]

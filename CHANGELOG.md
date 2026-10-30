@@ -14,6 +14,14 @@ All notable changes to this project will be documented in this file.
   lacks one of the tables, it raises `ConceptQL::Lexicon::MissingVocabularyError`, whose
   message names the missing tables, the current schema and the search path. For a Postgres
   or Spark db it returns nil, and the Database chooses its lexicon as before.
+- `sum` takes the boolean option `group_by_person`. With it, `sum` gives one person result
+  for each person (and window): `person_id`, `criterion_domain` `person`, `criterion_table`
+  of the person table (as a cast to `person` gives them), `criterion_id` 0, the earliest
+  `start_date`, the latest `end_date`, and the sum of `value_as_number`. The other columns
+  are NULL. `["sum", ["numeric", 1, <stream>], {"group_by_person": true}]` counts the events
+  of each person. Without the option, `sum` groups as before: by every column except the
+  dates, `criterion_id` and `value_as_number`, so one person can get several rows. A value
+  other than true or false is the validation error `wrong option format`.
 
 ### Changed
 
@@ -84,9 +92,11 @@ All notable changes to this project will be documented in this file.
 - The `count` operator is deprecated. Every stream is a set, so `count` returns 1 for nearly
   every row. A statement that uses `count` still runs and returns the same rows. Annotation
   adds the warning `deprecated operator` on `count`, and a later release will make it an
-  error. To count the events of each person, use `numeric` 1 and then `sum`. The operator
-  metadata of `count` says `deprecated: true`. The new class-level declaration `deprecated`
-  marks an operator.
+  error. To count the events of each person, use
+  `["sum", ["numeric", 1, <stream>], {"group_by_person": true}]`. Without `group_by_person`,
+  `sum` splits the count of one person over several rows when the events have different
+  source values. The operator metadata of `count` says `deprecated: true`. The new
+  class-level declaration `deprecated` marks an operator.
 
 ### Fixed
 
