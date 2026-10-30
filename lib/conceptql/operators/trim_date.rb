@@ -42,6 +42,14 @@ module ConceptQL
 
         ds = apply_selectors(ds)
 
+        # With compare_all, each left row joins every right row of the person,
+        # and two right rows can trim it to the same date: the same start_date,
+        # or both past the left row's date range. The join gives one copy per
+        # right row, so remove the copies (every stream is a set, seed
+        # conceptql-0eb). Without compare_all, the right side has one row per
+        # person, so no copies can come out.
+        ds = ds.distinct if compare_all?
+
         ds.from_self
       end
 
