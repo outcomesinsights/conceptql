@@ -30,6 +30,44 @@ describe ConceptQL::Operators::Union do
 
         _(sql).wont_include "IN ('ICD9CM')"
       end
+
+      # Every stream is a set (seed conceptql-0eb, bead conceptql-jib): union
+      # removes duplicates, unless no row can come from two of its queries.
+      def plain_unions(statement)
+        db.query(statement).sql.scan(/\bUNION\b(?! ALL)/).length
+      end
+
+      def union_alls(statement)
+        db.query(statement).sql.scan(/\bUNION ALL\b/).length
+      end
+
+      # Each statement, with its count of UNION and of UNION ALL. A
+      # cpt_or_hcpcs joins its own branches with UNION ALL (conceptql-5pz).
+      it "removes duplicates when its inputs can overlap" do
+        {
+          [ "union", [ "first", %w[icd9 412] ], %w[icd9 412] ] => [ 1, 0 ],
+          [ "union", [ "icd9", "412", { label: "a" } ], %w[recall a] ] => [ 1, 0 ],
+          [ "union", %w[cpt_or_hcpcs 99214], %w[cpt 99215] ] => [ 1, 1 ],
+          [ "union", [ "union", %w[icd9 412] ], %w[icd9 486] ] => [ 1, 0 ],
+          [ "union", %w[icd9 412], [ "union", %w[icd9 486], %w[cpt 99215] ] ] => [ 1, 1 ]
+        }.each do |statement, (unions, alls)|
+          _([ plain_unions(statement), union_alls(statement) ]).must_equal [ unions, alls ], statement.inspect
+        end
+      end
+
+      it "keeps UNION ALL for inputs of different domains" do
+        statement = [ "union", %w[icd9 412], %w[cpt 99215], %w[icd10cm I21.0] ]
+
+        _(plain_unions(statement)).must_equal 0
+        _(union_alls(statement)).must_equal 1
+      end
+
+      it "keeps UNION ALL for inputs of one domain from different vocabularies" do
+        statement = [ "union", %w[cpt_or_hcpcs 99214], %w[icd9_procedure 00.66], [ "union", %w[icd9 412] ] ]
+
+        _(plain_unions(statement)).must_equal 0
+        _(union_alls(statement)).must_equal 3
+      end
     end
   end
 end

@@ -269,7 +269,9 @@ Because streams represent sets of results, its makes sense to include a operator
 - Takes any number of upstream operators and aggregates their streams
   - Unions together streams with identical types
     - Think of streams with the same type flowing together into a single stream
-    - Union does not remove duplicates: a result that arrives from two upstream operators can appear twice
+    - Union removes duplicates: a result that arrives from more than one upstream operator appears once
+      - Every stream is a set, so no operator passes along two identical results
+      - Two results are identical when they have the same value in every column, label included
   - Streams with the different types flow along together concurrently without interacting
     - It does not make sense to union, say, condition_occurrence results with procedure_occurrence results, so streams with different types won't mingle together, but will continue to flow downstream in parallel
 
@@ -352,6 +354,32 @@ Because streams represent sets of results, its makes sense to include a operator
 | 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
 | 17        | 31480        | observations    | condition_occurrence | 2009-05-21 | 2009-05-21 | 486          |
 | 17        | 53417        | observations    | procedure_occurrence | 2008-04-05 | 2008-04-05 | 99231        |
+
+```YAML
+---
+- union
+- - first
+  - - icd9
+    - '412'
+- - icd9
+  - '412'
+
+```
+
+![The first MI of each patient is also one of the patient's MIs, so it appears once: the union holds the same results as icd9 412 alone](spec/4e6081d437226f76213819b0626b91ce3ba4e340da55c7366bf61ffa276a9b2c.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
 
 ### Filter
 
@@ -1547,7 +1575,7 @@ To count the events of each person, set value_as_number to 1 with `numeric`, and
 | 44        | 0            | observations    | condition_occurrence | 2009-09-07 | 2010-08-30 | 486          | 6.0             |
 | 51        | 0            | observations    | condition_occurrence | 2008-03-08 | 2008-10-18 | 486          | 2.0             |
 
-We could do dumb things like count the number of times a row shows up in a union:
+Because every stream is a set, `count` over a union cannot show how many upstreams a row came from. Union passes along each row once:
 
 ```YAML
 ---
@@ -1562,7 +1590,7 @@ We could do dumb things like count the number of times a row shows up in a union
 
 ```
 
-![All rows with a value of 2 would be rows that were both MI and from an inpatient record](spec/ecede6b94c97cf0b036a664e4df704d119be7c31607a1defe6eb77f294fd1393.png)
+![Every row has a value of 1, also the MIs from an inpatient record, which arrive from both upstreams](spec/ecede6b94c97cf0b036a664e4df704d119be7c31607a1defe6eb77f294fd1393.png)
 
 | person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value | value_as_number |
 | --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ | --------------- |
@@ -1571,11 +1599,11 @@ We could do dumb things like count the number of times a row shows up in a union
 | 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          | 1               |
 | 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          | 1               |
 | 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          | 1               |
-| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          | 2               |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          | 1               |
 | 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          | 1               |
 | 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          | 1               |
 | 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          | 1               |
-| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          | 2               |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          | 1               |
 
 #### Numeric Value Comparison
 
