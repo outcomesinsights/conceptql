@@ -54,6 +54,21 @@ module ConceptQL
 
       private
 
+      # With an upstream, a column name is read from the upstream's rows
+      # (SELECT ... FROM (<upstream>)), not from the tables the upstream
+      # reads. Every stream emits the same columns, the scope's query columns,
+      # so one check covers an upstream that mixes tables, such as a union of
+      # two domains. A name outside them fails at run time. The match ignores
+      # case, because DuckDB and Spark resolve an identifier without regard
+      # to case, and such a statement runs on them today.
+      def additional_validation(_db, _opts = {})
+        name = column_argument
+        return if stream.nil? || name.nil?
+        return if scope.query_columns.any? { |column| column.to_s.casecmp?(name) }
+
+        add_error("unknown column", name)
+      end
+
       def with_kids(db)
         dm.selectify(db.from(stream.evaluate(db)), replace: { value_as_number: first_argument })
       end
@@ -79,13 +94,23 @@ module ConceptQL
       end
 
       def first_argument
-        value = arguments.first.to_s.strip
-        value = nil if value.blank?
+        value = argument_text
         if !value || is_a_number?(value)
           Sequel.cast_numeric(value, Float)
         else
           Sequel.identifier(value)
         end
+      end
+
+      def argument_text
+        value = arguments.first.to_s.strip
+        value.blank? ? nil : value
+      end
+
+      # The argument when it names a column, or nil when it is a number or blank
+      def column_argument
+        value = argument_text
+        value if value && !is_a_number?(value)
       end
 
       def is_a_number?(value)

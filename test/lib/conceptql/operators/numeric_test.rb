@@ -72,6 +72,60 @@ describe ConceptQL::Operators::Numeric do
     end
   end
 
+  # With an upstream, a column name in the argument is read from the rows the
+  # upstream emits (SELECT ... FROM (<upstream>)). Every stream emits the
+  # same columns, the scope's query columns, whatever tables it reads. A name
+  # outside them fails at run time, so validation reports it (bead
+  # conceptql-2xf).
+  describe "column name argument with an upstream" do
+    def errors_for(cdb, statement)
+      cdb.query(statement).annotate.last[:annotation][:errors]
+    end
+
+    %i[gdm gdm_wide].each do |data_model|
+      describe "in #{data_model}" do
+        let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: data_model) }
+
+        it "reports a column that the upstream rows lack, by name" do
+          _(errors_for(cdb, [ "numeric", "quantity", [ "icd9", "412" ] ])).must_equal [ [ "unknown column", "quantity" ] ]
+        end
+
+        it "reports the column for an upstream that mixes tables" do
+          statement = [ "numeric", "quantity", [ "union", [ "icd9", "412" ], [ "ndc", "0000001" ] ] ]
+
+          _(errors_for(cdb, statement)).must_equal [ [ "unknown column", "quantity" ] ]
+        end
+
+        it "accepts a column that every stream emits" do
+          _(errors_for(cdb, [ "numeric", "criterion_id", [ "icd9", "412" ] ])).must_be_nil
+        end
+
+        it "accepts a column name in another case, as DuckDB and Spark do" do
+          _(errors_for(cdb, [ "numeric", "Criterion_ID", [ "icd9", "412" ] ])).must_be_nil
+        end
+
+        it "accepts a column that another operator in the statement adds to the rows" do
+          statement = [ "numeric", "provider_id", [ "provider_filter", [ "icd9", "412" ], { specialties: "12345", roles: "*" } ] ]
+
+          _(errors_for(cdb, statement)).must_be_nil
+        end
+
+        it "reads the column from the upstream rows in the SQL" do
+          _(cdb.query([ "numeric", "criterion_id", [ "icd9", "412" ] ]).sql).must_match(/CAST\("criterion_id" AS Float\) AS "value_as_number"/)
+        end
+
+        it "accepts a number" do
+          _(errors_for(cdb, [ "numeric", 1, [ "icd9", "412" ] ])).must_be_nil
+          _(errors_for(cdb, [ "numeric", "-2.5", [ "icd9", "412" ] ])).must_be_nil
+        end
+
+        it "does not check a column name without an upstream" do
+          _(errors_for(cdb, [ "numeric", "quantity" ])).must_be_nil
+        end
+      end
+    end
+  end
+
   describe "column_family in generated SQL" do
     it "as_criterion path emits default column_family" do
       # Numeric#as_criterion explicitly sets column_family to

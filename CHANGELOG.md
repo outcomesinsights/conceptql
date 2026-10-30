@@ -36,6 +36,17 @@ All notable changes to this project will be documented in this file.
   operator, for example) and with temp tables (`force_temp_tables`). `skip_counts: true`
   runs no counting query, as before.
 
+### Fixed
+
+- `numeric` with an upstream and a column name (`["numeric", "quantity", stream]`) now
+  fails validation when the upstream's rows lack that column. The error is
+  `["unknown column", "<name>"]`, so `annotate` reports it and runs no counting query.
+  Before, the statement passed validation and failed at run time with a "column not found"
+  error. The column is read from the rows that the upstream emits, not from the tables that
+  the upstream reads. Every stream emits the same columns, so an upstream that mixes tables
+  (a `union` of two domains, for example) gets the same check. The match ignores case, as
+  DuckDB and Spark do. `numeric` without an upstream is not checked.
+
 ## [0.5.0] - 2026-10-29
 
 ### Removed
