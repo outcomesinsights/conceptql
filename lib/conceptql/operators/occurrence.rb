@@ -114,10 +114,17 @@ module ConceptQL
             ).as(:timed_rn)
           )
 
-        db[joined_name]
+        # Each first row nominates its nth rest row. With at_least, several
+        # first rows can nominate the same rest row: all rest rows that start
+        # after the same gap share one ranking. The join gives one row per
+        # nomination, so take the nominated rows from the input instead, and
+        # each comes out once (every stream is a set, seed conceptql-0eb).
+        nth_ds = db[joined_name].where(timed_rn: occurrence.abs)
+        keys = matching_columns_plus(:global_rn).map { |c| Sequel[:l][c] =~ Sequel[:r][c] }
+
+        rdbms.semi_join(db[input_name], nth_ds, *keys)
           .with(input_name, input_ds)
           .with(joined_name, joined_ds)
-          .where(timed_rn: occurrence.abs)
       end
 
       def grouped?
