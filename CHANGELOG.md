@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-29
+
 ### Removed
 
 - **Breaking:** the `omopv4_plus` data model (OMOP CDM v4) is gone. ConceptQL now supports
