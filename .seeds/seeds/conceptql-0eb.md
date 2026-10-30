@@ -4,7 +4,7 @@ title: 'Spec rewrite findings: six questionable ConceptQL behaviors and an uncom
 status: captured
 type: question
 created_at: 2026-10-30T02:01:24.978057+00:00
-updated_at: 2026-10-30T02:12:38.690459+00:00
+updated_at: 2026-10-30T02:36:36.631060+00:00
 ---
 
 Found 2026-10-29 by the agent that rewrote doc/spec.md for GDM (bead conceptql-p3i). It ran every spec example against the DuckDB test fixture (gdm_wide, OHDSI lexicon). None of these is fixed. Each needs a ruling: defect (file a bead) or intended (document it).
@@ -37,3 +37,10 @@ RULED 2026-10-29 (Ryan): "1. fix 2. fix 3. they carry a primary diag, right? wha
   - Item 3: yes. Utilizable sets criterion_domain to condition_occurrence and carries primary_concept_id, the admission's primary diagnosis. GDM has no visit or admission domain. A new domain would change how union groups streams (Union's Combiner groups by domain) and how the diagram editor colors them. Recommendation: keep condition_occurrence and say so in the spec. Not a defect.
   - Item 4: recommendation: support a trailing `*` as a prefix wildcard (`410*` selects every code in the vocabulary that starts with 410), resolved through the lexicon like any code list, and keep the warning only for a prefix that matches no code.
   - Item 6: today union keeps exact duplicate rows from non-vocabulary inputs (it joins them with UNION ALL), while vocabulary inputs of one domain are merged into one WHERE clause and cpt_or_hcpcs uses a duplicate-removing UNION. Recommendation: every stream is a set, so no operator emits two identical rows; union removes exact duplicates, and skips the removal only where its inputs are provably disjoint (the bead conceptql-5pz rule). This changes the row counts of statements that union overlapping non-vocabulary inputs.
+
+RULED 2026-10-29 (Ryan, answering the questions on items 3, 4 and 6):
+
+- Item 3: "Keep, document it". hospitalization, hospice and snf keep criterion_domain condition_occurrence; the spec gets one sentence that says why.
+- Item 4: "Make it an error". No prefix matching. A malformed code fails validation instead of only warning, so a statement cannot silently return 0 rows.
+- Item 6: "Every stream is a set". No operator emits two identical rows. union removes exact duplicates and skips the removal only where its inputs provably cannot overlap (the conceptql-5pz rule). Row counts change for statements that union overlapping non-vocabulary inputs.
+  Also ruled: conceptql 0.5.0 (released 2026-10-29 while the counting work was still in flight) stays published, and peers may bump to it. The counting work ships in a later release.
