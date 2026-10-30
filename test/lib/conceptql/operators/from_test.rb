@@ -8,7 +8,7 @@ describe ConceptQL::Operators::From do
 
     qi = Sequel.qualify(:test_from_schema, :test_from_table)
     stmt = [ :after, {
-      left: [ :ndc, "012345678" ],
+      left: [ :ndc, "01234567890" ],
       right: [ :from, qi, { query_cols: ConceptQL::Scope::DEFAULT_COLUMNS.keys } ]
     } ]
 

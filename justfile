@@ -210,6 +210,29 @@ test-full:
 bundle-update *ARGS:
     bundle update {{ ARGS }}
 
+# config/vocabulary_formats.tsv is a copy of the published table of the public
+# repository outcomesinsights/vocabulary_formats, and the code-format check
+# reads it (bead conceptql-bns). config/vocabulary_formats.sha records the
+# commit it came from. The recipe resolves the ref to a commit SHA first and
+# downloads that commit, so the copy and the SHA always agree. Review the diff
+# of the TSV and run `just ci` before you commit a refresh.
+# Refresh config/vocabulary_formats.tsv from GitHub (arg: a branch or commit SHA)
+vocabulary-formats $ref="main":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    repo=outcomesinsights/vocabulary_formats
+    sha=$(curl -fsSL -H 'Accept: application/vnd.github.sha' "https://api.github.com/repos/${repo}/commits/${ref}") \
+      || { echo "GitHub did not resolve '${ref}' to a commit of ${repo}"; exit 1; }
+    [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || { echo "GitHub answered '${sha}' for '${ref}', not a commit SHA"; exit 1; }
+    tmp=$(mktemp)
+    trap 'rm -f "$tmp"' EXIT
+    curl -fsSL "https://raw.githubusercontent.com/${repo}/${sha}/vocabulary_formats.tsv" -o "$tmp"
+    head -1 "$tmp" | tr '\t' '\n' | grep -qx vocabulary_id || { echo "${repo}@${sha}: vocabulary_formats.tsv has no vocabulary_id column"; exit 1; }
+    head -1 "$tmp" | tr '\t' '\n' | grep -qx regexp || { echo "${repo}@${sha}: vocabulary_formats.tsv has no regexp column"; exit 1; }
+    cat "$tmp" > config/vocabulary_formats.tsv
+    echo "$sha" > config/vocabulary_formats.sha
+    echo "config/vocabulary_formats.tsv is now ${repo}@${sha}"
+
 # Run before every release (CLAUDE.md, Releasing). Fails when a gem is behind
 # the newest version conceptql could use:
 # - the lock is not current: `bundle lock --update --print` resolves the newest

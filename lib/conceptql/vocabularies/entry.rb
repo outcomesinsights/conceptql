@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative "formats"
 require_relative "vocabulary_class_factory"
 
 module ConceptQL
@@ -13,7 +14,6 @@ module ConceptQL
         domain
         vocabulary_short_name
         vocabulary_long_name
-        format_regexp
       ].freeze
 
       METHODS.each do |meth|
@@ -23,6 +23,7 @@ module ConceptQL
       end
 
       METADATA_METHODS = METHODS + %i[
+        format_regexp
         preferred_name
         predominant_domains
       ]
@@ -52,6 +53,14 @@ module ConceptQL
         METADATA_METHODS.to_h do |meth|
           [ meth, send(meth) ]
         end
+      end
+
+      # The anchored code format from vocabulary_formats, as a string, or nil
+      # when vocabulary_formats has no row for this vocabulary. A
+      # format_regexp column in a vocabularies CSV is ignored: vocabulary_formats
+      # is the only source (bead conceptql-bns).
+      def format_regexp
+        Formats.pattern(omopv5_id)
       end
 
       def short_name

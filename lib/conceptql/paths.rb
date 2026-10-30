@@ -22,6 +22,16 @@ module ConceptQL
       ConceptQL.config_dir / "vocabularies.csv"
     end
 
+    # A pinned copy of vocabulary_formats.tsv (ConceptQL::Vocabularies::Formats)
+    def vocabulary_formats_file_path
+      ConceptQL.config_dir / "vocabulary_formats.tsv"
+    end
+
+    # The vocabulary_formats commit that the copy came from
+    def vocabulary_formats_sha_file_path
+      ConceptQL.config_dir / "vocabulary_formats.sha"
+    end
+
     def multiple_vocabularies_file_path
       ConceptQL.config_dir / "multiple_vocabularies.csv"
     end

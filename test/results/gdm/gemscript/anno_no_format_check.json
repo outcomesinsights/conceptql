@@ -1,7 +1,7 @@
 [
   "gemscript",
-  "7992602",
-  "179926020",
+  "!0676110",
+  "00003007",
   {
     "annotation": {
       "counts": {
@@ -9,8 +9,7 @@
           "rows": 0,
           "n": 0
         }
-      },
-      "errors": [["improperly formatted code", "7992602", "179926020"]]
+      }
     },
     "name": "Gemscript"
   }

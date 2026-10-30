@@ -3,11 +3,13 @@
 require_relative "../../../helper"
 require "conceptql"
 
-# Each format_regexp in config/vocabularies.csv is a vocabulary_formats
-# validator row, anchored with ^...$. The real codes below are concept_codes of
-# that vocabulary in the OHDSI vocabulary of the DuckDB test fixture.
-# ICD10PCS uses the ICD10PCS.BILLABLE row: 7 characters, a real section
-# character first, so hierarchy parents (0016) and Z561123 are malformed.
+# The code formats come from config/vocabulary_formats.tsv, a pinned copy of
+# the vocabulary_formats table (bead conceptql-bns). Each vocabulary uses its
+# DEFAULT row, anchored as \A(?:pattern)\z. A vocabulary without a row gets no
+# format check. The real codes below are concept_codes of that vocabulary in the
+# OHDSI vocabulary of the DuckDB test fixture. The ICD10PCS default row admits
+# the hierarchy parents (0016) and any 1 to 7 characters of the PCS alphabet,
+# which has no I and no O.
 describe "vocabulary code formats" do
   # CPT4_HCPCS has an operator only when the lexicon carries it.
   let(:lexicon_db) do
@@ -25,6 +27,7 @@ describe "vocabulary code formats" do
       end
       ldb.create_table!(:concept_relationship) { String :column }
       ldb[:vocabulary].insert(vocabulary_id: "CPT4_HCPCS", vocabulary_name: "CPT4 and HCPCS")
+      ldb[:vocabulary].insert(vocabulary_id: "RxNorm Extension", vocabulary_name: "RxNorm Extension")
     end
   end
 
@@ -46,20 +49,41 @@ describe "vocabulary code formats" do
     "hcpcs" => [ %w[A0382 A2001], %w[99214 0382] ],
     "icd10who" => [ %w[A20 A30.8 A15-A19 II], %w[1A0 A20.12345] ],
     "icd10cm" => [ %w[E58 Y36.101A M10.142 QA0], %w[E1165 1A0] ],
-    "icd10pcs" => [ %w[00163ZB XW03368 03JY3ZZ], %w[Z561123 561123 0016 00163ZI] ],
+    "icd10pcs" => [ %w[00163ZB XW03368 03JY3ZZ 0016 0], %w[00163ZI 0016O 00163ZB1] ],
     "icd9cm" => [ %w[412 V62.3 E873.1], %w[4011 00.00] ],
     "icd9proc" => [ %w[00.01 01.6 00], %w[4523 0001] ],
     "atc" => [ %w[A A01 A01AB02], %w[E01 A01AB023] ],
     "drg" => [ %w[001 210], %w[1 0001] ],
     "icd03_morphology" => [ %w[8000/0 8001/0], %w[8000 800] ],
     "icd03_topography" => [ %w[C00.0 C00.1], %w[C509 C00.123] ],
-    "ndc" => [ %w[43742164901 003630641 00019N068], %w[0002-7510-01 1234567] ],
+    "ndc" => [ %w[43742164901], %w[0002-7510-01 1234567] ],
     "rxnorm" => [ %w[161 2714520], %w[1 123456789] ],
-    "snomed" => [ %w[22298006 70685003], %w[12345 27d654d1-c02e-444b-bafc-4e6c0b49dba3] ]
+    "snomed" => [ %w[22298006 70685003], %w[12345 27d654d1-c02e-444b-bafc-4e6c0b49dba3] ],
+    "rxnorm_extension" => [ %w[OMOP4844730], %w[4844730 OMOP12] ]
   }.each do |operator, (real, malformed)|
     it "accepts real #{operator} codes and flags malformed ones" do
       _(badly_formatted([ operator, *real, *malformed ])).must_equal malformed
     end
+  end
+
+  # conceptql's own LOINC pattern ^\w{3,7}-\w$ rejected 99 standard LOINC
+  # codes, 20-8 (concept 3023414) among them. vocabulary_formats has no LOINC
+  # row and no Gemscript row, so neither gets a format check.
+  it "accepts the LOINC codes 20-8 and 1-8" do
+    _(badly_formatted(%w[loinc 20-8 1-8])).must_be_empty
+    _(cdb.query(%w[loinc 20-8]).validation_errors).must_equal({})
+  end
+
+  it "does not check the format of a vocabulary that has no vocabulary_formats row" do
+    _(badly_formatted([ "loinc", "not a code" ])).must_be_empty
+    _(badly_formatted(%w[gemscript !0000101 7992602])).must_be_empty
+  end
+
+  # The NDC default row is the 11-digit claims form. The fixture's 9-digit
+  # product codes and the alphanumeric codes (rows NDC.COMPLETE and
+  # NDC.ALPHANUM) are real concept_codes, but the default row rejects them.
+  it "rejects the 9-digit and alphanumeric NDC forms, as the NDC default row does" do
+    _(badly_formatted(%w[ndc 003630641 00019N068 43742164901])).must_equal %w[003630641 00019N068]
   end
 
   it "accepts M0201, which the old CPT4 pattern rejected" do
