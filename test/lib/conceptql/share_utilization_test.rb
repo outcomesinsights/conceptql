@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 require "digest"
+require "securerandom"
 require_relative "../../db_helper"
 
 # The statements of one Database share each hospitalization (Utilizable) list
 # when the Database has the share_utilization option (bead conceptql-98p,
 # seed conceptql-873).
 describe "ConceptQL::Database share_utilization" do
-  prefix = "jtest98p#{Process.pid}"
+  # A random part, not the pid: each docker compose run container numbers its
+  # own pids, and just test-full runs three of them against one database.
+  prefix = "jtest98p#{SecureRandom.hex(4)}"
   table_pattern = /"#{prefix}_util_\h{16}"/
 
   def share_opts(prefix)
