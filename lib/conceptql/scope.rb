@@ -86,6 +86,10 @@ module ConceptQL
 
     attr_accessor :person_ids
 
+    # The OneQueryCounts that Operator#annotate reads its counts from, or nil.
+    # Query#annotate sets it.
+    attr_accessor :one_query_counts
+
     attr_reader :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
 
     def initialize(opts = {})
@@ -93,6 +97,7 @@ module ConceptQL
       @recall_dependencies = {}
       @recall_stack = []
       @label_cte_names = {}
+      @operator_cte_names = {}.compare_by_identity
       @annotation = {}
       @opts = opts.dup
       @annotation[:errors] = @errors = {}
@@ -122,6 +127,16 @@ module ConceptQL
     def add_counts(key, domain, counts)
       c = @counts[key] ||= {}
       c[domain] = counts
+    end
+
+    # Operator#evaluate records the name of each CTE that holds an operator's
+    # rows. An operator evaluated more than once has more than one name.
+    def record_cte(op, name)
+      (@operator_cte_names[op] ||= []) << name
+    end
+
+    def cte_names(op)
+      @operator_cte_names.fetch(op, [])
     end
 
     def add_required_columns(op)
@@ -353,10 +368,13 @@ module ConceptQL
       sorted
     end
 
-    def with_ctes(op, db, options = {})
+    # The CTEs of each dataset in extra (an evaluated operator) join the WITH
+    # list too, so the query can read operators that op does not evaluate.
+    def with_ctes(op, db, options = {}, extra: [])
       raise "recall operator use without matching label" unless valid?
 
       query = op.evaluate(db)
+      extra.each { |ds| query = query.clone(with: query.opts[:with] + ds.opts[:with]) }
       rdbms = op.rdbms
 
       query = query.from_self

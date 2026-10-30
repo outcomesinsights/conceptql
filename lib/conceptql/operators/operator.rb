@@ -170,15 +170,8 @@ module ConceptQL
         end
         res = [ op_name, *annotate_values(db, opts) ]
 
-        if upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
-          scope.with_ctes(self, db)
-               .from_self
-               .select_group(:criterion_domain)
-               .select_append { Sequel.function(:count, 1).as(:rows) }
-               .select_append { count(:person_id).distinct.as(:n) }
-               .each do |h|
-            counts[h.delete(:criterion_domain).to_sym] = h
-          end
+        if countable?(db, opts)
+          counts.merge!(scope.one_query_counts&.for(self) || domain_counts(db))
         elsif !errors.empty?
           annotation[:errors] = errors
           scope.add_errors(scope_key, errors)
@@ -214,6 +207,7 @@ module ConceptQL
       def evaluate(db)
         q = select_it(query(db))
         name = cte_name(op_name)
+        scope.record_cte(self, name)
         opts = {}
         opts[:materialized] = true if rdbms.supports_materialized?
         db[name].with(name, q, opts)
@@ -320,6 +314,26 @@ module ConceptQL
 
       def upstreams_valid?(db, opts = {})
         valid?(db, opts) && upstreams.all? { |u| u.upstreams_valid?(db, opts) }
+      end
+
+      # Whether #annotate counts this operator's rows and people.
+      def countable?(db, opts = {})
+        upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
+      end
+
+      # Rows and distinct people of each criterion_domain in this operator's
+      # output, with a query for this operator alone.
+      def domain_counts(db)
+        counts = {}
+        scope.with_ctes(self, db)
+             .from_self
+             .select_group(:criterion_domain)
+             .select_append { Sequel.function(:count, 1).as(:rows) }
+             .select_append { count(:person_id).distinct.as(:n) }
+             .each do |h|
+          counts[h.delete(:criterion_domain).to_sym] = h
+        end
+        counts
       end
 
       def scope
