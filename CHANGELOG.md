@@ -145,6 +145,15 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- A date adjustment that is a bare number with an `r`, `e` or `s` prefix now means days.
+  `R365` means 365 days back from the origin, `E30` means `end_date` + 30 days, and `S7` means
+  `start_date` + 7 days, the same as `R365d`, `E30d` and `S7d`. Before, these strings gave no
+  adjustment and no error, so a lookback of `R365` (t_shank puts `R` before lookbacks and
+  blackout periods) was a lookback of zero days. A bare number is now also reversed where
+  ConceptQL reverses an adjustment, as `365d` is: the `within` of a temporal operator, the
+  `at_least` of `before`, and the `start` of `concurrent_within` now count a bare number back
+  from the date. Before, they added it. `DateAdjuster#adjustments` also no longer returns the
+  result of an earlier call that had a different `reverse` value.
 - An empty statement (`[]`) is now an invalid statement. `validation_errors` and
   `scope_annotate` report the error `{"invalid" => [["empty statement"]]}`, and `query`, `sql`
   and the other methods that build SQL raise `ConceptQL::InvalidStatementError`. This also

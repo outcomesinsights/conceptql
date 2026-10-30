@@ -191,5 +191,58 @@ describe ConceptQL::DateAdjuster do
         _(da.adjustments).must_equal([ [ :days, -1 ], [ :days, -1 ], [ :days, -1 ] ])
       end
     end
+
+    # A bare number means days, with or without an r/e/s prefix (conceptql-d3v).
+    describe "with a bare number" do
+      let(:literal_db) do
+        Sequel.extension :date_arithmetic
+        Sequel.mock(host: :postgres).extension(:date_arithmetic)
+      end
+
+      let(:stub_op) { Struct.new(:rdbms).new(rdbms) }
+
+      def adjust_sql(adjustment, column, reverse = false)
+        literal_db.literal(ConceptQL::DateAdjuster.new(stub_op, adjustment).adjust(column, reverse))
+      end
+
+      [
+        [ "R365", "R365d", :start_date ],
+        [ "E30", "E30d", :start_date ],
+        [ "S7", "S7d", :end_date ],
+        [ "r365", "r365d", :start_date ],
+        [ "ER6", "ER6d", Sequel[:table][:start_date] ],
+        [ "R-30", "R-30d", :end_date ]
+      ].each do |bare, days, column|
+        it "gives the same SQL for #{bare} as for #{days}" do
+          _(adjust_sql(bare, column)).must_equal(adjust_sql(days, column))
+          _(adjust_sql(bare, column)).wont_equal(adjust_sql("", column))
+        end
+      end
+
+      it "subtracts the days of 365 when reversed, as it does for 365d" do
+        _(adjust_sql("365", :start_date, true)).must_equal(adjust_sql("365d", :start_date, true))
+        _(adjust_sql("365", :start_date, true)).wont_equal(adjust_sql("365", :start_date))
+      end
+
+      it "parses R365 to 365 days back" do
+        adjuster = ConceptQL::DateAdjuster.new(stub_op, "R365")
+        adjuster.adjust(:start_date)
+        _(adjuster.adjustments).must_equal([ [ :days, -365 ] ])
+      end
+    end
+
+    describe "called twice with different reverse values" do
+      let(:stub_op) { Struct.new(:rdbms).new(rdbms) }
+
+      %w[365 365d].each do |adjustment|
+        it "does not reuse the adjustments of the first call for #{adjustment}" do
+          adjuster = ConceptQL::DateAdjuster.new(stub_op, adjustment)
+          _(adjuster.adjust(:start_date).interval).must_equal(days: 365)
+          _(adjuster.adjust(:start_date, true).interval).must_equal(days: -365)
+          _(adjuster.adjustments(true)).must_equal([ [ :days, -365 ] ])
+          _(adjuster.adjustments).must_equal([ [ :days, 365 ] ])
+        end
+      end
+    end
   end
 end

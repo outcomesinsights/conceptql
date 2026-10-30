@@ -26,8 +26,7 @@ module ConceptQL
 
       origin_column = column
 
-      chrs = str.chars
-      while (chr = chrs.shift) =~ /[res]/i
+      prefix.each_char do |chr|
         if chr.downcase == "r"
           reverse = true
         else
@@ -53,12 +52,19 @@ module ConceptQL
       op.rdbms.cast_date(adjusted_date)
     end
 
-    # Returns an array of strings that represent date modifiers
+    # Returns an array of [units, quantity] pairs that represent date modifiers.
+    # An "r" in the prefix reverses them, as it does in #adjust.
     def adjustments(reverse = false)
-      @adjustments ||= parse(str, reverse)
+      reverse ||= prefix.match?(/r/i)
+      (@adjustments ||= {})[reverse] ||= parse(str.delete_prefix(prefix), reverse)
     end
 
     private
+
+    # The leading e/r/s characters, which pick the origin column and the direction
+    def prefix
+      str[/\A[res]*/i]
+    end
 
     def lookup
       {
@@ -71,7 +77,8 @@ module ConceptQL
 
     def parse(str, reverse)
       return [] if str.nil? || str.empty?
-      return [ [ lookup["d"], str.to_i ] ] if str.match(/^[-+]?\d+$/)
+      # A bare number means days
+      return [ [ lookup["d"], reverse ? -str.to_i : str.to_i ] ] if str.match?(/\A[-+]?\d+\z/)
 
       str.downcase.scan(/([-+]?\d*[dwmy])/).map do |adjustment|
         adjustment = adjustment.first
