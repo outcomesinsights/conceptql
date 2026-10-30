@@ -38,6 +38,15 @@ module ConceptQL
       @conceptql_spec_id = value
     end
 
+    # Marks an operator as deprecated. It still runs. Operator#validate adds
+    # the message to its annotation as a warning, and its metadata says
+    # deprecated: true. A subclass does not inherit the mark.
+    def deprecated(message = nil)
+      return @deprecated unless message
+
+      @deprecated = message
+    end
+
     def predominant_domains(*values)
       return @predominant_domains if values.empty?
 
@@ -154,7 +163,7 @@ module ConceptQL
         desc: get_desc,
         categories: @categories || [],
         basic_type: @basic_type,
-        deprecated: nil, # kept for metadata consumers; no operator is deprecated
+        deprecated: (true if deprecated), # nil for an operator that is not deprecated
         arity: arity,
         aliases: @aliases,
         spec_id: spec_id

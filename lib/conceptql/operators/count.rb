@@ -8,6 +8,10 @@ module ConceptQL
       register __FILE__
 
       desc "Counts the number of records that exactly match across all columns."
+      # Every stream is a set, so count returns 1 for nearly every row
+      # (seed conceptql-e8n, ruled 2026-10-30).
+      deprecated "count will become an error in a later release. " \
+                 "To count the events of each person, use numeric 1 and then sum."
       allows_one_upstream
       validate_one_upstream
       validate_no_arguments

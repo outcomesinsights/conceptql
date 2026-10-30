@@ -527,6 +527,7 @@ module ConceptQL
         @errors = [] unless defined?(@errors)
         @warnings = [] unless defined?(@warnings)
 
+        add_warning("deprecated operator", self.class.deprecated) if self.class.deprecated
         add_error("invalid label") if label && !label.is_a?(String)
         self.class.validations.each do |args|
           send(*args)
