@@ -113,6 +113,45 @@ test-duckdb *ARGS:
       bundle exec ruby -e 'files = ARGV.dup; ARGV.clear; files.each { |f| require File.expand_path(f) }' "${args[@]}"
     fi
 
+# Rebuilds the spec from doc/spec.md.cql. script/spec/harness.rb validates and runs
+# every ConceptQL block against the DuckDB fixture (through test-duckdb, so it
+# needs what test-duckdb needs). script/spec/knit.rb then writes doc/spec.md with
+# the YAML, the diagram and the first 10 rows of each block, and draws the
+# diagrams (doc/spec/<sha>.png) with graphviz `dot`. mise cannot install graphviz,
+# so install it on the host. The committed PNGs come from graphviz 15.1; another
+# version can draw different bytes. Edit doc/spec.md.cql, never doc/spec.md.
+# Like fmt-check, it rewrites first and THEN fails: commit what it changed.
+# Rebuild doc/spec.md and doc/spec/*.png; fail if they changed
+spec:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p claude_stuff
+    log=claude_stuff/spec-$(date +%Y%m%d-%H%M%S).log
+    exec 3>&1 > >(tee "$log") 2>&1
+    tee_pid=$!
+    finish() {
+      rc=$?
+      exec >&- 2>&-
+      wait "$tee_pid" || true
+      echo "Log: $log" >&3
+      exit $rc
+    }
+    trap finish EXIT
+
+    command -v dot >/dev/null || { echo "graphviz is not installed: just spec draws the diagrams with its dot command"; exit 1; }
+    dot -V
+    snapshot() { find doc/spec.md doc/spec -type f | sort | xargs sha256sum; }
+    before=$(snapshot)
+    {{ just_executable() }} test-duckdb script/spec/harness.rb
+    bundle exec ruby script/spec/knit.rb
+    treefmt --no-cache doc/spec.md
+    if [ "$(snapshot)" != "$before" ]; then
+      echo "just spec changed these files; review and commit them:"
+      git status --short -- doc/spec.md doc/spec
+      exit 1
+    fi
+    echo "doc/spec.md and doc/spec/*.png are up to date"
+
 # Run all three CI matrix configs in parallel; fail if any fails
 test-full:
     #!/usr/bin/env bash
