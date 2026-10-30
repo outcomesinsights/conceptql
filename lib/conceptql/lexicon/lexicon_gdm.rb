@@ -4,9 +4,12 @@ require_relative "lexicon_strategy"
 
 module ConceptQL
   class LexiconGDM < LexiconStrategy
+    # The GDM vocabulary tables. A db that has all four can be the lexicon.
+    VOCABULARY_TABLES = %i[ancestors concepts mappings vocabularies].freeze
+
     class << self
       def db_has_all_vocabulary_tables?(db)
-        %i[ancestors concepts mappings vocabularies].all? { |t| db.table_exists?(t) }
+        VOCABULARY_TABLES.all? { |t| db.table_exists?(t) }
       end
     end
 

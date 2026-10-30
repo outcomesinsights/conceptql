@@ -27,23 +27,21 @@ describe ConceptQL::Operators do
   end
 
   describe "when tables aren't available" do
-    it "should not blow up" do
+    # Before conceptql-brm a real database whose search path held no
+    # vocabulary annotated as if no code existed and gave no warning. Seed
+    # conceptql-ysx ruled (option A) that its Database raises instead.
+    it "raises NoVocabularyError on a real database without vocabulary" do
       seq_db = Sequel.connect(DB.opts.except(:after_connect).merge(search_path: "bad_path"))
-      db = ConceptQL::Database.new(seq_db)
-      query = db.query([ "union", %w[cpt 00000 99213], [ "icd9", "000.00", "412" ] ])
-      _(query.scope_annotate(skip_counts: true)).must_equal(
-        { errors: {},
-          warnings: {},
-          counts: { "cpt" => { procedure_occurrence: { rows: 0, n: 0 } },
-                    "icd9" => { condition_occurrence: { rows: 0, n: 0 } },
-                    "union" => { procedure_occurrence: { rows: 0, n: 0 },
-                                 condition_occurrence: { rows: 0, n: 0 } } } }
-      )
+      _ { ConceptQL::Database.new(seq_db) }.must_raise ConceptQL::Lexicon::NoVocabularyError
+    ensure
+      seq_db&.disconnect
     end
 
+    # Before conceptql-brm this test used the real database with the search
+    # path "bad_path", which now raises. A database-less Database still has
+    # no vocabulary and still reports the formats.
     it "should still report if codes aren't properly formatted" do
-      seq_db = Sequel.connect(DB.opts.except(:after_connect).merge(search_path: "bad_path"))
-      db = ConceptQL::Database.new(seq_db)
+      db = ConceptQL::Database.new(nil)
       query = db.query([ "union", %w[cpt 0000], [ "icd9", "00.00" ] ])
       _(query.scope_annotate(skip_counts: true)).must_equal(
         { errors: { "cpt" => [ [ "improperly formatted code", "0000" ] ],
