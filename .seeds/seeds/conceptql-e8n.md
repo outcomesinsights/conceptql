@@ -4,7 +4,7 @@ title: What should the count operator do now that every stream is a set?
 status: captured
 type: question
 created_at: 2026-10-30T05:17:08.048015+00:00
-updated_at: 2026-10-30T05:17:08.048015+00:00
+updated_at: 2026-10-30T11:18:01.375304+00:00
 ---
 
 ## Question
@@ -31,3 +31,7 @@ Recommendation: (a). It tells existing algorithm users that the meaning changed,
 ## Data to gather before ruling
 
 How many saved production algorithms use count. JDE can count them.
+
+RULED 2026-10-30 (Ryan): option (a), deprecate. Ryan: "we don't use count in production, so deprecate". This answers the "data to gather" item: no production algorithm uses count.
+
+Measured before the ruling (claude_stuff/count-impact2-20261030-041442.log): every row this round removed from the occurrence at_least results was an exact copy, and the set of distinct rows is unchanged. No count test checks value_as_number, so no test showed count above 1 before or after the round. Before this round, count exceeded 1 mostly when its input had copies from union or from the occurrence and trim_date defects.
