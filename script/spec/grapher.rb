@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "fileutils"
+require "open3"
+
 # Writes the graphviz source of a diagram for doc/spec/ from an annotated
 # statement (Query#annotate, with JSON string keys). Each node is an operator,
 # and each edge carries the rows and people of one criterion_domain.
@@ -12,6 +15,20 @@ class SpecGrapher
 
   def self.dot(annotated)
     new.dot(annotated)
+  end
+
+  # Draws the PNG at +path+ from the graphviz source +dot+. The renderer
+  # (+command+, then "-o" and a file) writes a temporary file in the same
+  # directory, and only a successful render is renamed over +path+. A failed
+  # or interrupted run so leaves the old PNG whole, never a truncated one.
+  def self.draw(dot, path, command: %w[dot -Tpng])
+    tmp = File.join(File.dirname(path), ".#{File.basename(path)}.#{Process.pid}.tmp")
+    out, status = Open3.capture2e(*command, "-o", tmp, stdin_data: dot)
+    raise "dot failed for #{path}: #{out}" unless status.success?
+
+    File.rename(tmp, path)
+  ensure
+    FileUtils.rm_f(tmp) if tmp
   end
 
   def initialize

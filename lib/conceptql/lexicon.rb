@@ -42,14 +42,17 @@ module ConceptQL
     # A DuckDB dataset lacks one or more of the OHDSI vocabulary tables, so
     # Lexicon.for_dataset cannot make the dataset its own lexicon.
     class MissingVocabularyError < StandardError
-      attr_reader :missing_tables
+      attr_reader :missing_tables, :schemas
 
       # +missing_tables+ are the vocabulary tables that were not found.
-      # +schema+ is the db's current schema and +search_path+ the DuckDB
-      # search path that the unqualified table names resolved through.
-      def initialize(missing_tables, schema:, search_path:)
+      # +schemas+ are the schemas that were searched for them, each as
+      # "catalog.schema", and +search_path+ the DuckDB search path that the
+      # unqualified table names resolved through.
+      def initialize(missing_tables, schemas:, search_path:)
         @missing_tables = missing_tables
-        super("The DuckDB dataset (schema #{schema.inspect}) has no vocabulary table #{missing_tables.join(", ")}. " \
+        @schemas = schemas
+        super("The DuckDB dataset (schemas #{schemas.map(&:inspect).join(", ")}) " \
+              "has no vocabulary table #{missing_tables.join(", ")}. " \
               "A DuckDB dataset is its own lexicon: ConceptQL reads " \
               "#{LexiconOhdsi::VOCABULARY_TABLES.join(", ")} only from it, and never from LEXICON_URL. " \
               "The tables were looked up without a schema, through the search path #{search_path.inspect}.")
@@ -71,13 +74,26 @@ module ConceptQL
 
       missing = LexiconOhdsi::VOCABULARY_TABLES.reject { |table| db.table_exists?(table) }
       unless missing.empty?
-        raise MissingVocabularyError.new(missing,
-                                         schema: db.get(Sequel.function(:current_schema)),
-                                         search_path: db.get(Sequel.function(:current_setting, "search_path")))
+        search_path = db.get(Sequel.function(:current_setting, "search_path"))
+        raise MissingVocabularyError.new(missing, schemas: searched_schemas(db, search_path), search_path: search_path)
       end
 
       new(nil, db, strategy: LexiconOhdsi.new(db), cache: true)
     end
+
+    # The schemas, as "catalog.schema", where DuckDB looks for a table named
+    # without a schema. DuckDB reports a set search path in that form. The
+    # consumers attach the dataset and search "memory.main,dataset.<schema>",
+    # so current_schema() alone ("main") would name the wrong schema. With no
+    # search path set, DuckDB searches the current schema (and its own system
+    # schemas, which hold no dataset tables).
+    def self.searched_schemas(db, search_path)
+      schemas = search_path.to_s.split(",").map(&:strip).reject(&:empty?)
+      return schemas unless schemas.empty?
+
+      [ "#{db.get(Sequel.function(:current_database))}.#{db.get(Sequel.function(:current_schema))}" ]
+    end
+    private_class_method :searched_schemas
 
     def initialize(lexicon_db, dataset_db = nil, strategy: nil, cache: false)
       @strategy = strategy || determine_strategy(lexicon_db, dataset_db)

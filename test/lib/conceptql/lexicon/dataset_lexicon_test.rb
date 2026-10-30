@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "tmpdir"
 require_relative "../../../db_helper"
 
 # ConceptQL::Lexicon.for_dataset: a DuckDB dataset's own OHDSI vocabulary
@@ -84,10 +85,39 @@ describe "ConceptQL::Lexicon.for_dataset" do
     err = _ { ConceptQL::Lexicon.for_dataset(db) }.must_raise ConceptQL::Lexicon::MissingVocabularyError
     _(err.missing_tables).must_equal %i[concept_ancestor concept_relationship]
     _(err.message).must_include "concept_ancestor, concept_relationship"
-    _(err.message).must_include 'schema "main"'
+    _(err.schemas).must_equal %w[memory.main]
+    _(err.message).must_include 'schemas "memory.main"'
     _(err.message).must_include "search path"
     _(err.message).must_include "LEXICON_URL"
   ensure
     db&.disconnect
+  end
+
+  # The consumers (jde, t_shank) attach the dataset read-only and search it
+  # after the default database's main schema. current_schema() is then
+  # "main", which is not where the vocabulary tables were looked for.
+  it "names the attached dataset's schema that the consumers' search path searches" do
+    skip_unless_duckdb
+
+    Dir.mktmpdir do |dir|
+      file = File.join(dir, "dataset.duckdb")
+      writer = Sequel.connect("duckdb://#{file}")
+      writer.run("CREATE SCHEMA synpuf")
+      writer.run("CREATE TABLE synpuf.concept (concept_id INTEGER)")
+      writer.run("CREATE TABLE synpuf.vocabulary (vocabulary_id VARCHAR)")
+      writer.disconnect
+
+      db = Sequel.connect("duckdb::memory:")
+      db.run("ATTACH #{db.literal(file)} AS dataset (READ_ONLY)")
+      db.run("SET search_path = 'memory.main,dataset.synpuf'")
+
+      err = _ { ConceptQL::Lexicon.for_dataset(db) }.must_raise ConceptQL::Lexicon::MissingVocabularyError
+      _(err.missing_tables).must_equal %i[concept_ancestor concept_relationship]
+      _(err.schemas).must_equal %w[memory.main dataset.synpuf]
+      _(err.message).must_include 'schemas "memory.main", "dataset.synpuf"'
+      _(err.message).wont_include 'schema "main"'
+    ensure
+      db&.disconnect
+    end
   end
 end

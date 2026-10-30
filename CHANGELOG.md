@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
   caches its lookups. It never reads `LEXICON_URL`. Pass it as
   `ConceptQL::Database.new(db, lexicon: lexicon)`, without `cache_lookups`. When the dataset
   lacks one of the tables, it raises `ConceptQL::Lexicon::MissingVocabularyError`, whose
-  message names the missing tables, the current schema and the search path. For a Postgres
+  message names the missing tables, the schemas that it searched and the search path. For a Postgres
   or Spark db it returns nil, and the Database chooses its lexicon as before.
 - `sum` takes the boolean option `group_by_person`. With it, `sum` gives one person result
   for each person (and window): `person_id`, `criterion_domain` `person`, `criterion_table`
@@ -167,6 +167,19 @@ All notable changes to this project will be documented in this file.
   `hospitalization` records (table `collections`, domain `condition_occurrence`) matched
   `icd9` records from `observations`: `filter(icd9 "*" by hospitalization, ignore_dates)`
   kept 8 such records on the test data, and now keeps none.
+- `ConceptQL::Lexicon::MissingVocabularyError` now names the schemas that were searched for
+  the vocabulary tables, each as `catalog.schema`, and its `schemas` attribute holds them.
+  Before, it named the result of `current_schema()`. The consumers attach the dataset and
+  set the search path `memory.main,dataset.<schema>`, so that name was `main`, which is not
+  the dataset's schema. The constructor keyword `schema:` is now `schemas:`.
+- `numeric` with a column name in another case than the column's own
+  (`["numeric", "Value_As_Number", stream]`) now runs on Postgres. Validation accepted the
+  name, because the match ignores case, but the SQL quoted the name as written, and Postgres
+  found no such column. The SQL now uses the column's own name, so validation and the SQL
+  agree on every database.
+- `just spec` no longer leaves a truncated diagram in `doc/spec/` when it is interrupted or
+  `dot` fails. It draws each diagram into a temporary file in the same directory and renames
+  that file over the diagram only after `dot` succeeds.
 
 ## [0.5.0] - 2026-10-29
 

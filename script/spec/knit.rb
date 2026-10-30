@@ -5,7 +5,6 @@
 # graphviz `dot`. `just spec` runs both and then formats doc/spec.md.
 require "json"
 require "yaml"
-require "open3"
 require "fileutils"
 require_relative "blocks"
 require_relative "old_inspect"
@@ -30,8 +29,7 @@ wanted = blocks.zip(results).to_h { |b, r| [ OldInspect.sha(b.statement), r["ann
 wanted.each do |sha, annotated|
   dot = SpecGrapher.dot(annotated)
   File.write(File.join(dot_dir, "#{sha}.dot"), dot)
-  out, status = Open3.capture2e("dot", "-Tpng", "-o", File.join(img_dir, "#{sha}.png"), stdin_data: dot)
-  raise "dot failed for #{sha}: #{out}" unless status.success?
+  SpecGrapher.draw(dot, File.join(img_dir, "#{sha}.png"))
 end
 stale = Dir[File.join(img_dir, "*.png")].reject { |f| wanted.key?(File.basename(f, ".png")) }
 FileUtils.rm(stale)
