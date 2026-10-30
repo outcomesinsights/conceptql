@@ -53,9 +53,13 @@ module ConceptQL
           .inject(:+)
       end
 
+      # A NULL part is an empty string. The || operator gives NULL when one
+      # part is NULL, and a NULL uuid matches nothing (bead conceptql-18n).
+      # COALESCE keeps the place of each part, so "1//t/2008-01-01/" cannot
+      # be read as other parts. Postgres, DuckDB and Spark all support it.
       def uuid_items
         %w[person_id criterion_id criterion_table start_date end_date].map do |column|
-          Sequel.cast_string(column.to_sym)
+          Sequel.function(:coalesce, Sequel.cast_string(column.to_sym), "")
         end
       end
 

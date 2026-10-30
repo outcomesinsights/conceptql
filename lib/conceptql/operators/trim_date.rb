@@ -15,6 +15,9 @@ module ConceptQL
     # If the RHS record's start_date is later than the LHS end_date, the LHS
     # record is passed thru unaffected.
     #
+    # With join_columns (only t_shank gives it), "per person" means per
+    # person and join_columns values, with or without compare_all.
+    #
     # With compare_all (only t_shank gives it), each LHS record is compared
     # with every RHS record of the person and of the join_columns, not only
     # with the person's first (trim_date_end) or last (trim_date_start) RHS
@@ -82,13 +85,26 @@ module ConceptQL
       end
 
       def right_stream_query(db)
-        rh = if compare_all?
-               super
-        else
-               occ = to_op([ :occurrence, occurrence_number, right ])
-               occ.evaluate(db)
-        end
+        rh = compare_all? ? super : nearest_right_row(db)
         columnizer.apply(rh)
+      end
+
+      # Without compare_all, the first (trim_date_end) or last
+      # (trim_date_start) right row of each person and join_columns values,
+      # the grouping compare_all uses. The rows are ordered as the occurrence
+      # operator orders them: by start_date, then criterion_id. The occurrence
+      # operator groups by person only, so a left row whose join values
+      # differed from those of the person's first right row passed through
+      # untrimmed (bead conceptql-18n).
+      def nearest_right_row(db)
+        direction = occurrence_number.negative? ? :desc : :asc
+        right.evaluate(db)
+             .select_append(Sequel[:ROW_NUMBER].function.over(
+               partition: join_columns_option.uniq,
+               order: %i[start_date criterion_id].map { |column| Sequel.send(direction, column) }
+             ).as(:rn))
+             .from_self
+             .where(rn: occurrence_number.abs)
       end
 
       def columnizer
