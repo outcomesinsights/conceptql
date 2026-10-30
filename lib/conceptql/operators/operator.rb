@@ -223,8 +223,13 @@ module ConceptQL
         "<##{self.class} upstreams=[#{upstreams.map(&:inspect).join(', ')}] arguments=[#{arguments.map(&:inspect).join(', ')}]>"
       end
 
+      # The operator's rows, read from a CTE that Scope#with_ctes moves to the
+      # statement's WITH list. With CONCEPTQL_AVOID_CTES, the rows are a
+      # subquery instead, because with_ctes then makes no WITH list.
       def evaluate(db)
         q = select_it(query(db))
+        return q.from_self if ConceptQL.avoid_ctes?
+
         name = cte_name(op_name)
         scope.record_cte(self, name)
         opts = {}

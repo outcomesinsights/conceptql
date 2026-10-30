@@ -8,6 +8,8 @@ require "conceptql/rdbms/spark"
 # join_columns it compares only the person and the listed columns.
 # No live database: the mock never answers a query.
 describe ConceptQL::Operators::Match do
+  include SqlMode::CTES
+
   let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide) }
   let(:icd) { [ "icd9", "412", { uuid: true } ] }
 

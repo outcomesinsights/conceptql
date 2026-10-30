@@ -3,6 +3,8 @@
 require_relative "../../db_helper"
 
 describe ConceptQL::OneQueryCounts do
+  include SqlMode::CTES
+
   # The Union reads icd9 412 and cpt 99214 with one combined query, so the
   # root query has no CTE for them. icd9 999.99 has no rows.
   let(:empty_code) { %w[icd9 999.99] }

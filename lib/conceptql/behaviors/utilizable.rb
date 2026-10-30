@@ -41,13 +41,17 @@ module ConceptQL
       # With the Database's share_utilization option, the list is read from a
       # table that every statement on the Database shares. The WITH entry only
       # carries the list to Scope#with_ctes, which takes it out of the SQL and
-      # creates the table when the query first reads rows.
+      # creates the table when the query first reads rows. With
+      # CONCEPTQL_AVOID_CTES, with_ctes extracts nothing, so the scope keeps
+      # the table instead.
       def evaluate(db)
         cdb = nodifier.cdb
         return super unless cdb.opts[:share_utilization]
 
         list = select_it(query(db))
         name = cdb.shared_utilization_table(list, scope)
+        return scope.add_shared_table(db, name, list) if ConceptQL.avoid_ctes?
+
         db[name].with(name, list, Scope::SHARED_TABLE => true)
       end
 

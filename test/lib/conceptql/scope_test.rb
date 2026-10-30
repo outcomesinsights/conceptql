@@ -208,6 +208,8 @@ describe ConceptQL::Scope do
     end
 
     describe "merging ctes with the same sql" do
+      include SqlMode::CTES
+
       let(:sequel_db) { Sequel.mock(host: host) }
       let(:scope) { ConceptQL::Scope.new }
       let(:a1) { Sequel.identifier("a_1_abc") }

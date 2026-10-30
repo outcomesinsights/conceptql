@@ -6,6 +6,8 @@ require_relative "../../db_helper"
 # as a CTE (Scope#concept_list_condition). The statement suite checks that the
 # rows do not change. This checks the form of the SQL on each database.
 describe "concept lists" do
+  include SqlMode::CTES
+
   # Both specialty columns read the same list of CONCEPT_LIST_MIN_ITEMS IDs.
   let(:ids) { (1..ConceptQL::Scope::CONCEPT_LIST_MIN_ITEMS).to_a }
   let(:statement) { [ "provider_filter", %w[icd9 412], { specialties: ids.join(","), roles: "*" } ] }

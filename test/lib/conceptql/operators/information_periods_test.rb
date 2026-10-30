@@ -4,6 +4,8 @@ require_relative "../../../helper"
 require "conceptql"
 
 describe ConceptQL::Operators::InformationPeriods do
+  include SqlMode::CTES
+
   def assert_information_periods_sql(query, source_table)
     sql = query.sql
 

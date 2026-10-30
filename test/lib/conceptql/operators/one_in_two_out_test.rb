@@ -3,6 +3,8 @@
 require_relative "../../../helper"
 
 describe ConceptQL::Operators::OneInTwoOut do
+  include SqlMode::CTES
+
   let(:db) do
     ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide)
   end

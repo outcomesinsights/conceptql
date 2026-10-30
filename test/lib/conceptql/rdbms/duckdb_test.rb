@@ -28,6 +28,8 @@ describe ConceptQL::Rdbms::DuckDB do
   end
 
   describe "#supports_materialized?" do
+    include SqlMode::CTES
+
     it "marks operator CTEs AS MATERIALIZED" do
       cdb = ConceptQL::Database.new(db, data_model: :gdm, database_type: :duckdb)
       sql = cdb.query(%w[gender male]).sql
