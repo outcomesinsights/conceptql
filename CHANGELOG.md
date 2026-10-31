@@ -255,7 +255,7 @@ All notable changes to this project will be documented in this file.
     condition, such as the `IS NULL OR NOT IN` of `gender`.
   - On a 111-operator production algorithm, DuckDB planning of the plain query fell from
     0.81 s to 0.57 s and `annotate` with counts from 2.7 s to 2.0 s. Postgres planning of the
-    same statement on the test data fell from 485 ms to 156 ms.
+    same statement on the test data fell from 480 ms to 152 ms.
 - The specification (`doc/spec.md`) describes the changed `union` and `filter`, the new
   `ms_drg` and `cms_drg`, the `count` and `drg` deprecations, and `sum` with
   `group_by_person`. It gives the full format of a date adjustment, with the unit `w` and the

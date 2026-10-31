@@ -1,5 +1,10 @@
 # Merged CTEs and concept lists sent once, 2026-10-30 (bead conceptql-6cz)
 
+> **Re-measured 2026-10-31:** [concept-list-threshold-2026-10-31.md](concept-list-threshold-2026-10-31.md)
+> measured the shipped threshold of 1,000 items in one interleaved run. On
+> Postgres, planning of `ac4efe58` fell from 480 ms (`e2e11ed5`) to 152 ms.
+> The 2-item result below was caused by the Postgres JIT, not by a better plan.
+
 **Answer:** Merging identical CTEs cut the SQL of algorithm `ac4efe58` from 264
 to 205 CTEs and from 237 KB to 165 KB on DuckDB. DuckDB planning of the plain
 query fell from 0.81 s to 0.57 s (30%). Annotate with counts fell from 2.7 s to
