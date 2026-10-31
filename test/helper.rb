@@ -65,3 +65,57 @@ module SqlMode
   CTES = with(nil)
   AVOID_CTES = with("true")
 end
+
+# The SQL that Scope#with_ctes builds for one dataset on a mock database, for
+# the tests of concept lists (Scope#concept_list?). A describe block that
+# includes ConceptListMock defines host (:postgres, :duckdb or :spark), table
+# and dataset (a dataset of db that reads table).
+module ConceptListMock
+  # Sequel's Spark adapter comes with sequel-hexspace, an optional group
+  # (BUNDLE_WITH=hexspace). Without it, Sequel.mock(host: :spark) is a plain
+  # mock database, which has no WITH. The Rdbms decides the form of the SQL,
+  # so the plain mock gets WITH and tests the same thing.
+  WITH_SUPPORT = Module.new do
+    def supports_cte?(_type = :select) = true
+  end
+
+  def db
+    @db ||= Sequel.mock(host: host).tap do |mock|
+      mock.extend_datasets(WITH_SUPPORT) unless mock.dataset.supports_cte?
+    end
+  end
+
+  # An operator that evaluates to dataset. Scope#with_ctes reads only these two.
+  def operator
+    ds = dataset
+    rdbms = ConceptQL::Rdbms.generate(host)
+    Object.new.tap do |op|
+      op.define_singleton_method(:evaluate) { |_db| ds }
+      op.define_singleton_method(:rdbms) { rdbms }
+    end
+  end
+
+  def sql
+    @sql ||= ConceptQL::Scope.new.with_ctes(operator, db).sql
+  end
+
+  # The name of the CTE that holds the list.
+  def list_cte
+    sql[/(?:"|`)?concept_list_\w+(?:"|`)?(?= AS)/]
+  end
+
+  # The subquery that reads the list from list_cte.
+  def reads
+    "(SELECT #{quoted(:concept_id)} FROM #{list_cte})"
+  end
+
+  # The WHERE clause of the query.
+  def where
+    sql[/FROM #{Regexp.escape(quoted(table))} WHERE (.*)/, 1]
+  end
+
+  # An identifier as db writes it in SQL.
+  def quoted(name)
+    db.literal(Sequel.identifier(name))
+  end
+end

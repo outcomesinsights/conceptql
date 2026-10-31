@@ -10,6 +10,7 @@ require_relative "../../helper"
 # an IN list still reads the list CTE.
 describe "concept lists in a NOT IN condition" do
   include SqlMode::CTES
+  include ConceptListMock
 
   let(:ids) { (1..ConceptQL::Scope::CONCEPT_LIST_MIN_ITEMS).to_a }
   # The shape of a gender operator with an "unknown" argument, after an IN
@@ -17,30 +18,9 @@ describe "concept lists in a NOT IN condition" do
   let(:condition) do
     Sequel.expr(race_concept_id: ids) & (Sequel.expr(gender_concept_id: nil) | Sequel.~(gender_concept_id: ids))
   end
-  # Sequel's Spark adapter comes with sequel-hexspace, an optional group
-  # (BUNDLE_WITH=hexspace). Without it, Sequel.mock(host: :spark) is a plain
-  # mock database, which has no WITH. The Rdbms decides the form of the SQL,
-  # so the plain mock gets WITH and tests the same thing.
-  let(:db) do
-    Sequel.mock(host: host).tap do |mock|
-      mock.extend_datasets { def supports_cte?(_type = :select) = true } unless mock.dataset.supports_cte?
-    end
-  end
-  let(:dataset) { db[:patients].where(condition) }
-  # An operator that evaluates to dataset. Scope#with_ctes reads only these two.
-  let(:operator) do
-    ds = dataset
-    rdbms = ConceptQL::Rdbms.generate(host)
-    Object.new.tap do |op|
-      op.define_singleton_method(:evaluate) { |_db| ds }
-      op.define_singleton_method(:rdbms) { rdbms }
-    end
-  end
-  let(:sql) { ConceptQL::Scope.new.with_ctes(operator, db).sql }
-  let(:list_cte) { sql[/(?:"|`)?concept_list_\w+(?:"|`)?(?= AS)/] }
-  let(:reads) { "(SELECT #{db.literal(Sequel.identifier(:concept_id))} FROM #{list_cte})" }
+  let(:table) { :patients }
+  let(:dataset) { db[table].where(condition) }
   let(:list) { "(#{ids.join(', ')})" }
-  let(:where) { sql[/FROM #{Regexp.escape(db.literal(Sequel.identifier(:patients)))} WHERE (.*)/, 1] }
 
   # The number of times item (list or reads) follows op in text. "IN" counts
   # only the IN conditions that are not NOT IN.
