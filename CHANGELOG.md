@@ -257,6 +257,14 @@ All notable changes to this project will be documented in this file.
   the CMS-DRG meaning (events before 2007-10-01). The operator metadata of `drg` says
   `deprecated: true`.
 
+### Removed
+
+- The unused methods `query_cols` of the `race` and `ethnicity` operators and the unused class
+  method `Operator.query_columns` are removed. Nothing called them, and the two `query_cols`
+  methods would have raised `NoMethodError`. The `race` and `ethnicity` operators are not
+  affected: their SQL and their results do not change. `Query#query_cols` is a different
+  method and stays.
+
 ### Fixed
 
 - `CONCEPTQL_AVOID_CTES=true` works again. Since 2022, each operator read its rows from a CTE

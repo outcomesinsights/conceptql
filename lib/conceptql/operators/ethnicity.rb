@@ -15,10 +15,6 @@ module ConceptQL
       validate_no_upstreams
       validate_at_least_one_argument
 
-      def query_cols
-        table_columns(table)
-      end
-
       def table
         source_table
       end

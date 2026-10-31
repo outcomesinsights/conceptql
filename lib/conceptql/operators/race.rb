@@ -29,10 +29,6 @@ module ConceptQL
         @race_descendents ||= YAML.load_file(ConceptQL.race_file)
       end
 
-      def query_cols
-        table_columns(table)
-      end
-
       def table
         source_table
       end
