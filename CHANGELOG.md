@@ -292,6 +292,19 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `place_of_service_filter` selects records again. It looked up its codes in the vocabulary
+  `Place of Service`, but the OHDSI and the GDM lexicons name that vocabulary
+  `CMS Place of Service`. So no code became a concept ID, and the operator kept no record on
+  any data. Now `["place_of_service_filter", <stream>, "21"]` keeps the records whose place of
+  service (`pos_concept_id` of the record's context in gdm, of the observation in gdm_wide)
+  is the concept of code 21, Inpatient Hospital. A record with no place of service is still
+  dropped. A code that is not in the vocabulary is now the validation error
+  `unknown code(s)`, with the code as written, and the plain query raises
+  `ConceptQL::InvalidStatementError` for it. A code can never match a record when it names no
+  concept, so this is an error and not a warning. The codes have two digits, so the number
+  `1` is an unknown code and `"01"` is Pharmacy. Without a lexicon, no code is checked. The
+  argument metadata names the vocabulary `CMS Place of Service`. The SQL of the operator now
+  has the concept IDs of its codes. The SQL of every other statement is unchanged.
 - `provenance` accepts its keywords in any case, as the query always did. The query compares
   each keyword with the provenance concept codes in lower case, so `"Inpatient"` and
   `"INPATIENT:Primary_Or_First"` keep the same records as `"inpatient"` and
