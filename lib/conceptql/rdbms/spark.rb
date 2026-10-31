@@ -19,6 +19,12 @@ module ConceptQL
       def supports_in_subquery_in_select?
         false
       end
+
+      # Spark rejects a NOT IN subquery in a nested condition: "Null-aware
+      # predicate sub-queries cannot be used in nested conditions" (Spark 3.3).
+      def supports_nested_not_in_subquery?
+        false
+      end
     end
   end
 end

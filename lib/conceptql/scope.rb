@@ -270,15 +270,17 @@ module ConceptQL
     # Takes the CTEs out of the datasets in an expression, and replaces its
     # long IN lists with concept lists. With datasets: false, it leaves the
     # datasets as they are (for a SELECT list). With concept_lists: false, it
-    # leaves the IN lists as they are.
+    # leaves the IN lists as they are. With not_in_lists: false, it leaves the
+    # NOT IN lists as they are.
     class CteExtractor < Sequel::ASTTransformer
-      def initialize(scope, ctes, db, datasets: true, concept_lists: true)
+      def initialize(scope, ctes, db, datasets: true, concept_lists: true, not_in_lists: true)
         super()
         @scope = scope
         @ctes = ctes
         @db = db
         @datasets = datasets
         @concept_lists = concept_lists
+        @not_in_lists = not_in_lists
       end
 
       private
@@ -286,7 +288,7 @@ module ConceptQL
       def v(o)
         if o.is_a?(Sequel::Dataset)
           @datasets ? @scope.recursive_extract_ctes(o, @ctes) : o
-        elsif @concept_lists && @scope.concept_list?(o)
+        elsif @concept_lists && @scope.concept_list?(o) && (@not_in_lists || o.op == :IN)
           @scope.concept_list_condition(o, @db, @ctes, v(o.args.first))
         else
           super
@@ -373,16 +375,20 @@ module ConceptQL
         # p [:rec_compounds, ctes.map(&:first), compounds]
       end
 
+      # Spark rejects a NOT IN subquery in a nested condition, so there a
+      # NOT IN list stays a NOT IN list. @not_in_concept_lists and
+      # @select_concept_lists are nil when with_ctes did not run (a direct
+      # call), and nil rewrites.
+      not_in_lists = @not_in_concept_lists != false
       if (where = query.opts[:where])
-        query = query.clone(where: CteExtractor.new(self, ctes, query.db).transform(where))
+        query = query.clone(where: CteExtractor.new(self, ctes, query.db, not_in_lists: not_in_lists).transform(where))
       end
 
       # One In Two Out flags its events with CASE expressions on the same
       # provenance lists as its WHERE. Spark rejects an IN subquery in a
-      # SELECT list, so there the lists stay IN lists. @select_concept_lists
-      # is nil when with_ctes did not run (a direct call), and nil rewrites.
+      # SELECT list, so there the lists stay IN lists.
       if (select = query.opts[:select])
-        extractor = CteExtractor.new(self, ctes, query.db, datasets: false, concept_lists: @select_concept_lists != false)
+        extractor = CteExtractor.new(self, ctes, query.db, datasets: false, concept_lists: @select_concept_lists != false, not_in_lists: not_in_lists)
         query = query.clone(select: extractor.transform(select))
       end
 
@@ -499,6 +505,7 @@ module ConceptQL
       # A concept list is read by many CTEs, so it runs once.
       @concept_list_options = rdbms.supports_materialized? ? { materialized: true } : {}
       @select_concept_lists = rdbms.supports_in_subquery_in_select?
+      @not_in_concept_lists = rdbms.supports_nested_not_in_subquery?
 
       query = query.from_self
       temp_tables = []
