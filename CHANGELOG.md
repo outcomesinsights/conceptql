@@ -323,6 +323,9 @@ All notable changes to this project will be documented in this file.
   `hospitalization` records (table `collections`, domain `condition_occurrence`) matched
   `icd9` records from `observations`: `filter(icd9 "*" by hospitalization, ignore_dates)`
   kept 8 such records on the test data, and now keeps none.
+- `DataModel::Base#table_columns` no longer prints its result and its table names to
+  stdout. The two `p` calls were debug output from 2019. No statement in the test suite
+  calls this method, so the SQL and the results are unchanged.
 
 ## [0.5.0] - 2026-10-29
 
