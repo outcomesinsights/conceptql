@@ -4,7 +4,7 @@ title: Match codes case-sensitively unless vocabulary_formats declares a vocabul
 status: captured
 type: question
 created_at: 2026-10-31T13:36:44.334573+00:00
-updated_at: 2026-10-31T13:46:45.111275+00:00
+updated_at: 2026-10-31T13:48:53.928430+00:00
 ---
 
 ## Question
@@ -49,3 +49,5 @@ FACTS 2026-10-31 (jde production survey; 1,259 current algorithms; ohdsi20260829
 - No vocabulary used by the algorithms has two concept_codes that differ only in case, so today's case-insensitive selection selects no extra concepts.
 - conceptql's unknown-code warning (known_codes) already compares case exactly; only selection ignores case.
 - Limits: usrds_first_transplant arguments and algorithm-reference operators were not checked.
+
+RULED 2026-10-31 (Ryan): "Wait for vfm-8k1". conceptql builds the case-exact lookup and the reading of a case-insensitive declaration together, after vocabulary_formats rules on how a row declares it. Rejected: building the exact lookup now.
