@@ -360,6 +360,9 @@ All notable changes to this project will be documented in this file.
   serves the text that it sets with `desc`, and an operator that sets `no_desc` serves an
   empty text. A vocabulary operator, which sets no `desc`, still serves "Selects records
   based on the <name> vocabulary." The SQL is unchanged.
+- In `ConceptQL.metadata`, each vocabulary operator serves `predominant_domains` as a flat
+  list, for example `["condition_occurrence"]`, as the other operators do. Before, it served
+  the list inside another list (`[["condition_occurrence"]]`). The SQL is unchanged.
 
 ## [0.5.0] - 2026-10-29
 

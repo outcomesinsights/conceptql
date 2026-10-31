@@ -108,4 +108,23 @@ describe ConceptQL::Metadatable do
       _(klass.desc).must_be_nil
     end
   end
+
+  # A vocabulary operator serves its domains as a flat list, as the other
+  # operators do. Before, each one served the list inside another list
+  # ([["condition_occurrence"]]) (bead conceptql-9jgg).
+  describe "predominant_domains of vocabulary operators" do
+    %i[gdm gdm_wide].each do |dm|
+      it "is a flat, non-empty list for every vocabulary operator under #{dm}" do
+        cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: dm)
+        vocab_ops = cdb.operators(dm).select { |_name, klass| klass < ConceptQL::Operators::Vocabulary }
+        _(vocab_ops).wont_be_empty
+        vocab_ops.each do |name, klass|
+          domains = klass.to_metadata(name)[:predominant_domains]
+          _(domains).wont_be_empty name
+          _(domains).must_equal klass.entry.predominant_domains, name
+          _(domains.grep(Array)).must_be_empty name
+        end
+      end
+    end
+  end
 end

@@ -40,7 +40,7 @@ module ConceptQL
           preferred_name entry.preferred_name
           argument :codes, type: :codelist
           aliases entry.aliases
-          predominant_domains entry.predominant_domains
+          predominant_domains(*entry.predominant_domains)
           short_name entry.short_name
           long_name entry.long_name
           conceptql_spec_id "vocabulary"
