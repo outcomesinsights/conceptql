@@ -14,7 +14,7 @@ module ConceptQL
     class Recall < Operator
       register __FILE__
 
-      desc "Recalls a set of records from a labeled operator in the statement"
+      desc "Passes along the records of the operator in the statement that has the given label."
 
       argument :name, type: :string
       category "Get Related Data"

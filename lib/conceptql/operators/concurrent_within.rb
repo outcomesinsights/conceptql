@@ -18,7 +18,11 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc "Filters each upstream to only include records where other upstreams' date ranges overlap"
+      desc "Passes along each record of an upstream stream when every other upstream stream " \
+           "has a record of the same person inside the record's date range. " \
+           "The start option sets how far before the start_date that date range begins, " \
+           "and the end option sets how far after the end_date it ends. " \
+           "With only one upstream stream, the operator passes along all of its records."
       option :start, type: :string
       option :end, type: :string
       allows_many_upstreams

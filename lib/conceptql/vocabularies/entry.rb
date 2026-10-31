@@ -81,8 +81,9 @@ module ConceptQL
         @hash[:aliases_arr]
       end
 
+      # A vocabulary without a domain selects condition_occurrence records
       def predominant_domains
-        Array(domain || :condition_occurrence).flatten
+        Array(domain || "condition_occurrence").flatten
       end
 
       def from_lexicon?

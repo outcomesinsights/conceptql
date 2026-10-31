@@ -376,6 +376,19 @@ All notable changes to this project will be documented in this file.
 - In `ConceptQL.metadata`, each vocabulary operator serves `predominant_domains` as a flat
   list, for example `["condition_occurrence"]`, as the other operators do. Before, it served
   the list inside another list (`[["condition_occurrence"]]`). The SQL is unchanged.
+- The diagram editor shows the `desc` of each operator to its users, so 14 texts are
+  rewritten to say what the operator does. `dedup` served the text of `count`. `numeric` read
+  like a code comment. `provenance` now says that it needs at least one keyword, that `*`
+  matches any provenance, and that `<file keyword>:<code keyword>` matches the file AND the
+  code. `information_periods` claimed that it takes an upstream stream, which it refuses.
+  `concurrent_within` said that the date ranges overlap, but the other record must lie
+  inside the record's date range. `provider_filter` now names its required `roles` option.
+  `death`, `person` and `sum` now describe all of their inputs, and `occurrence`, `recall`,
+  `hospice`, `hospitalization` and `snf` were fixed for typos or a missing final period.
+  Every served `desc` now ends with a period. Also, every operator serves
+  `predominant_domains` as strings. Before, a vocabulary without a domain and an operator that
+  declares its domains, such as `death`, served symbols (`:condition_occurrence`, `:death`)
+  to Ruby callers. The JSON and the SQL are unchanged.
 
 ## [0.5.0] - 2026-10-29
 

@@ -33,7 +33,9 @@ module ConceptQL
 
       preferred_name "Nth Occurrence"
 
-      desc "Groups all records by person, then orders by start_date and finds the nth occurrence. Can be positive or negative, e.g 2 means 'second' and -3 means 'third from last'."
+      desc "For each person, orders the records by start_date and passes along the record at the given position. " \
+           "A positive number counts from the earliest record, so 2 means the second record. " \
+           "A negative number counts from the most recent record, so -3 means the third record from the last."
 
       argument :occurrence, type: :integer
       category "Filter Single Stream"

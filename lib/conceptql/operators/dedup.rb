@@ -7,7 +7,7 @@ module ConceptQL
     class Dedup < PassThru
       register __FILE__
 
-      desc "Counts the number of records that exactly match across all columns."
+      desc "Passes along each distinct record once. Records that have the same value in every column become one record."
       allows_one_upstream
       validate_one_upstream
 

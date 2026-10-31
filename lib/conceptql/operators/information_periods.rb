@@ -10,7 +10,10 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Generates all observation_period records, or, if fed a stream, fetches all observation_period records for the people represented in the incoming record set."
+      desc "Selects all information period records, which have the observation_period domain. " \
+           "The operator takes no upstream stream. " \
+           "Each argument is an information type concept ID, and with arguments, " \
+           "the operator selects only the information periods of those types."
       domains :observation_period
       category "Get Related Data"
       basic_type :selection

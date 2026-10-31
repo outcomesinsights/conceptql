@@ -10,7 +10,7 @@ module ConceptQL
 
       register __FILE__
 
-      desc "Selects all records in the person table."
+      desc "Selects all person records. With an upstream stream, the operator selects the person record of each person in that stream."
 
       allows_one_upstream
       domains :person

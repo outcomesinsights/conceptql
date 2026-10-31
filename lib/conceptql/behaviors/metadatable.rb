@@ -159,7 +159,8 @@ module ConceptQL
         max_upstreams: @max_upstreams || 0,
         arguments: @arguments || [],
         options: process_options(@options),
-        predominant_domains: @domains || @predominant_domains || [],
+        # Strings, as JSON gives them: domains (for example death) are symbols
+        predominant_domains: (@domains || @predominant_domains || []).map(&:to_s),
         desc: get_desc,
         categories: @categories || [],
         basic_type: @basic_type,
