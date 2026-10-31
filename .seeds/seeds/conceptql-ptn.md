@@ -1,10 +1,12 @@
 ---
 id: conceptql-ptn
 title: 'provenance with an unrecognized keyword: annotate reports it, the plain query silently ignores it'
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-29T20:43:42.285762+00:00
-updated_at: 2026-10-31T04:17:36.497224+00:00
+updated_at: 2026-10-31T12:50:59.425528+00:00
+resolved_at: 2026-10-31T12:50:59.425520+00:00
+resolution: Validation half built by conceptql-g2v; the feature (file:code keywords) built by conceptql-8mrc.
 tags:
   - algorithm-survey
   - validation
@@ -52,3 +54,5 @@ UPDATE 2026-10-30: the validation half is built by bead conceptql-g2v (the plain
 FOUND 2026-10-30: the feature existed. Commit 870d48a0 (2019-03-19) made provenance read keywords as \<file_type>:\<code_type> (CODE_SEPARATOR ":"); on GDM, "outpatient:primary" meant file_provenance_type in the outpatient concepts AND code_provenance_type in the primary concepts. Commit 0fdec070 (2023-06-26, the lexicon Strategy Pattern rewrite) commented that code out, and it was later deleted. The test statement provenance/count_2.json, \["provenance", ["icd9", "412"], "carrier_claim:primary_or_first"\], still exists; its expected result now records the loss ("unrecognized keywords"). The code provenance vocabulary JS_CODE_PROV_TYPE already has the keyword primary_or_first ("Primary or First"), whose descendants are the primary and the first-position concepts, so the vocabulary answers what first-listed means. Today, keywords in one provenance operator are ORed, so file AND code needs two nested provenance operators.
 
 RULED 2026-10-30 (Ryan): "restore" the <file>:<code> keyword syntax. "inpatient:primary_or_first" selects records whose file provenance is inpatient AND whose code provenance is primary_or_first. Keywords in one operator stay ORed. Rejected: nesting as the only way (no conceptql change).
+
+RESULT 2026-10-31: bead conceptql-8mrc merged (33c0c272). file:code keywords select file AND code; merged main green. Follow-ups: bead conceptql-sxqe (case-insensitive validation), and a new question seed on provenance with no keywords versus an explicit "\*".
