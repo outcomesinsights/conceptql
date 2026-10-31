@@ -64,12 +64,6 @@ module ConceptQL
           end
         end
 
-        def query_columns(*tables)
-          define_method(:query_cols) do
-            dm.table_columns(*tables)
-          end
-        end
-
         def default_query_columns
           define_method(:query_cols) do
             dynamic_columns
