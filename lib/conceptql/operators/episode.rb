@@ -52,10 +52,13 @@ module ConceptQL
         # Get allowed episode gap
         gap_of = get_episode_gap
 
+        # episode_end_date is the latest end so far. The lag gives it for the
+        # records before this one, so a record starts a new episode when it
+        # starts more than gap_of days after the end of the records before it.
         gap_check = date_adjust_add(db,
                                     Sequel.function(:lag, :episode_end_date).over(partition: partition_vars, order: %i[start_date end_date]), gap_of, "days")
 
-        cond_gap_lt_start = (gap_check < Sequel[:episode_end_date]) | (nil)
+        cond_gap_lt_start = (gap_check < Sequel[:start_date]) | (nil)
 
         dt2 = dt1.from_self.select_append(
           gap_of.as(:gap_of),

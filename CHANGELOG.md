@@ -60,6 +60,18 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** `episode` merges a record that starts inside an episode and ends after it. A
+  record now stays in the episode when its start_date is no more than `gap_of` days after the
+  latest end_date of the episode's earlier records. A NULL end_date counts as the start_date.
+  Before, the operator compared that end plus `gap_of` with the latest end_date including the
+  record itself, so a record that ended more than `gap_of` days after the episode began a new
+  episode, even when it started inside the episode. For example, the records 2020-01-01 to
+  2020-01-10 and 2020-01-05 to 2020-03-01 gave two overlapping episodes with `gap_of` 0 or
+  30, and now give one episode from 2020-01-01 to 2020-03-01. The result changes only for
+  records that last more than one day. Records of one day give the same episodes as before,
+  so the test statement `episode/results_icd9_episodes_w_30d_gap.json` returns the same rows.
+  Statements that make episodes of records with durations, such as drug exposures or
+  hospital stays, return fewer and longer episodes.
 - **Breaking:** `provenance` with no keyword fails validation with
   `["no provenance keywords; use \"*\" for any provenance"]`, and its plain query raises
   `ConceptQL::InvalidStatementError`. The error does not need a database. Before,
