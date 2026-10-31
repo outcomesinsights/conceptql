@@ -4,7 +4,7 @@ title: Match codes case-sensitively unless vocabulary_formats declares a vocabul
 status: captured
 type: question
 created_at: 2026-10-31T13:36:44.334573+00:00
-updated_at: 2026-10-31T13:39:21.550899+00:00
+updated_at: 2026-10-31T13:44:15.979285+00:00
 ---
 
 ## Question
@@ -38,3 +38,5 @@ RULED 2026-10-31 (Ryan): "b". Codes match case-exactly by default. A vocabulary 
 FACT 2026-10-31 (synpuf test vocabulary, ohdsi_vocabs): the claims vocabularies store upper-case codes. Exceptions: NDC 3 codes with a lower-case letter (e.g. 1549912340a), ICD9CM 1 defect row (sd), LOINC 2 survey codes. JS_CODE_PROV_TYPE and JS_FILE_PROV_TYPE codes are all lower case, and every production provenance keyword is lower case (jde survey 2026-10-31).
 
 Before beads: (1) vocabulary_formats chooses how a row declares case-insensitivity (an inline (?i) in the regexp, or a column) and makes the upper-case vocabularies' patterns upper case only; handed to that repo 2026-10-31. (2) jde's production survey of codes that match only when case is ignored (asked 2026-10-31): those statements stop matching when the lookup becomes exact, so they need counting and a plan first.
+
+UPDATE 2026-10-31: handed to vocabulary_formats as seed vfm-8k1 ("Declare case-insensitivity explicitly...", commit b9fceee there). Facts it found: more rows admit lower case than listed above (ICD10, CPT4_HCPCS and variants, the \*\_MODIFIER rows, ATC, NDC.ALPHANUM, ICDO3 and others); some rows are already upper case only (ICD9CM, ICD10PCS.BILLABLE, RxNorm Extension); the ICD10PCS row's notes and seed vfm-yop chose permissive case on purpose (a caller who lowercases codes would get a silent 100% false-negative rate), which this ruling reverses; codesistant compiles every row with re.IGNORECASE, so a declaration has no effect there until it changes; a scoped (?i:...) works in Python, Ruby, PCRE and RE2, while a global (?i) must start the pattern in Python 3.11+. conceptql waits for vfm-8k1's ruling before filing beads.
