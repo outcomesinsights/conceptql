@@ -589,6 +589,36 @@ And just to show how multiple streams behave:
 | 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
 | 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
 
+## Filtering by Provenance
+
+### provenance
+
+`provenance` passes along the events of its upstream stream that come from a given kind of source record. Each event has two provenances. Its file provenance tells which kind of file the record came from, such as `inpatient`, `outpatient` or `carrier_claim`. Its code provenance tells the position of the code in the record, such as `primary`, `first` or `admitting`. Each argument of `provenance` is a keyword from the file or the code provenance vocabulary, and the operator keeps an event when its provenance is that keyword's concept or one of its descendants.
+
+A plain keyword, such as `inpatient` or `primary_or_first`, keeps an event when either provenance matches it. A keyword of the form `<file keyword>:<code keyword>` keeps an event when its file provenance matches the file keyword AND its code provenance matches the code keyword. The left half must be a file provenance keyword and the right half a code provenance keyword. Any other keyword with a `:` is an error.
+
+When `provenance` has several keywords, it keeps the events that match any one of them. So `["inpatient:primary", "outpatient:first"]` keeps the inpatient events with a primary code and the outpatient events with a first code.
+
+```YAML
+---
+- provenance
+- - icd9
+  - '250.00'
+- inpatient:primary_or_first
+
+```
+
+![Diabetes diagnoses that are the primary or first code of an inpatient record](spec/14942bd4e7713897ad9aa646c71cc348d5690cccafadd50e4a7dcd65b9a81061.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 37        | 310          | observations    | condition_occurrence | 2009-01-19 | 2009-01-20 | 25000        |
+| 68        | 19           | observations    | condition_occurrence | 2008-04-19 | 2008-04-23 | 25000        |
+| 68        | 1596         | observations    | condition_occurrence | 2008-11-10 | 2008-11-11 | 25000        |
+| 131       | 676          | observations    | condition_occurrence | 2008-03-21 | 2008-03-24 | 25000        |
+| 207       | 106          | observations    | condition_occurrence | 2010-04-28 | 2010-05-02 | 25000        |
+| 237       | 918          | observations    | condition_occurrence | 2010-07-16 | 2010-07-19 | 25000        |
+
 ## Co-reported Events
 
 ### co_reported

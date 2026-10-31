@@ -1,0 +1,34 @@
+[
+  "provenance",
+  [
+    "icd9",
+    "250.00",
+    {
+      "annotation": {
+        "counts": {
+          "condition_occurrence": {
+            "rows": 1036,
+            "n": 162
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  "inpatient:primary_or_first",
+  "outpatient:primary",
+  "inpatient:",
+  "garbage:first",
+  {
+    "annotation": {
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["unrecognized keywords", "inpatient:", "garbage:first"]]
+    },
+    "name": "Provenance"
+  }
+]
