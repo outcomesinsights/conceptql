@@ -8,7 +8,7 @@ module ConceptQL
       register __FILE__
       include ConceptQL::Behaviors::Utilizable
 
-      desc "Selects admission records of type 'hospice'"
+      desc "Selects hospice admission records."
 
       def collection_type
         "hospice"

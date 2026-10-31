@@ -9,7 +9,11 @@ module ConceptQL
     class ProviderFilter < Operator
       register __FILE__
 
-      desc "Passes along records where the provider's specialty matches a given set of specialty_concept_ids.\n\nA single record may have multiple specialties, so the operator will return all records that match any of the given specialties, which may lead to duplicate records."
+      desc "Passes along the records whose provider matches the given specialties and roles. " \
+           "Each option is a comma-separated list of concept IDs, and * matches any value. " \
+           "A record matches the specialties when its context specialty or its practitioner specialty " \
+           "is in the list. " \
+           "A record can have more than one specialty, so the operator can pass along the same record more than once."
       option :specialties, type: :string
       option :roles, type: :string
       category "Filter Single Stream"

@@ -16,17 +16,11 @@ module ConceptQL
     class Numeric < PassThru
       register __FILE__
 
-      desc <<~EOF
-        Represents an operator that will either:
-        - Create a value_as_number value for every person in the database
-        - Change the value_as_number value for every record passed in
-          - Either to a number
-          - Or a value from a column in the origin row
-
-        Accepts two params:
-        - Either a number value or a symbol representing a column name
-        - An optional stream
-      EOF
+      desc "Sets the value_as_number of each record of its upstream stream. " \
+           "The argument is a number, or the name of a column whose value is copied from the same record. " \
+           "Without an upstream stream, the operator selects one person record for each person, " \
+           "with value_as_number set to the argument. " \
+           "A column name must then name a column of the person table."
       argument :value, type: :float
       allows_one_upstream
       validate_at_most_one_upstream

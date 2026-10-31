@@ -19,7 +19,14 @@ module ConceptQL
     class Provenance < Operator
       register __FILE__
 
-      desc "Passes along records with the indicated provenance (e.g. inpatient, outpatient, file type)."
+      desc "Passes along the records whose provenance matches at least one of the given keywords. " \
+           "Each record has a file provenance, such as inpatient or outpatient, " \
+           "and a code provenance, such as primary or first. " \
+           "A plain keyword matches a record when either provenance matches it. " \
+           "A keyword of the form <file keyword>:<code keyword> matches a record when its file provenance " \
+           "matches the file keyword and its code provenance matches the code keyword. " \
+           "The keyword * matches a record that has any file or code provenance. " \
+           "At least one keyword is required."
 
       argument :provenance_types, label: "Provenance Types", type: :codelist
       category "Filter Single Stream"

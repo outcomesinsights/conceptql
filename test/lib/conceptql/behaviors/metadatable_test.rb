@@ -109,6 +109,58 @@ describe ConceptQL::Metadatable do
     end
   end
 
+  # The diagram editor shows each desc to its users. Every served desc is a
+  # text that ends with a period, and only a no_desc operator serves "".
+  # Before, dedup served count's text and several texts had no final period
+  # (bead conceptql-kv2v).
+  describe "served desc texts" do
+    %i[gdm gdm_wide].each do |dm|
+      it "is non-empty and ends with a period for every operator under #{dm}, except a no_desc operator" do
+        cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: dm)
+        served = cdb.operators(dm).to_h { |name, klass| [ name, klass.to_metadata(name)[:desc] ] }
+        no_desc = cdb.operators(dm).select { |_name, klass| klass.desc == "" }.keys
+        _(no_desc.sort).must_equal %w[from invalid]
+        served.except(*no_desc).each do |name, desc|
+          _(desc).must_match(/\S\.\z/, name)
+        end
+        no_desc.each { |name| _(served.fetch(name)).must_equal "", name }
+      end
+    end
+
+    it "serves a dedup text that differs from count's text" do
+      cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide)
+      ops = cdb.operators(:gdm_wide)
+      _(ops.fetch("dedup").to_metadata("dedup")[:desc]).wont_equal ops.fetch("count").to_metadata("count")[:desc]
+    end
+  end
+
+  # Every operator serves its predominant_domains as strings, as JSON gives
+  # them. Before, a vocabulary without a domain and an operator that declares
+  # domains (for example death) served symbols (bead conceptql-kv2v).
+  describe "predominant_domains types" do
+    %i[gdm gdm_wide].each do |dm|
+      it "is a list of strings for every operator under #{dm}" do
+        cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: dm)
+        cdb.operators(dm).each do |name, klass|
+          domains = klass.to_metadata(name)[:predominant_domains]
+          _(domains.reject { |d| d.is_a?(String) }).must_be_empty name
+        end
+        ConceptQL.metadata(cdb)[:operators].each do |name, h|
+          _(h[:predominant_domains].reject { |d| d.is_a?(String) }).must_be_empty name
+        end
+      end
+    end
+
+    it "serves condition_occurrence for a vocabulary without a domain" do
+      entry = ConceptQL::Vocabularies::Entry.new(id: "no_domain_vocab")
+      _(entry.predominant_domains).must_equal [ "condition_occurrence" ]
+    end
+
+    it "serves death as a string for the death operator" do
+      _(ConceptQL::Operators::Death.to_metadata("death")[:predominant_domains]).must_equal [ "death" ]
+    end
+  end
+
   # A vocabulary operator serves its domains as a flat list, as the other
   # operators do. Before, each one served the list inside another list
   # ([["condition_occurrence"]]) (bead conceptql-9jgg).

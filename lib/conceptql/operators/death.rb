@@ -9,7 +9,7 @@ module ConceptQL
 
       register __FILE__
 
-      desc "Selects all death records"
+      desc "Selects all death records. With an upstream stream, the operator selects the death record of each person in that stream."
       domains :death
       allows_one_upstream
 

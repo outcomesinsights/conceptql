@@ -22,11 +22,11 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc <<~EOF
-        Sums value_as_number across all records that match on all but start_date, end_date.
-        For start_date and end_date the min and max of each respectively is returned.
-        With group_by_person, sums all of the records of each person into one person record.
-      EOF
+      desc "Groups the records that have the same values in all columns except criterion_id, start_date, " \
+           "end_date and value_as_number. For each group, the operator passes along one record " \
+           "with the sum of value_as_number, the earliest start_date, the most recent end_date " \
+           "and a criterion_id of 0. With group_by_person, the operator groups all of the records " \
+           "of each person and passes along one person record for each person."
       option :group_by_person, type: :boolean,
                                instructions: "Choose whether to sum all of the records of each person into one person record, for example to count the events of each person"
       default_query_columns

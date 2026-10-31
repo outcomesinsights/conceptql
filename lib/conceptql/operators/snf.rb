@@ -8,7 +8,7 @@ module ConceptQL
       register __FILE__
       include ConceptQL::Behaviors::Utilizable
 
-      desc "Selects admission records of type 'SNF'"
+      desc "Selects skilled nursing facility (SNF) admission records."
 
       def collection_type
         "SNF"
