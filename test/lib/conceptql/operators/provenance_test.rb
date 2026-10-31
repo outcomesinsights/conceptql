@@ -45,13 +45,60 @@ describe ConceptQL::Operators::Provenance do
       _(records("inpatient", "outpatient")).must_equal (records("inpatient") + records("outpatient")).uniq.sort
     end
 
-    # Every ICD-9 250.00 record comes from a claim file.
-    it "keeps every record with a provenance when there is no keyword" do
-      _(records).must_equal records("claim")
-    end
-
     it "reports a keyword that names no provenance concept" do
       _(errors("inpatient", "garbage")).must_equal [ [ "unrecognized keywords", "garbage" ] ]
+    end
+  end
+
+  # "*" asks for any provenance. It builds the condition that provenance
+  # with no keyword built before 2026-10-31: either column is in the
+  # descendants of any provenance concept.
+  describe "with the keyword \"*\"" do
+    # Every ICD-9 250.00 record comes from a claim file.
+    it "keeps every record with a provenance" do
+      _(records("*")).must_equal records("claim")
+    end
+
+    it "is valid" do
+      _(errors("*")).must_be_nil
+    end
+
+    it "checks both columns" do
+      _(CDB.query(statement("*")).sql)
+        .must_match(/"file_provenance_type" IN .* OR .*"code_provenance_type" IN/m)
+    end
+
+    # Keywords are ORed, so "*" with any other keyword is "*".
+    it "keeps the same records with other keywords" do
+      _(records("inpatient", "*", "outpatient:unspecified")).must_equal records("*")
+    end
+
+    it "is valid with other keywords" do
+      _(errors("*", "inpatient", "outpatient:unspecified")).must_be_nil
+    end
+
+    it "still reports an unrecognized keyword beside it" do
+      _(errors("*", "garbage")).must_equal [ [ "unrecognized keywords", "garbage" ] ]
+    end
+  end
+
+  describe "with no keyword" do
+    let(:no_keywords) { [ "no provenance keywords; use \"*\" for any provenance" ] }
+
+    it "reports that it has no keywords" do
+      _(errors).must_equal [ no_keywords ]
+    end
+
+    it "is refused in the plain query" do
+      error = _ { CDB.query(statement).sql }.must_raise ConceptQL::InvalidStatementError
+      _(error.errors.values).must_equal [ [ no_keywords ] ]
+    end
+
+    it "reports that it has no keywords without a database" do
+      cdb = ConceptQL::Database.new(nil, data_model: :gdm)
+      annotated = cdb.query(statement).annotate(skip_counts: true)
+
+      _(annotated.last[:annotation][:errors]).must_equal [ no_keywords ]
     end
   end
 
@@ -105,7 +152,10 @@ describe ConceptQL::Operators::Provenance do
       "garbage:primary",
       "inpatient:garbage",
       "inpatient:outpatient",
-      "primary:first"
+      "primary:first",
+      "*:primary_or_first",
+      "inpatient:*",
+      "*:*"
     ].each do |keyword|
       it "reports #{keyword.inspect} as written" do
         _(errors(keyword)).must_equal [ [ "unrecognized keywords", keyword ] ]

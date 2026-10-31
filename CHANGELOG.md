@@ -19,6 +19,13 @@ All notable changes to this project will be documented in this file.
   Before, annotate reported every keyword with a `:` as that error. The test statement
   `provenance/count_2.json` (`carrier_claim:primary_or_first`) is now valid. It has no
   results, because no carrier claim record in the test data has a primary or first code.
+- `provenance` takes the keyword `"*"`. `["provenance", <stream>, "*"]` keeps the records
+  whose file provenance or code provenance is any provenance concept, and drops the records
+  with neither. It builds the SQL that `provenance` with no keyword built before. Keywords are
+  ORed, so `"*"` with other keywords keeps the same records and builds the same SQL as `"*"`
+  alone. The other keywords are still checked, so an unrecognized one beside `"*"` is still
+  the error `unrecognized keywords`. A `"*"` half in a `<file keyword>:<code keyword>`
+  keyword, such as `"inpatient:*"`, is that error too.
 - `ConceptQL::Lexicon.for_dataset(db)` makes a DuckDB dataset its own lexicon. The returned
   Lexicon reads the OHDSI vocabulary tables (`concept`, `concept_ancestor`,
   `concept_relationship` and `vocabulary`) from `db` itself, through its search path, and
@@ -53,6 +60,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** `provenance` with no keyword fails validation with
+  `["no provenance keywords; use \"*\" for any provenance"]`, and its plain query raises
+  `ConceptQL::InvalidStatementError`. The error does not need a database. Before,
+  `["provenance", <stream>]` kept every record with any provenance. Write
+  `["provenance", <stream>, "*"]` for that. No production algorithm used the empty form on
+  2026-10-31.
 - **Breaking:** a Database on a real database without vocabulary raises
   `ConceptQL::Lexicon::NoVocabularyError`. `ConceptQL::Database.new(db)` raises it when `db`
   is a real database (not nil and not a Sequel mock) and neither `db` nor the `LEXICON_URL`

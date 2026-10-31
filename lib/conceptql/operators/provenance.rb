@@ -14,7 +14,8 @@ module ConceptQL
     # If the record has NULL for the provenance-related field, they are filtered
     # out.
     #
-    # Multiple provenances can be specified at once
+    # Multiple provenances can be specified at once. "*" asks for any
+    # provenance. At least one keyword is required.
     class Provenance < Operator
       register __FILE__
 
@@ -39,6 +40,8 @@ module ConceptQL
       private
 
       def additional_validation(db, _opts = {})
+        return add_error('no provenance keywords; use "*" for any provenance') if arguments.empty?
+
         # With no lexicon there are no provenance concepts to check against,
         # and every keyword would be reported as unrecognized. Vocabulary
         # operators skip their unknown-code check in the same situation.

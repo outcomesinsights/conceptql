@@ -619,6 +619,32 @@ When `provenance` has several keywords, it keeps the events that match any one o
 | 207       | 106          | observations    | condition_occurrence | 2010-04-28 | 2010-05-02 | 25000        |
 | 237       | 918          | observations    | condition_occurrence | 2010-07-16 | 2010-07-19 | 25000        |
 
+The keyword `*` keeps an event that has any file or code provenance. It drops only the events whose two provenances are both empty. Several keywords are ORed, so `*` with other keywords keeps the same events as `*` alone. A `*` in a `<file keyword>:<code keyword>` keyword is an error. `provenance` needs at least one keyword: with none, it is the error `no provenance keywords; use "*" for any provenance`.
+
+```YAML
+---
+- provenance
+- - icd9
+  - '250.00'
+- "*"
+
+```
+
+![Diabetes diagnoses with any provenance](spec/8614aacee51d8264bc6c61b5e202aa9c0c9318fd66c2ff254cdb45456bdda9fc.png)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 2         | 89752        | observations    | condition_occurrence | 2009-05-11 | 2009-05-11 | 25000        |
+| 2         | 57897        | observations    | condition_occurrence | 2009-05-16 | 2009-05-16 | 25000        |
+| 2         | 76985        | observations    | condition_occurrence | 2009-07-31 | 2009-07-31 | 25000        |
+| 3         | 93400        | observations    | condition_occurrence | 2009-11-17 | 2009-11-17 | 25000        |
+| 5         | 89717        | observations    | condition_occurrence | 2009-06-28 | 2009-06-28 | 25000        |
+| 7         | 15942        | observations    | condition_occurrence | 2008-04-23 | 2008-04-23 | 25000        |
+| 7         | 69706        | observations    | condition_occurrence | 2008-05-12 | 2008-05-12 | 25000        |
+| 7         | 38732        | observations    | condition_occurrence | 2008-06-09 | 2008-06-09 | 25000        |
+| 7         | 38733        | observations    | condition_occurrence | 2008-06-09 | 2008-06-09 | 25000        |
+| 7         | 70454        | observations    | condition_occurrence | 2008-10-02 | 2008-10-02 | 25000        |
+
 ## Co-reported Events
 
 ### co_reported
