@@ -24,9 +24,9 @@ describe ConceptQL::Operators::Vocabulary do
   end
 
   it "should have predominant_domains set to correct value" do
-    assert_equal gdm_operators["icd9cm"].to_metadata("icd9cm")[:predominant_domains], [ [ "condition_occurrence" ] ]
-    assert_equal gdm_operators["hcpcs"].to_metadata("icd9cm")[:predominant_domains], [ [ "procedure_occurrence" ] ]
-    assert_equal gdm_operators["ndc"].to_metadata("icd9cm")[:predominant_domains], [ [ "drug_exposure" ] ]
+    assert_equal gdm_operators["icd9cm"].to_metadata("icd9cm")[:predominant_domains], [ "condition_occurrence" ]
+    assert_equal gdm_operators["hcpcs"].to_metadata("icd9cm")[:predominant_domains], [ "procedure_occurrence" ]
+    assert_equal gdm_operators["ndc"].to_metadata("icd9cm")[:predominant_domains], [ "drug_exposure" ]
   end
 
   describe "under gdm" do

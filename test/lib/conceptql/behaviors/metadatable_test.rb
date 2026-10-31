@@ -71,4 +71,60 @@ describe ConceptQL::Metadatable do
       _(parent_options.values_at(:first_opt, :second_opt).map { |h| h[:required] }).must_equal [ nil, nil ]
     end
   end
+
+  # An operator that sets desc serves that text. Only an operator without
+  # one serves the standard vocabulary text (bead conceptql-h20w).
+  describe "desc in metadata" do
+    let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide) }
+    let(:operators) { cdb.operators(:gdm_wide) }
+
+    it "serves the desc that an operator sets" do
+      _(ConceptQL.metadata(cdb)[:operators].fetch("after")[:desc])
+        .must_equal "For each person, passes along left hand records with a start_date " \
+                    "that occurs after the earliest end_date of a right hand record."
+    end
+
+    it "serves its own desc for every operator that sets one" do
+      operators.each do |name, klass|
+        next unless klass.desc
+
+        _(klass.to_metadata(name)[:desc]).must_equal klass.desc, name
+      end
+    end
+
+    it "serves an empty desc for an operator that sets no_desc" do
+      _(operators.fetch("from").to_metadata("from")[:desc]).must_equal ""
+    end
+
+    it "serves the standard description for a vocabulary operator" do
+      klass = operators.fetch("icd9cm")
+      _(klass.to_metadata("icd9cm")[:desc]).must_equal klass.standard_description
+      _(klass.standard_description).must_equal "Selects records based on the #{klass.pref_name} vocabulary."
+    end
+
+    it "does not store the standard description as the desc" do
+      klass = Class.new(ConceptQL::Operators::Operator) { preferred_name "No Desc" }
+      _(klass.to_metadata("op")[:desc]).must_equal "Selects records based on the No Desc vocabulary."
+      _(klass.desc).must_be_nil
+    end
+  end
+
+  # A vocabulary operator serves its domains as a flat list, as the other
+  # operators do. Before, each one served the list inside another list
+  # ([["condition_occurrence"]]) (bead conceptql-9jgg).
+  describe "predominant_domains of vocabulary operators" do
+    %i[gdm gdm_wide].each do |dm|
+      it "is a flat, non-empty list for every vocabulary operator under #{dm}" do
+        cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: dm)
+        vocab_ops = cdb.operators(dm).select { |_name, klass| klass < ConceptQL::Operators::Vocabulary }
+        _(vocab_ops).wont_be_empty
+        vocab_ops.each do |name, klass|
+          domains = klass.to_metadata(name)[:predominant_domains]
+          _(domains).wont_be_empty name
+          _(domains).must_equal klass.entry.predominant_domains, name
+          _(domains.grep(Array)).must_be_empty name
+        end
+      end
+    end
+  end
 end
