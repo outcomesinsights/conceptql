@@ -34,10 +34,13 @@ module ConceptQL
 
     # The keywords as written that name no provenance concept. A pair is
     # recognized only when it has one separator, a file keyword on the left
-    # and a code keyword on the right.
+    # and a code keyword on the right. Case is ignored, as the lookup ignores
+    # it (LexiconStrategy#concepts compares lower(concept_code) with the
+    # keyword in lower case), so "Inpatient" names the concept "inpatient".
     def find_bad_keywords(db, codes)
       pairs, plain = codes.partition { |code| pair_keyword?(code) }
-      bad = plain - dm.concept_codes(db, all_provenance_types_vocab)
+      known = known_keywords(db, all_provenance_types_vocab)
+      bad = plain.reject { |code| known.include?(code.to_s.downcase) }
       bad += pairs.reject { |pair| known_pair?(db, pair) }
       codes & bad
     end
@@ -49,10 +52,15 @@ module ConceptQL
     end
 
     def known_pair?(db, pair)
-      file, code, *rest = pair.split(PAIR_SEPARATOR, -1)
+      file, code, *rest = pair.downcase.split(PAIR_SEPARATOR, -1)
       rest.empty? &&
-        dm.concept_codes(db, dm.file_provenance_types_vocab).include?(file) &&
-        dm.concept_codes(db, dm.code_provenance_types_vocab).include?(code)
+        known_keywords(db, dm.file_provenance_types_vocab).include?(file) &&
+        known_keywords(db, dm.code_provenance_types_vocab).include?(code)
+    end
+
+    # The concept codes of the vocabularies, in lower case.
+    def known_keywords(db, vocabularies)
+      dm.concept_codes(db, vocabularies).map(&:downcase)
     end
 
     def all_provenance_types_vocab
