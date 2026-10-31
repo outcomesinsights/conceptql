@@ -68,6 +68,9 @@ module ConceptQL
       query, relations = root_query
       # A Union reads its Vocabulary upstreams with one combined query, so the
       # root query has no CTE for them. Their own CTEs join the WITH list.
+      # The second root_query evaluates the tree again. Reusing the first
+      # evaluation would give the root CTEs other names (each evaluation
+      # takes new numbers from the scope), and the SQL would change.
       unless relations.all?
         extra = @operators.zip(relations).filter_map { |op, name| op.evaluate(db) unless name }
         query, relations = root_query(extra)

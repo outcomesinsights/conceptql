@@ -70,6 +70,24 @@ describe ConceptQL::DataModel::Gdm do
       _(dm.concept_id(:clinical_codes)).must_equal :clinical_code_concept_id
     end
   end
+
+  describe "#source_vocabulary_id" do
+    it "names the vocabulary column of a table, and nothing for a table without one" do
+      _(dm.source_vocabulary_id(:clinical_codes)).must_equal :clinical_code_vocabulary_id
+      _(dm.source_vocabulary_id("patient_details")).must_equal :patient_detail_vocabulary_id
+      _(dm.source_vocabulary_id(:vocabularies)).must_equal :omopv4_vocabulary_id
+      _(dm.source_vocabulary_id(:patients)).must_be_nil
+      _(dm.source_vocabulary_id(:deaths)).must_be_nil
+    end
+
+    # Every operator's columns ask for it, so the data model works it out once.
+    it "gives the same answer to later calls without working it out again" do
+      first = dm.source_vocabulary_ids
+
+      _(dm.source_vocabulary_ids).must_be_same_as(first)
+    end
+  end
+
   describe "#related_concept_ids" do
     let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconGDM.new(db)) }
     let(:cdb) { ConceptQL::Database.new(db, lexicon: lexicon) }
