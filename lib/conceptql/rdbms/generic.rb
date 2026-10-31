@@ -90,6 +90,15 @@ module ConceptQL
         true
       end
 
+      # True if a NOT IN subquery may sit in a nested condition, such as the
+      # "IS NULL OR NOT IN" of the gender operator. Scope#with_ctes reads a
+      # long NOT IN list from its list CTE only when this is true. It does not
+      # check whether a NOT IN condition is nested, so false keeps every long
+      # NOT IN list a NOT IN list.
+      def supports_nested_not_in_subquery?
+        true
+      end
+
       def create_options(_scope, _ds)
         opts = {}
         opts[:analyze] = opts[:explain] = explain_temp_tables?
