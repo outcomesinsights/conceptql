@@ -479,6 +479,20 @@ When `provenance` has several keywords, it keeps the events that match any one o
 ]
 ```
 
+The keyword `*` keeps an event that has any file or code provenance. It drops only the events whose two provenances are both empty. Several keywords are ORed, so `*` with other keywords keeps the same events as `*` alone. A `*` in a `<file keyword>:<code keyword>` keyword is an error. `provenance` needs at least one keyword: with none, it is the error `no provenance keywords; use "*" for any provenance`.
+
+```ConceptQL
+# Diabetes diagnoses with any provenance
+[
+  "provenance",
+  [
+    "icd9",
+    "250.00"
+  ],
+  "*"
+]
+```
+
 ## Co-reported Events
 
 ### co_reported

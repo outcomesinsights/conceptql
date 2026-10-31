@@ -14,19 +14,26 @@ module ConceptQL
   # descendants of the code keyword.
   #
   # Several keywords are ORed: a record is kept when any keyword keeps it.
+  #
+  # The keyword "*" keeps a record when either column is any provenance
+  # concept. Because keywords are ORed, "*" with other keywords is "*".
   module Provenanceable
     PAIR_SEPARATOR = ":"
+    ANY = "*"
 
     def self.included(base)
       base.require_column :file_provenance_type
       base.require_column :code_provenance_type
     end
 
+    # No keyword at all is a validation error of Provenance. It still builds
+    # the condition of "*", as an invalid pair still builds a condition.
     def build_where_from_codes(db, codes)
+      return plain_condition(db, []) if codes.empty? || codes.include?(ANY)
+
       pairs, plain = codes.partition { |code| pair_keyword?(code) }
       conditions = pairs.map { |pair| pair_condition(db, pair) }
-      # With no keywords at all, the plain condition is built as before.
-      conditions.unshift(plain_condition(db, plain)) if plain.any? || pairs.empty?
+      conditions.unshift(plain_condition(db, plain)) if plain.any?
       return conditions.first if conditions.one?
 
       Sequel.|(*conditions)
@@ -37,8 +44,9 @@ module ConceptQL
     # and a code keyword on the right. Case is ignored, as the lookup ignores
     # it (LexiconStrategy#concepts compares lower(concept_code) with the
     # keyword in lower case), so "Inpatient" names the concept "inpatient".
+    # "*" is known. It is not a half of a pair.
     def find_bad_keywords(db, codes)
-      pairs, plain = codes.partition { |code| pair_keyword?(code) }
+      pairs, plain = (codes - [ ANY ]).partition { |code| pair_keyword?(code) }
       known = known_keywords(db, all_provenance_types_vocab)
       bad = plain.reject { |code| known.include?(code.to_s.downcase) }
       bad += pairs.reject { |pair| known_pair?(db, pair) }
