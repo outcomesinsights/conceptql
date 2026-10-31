@@ -267,6 +267,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `provenance` accepts its keywords in any case, as the query always did. The query compares
+  each keyword with the provenance concept codes in lower case, so `"Inpatient"` and
+  `"INPATIENT:Primary_Or_First"` keep the same records as `"inpatient"` and
+  `"inpatient:primary_or_first"`. Before, the validation compared case exactly. It reported
+  these keywords as `unrecognized keywords`, and the plain query raised
+  `ConceptQL::InvalidStatementError` for them. A keyword that names no provenance concept in
+  any case is still reported, as written. The SQL is unchanged.
 - `CONCEPTQL_AVOID_CTES=true` works again. Since 2022, each operator read its rows from a CTE
   of its own, but in this mode the statement had no WITH list. So the database refused the
   SQL of every statement because the CTE did not exist. Now each operator is a
