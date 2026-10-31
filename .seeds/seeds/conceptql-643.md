@@ -4,7 +4,7 @@ title: sort_extracted_ctes builds SQL for every CTE to find dependencies (about 
 status: captured
 type: idea
 created_at: 2026-10-29T20:43:42.822503+00:00
-updated_at: 2026-10-30T12:39:08.013386+00:00
+updated_at: 2026-10-31T03:19:51.702156+00:00
 tags:
   - algorithm-survey
   - performance
@@ -56,3 +56,5 @@ PROFILE 2026-10-30 (current main 8a1aaa85, ac4efe58 on native_sample_5000, DuckD
   Conclusion: on DuckDB and Postgres the 62 s is gone. This seed idea now matters only where counting falls back per operator, mainly Spark.
 
 NOTE 2026-10-30: the profile logs listed above were deleted when the profiling worktree was removed. The numbers in this seed are the remaining record.
+
+RULED 2026-10-30 (Ryan): "Fix the hot spot". Bead conceptql-ahg5 compares CTE names as strings in sort_extracted_ctes and caches the two recomputed values (Operator#evaluate in build_dataset, gdm.rb source_vocabulary_ids). This seed resolves when that bead merges.

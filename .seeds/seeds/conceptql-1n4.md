@@ -1,10 +1,12 @@
 ---
 id: conceptql-1n4
 title: provider_filter without roles crashes the plain query with nil.split instead of a validation error
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-29T20:43:41.234113+00:00
-updated_at: 2026-10-30T11:41:54.914520+00:00
+updated_at: 2026-10-31T03:19:54.689698+00:00
+resolved_at: 2026-10-31T03:19:54.689687+00:00
+resolution: 'Ruled: keep roles required. Bead conceptql-g2v makes the plain query raise one ConceptQL::InvalidStatementError instead of nil.split.'
 tags:
   - algorithm-survey
   - bug

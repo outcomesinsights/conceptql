@@ -4,7 +4,7 @@ title: 'provenance with an unrecognized keyword: annotate reports it, the plain 
 status: captured
 type: question
 created_at: 2026-10-29T20:43:42.285762+00:00
-updated_at: 2026-10-30T11:51:57.501289+00:00
+updated_at: 2026-10-31T03:19:56.251507+00:00
 tags:
   - algorithm-survey
   - validation
@@ -46,3 +46,5 @@ plain_s:    median 0.037  p90 0.123  p99 0.520  max 2.293  sum 84.4
 RULED 2026-10-30 (Ryan): the plain query (Query#sql / #query) validates first and raises one clear error, ConceptQL::InvalidStatementError, listing the same errors annotate shows. An invalid statement that returns rows today (a bad provenance keyword) raises instead. provider_filter keeps roles required: no default. Build before the next release.
 
 RULED 2026-10-30 (Ryan): "Yes, add it as a feature": conceptql should support a provenance form for a primary or first-listed inpatient diagnosis. It needs a design seed first (what "first-listed" means in GDM data, and the keyword syntax).
+
+UPDATE 2026-10-30: the validation half is built by bead conceptql-g2v (the plain query raises ConceptQL::InvalidStatementError, as annotate reports). Still owed: the design seed for the primary-or-first-listed provenance feature that Ryan approved.

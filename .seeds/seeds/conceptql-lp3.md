@@ -1,10 +1,12 @@
 ---
 id: conceptql-lp3
 title: How noisy may the reused-code warning be? 60% of DRG codes in use have more than one meaning
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-29T21:08:16.452855+00:00
-updated_at: 2026-10-30T11:51:56.115467+00:00
+updated_at: 2026-10-31T03:19:53.291696+00:00
+resolved_at: 2026-10-31T03:19:53.291688+00:00
+resolution: 'Ruled 2026-10-30: keep the warning as built; ms_drg and cms_drg (bead conceptql-alw) settle the DRG case, which was 60% of the noise.'
 tags:
   - conceptql-ttk
   - validation
@@ -61,3 +63,5 @@ Dates exist only in the OHDSI vocabulary source. The statement tests share one e
 Recommendation: (c) with (d), because 60% of the DRG codes in use would otherwise warn, and most of those warnings are noise on post-2007 data. Until Ryan rules, (a) stays as built.
 
 RULED 2026-10-30 (Ryan) on the warning form: none of the options. Ryan: "this feels like a weird approach -- if I have an algorithm with renumbered codes, its behavior changes based on datast its applied to? this feels bad. conceptql statements are supposed to be definitive, explicit, and consistent and we are not doing this here. We need to not only concsider the warning, but how conceptql locks in the correct codes". The warning is now part of the question in seed conceptql-7p3. The warning stays as built until then.
+
+RULED 2026-10-30 (Ryan): "Keep it as built". The reused-code warning stays as it is for drg and the other vocabularies; ms_drg and cms_drg (bead conceptql-alw, seed conceptql-7p3) need none, because each fixes the DRG meaning by event date. Fact found the same day: ohdsi_supplemental_vocabs bead ohdsi_supplemental_vocabs-yyg (open) says HCPCS "AC", the one other reused code in the test vocabulary, is a supplemental row that collides with an Athena code, not a code HCPCS reused.

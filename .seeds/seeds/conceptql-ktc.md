@@ -1,10 +1,12 @@
 ---
 id: conceptql-ktc
 title: Send each concept-ID list once and merge identical CTEs (planning is 0.8 s of a 1.1 s query)
-status: captured
+status: resolved
 type: idea
 created_at: 2026-10-29T20:43:43.871479+00:00
-updated_at: 2026-10-30T12:39:07.538988+00:00
+updated_at: 2026-10-31T03:19:55.089113+00:00
+resolved_at: 2026-10-31T03:19:55.089105+00:00
+resolution: Built by bead conceptql-6cz (identical CTEs merge; 1,000+ ID lists go once as a VALUES CTE), with Spark follow-ups conceptql-mmm and conceptql-qqy.
 tags:
   - algorithm-survey
   - performance

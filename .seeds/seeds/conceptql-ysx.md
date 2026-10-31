@@ -1,10 +1,12 @@
 ---
 id: conceptql-ysx
 title: 'Adversarial review of the unreleased round: findings that needed rulings'
-status: captured
+status: resolved
 type: decision
 created_at: 2026-10-30T12:39:07.024787+00:00
-updated_at: 2026-10-30T14:33:06.266527+00:00
+updated_at: 2026-10-31T03:19:55.859303+00:00
+resolved_at: 2026-10-31T03:19:55.859295+00:00
+resolution: 'Every ruling in this review is built: format warning (spm, 28h), count advice (8v0), compare_all (18n), concept lists (6cz), lexicon (0xz), NDC text (28h).'
 ---
 
 ## Context

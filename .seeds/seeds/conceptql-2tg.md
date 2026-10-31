@@ -1,10 +1,12 @@
 ---
 id: conceptql-2tg
 title: 'Grouped occurrence over a labeled stream fails: select_remove queries a CTE that does not exist yet'
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-29T20:43:40.603164+00:00
-updated_at: 2026-10-30T11:41:54.390217+00:00
+updated_at: 2026-10-31T03:19:54.286333+00:00
+resolved_at: 2026-10-31T03:19:54.286323+00:00
+resolution: Fixed by bead conceptql-6k8 (stop building SQL from database queries); merged main green on all configs.
 tags:
   - algorithm-survey
   - bug

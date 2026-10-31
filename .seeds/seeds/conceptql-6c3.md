@@ -1,10 +1,12 @@
 ---
 id: conceptql-6c3
 title: sum needs a group-by-person option so a statement can count events per person
-status: captured
+status: resolved
 type: decision
 created_at: 2026-10-30T12:39:06.582737+00:00
-updated_at: 2026-10-30T12:39:06.582737+00:00
+updated_at: 2026-10-31T03:19:55.470277+00:00
+resolved_at: 2026-10-31T03:19:55.470259+00:00
+resolution: 'Built by bead conceptql-8v0: sum group_by_person, the count advice, and the spec text.'
 ---
 
 ## Question

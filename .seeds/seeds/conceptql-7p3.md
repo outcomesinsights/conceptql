@@ -1,10 +1,12 @@
 ---
 id: conceptql-7p3
 title: How does a ConceptQL statement lock in the meaning of a code that has had more than one meaning?
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-30T11:51:55.643472+00:00
-updated_at: 2026-10-30T12:24:35.349523+00:00
+updated_at: 2026-10-31T03:19:53.771397+00:00
+resolved_at: 2026-10-31T03:19:53.771380+00:00
+resolution: 'Built by bead conceptql-alw: ms_drg and cms_drg choose the DRG meaning by event date (cutover 2007-10-01), and drg is deprecated with a warning.'
 ---
 
 ## Question
