@@ -185,8 +185,10 @@ module ConceptQL
       end
     end
 
+    # The desc that the operator set (no_desc sets ""), else the standard
+    # vocabulary text. A subclass does not inherit its parent's desc.
     def get_desc
-      @get_desc ||= standard_description
+      @desc || standard_description
     end
 
     def process_options(options)

@@ -354,6 +354,12 @@ All notable changes to this project will be documented in this file.
 - `DataModel::Base#table_columns` no longer prints its result and its table names to
   stdout. The two `p` calls were debug output from 2019. No statement in the test suite
   calls this method, so the SQL and the results are unchanged.
+- `ConceptQL.metadata` serves the `desc` of each operator again. Since 2024-12, every
+  operator served the vocabulary text, for example "Selects records based on the After
+  vocabulary." for `after`. The diagram editor showed this text to users. Now an operator
+  serves the text that it sets with `desc`, and an operator that sets `no_desc` serves an
+  empty text. A vocabulary operator, which sets no `desc`, still serves "Selects records
+  based on the <name> vocabulary." The SQL is unchanged.
 
 ## [0.5.0] - 2026-10-29
 
