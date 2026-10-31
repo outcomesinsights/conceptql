@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `provenance` takes keywords of the form `<file keyword>:<code keyword>` again (the form
+  existed from 2019 until the lexicon rewrite of 2023). `"inpatient:primary_or_first"` keeps
+  the records whose file provenance is in the descendants of `inpatient` AND whose code
+  provenance is in the descendants of `primary_or_first`. A plain keyword keeps its meaning:
+  it keeps a record when either column is in the descendants of its concept. Several keywords
+  in one operator are still ORed, so `["inpatient:primary", "outpatient:first"]` keeps the
+  records of either pair. The left half must be a file provenance keyword and the right half
+  a code provenance keyword. Any other keyword with a `:` (a swapped pair, an unknown half, an
+  empty half or a second `:`) is the validation error `unrecognized keywords`, with the
+  keyword as written, and the plain query raises `ConceptQL::InvalidStatementError` for it.
+  Before, annotate reported every keyword with a `:` as that error. The test statement
+  `provenance/count_2.json` (`carrier_claim:primary_or_first`) is now valid. It has no
+  results, because no carrier claim record in the test data has a primary or first code.
 - `ConceptQL::Lexicon.for_dataset(db)` makes a DuckDB dataset its own lexicon. The returned
   Lexicon reads the OHDSI vocabulary tables (`concept`, `concept_ancestor`,
   `concept_relationship` and `vocabulary`) from `db` itself, through its search path, and

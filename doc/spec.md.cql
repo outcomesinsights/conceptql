@@ -457,6 +457,28 @@ And just to show how multiple streams behave:
 ]
 ```
 
+## Filtering by Provenance
+
+### provenance
+
+`provenance` passes along the events of its upstream stream that come from a given kind of source record. Each event has two provenances. Its file provenance tells which kind of file the record came from, such as `inpatient`, `outpatient` or `carrier_claim`. Its code provenance tells the position of the code in the record, such as `primary`, `first` or `admitting`. Each argument of `provenance` is a keyword from the file or the code provenance vocabulary, and the operator keeps an event when its provenance is that keyword's concept or one of its descendants.
+
+A plain keyword, such as `inpatient` or `primary_or_first`, keeps an event when either provenance matches it. A keyword of the form `<file keyword>:<code keyword>` keeps an event when its file provenance matches the file keyword AND its code provenance matches the code keyword. The left half must be a file provenance keyword and the right half a code provenance keyword. Any other keyword with a `:` is an error.
+
+When `provenance` has several keywords, it keeps the events that match any one of them. So `["inpatient:primary", "outpatient:first"]` keeps the inpatient events with a primary code and the outpatient events with a first code.
+
+```ConceptQL
+# Diabetes diagnoses that are the primary or first code of an inpatient record
+[
+  "provenance",
+  [
+    "icd9",
+    "250.00"
+  ],
+  "inpatient:primary_or_first"
+]
+```
+
 ## Co-reported Events
 
 ### co_reported

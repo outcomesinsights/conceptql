@@ -62,10 +62,12 @@ describe ConceptQL::Query do
         { "provider_filter" => [ [ "required option not present", "roles" ] ] },
         "provider_filter: required option not present (roles)"
       ],
+      # The survey's keyword was inpatient:primary_or_first. Bead conceptql-8mrc
+      # made that file:code form valid, so an unknown code half stands in.
       "provenance with an unknown keyword" => [
-        [ "provenance", [ "icd9", "412" ], "inpatient:primary_or_first" ],
-        { "provenance" => [ [ "unrecognized keywords", "inpatient:primary_or_first" ] ] },
-        "provenance: unrecognized keywords (inpatient:primary_or_first)"
+        [ "provenance", [ "icd9", "412" ], "inpatient:garbage" ],
+        { "provenance" => [ [ "unrecognized keywords", "inpatient:garbage" ] ] },
+        "provenance: unrecognized keywords (inpatient:garbage)"
       ],
       "provenance with a concept ID" => [
         [ "provenance", [ "icd9", "412" ], "38000204" ],
