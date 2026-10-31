@@ -4,7 +4,7 @@ title: Match codes case-sensitively unless vocabulary_formats declares a vocabul
 status: captured
 type: question
 created_at: 2026-10-31T13:36:44.334573+00:00
-updated_at: 2026-10-31T13:36:44.334573+00:00
+updated_at: 2026-10-31T13:39:21.550899+00:00
 ---
 
 ## Question
@@ -32,3 +32,9 @@ Should ConceptQL match codes and keywords case-sensitively, with case-insensitiv
 
 - Production use: how many codes in current production algorithms differ in case from the vocabulary's concept_code (per vocabulary), and how many provenance keywords are not lower case. Asked jde on 2026-10-31. (jde's 2026-10-31 provenance survey: every production provenance keyword is already lower case.)
 - Which vocabularies store mixed or lower case concept_codes (the lookup's case-insensitivity may exist for one of them).
+
+RULED 2026-10-31 (Ryan): "b". Codes match case-exactly by default. A vocabulary is case-insensitive only when its vocabulary_formats row declares it; conceptql honors that declaration in both the format check and the lookup. Provenance keywords have no vocabulary_formats row, so they match exactly (this reverses the direction of bead conceptql-sxqe). Rejected: (a) case-exact everywhere with no declaration.
+
+FACT 2026-10-31 (synpuf test vocabulary, ohdsi_vocabs): the claims vocabularies store upper-case codes. Exceptions: NDC 3 codes with a lower-case letter (e.g. 1549912340a), ICD9CM 1 defect row (sd), LOINC 2 survey codes. JS_CODE_PROV_TYPE and JS_FILE_PROV_TYPE codes are all lower case, and every production provenance keyword is lower case (jde survey 2026-10-31).
+
+Before beads: (1) vocabulary_formats chooses how a row declares case-insensitivity (an inline (?i) in the regexp, or a column) and makes the upper-case vocabularies' patterns upper case only; handed to that repo 2026-10-31. (2) jde's production survey of codes that match only when case is ignored (asked 2026-10-31): those statements stop matching when the lookup becomes exact, so they need counting and a plan first.
