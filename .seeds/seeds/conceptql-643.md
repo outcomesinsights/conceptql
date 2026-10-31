@@ -1,10 +1,12 @@
 ---
 id: conceptql-643
 title: sort_extracted_ctes builds SQL for every CTE to find dependencies (about 50 s of Ruby on one algorithm)
-status: captured
+status: resolved
 type: idea
 created_at: 2026-10-29T20:43:42.822503+00:00
-updated_at: 2026-10-31T03:19:51.702156+00:00
+updated_at: 2026-10-31T04:05:28.388863+00:00
+resolved_at: 2026-10-31T04:05:28.388852+00:00
+resolution: Ruled 'fix the hot spot'; bead conceptql-ahg5 merged (per-operator annotate 36 s to 30 s). The quadratic per-operator path is recorded, not ruled.
 tags:
   - algorithm-survey
   - performance
@@ -58,3 +60,7 @@ PROFILE 2026-10-30 (current main 8a1aaa85, ac4efe58 on native_sample_5000, DuckD
 NOTE 2026-10-30: the profile logs listed above were deleted when the profiling worktree was removed. The numbers in this seed are the remaining record.
 
 RULED 2026-10-30 (Ryan): "Fix the hot spot". Bead conceptql-ahg5 compares CTE names as strings in sort_extracted_ctes and caches the two recomputed values (Operator#evaluate in build_dataset, gdm.rb source_vocabulary_ids). This seed resolves when that bead merges.
+
+RESULT 2026-10-30 (bead conceptql-ahg5, merged 82868b2d): the sort_extracted_ctes hot lines in the profile above were already gone; bead conceptql-6cz (c7a5eeb4) rewrote the sort to compare quoted names as strings after this profile was taken on 8a1aaa85. ahg5 cached gdm.rb source_vocabulary_ids (20.5% of per-operator CPU samples). Per-operator annotate on ac4efe58 (DuckDB, interleaved A/B, medians): 35.85 s to 29.86 s. One-query annotate: 1.83 s to 1.85 s (noise). The second evaluation in OneQueryCounts#build_dataset stays, because reusing the first would renumber the root CTEs and change the SQL. Logs: claude_stuff/worktrees/conceptql-ahg5/ in the primary checkout.
+
+Not ruled, for later: the per-operator path is quadratic. Each operator's domain_counts re-runs with_ctes and evaluates its whole subtree again; evaluate is now 32% of per-operator CPU samples. A large speed-up needs evaluate reuse across counting queries, which changes CTE names. Nobody counts per operator in production today (JDE and t_shank use the one-query path on DuckDB and Postgres).
