@@ -115,8 +115,10 @@ module ConceptQL
         :context_id
       end
 
+      # The schema of a data model does not change, so the answer is kept, as
+      # for start_date_columns and the other column lookups.
       def source_vocabulary_ids
-        @source_vocabulary_ids = assign_column_to_table do |table, columns|
+        @source_vocabulary_ids ||= assign_column_to_table do |table, columns|
           next if %w[patients death].any? { |tn| table.to_s =~ /#{tn}/ }
 
           reggy = /#{table.to_s.split('_').first}_vocabulary_id/

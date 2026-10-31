@@ -192,6 +192,11 @@ All notable changes to this project will be documented in this file.
   `share_utilization` option and the statement has a `hospitalization`, `snf` or `hospice`
   operator, because the shared tables are not CTEs. `skip_counts: true` runs no counting
   query, as before.
+- `annotate` with one counting query for each operator (Spark, temp tables and the other
+  cases above) builds its SQL faster. The data model found the vocabulary column of each
+  table again each time it built an operator's columns, and now finds it once. The SQL and the
+  counts do not change. On a 111-operator production algorithm on DuckDB, that `annotate`
+  fell from 36 s to 30 s.
 - The gemspec accepts sequelizer 0.5 (`>= 0.3.0, < 0.6`; before, `< 0.5`), so an
   application can use sequelizer 0.5's `dataset_db` and `with_dataset` with conceptql.
   conceptql calls neither of them, and the parts of sequelizer that conceptql uses did not
