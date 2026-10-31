@@ -4,7 +4,7 @@ title: 'provenance with an unrecognized keyword: annotate reports it, the plain 
 status: captured
 type: question
 created_at: 2026-10-29T20:43:42.285762+00:00
-updated_at: 2026-10-31T03:19:56.251507+00:00
+updated_at: 2026-10-31T04:17:36.497224+00:00
 tags:
   - algorithm-survey
   - validation
@@ -48,3 +48,7 @@ RULED 2026-10-30 (Ryan): the plain query (Query#sql / #query) validates first an
 RULED 2026-10-30 (Ryan): "Yes, add it as a feature": conceptql should support a provenance form for a primary or first-listed inpatient diagnosis. It needs a design seed first (what "first-listed" means in GDM data, and the keyword syntax).
 
 UPDATE 2026-10-30: the validation half is built by bead conceptql-g2v (the plain query raises ConceptQL::InvalidStatementError, as annotate reports). Still owed: the design seed for the primary-or-first-listed provenance feature that Ryan approved.
+
+FOUND 2026-10-30: the feature existed. Commit 870d48a0 (2019-03-19) made provenance read keywords as \<file_type>:\<code_type> (CODE_SEPARATOR ":"); on GDM, "outpatient:primary" meant file_provenance_type in the outpatient concepts AND code_provenance_type in the primary concepts. Commit 0fdec070 (2023-06-26, the lexicon Strategy Pattern rewrite) commented that code out, and it was later deleted. The test statement provenance/count_2.json, \["provenance", ["icd9", "412"], "carrier_claim:primary_or_first"\], still exists; its expected result now records the loss ("unrecognized keywords"). The code provenance vocabulary JS_CODE_PROV_TYPE already has the keyword primary_or_first ("Primary or First"), whose descendants are the primary and the first-position concepts, so the vocabulary answers what first-listed means. Today, keywords in one provenance operator are ORed, so file AND code needs two nested provenance operators.
+
+RULED 2026-10-30 (Ryan): "restore" the <file>:<code> keyword syntax. "inpatient:primary_or_first" selects records whose file provenance is inpatient AND whose code provenance is primary_or_first. Keywords in one operator stay ORed. Rejected: nesting as the only way (no conceptql change).
