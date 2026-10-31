@@ -1,10 +1,12 @@
 ---
 id: conceptql-80o
 title: 'provenance with no keywords: keep, make it an error, or require an explicit "*"?'
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-31T12:50:58.109889+00:00
-updated_at: 2026-10-31T12:52:08.484707+00:00
+updated_at: 2026-10-31T12:53:32.064432+00:00
+resolved_at: 2026-10-31T12:53:32.064421+00:00
+resolution: 'Ruled: add "*"; no keywords is a validation error. Built by a bead.'
 ---
 
 ## Question
@@ -38,3 +40,5 @@ FACTS 2026-10-31 (jde survey of current production algorithms, child_id IS NULL 
 - <file>:<code> form: 1 operator (b298a95f, a Draft, inpatient:primary_or_first).
 - Keywords by operator count: inpatient 71, outpatient 21, carrier_claim 14, primary_or_first 5, 100012292 1 (3b7deef8, a Draft), inpatient:primary_or_first 1.
   So making the empty form an error breaks no production statement, and no deprecation period is needed for it.
+
+RULED 2026-10-31 (Ryan): "Add "*", empty is error". \["provenance", X, "*"\] keeps rows with any file or code provenance (today's empty-form behavior). provenance with no keywords becomes a validation error that points the author to "\*". No deprecation period: no production statement uses the empty form. Rejected: a warning period for the empty form; keeping the empty form.
