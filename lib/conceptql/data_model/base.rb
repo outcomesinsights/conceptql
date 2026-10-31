@@ -259,10 +259,7 @@ module ConceptQL
       end
 
       def table_columns(*tables)
-        tables.map { |t| table_cols(t) }.flatten.tap do |o|
-          p o
-          p tables
-        end
+        tables.flat_map { |t| table_cols(t) }
       end
 
       def table_source_value(table)
