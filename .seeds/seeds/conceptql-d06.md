@@ -1,10 +1,12 @@
 ---
 id: conceptql-d06
 title: 'concurrent_within: start "-1d" moves the window start later, not earlier. Intended?'
-status: captured
+status: resolved
 type: question
 created_at: 2026-11-01T04:04:12.608241+00:00
-updated_at: 2026-11-01T04:06:42.082770+00:00
+updated_at: 2026-11-01T14:35:42.523843+00:00
+resolved_at: 2026-11-01T14:35:42.523836+00:00
+resolution: 'Ruled: remove concurrent_within (unused anywhere); bead conceptql-ayt2.'
 ---
 
 ## Question
@@ -34,3 +36,5 @@ FACTS 2026-10-31:
 - doc/spec.md.cql has no concurrent_within section. time_window, by contrast, is signed: "start": "-30d" means 30 days earlier (spec lines 748-822). So the two operators read the same text in opposite directions for start.
 - Production (jde survey 2026-10-31, log JDE claude_stuff/concurrent-within-survey-20261031-210536.log): 0 concurrent_within operators in the 1,259 current algorithms, and 0 rows containing 'concurrent' in all 1,652 algorithm rows including old and deleted versions. A change affects no production algorithm and no study.
 - In the suite, only test/statements/concurrent_within/crit_negative_start.json ({start: "-1d", end: "0d"}) uses a negative start.
+
+RULED 2026-11-01 (Ryan): asked 'if we're not using this operator, should we retire it', then chose 'Remove it now' (no deprecation step; nobody uses it). The start-sign question is moot. Built by bead conceptql-ayt2. Extra facts (jde, 2026-10-31): t_shank, jigsaw_builder and sequelizer never mention concurrent_within; JDE has it only in its operator list and test fixtures; 'concurrent' in jigsaw_production appears only in CPT descriptions.
