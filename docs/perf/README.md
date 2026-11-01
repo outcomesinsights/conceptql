@@ -17,6 +17,7 @@ contain data rows, values or code lists from the confidential data sets.
 | 2026-10-30 | [annotate-profile-ac4efe58-2026-10-30.md](annotate-profile-ac4efe58-2026-10-30.md) | Profile of annotate on algorithm ac4efe58 (logs lost; seed conceptql-643 is the record)                 |
 | 2026-10-30 | [concept-lists-merged-ctes-2026-10-30.md](concept-lists-merged-ctes-2026-10-30.md) | Bead conceptql-6cz: merged identical CTEs and concept lists sent once                                   |
 | 2026-10-30 | [per-operator-annotate-2026-10-30.md](per-operator-annotate-2026-10-30.md)         | Bead conceptql-ahg5: per-operator annotate after caching `source_vocabulary_ids`                        |
+| 2026-10-31 | [concept-list-threshold-2026-10-31.md](concept-list-threshold-2026-10-31.md)       | Seed conceptql-5yq: concept-list threshold 1,000 re-measured; the 2-item Postgres result was JIT        |
 
 Measurements of conceptql that other repositories made and own are not
 reported here. Their seeds in this repository cite them: t_shank's lexicon
