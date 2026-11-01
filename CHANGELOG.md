@@ -289,6 +289,18 @@ All notable changes to this project will be documented in this file.
   methods would have raised `NoMethodError`. The `race` and `ethnicity` operators are not
   affected: their SQL and their results do not change. `Query#query_cols` is a different
   method and stays.
+- The hidden vocabulary operators `place_of_service` (alias `place of service`) and
+  `specialty` are removed, with their rows in `config/vocabularies.csv`. Neither one worked.
+  Their rows named the vocabularies `Place of Service` and `Specialty`, but the OHDSI and the
+  GDM lexicons name them `CMS Place of Service` and `Medicare Specialty`. So
+  `place_of_service` selected no record and gave no warning. `specialty` read the column
+  `clinical_code_vocabulary_id` from `practitioners`, which has no such column, so its query
+  failed with a database error. No production algorithm used either name. Now each name is
+  the validation error `invalid operator`. The lexicon's own operators for these
+  vocabularies, `cms_place_of_service` (also written `cms place of service`) and
+  `medicare_specialty`, do not change. To keep records by their place of service or their
+  provider's specialty, use `place_of_service_filter` or `provider_filter`. The SQL of every
+  other statement is unchanged.
 
 ### Fixed
 
