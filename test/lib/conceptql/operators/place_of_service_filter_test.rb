@@ -110,6 +110,43 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
     end
   end
 
+  # "*" keeps a record whose place of service is any concept of the CMS
+  # Place of Service vocabulary, as provenance's "*" keeps any provenance
+  # concept.
+  describe 'with "*"' do
+    it "keeps every record that has a place of service" do
+      with_places_of_service do |expected|
+        _(records("*")).must_equal (expected["21"] + expected["22"]).sort
+      end
+    end
+
+    it "drops the records that have no place of service" do
+      with_places_of_service do |expected|
+        _(records("*") & expected[nil]).must_be_empty
+      end
+    end
+
+    # Codes are ORed, so "*" with other codes is "*".
+    it "keeps every record with a place of service when other codes are given" do
+      with_places_of_service do |expected|
+        _(records("21", "*", "11")).must_equal (expected["21"] + expected["22"]).sort
+      end
+    end
+
+    # A record whose pos_concept_id is a concept of another vocabulary (here
+    # ICD-9-CM 412) has no place of service.
+    it "drops a record whose place of service is not a CMS Place of Service concept" do
+      with_places_of_service do |expected|
+        other = CDB.lexicon.concept_ids(DB, "ICD9CM", [ "412" ])
+        _(other.size).must_equal 1, "ICD9CM 412 is not in the lexicon"
+        places = upstream_rows.select { |id, _| expected[nil].include?(id) }.map(&:last)
+        DB[place_of_service_table].where(id: places).update(pos_concept_id: other.first)
+
+        _(records("*")).must_equal (expected["21"] + expected["22"]).sort
+      end
+    end
+  end
+
   it "reads the place of service from pos_concept_id" do
     _(CDB.query(statement("21")).sql).must_match(/"pos_concept_id"/)
   end
@@ -127,6 +164,21 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
 
     it "reports only the unknown codes, as written and in the order written" do
       _(errors("garbage", "21", 98, "Inpatient")).must_equal [ [ unknown, "garbage", 98, "Inpatient" ] ]
+    end
+
+    it 'accepts "*"' do
+      _(errors("*")).must_be_nil
+      _(errors("*", "21", 11)).must_be_nil
+    end
+
+    it 'reports an unknown code that is given with "*"' do
+      _(errors("*", "98", "21")).must_equal [ [ unknown, "98" ] ]
+    end
+
+    # The form of Draft algorithm 7acf23d1 (stenting_femoral_artery_atherectomy)
+    # in production: the code comes before the upstream.
+    it 'validates "*" before the upstream' do
+      _(CDB.query([ "place_of_service_filter", "*", [ "cpt_or_hcpcs", "37226" ] ]).validation_errors).must_be_empty
     end
 
     # The codes have two digits, so the number 1 is not the code 01 (Pharmacy).
