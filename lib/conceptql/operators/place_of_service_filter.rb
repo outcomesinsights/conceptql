@@ -18,12 +18,21 @@ module ConceptQL
     # a concept ID through the lexicon, so a code that names no concept can
     # match no record. Such a code is an error, as an unrecognized
     # provenance keyword is.
+    #
+    # The code "*" keeps a record whose place of service is any concept of
+    # the vocabulary, as provenance's "*" keeps any provenance concept. A
+    # pos_concept_id of another vocabulary is not a place of service. Because
+    # codes are ORed, "*" with other codes is "*". The other codes are still
+    # checked.
     class PlaceOfServiceFilter < Operator
       register __FILE__
 
       VOCABULARY_ID = "CMS Place of Service"
+      ANY = "*"
 
-      desc "Passes along records that match one or more of the Medicare Place Of Service values."
+      desc "Passes along the records whose place of service is one of the given CMS Place of Service codes. " \
+           "The code * matches a record that has any place of service. " \
+           "A record that has no place of service is not passed along."
 
       argument :places_of_service, type: :codelist, vocab: VOCABULARY_ID
       category "Filter Single Stream"
@@ -41,8 +50,10 @@ module ConceptQL
 
       private
 
+      # With no codes, the lookup returns every concept of the vocabulary.
       def place_of_service_concept_ids(db)
-        dm.concept_ids(db, VOCABULARY_ID, arguments.map(&:to_s))
+        codes = arguments.map(&:to_s)
+        dm.concept_ids(db, VOCABULARY_ID, codes.include?(ANY) ? [] : codes)
       end
 
       # With no lexicon there are no codes to check against, and every code
@@ -51,7 +62,7 @@ module ConceptQL
         return if dm.lexicon.strategy == :no_db
 
         known = dm.concept_codes(db, VOCABULARY_ID).map(&:downcase)
-        unknown = arguments.reject { |code| known.include?(code.to_s.downcase) }
+        unknown = arguments.reject { |code| code.to_s == ANY || known.include?(code.to_s.downcase) }
         add_error(UNKNOWN_CODE, *unknown) unless unknown.empty?
       end
     end

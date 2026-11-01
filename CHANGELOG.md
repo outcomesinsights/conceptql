@@ -26,6 +26,13 @@ All notable changes to this project will be documented in this file.
   alone. The other keywords are still checked, so an unrecognized one beside `"*"` is still
   the error `unrecognized keywords`. A `"*"` half in a `<file keyword>:<code keyword>`
   keyword, such as `"inpatient:*"`, is that error too.
+- `place_of_service_filter` takes the code `"*"`. `["place_of_service_filter", <stream>, "*"]`
+  keeps the records whose place of service is any concept of the CMS Place of Service
+  vocabulary. It drops the records with no place of service, and the records whose place of
+  service is a concept of another vocabulary. This is the meaning of `"*"` in `provenance`.
+  Codes are ORed, so `"*"` with other codes keeps the same records as `"*"` alone. The other
+  codes are still checked, so an unknown code beside `"*"` is still the error
+  `unknown code(s)`. Before, `"*"` was itself that error.
 - `ConceptQL::Lexicon.for_dataset(db)` makes a DuckDB dataset its own lexicon. The returned
   Lexicon reads the OHDSI vocabulary tables (`concept`, `concept_ancestor`,
   `concept_relationship` and `vocabulary`) from `db` itself, through its search path, and
