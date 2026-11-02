@@ -87,7 +87,6 @@ These operators take two streams and use `example_input.left_stream` and `exampl
 ### Multi-Stream Operators
 
 - **Co Reported** - Records appearing together in source data
-- **Concurrent Within** - Records with overlapping date ranges
 - **One In Two Out** - Validates events (1 inpatient or 2 outpatient)
 - **Union** - Combines multiple streams
 
@@ -187,14 +186,6 @@ options:
 options:
   - specialties: comma-separated specialty concept IDs (required)
   - roles: comma-separated role concept IDs or "*" (required)
-```
-
-### Concurrent Within
-
-```
-options:
-  - start: date adjustment for start date
-  - end: date adjustment for end date
 ```
 
 ## Date Adjustment Format

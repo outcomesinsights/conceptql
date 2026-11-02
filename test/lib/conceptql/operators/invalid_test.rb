@@ -38,4 +38,26 @@ describe ConceptQL::Operators::Invalid do
       _(cdb.query(%w[nope_op 412]).validation_errors).must_equal("nope_op" => [ [ "invalid operator", "nope_op" ] ])
     end
   end
+
+  # concurrent_within was removed (bead conceptql-ayt2). No production
+  # algorithm used it. A statement that names it is an unknown operator.
+  describe "for the removed operator concurrent_within" do
+    let(:statement) { [ "concurrent_within", [ "icd9", "412" ], [ "cpt", "99214" ], { "start" => "1d" } ] }
+    let(:query) { cdb.query(statement) }
+
+    it "is an Invalid operator" do
+      _(cdb.operators).wont_include "concurrent_within"
+      _(query.operator).must_be_instance_of ConceptQL::Operators::Invalid
+    end
+
+    it "reports the invalid-operator error" do
+      _(query.validation_errors).must_equal("concurrent_within" => [ [ "invalid operator", "concurrent_within" ] ])
+      _(query.annotate.last[:annotation][:errors]).must_equal [ [ "invalid operator", "concurrent_within" ] ]
+    end
+
+    it "raises InvalidStatementError from the plain query" do
+      error = _ { query.sql }.must_raise ConceptQL::InvalidStatementError
+      _(error.errors).must_equal("concurrent_within" => [ [ "invalid operator", "concurrent_within" ] ])
+    end
+  end
 end
