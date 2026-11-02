@@ -86,8 +86,6 @@ All notable changes to this project will be documented in this file.
   case-exact. The default rows of ICD10CM, ICD10, ICD10PCS, HCPCS, CPT4, CPT4_HCPCS, the
   `*_MODIFIER` vocabularies, ATC, ICDO3, ICD03_Topography and EDI no longer accept lower-case
   letters, and the rows that used `\w` accept only digits and upper-case letters in its place.
-  **That commit is not on GitHub yet.** `just vocabulary-formats` cannot fetch it until
-  vocabulary_formats pushes it, and conceptql must not be released before that push.
 - Provenance keywords and the codes of `place_of_service_filter` match case-exactly too,
   because their vocabularies have no vocabulary_formats row. `"Inpatient"` is the validation
   error `unrecognized keywords`, as in 0.5.0, and the plain query raises
