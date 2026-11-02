@@ -58,11 +58,12 @@ module ConceptQL
 
       # With no lexicon there are no codes to check against, and every code
       # would be reported. Provenance skips its check in the same situation.
+      # A code is known only in its own case, as the lookup finds it.
       def additional_validation(db, _opts = {})
         return if dm.lexicon.strategy == :no_db
 
-        known = dm.concept_codes(db, VOCABULARY_ID).map(&:downcase)
-        unknown = arguments.reject { |code| code.to_s == ANY || known.include?(code.to_s.downcase) }
+        known = dm.concept_codes(db, VOCABULARY_ID)
+        unknown = arguments.reject { |code| code.to_s == ANY || known.include?(code.to_s) }
         add_error(UNKNOWN_CODE, *unknown) unless unknown.empty?
       end
     end

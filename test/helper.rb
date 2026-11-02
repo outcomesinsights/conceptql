@@ -17,6 +17,7 @@ ENV["MT_NO_PLUGINS"] = "1" # Work around stupid autoloading of plugins
 require "minitest/spec"
 require "minitest/mock"
 require "minitest/autorun"
+require "tempfile"
 
 Minitest::Test.make_my_diffs_pretty!
 
@@ -117,5 +118,25 @@ module ConceptListMock
   # An identifier as db writes it in SQL.
   def quoted(name)
     db.literal(Sequel.identifier(name))
+  end
+end
+
+# A test that needs a vocabulary_formats row that the pinned table does not
+# have, such as a row that declares case-insensitivity with (?i:...),
+# includes FormatsTable and wraps its work in with_formats_table. The rows
+# ({ vocabulary_id => regexp }) replace config/vocabulary_formats.tsv for the
+# block, and Formats reads the pinned table again afterwards.
+module FormatsTable
+  def with_formats_table(rows)
+    formats = ConceptQL::Vocabularies::Formats
+    Tempfile.create([ "vocabulary_formats", ".tsv" ]) do |f|
+      f.write("vocabulary_id\tregexp\n")
+      rows.each { |id, regexp| f.write("#{id}\t#{regexp}\n") }
+      f.flush
+      formats.instance_variable_set(:@patterns, nil)
+      ConceptQL.stub(:vocabulary_formats_file_path, Pathname.new(f.path)) { yield }
+    end
+  ensure
+    formats.instance_variable_set(:@patterns, nil)
   end
 end

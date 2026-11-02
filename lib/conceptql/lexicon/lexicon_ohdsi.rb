@@ -68,7 +68,7 @@ module ConceptQL
 
       db[:concept]
         .where(vocabulary_id: vocabulary_id, concept_class_id: concept_class_id)
-        .where(Sequel.function(:lower, :concept_code) => codes.map(&:downcase))
+        .where(code_condition(vocabulary_id, codes))
         .select_map(%i[concept_code concept_name])
     rescue Sequel::DatabaseError
       nil

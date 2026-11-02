@@ -56,7 +56,7 @@ describe ConceptQL::LexiconStrategy do
       sql = lexicon.concepts(db, "ICD9CM", [ "250.00" ]).sql
 
       _(sql).must_match(/"vocabulary_id" = 'ICD9CM'/)
-      _(sql).must_match(/lower\("concept_code"\) IN \('250.00'\)/)
+      _(sql).must_match(/"concept_code" IN \('250.00'\)/)
     end
 
     # The vocabulary filter is now unconditional — nothing can produce an

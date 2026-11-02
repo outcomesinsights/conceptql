@@ -16,17 +16,33 @@ module ConceptQL
     # is the vocabulary's id. A variant row (ICD9CM.DOTLESS) is never used. The
     # published patterns carry no anchors, so each one is anchored here as
     # \A(?:pattern)\z. A vocabulary with no row has no format to check.
+    #
+    # A pattern is case-exact unless its row declares case-insensitivity with
+    # the scoped flag (?i:...) (vocabulary_formats seed vfm-8k1, seed
+    # conceptql-oji ruling "b"). Ruby honors the flag natively, so a pattern
+    # is compiled with no flag of its own: an ignore-case flag would override
+    # what the row says.
     module Formats
+      DECLARES_CASE_INSENSITIVE = "(?i:"
+
       class << self
-        # The anchored pattern of a vocabulary as a string, or nil. The lookup
-        # ignores case.
+        # The anchored pattern of a vocabulary as a string, or nil. The
+        # vocabulary_id finds its row in any case.
         def pattern(vocabulary_id)
           patterns[vocabulary_id.to_s.downcase]
         end
 
-        # The anchored pattern as a case-insensitive Regexp, or nil.
+        # The anchored pattern as a Regexp, or nil.
         def regexp(vocabulary_id)
-          (str = pattern(vocabulary_id)) && Regexp.new(str, Regexp::IGNORECASE)
+          (str = pattern(vocabulary_id)) && Regexp.new(str)
+        end
+
+        # True when the vocabulary's row declares case-insensitivity with
+        # (?i:...). The lexicon then matches the vocabulary's codes without
+        # regard to case (LexiconStrategy#code_condition). A vocabulary with no
+        # row is case-exact.
+        def case_insensitive?(vocabulary_id)
+          pattern(vocabulary_id).to_s.include?(DECLARES_CASE_INSENSITIVE)
         end
 
         private

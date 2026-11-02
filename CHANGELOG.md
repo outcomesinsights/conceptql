@@ -67,6 +67,32 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** codes match case-exactly. A code selects a concept only when it has the case
+  of the concept's `concept_code`, so `["icd10cm", "I16.5"]` selects I16.5 as before and
+  `["icd10cm", "i16.5"]` selects no rows. A code in the wrong case also gets the warning
+  `improperly formatted code`, because the format check no longer ignores case. Before, the
+  lookup compared `lower(concept_code)` with the code in lower case, and the format check
+  compiled each vocabulary_formats pattern with an ignore-case flag. A vocabulary can still
+  ignore case: its vocabulary_formats row declares it with the scoped flag `(?i:...)`. Then
+  the format check honors the flag, and the lookup compares `lower(concept_code)`. No row
+  declares it today. The unknown-code warning compared case exactly before and still does.
+  A survey of the 1,259 production algorithms (2026-10-31) found no code that matches only
+  when case is ignored. Its 150 lower-case codes, all SEER staging codes such as `cX` and
+  `M1a`, match their concept codes exactly. The `snf` operator looked up its file provenance
+  with the code `SNF`, which found the concept `snf` only while the lookup ignored case. It now
+  uses `snf`, so it selects the same records as before.
+- **Breaking:** the pinned vocabulary_formats table (`config/vocabulary_formats.tsv`) is
+  vocabulary_formats commit `dbd670ae17be0afa3002ce40e5e327c509e62f9c`, which makes every row
+  case-exact. The default rows of ICD10CM, ICD10, ICD10PCS, HCPCS, CPT4, CPT4_HCPCS, the
+  `*_MODIFIER` vocabularies, ATC, ICDO3, ICD03_Topography and EDI no longer accept lower-case
+  letters, and the rows that used `\w` accept only digits and upper-case letters in its place.
+  **That commit is not on GitHub yet.** `just vocabulary-formats` cannot fetch it until
+  vocabulary_formats pushes it, and conceptql must not be released before that push.
+- Provenance keywords and the codes of `place_of_service_filter` match case-exactly too,
+  because their vocabularies have no vocabulary_formats row. `"Inpatient"` is the validation
+  error `unrecognized keywords`, as in 0.5.0, and the plain query raises
+  `ConceptQL::InvalidStatementError` for it. Every provenance concept code is in lower case.
+  The unreleased change that made the keyword validation ignore case is withdrawn.
 - **Breaking:** `episode` merges a record that starts inside an episode and ends after it. A
   record now stays in the episode when its start_date is no more than `gap_of` days after the
   latest end_date of the episode's earlier records. A NULL end_date counts as the start_date.
@@ -329,13 +355,6 @@ All notable changes to this project will be documented in this file.
   `1` is an unknown code and `"01"` is Pharmacy. Without a lexicon, no code is checked. The
   argument metadata names the vocabulary `CMS Place of Service`. The SQL of the operator now
   has the concept IDs of its codes. The SQL of every other statement is unchanged.
-- `provenance` accepts its keywords in any case, as the query always did. The query compares
-  each keyword with the provenance concept codes in lower case, so `"Inpatient"` and
-  `"INPATIENT:Primary_Or_First"` keep the same records as `"inpatient"` and
-  `"inpatient:primary_or_first"`. Before, the validation compared case exactly. It reported
-  these keywords as `unrecognized keywords`, and the plain query raised
-  `ConceptQL::InvalidStatementError` for them. A keyword that names no provenance concept in
-  any case is still reported, as written. The SQL is unchanged.
 - `CONCEPTQL_AVOID_CTES=true` works again. Since 2022, each operator read its rows from a CTE
   of its own, but in this mode the statement had no WITH list. So the database refused the
   SQL of every statement because the CTE did not exist. Now each operator is a

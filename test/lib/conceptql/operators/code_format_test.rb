@@ -122,9 +122,21 @@ describe "vocabulary code formats" do
     _(badly_formatted([ "cpt4", "99214 and more" ])).must_equal [ "99214 and more" ]
   end
 
-  it "ignores case, as before" do
-    _(badly_formatted(%w[hcpcs a0382])).must_be_empty
-    _(badly_formatted(%w[icd10cm e58 y36.101a])).must_be_empty
+  # Each vocabulary_formats row is case-exact unless it declares (?i:...), and
+  # no row of the pinned table declares it (seed conceptql-oji ruling "b").
+  describe "case" do
+    include FormatsTable
+
+    it "flags a code in the wrong case" do
+      _(badly_formatted(%w[hcpcs a0382 A0382])).must_equal %w[a0382]
+      _(badly_formatted(%w[icd10cm e58 y36.101a i16.5 I16.5])).must_equal %w[e58 y36.101a i16.5]
+    end
+
+    it "accepts both cases where the vocabulary's row declares (?i:...)" do
+      with_formats_table("ICD10CM" => "(?i:[A-Z][0-9][0-9AB](\\.[0-9A-Z]{1,4})?)") do
+        _(badly_formatted(%w[icd10cm i16.5 I16.5])).must_be_empty
+      end
+    end
   end
 
   # Ryan ruled 2026-10-30 (seeds conceptql-0eb and conceptql-ysx), reversing

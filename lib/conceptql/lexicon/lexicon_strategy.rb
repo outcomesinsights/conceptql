@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../vocabularies/formats"
+
 module ConceptQL
   class LexiconStrategy
     attr_reader :db
@@ -28,9 +30,33 @@ module ConceptQL
       ds = concepts_table(data_db)
 
       ds = ds.where(vocabulary_id: vocabulary_id)
-      ds = ds.where(Sequel.function(:lower, :concept_code) => Array(codes).map(&:downcase)) unless codes.blank?
+      ds = ds.where(code_condition(vocabulary_id, codes)) unless codes.blank?
 
       ds
+    end
+
+    # The condition that matches concept_code with codes. It compares case
+    # exactly, unless the vocabulary's vocabulary_formats row declares
+    # case-insensitivity with (?i:...) (seed conceptql-oji ruling "b"). Then it
+    # compares lower(concept_code) with the codes in lower case. One lookup
+    # over several vocabularies has one comparison, so they must agree.
+    def code_condition(vocabulary_id, codes)
+      codes = Array(codes)
+      return { concept_code: codes } unless case_insensitive?(vocabulary_id)
+
+      { Sequel.function(:lower, :concept_code) => codes.map(&:downcase) }
+    end
+
+    def case_insensitive?(vocabulary_id)
+      ids = Array(vocabulary_id)
+      declared = ids.select { |id| Vocabularies::Formats.case_insensitive?(id) }
+      return false if declared.empty?
+      return true if declared.size == ids.size
+
+      raise ArgumentError,
+            "one lookup over the vocabularies #{ids.inspect} cannot compare case: " \
+            "#{declared.inspect} declare case-insensitivity with (?i:...) in vocabulary_formats, " \
+            "and #{(ids - declared).inspect} do not"
     end
 
     def concepts_by_name(data_db, names = [])

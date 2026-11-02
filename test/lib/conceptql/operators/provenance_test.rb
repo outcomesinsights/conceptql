@@ -173,30 +173,18 @@ describe ConceptQL::Operators::Provenance do
     end
   end
 
-  # The lookup compares lower(concept_code) with the keyword in lower case,
-  # so the validation ignores case too.
+  # Provenance keywords have no vocabulary_formats row, so they match their
+  # concept codes exactly (seed conceptql-oji ruling "b"). Every provenance
+  # concept code is in lower case. This reverses bead conceptql-sxqe, which
+  # made the validation ignore case.
   describe "with a keyword in another case" do
-    it "keeps the same records as the keyword in lower case" do
-      _(records("Inpatient")).wont_be_empty
-      _(records("Inpatient")).must_equal records("inpatient")
-      _(records("PRIMARY_OR_FIRST")).must_equal records("primary_or_first")
-    end
-
-    it "keeps the same records as the file:code keyword in lower case" do
-      _(records("INPATIENT:Primary_Or_First")).wont_be_empty
-      _(records("INPATIENT:Primary_Or_First")).must_equal records("inpatient:primary_or_first")
-    end
-
-    it "is valid" do
-      _(errors("Inpatient", "INPATIENT:Primary_Or_First", "Outpatient:UNSPECIFIED", "CARRIER_CLAIM")).must_be_nil
-    end
-
-    it "is not refused in the plain query" do
-      _(CDB.query(statement("Inpatient", "INPATIENT:Primary_Or_First")).sql)
-        .must_match(/"file_provenance_type" IN .* AND .*"code_provenance_type" IN/m)
-    end
-
     [
+      "Inpatient",
+      "PRIMARY_OR_FIRST",
+      "CARRIER_CLAIM",
+      "INPATIENT:Primary_Or_First",
+      "Outpatient:UNSPECIFIED",
+      "inpatient:Primary_Or_First",
       "GARBAGE",
       "Garbage:Primary",
       "INPATIENT:Garbage",
@@ -204,19 +192,24 @@ describe ConceptQL::Operators::Provenance do
       "Inpatient:Outpatient",
       "INPATIENT:PRIMARY:FIRST"
     ].each do |keyword|
-      it "reports the unknown #{keyword.inspect} as written" do
+      it "reports #{keyword.inspect} as written" do
         _(errors(keyword)).must_equal [ [ "unrecognized keywords", keyword ] ]
       end
 
-      it "refuses the unknown #{keyword.inspect} in the plain query" do
+      it "refuses #{keyword.inspect} in the plain query" do
         error = _ { CDB.query(statement(keyword)).sql }.must_raise ConceptQL::InvalidStatementError
         _(error.errors.values).must_equal [ [ [ "unrecognized keywords", keyword ] ] ]
       end
     end
 
+    it "reports each keyword in another case beside the same keyword in lower case" do
+      _(errors("inpatient", "Inpatient", "inpatient:primary_or_first", "INPATIENT:PRIMARY_OR_FIRST"))
+        .must_equal [ [ "unrecognized keywords", "Inpatient", "INPATIENT:PRIMARY_OR_FIRST" ] ]
+    end
+
     it "reports each spelling of an unknown keyword, in the order written" do
       _(errors("Garbage", "Inpatient", "garbage", "INPATIENT:GARBAGE"))
-        .must_equal [ [ "unrecognized keywords", "Garbage", "garbage", "INPATIENT:GARBAGE" ] ]
+        .must_equal [ [ "unrecognized keywords", "Garbage", "Inpatient", "garbage", "INPATIENT:GARBAGE" ] ]
     end
   end
 end

@@ -11,7 +11,7 @@ module ConceptQL
       desc "Selects skilled nursing facility (SNF) admission records."
 
       def collection_type
-        "SNF"
+        "snf"
       end
     end
   end
