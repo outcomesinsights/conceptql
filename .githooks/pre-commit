@@ -14,6 +14,10 @@ if [ -n "${GATOR_HOOK:-}" ]; then
   exit 1
 fi
 export GATOR_HOOK=pre-commit
+# This commit's staging area, kept for the check after the checks (below). Git runs the hook
+# at the top of the working tree, so a relative path is made absolute here, before any cd.
+index="${GIT_INDEX_FILE:-}"
+case "$index" in "" | /*) ;; *) index="$PWD/$index" ;; esac
 # Git points these at THIS commit's staging area; a check that runs git in some other repo (a
 # test building a scratch repo) would otherwise write into this commit. The checks read the
 # working tree, so they do not need them.
@@ -37,7 +41,32 @@ out="$(just --justfile "./$jf" --working-directory . --summary 2>&1)" || {
 }
 # --show finds private and aliased recipes too; --summary lists neither.
 if just --justfile "./$jf" --working-directory . --show pre-commit >/dev/null 2>&1; then
-  exec just --justfile "./$jf" --working-directory . pre-commit
+  just --justfile "./$jf" --working-directory . pre-commit || exit $?
+  # The checks read the working tree, but the commit holds the staged copies. Where the two
+  # differ for a staged file, the checks passed on content this commit does not hold. A
+  # check that rewrites files (treefmt --fail-on-change) leaves exactly that: its first run
+  # fails and formats the working tree, and a second commit would pass with the unformatted
+  # staged copy (seed gator-l5c, ruled 2026-10-27). So refuse. A commit of part of a file
+  # is refused too; that cost was accepted.
+  if [ -n "$index" ]; then
+    staged="$(GIT_INDEX_FILE="$index" git diff --cached --name-only)" || exit 1
+    changed="$(GIT_INDEX_FILE="$index" git diff --name-only)" || exit 1
+  else
+    staged="$(git diff --cached --name-only)" || exit 1
+    changed="$(git diff --name-only)" || exit 1
+  fi
+  both="$(printf '%s\n' "$changed" | while IFS= read -r p; do
+    [ -n "$p" ] && printf '%s\n' "$staged" | grep -Fxq -- "$p" && printf '  %s\n' "$p"
+  done)"
+  if [ -n "$both" ]; then
+    {
+      echo "pre-commit: refusing the commit -- the checks passed on the working tree, but these staged files differ from it, so the commit would hold content nobody checked (a check that rewrites files, such as treefmt --fail-on-change, leaves this behind):"
+      printf '%s\n' "$both"
+      echo "To commit the working-tree copy: git add <file>, then commit again. To drop the working-tree change: git restore <file>."
+    } >&2
+    exit 1
+  fi
+  exit 0
 fi
 echo "pre-commit: no commit checks configured (no pre-commit recipe)" >&2
 exit 0

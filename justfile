@@ -334,15 +334,16 @@ setup:
 # here when they fit; lint alone when they do not. fmt-check never rewrites.
 pre-commit: lint fmt-check hygiene seeds-check
 
-# Gator's standard seeds-check: `seeds check --against-git` compares the seed store
-# with HEAD, so a seed body rewritten in place fails the commit. It belongs at commit
+# Gator's standard seeds-check: `seeds check --gate` compares the seed store with
+# HEAD, so a seed body rewritten in place fails the commit (SEEDS_GATE_CONFIRM=1 allows
+# an intended rewrite). It belongs at commit
 # (at push it would compare HEAD~1 with HEAD only). It skips where there is no seed
 # store or no seeds binary (a clone without the nix tools).
 seeds-check:
     #!/usr/bin/env sh
     [ -d .seeds ] || exit 0
     command -v seeds >/dev/null 2>&1 || exit 0
-    exec seeds check --against-git
+    exec seeds check --gate
 
 # Content checks inherited from overcommit when it was removed (2026-09-12):
 # MergeConflicts, YamlSyntax, JsonSyntax. RuboCop and the test target were already

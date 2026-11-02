@@ -8,6 +8,8 @@ just = "1"
 uv = "0"
 "aqua:numtide/treefmt" = "2"
 shfmt = "3"
+# prettier uses mise's npm backend, which installs no node, so node is pinned too (gator-ncm).
+node = "24"
 prettier = "3"
 taplo = "0"
 shellcheck = "0"
