@@ -24,6 +24,15 @@ All notable changes to this project will be documented in this file.
   the warning `improperly formatted code` and selects no rows. The utilization operators
   (`hospitalization`, `hospice`, `snf`) look up their own codes with the check.
 
+### Fixed
+
+- A vocabulary whose domain is blank has no domain, so its operators select
+  `condition_occurrence` records. The GDM vocabulary table (`gdm_vocabs.vocabularies` in the
+  test data) gives 40 of its 41 vocabularies the domain `''`. Before, their operators, such as
+  `cms_place_of_service`, got `criterion_domain` `''`, their predominant domain in the
+  metadata was `''`, and their annotation counts were keyed by `''`. The OHDSI vocabulary
+  tables give no domain, so they were not affected.
+
 ## [0.6.0] - 2026-11-02
 
 ### Added
