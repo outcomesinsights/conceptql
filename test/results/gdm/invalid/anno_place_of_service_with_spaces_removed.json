@@ -1,0 +1,16 @@
+[
+  "place of service",
+  "21",
+  {
+    "annotation": {
+      "counts": {
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["invalid operator", "place of service"]]
+    },
+    "name": "Invalid"
+  }
+]

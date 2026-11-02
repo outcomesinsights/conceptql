@@ -1,0 +1,16 @@
+[
+  "specialty",
+  "01",
+  {
+    "annotation": {
+      "counts": {
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["invalid operator", "specialty"]]
+    },
+    "name": "Invalid"
+  }
+]
