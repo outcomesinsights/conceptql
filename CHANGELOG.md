@@ -291,6 +291,11 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+- **Breaking:** the `concurrent_within` operator is gone. A statement that names it gets the
+  validation error `invalid operator`, as any unknown operator does, and its plain query
+  raises `ConceptQL::InvalidStatementError`. No production algorithm used it on 2026-10-31:
+  none of the 1,652 algorithm rows (current, old and deleted) named it. Its test statements
+  and expected results are removed with it. The SQL of every other operator does not change.
 - The unused methods `query_cols` of the `race` and `ethnicity` operators and the unused class
   method `Operator.query_columns` are removed. Nothing called them, and the two `query_cols`
   methods would have raised `NoMethodError`. The `race` and `ethnicity` operators are not

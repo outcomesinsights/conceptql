@@ -87,7 +87,7 @@ describe ConceptQL::Operators::Episode do
     # The conceptql-grt fix MUST override BOTH Episode#vocabularies AND
     # Episode#multiple_vocabularies. If only multiple_vocabularies is overridden,
     # these tests will still report `true` because the variadic operators fall back
-    # to `vocabularies.length > 1` (see union.rb, co_reported.rb, concurrent_within.rb).
+    # to `vocabularies.length > 1` (see union.rb, co_reported.rb).
     # That cross-check is the entire point of these tests — do NOT loosen them.
     [
       [ :union ],
@@ -105,21 +105,6 @@ describe ConceptQL::Operators::Episode do
         it "#{op}#vocabularies returns [] because Episodes strip vocabulary metadata" do
           _(query.operator.vocabularies).must_equal []
         end
-      end
-    end
-
-    describe "wrapped in concurrent_within" do
-      let(:query) do
-        db.query([ :concurrent_within, [ :episode, [ :icd9, "250.00" ] ], [ :episode, [ :cpt, "99214" ] ],
-                  { "within" => "0d" } ])
-      end
-
-      it "concurrent_within#multiple_vocabularies returns false because Episodes report no vocabularies" do
-        _(query.multiple_vocabularies).must_equal false
-      end
-
-      it "concurrent_within#vocabularies returns [] because Episodes strip vocabulary metadata" do
-        _(query.operator.vocabularies).must_equal []
       end
     end
 

@@ -14,7 +14,7 @@ describe ConceptQL::Operators::Numeric do
         # SELECT value_as_number FROM patients shape produces exactly one row
         # per patient, so events_per_patient must be :single — otherwise
         # downstream operators that aggregate via :all-single-then-single
-        # (Union, CoReported, ConcurrentWithin) misclassify the cardinality.
+        # (Union, CoReported) misclassify the cardinality.
         _(query.operator.method(:events_per_patient).owner).must_equal ConceptQL::Operators::Numeric
         _(query.events_per_patient).must_equal :single
       end
