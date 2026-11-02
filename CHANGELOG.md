@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** a code lookup raises `ConceptQL::CodeCaseMismatchError` for a code that its
+  vocabulary stores only in another case. Since 0.6.0 a lookup compares codes case-exactly, so
+  `data_model.concept_ids(db, "GDM_PROV", ["line"])` returned `[]` without a word, because the
+  vocabulary stores `LINE`. t_shank made that call and lost every line row of an export. Now it
+  raises, and the message names the vocabulary, each such code and its stored spellings. The
+  error's `mismatches` attribute holds the same facts. It is an `ArgumentError`. The lookups
+  that take codes raise it: `concept_ids`, `known_codes`, `concepts_to_codes`,
+  `concepts_to_codes_in_class`, `code_meanings`, `concepts` and `concepts_ds`, on the
+  `Lexicon` and on the data model. `concepts` and `concepts_ds` check when they build the
+  dataset. A code that a lookup vocabulary stores in this case is no error, and neither is a
+  code that matches nothing in any case: it still finds no concept. A vocabulary whose
+  vocabulary_formats row declares `(?i:...)` already ignores case, so it never raises. Each
+  of these lookups takes `check_case: false`, which skips the check and keeps the 0.6.0
+  answer. A statement does not raise: a vocabulary operator, `provenance` and
+  `place_of_service_filter` pass `check_case: false`. So `["icd10cm", "i16.5"]` still gets
+  the warning `improperly formatted code` and selects no rows. The utilization operators
+  (`hospitalization`, `hospice`, `snf`) look up their own codes with the check.
+
 ## [0.6.0] - 2026-11-02
 
 ### Added

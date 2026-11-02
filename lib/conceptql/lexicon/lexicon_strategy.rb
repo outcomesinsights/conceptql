@@ -59,6 +59,22 @@ module ConceptQL
             "and #{(ids - declared).inspect} do not"
     end
 
+    # The [vocabulary_id, concept_code] pairs of the vocabularies' codes that
+    # equal one of the codes when case is ignored. Lexicon reads them to find
+    # a code given in another case than the stored one
+    # (CodeCaseMismatchError). A vocabulary that declares (?i:...) already
+    # compares without case, so it has none. A lexicon without a database has
+    # none either.
+    def case_variants(data_db, vocabulary_id, codes)
+      return [] if db.nil? || db_is_mock?(data_db) || case_insensitive?(vocabulary_id)
+
+      concepts_table(db)
+        .where(vocabulary_id: vocabulary_id)
+        .where(Sequel.function(:lower, :concept_code) => Array(codes).map { |code| code.to_s.downcase })
+        .distinct
+        .select_map(%i[vocabulary_id concept_code])
+    end
+
     def concepts_by_name(data_db, names = [])
       ds = concepts_table(data_db)
 

@@ -95,7 +95,8 @@ module ConceptQL
         def describe_codes(db, codes)
           return super if select_all?
 
-          in_system = dm.concepts_to_codes_in_class(db, vocabulary_id, drg_system.concept_class_id, codes)
+          in_system = dm.concepts_to_codes_in_class(db, vocabulary_id, drg_system.concept_class_id, codes,
+                                                    check_case: false)
           return super if in_system.blank?
 
           named = in_system.map { |code, _| code.downcase }

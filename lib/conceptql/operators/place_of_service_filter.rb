@@ -51,9 +51,11 @@ module ConceptQL
       private
 
       # With no codes, the lookup returns every concept of the vocabulary.
+      # The codes come from the statement, whose validation reports an
+      # unknown code, so the lookup does not raise CodeCaseMismatchError.
       def place_of_service_concept_ids(db)
         codes = arguments.map(&:to_s)
-        dm.concept_ids(db, VOCABULARY_ID, codes.include?(ANY) ? [] : codes)
+        dm.concept_ids(db, VOCABULARY_ID, codes.include?(ANY) ? [] : codes, check_case: false)
       end
 
       # With no lexicon there are no codes to check against, and every code
