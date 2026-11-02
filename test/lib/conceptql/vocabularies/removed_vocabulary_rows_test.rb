@@ -12,7 +12,7 @@ describe "the removed vocabulary rows Place of Service and Specialty" do
   # The CTE name ends with a hash of the statement, so two names for one
   # operator give the same SQL apart from that hash.
   def sql_without_cte_hash(statement)
-    CDB.query(statement).sql.gsub(/_\h{32}"/, '_HASH"')
+    CDB.query(statement).sql.gsub(/_\h{32}(["`])/, '_HASH\1')
   end
 
   def errors_of(statement)
@@ -35,7 +35,7 @@ describe "the removed vocabulary rows Place of Service and Specialty" do
     _(klass.entry).must_be :visible?
     # The OHDSI lexicon gives no domain and the GDM lexicon gives "".
     _(klass.entry.domain.to_s).must_be_empty
-    _(CDB.query([ "cms_place_of_service", "21" ]).sql).must_include %("clinical_code_vocabulary_id" = 'CMS Place of Service')
+    _(CDB.query([ "cms_place_of_service", "21" ]).sql).must_match(/["`]clinical_code_vocabulary_id["`] = 'CMS Place of Service'/)
   end
 
   # A draft algorithm in production names the operator "cms place of service".
@@ -59,6 +59,6 @@ describe "the removed vocabulary rows Place of Service and Specialty" do
     _(klass.entry).must_be :visible?
     # The OHDSI lexicon gives no domain and the GDM lexicon gives "".
     _(klass.entry.domain.to_s).must_be_empty
-    _(CDB.query([ "medicare_specialty", "C0" ]).sql).must_include %("clinical_code_vocabulary_id" = 'Medicare Specialty')
+    _(CDB.query([ "medicare_specialty", "C0" ]).sql).must_match(/["`]clinical_code_vocabulary_id["`] = 'Medicare Specialty'/)
   end
 end

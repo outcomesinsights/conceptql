@@ -148,7 +148,7 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
   end
 
   it "reads the place of service from pos_concept_id" do
-    _(CDB.query(statement("21")).sql).must_match(/"pos_concept_id"/)
+    _(CDB.query(statement("21")).sql).must_match(/["`]pos_concept_id["`]/)
   end
 
   describe "with an unknown code" do

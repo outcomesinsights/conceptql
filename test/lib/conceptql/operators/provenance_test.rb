@@ -38,7 +38,7 @@ describe ConceptQL::Operators::Provenance do
     it "checks both columns for each keyword" do
       sql = CDB.query(statement("inpatient")).sql
 
-      _(sql).must_match(/"file_provenance_type" IN .* OR .*"code_provenance_type" IN/m)
+      _(sql).must_match(/["`]file_provenance_type["`] IN .* OR .*["`]code_provenance_type["`] IN/m)
     end
 
     it "keeps the records of any of several keywords" do
@@ -65,7 +65,7 @@ describe ConceptQL::Operators::Provenance do
 
     it "checks both columns" do
       _(CDB.query(statement("*")).sql)
-        .must_match(/"file_provenance_type" IN .* OR .*"code_provenance_type" IN/m)
+        .must_match(/["`]file_provenance_type["`] IN .* OR .*["`]code_provenance_type["`] IN/m)
     end
 
     # Keywords are ORed, so "*" with any other keyword is "*".
