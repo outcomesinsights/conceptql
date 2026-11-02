@@ -181,6 +181,16 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
       _(CDB.query([ "place_of_service_filter", "*", [ "cpt_or_hcpcs", "37226" ] ]).validation_errors).must_be_empty
     end
 
+    # The vocabulary has no vocabulary_formats row, so a code matches only in
+    # its own case, as the lookup matches it (seed conceptql-oji ruling "b").
+    # Every real code is a number, so a code with a letter is added here.
+    it "reports a code in another case" do
+      CDB.lexicon.stub(:concept_codes, ->(*) { %w[21 22 0A] }) do
+        _(errors("0A", "21")).must_be_nil
+        _(errors("0a", "21")).must_equal [ [ unknown, "0a" ] ]
+      end
+    end
+
     # The codes have two digits, so the number 1 is not the code 01 (Pharmacy).
     it "reports a one-digit number" do
       _(errors(1)).must_equal [ [ unknown, 1 ] ]

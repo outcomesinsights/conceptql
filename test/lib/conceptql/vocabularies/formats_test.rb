@@ -28,7 +28,7 @@ describe ConceptQL::Vocabularies::Formats do
     row = table.find { |r| r["vocabulary_id"] == "ICD9CM" }
 
     _(formats.pattern("ICD9CM")).must_equal "\\A(?:#{row["regexp"]})\\z"
-    _(formats.regexp("ICD9CM")).must_equal Regexp.new("\\A(?:#{row["regexp"]})\\z", Regexp::IGNORECASE)
+    _(formats.regexp("ICD9CM")).must_equal Regexp.new("\\A(?:#{row["regexp"]})\\z")
   end
 
   it "never uses a variant row" do
@@ -52,6 +52,47 @@ describe ConceptQL::Vocabularies::Formats do
     _("I10").must_match icd10cm
     _("I10 and more").wont_match icd10cm
     _("I10\nI11").wont_match icd10cm
+  end
+
+  # A row is case-exact unless it declares case-insensitivity with the scoped
+  # flag (?i:...) (vocabulary_formats seed vfm-8k1, conceptql seed
+  # conceptql-oji ruling "b"). Formats adds no ignore-case flag of its own.
+  describe "case" do
+    include FormatsTable
+
+    it "compiles a row case-exactly" do
+      icd10cm = formats.regexp("ICD10CM")
+
+      _(icd10cm.options & Regexp::IGNORECASE).must_equal 0
+      _("I16.5").must_match icd10cm
+      _("i16.5").wont_match icd10cm
+      _(formats.case_insensitive?("ICD10CM")).must_equal false
+    end
+
+    it "accepts both cases where a row declares (?i:...), and only there" do
+      with_formats_table("DECLARED" => "(?i:[A-Z])\\d{2}", "EXACT" => "[A-Z]\\d{2}") do
+        _("A12").must_match formats.regexp("DECLARED")
+        _("a12").must_match formats.regexp("DECLARED")
+        _("A12").must_match formats.regexp("EXACT")
+        _("a12").wont_match formats.regexp("EXACT")
+        _(formats.case_insensitive?("declared")).must_equal true
+        _(formats.case_insensitive?("EXACT")).must_equal false
+        _(formats.case_insensitive?("NOROW")).must_equal false
+      end
+    end
+
+    it "honors the scope of a (?i:...) group" do
+      with_formats_table("PARTLY" => "(?i:[A-Z])[A-Z]") do
+        _("aB").must_match formats.regexp("PARTLY")
+        _("ab").wont_match formats.regexp("PARTLY")
+      end
+    end
+
+    it "reads the pinned table again after a substitute table" do
+      with_formats_table("ICD10CM" => "(?i:x)") { _(formats.pattern("ICD10CM")).must_equal "\\A(?:(?i:x))\\z" }
+
+      _(formats.pattern("ICD10CM")).must_equal "\\A(?:#{table.find { |r| r["vocabulary_id"] == "ICD10CM" }["regexp"]})\\z"
+    end
   end
 
   it "fills the format_regexp metadata of a vocabulary entry" do
