@@ -55,6 +55,9 @@ module ConceptQL
         db[name].with(name, list, Scope::SHARED_TABLE => true)
       end
 
+      # collection_type and "primary" are ConceptQL's own codes, so their
+      # lookups check case: a wrong case raises CodeCaseMismatchError instead
+      # of selecting nothing (conceptql-9okk, bead conceptql-rz8s).
       def gdm_it(db)
         source_type_id = dm.concept_ids(db, dm.file_provenance_types_vocab, collection_type)
         all_source_type_ids = dm.descendants_of(db, source_type_id)

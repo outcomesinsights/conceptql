@@ -76,8 +76,11 @@ module ConceptQL
       [ dm.file_provenance_types_vocab, dm.code_provenance_types_vocab ].flatten
     end
 
+    # The keywords come from the statement, whose validation reports a bad
+    # one (find_bad_keywords), so the lookup does not raise
+    # CodeCaseMismatchError.
     def prov_of(db, vocabularies, ancestors)
-      dm.descendants_of(db, dm.concept_ids(db, vocabularies, ancestors))
+      dm.descendants_of(db, dm.concept_ids(db, vocabularies, ancestors, check_case: false))
     end
 
     def plain_condition(db, codes)

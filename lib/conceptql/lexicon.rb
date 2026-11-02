@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "forwardable"
+require_relative "code_case_mismatch_error"
 require_relative "lexicon/lexicon_gdm"
 require_relative "lexicon/lexicon_no_db"
 require_relative "lexicon/lexicon_ohdsi"
@@ -29,10 +30,8 @@ module ConceptQL
 
     def_delegators :@strategy,
                    :strategy,
-                   :concepts,
                    :concepts_table,
                    :concepts_by_name,
-                   :concepts_ds,
                    :vocabularies,
                    :vocabularies_query
 
@@ -187,40 +186,77 @@ module ConceptQL
       @cache = {} if cache
     end
 
-    (CACHED_LOOKUPS - %i[code_meanings concepts_to_codes concepts_to_codes_in_class known_codes table_is_missing?]).each do |name|
+    (CACHED_LOOKUPS - %i[code_meanings concept_ids concepts_to_codes concepts_to_codes_in_class known_codes
+                         table_is_missing?]).each do |name|
       define_method(name) do |*args|
         lookup(name, args) { @strategy.public_send(name, *args) }
       end
     end
 
+    # The lookups below take codes. Each one raises CodeCaseMismatchError for
+    # a code that matches no stored code exactly but matches one in another
+    # case (bead conceptql-rz8s). A vocabulary operator passes
+    # check_case: false, because a statement warns about such a code instead.
+
+    def concept_ids(data_db, vocabulary_id, codes = [], check_case: true)
+      ids = lookup(:concept_ids, [ data_db, vocabulary_id, codes ]) do
+        @strategy.concept_ids(data_db, vocabulary_id, codes)
+      end
+      check_case!(data_db, vocabulary_id, codes) if check_case
+      ids
+    end
+
+    # The datasets are not cached, but the check runs when they are built.
+    def concepts(data_db, vocabulary_id, codes = [], check_case: true)
+      ds = @strategy.concepts(data_db, vocabulary_id, codes)
+      check_case!(data_db, vocabulary_id, codes) if check_case
+      ds
+    end
+
+    def concepts_ds(data_db, vocabulary_id, codes, check_case: true)
+      ds = @strategy.concepts_ds(data_db, vocabulary_id, codes)
+      check_case!(data_db, vocabulary_id, codes) if check_case
+      ds
+    end
+
     # The strategy's known_codes first asks whether the vocabulary is empty.
     # It asks through the block, so that question also reaches the cache.
-    def known_codes(data_db, vocabulary_id, codes)
-      lookup(:known_codes, [ data_db, vocabulary_id, codes ]) do
+    def known_codes(data_db, vocabulary_id, codes, check_case: true)
+      known = lookup(:known_codes, [ data_db, vocabulary_id, codes ]) do
         @strategy.known_codes(data_db, vocabulary_id, codes) { vocabulary_is_empty?(data_db, vocabulary_id) }
       end
+      check_case!(data_db, vocabulary_id, Array(codes) - known) if check_case
+      known
     end
 
     # The strategy's concepts_to_codes first asks whether the concept table is
     # missing. It asks through the block, so that question also reaches the cache.
-    def concepts_to_codes(data_db, vocabulary_id, codes = [])
-      lookup(:concepts_to_codes, [ data_db, vocabulary_id, codes ]) do
+    def concepts_to_codes(data_db, vocabulary_id, codes = [], check_case: true)
+      found = lookup(:concepts_to_codes, [ data_db, vocabulary_id, codes ]) do
         @strategy.concepts_to_codes(data_db, vocabulary_id, codes) { table_is_missing?(data_db) }
       end
+      check_case!(data_db, vocabulary_id, Array(codes) - found.map(&:first)) if check_case
+      found
     end
 
     # Like concepts_to_codes, it asks about the concept table through the block.
-    def concepts_to_codes_in_class(data_db, vocabulary_id, concept_class_id, codes)
-      lookup(:concepts_to_codes_in_class, [ data_db, vocabulary_id, concept_class_id, codes ]) do
+    # A code of the vocabulary that is in another class is not in the answer,
+    # so the check finds it in its own case and does not raise.
+    def concepts_to_codes_in_class(data_db, vocabulary_id, concept_class_id, codes, check_case: true)
+      found = lookup(:concepts_to_codes_in_class, [ data_db, vocabulary_id, concept_class_id, codes ]) do
         @strategy.concepts_to_codes_in_class(data_db, vocabulary_id, concept_class_id, codes) { table_is_missing?(data_db) }
       end
+      check_case!(data_db, vocabulary_id, Array(codes) - Array(found).map(&:first)) if check_case
+      found
     end
 
     # Like concepts_to_codes, it asks about the concept table through the block.
-    def code_meanings(data_db, vocabulary_id, codes)
-      lookup(:code_meanings, [ data_db, vocabulary_id, codes ]) do
+    def code_meanings(data_db, vocabulary_id, codes, check_case: true)
+      meanings = lookup(:code_meanings, [ data_db, vocabulary_id, codes ]) do
         @strategy.code_meanings(data_db, vocabulary_id, codes) { table_is_missing?(data_db) }
       end
+      check_case!(data_db, vocabulary_id, codes) if check_case
+      meanings
     end
 
     # Only "the table is there" is kept. A missing table (or a database error,
@@ -231,6 +267,22 @@ module ConceptQL
         @strategy.table_is_missing?(data_db)
       end
     end
+
+    # Raises CodeCaseMismatchError when a code matches no stored code of the
+    # vocabularies exactly, but matches one in another case. The caller passes
+    # only the codes that its lookup did not find, when it can tell. A strategy
+    # without case_variants (a test double) cannot check.
+    def check_case!(data_db, vocabulary_id, codes)
+      codes = Array(codes)
+      return if codes.empty? || !@strategy.respond_to?(:case_variants)
+
+      rows = lookup(:case_variants, [ data_db, vocabulary_id, codes ]) do
+        @strategy.case_variants(data_db, vocabulary_id, codes)
+      end
+      mismatches = CodeCaseMismatchError.mismatches(codes, rows)
+      raise CodeCaseMismatchError, mismatches unless mismatches.empty?
+    end
+    private :check_case!
 
     # Runs the lookup, or with caching on returns the result kept for the same
     # method and arguments. A result that keep rejects is returned, not kept.

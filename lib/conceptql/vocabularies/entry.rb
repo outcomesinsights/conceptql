@@ -28,8 +28,14 @@ module ConceptQL
         predominant_domains
       ]
 
+      # A blank domain is no domain (bead conceptql-7azx). The GDM vocabulary
+      # table gives a vocabulary without a domain the domain '', and that
+      # became the criterion_domain of its operators. Without the key, the
+      # vocabulary selects condition_occurrence records (predominant_domains),
+      # and a merge keeps the other entry's domain.
       def initialize(hash)
         @hash = hash
+        @hash.delete(:domain) if @hash[:domain].blank?
         @hash[:omopv5_vocabulary_id] ||= @hash[:id]
         @hash[:aliases_arr] ||= []
         @hash[:aliases_arr] |= (@hash[:aliases] || "").split(";")

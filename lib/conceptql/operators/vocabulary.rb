@@ -37,7 +37,9 @@ module ConceptQL
         args = arguments.dup
         args -= bad_arguments
 
-        missing_args = args - dm.known_codes(db, vocabulary_id, args)
+        # A statement warns about a code in another case than the stored one,
+        # so its lookups do not raise CodeCaseMismatchError (bead conceptql-rz8s).
+        missing_args = args - dm.known_codes(db, vocabulary_id, args, check_case: false)
         add_warning(UNKNOWN_CODE, *missing_args) unless missing_args.empty?
 
         warn_about_reused_codes(db, args - missing_args)
@@ -49,7 +51,7 @@ module ConceptQL
       # code and all of its names, so the user sees the problem without a
       # vocabulary lookup.
       def warn_about_reused_codes(db, codes)
-        meanings = dm.code_meanings(db, vocabulary_id, codes)
+        meanings = dm.code_meanings(db, vocabulary_id, codes, check_case: false)
         reused = codes.filter_map do |code|
           names = meanings[code.downcase]
           "#{code}: #{names.join(' | ')}" if names
@@ -60,7 +62,7 @@ module ConceptQL
       def describe_codes(db, codes)
         return [ [ "*", "ALL CODES" ] ] if select_all?
 
-        found_codes = dm.concepts_to_codes(db, vocabulary_id, codes)
+        found_codes = dm.concepts_to_codes(db, vocabulary_id, codes, check_case: false)
 
         found_codes + (codes - found_codes.map(&:first)).zip([])
       end
@@ -112,7 +114,7 @@ module ConceptQL
         wheres = vocabulary_condition
 
         unless select_all?
-          concept_ids = dm.concept_ids(db, vocabulary_id, arguments)
+          concept_ids = dm.concept_ids(db, vocabulary_id, arguments, check_case: false)
 
           wheres = wheres.merge({ clinical_code_concept_id: concept_ids })
         end
