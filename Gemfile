@@ -11,7 +11,7 @@ gem "pg"
 # are held to their minor line. To test an unreleased change, point the entry
 # at a checkout with `path:` for that run, and do not commit it.
 gem "sequel-duckdb", "~> 0.4.2"
-gem "sequelizer", "~> 0.4.0"
+gem "sequelizer", "~> 0.5.0"
 
 # Optional, because the gem compiles against libduckdb, which only the DuckDB
 # runs install (just test-duckdb, CI's DuckDB job). Gem 2.x only (Ryan,
