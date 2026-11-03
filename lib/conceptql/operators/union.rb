@@ -54,7 +54,19 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc "Combines sets of incoming records into a single large set of records."
+      desc "Combines the records of all its upstream operators into one stream. " \
+           "Each record keeps its own type, so one stream can hold several types."
+
+      returns "Each record of each upstream. A record that comes from more than one upstream comes out once. " \
+              "Two records are the same only when every column is equal, including label."
+
+      example "Two streams of the same type (condition_occurrence) combined into one stream",
+              [ "union", [ "icd9", "412" ], [ "icd9", "250.01" ] ]
+      example "Two condition_occurrence streams combined, then combined with a procedure_occurrence stream",
+              [ "union", [ "union", [ "icd9", "412" ], [ "icd9", "250.01" ] ], [ "cpt", "99214" ] ]
+      example "Two condition_occurrence streams and a procedure_occurrence stream combined by a single union",
+              [ "union", [ "icd9", "412" ], [ "icd9", "250.01" ], [ "cpt", "99214" ] ]
+
       allows_many_upstreams
       category "Combine Streams"
       default_query_columns

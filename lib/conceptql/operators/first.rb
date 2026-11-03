@@ -21,6 +21,16 @@ module ConceptQL
 
       desc "For each person, passes along the record with the earliest start_date."
 
+      returns "One record per person: the upstream record with the earliest start_date. " \
+              "When several records have that start_date, the one with the lowest criterion_id."
+
+      option_meaning :group_by_date,
+                     "Treats the records of a person on one start_date as one occurrence. " \
+                     "It does not change the result of first, which passes along one record of the earliest date either way."
+
+      example "For each patient, select the Condition that represents the first occurrence of an MI",
+              [ "first", [ "icd9", "412" ] ]
+
       # With either option, Occurrence's timed query returns every upstream
       # row instead of one row per person
       unsupported_options :at_least, :within

@@ -31,10 +31,19 @@ module ConceptQL
       ANY = "*"
 
       desc "Passes along the records whose place of service is one of the given CMS Place of Service codes. " \
-           "The code * matches a record that has any place of service. " \
            "A record that has no place of service is not passed along."
 
-      argument :places_of_service, type: :codelist, vocab: VOCABULARY_ID
+      returns "The upstream records whose place of service is one of the given codes."
+
+      argument :places_of_service, type: :codelist, vocab: VOCABULARY_ID,
+                                   meaning: "One or more CMS Place of Service codes, such as 21 (inpatient hospital) or 22 (outpatient hospital). " \
+                                            "The code * matches a record whose place of service is any code of that vocabulary. " \
+                                            "An unknown code makes the statement invalid."
+
+      # The test data has no place of service, so the example returns no rows
+      example "Diabetes diagnoses (ICD-9 250.00) with the place of service outpatient hospital (22)",
+              [ "place_of_service_filter", 22, [ "icd9", "250.00" ] ], help: false
+
       category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream

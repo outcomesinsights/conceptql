@@ -34,20 +34,41 @@ module ConceptQL
       preferred_name "Nth Occurrence"
 
       desc "For each person, orders the records by start_date and passes along the record at the given position. " \
-           "A positive number counts from the earliest record, so 2 means the second record. " \
-           "A negative number counts from the most recent record, so -3 means the third record from the last."
+           "A positive position counts from the earliest record and a negative one from the most recent record."
 
-      argument :occurrence, type: :integer
+      returns "One record per person: the record at the given position. " \
+              "A person who has fewer records than the position asks for is not passed along. " \
+              "With at_least or within, a person can have more than one record."
+
+      argument :occurrence, type: :integer,
+                            meaning: "The position of the record to pass along, as an integer. " \
+                                     "A positive number counts from the earliest record, so 1 is the first record and 2 is the second. " \
+                                     "A negative number counts from the most recent record, so -1 is the last record and -3 is the third from the last. " \
+                                     "0 selects nothing."
       category "Filter Single Stream"
       basic_type :temporal
       validate_at_least_one_upstream
 
       option :at_least, type: :string,
-                        instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+                        instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                        meaning: "A date adjustment, such as 30d. For each record, the operator counts that record and the later records " \
+                                 "that start at least this long after it ends, and passes along the record at the given position. " \
+                                 "So a person can have more than one record in the result."
       option :within, type: :string,
-                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.'
+                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                      meaning: "A date adjustment, such as 365d. For each record, the operator counts that record and the later records " \
+                               "that start at most this long after it ends, and passes along the record at the given position. " \
+                               "So a person can have more than one record in the result."
       option :group_by_date, type: :boolean,
-                             instructions: "Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence"
+                             instructions: "Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence",
+                             meaning: "Treats the records of a person on one start_date as one occurrence, so the position counts dates. " \
+                                      "From the date at that position, the operator passes along the record with the lowest criterion_id, " \
+                                      "or the highest criterion_id for a negative position."
+
+      example "For each patient, select the Condition that represents the second occurrence of an MI",
+              [ "occurrence", 2, [ "icd9", "412" ] ]
+      example "For each patient, the first record on the second day with any of these diagnoses",
+              [ "occurrence", 2, [ "icd9", "410.00", "410.01", "250.00", "250.01" ], { "group_by_date" => true } ]
 
       def query_cols
         dynamic_columns + [ :rn ]

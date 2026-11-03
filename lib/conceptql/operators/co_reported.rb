@@ -17,10 +17,15 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc "Passes along the events of its upstream streams that were reported in the same source record " \
-           "(the same context). A record is kept only if every upstream stream " \
-           "has at least one event in it. If any one upstream has no event in a record, the events of all " \
-           "streams in that record are dropped, without a warning."
+      desc "Passes along the records of its upstreams that were reported in the same context as a record of every other upstream. " \
+           "In the GDM, a context is the claim or other source record that reported the record."
+
+      returns "The records of each upstream whose context also has a record of every other upstream. " \
+              "The operator does not compare dates. If one upstream has no record in a context, the records of all upstreams " \
+              "in that context are not passed along. Person and death records have no context, so they never pass."
+
+      example "Diabetes diagnoses reported as a reason for an office visit, and those office visits",
+              [ "co_reported", [ "icd9", "250.00" ], [ "cpt", "99214" ] ]
 
       allows_many_upstreams
       category "Combine Streams"
