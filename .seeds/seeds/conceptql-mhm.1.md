@@ -1,11 +1,13 @@
 ---
 id: conceptql-mhm.1
 title: 'Operator documentation as code: desc, options, returns and examples in each operator class'
-status: captured
+status: resolved
 type: idea
 parent: conceptql-mhm
 created_at: 2026-11-03T16:32:58.027724+00:00
-updated_at: 2026-11-03T16:32:58.027724+00:00
+updated_at: 2026-11-03T18:15:06.911375+00:00
+resolved_at: 2026-11-03T18:15:06.911367+00:00
+resolution: Superseded on 2026-11-03 by conceptql-mdo.2 (operator documentation as code), which carries the reviewed deliberation and Ryan's rulings from conceptql_spec seed conceptql-spec-6sm.2.
 ---
 
 Child of the seed "One ConceptQL specification, built inside conceptql". Captured 2026-11-03. Ryan agreed in discussion. Not yet permission to build.

@@ -1,11 +1,13 @@
 ---
 id: conceptql-mhm.2
 title: Example results and diagrams as shipped data for the Jigsaw diagram editor's operator help
-status: captured
+status: resolved
 type: idea
 parent: conceptql-mhm
 created_at: 2026-11-03T16:32:58.450037+00:00
-updated_at: 2026-11-03T16:32:58.450037+00:00
+updated_at: 2026-11-03T18:15:07.304883+00:00
+resolved_at: 2026-11-03T18:15:07.304874+00:00
+resolution: Superseded on 2026-11-03 by conceptql-mdo.3 (example results and diagram trees as build artifacts), which carries the reviewed deliberation and Ryan's rulings from conceptql_spec seed conceptql-spec-6sm.3.
 ---
 
 Child of the seed "One ConceptQL specification, built inside conceptql". Captured 2026-11-03. Ryan agreed in discussion. Not yet permission to build.
