@@ -4,7 +4,7 @@ title: Move the ConceptQL spec, operator documentation and example results into 
 status: captured
 type: decision
 created_at: 2026-11-03T18:14:43.431733+00:00
-updated_at: 2026-11-03T18:54:36.490944+00:00
+updated_at: 2026-11-03T19:04:56.563322+00:00
 tags:
   - spec
   - migration
@@ -138,3 +138,13 @@ Proposed changes to the bead order (fact fixes, not ruled):
 
 - conceptql-mdo.5 records both. The spec check runs only in `just release-check`, and the pre-push hook does not change (this closes the open point of ruling 16). A committed manifest of diagram-tree hashes, checked by `just release-check`, detects stale images (this closes the open point of ruling 17).
 - Children list: add conceptql-mdo.5.
+
+## RULED 2026-11-03 (Ryan, while converting to beads)
+
+21. Spec file names: source docs/spec/README.cql.md, output docs/spec/README.md, built by `just spec`. GitHub shows the spec when someone opens docs/spec/.
+22. Appendix E (the quick-reference table) is generated from desc, one row per published spec_id.
+23. Example artifacts: one JSON file per spec_id, docs/spec/examples/\<spec_id>.json. ConceptQL.spec_examples_path returns the directory.
+
+## Beads (created 2026-11-03)
+
+Epic conceptql-jwsv holds the conceptql work: conceptql-jwsv.1 (upstream counts), conceptql-voth (hidden flag and the CSV column), conceptql-jwsv.2 (docs/spec/ build and the switch), conceptql-jwsv.3 (doc/ into docs/), conceptql-jwsv.4 (content port), conceptql-jwsv.5 (spec-check in release-check), conceptql-jwsv.6 (DSL), conceptql-jwsv.7 to .9 (operator texts in three batches), conceptql-jwsv.10 (generated sections and Appendix E), conceptql-jwsv.11 (example JSON files). conceptql-gmpe and conceptql-o29p are closed as superseded. No bead makes a release: Ryan releases when the round is complete. JDE's link changes and the archive of conceptql_spec are not conceptql beads.
