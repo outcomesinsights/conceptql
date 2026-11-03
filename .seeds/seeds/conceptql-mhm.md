@@ -1,10 +1,12 @@
 ---
 id: conceptql-mhm
 title: One ConceptQL specification, built inside conceptql
-status: captured
+status: resolved
 type: decision
 created_at: 2026-11-03T16:32:51.956574+00:00
-updated_at: 2026-11-03T16:33:05.354596+00:00
+updated_at: 2026-11-03T18:15:07.753876+00:00
+resolved_at: 2026-11-03T18:15:07.753866+00:00
+resolution: "Superseded on 2026-11-03 by conceptql-mdo (move the spec, operator documentation and example results into conceptql) and its children conceptql-mdo.1 to .4. They carry the adversarial review and Ryan's 15 rulings from conceptql_spec seed conceptql-spec-6sm. Changed since this seed: no history import, DuckDB gdm_wide results, new docs/spec/ directory, renderer split off."
 ---
 
 Captured 2026-11-03 from a conceptql_spec session with Ryan. This seed records the decisions and the chain of reasoning that led to them, so that a later session can see why each step was taken. Ryan's confirmation of these decisions is recorded here. It is NOT permission to build. Beads come after an adversarial review of this seed.
