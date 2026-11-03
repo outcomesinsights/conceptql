@@ -51,7 +51,7 @@ module ConceptQL
     # The ConceptQL specification, shipped in the gem for applications that
     # serve it to readers (the Jigsaw diagram editor serves it over MCP).
     def spec_path
-      root / "doc" / "spec.md"
+      root / "docs" / "spec" / "README.md"
     end
   end
 end

@@ -12,6 +12,8 @@ _yardoc
 coverage
 demos
 images/
+# The spec's diagram images (just spec) are committed.
+!/docs/spec/images/
 jsons/
 lib/bundler/man
 pkg
@@ -24,7 +26,6 @@ tmp
 yamls/
 Gemfile.local
 Gemfile.local.lock
-doc/.?????????*
 .ci/logs/
 .ci/cids/
 .byebug_history
