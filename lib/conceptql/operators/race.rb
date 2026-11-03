@@ -17,8 +17,15 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Selects person records that match the given set of Race codes."
-      argument :races, type: :codelist, vocab: "Race"
+      desc "Selects the patients with the given races."
+      argument :races, type: :codelist, vocab: "Race",
+                       meaning: "One or more race names, such as White, or race concept IDs. " \
+                                "A name matches the concepts with that name in any vocabulary, and case does not matter. " \
+                                "The operator also selects the more detailed races under each named race, " \
+                                "and each concept that is a kind of one of the race concepts through an is-a relationship."
+      returns "One person record for each patient whose race is one of the given races. " \
+              "The start_date and the end_date of each record are the patient's birth date."
+      example "All patients recorded as white", [ "race", "White" ]
       domains :person
       category "Select by Property"
       basic_type :selection

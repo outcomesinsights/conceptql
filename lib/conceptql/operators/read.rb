@@ -14,7 +14,10 @@ module ConceptQL
 
       preferred_name "READ"
       desc "Selects records based on the Read vocabulary."
-      argument :read_codes, type: :codelist, vocab: "Read"
+      argument :read_codes, type: :codelist, vocab: "Read",
+                            meaning: "One or more Read codes. Write each code as the Read vocabulary writes it. " \
+                                     "A code matches exactly, including case, and it does not select its child codes. " \
+                                     "A code alone of * selects every Read record."
       basic_type :selection
       validate_no_upstreams
       category "Select by Clinical Codes"

@@ -18,9 +18,21 @@ module ConceptQL
 
       DATE_FORMAT = /\A#{Regexp.union([ /START/i, /END/i, /\d{4}-\d{2}-\d{2}/ ])}\z/.freeze
 
-      desc "Creates a set of all person records with the given start_date and end_date."
-      option :start, type: :string
-      option :end, type: :string
+      desc "Makes one person record for each patient, with the given start_date and end_date. " \
+           "Use it to compare other records with a fixed range of dates."
+      option :start, type: :string,
+                     meaning: "The start_date of each record. It is a date in YYYY-MM-DD format, START or END. " \
+                              "START is the earliest start date of any information period in the database, " \
+                              "and END is the latest end date. START and END are not case-sensitive."
+      option :end, type: :string,
+                   meaning: "The end_date of each record. It is a date in YYYY-MM-DD format, START or END. " \
+                            "START is the earliest start date of any information period in the database, " \
+                            "and END is the latest end date. START and END are not case-sensitive. " \
+                            "For a single day, give the same date as the start option."
+      returns "One record for each patient. The type of the records is person, " \
+              "and each record has the start_date and the end_date that the options give."
+      example "Each patient, with the dates of the year 2010", [ "date_range", { "start" => "2010-01-01", "end" => "2010-12-31" } ]
+      example "Each patient, with the dates from the start to the end of the data", [ "date_range", { "start" => "START", "end" => "END" } ]
       category "Select by Property"
       basic_type :selection
       validate_no_upstreams

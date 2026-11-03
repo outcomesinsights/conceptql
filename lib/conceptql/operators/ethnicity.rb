@@ -7,11 +7,19 @@ module ConceptQL
     class Ethnicity < Operator
       register __FILE__
 
-      desc "Selects person records that match the given set of Ethnicity codes."
+      desc "Selects the patients with the given ethnicities."
       domains :person
       category "Select by Property"
       basic_type :selection
-      argument :ethnicity, type: :string, options: [ "Hispanic or Latino", "Not Hispanic or Latino" ]
+      argument :ethnicity, type: :string, options: [ "Hispanic or Latino", "Not Hispanic or Latino" ],
+                           meaning: "One or more ethnicities. A value that starts with Hispanic selects the " \
+                                    "Hispanic or Latino patients, and a value that starts with Not Hispanic selects " \
+                                    "the patients who are not Hispanic or Latino. A value that contains Unknown " \
+                                    "selects the patients whose ethnicity concept ID is 0. Case does not matter, " \
+                                    "and any other value selects no patients."
+      returns "One person record for each patient whose ethnicity is one of the given ethnicities. " \
+              "The start_date and the end_date of each record are the patient's birth date."
+      example "All patients recorded as Hispanic", [ "ethnicity", "Hispanic" ]
       validate_no_upstreams
       validate_at_least_one_argument
 

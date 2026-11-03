@@ -36,7 +36,21 @@ module ConceptQL
 
       # VocabularyClassFactory gives each vocabulary operator a copy of this
       # argument, with the label "<preferred name> Codes"
-      argument :codes, type: :codelist
+      argument :codes, type: :codelist,
+                       meaning: "One or more codes of the vocabulary. Write each code as the vocabulary writes it, " \
+                                "including any dots: 250.01, not 25001. A code matches exactly, including case, " \
+                                "and it does not select its child codes. A code alone of * selects every record " \
+                                "of the vocabulary, and there is no other wildcard. A code that does not have the " \
+                                "vocabulary's format matches nothing and gives a warning."
+
+      returns "Every record whose code is one of the given codes in the operator's vocabulary. " \
+              "The type of the records depends on the vocabulary, for example condition_occurrence for icd9cm " \
+              "and procedure_occurrence for cpt4. An operator does not follow mappings to other vocabularies."
+      example "All records with the ICD-9-CM diagnosis code 412 (old myocardial infarction)", [ "icd9cm", "412" ]
+      example "All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity",
+              [ "ms_drg", "205" ]
+      # The test data has no DRG record before 2007-10-01
+      example "All CMS-DRG 205 records (a liver disorder)", [ "cms_drg", "205" ], help: false
 
       def source_table
         domain_map(op_name)

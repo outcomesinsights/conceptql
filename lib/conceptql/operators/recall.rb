@@ -14,9 +14,41 @@ module ConceptQL
     class Recall < Operator
       register __FILE__
 
-      desc "Passes along the records of the operator in the statement that has the given label."
+      desc "Passes on the records of the operator in the statement that has the given label. " \
+           "Use it to break a complex statement into parts, or to use a stream of records more than once."
+      returns "The records of the operator that has the given label."
+      example 'Label neurological diagnoses as "neuro dxs". Recall them to remove those that were co-reported ' \
+              "with a nervous-system MS-DRG. Then apply the one inpatient, two outpatient rule. " \
+              "(The code lists are shortened.)",
+              [
+                "one_in_two_out",
+                [
+                  "except",
+                  {
+                    "left" => [
+                      "union",
+                      [ "icd9", "331.0", "332.0", "340", "345.90" ],
+                      [ "icd10cm", "G20", "G30.9", "G35", "G40.909" ],
+                      { "label" => "neuro dxs" }
+                    ],
+                    "right" => [
+                      "co_reported",
+                      [ "recall", "neuro dxs" ],
+                      [ "ms_drg", "056", "057", "058", "059", "060", "100", "101" ]
+                    ]
+                  }
+                ],
+                {
+                  "outpatient_minimum_gap" => "30d",
+                  "outpatient_maximum_gap" => "365d",
+                  "outpatient_event_to_return" => "Confirming Event"
+                }
+              ]
 
-      argument :name, type: :string
+      argument :name, type: :string,
+                      meaning: "The label of the operator whose records to pass on. It must match the label exactly, " \
+                               "including case. The labeled operator can come before or after the recall in the " \
+                               "statement, but labeled streams that recall each other in a loop are invalid."
       category "Get Related Data"
       basic_type :selection
       validate_no_upstreams
