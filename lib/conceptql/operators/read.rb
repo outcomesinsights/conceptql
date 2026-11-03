@@ -14,6 +14,7 @@ module ConceptQL
       desc "Selects records based on the Read vocabulary."
       argument :read_codes, type: :codelist, vocab: "Read"
       basic_type :selection
+      validate_no_upstreams
       category "Select by Clinical Codes"
       conceptql_spec_id "vocabulary"
 

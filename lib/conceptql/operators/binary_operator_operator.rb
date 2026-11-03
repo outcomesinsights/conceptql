@@ -8,6 +8,9 @@ module ConceptQL
     class BinaryOperatorOperator < Operator
       option :left, type: :upstream
       option :right, type: :upstream
+      # The operands are the left and right options. A positional upstream
+      # would be ignored, so it is an error (Ryan ruled 2026-11-03).
+      validate_no_upstreams
       validate_no_arguments
       validate_option Array, :left, :right
       validate_required_options :left, :right
@@ -66,6 +69,11 @@ module ConceptQL
       def create_upstreams
         @left = to_op(options[:left]) if options[:left].is_a?(Array)
         @right = to_op(options[:right])  if options[:right].is_a?(Array)
+      end
+
+      # create_upstreams leaves the positional upstreams as statements
+      def upstream_operator_names
+        @upstreams.map { |stmt| stmt.is_a?(Operator) ? stmt.op_name : stmt.first }
       end
 
       def left_stream(db)

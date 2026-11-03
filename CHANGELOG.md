@@ -23,8 +23,19 @@ All notable changes to this project will be documented in this file.
   `place_of_service_filter` pass `check_case: false`. So `["icd10cm", "i16.5"]` still gets
   the warning `improperly formatted code` and selects no rows. The utilization operators
   (`hospitalization`, `hospice`, `snf`) look up their own codes with the check.
+- A positional upstream is a validation error (`has upstreams`) on `after`, `any_overlap`,
+  `before`, `contains`, `during`, `equal`, `except`, `filter`, `match`, `person_filter`,
+  `trim_date_end`, `trim_date_start` and `read`. The first twelve take their operands from the
+  `left` and `right` options, and `read` takes codes. Before, each of them ignored a positional
+  upstream without a word.
 
 ### Fixed
+
+- `min_upstreams` and `max_upstreams` in `ConceptQL.metadata` say how many positional
+  upstreams pass validation (99 means no limit). Before, `min_upstreams` always equalled
+  `max_upstreams`. `union`, `first`, `last`, `co_reported` and `occurrence` served 99/99 and now
+  serve 1/99. `person` and `death` served 1/1 and now serve 0/1. `trim_date_end` and
+  `trim_date_start` served 1/1 and now serve 0/0.
 
 - A vocabulary whose domain is blank has no domain, so its operators select
   `condition_occurrence` records. The GDM vocabulary table (`gdm_vocabs.vocabularies` in the

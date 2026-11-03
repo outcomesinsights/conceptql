@@ -19,8 +19,6 @@ module ConceptQL
 
       desc "For each person, trims the end_date of all left hand records by the earliest start_date in the right hand records."
 
-      allows_one_upstream
-
       private
 
       def trim_date

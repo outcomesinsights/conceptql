@@ -40,7 +40,6 @@ module ConceptQL
       argument :occurrence, type: :integer
       category "Filter Single Stream"
       basic_type :temporal
-      allows_one_upstream
       validate_at_least_one_upstream
 
       option :at_least, type: :string,
