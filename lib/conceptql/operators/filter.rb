@@ -7,7 +7,12 @@ module ConceptQL
     class Filter < BinaryOperatorOperator
       register __FILE__
 
-      desc "Keeps left hand records that share the same person, criterion_id, criterion_table, and criterion_domain with a right hand side record."
+      desc "Keeps each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date."
+      returns "The left-hand records that have a right-hand record with the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date. The right-hand records are not returned."
+      option_meaning :right, "The right-hand stream. The operator keeps each left-hand record that is also in this stream, and does not pass these records on."
+
+      example "MIs that are a patient's first diagnosis of MI or diabetes",
+              [ "filter", { left: [ "icd9", "412" ], right: [ "first", [ "union", [ "icd9", "412" ], [ "icd9", "250.01" ] ] ] } ]
       default_query_columns
 
       # An `as` option would cast both streams before the comparison. Filter

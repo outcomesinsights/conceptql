@@ -80,8 +80,10 @@ describe ConceptQL::Metadatable do
 
     it "serves the desc that an operator sets" do
       _(ConceptQL.metadata(cdb)[:operators].fetch("after")[:desc])
-        .must_equal "For each person, passes along left hand records with a start_date " \
-                    "that occurs after the earliest end_date of a right hand record."
+        .must_equal "For each patient, keeps the left-hand records whose start_date is after " \
+                    "the earliest end_date of the patient's right-hand records. With the within " \
+                    "option, each left-hand record is compared with every right-hand record of " \
+                    "the patient instead."
     end
 
     it "serves its own desc for every operator that sets one" do
