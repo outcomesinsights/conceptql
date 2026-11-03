@@ -4,7 +4,7 @@ title: Move the ConceptQL spec, operator documentation and example results into 
 status: captured
 type: decision
 created_at: 2026-11-03T18:14:43.431733+00:00
-updated_at: 2026-11-03T18:41:51.392358+00:00
+updated_at: 2026-11-03T18:54:36.490944+00:00
 tags:
   - spec
   - migration
@@ -133,3 +133,8 @@ Proposed changes to the bead order (fact fixes, not ruled):
 18. Renderer seeds and the archive (question conceptql-3i7): "Those are going to be taken care of. Keep your eyes on your own repo." The renderer seeds, the push of conceptql_spec main and the archive itself belong to conceptql_spec. The proposed change to step 7 ("push conceptql_spec main before the archive") is withdrawn from conceptql's plan.
 19. Directory name (question conceptql-59n): use the convention, which is docs/. 23 of the 24 outins repos with a documentation directory use docs/, and YARD writes generated output to doc/ by default. Step 3 moves doc/metadata.md and doc/implementation_notes.md into docs/ and removes doc/.
 20. Private JDE names in public seeds (question conceptql-ivi): accepted.
+
+## RULED 2026-11-03 (Ryan): the open points of rulings 16 and 17
+
+- conceptql-mdo.5 records both. The spec check runs only in `just release-check`, and the pre-push hook does not change (this closes the open point of ruling 16). A committed manifest of diagram-tree hashes, checked by `just release-check`, detects stale images (this closes the open point of ruling 17).
+- Children list: add conceptql-mdo.5.
