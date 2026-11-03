@@ -93,11 +93,16 @@ module ConceptQL
       @basic_type = value
     end
 
+    # min_upstreams and max_upstreams say how many positional upstreams pass
+    # validation (99 means no limit). A validate_*_upstream check sets them
+    # again when to_metadata runs (derive_metadata_from_validations).
     def allows_many_upstreams
+      @min_upstreams = 0
       @max_upstreams = 99
     end
 
     def allows_one_upstream
+      @min_upstreams = 0
       @max_upstreams = 1
     end
 
@@ -155,7 +160,7 @@ module ConceptQL
         short_name: short_name,
         long_name: long_name,
         operation: just_class_name.underscore,
-        min_upstreams: @max_upstreams || 0,
+        min_upstreams: @min_upstreams || 0,
         max_upstreams: @max_upstreams || 0,
         arguments: @arguments || [],
         options: process_options(@options),

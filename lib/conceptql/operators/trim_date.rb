@@ -40,8 +40,6 @@ module ConceptQL
         is passed through unaffected.
       EOF
 
-      allows_one_upstream
-
       def query(db)
         # If the RHS's min start date is less than the LHS start date,
         # the entire LHS date range is truncated, which implies the row itself
