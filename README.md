@@ -6,7 +6,7 @@ This gem interprets the ConceptQL language and translates it into SQL queries co
 
 ## Further Reading
 
-If you're interested in reading up on ConceptQL, a the specifications document is [available in markdown format](https://github.com/outcomesinsights/conceptql_spec).
+The ConceptQL specification is [docs/spec/README.md](docs/spec/README.md).
 
 ## Motivation for ConceptQL
 

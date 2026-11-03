@@ -37,6 +37,10 @@ All notable changes to this project will be documented in this file.
   `trim_date_end`, `trim_date_start` and `read`. The first twelve take their operands from the
   `left` and `right` options, and `read` takes codes. Before, each of them ignored a positional
   upstream without a word.
+- The specification moved to `docs/spec/README.md`, and `ConceptQL.spec_path` returns it. Its
+  text comes from the conceptql_spec repository, which held the published spec, and it replaces
+  the copy that was `doc/spec.md`. `just spec` builds it from `docs/spec/README.cql.md` on the
+  DuckDB test data. The gem does not ship its diagram images.
 
 ### Removed
 
