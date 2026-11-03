@@ -57,6 +57,18 @@ module SpecBuild
       "#{sha(statement)}.svg"
     end
 
+    # The images in +trees+ (image name => diagram tree) that are not current:
+    # image name => "MISSING" when the file is not in +dir+, "stale" when the
+    # manifest (the text of manifest.tsv) has no hash or another hash for it.
+    def outdated(trees, manifest, dir = IMAGES)
+      drawn = manifest.lines.to_h { |line| line.chomp.split("\t", 2) }
+      trees.filter_map do |name, tree|
+        if !File.file?(File.join(dir, name)) then [ name, "MISSING" ]
+        elsif drawn[name] != sha(tree) then [ name, "stale" ]
+        end
+      end.to_h
+    end
+
     def canonical(obj)
       case obj
       when Hash then obj.map { |k, v| [ k.to_s, canonical(v) ] }.sort_by(&:first).to_h
@@ -70,10 +82,13 @@ module SpecBuild
   class Build
     attr_reader :db, :cdb
 
-    def initialize(db, cdb)
+    # With check: true (`just spec-check`) it never draws, and it fails after
+    # it writes the output when an image is missing or stale.
+    def initialize(db, cdb, check: false)
       @db = db
       @cdb = cdb
-      @cli = ENV.fetch(CLI_ENV, "")
+      @check = check
+      @cli = check ? "" : ENV.fetch(CLI_ENV, "")
       raise "#{CLI_ENV}=#{@cli} is not a file" unless @cli.empty? || File.file?(@cli)
     end
 
@@ -81,9 +96,16 @@ module SpecBuild
       lines = File.readlines(SOURCE)
       blocks = SpecBuild.blocks(lines)
       examples = blocks.to_h { |b| [ b.line, example(b) ] }
-      images(blocks)
+      outdated = images(blocks)
       File.write(OUTPUT, knit(lines, examples))
       puts "wrote #{OUTPUT} (#{blocks.size} examples)"
+      return unless @check && outdated.any?
+
+      abort(<<~MSG)
+        These images do not show the current diagram tree (#{outdated.size}):
+        #{outdated.map { |name, state| "  #{state} images/#{name}" }.join("\n")}
+        Redraw them: run `just spec` with #{CLI_ENV} set to the renderer CLI.
+      MSG
     end
 
     private
@@ -123,14 +145,16 @@ module SpecBuild
 
     # Each diagram tree, with its counts, as the renderer draws it. Without the
     # renderer the committed images stay: nothing is deleted and nothing fails.
+    # It returns the images that are missing or stale (SpecBuild.outdated).
     def images(blocks)
       trees = blocks.to_h { |b| [ SpecBuild.image_name(b.statement), tree(b) ] }
       unless draw?
+        manifest = File.file?(MANIFEST) ? File.read(MANIFEST) : ""
+        outdated = SpecBuild.outdated(trees, manifest)
         trees.each_key do |name|
-          state = File.file?(File.join(IMAGES, name)) ? "kept" : "MISSING"
-          puts "not drawn (#{CLI_ENV} is not set, #{state}): images/#{name}"
+          puts "not drawn (#{CLI_ENV} is not set, #{outdated.fetch(name, 'kept')}): images/#{name}"
         end
-        return
+        return outdated
       end
 
       FileUtils.mkdir_p(IMAGES)
@@ -139,6 +163,7 @@ module SpecBuild
       FileUtils.rm(stale)
       File.write(MANIFEST, trees.sort.map { |name, tree| "#{name}\t#{SpecBuild.sha(tree)}\n" }.join)
       puts "images: #{trees.size} drawn, #{stale.size} stale removed, #{MANIFEST} written"
+      {}
     end
 
     def tree(block)
