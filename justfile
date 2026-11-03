@@ -115,15 +115,17 @@ test-duckdb *ARGS:
       bundle exec ruby -e 'files = ARGV.dup; ARGV.clear; files.each { |f| require File.expand_path(f) }' "${args[@]}"
     fi
 
-# Rebuilds the spec from doc/spec.md.cql. script/spec/harness.rb validates and runs
-# every ConceptQL block against the DuckDB fixture (through test-duckdb, so it
-# needs what test-duckdb needs). script/spec/knit.rb then writes doc/spec.md with
-# the YAML, the diagram and the first 10 rows of each block, and draws the
-# diagrams (doc/spec/<sha>.png) with graphviz `dot`. mise cannot install graphviz,
-# so install it on the host. The committed PNGs come from graphviz 15.1; another
-# version can draw different bytes. Edit doc/spec.md.cql, never doc/spec.md.
+# Rebuilds docs/spec/README.md from docs/spec/README.cql.md. docs/spec/build/run.rb
+# runs every ConceptQL block on the DuckDB fixture (through test-duckdb, so it
+# needs what test-duckdb needs) and writes each example: the statement, its
+# diagram and the first 10 rows of its result. With CONCEPTQL_DIAGRAM_CLI set to
+# the Jigsaw diagram editor's renderer CLI
+# (frontend/lib/conceptql-diagram/cli/bin/conceptql-diagram.js), it also draws
+# docs/spec/images/<sha>.svg and writes docs/spec/images/manifest.tsv. Without
+# it, the committed images stay and the build names each image it did not draw.
+# Edit docs/spec/README.cql.md, never docs/spec/README.md.
 # Like fmt-check, it rewrites first and THEN fails: commit what it changed.
-# Rebuild doc/spec.md and doc/spec/*.png; fail if they changed
+# Rebuild docs/spec/README.md and its images; fail if they changed
 spec:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -140,19 +142,16 @@ spec:
     }
     trap finish EXIT
 
-    command -v dot >/dev/null || { echo "graphviz is not installed: just spec draws the diagrams with its dot command"; exit 1; }
-    dot -V
-    snapshot() { find doc/spec.md doc/spec -type f | sort | xargs sha256sum; }
+    snapshot() { find docs/spec/README.md docs/spec/images -type f 2>/dev/null | sort | xargs -r sha256sum; }
     before=$(snapshot)
-    {{ just_executable() }} test-duckdb script/spec/harness.rb
-    bundle exec ruby script/spec/knit.rb
-    treefmt --no-cache doc/spec.md
+    {{ just_executable() }} test-duckdb docs/spec/build/run.rb
+    treefmt --no-cache docs/spec/README.md
     if [ "$(snapshot)" != "$before" ]; then
       echo "just spec changed these files; review and commit them:"
-      git status --short -- doc/spec.md doc/spec
+      git status --short --untracked-files=all -- docs/spec/README.md docs/spec/images
       exit 1
     fi
-    echo "doc/spec.md and doc/spec/*.png are up to date"
+    echo "docs/spec/README.md and docs/spec/images are up to date"
 
 # test and test-full run this when they exit. Each checkout (the primary, every
 # worktree, the pre-push gate copy) has its own compose project, so without this
