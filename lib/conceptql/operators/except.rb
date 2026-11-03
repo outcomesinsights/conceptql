@@ -7,7 +7,16 @@ module ConceptQL
     class Except < BinaryOperatorOperator
       register __FILE__
 
-      desc "Removes all incoming records that appear in the right hand set of records."
+      desc "Removes each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same criterion_table, criterion_id, start_date and end_date."
+      returns "The left-hand records that have no right-hand record with the same criterion_table, criterion_id, start_date and end_date. A left-hand record whose table has no right-hand record passes through unchanged. The right-hand records are not returned."
+      option_meaning :right, "The right-hand stream. The operator removes each left-hand record that is also in this stream, and does not pass these records on."
+
+      example "All males who are not white",
+              [ "except", { left: [ "gender", "male" ], right: [ "race", "white" ] } ]
+      example "All Conditions that are MI",
+              [ "except", { left: [ "icd9", "412" ], right: [ "cpt", "99214" ] } ]
+      example "Passes two types downstream: Conditions that are MI (unaffected by the right-hand stream) and People that are Male but not White",
+              [ "except", { left: [ "union", [ "icd9", "412" ], [ "gender", "Male" ] ], right: [ "race", "White" ] } ]
       default_query_columns
 
       # An `as` option would cast both streams before the comparison. Except
