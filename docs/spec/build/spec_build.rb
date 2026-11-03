@@ -5,9 +5,12 @@ require "digest"
 require "fileutils"
 require "json"
 require "open3"
+require_relative "reference"
 
-# Builds docs/spec/README.md from docs/spec/README.cql.md. Each ```ConceptQL
-# block of the source becomes an example: the statement as JSON, its diagram
+# Builds docs/spec/README.md from docs/spec/README.cql.md. First each
+# directive of the source becomes its generated markdown (SpecBuild::Reference):
+# the operator reference sections, the label option and Appendix E. Then each
+# ```ConceptQL block becomes an example: the statement as JSON, its diagram
 # (images/<name>.svg) and the first 10 rows of its result. `just spec` runs
 # docs/spec/build/run.rb, which calls this, on the DuckDB fixture.
 module SpecBuild
@@ -27,16 +30,19 @@ module SpecBuild
   RESULT_KEYS = %i[person_id criterion_id criterion_table criterion_domain start_date end_date source_value].freeze
 
   # A ```ConceptQL block: `#` comment lines (its title) and one JSON statement.
-  # ```ConceptQL{all_keys: true} shows every column of the result.
-  Block = Struct.new(:number, :line, :title, :statement, :all_keys, keyword_init: true)
+  # ```ConceptQL{all_keys: true} shows every column of the result. +line+ is
+  # the line in +lines+, and +origin+ names the place in README.cql.md.
+  Block = Struct.new(:number, :line, :origin, :title, :statement, :all_keys, keyword_init: true)
 
   class << self
-    def blocks(lines)
+    # The ```ConceptQL blocks of +lines+. +origins+ names the place of each
+    # line in README.cql.md.
+    def blocks(lines, origins = lines.each_index.map { |i| "README.cql.md:#{i + 1}" })
       numbered = lines.each_with_index.select { |line, _| line.start_with?("```ConceptQL") }
       numbered.each_with_index.map do |(line, i), n|
         body = lines[(i + 1)..].take_while { |l| !l.start_with?("```") }
         titles, statement = body.partition { |l| l.match?(/\A\s*#/) }
-        Block.new(number: n + 1, line: i + 1, all_keys: line.include?("all_keys: true"),
+        Block.new(number: n + 1, line: i + 1, origin: origins.fetch(i), all_keys: line.include?("all_keys: true"),
                   title: titles.map { |l| l.sub(/\A\s*#+\s*/, "").strip }.join(" "),
                   statement: JSON.parse(statement.join))
       end
@@ -82,19 +88,22 @@ module SpecBuild
   class Build
     attr_reader :db, :cdb
 
+    # +reference+ (a SpecBuild::Reference) writes the generated markdown.
     # With check: true (`just spec-check`) it never draws, and it fails after
     # it writes the output when an image is missing or stale.
-    def initialize(db, cdb, check: false)
+    def initialize(db, cdb, reference:, check: false)
       @db = db
       @cdb = cdb
+      @reference = reference
       @check = check
       @cli = check ? "" : ENV.fetch(CLI_ENV, "")
       raise "#{CLI_ENV}=#{@cli} is not a file" unless @cli.empty? || File.file?(@cli)
     end
 
     def run
-      lines = File.readlines(SOURCE)
-      blocks = SpecBuild.blocks(lines)
+      expanded = @reference.expand(File.readlines(SOURCE))
+      lines = expanded.map(&:text)
+      blocks = SpecBuild.blocks(lines, expanded.map(&:origin))
       examples = blocks.to_h { |b| [ b.line, example(b) ] }
       outdated = images(blocks)
       File.write(OUTPUT, knit(lines, examples))
@@ -117,11 +126,11 @@ module SpecBuild
     # The markdown of one example.
     def example(block)
       errors = cdb.query(block.statement).validation_errors
-      raise "example #{block.number} (README.cql.md:#{block.line}) is not valid: #{errors}" unless errors.empty?
+      raise "example #{block.number} (#{block.origin}) is not valid: #{errors}" unless errors.empty?
 
       ds = db.from(cdb.query(block.statement).query)
       rows = ds.order(*ORDER).limit(LIMIT).all
-      puts format("[%02d] line %4d rows=%-6d %s", block.number, block.line, ds.count, block.title[0, 70])
+      puts format("[%02d] %-24s rows=%-6d %s", block.number, block.origin[/\A\S+/], ds.count, block.title[0, 70])
       heading = [ "**Example #{block.number}", block.title.empty? ? nil : block.title ].compact.join(" - ")
       [ "---", "#{heading}**", "```JSON\n#{JSON.generate(block.statement)}\n```",
         "![#{block.title.delete('[]')}](images/#{SpecBuild.image_name(block.statement)})",
@@ -173,7 +182,7 @@ module SpecBuild
     end
 
     def check_counts(node, block)
-      raise "example #{block.number} (README.cql.md:#{block.line}): no counts for #{node[:name]}" if node[:counts].blank?
+      raise "example #{block.number} (#{block.origin}): no counts for #{node[:name]}" if node[:counts].blank?
 
       node[:children].each { |child| check_counts(child, block) }
     end

@@ -197,7 +197,9 @@ Selection operators select records from the database. For example, a search for 
 
 ### `Vocabulary` Operator
 
-A vocabulary operator selects the records that have any of the given codes from one vocabulary. ConceptQL creates one vocabulary operator for each vocabulary that it knows, so the list of operators depends on the vocabulary tables. The operator name is the vocabulary ID in lower case, with spaces and punctuation replaced by `_`. Some operators also have a shorter alias.
+<!-- conceptql-spec: operator vocabulary-operator -->
+
+ConceptQL creates one vocabulary operator for each vocabulary that it knows, so the list of operators depends on the vocabulary tables. The operator name is the vocabulary ID in lower case, with spaces and punctuation replaced by `_`. Some operators also have a shorter alias.
 
 These are the most common vocabulary operators:
 
@@ -218,18 +220,15 @@ These are the most common vocabulary operators:
 | rxnorm       |                | RxNorm codes                                 | drug_exposure        |
 | snomed       |                | SNOMED CT codes                              | condition_occurrence |
 
-- **Arguments:** one or more codes.
-- **Returns:** every record whose code is one of the given codes in that vocabulary.
+Examples of how codes match:
 
-How codes match:
-
-- Write each code as the vocabulary writes it, including any dots: `250.01`, not `25001`.
-- A code matches exactly, including case: `V58.61` matches, but `v58.61` does not. ConceptQL does not expand a code to its child codes, so `584` does not match `584.9`.
-- A code alone of `*` selects every record of the vocabulary. There is no other wildcard: `410*` matches nothing.
-- A code that does not have the vocabulary's format gives the warning "improperly formatted code" and matches nothing.
+- `V58.61` matches, but `v58.61` does not.
+- ConceptQL does not expand a code to its child codes, so `584` does not match `584.9`.
+- `410*` matches nothing, because `*` is a wildcard only as a code alone.
+- A code that does not have the vocabulary's format gives the warning "improperly formatted code".
 - A code that the vocabulary does not contain gives the warning "unknown code(s)".
 - A code that has more than one meaning in the vocabulary gives the warning "code(s) with more than one meaning".
-- A vocabulary operator selects only codes from its own vocabulary. It does not follow mappings between vocabularies, so `rxnorm` does not find records coded with NDC.
+- `rxnorm` does not find records coded with NDC, because an operator does not follow mappings between vocabularies.
 
 #### DRG Codes
 
@@ -238,23 +237,7 @@ CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the M
 - `ms_drg` selects the DRG records whose start_date is on or after 2007-10-01.
 - `cms_drg` selects the DRG records whose start_date is before 2007-10-01.
 
-```ConceptQL
-# All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity
-[
-  "ms_drg",
-  "205"
-]
-```
-
-Our test data has no DRG record before 2007-10-01, so this example returns no records:
-
-```ConceptQL
-# All CMS-DRG 205 records (a liver disorder)
-[
-  "cms_drg",
-  "205"
-]
-```
+The examples above show both operators. Our test data has no DRG record before 2007-10-01, so the `cms_drg` example returns no records.
 
 Both operators check codes as the other vocabulary operators do. A DRG code has 3 digits, with leading zeros. A code that the DRG vocabulary does not have gets the warning "unknown code(s)". These operators never give the warning "code(s) with more than one meaning", because the operator chooses the meaning.
 
@@ -266,101 +249,49 @@ Person operators select records from the `patients` table, which holds the patie
 
 #### `Gender` Operator
 
-Selects patients by gender.
-
-- **Arguments:** one or more of `Male`, `Female` and `Unknown`. Case does not matter. `Unknown` selects patients whose gender is neither male nor female.
-
-```ConceptQL
-# All female patients
-[ "gender", "Female" ]
-```
+<!-- conceptql-spec: operator gender-operator -->
 
 #### `Race` Operator
 
-Selects patients by race.
-
-- **Arguments:** one or more race names (such as `White`) or race concept IDs. A name matches the race concepts of that name, and the concepts mapped to them. Case does not matter.
-
-```ConceptQL
-# All patients recorded as white
-[ "race", "White" ]
-```
+<!-- conceptql-spec: operator race-operator -->
 
 #### `Ethnicity` Operator
 
-Selects patients by ethnicity.
-
-- **Arguments:** one or more of `Hispanic or Latino`, `Not Hispanic or Latino` and `Unknown`. Case does not matter. A value that starts with "Hispanic" means Hispanic or Latino.
-
-```ConceptQL
-# All patients recorded as Hispanic
-[ "ethnicity", "Hispanic" ]
-```
+<!-- conceptql-spec: operator ethnicity-operator -->
 
 #### `Person` Operator
 
-Selects patients. With no upstream operator, it selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream.
-
-- **Upstream:** none, or one operator.
-
-```ConceptQL
-# All patients
-[ "person" ]
-```
+<!-- conceptql-spec: operator person-operator -->
 
 ### Additional Selection Operators
 
 #### `Death` Operator
 
-Selects death records from the `deaths` table. The type of these records is `death`, and their start_date and end_date are both the date of death. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream.
-
-- **Upstream:** none, or one operator.
-
-```ConceptQL
-[ "death" ]
-```
+<!-- conceptql-spec: operator death-operator -->
 
 #### `Information Periods` Operator
 
-Selects records from the `information_periods` table. An information period is a span of time in which the data has information about a patient, such as a period of insurance enrollment. The type of these records is `observation_period`.
-
-- **Arguments:** optional information type concept IDs. With none, it selects every information period.
-
-```ConceptQL
-[ "information_periods" ]
-```
+<!-- conceptql-spec: operator information-periods-operator -->
 
 ### Utilization Operators
 
 Utilization operators select admissions. Each operator returns one record for each admission whose claim came from the matching kind of file. For example, `hospitalization` uses the claims whose file provenance is inpatient.
 
-The type of these records is `condition_occurrence`, because the GDM has no visit or admission type. So `union` combines them with diagnosis records into one stream. The `criterion_table` is `collections` (the GDM table of claims). The start_date and end_date are the dates of the claim. `source_value` holds the primary code of the admission, which is usually a diagnosis. These operators also add the columns `admission_date`, `discharge_date` and `length_of_stay`.
+The type of these records is `condition_occurrence`, because the GDM has no visit or admission type. So `union` combines them with diagnosis records into one stream. `source_value` usually holds a diagnosis.
 
-They take no arguments and no upstream operators.
+Our test data has no SNF claims and no hospice claims, so the examples of `snf` and `hospice` return no records.
 
 #### `SNF` Operator
 
-Selects admissions to skilled nursing facilities (SNF). Our test data has no SNF claims, so this example returns no records.
-
-```ConceptQL
-[ "snf" ]
-```
+<!-- conceptql-spec: operator snf-operator -->
 
 #### `Hospice` Operator
 
-Selects hospice admissions. Our test data has no hospice claims, so this example returns no records.
-
-```ConceptQL
-[ "hospice" ]
-```
+<!-- conceptql-spec: operator hospice-operator -->
 
 #### `Hospitalization` Operator
 
-Selects inpatient hospital admissions.
-
-```ConceptQL
-[ "hospitalization" ]
-```
+<!-- conceptql-spec: operator hospitalization-operator -->
 
 ## Set Operators
 
@@ -368,139 +299,15 @@ Streams are sets of records, so ConceptQL has operators that work on sets.
 
 ### `Union` Operator
 
-Combines the records of all its upstream operators into one stream.
+<!-- conceptql-spec: operator union-operator -->
 
-- **Upstream:** one or more operators.
-- **Returns:** each record of each upstream. A record that comes from more than one upstream comes out once. Two records are the same only when every column is equal, including `label`.
-
-Each record keeps its own type, so one stream can hold several types. Union does not change records of different types. Each later operator decides whether it treats the types separately or together.
-
-```ConceptQL
-# Two streams of the same type (condition_occurrence) combined into one stream
-[
-  "union",
-  [
-    "icd9",
-    "412"
-  ],
-  [
-    "icd9",
-    "250.01"
-  ]
-]
-```
-
-```ConceptQL
-# Two condition_occurrence streams combined, then combined with a procedure_occurrence stream
-[
-  "union",
-  [
-    "union",
-    [
-      "icd9",
-      "412"
-    ],
-    [
-      "icd9",
-      "250.01"
-    ]
-  ],
-  [
-    "cpt",
-    "99214"
-  ]
-]
-```
-
-```ConceptQL
-# The same result as the example above, from a single union
-[
-  "union",
-  [
-    "icd9",
-    "412"
-  ],
-  [
-    "icd9",
-    "250.01"
-  ],
-  [
-    "cpt",
-    "99214"
-  ]
-]
-```
+Union does not change records of different types. Each later operator decides whether it treats the types separately or together.
 
 ### `Except` Operator
 
-Removes each left-hand record that also appears in the right-hand stream.
+<!-- conceptql-spec: operator except-operator -->
 
-- **Options:** `left` (required) and `right` (required), each an operator.
-- **Returns:** the left-hand records that have no right-hand record with the same `criterion_table`, `criterion_id`, `start_date` and `end_date`. The right-hand records are discarded.
-
-A left-hand record matches only a right-hand record from the same table, and only when the dates are the same. For example, a record whose dates `time_window` changed no longer matches the original record.
-
-```ConceptQL
-# All males who are not white
-[
-  "except",
-  {
-    "left": [
-      "gender",
-      "male"
-    ],
-    "right": [
-      "race",
-      "white"
-    ]
-  }
-]
-```
-
-If no right-hand record comes from the same table as a left-hand record, the left-hand record passes through unchanged:
-
-```ConceptQL
-# All Conditions that are MI
-[
-  "except",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "cpt",
-      "99214"
-    ]
-  }
-]
-```
-
-And with several types in the left-hand stream:
-
-```ConceptQL
-# Passes two types downstream: Conditions that are MI (unaffected by the right-hand stream) and People that are Male but not White
-[
-  "except",
-  {
-    "left": [
-      "union",
-      [
-        "icd9",
-        "412"
-      ],
-      [
-        "gender",
-        "Male"
-      ]
-    ],
-    "right": [
-      "race",
-      "White"
-    ]
-  }
-]
-```
+A left-hand record matches only a right-hand record from the same table, and only when the dates are the same. For example, a record whose dates `time_window` changed no longer matches the original record. The second example above shows that a left-hand record passes through unchanged when no right-hand record comes from its table. The third example has several types in the left-hand stream.
 
 ### Discussion About Set Operators
 
@@ -537,66 +344,21 @@ For each patient, we may want only the chronologically first or last record, or 
 
 ### `Nth Occurrence` Operator
 
-For each patient, passes along the nth record in order of start_date.
+<!-- conceptql-spec: operator nth-occurrence-operator -->
 
-- **Arguments:** an integer n.
-  - A positive n counts from the earliest record: 1 is the first record, and 4 is the fourth.
-  - A negative n counts from the latest record: -1 is the last record, and -4 is the fourth from last.
-  - 0 selects nothing.
-- **Upstream:** one operator.
-- **Options:**
-  - `group_by_date` (boolean, default false): treat all records on the same start_date as one occurrence, so that n counts distinct dates.
-  - `at_least` and `within` (date adjustments, see [Time Window](#time-window-operator)): for each record A, count only A and the later records that start at least `at_least` and at most `within` after A ends. With either option, a patient can have more than one record in the result.
-- **Returns:** one record per patient (without `at_least` and `within`). A patient who has fewer than n records is dropped.
-
-```ConceptQL
-# For each patient, select the Condition that represents the second occurrence of an MI
-[
-  "occurrence",
-  2,
-  [
-    "icd9",
-    "412"
-  ]
-]
-```
-
-With `group_by_date`, several codes on the same day count as one occurrence. This example finds, for each patient, the second day on which any of these codes appears:
-
-```ConceptQL
-# For each patient, the first record on the second day with any of these diagnoses
-["occurrence", 2, ["icd9", "410.00", "410.01", "250.00", "250.01"], {"group_by_date": true}]
-```
+`at_least` and `within` take date adjustments, as [`time_window`](#time-window-operator) does. With `group_by_date`, several codes on the same day count as one occurrence. The second example above finds, for each patient, the second day on which any of its codes appears.
 
 ### `First` Operator
 
-For each patient, passes along the record with the earliest start_date. It is the same as `["occurrence", 1, ...]`. It does not accept `at_least` or `within`.
+<!-- conceptql-spec: operator first-operator -->
 
-```ConceptQL
-# For each patient, select the Condition that represents the first occurrence of an MI
-[
-  "first",
-  [
-    "icd9",
-    "412"
-  ]
-]
-```
+`first` is the same as `["occurrence", 1, ...]`. It does not accept `at_least` or `within`.
 
 ### `Last` Operator
 
-For each patient, passes along the record with the latest start_date. It is the same as `["occurrence", -1, ...]`. When two records have the same start_date, the record with the higher `criterion_id` is the last. It does not accept `at_least` or `within`.
+<!-- conceptql-spec: operator last-operator -->
 
-```ConceptQL
-# For each patient, select the Condition that represents the last occurrence of an MI
-[
-  "last",
-  [
-    "icd9",
-    "412"
-  ]
-]
-```
+`last` is the same as `["occurrence", -1, ...]`. It does not accept `at_least` or `within`.
 
 ## Date Literals
 
@@ -604,19 +366,9 @@ To represent a fixed range of dates, use the `date_range` operator.
 
 ### `Date Range` Operator
 
-Makes one record for each patient, with the given start_date and end_date. The type of these records is `person`. The range includes both dates.
+<!-- conceptql-spec: operator date-range-operator -->
 
-- **Options:**
-  - `start` (required): the start date.
-  - `end` (required): the end date.
-
-Each date is one of:
-
-- `YYYY-MM-DD`: a four-digit year, a two-digit month, and a two-digit day, with leading zeros.
-- `START`: the earliest start date of any information period in the database.
-- `END`: the latest end date of any information period in the database.
-
-`START` and `END` are not case-sensitive. There is no operator for a single day. Use `date_range` with the same start and end.
+The range includes both dates. A `YYYY-MM-DD` date has a four-digit year, a two-digit month, and a two-digit day, with leading zeros. There is no operator for a single day. Use `date_range` with the same start and end.
 
 ## Temporal Comparison Operators
 
@@ -634,265 +386,59 @@ Each operator compares the dates in a different way. All of them take [some opti
 
 ### `During` Operator
 
-Passes along each LHR whose date range is inside the date range of an RHR: `RHR start_date <= LHR start_date` and `LHR end_date <= RHR end_date`.
-
-```ConceptQL
-# All MIs for the year 2010
-[
-  "during",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "date_range",
-      {
-        "start": "2010-01-01",
-        "end": "2010-12-31"
-      }
-    ]
-  }
-]
-```
+<!-- conceptql-spec: operator during-operator -->
 
 ### `Contains` Operator
 
-Passes along each LHR whose date range encloses the date range of an RHR: `LHR start_date <= RHR start_date` and `RHR end_date <= LHR end_date`.
-
-```ConceptQL
-# All MIs occurring on 2010-06-22
-[
-  "contains",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "date_range",
-      {
-        "start": "2010-06-22",
-        "end": "2010-06-22"
-      }
-    ]
-  }
-]
-```
+<!-- conceptql-spec: operator contains-operator -->
 
 ### `Any Overlap` Operator
 
-Passes along each LHR whose date range shares at least one day with the date range of an RHR. This diagram shows each kind of L record that has "any overlap" with an R record:
+<!-- conceptql-spec: operator any-overlap-operator -->
+
+This diagram shows each kind of L record that has "any overlap" with an R record:
 
 ![](images/any_overlap.png)
 
-```ConceptQL
-# All MIs that overlap with the month of 2010-06
-[
-  "any_overlap",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "date_range",
-      {
-        "start": "2010-06-01",
-        "end": "2010-06-30"
-      }
-    ]
-  }
-]
-```
-
 ### `Before` Operator
 
-Passes along each LHR that ends before the patient's **last** RHR starts: `LHR end_date < latest RHR start_date`. The comparison is strict, so an LHR that ends on the day the RHR starts does not pass.
+<!-- conceptql-spec: operator before-operator -->
+
+The comparison is strict, so an LHR that ends on the day the RHR starts does not pass.
 
 This rule needs some explanation. Imagine the events A-A-B-A-B-A. How many A's come before a B? One could argue that only the first two A's qualify, because they come before the first B. But three A's come before some B. The `before` operator uses the second answer, so it compares every LHR with the start_date of the patient's last RHR.
 
-```ConceptQL
-# All MIs that occurred before a patient's __last__ case of diabetes (250.01)
-[
-  "before",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "icd9",
-      "250.01"
-    ]
-  }
-]
-```
-
 ### `After` Operator
 
-Passes along each LHR that starts after the patient's **earliest** RHR end_date: `LHR start_date > earliest RHR end_date`. The comparison is strict.
+<!-- conceptql-spec: operator after-operator -->
+
+The comparison is strict, so an LHR that starts on the day the RHR ends does not pass.
 
 Imagine the events A-A-B-A-B-A again. How many A's come after a B? One could argue that only the last A qualifies, because it comes after the last B. But two A's come after some B. The `after` operator uses the second answer, so it compares every LHR with the earliest end_date of the patient's RHR.
 
-```ConceptQL
-# All MIs that occurred after a patient's __first__ case of diabetes (250.01)
-[
-  "after",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "icd9",
-      "250.01"
-    ]
-  }
-]
-```
-
 ### Working Around `Before`/`After` Behavior
 
-If you want a different RHR for the comparison, use a relative temporal operator to select it:
-
-```ConceptQL
-# All MIs that occurred before a patient's __first__ case of diabetes (250.01)
-[
-  "before",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "first",
-      [
-        "icd9",
-        "250.01"
-      ]
-    ]
-  }
-]
-```
+If you want a different RHR for the comparison, use a relative temporal operator to select it. The second example of [`before`](#before-operator) uses `first` to compare each MI with the patient's first case of diabetes.
 
 ## Time Manipulation Operators
 
 ### `Time Window` Operator
 
-Moves the start_date and the end_date of each record. Use it to shift or widen a record's dates before you compare them with other records.
+<!-- conceptql-spec: operator time-window-operator -->
 
-- **Upstream:** one operator.
-- **Options:**
-  - `start`: how to change the start_date. If you omit it, the start_date does not change.
-  - `end`: how to change the end_date. If you omit it, the end_date does not change.
+More examples of date adjustments:
 
-Each option takes a date adjustment, which is one of:
-
-- An amount of time, made of one or more numbers with a unit: `d` (days), `w` (weeks), `m` (months) or `y` (years). Each part can have a `-` or `+` sign. For example:
-  - `30d` is 30 days.
-  - `20` is 20 days (a bare number means days).
-  - `d` is 1 day.
-  - `1y` is 1 year.
-  - `-1m` is 1 month back.
-  - `10d3m` is 3 months and 10 days.
-  - `-2y10m-3d` is back 2 years, forward 10 months, and back 3 days.
-- `""` or `0`: leave the date unchanged.
-- `start` or `end`: use the record's start_date or end_date. See the examples below.
-- A date in `YYYY-MM-DD` format: set the date to that date.
-
-```ConceptQL
-# All Diagnoses of Diabetes (ICD-9 250.01) within 30 days of an MI
-[
-  "during",
-  {
-    "left": [
-      "icd9",
-      "250.01"
-    ],
-    "right": [
-      "time_window",
-      [
-        "icd9",
-        "412"
-      ],
-      {
-        "start": "-30d",
-        "end": "30d"
-      }
-    ]
-  }
-]
-```
-
-```ConceptQL
-# Shift the dates of all MIs back by 200 years
-[
-  "time_window",
-  [
-    "icd9",
-    "412"
-  ],
-  {
-    "start": "-200y",
-    "end": "-200y"
-  }
-]
-```
-
-```ConceptQL
-# Widen the dates of all MIs to run from 2 months and 2 days before the MI to 1 year and 3 days after it
-[
-  "time_window",
-  [
-    "icd9",
-    "412"
-  ],
-  {
-    "start": "-2m-2d",
-    "end": "3d1y"
-  }
-]
-```
-
-```ConceptQL
-# Collapse the date range of all MIs to the start date: leave start_date unchanged and set end_date to start_date
-[
-  "time_window",
-  [
-    "icd9",
-    "412"
-  ],
-  {
-    "start": "",
-    "end": "start"
-  }
-]
-```
-
-```ConceptQL
-# Nonsensical, but allowed: swap the start_date and end_date
-[
-  "time_window",
-  [
-    "icd9",
-    "412"
-  ],
-  {
-    "start": "end",
-    "end": "start"
-  }
-]
-```
+- `30d` is 30 days.
+- `20` is 20 days.
+- `d` is 1 day.
+- `1y` is 1 year.
+- `-2y10m-3d` is back 2 years, forward 10 months, and back 3 days.
 
 ### `Trim Date Start` Operator
 
-Moves the start_date of each LHR forward to the end_date of an RHR. Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records.
+<!-- conceptql-spec: operator trim-date-start-operator -->
 
-- **Options:** `left` (required), `right` (required), and `within` (a date adjustment that is added to the RHR end_date before the comparison).
-- For each patient, it uses the end_date of the RHR with the latest start_date.
-
-There are four cases:
+Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records. There are four cases:
 
 - The patient has no RHR.
   - The LHR passes through unchanged.
@@ -903,31 +449,11 @@ There are four cases:
 - The RHR end_date is between the LHR start_date and end_date.
   - The LHR's start_date becomes the RHR's end_date.
 
-```ConceptQL
-# Each patient's span from birth to age 50, trimmed to start no earlier than 1980-01-01 (patients who were 50 before 1980 are dropped)
-[
-  "trim_date_start", {
-    "left": [
-      "time_window",
-      [ "person" ],
-      { "end": "+50y" }
-    ],
-    "right": [ "date_range", {
-      "start": "1980-01-01",
-      "end": "1980-01-01"
-    }]
-  }
-]
-```
-
 ### `Trim Date End` Operator
 
-Moves the end_date of each LHR back to the start_date of an RHR. Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records.
+<!-- conceptql-spec: operator trim-date-end-operator -->
 
-- **Options:** `left` (required), `right` (required), and `within` (a date adjustment that is subtracted from the RHR start_date before the comparison).
-- For each patient, it uses the earliest RHR start_date.
-
-There are four cases:
+Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records. There are four cases:
 
 - The patient has no RHR.
   - The LHR passes through unchanged.
@@ -937,23 +463,6 @@ There are four cases:
   - The LHR is discarded.
 - The RHR start_date is between the LHR start_date and end_date.
   - The LHR's end_date becomes the RHR's start_date.
-
-```ConceptQL
-# Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)
-[
-  "trim_date_end", {
-    "left": [
-      "time_window",
-      [ "person" ],
-      { "end": "+50y" }
-    ],
-    "right": [ "date_range", {
-      "start": "1980-01-01",
-      "end": "1980-01-01"
-    }]
-  }
-]
-```
 
 ### The `join_columns`, `compare_all` and `uuid` Options
 
@@ -993,131 +502,33 @@ This example makes a one-year window after each MI. Then it trims each window to
 
 ## Temporal Comparison Operator Options
 
-It can be hard to reason with [`time_window`](#time-window-operator) when you use temporal comparison operators. These options describe some common temporal relationships more directly:
-
-- `within` (all temporal comparison operators): a date adjustment, such as `30d`, `2m` or `1y-3d`.
-  - `before`: the LHR must also end no earlier than `within` before the RHR start_date.
-  - `after`: the LHR must also start no later than `within` after the RHR end_date.
-  - `during` and `any_overlap`: the RHR date range is widened by `within` in each direction before the comparison.
-  - `contains`: the LHR date range is widened by `within` in each direction before the comparison.
-- `at_least` (`before` and `after` only): a date adjustment.
-  - `before`: the LHR must end more than `at_least` before the RHR start_date.
-  - `after`: the LHR must start more than `at_least` after the RHR end_date.
-
-Use positive amounts with these options.
+It can be hard to reason with [`time_window`](#time-window-operator) when you use temporal comparison operators. The options `within` and `at_least` describe some common temporal relationships more directly. Every temporal comparison operator takes `within`, and `before` and `after` also take `at_least`. The reference section of each operator says what the options do for it.
 
 When `before` or `after` has the `within` option, it compares each LHR with every RHR of the patient, not only with the patient's last or earliest RHR.
 
-Here are the options in use:
-
-**Prescriptions After an Office Visit** - Find all prescriptions of interest that occur within three days after an office visit
-
-```ConceptQL
-[
-    "after", {
-        "left": [
-            "ndc", "61392070054", "65084025214", "65726040125", { "label": "Prescriptions of Interest" }
-        ],
-        "right": [
-            "cpt", "99214", { "label": "Office Visit" }
-        ],
-        "within": "3d"
-    }
-]
-```
-
-Walk-through of the example above:
+Walk-through of the second example of [`after`](#after-operator), which finds the prescriptions of interest within three days after an office visit:
 
 - Select some prescriptions of interest as the LHR.
 - Select office visits as the RHR.
 - Compare each LHR with each RHR of the same patient. Keep the LHR whose start_date is after the RHR end_date, and no more than 3 days after it.
 
-**Find all Heart Attacks Probably Resulting in Death** - Does anyone die within a year of a heart attack?
-
-```ConceptQL
-[
-    "before", {
-        "left": [
-            "icd9", "410.00", "410.01", "410.10", "410.11"
-        ],
-        "right": [
-            "death"
-        ],
-        "within": "1y"
-    }
-]
-```
-
-Walk-through of the example above:
+Walk-through of the third example of [`before`](#before-operator), which asks whether anyone dies within a year of a heart attack:
 
 - Select heart attack diagnoses as the LHR.
 - Select death records as the RHR.
 - Keep the LHR whose end_date is before the date of death, and no more than 1 year before it.
 
-```ConceptQL
-# Find all diagnoses of heart attack more than 1 week after a diagnosis of diabetes
-[
-    "after", {
-        "left": [
-            "icd9",
-            "410.00", "410.01", "410.10", "410.11",
-            { "label": "Heart Attack Dx" }
-        ],
-        "right": [
-            "icd9", "250.01", { "label": "Diabetes Dx"}
-        ],
-        "at_least": "1w"
-    }
-]
-```
-
-This example shows how `at_least` works.
+The third example of [`after`](#after-operator) shows how `at_least` works.
 
 ### Temporal Operators and Person Streams
 
-The start and end dates of a person record are the patient's birth date. So a person stream is rarely useful as the left-hand stream of a temporal operator. But it is useful as the right-hand stream. If we move the birth date with `time_window`, we can filter by the patient's age:
-
-```ConceptQL
-# All MIs that occurred after a male patient's 50th birthday
-[
-  "after",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "time_window",
-      [
-        "gender",
-        "Male"
-      ],
-      {
-        "start": "50y",
-        "end": "50y"
-      }
-    ]
-  }
-]
-```
+The start and end dates of a person record are the patient's birth date. So a person stream is rarely useful as the left-hand stream of a temporal operator. But it is useful as the right-hand stream. If we move the birth date with `time_window`, we can filter by the patient's age. The last example of [`after`](#after-operator) selects the MIs that occurred after a male patient's 50th birthday.
 
 ## `Episode` Operator
 
-Merges each patient's records into episodes: spans of time in which the records are close together. For example, it can turn a set of prescriptions into the spans of time in which we consider a patient to be taking a drug.
+<!-- conceptql-spec: operator episode-operator -->
 
-- **Upstream:** one operator.
-- **Options:**
-  - `gap_of` (integer number of days, default 0): the largest gap that stays in the same episode. The gap is measured from the latest end_date of all the earlier records in the episode, not only from the end_date of the record just before.
-- **Returns:** one record for each episode. Its start_date is the earliest start_date in the episode, and its end_date is the latest end_date.
-
-The operator orders each patient's records by start_date and then by end_date. A record stays in the current episode when its start_date is no more than `gap_of` days after the latest end_date of the earlier records. Otherwise it starts a new episode. A record without an end_date counts as ending on its start_date. So a long record keeps the episode open: the records 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first record ends after the third record starts.
-
-```ConceptQL
-# Episodes of diabetes diagnoses
-[ "episode", ["icd9", "250.00"], { "gap_of": "90" } ]
-```
-
-An episode record does not point back to one row, because it merges several records. Its `criterion_table` and `criterion_domain` are `episode`, and its `criterion_id` is 0. An episode stream is often most useful as the right-hand stream of a [temporal operator](#temporal-comparison-operators).
+A long record keeps the episode open: the records 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first record ends after the third record starts. An episode stream is often most useful as the right-hand stream of a [temporal operator](#temporal-comparison-operators).
 
 ## Inline-Filter Operators
 
@@ -1125,77 +536,39 @@ These operators filter one incoming stream and pass along the records that remai
 
 ### `Place of Service Filter` Operator
 
-Claims often report the place of service of an event with a CMS place of service code, such as "inpatient hospital" (21) or "outpatient hospital" (22). The `place_of_service_filter` operator keeps the records whose claim has one of the given place of service codes.
+<!-- conceptql-spec: operator place-of-service-filter-operator -->
 
-- **Arguments:** one or more CMS place of service codes, such as `21` or `22`. `*` keeps every record that has a place of service. An unknown code makes the statement invalid.
-- **Upstream:** one operator.
-
-```ConceptQL
-["place_of_service_filter", 22, ["icd9", "250.00"]]
-```
-
-Our test data has no place of service information, so this example returns no records.
+Claims often report the place of service of an event with a CMS place of service code. Our test data has no place of service information, so the example returns no records.
 
 ### `Provenance` Operator
 
-Provenance is information about the origin of claims data. It is sometimes an important factor in research algorithms. For example, authors often describe "inpatient records", by which they mean claims from the inpatient file of a claims dataset. The [GDM](https://github.com/outcomesinsights/generalized_data_model#contexts) records the provenance of the data during ETL. The `provenance` operator keeps the records that have the given provenance.
+<!-- conceptql-spec: operator provenance-operator -->
 
-- **Arguments:** one or more provenance keywords, in lower case. Case matters.
-- **Upstream:** one operator.
+Provenance is information about the origin of claims data. It is sometimes an important factor in research algorithms. For example, authors often describe "inpatient records", by which they mean claims from the inpatient file of a claims dataset. The [GDM](https://github.com/outcomesinsights/generalized_data_model#contexts) records the provenance of the data during ETL.
 
-There are two kinds of keyword:
+These are the keywords of each kind:
 
-- A file keyword says which kind of file a record came from: `inpatient`, `outpatient`, `carrier_claim`, `claim`, `dme`, `hha`, `hospice`, `snf`, `prescription_drug` or `demographics`.
-- A code keyword says where the code was in the claim: `primary`, `primary_or_first`, `first`, `second`, `admitting`, `discharge`, `problem_list`, `chief_complaint` or `unspecified`.
+- File keywords: `inpatient`, `outpatient`, `carrier_claim`, `claim`, `dme`, `hha`, `hospice`, `snf`, `prescription_drug` and `demographics`.
+- Code keywords: `primary`, `primary_or_first`, `first`, `second`, `admitting`, `discharge`, `problem_list`, `chief_complaint` and `unspecified`.
 
-A keyword also includes the provenances under it. For example, `inpatient` includes `snf`, `outpatient` includes `hha` and `hospice`, and `claim` includes every kind of claim file.
-
-- A record passes if it matches any of the keywords.
-- The form `file:code`, such as `inpatient:primary`, requires both the file provenance and the code provenance.
-- `*` keeps every record that has a provenance.
-- A statement with no keyword, or with an unknown keyword, is invalid.
-
-```ConceptQL
-["provenance", "inpatient", [ "icd9", "250.00" ]]
-```
+Besides `inpatient`, which includes `snf`, `outpatient` includes `hha` and `hospice`, and `claim` includes every kind of claim file.
 
 ### `Provider Filter` Operator
 
-Keeps the records in which a particular kind of provider took part.
+<!-- conceptql-spec: operator provider-filter-operator -->
 
-- **Upstream:** one operator.
-- **Options:** both are required.
-  - `specialties`: the specialty of the provider. A record passes if the practitioner's own specialty, or the specialty recorded for the practitioner on that record's claim, matches.
-  - `roles`: the role that the provider had, from the GDM_ROLE vocabulary. For example, `100000066` (Performing physician), `100000067` (Attending physician), `100000068` (Operating physician), `100000069` (Other physician), `100176860` (Billing provider), `100176861` (Rendering provider) and `100176862` (Prescribing provider).
-- **Returns:** the matching records, with the columns `provider_id`, `context_specialty_concept_id`, `practitioner_specialty_concept_id` and `role_type_concept_id` added.
+These are the roles of the GDM_ROLE vocabulary: `100000066` (Performing physician), `100000067` (Attending physician), `100000068` (Operating physician), `100000069` (Other physician), `100176860` (Billing provider), `100176861` (Rendering provider) and `100176862` (Prescribing provider). The operator takes concept IDs, not names of specialties and roles.
 
-Each option takes a comma-separated list of concept IDs, and a record passes if it matches any of them. Use `*` to skip that half of the filter. For example, `{ "specialties": "*", "roles": "100000067" }` keeps the records that had an attending physician of any specialty. One record can involve several providers, so a record can appear more than once if more than one of its providers matches.
-
-The operator takes concept IDs, not names of specialties and roles.
-
-This example looks for diabetes diagnoses whose attending physician was an endocrinologist. `38003868` is the NUCC specialty "Endocrinology, Diabetes & Metabolism Physician", and `100000067` is the "Attending physician" role. The results show every column, so you can see the provider, both specialty columns, and the role that matched:
+Use `*` to skip one half of the filter. This example keeps the diabetes diagnoses that had an attending physician of any specialty. The results show every column, so you can see the provider, both specialty columns, and the role that matched:
 
 ```ConceptQL{all_keys: true}
-# Diabetes diagnoses with an endocrinologist as the attending physician
-[ "provider_filter", [ "icd9", "250.00"], { "specialties": "38003868", "roles": "100000067" }]
+# Diabetes diagnoses with an attending physician of any specialty
+[ "provider_filter", [ "icd9", "250.00"], { "specialties": "*", "roles": "100000067" }]
 ```
 
 ### `One In Two Out` Operator
 
-Algorithms often consider a condition to be confirmed if:
-
-- the condition appears once in an inpatient record, or
-- the condition appears twice in outpatient records, separated by a minimum gap (often 30 days).
-
-The `one_in_two_out` operator implements this pattern.
-
-```ConceptQL
-# First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart
-["one_in_two_out", ["icd9", "250.00"], { "outpatient_minimum_gap": "30d", "outpatient_event_to_return": "Initial Event" }]
-```
-
-- **Upstream:** one operator.
-- **Returns:** one record per patient: the earliest confirmed event.
+<!-- conceptql-spec: operator one-in-two-out-operator -->
 
 The operator decides between inpatient and outpatient by the provenance of each record (see [`provenance`](#provenance-operator)):
 
@@ -1203,140 +576,18 @@ The operator decides between inpatient and outpatient by the provenance of each 
 - A record with `outpatient` or `carrier_claim` provenance is an outpatient record.
 - Other records, and records whose type is not `condition_occurrence`, are removed.
 
-The place of service of a record does not matter. The two outpatient records need not have the same code. Any two records from the upstream stream can confirm each other.
+The place of service of a record does not matter. The two outpatient records need not have the same code. Any two records from the upstream stream can confirm each other. For outpatient records, the operator compares start_dates.
 
-For an inpatient record, the operator uses the admission date and the discharge date of its admission, when the claim has them. It returns an inpatient record with the admission date as its start_date and the discharge date as its end_date. For outpatient records, it compares start_dates.
+More about the options:
 
-Options:
-
-- `inpatient_length_of_stay` (Inpatient Length of Stay): an integer number of days, default 0.
-  - An inpatient record counts only if its discharge date is more than this many days after its admission date.
-  - 0 or empty means no length-of-stay check.
-- `outpatient_minimum_gap` (Outpatient Minimum Gap): a date adjustment, as in `time_window` (for example `30d`, `1m` or `1y`).
-  - The confirming outpatient record must start at least this long after the initial record.
-  - If you omit it, the gap is 30 days.
-- `outpatient_maximum_gap` (Outpatient Maximum Gap): a date adjustment.
-  - The confirming outpatient record must start no more than this long after the initial record.
-  - If you omit it, there is no maximum. Jigsaw fills in 365 days.
-  - This option helps with acute diseases. For example, to confirm the flu, set a maximum gap so that the two diagnoses come from the same illness.
-- `outpatient_event_to_return` (Outpatient Event to Return): `Initial Event` or `Confirming Event`.
-  - It chooses which outpatient record to return when two outpatient records confirm the condition.
-  - Use `Initial Event` in most cases, for example when the algorithm records an exposure of interest or an outcome.
-  - Use `Confirming Event` when the algorithm finds an index event. The initial event would introduce immortal time bias.
-  - Jigsaw fills in `Initial Event`. A statement that omits the option, or gives any other value, gets `Confirming Event`. So always set this option.
+- `outpatient_maximum_gap` helps with acute diseases. For example, to confirm the flu, set a maximum gap so that the two diagnoses come from the same illness. Jigsaw fills in 365 days.
+- `outpatient_event_to_return`: use `Initial Event` in most cases, for example when the algorithm records an exposure of interest or an outcome. Use `Confirming Event` when the algorithm finds an index event. The initial event would introduce immortal time bias. Jigsaw fills in `Initial Event`, but a statement that omits the option gets `Confirming Event`. So always set this option.
 
 ### `Person Filter` Operator
 
-Keeps each left-hand record whose patient appears anywhere in the right-hand stream. For example, to find all MIs of males, use `person_filter`.
+<!-- conceptql-spec: operator person-filter-operator -->
 
-- **Options:** `left` (required) and `right` (required), each an operator.
-- **Returns:** the left-hand records of every type whose patient has at least one right-hand record. The type and the dates of the right-hand records do not matter.
-
-```ConceptQL
-# All MI Conditions for people who are male
-[
-  "person_filter",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "gender",
-      "Male"
-    ]
-  }
-]
-```
-
-The right-hand stream need not be a person stream. Any record of a patient counts:
-
-```ConceptQL
-# All MI Conditions for people who had an office visit at some point in the data
-[
-  "person_filter",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "cpt",
-      "99214"
-    ]
-  }
-]
-```
-
-```ConceptQL
-# The same result as the example above, with the office visits converted to patients first
-[
-  "person_filter",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "person",
-      [
-        "cpt",
-        "99214"
-      ]
-    ]
-  }
-]
-```
-
-```ConceptQL
-# All MI Conditions for people who are Male OR had an office visit at some point in the data
-[
-  "person_filter",
-  {
-    "left": [
-      "icd9",
-      "412"
-    ],
-    "right": [
-      "union",
-      [
-        "cpt",
-        "99214"
-      ],
-      [
-        "gender",
-        "Male"
-      ]
-    ]
-  }
-]
-```
-
-The left-hand stream can also have several types:
-
-```ConceptQL
-# Yields two types: all MI Conditions for people who are Male, and all office visit Procedures for people who are Male
-[
-  "person_filter",
-  {
-    "left": [
-      "union",
-      [
-        "icd9",
-        "412"
-      ],
-      [
-        "cpt",
-        "99214"
-      ]
-    ],
-    "right": [
-      "gender",
-      "Male"
-    ]
-  }
-]
-```
+For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any record of a patient counts. The left-hand stream can also have several types, as the last example shows.
 
 ## Comparison Operators
 
@@ -1344,40 +595,29 @@ These operators compare records of incoming streams to produce a set of records.
 
 ### `Filter` Operator
 
-Keeps each left-hand record that also appears in the right-hand stream. It is an intersection of the two streams.
+<!-- conceptql-spec: operator filter-operator -->
 
-- **Options:** `left` (required) and `right` (required), each an operator.
-- **Returns:** the left-hand records that have a right-hand record with the same `person_id`, `criterion_id`, `criterion_table`, `criterion_domain`, `start_date` and `end_date`.
-
-Filter compares records, not date ranges. A record whose dates `time_window` changed no longer matches the original record.
+It is an intersection of the two streams. Filter compares records, not date ranges. A record whose dates `time_window` changed no longer matches the original record.
 
 ### `Match` Operator
 
-Keeps each left-hand record that is equal to a right-hand record in every column, including `label`. Two empty (NULL) values count as equal. It is stricter than [`filter`](#filter-operator), so most users want `filter`. Systems that build statements, such as Jigsaw's export engine, use match with options that Jigsaw does not show.
+<!-- conceptql-spec: operator match-operator -->
 
-- **Options:** `left` (required) and `right` (required), each an operator.
+It is stricter than [`filter`](#filter-operator), so most users want `filter`. Systems that build statements, such as Jigsaw's export engine, use match with options that Jigsaw does not show.
 
 ### `Co-Reported` Operator
 
-Claims data often reports diagnoses on the same claim as a procedure. This is done for billing: the provider says "I performed this procedure because the patient has these conditions". The `co_reported` operator finds this relationship.
+<!-- conceptql-spec: operator co-reported-operator -->
 
-- **Upstream:** two or more operators.
-- **Returns:** the records of every stream that were reported in the same claim as a record of every other stream. In the [GDM](https://github.com/outcomesinsights/generalized_data_model), "the same claim" means the same [context](https://github.com/outcomesinsights/generalized_data_model#contexts).
-
-The operator does not compare dates. If one stream has no record in a context, the records of all streams in that context are dropped. Person and death records have no context, so they never pass.
-
-```ConceptQL
-# Diabetes diagnoses reported as a reason for an office visit, and those office visits
-[ "co_reported", [ "icd9", "250.00" ], ["cpt", "99214" ] ]
-```
-
-Both the diagnoses and the procedures pass through the operator.
+Claims data often reports diagnoses on the same claim as a procedure. This is done for billing: the provider says "I performed this procedure because the patient has these conditions". The `co_reported` operator finds this relationship. In the [GDM](https://github.com/outcomesinsights/generalized_data_model), "the same claim" means the same [context](https://github.com/outcomesinsights/generalized_data_model#contexts). In the example, both the diagnoses and the procedures pass through the operator.
 
 ## `label` Option and Its Features
 
-Every ConceptQL operator takes a `label` option. A label is a short description of an operator, usually of the records that it produces.
+Every ConceptQL operator takes a `label` option, so the reference sections of the operators do not list it:
 
-An operator with a `label` writes its label into the `label` column of its records. An operator without a label passes the upstream label through.
+<!-- conceptql-spec: label-option -->
+
+An operator without a label passes the upstream label through.
 
 For example, here are some diabetes diagnoses with a label:
 
@@ -1397,44 +637,11 @@ Labels give hints about the output:
 ["first", ["union", ["icd9", "250.00", {"label": "diabetes"}], ["icd9", "401.9", {"label": "hypertension"}]]]
 ```
 
-A label must be a string, and each label in a statement must be different.
+A label must be a string.
 
 ### `Recall` Operator
 
-When an algorithm is complex, or uses a stream of records more than once, it helps to break the algorithm into parts. Use the `label` option and the `recall` operator to do that. The `recall` operator returns the records of the operator with the given label.
-
-- **Arguments:** one label. The label must match exactly, including case.
-- **Upstream:** none.
-
-Each label that `recall` uses must exist in the statement. It can appear before or after the `recall`. A statement in which labeled streams recall each other in a loop is invalid.
-
-```ConceptQL
-# Label neurological diagnoses as "neuro dxs".  Recall them to remove those that were co-reported with a nervous-system MS-DRG.  Then apply the one inpatient, two outpatient rule.  (The code lists are shortened.)
-[
-  "one_in_two_out",
-  [
-    "except",
-    {
-      "left": [
-        "union",
-        ["icd9", "331.0", "332.0", "340", "345.90"],
-        ["icd10cm", "G20", "G30.9", "G35", "G40.909"],
-        {"label": "neuro dxs"}
-      ],
-      "right": [
-        "co_reported",
-        ["recall", "neuro dxs"],
-        ["ms_drg", "056", "057", "058", "059", "060", "100", "101"]
-      ]
-    }
-  ],
-  {
-    "outpatient_minimum_gap": "30d",
-    "outpatient_maximum_gap": "365d",
-    "outpatient_event_to_return": "Confirming Event"
-  }
-]
-```
+<!-- conceptql-spec: operator recall-operator -->
 
 ## Window Tables
 
@@ -1456,20 +663,15 @@ These operators work, but they may change or be removed. They compare the `value
 
 ### `Numeric Filter` Operator
 
-An [inline filter operator](#inline-filter-operators). Keeps each record whose `value_as_number` is in a range.
+<!-- conceptql-spec: operator numeric-filter-operator -->
 
-- **Upstream:** one operator.
-- **Options:** both are optional.
-  - `greater_than_or_equal_to` (number): the lowest value that passes.
-  - `less_than_or_equal_to` (number): the highest value that passes.
-- Records whose `value_as_number` is empty (NULL) are discarded.
+It is an [inline filter operator](#inline-filter-operators).
 
 ### `Equal` Operator
 
-Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams. Keeps each LHR that has an RHR of the same patient with the same `value_as_number`. It does not compare dates.
+<!-- conceptql-spec: operator equal-operator -->
 
-- **Options:** `left` (required) and `right` (required), each an operator.
-- LHR whose `value_as_number` is empty (NULL) are discarded.
+Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams.
 
 ## Appendix B - Algorithm Showcase
 
@@ -1633,7 +835,15 @@ ConceptQL was first written for PostgreSQL, and it was later adapted to MSSQL, O
 
 This document is part of the [ConceptQL](https://github.com/outcomesinsights/conceptql) repository, in `docs/spec/`. `README.md` is generated from `README.cql.md`. Edit `README.cql.md`, and then run `just spec` in the repository. This document describes the version of ConceptQL in the same commit.
 
-`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md`, the build writes the example: the statement as JSON, its diagram, and the first 10 records of its result. It orders the records by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same records. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
+The reference section of each operator, the text of the `label` option and Appendix E come from the metadata of the operators (`ConceptQL.metadata`), so the texts in the operator classes are their only copy. A directive in `README.cql.md`, an HTML comment on a line of its own, marks the place of each generated block:
+
+- `<!-- conceptql-spec: operator <spec_id> -->` writes the reference section of the operators with that `spec_id`. It comes directly after the heading of the section, whose anchor is the `spec_id`. The section has the operator's description, its upstream operators or its operands (`left` and `right`), its arguments, its options, the records it returns, and its examples. Text about more than one operator, and longer explanations of one operator, follow the directive as markdown.
+- `<!-- conceptql-spec: label-option -->` writes the text of the `label` option, which every operator takes.
+- `<!-- conceptql-spec: quick-reference -->` writes the table of Appendix E, with one row for each `spec_id`.
+
+The metadata comes from a ConceptQL database with the data model `gdm`, no data database and no custom vocabularies, so it decides which operators get a section. Each `spec_id` of that metadata needs exactly one directive, and the build stops when one is missing, repeated or not after its heading.
+
+`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md` and each example of a reference section, the build writes the example: the statement as JSON, its diagram, and the first 10 records of its result. It orders the records by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same records. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
 
 The results and the counts come from ConceptQL's DuckDB test data, `synpuf_test_data.duckdb`, with the data model `gdm_wide` and the OHDSI vocabulary tables. `just spec` runs the build through `just test-duckdb`, so it needs what the DuckDB tests need:
 
@@ -1648,28 +858,6 @@ Between releases, the results and the images on the main branch can be out of da
 
 ## Appendix E - Operator Quick Reference
 
-The Jigsaw category of each operator is the group in which Jigsaw's operator palette shows it. Every operator also takes the [`label`](#label-option-and-its-features) option.
+The build writes this table from the metadata of the operators. It has one row for each reference section. The Jigsaw category of each operator is the group in which Jigsaw's operator palette shows it. Every operator also takes the [`label`](#label-option-and-its-features) option.
 
-| Operator                                                                                                                                                         | Jigsaw category          | What it does                                                              |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------- |
-| [vocabulary operators](#vocabulary-operator) (`icd9cm`, `cpt4`, ...)                                                                                             | Select by Clinical Codes | Selects the records that have any of the given codes                      |
-| [`gender`](#gender-operator), [`race`](#race-operator), [`ethnicity`](#ethnicity-operator)                                                                       | Select by Property       | Selects patients with the given demographic values                        |
-| [`date_range`](#date-range-operator)                                                                                                                             | Select by Property       | Makes one record per patient with the given dates                         |
-| [`hospitalization`](#hospitalization-operator), [`snf`](#snf-operator), [`hospice`](#hospice-operator)                                                           | Select by Property       | Selects inpatient, skilled nursing or hospice admissions                  |
-| [`person`](#person-operator), [`death`](#death-operator)                                                                                                         | Get Related Data         | Selects patients or deaths, for all patients or for the patients upstream |
-| [`information_periods`](#information-periods-operator)                                                                                                           | Get Related Data         | Selects the periods in which each patient has data                        |
-| [`recall`](#recall-operator)                                                                                                                                     | Get Related Data         | Reuses the records of a labeled operator                                  |
-| [`time_window`](#time-window-operator)                                                                                                                           | Modify Data              | Moves each record's start_date and end_date                               |
-| [`episode`](#episode-operator)                                                                                                                                   | Modify Data              | Merges records that are close in time into episodes                       |
-| [`union`](#union-operator)                                                                                                                                       | Combine Streams          | Combines streams into one stream                                          |
-| [`co_reported`](#co-reported-operator)                                                                                                                           | Combine Streams          | Keeps records reported in the same claim as records of every other stream |
-| [`except`](#except-operator)                                                                                                                                     | Filter by Comparing      | Removes left-hand records that also appear on the right                   |
-| [`filter`](#filter-operator), [`match`](#match-operator)                                                                                                         | Filter by Comparing      | Keeps left-hand records that also appear on the right                     |
-| [`person_filter`](#person-filter-operator)                                                                                                                       | Filter by Comparing      | Keeps left-hand records of the patients on the right                      |
-| [`during`](#during-operator), [`contains`](#contains-operator), [`any_overlap`](#any-overlap-operator), [`before`](#before-operator), [`after`](#after-operator) | Filter by Comparing      | Keep left-hand records by comparing their dates with right-hand records   |
-| [`trim_date_start`](#trim-date-start-operator), [`trim_date_end`](#trim-date-end-operator)                                                                       | Filter by Comparing      | Shorten left-hand records with the dates of right-hand records            |
-| [`equal`](#equal-operator)                                                                                                                                       | Filter by Comparing      | Keeps left-hand records with the same value as a right-hand record        |
-| [`occurrence`](#nth-occurrence-operator), [`first`](#first-operator), [`last`](#last-operator)                                                                   | Filter Single Stream     | Keep the nth record of each patient                                       |
-| [`place_of_service_filter`](#place-of-service-filter-operator), [`provenance`](#provenance-operator), [`provider_filter`](#provider-filter-operator)             | Filter Single Stream     | Keep records by place of service, source file or provider                 |
-| [`one_in_two_out`](#one-in-two-out-operator)                                                                                                                     | Filter Single Stream     | Keeps conditions confirmed by one inpatient or two outpatient records     |
-| [`numeric_filter`](#numeric-filter-operator)                                                                                                                     | Filter Single Stream     | Keeps records whose value is in a range                                   |
+<!-- conceptql-spec: quick-reference -->

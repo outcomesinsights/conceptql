@@ -53,6 +53,18 @@ All notable changes to this project will be documented in this file.
   text comes from the conceptql_spec repository, which held the published spec, and it replaces
   the copy that was `doc/spec.md`. `just spec` builds it from `docs/spec/README.cql.md` on the
   DuckDB test data. The gem does not ship its diagram images.
+- The `desc` of the published operators changed. The operator classes now hold the reference
+  documentation of the spec, so each `desc` is the summary of its operator's reference section.
+  `ConceptQL.metadata` serves the new texts, so a system that keeps a copy of the metadata,
+  such as the Jigsaw diagram editor, sees a different payload.
+- The spec build writes the reference section of each published `spec_id` and the quick
+  reference of Appendix E from `ConceptQL.metadata` of `Database.new(nil, data_model: :gdm)`.
+  A section has the operator's `desc`, its upstream operators or its `left` and `right`
+  operands, its arguments and options with their `meaning`, its `returns` text and its examples
+  with their results and diagrams. `docs/spec/README.cql.md` marks the place of each generated
+  block with a directive, `<!-- conceptql-spec: operator <spec_id> -->`, and the spec's
+  Appendix D describes the directives. The hand-written copies of these texts are removed from
+  the spec.
 
 ### Removed
 
