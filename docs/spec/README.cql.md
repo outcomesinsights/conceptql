@@ -183,6 +183,14 @@ That kind of aggregation and analysis is outside the scope of ConceptQL. Concept
 
 The rest of this document describes each operator. [Appendix E](#appendix-e---operator-quick-reference) lists every operator in one table.
 
+### Statements That ConceptQL Refuses
+
+ConceptQL checks each statement before it builds SQL for it. A statement with an error is invalid. Examples of errors are an unknown operator, a required option that is missing, and a `recall` of a label that the statement does not have. ConceptQL refuses to build SQL for an invalid statement, and so it does not run it. It reports each error with the name of the operator that has the error.
+
+A warning does not make a statement invalid. Examples of warnings are an unknown code, an improperly formatted code and a deprecated operator. A statement with warnings runs. When ConceptQL draws the diagram of a statement, it shows the errors and the warnings of each operator, and it does not refuse an invalid statement.
+
+ConceptQL finds the concept of each code in the vocabulary tables. It uses either the OHDSI vocabulary tables (`concept`, `concept_ancestor`, `concept_relationship` and `vocabulary`) or the GDM vocabulary tables (`concepts`, `ancestors`, `mappings` and `vocabularies`). It looks for them in the search path of the data database, and then in the database that the environment variable `LEXICON_URL` names. If ConceptQL has a real data database and finds no complete set of vocabulary tables, it refuses to start. Without vocabulary tables, every code would match no records, and a statement would return no records with no warning. Without a database, for example when ConceptQL only draws a diagram, it uses no vocabulary tables.
+
 ## Selection Operators
 
 Selection operators select records from the database. For example, a search for diagnoses of old myocardial infarction (ICD-9-CM 412) is a selection. Most selection operators are leaf operators: no other operator flows into them. `person` and `death` can also take one upstream operator (see [`person`](#person-operator)).
@@ -223,7 +231,34 @@ How codes match:
 - A code that has more than one meaning in the vocabulary gives the warning "code(s) with more than one meaning".
 - A vocabulary operator selects only codes from its own vocabulary. It does not follow mappings between vocabularies, so `rxnorm` does not find records coded with NDC.
 
-The `drg` operator is deprecated. A DRG code has one meaning in CMS-DRG (before 2007-10-01) and another in MS-DRG (from 2007-10-01), and `drg` selects the records of both. Use `ms_drg` or `cms_drg`.
+#### DRG Codes
+
+CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning. For example, DRG 205 meant a liver disorder in CMS-DRG, and it means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a record does not say which meaning applied. So a statement names the DRG system, and ConceptQL selects each record by its code and by its start_date:
+
+- `ms_drg` selects the DRG records whose start_date is on or after 2007-10-01.
+- `cms_drg` selects the DRG records whose start_date is before 2007-10-01.
+
+```ConceptQL
+# All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity
+[
+  "ms_drg",
+  "205"
+]
+```
+
+Our test data has no DRG record before 2007-10-01, so this example returns no records:
+
+```ConceptQL
+# All CMS-DRG 205 records (a liver disorder)
+[
+  "cms_drg",
+  "205"
+]
+```
+
+Both operators check codes as the other vocabulary operators do. A DRG code has 3 digits, with leading zeros. A code that the DRG vocabulary does not have gets the warning "unknown code(s)". These operators never give the warning "code(s) with more than one meaning", because the operator chooses the meaning.
+
+The `drg` operator is deprecated. It selects the DRG records of both systems, whatever their dates. A statement that uses `drg` still runs, but `drg` gets the warning "deprecated operator", and a later release will make it an error. Use `ms_drg` or `cms_drg`.
 
 ### Person-related Operators
 
@@ -264,7 +299,7 @@ Selects patients by ethnicity.
 
 #### `Person` Operator
 
-Selects patients. With no upstream operator, it selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream.
+Selects patients. With no upstream operator, it selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream. That use is called casting (see [Type Conversion](#type-conversion)).
 
 - **Upstream:** none, or one operator.
 
@@ -277,7 +312,7 @@ Selects patients. With no upstream operator, it selects every patient. With one 
 
 #### `Death` Operator
 
-Selects death records from the `deaths` table. The type of these records is `death`, and their start_date and end_date are both the date of death. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream.
+Selects death records from the `deaths` table. The type of these records is `death`, and their start_date and end_date are both the date of death. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream (see [Type Conversion](#type-conversion)).
 
 - **Upstream:** none, or one operator.
 
@@ -325,6 +360,66 @@ Selects inpatient hospital admissions.
 
 ```ConceptQL
 [ "hospitalization" ]
+```
+
+## Type Conversion
+
+Sometimes a stream of one type must become a stream of another type. Programmers call this "casting". Think of a metal candle holder that is melted down and cast again as a lamp. In the same way, `person` can take a stream of `condition_occurrence` records and cast it again as a stream of `person` records.
+
+ConceptQL has two casting operators: `person` and `death`. The GDM has no visit table, so there is no cast to a visit. To find the conditions and procedures that were reported in the same claim, use [`co_reported`](#co-reported-operator).
+
+### Casting to Person
+
+Cast a stream to `person` when you need to know *whether* a patient has a record, not when or how often. The result has one record for each patient who has at least one record in the upstream stream, however many records the patient has.
+
+```ConceptQL
+# All people who had an MI
+[
+  "person",
+  [
+    "icd9",
+    "412"
+  ]
+]
+```
+
+### Casting to Death
+
+Cast a stream to `death` to replace the records of each patient with the patient's death records. A patient who has no death record has no records in the result.
+
+```ConceptQL
+# The deaths of all people who had an MI
+[
+  "death",
+  [
+    "icd9",
+    "412"
+  ]
+]
+```
+
+### Casting Loses the Original Information
+
+A cast record does not keep the ID, the code or the dates of the upstream record. For example, a `condition_occurrence` record cast to `person` points at the patient's row in `patients`, and its start_date and end_date are the patient's birth date. This is useful when a stream of person records had its dates moved by [`time_window`](#time-window-operator), and you need the birth dates again: cast the stream to `person` again.
+
+### Casting as a Way to Fetch All Rows
+
+With no upstream operator, a casting operator selects every row of its table: `["person"]` selects every patient, and `["death"]` selects every death record. This is useful as the right-hand stream of an operator such as [`person_filter`](#person-filter-operator):
+
+```ConceptQL
+# All male patients who died
+[
+  "person_filter",
+  {
+    "left": [
+      "gender",
+      "Male"
+    ],
+    "right": [
+      "death"
+    ]
+  }
+]
 ```
 
 ## Set Operators
@@ -592,6 +687,8 @@ A temporal operator takes two streams: the left-hand records (LHR) and the right
 - Each LHR is passed along at most once, however many RHR it matches.
 - A patient who has LHR but no RHR loses all of their LHR.
 - A record that is in both streams can match itself. For example, a record is during itself.
+
+Edge behaviors: `during`, `contains` and `any_overlap` compare each LHR with every RHR of the patient. `before` and `after` do not. Without the `within` option, `before` compares each LHR only with the latest start_date of the patient's RHR, and `after` compares each LHR only with the earliest end_date of the patient's RHR. [`before`](#before-operator) and [`after`](#after-operator) explain why, and [Working Around `Before`/`After` Behavior](#working-around-beforeafter-behavior) shows how to choose another RHR.
 
 Each operator compares the dates in a different way. All of them take [some options](#temporal-comparison-operator-options), which are described later.
 
@@ -918,6 +1015,42 @@ There are four cases:
 ]
 ```
 
+### The `join_columns`, `compare_all` and `uuid` Options
+
+Systems that build statements, such as Jigsaw's export engine, give `trim_date_start` and `trim_date_end` two more options. Jigsaw's diagram editor does not show them.
+
+- `join_columns`: a list of column names. Each LHR is compared only with the RHR of the same patient that have the same values in these columns. Without `compare_all`, the operator uses the first RHR (`trim_date_end`) or the last RHR (`trim_date_start`) of each patient and each set of `join_columns` values. The RHR are ordered by start_date and then by `criterion_id`.
+- `compare_all` (boolean): compare each LHR with every RHR of the patient (and of the `join_columns` values), not only with the first or the last RHR. Each LHR comes out at most once.
+  - `trim_date_end` moves the end_date of the LHR back to the earliest RHR start_date that is on or after the LHR start_date.
+  - `trim_date_start` moves the start_date of the LHR forward to the latest RHR end_date that is on or before the LHR end_date.
+  - The `within` option moves each RHR date before the comparison, as above.
+  - An LHR is discarded only when it has RHR (of its patient and its `join_columns` values) and none of them qualifies. An LHR without RHR passes through unchanged.
+
+These systems often join on the column `uuid`. A selection operator, such as a vocabulary operator, takes the option `uuid` (`{"uuid": true}`), which adds the column `uuid` to its records. The uuid is the `person_id`, `criterion_id`, `criterion_table`, start_date and end_date of the record, joined with `/`, such as `17/27269/observations/2008-08-25/2008-08-25`. An empty part is an empty string, so a record without an end_date has a uuid such as `1/2/observations/2008-03-10/`. The uuid keeps its value when a later operator, such as `time_window`, moves the dates. So two streams made from the same records can be joined record by record.
+
+This example makes a one-year window after each MI. Then it trims each window to end 30 days after its own MI. The `join_columns` option makes sure that no other MI of the same patient trims the window:
+
+```ConceptQL
+# Each MI's following year, trimmed to end 30 days after that same MI
+[
+  "trim_date_end",
+  {
+    "left": [
+      "time_window",
+      [ "icd9", "412", { "uuid": true } ],
+      { "end": "+1y" }
+    ],
+    "right": [
+      "time_window",
+      [ "icd9", "412", { "uuid": true } ],
+      { "start": "+30d", "end": "+30d" }
+    ],
+    "join_columns": [ "uuid" ],
+    "compare_all": true
+  }
+]
+```
+
 ## Temporal Comparison Operator Options
 
 It can be hard to reason with [`time_window`](#time-window-operator) when you use temporal comparison operators. These options describe some common temporal relationships more directly:
@@ -1034,8 +1167,10 @@ Merges each patient's records into episodes: spans of time in which the records 
 
 - **Upstream:** one operator.
 - **Options:**
-  - `gap_of` (integer number of days, default 0): the largest gap between the end of one record and the start of the next that stays in the same episode.
+  - `gap_of` (integer number of days, default 0): the largest gap that stays in the same episode. The gap is measured from the latest end_date of all the earlier records in the episode, not only from the end_date of the record just before.
 - **Returns:** one record for each episode. Its start_date is the earliest start_date in the episode, and its end_date is the latest end_date.
+
+The operator orders each patient's records by start_date and then by end_date. A record stays in the current episode when its start_date is no more than `gap_of` days after the latest end_date of the earlier records. Otherwise it starts a new episode. A record without an end_date counts as ending on its start_date. So a long record keeps the episode open: the records 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first record ends after the third record starts.
 
 ```ConceptQL
 # Episodes of diabetes diagnoses
@@ -1361,6 +1496,67 @@ Each label that `recall` uses must exist in the statement. It can appear before 
 ]
 ```
 
+## Algorithms within Algorithms
+
+ConceptQL is flexible so that users can build statements from other statements. A system can store statements, and a new statement can use a stored statement as one of its parts.
+
+Say that a stored statement selects the pneumonia diagnoses (ICD-9-CM 486) and the hospital visits (CPT 99232, subsequent hospital care) that were reported in the same claim:
+
+```ConceptQL
+# All pneumonia diagnoses and hospital visits reported in the same claim
+[
+  "co_reported",
+  [
+    "icd9",
+    "486"
+  ],
+  [
+    "cpt",
+    "99232"
+  ]
+]
+```
+
+The `algorithm` operator stands for a stored statement. Its argument is the ID of the stored statement. ConceptQL reads the stored statement from the `statement` column of the `concepts` table, in the row whose `concept_id` is that ID. If the ID 2031 is the statement above, this statement selects the people who have those records:
+
+```JSON
+[ "person", [ "algorithm", 2031 ] ]
+```
+
+ConceptQL replaces each `algorithm` operator with its stored statement when it reads the statement. So the result is the same as the result of the statement with the stored statement written in its place. A diagram also shows the stored statement. If no stored statement has the ID, the statement is invalid. Our test data has no stored statements, so this document shows the statement with the stored statement written in:
+
+```ConceptQL
+# All people with a pneumonia diagnosis and a hospital visit reported in the same claim
+[
+  "person",
+  [
+    "co_reported",
+    [
+      "icd9",
+      "486"
+    ],
+    [
+      "cpt",
+      "99232"
+    ]
+  ]
+]
+```
+
+## Window Tables
+
+A system can run a statement inside windows. A window is a date range of one patient. Jigsaw's export engine uses windows. The system gives the windows in a window table, and it wraps the statement like this:
+
+```JSON
+[ "window", <statement>, { "window_table": <window table> } ]
+```
+
+- The window table has the columns `person_id`, `start_date` and `end_date`. It is the name of a database table or a ConceptQL statement.
+- Each selection operator keeps only the records whose patient has a window and whose start_date is in that window. Both dates of the window are in the window. The person operators, such as `person` and `gender`, keep each patient who has a window, whatever the dates.
+- Each record gets the column `window_id`, which identifies its window. A record that is in two windows of its patient comes out once for each window.
+- Operators that work on each patient, such as `first`, `episode` and the temporal operators, work on each patient and window. For example, `first` keeps the first record of each window.
+- If the window table is a ConceptQL statement with errors, the statement that it wraps is invalid. A diagram reports the errors under `window_table`, and counts nothing.
+
 ## Appendix A - Experimental Operators
 
 These operators work, but they may change or be removed. They compare the `value_as_number` column, which lab records (such as `loinc`) carry.
@@ -1542,17 +1738,20 @@ ConceptQL was first written for PostgreSQL, and it was later adapted to MSSQL, O
 
 ## Appendix D - Regenerating This Document
 
-`README.md` is generated from `README.cql.md`, so edit `README.cql.md` and then run `./prep_readme.sh`. Add `--clean` to delete the cached results and diagrams first. The cache does not depend on the version of ConceptQL, so use `--clean` after you change the ConceptQL version or the database.
+This document is part of the [ConceptQL](https://github.com/outcomesinsights/conceptql) repository, in `docs/spec/`. `README.md` is generated from `README.cql.md`. Edit `README.cql.md`, and then run `just spec` in the repository. This document describes the version of ConceptQL in the same commit.
 
-For each `ConceptQL` block, `exe/knit.rb` runs the statement against a GDM database to produce the example's results table. It draws the diagram with the [Jigsaw](https://jigsaw.io) Diagram Editor's renderer, which labels each stream with the records (`rows=`) and people (`n=`) that flow along it and lists each operator's options. Each diagram is saved as a self-contained SVG under `README/`, named after the SHA-256 of its statement.
+`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md`, the build writes the example: the statement as JSON, its diagram, and the first 10 records of its result. It orders the records by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same records. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
 
-This document describes ConceptQL 0.6.0.
+The results and the counts come from ConceptQL's DuckDB test data, `synpuf_test_data.duckdb`, with the data model `gdm_wide` and the OHDSI vocabulary tables. `just spec` runs the build through `just test-duckdb`, so it needs what the DuckDB tests need:
 
-Regenerating needs:
+- Linux on x86-64. `just test-duckdb` downloads the pinned version of the DuckDB library on the first run.
+- The DuckDB test data. `just test-duckdb` copies it from the path in `DUCKDB_TEST_DATA_SOURCE`, and it fails unless the copy matches the checksum in `.github/synpuf_test_data.sha256`.
 
-- Ruby 4.0, pinned in `mise.toml` and `.ruby-version`, with Bundler (`bundle install`), plus [mdl](https://github.com/markdownlint/markdownlint) (in the Gemfile) and [doctoc](https://github.com/thlorenz/doctoc) (run through `npx` when it is not installed). With [mise](https://mise.jdx.dev), run `mise trust` once in a fresh checkout and `mise install` if the pinned Ruby is missing. `prep_readme.sh` then runs Ruby and Bundler through `mise exec`, so the pinned Ruby is used even when another Ruby comes first on `PATH`. Without mise, it uses whichever `ruby` and `bundle` are on `PATH`.
-- A GDM database. `exe/knit.rb` reads the connection settings from a `.env` file, which must exist and must set `SEQUELIZER_URL`. `CONCEPTQL_DATA_MODEL` picks the data model (default `gdm`). The results and counts in this document come from ConceptQL's test data, with `SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs`. This repository's `docker-compose.yml` runs the `outcomesinsights/misc:test_data.ignitor` image on `127.0.0.1:55432`. Start it with `docker compose up -d --wait test_data`, and copy `.env.example` to `.env`. `.env.example` also points `LEXICON_URL` at the same database, for the vocabulary tables. `just readme` starts the database and then runs `prep_readme.sh`.
-- Node.js 22 or later, and the diagram renderer's command-line tool from a checkout of the Jigsaw Diagram Editor. Run `npm ci` in its `frontend/lib/conceptql-diagram/cli` directory, and then set `CONCEPTQL_DIAGRAM_CLI` to the full path of `frontend/lib/conceptql-diagram/cli/bin/conceptql-diagram.js` in that checkout. `prep_readme.sh` stops with an error when `CONCEPTQL_DIAGRAM_CLI` is not set.
+The diagrams are drawn with the Jigsaw diagram renderer, which is not public yet. The renderer labels each line with the records (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. Set `CONCEPTQL_DIAGRAM_CLI` to the full path of the renderer's command-line script (Node.js 22 or later) to draw the diagrams. The build then writes each diagram as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
+
+Without `CONCEPTQL_DIAGRAM_CLI`, the build keeps the committed images. It deletes no image, and it does not fail. It names each image that it did not draw, and it marks an image that does not exist as `MISSING`. So a new example needs one run with the renderer.
+
+Between releases, the results and the images on the main branch can be out of date. Before a release, `just release-check` runs `just spec-check`, which rebuilds the document and the diagram data and fails when `README.md` or an image does not match the code.
 
 ## Appendix E - Operator Quick Reference
 
