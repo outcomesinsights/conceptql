@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+require_relative "vocabulary"
+
 module ConceptQL
   module Operators
     class MultipleVocabularies < Operator
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::CodeLister
+      extend Vocabulary::SharedDocumentation
 
       class << self
         def multiple_vocabularies

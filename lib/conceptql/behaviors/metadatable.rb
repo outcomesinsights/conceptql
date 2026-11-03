@@ -65,14 +65,51 @@ module ConceptQL
       @predominant_domains = values
     end
 
+    # An argument or option can carry two texts. instructions: is the form
+    # hint for typing a value. meaning: says what the argument or option
+    # does. Both are plain text, because the diagram editor escapes them.
     def argument(name, options = {})
       (@arguments ||= [])
       @arguments << [ name, auto_label(name, options) ]
     end
 
+    # The options that one argument was declared with
+    def argument_options(name)
+      (@arguments || []).to_h.fetch(name)
+    end
+
     def option(name, options = {})
       @options ||= {}
       @options[name] = auto_label(name, options)
+    end
+
+    # Replaces the meaning: text of an option, usually one that this class
+    # inherited. The option hash is shared with the parent class (see
+    # #inherited), so this stores a copy and leaves the parent's text alone.
+    # An option that the class does not have raises KeyError.
+    def option_meaning(name, text)
+      @options[name] = @options.fetch(name).merge(meaning: text)
+    end
+
+    # The plain text that says which records the operator returns. A
+    # subclass does not inherit it.
+    def returns(value = nil)
+      return @returns unless value
+
+      @returns = value
+    end
+
+    # Adds an example: a title and a ConceptQL statement. help: false keeps
+    # the example out of an editor's help, for example because it returns no
+    # rows on the test data. The spec build generates the results and the
+    # diagram, so they are never written here. A subclass does not inherit
+    # the examples, because they would show the wrong operator.
+    def example(title, statement, help: true)
+      (@examples ||= []) << { title: title, statement: statement, help: help }
+    end
+
+    def examples
+      @examples || []
     end
 
     # Takes an option that a subclass inherited out of its metadata
@@ -184,8 +221,20 @@ module ConceptQL
         deprecated: (true if deprecated), # nil for an operator that is not deprecated
         arity: arity,
         aliases: @aliases,
-        spec_id: spec_id
+        spec_id: spec_id,
+        returns: get_returns,
+        examples: examples_for(name)
       }
+    end
+
+    # The returns text that the metadata serves
+    def get_returns
+      returns
+    end
+
+    # The examples that the metadata of the operator with this name serves
+    def examples_for(_name)
+      examples
     end
 
     def arity
