@@ -125,6 +125,8 @@ test-duckdb *ARGS:
 # it, the committed images stay and the build names each image it did not draw.
 # Edit docs/spec/README.cql.md, never docs/spec/README.md.
 # Like fmt-check, it rewrites first and THEN fails: commit what it changed.
+# When the build fails (spec-check's stale images, an invalid example), it still
+# names the files that changed, and then fails with the build's exit status.
 # Rebuild docs/spec/README.md and its images; fail if they changed
 spec:
     #!/usr/bin/env bash
@@ -144,14 +146,48 @@ spec:
 
     snapshot() { find docs/spec/README.md docs/spec/images -type f 2>/dev/null | sort | xargs -r sha256sum; }
     before=$(snapshot)
-    {{ just_executable() }} test-duckdb docs/spec/build/run.rb
+    build_rc=0
+    {{ just_executable() }} test-duckdb docs/spec/build/run.rb || build_rc=$?
     treefmt --no-cache docs/spec/README.md
-    if [ "$(snapshot)" != "$before" ]; then
+    changed=0
+    after=$(snapshot)
+    if [ "$after" != "$before" ]; then
+      # Not `git status`: a rebuild that restores the committed file is a change too.
       echo "just spec changed these files; review and commit them:"
-      git status --short --untracked-files=all -- docs/spec/README.md docs/spec/images
-      exit 1
+      { diff <(printf '%s\n' "$before") <(printf '%s\n' "$after") || true; } | sed -n 's/^[<>] [0-9a-f]*  /  /p' | sort -u
+      changed=1
     fi
+    [ "$build_rc" -eq 0 ] || { echo "docs/spec/build/run.rb failed (exit $build_rc)"; exit "$build_rc"; }
+    [ "$changed" -eq 0 ] || exit 1
     echo "docs/spec/README.md and docs/spec/images are up to date"
+
+# A step of release-check, and only of release-check: between releases, main
+# may hold a stale spec and stale images (seed conceptql-mdo, decision 09), so
+# ci, the pre-push hook and the workflows do not run it. It runs `just spec`
+# with CONCEPTQL_SPEC_CHECK=1, so it needs what test-duckdb needs (the DuckDB
+# fixture, linux amd64). The build prints the Ruby and libduckdb versions that
+# it used. It never draws: it rebuilds each diagram tree and compares the
+# sha256 of the tree's canonical JSON with docs/spec/images/manifest.tsv. A
+# missing image or a different hash fails and names the image. Like `spec`, it
+# rewrites docs/spec/README.md first and THEN fails.
+# Fail if docs/spec/README.md or a diagram image does not match the code
+spec-check:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p claude_stuff
+    log=claude_stuff/spec-check-$(date +%Y%m%d-%H%M%S).log
+    exec 3>&1 > >(tee "$log") 2>&1
+    tee_pid=$!
+    finish() {
+      rc=$?
+      exec >&- 2>&-
+      wait "$tee_pid" || true
+      echo "Log: $log" >&3
+      exit $rc
+    }
+    trap finish EXIT
+
+    CONCEPTQL_SPEC_CHECK=1 {{ just_executable() }} --justfile {{ justfile() }} spec
 
 # test and test-full run this when they exit. Each checkout (the primary, every
 # worktree, the pre-push gate copy) has its own compose project, so without this
@@ -256,7 +292,9 @@ vocabulary-formats $ref="main":
 # - a bound in conceptql.gemspec or the Gemfile excludes the newest release.
 # A gem held back only by another gem's constraint is printed and does not fail,
 # because conceptql cannot change it. Fix a failure with `just bundle-update`.
-# Fail if any gem is behind the newest version conceptql could use
+# Then it runs spec-check, which fails when docs/spec/README.md or a diagram
+# image does not match the code.
+# Fail if a gem is behind the newest version conceptql could use, or the spec is stale
 release-check:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -286,6 +324,7 @@ release-check:
       case "$verdict" in FAIL*) rc=1 ;; esac
     done <<<"$outdated"
     [ $rc -eq 0 ] && echo "ok   every gem is at the newest version conceptql allows"
+    {{ just_executable() }} --justfile {{ justfile() }} spec-check || { echo "FAIL just spec-check"; rc=1; }
     exit $rc
 
 # Local pre-push CI gate. GitHub CI runs the same recipes: its lint job runs
