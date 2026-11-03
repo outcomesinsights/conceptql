@@ -25,6 +25,8 @@ test *ARGS:
     ts=$(date +%Y%m%d%H%M%S)
     log={{ log_dir }}/test/${ts}.txt
 
+    trap '{{ just_executable() }} --justfile {{ justfile() }} test-db-down' EXIT
+
     rc=0
     SEQUELIZER_SEARCH_PATH="${SEQUELIZER_SEARCH_PATH:-wide,slim,ohdsi_vocabs}" \
       CONCEPTQL_DATA_MODEL="${CONCEPTQL_DATA_MODEL:-gdm_wide}" \
@@ -152,6 +154,20 @@ spec:
     fi
     echo "doc/spec.md and doc/spec/*.png are up to date"
 
+# test and test-full run this when they exit. Each checkout (the primary, every
+# worktree, the pre-push gate copy) has its own compose project, so without this
+# every finished worktree left its test_data database running (59 were found on
+# titan on 2026-11-02). It does nothing while another test run of this checkout
+# still uses the database, and nothing when KEEP_TEST_DB is set.
+# Stop this checkout's test database unless a test run still uses it
+test-db-down:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    [ -z "${KEEP_TEST_DB:-}" ] || exit 0
+    running=$(docker ps -q --filter "label=com.docker.compose.project.working_dir=${PWD}" --filter "label=com.docker.compose.oneoff=True")
+    [ -z "$running" ] || { echo "test-db-down: another test run uses this checkout's database; leaving it up"; exit 0; }
+    docker compose down --remove-orphans
+
 # Run all three CI matrix configs in parallel; fail if any fails
 test-full:
     #!/usr/bin/env bash
@@ -162,6 +178,7 @@ test-full:
     # Create or recreate test_data once, before the parallel runs. When its image
     # or config has changed, each `docker compose run` would try to recreate it,
     # and the losers fail with "container name ... is already in use".
+    trap '{{ just_executable() }} --justfile {{ justfile() }} test-db-down' EXIT
     docker compose up -d test_data
 
     echo "Running all 3 CI matrix configs in parallel..."
