@@ -4,7 +4,7 @@ title: Move the ConceptQL spec, operator documentation and example results into 
 status: captured
 type: decision
 created_at: 2026-11-03T18:14:43.431733+00:00
-updated_at: 2026-11-03T18:36:58.901174+00:00
+updated_at: 2026-11-03T18:41:51.392358+00:00
 tags:
   - spec
   - migration
@@ -125,3 +125,11 @@ Proposed changes to the bead order (fact fixes, not ruled):
 - A new step between 5 and 6: release conceptql. JDE pins `~> 0.6.0` (JDE Gemfile:40), and decision 10 makes a release the only route for help to reach JDE. The release waits until the round is done (finding 11).
 - Each step that changes the public surface writes a CHANGELOG entry under \[Unreleased\]: spec_path moves, upstream counts change, new metadata keys, a new path method, Entry#hidden? and Entry#visible? removed (finding 11).
 - Step 7 also: push conceptql_spec main before the archive, and change the 4 outcomesinsights.github.io links (findings 7 and 15).
+
+## Rulings on the review (Ryan, 2026-11-03)
+
+16. Staleness check (question conceptql-5hn, refines decision 09): "I would like to catch desync between spec and conceptql locally before a release is pushed." The check is a step in `just release-check`. It rebuilds the spec and its example artifacts with no cache and fails on any difference. release.yml is not changed. Not ruled: whether the pre-push hook also runs the check when a v\* tag is pushed.
+17. Interim images (question conceptql-q8n, refines decision 13): "in the absence of a renderer, keeping existing images is preferred." Without CONCEPTQL_DIAGRAM_CLI, the build keeps the committed images. It neither deletes them nor fails. Not ruled: how stale counts in kept images are detected.
+18. Renderer seeds and the archive (question conceptql-3i7): "Those are going to be taken care of. Keep your eyes on your own repo." The renderer seeds, the push of conceptql_spec main and the archive itself belong to conceptql_spec. The proposed change to step 7 ("push conceptql_spec main before the archive") is withdrawn from conceptql's plan.
+19. Directory name (question conceptql-59n): use the convention, which is docs/. 23 of the 24 outins repos with a documentation directory use docs/, and YARD writes generated output to doc/ by default. Step 3 moves doc/metadata.md and doc/implementation_notes.md into docs/ and removes doc/.
+20. Private JDE names in public seeds (question conceptql-ivi): accepted.
