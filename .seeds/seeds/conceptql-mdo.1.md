@@ -5,7 +5,7 @@ status: captured
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:50.066549+00:00
-updated_at: 2026-11-03T18:36:45.727870+00:00
+updated_at: 2026-11-03T18:41:52.444477+00:00
 tags:
   - spec
   - migration
@@ -61,3 +61,9 @@ Until the renderer is decided (separate pursuit, conceptql_spec seed conceptql-s
 - Finding 5 (NEEDS RULING, question attached to the parent). Interim images: behavior without CONCEPTQL_DIAGRAM_CLI, and detection of stale counts.
 - Finding 7 (NEEDS RULING, question attached to the parent). The archive and the open renderer seeds in conceptql_spec. Push conceptql_spec main (6 commits ahead) before the archive.
 - Plausible, not demonstrated: the 58 SVGs are 8.8 MB, each embeds the Roboto font, and each redraw adds full copies to the history (conceptql's pack is 19.75 MiB). `just test-duckdb` downloads only linux-amd64 libduckdb, so the spec build cannot run on the Mac. mdformat runs through uvx without a version pin.
+
+## RULED 2026-11-03 (Ryan, questions conceptql-q8n, conceptql-59n and conceptql-3i7)
+
+- Without CONCEPTQL_DIAGRAM_CLI, the build keeps the committed images. It does not delete the image directory (conceptql_spec's knitter.rb:35 does) and does not fail. Not ruled: how stale counts in kept images are detected.
+- Step 3 also moves doc/metadata.md and doc/implementation_notes.md into docs/ and removes doc/. Every reference to doc/ changes with it (the gemspec, spec_path_test.rb, release.yml, CLAUDE.md, AGENTS.md:99, cog.toml:2).
+- The archive of conceptql_spec, the push of its main and its open renderer seeds belong to conceptql_spec. conceptql's plan covers only conceptql.

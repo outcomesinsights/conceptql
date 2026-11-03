@@ -5,7 +5,7 @@ status: captured
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:51.179198+00:00
-updated_at: 2026-11-03T18:36:46.603127+00:00
+updated_at: 2026-11-03T18:41:51.997067+00:00
 tags:
   - spec
   - examples
@@ -47,3 +47,7 @@ Ryan expects some part of the spec to be the help that JDE shows for each operat
 - Finding 6 (FACT FIX). Name each artifact by the sha256 of the statement's canonical JSON, not of Ruby `inspect`, which differs between Ruby 3.3 and 3.4.
 - Verified: ConceptQL::Diagram.render(..., counts: true) gives the same JSON on repeated runs. The snf, hospice and place_of_service_filter examples return 0 rows on the fixture, so under the rule above JDE shows no example for those 3 operators until the fixture has that data.
 - Not tested: libduckdb 2.0 results, and whether a tag-triggered run can restore the fixture cache that runs on main create.
+
+## RULED 2026-11-03 (Ryan, question conceptql-5hn): the staleness check runs locally
+
+The ruling above that "the release workflow rebuilds the results" is replaced. The rebuild with no cache and the comparison run as a step of `just release-check`, before a release is pushed. release.yml is not changed. The step names the Ruby and libduckdb versions that it uses.
