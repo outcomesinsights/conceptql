@@ -12,9 +12,21 @@ All notable changes to this project will be documented in this file.
   `ConceptQL.metadata` left out each operator without a category, and these six were the only
   such operators. Now every operator has a category from `ConceptQL.categories`. The metadata
   has no `hidden` key, and it publishes the same 119 operators on `gdm` as before.
+- Operator reference documentation in the operator classes. `ConceptQL.metadata` serves two new
+  keys for each operator: `returns`, a text that says which records the operator returns, and
+  `examples`, a list of `{title, statement, help}`. An option or an argument can have a
+  `meaning` key, a text that says what it does. `instructions` stays the hint for typing a
+  value. The `label` option and the `left` and `right` options have a `meaning`. The Metadatable
+  DSL has `returns`, `example` and `option_meaning`, which replaces the meaning of one inherited
+  option. A subclass does not inherit `returns` or the examples. The vocabulary operators serve
+  the `returns` text and the examples of `ConceptQL::Operators::Vocabulary`, each operator
+  only the examples whose statement starts with its own name. All texts are plain text.
 
 ### Changed
 
+- The `inpatient_length_of_stay` and `outpatient_event_to_return` options of `one_in_two_out`
+  serve their text as `meaning`. Before, it was a `desc` key that the diagram editor did not
+  read.
 - **Breaking:** a code lookup raises `ConceptQL::CodeCaseMismatchError` for a code that its
   vocabulary stores only in another case. Since 0.6.0 a lookup compares codes case-exactly, so
   `data_model.concept_ids(db, "GDM_PROV", ["line"])` returned `[]` without a word, because the

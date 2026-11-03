@@ -38,7 +38,8 @@ module ConceptQL
           end
 
           preferred_name entry.preferred_name
-          argument :codes, type: :codelist
+          # The label is "<preferred name> Codes" (Metadatable#auto_label)
+          argument :codes, ConceptQL::Operators::Vocabulary.argument_options(:codes).except(:label)
           aliases entry.aliases
           predominant_domains(*entry.predominant_domains)
           short_name entry.short_name

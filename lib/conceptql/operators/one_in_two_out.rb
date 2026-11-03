@@ -21,13 +21,13 @@ module ConceptQL
       basic_type :temporal
 
       option :inpatient_length_of_stay, type: :integer, min: 0, default: 0,
-                                        desc: "Minimum length of inpatient stay (in days) required for inpatient event to be valid", label: "Inpatient Length of Stay (Days)"
+                                        meaning: "The minimum length in days of an inpatient stay. A shorter stay is not a valid inpatient event.", label: "Inpatient Length of Stay (Days)"
       option :outpatient_minimum_gap, type: :string, default: "30d",
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
       option :outpatient_maximum_gap, type: :string, default: "365d",
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
       option :outpatient_event_to_return, type: :string, options: [ "Initial Event", "Confirming Event" ],
-                                          default: "Initial Event", desc: "Which event to pass downstream"
+                                          default: "Initial Event", meaning: "Which outpatient event the operator passes on: the initial event or the confirming event."
 
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 

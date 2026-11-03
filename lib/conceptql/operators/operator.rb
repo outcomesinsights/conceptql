@@ -49,7 +49,8 @@ module ConceptQL
       BAD_FORMATS = [ BAD_FORMAT, NDC_BAD_FORMAT ].freeze
       UNKNOWN_CODE = "unknown code(s)"
 
-      option :label, type: :string
+      option :label, type: :string,
+                     meaning: "A short description of the operator's records. The operator writes it into the label column of each of its records, and a recall operator selects those records by it. Each label in a statement must be different."
 
       @validations = []
 

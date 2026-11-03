@@ -5,6 +5,25 @@ require_relative "operator"
 module ConceptQL
   module Operators
     class Vocabulary < Operator
+      # The vocabulary operators share one reference section (spec_id
+      # vocabulary-operator): each generated vocabulary operator, read and
+      # the multiple vocabulary operators. So the section's texts are written
+      # on this class: `returns`, the meaning: of the codes argument, and each
+      # `example`. An operator of the section extends this module and serves
+      # the returns text, and only the examples whose statement starts with
+      # its own name, so no operator shows an example of another one.
+      module SharedDocumentation
+        def get_returns
+          super || Vocabulary.returns
+        end
+
+        def examples_for(name)
+          Vocabulary.examples.select { |example| example[:statement].first.to_s == name }
+        end
+      end
+
+      extend SharedDocumentation
+
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::CodeLister
 
@@ -14,6 +33,10 @@ module ConceptQL
       validate_no_upstreams
       validate_at_least_one_argument
       validate_codes_match
+
+      # VocabularyClassFactory gives each vocabulary operator a copy of this
+      # argument, with the label "<preferred name> Codes"
+      argument :codes, type: :codelist
 
       def source_table
         domain_map(op_name)

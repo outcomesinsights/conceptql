@@ -59,6 +59,27 @@ The metadata for each operator should be complete enough that a UI can understan
   - This option should only appear in selection operators and casting operators
 - basic_type
   - I don't know what this does but it seemed like information needed for Envy's JAM
+- returns
+  - A plain text that says which records the operator returns, or null
+  - The operator class sets it with `returns "..."`. A subclass does not inherit it
+  - Every vocabulary operator serves the text of `ConceptQL::Operators::Vocabulary`, because
+    the vocabulary operators share one reference section (spec_id `vocabulary-operator`). The
+    section holds the generated vocabulary operators, `read` and the multiple vocabulary
+    operators (`cpt_or_hcpcs`). Each extends `ConceptQL::Operators::Vocabulary::SharedDocumentation`
+- examples
+  - An array of hashes, one for each example, in the order that the operator class declares them
+  - Each hash has three keys:
+    - title: a plain text that says what the example selects
+    - statement: the ConceptQL statement of the example
+    - help: false when an editor should not show the example in its help, for example because
+      it returns no rows on the test data. Otherwise true
+  - The operator class adds one with `example "Title", [statement]` or
+    `example "Title", [statement], help: false`. A subclass does not inherit the examples,
+    because they would show the wrong operator
+  - The vocabulary operators' examples are declared on `ConceptQL::Operators::Vocabulary`. Each
+    one's statement starts with the name of a vocabulary operator, and only that operator serves it
+  - The results and the diagram of an example are not in the metadata. The spec build
+    generates them
 
 ### Option Metadata Outline
 
@@ -87,3 +108,14 @@ The metadata for each operator should be complete enough that a UI can understan
   - The default value for this parameter
 - required
   - True if this parameter must have a value
+- label
+  - The name to display for the parameter
+- instructions
+  - A plain text hint for typing a value, for example the format of a number of days
+- meaning
+  - A plain text that says what the parameter does
+  - It is in the hash only when the operator gives one
+  - An option is inherited with its meaning. A subclass replaces the meaning of one inherited
+    option with `option_meaning :name, "..."`, and the parent keeps its own text
+  - Arguments take the same key. The vocabulary operators' `codes` argument is a copy of the
+    `codes` argument of `ConceptQL::Operators::Vocabulary`

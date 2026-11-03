@@ -3,11 +3,13 @@
 require "sequel"
 require "sequel/adapters/mock"
 require_relative "../behaviors/labish"
+require_relative "vocabulary"
 
 module ConceptQL
   module Operators
     class Read < Operator
       include ConceptQL::Behaviors::CodeLister
+      extend Vocabulary::SharedDocumentation
       register __FILE__
 
       preferred_name "READ"
