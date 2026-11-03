@@ -268,6 +268,14 @@ That kind of aggregation and analysis is outside the scope of ConceptQL. Concept
 
 The rest of this document describes each operator. [Appendix E](#appendix-e---operator-quick-reference) lists every operator in one table.
 
+### Statements That ConceptQL Refuses
+
+ConceptQL checks each statement before it builds SQL for it. A statement with an error is invalid. Examples of errors are an unknown operator, a required option that is missing, and a `recall` of a label that the statement does not have. ConceptQL refuses to build SQL for an invalid statement, and so it does not run it. It reports each error with the name of the operator that has the error.
+
+A warning does not make a statement invalid. Examples of warnings are an unknown code, an improperly formatted code and a deprecated operator. A statement with warnings runs. When ConceptQL draws the diagram of a statement, it shows the errors and the warnings of each operator, and it does not refuse an invalid statement.
+
+ConceptQL finds the concept of each code in the vocabulary tables. It uses either the OHDSI vocabulary tables (`concept`, `concept_ancestor`, `concept_relationship` and `vocabulary`) or the GDM vocabulary tables (`concepts`, `ancestors`, `mappings` and `vocabularies`). It looks for them in the search path of the data database, and then in the database that the environment variable `LEXICON_URL` names. If ConceptQL has a real data database and finds no complete set of vocabulary tables, it refuses to start. Without vocabulary tables, every code would match no records, and a statement would return no records with no warning. Without a database, for example when ConceptQL only draws a diagram, it uses no vocabulary tables.
+
 ## Selection Operators
 
 Selection operators select records from the database. For example, a search for diagnoses of old myocardial infarction (ICD-9-CM 412) is a selection. Most selection operators are leaf operators: no other operator flows into them. `person` and `death` can also take one upstream operator (see [`person`](#person-operator)).
@@ -308,7 +316,50 @@ How codes match:
 - A code that has more than one meaning in the vocabulary gives the warning "code(s) with more than one meaning".
 - A vocabulary operator selects only codes from its own vocabulary. It does not follow mappings between vocabularies, so `rxnorm` does not find records coded with NDC.
 
-The `drg` operator is deprecated. A DRG code has one meaning in CMS-DRG (before 2007-10-01) and another in MS-DRG (from 2007-10-01), and `drg` selects the records of both. Use `ms_drg` or `cms_drg`.
+#### DRG Codes
+
+CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning. For example, DRG 205 meant a liver disorder in CMS-DRG, and it means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a record does not say which meaning applied. So a statement names the DRG system, and ConceptQL selects each record by its code and by its start_date:
+
+- `ms_drg` selects the DRG records whose start_date is on or after 2007-10-01.
+- `cms_drg` selects the DRG records whose start_date is before 2007-10-01.
+
+______________________________________________________________________
+
+**Example 6 - All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity**
+
+```JSON
+["ms_drg","205"]
+```
+
+![All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity](images/cbf9ae203087a1deb86ecd49670a7883fa238a8912360411f090e1c90b11015d.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 17        | 1365         | observations    | procedure_occurrence | 2010-06-02 | 2010-06-06 | 205          |
+| 68        | 18           | observations    | procedure_occurrence | 2008-04-19 | 2008-04-23 | 205          |
+| 95        | 603          | observations    | procedure_occurrence | 2008-08-27 | 2008-09-01 | 205          |
+
+______________________________________________________________________
+
+Our test data has no DRG record before 2007-10-01, so this example returns no records:
+
+______________________________________________________________________
+
+**Example 7 - All CMS-DRG 205 records (a liver disorder)**
+
+```JSON
+["cms_drg","205"]
+```
+
+![All CMS-DRG 205 records (a liver disorder)](images/8ade3c4d946893bea0b378aa7f732ff2b62f43a149e996dc4783128c54482f9b.svg)
+
+No results.
+
+______________________________________________________________________
+
+Both operators check codes as the other vocabulary operators do. A DRG code has 3 digits, with leading zeros. A code that the DRG vocabulary does not have gets the warning "unknown code(s)". These operators never give the warning "code(s) with more than one meaning", because the operator chooses the meaning.
+
+The `drg` operator is deprecated. It selects the DRG records of both systems, whatever their dates. A statement that uses `drg` still runs, but `drg` gets the warning "deprecated operator", and a later release will make it an error. Use `ms_drg` or `cms_drg`.
 
 ### Person-related Operators
 
@@ -322,7 +373,7 @@ Selects patients by gender.
 
 ______________________________________________________________________
 
-**Example 6 - All female patients**
+**Example 8 - All female patients**
 
 ```JSON
 ["gender","Female"]
@@ -353,7 +404,7 @@ Selects patients by race.
 
 ______________________________________________________________________
 
-**Example 7 - All patients recorded as white**
+**Example 9 - All patients recorded as white**
 
 ```JSON
 ["race","White"]
@@ -384,7 +435,7 @@ Selects patients by ethnicity.
 
 ______________________________________________________________________
 
-**Example 8 - All patients recorded as Hispanic**
+**Example 10 - All patients recorded as Hispanic**
 
 ```JSON
 ["ethnicity","Hispanic"]
@@ -404,13 +455,13 @@ ______________________________________________________________________
 
 #### `Person` Operator
 
-Selects patients. With no upstream operator, it selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream.
+Selects patients. With no upstream operator, it selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream. That use is called casting (see [Type Conversion](#type-conversion)).
 
 - **Upstream:** none, or one operator.
 
 ______________________________________________________________________
 
-**Example 9 - All patients**
+**Example 11 - All patients**
 
 ```JSON
 ["person"]
@@ -437,13 +488,13 @@ ______________________________________________________________________
 
 #### `Death` Operator
 
-Selects death records from the `deaths` table. The type of these records is `death`, and their start_date and end_date are both the date of death. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream.
+Selects death records from the `deaths` table. The type of these records is `death`, and their start_date and end_date are both the date of death. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream (see [Type Conversion](#type-conversion)).
 
 - **Upstream:** none, or one operator.
 
 ______________________________________________________________________
 
-**Example 10**
+**Example 12**
 
 ```JSON
 ["death"]
@@ -474,7 +525,7 @@ Selects records from the `information_periods` table. An information period is a
 
 ______________________________________________________________________
 
-**Example 11**
+**Example 13**
 
 ```JSON
 ["information_periods"]
@@ -511,7 +562,7 @@ Selects admissions to skilled nursing facilities (SNF). Our test data has no SNF
 
 ______________________________________________________________________
 
-**Example 12**
+**Example 14**
 
 ```JSON
 ["snf"]
@@ -529,7 +580,7 @@ Selects hospice admissions. Our test data has no hospice claims, so this example
 
 ______________________________________________________________________
 
-**Example 13**
+**Example 15**
 
 ```JSON
 ["hospice"]
@@ -547,7 +598,7 @@ Selects inpatient hospital admissions.
 
 ______________________________________________________________________
 
-**Example 14**
+**Example 16**
 
 ```JSON
 ["hospitalization"]
@@ -570,6 +621,90 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+## Type Conversion
+
+Sometimes a stream of one type must become a stream of another type. Programmers call this "casting". Think of a metal candle holder that is melted down and cast again as a lamp. In the same way, `person` can take a stream of `condition_occurrence` records and cast it again as a stream of `person` records.
+
+ConceptQL has two casting operators: `person` and `death`. The GDM has no visit table, so there is no cast to a visit. To find the conditions and procedures that were reported in the same claim, use [`co_reported`](#co-reported-operator).
+
+### Casting to Person
+
+Cast a stream to `person` when you need to know *whether* a patient has a record, not when or how often. The result has one record for each patient who has at least one record in the upstream stream, however many records the patient has.
+
+______________________________________________________________________
+
+**Example 17 - All people who had an MI**
+
+```JSON
+["person",["icd9","412"]]
+```
+
+![All people who had an MI](images/186254269a5ce85ed2e96de4e8529c01c789b43e72c6868af0c037105d1fb66d.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 11        | 11           | patients        | person           | 1934-02-01 | 1934-02-01 | 000489E7EAAD463F |
+| 17        | 17           | patients        | person           | 1919-09-01 | 1919-09-01 | 0007F12A492FD25D |
+| 38        | 38           | patients        | person           | 1922-12-01 | 1922-12-01 | 001731EB127233DA |
+| 54        | 54           | patients        | person           | 1931-02-01 | 1931-02-01 | 001CAFF084B21E14 |
+| 60        | 60           | patients        | person           | 1925-07-01 | 1925-07-01 | 001EA2F4DB30F105 |
+| 66        | 66           | patients        | person           | 1920-04-01 | 1920-04-01 | 0021B3C854C968C8 |
+| 73        | 73           | patients        | person           | 1925-09-01 | 1925-09-01 | 00237322613CFC3C |
+| 77        | 77           | patients        | person           | 1929-03-01 | 1929-03-01 | 00244B6D9AB50F9B |
+| 81        | 81           | patients        | person           | 1940-06-01 | 1940-06-01 | 0024E5A7B7272E75 |
+| 88        | 88           | patients        | person           | 1922-05-01 | 1922-05-01 | 00291F39917544B1 |
+
+______________________________________________________________________
+
+### Casting to Death
+
+Cast a stream to `death` to replace the records of each patient with the patient's death records. A patient who has no death record has no records in the result.
+
+______________________________________________________________________
+
+**Example 18 - The deaths of all people who had an MI**
+
+```JSON
+["death",["icd9","412"]]
+```
+
+![The deaths of all people who had an MI](images/f69a6b861ad7cba7a1ff7808c8310a6d8b1bc9354fbc896490ffd00c15cfbb1d.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ------------ |
+| 190       | 7            | deaths          | death            | 2009-09-01 | 2009-09-01 |              |
+
+______________________________________________________________________
+
+### Casting Loses the Original Information
+
+A cast record does not keep the ID, the code or the dates of the upstream record. For example, a `condition_occurrence` record cast to `person` points at the patient's row in `patients`, and its start_date and end_date are the patient's birth date. This is useful when a stream of person records had its dates moved by [`time_window`](#time-window-operator), and you need the birth dates again: cast the stream to `person` again.
+
+### Casting as a Way to Fetch All Rows
+
+With no upstream operator, a casting operator selects every row of its table: `["person"]` selects every patient, and `["death"]` selects every death record. This is useful as the right-hand stream of an operator such as [`person_filter`](#person-filter-operator):
+
+______________________________________________________________________
+
+**Example 19 - All male patients who died**
+
+```JSON
+["person_filter",{"left":["gender","Male"],"right":["death"]}]
+```
+
+![All male patients who died](images/cdf4ad4436175cdcf29104cf4e53709ac6a5b9f622424e5a17e3143781ee216e.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 16        | 16           | patients        | person           | 1934-01-01 | 1934-01-01 | 0007E57CC13CE880 |
+| 65        | 65           | patients        | person           | 1936-01-01 | 1936-01-01 | 0021940CF994C374 |
+| 181       | 181          | patients        | person           | 1939-11-01 | 1939-11-01 | 005E0AB5172E715F |
+| 190       | 190          | patients        | person           | 1939-07-01 | 1939-07-01 | 0060C263DA4EBBAF |
+| 191       | 191          | patients        | person           | 1928-12-01 | 1928-12-01 | 0061141AB18FFA96 |
+| 201       | 201          | patients        | person           | 1949-06-01 | 1949-06-01 | 00653DC86A0E30D8 |
+
+______________________________________________________________________
+
 ## Set Operators
 
 Streams are sets of records, so ConceptQL has operators that work on sets.
@@ -585,7 +720,7 @@ Each record keeps its own type, so one stream can hold several types. Union does
 
 ______________________________________________________________________
 
-**Example 15 - Two streams of the same type (condition_occurrence) combined into one stream**
+**Example 20 - Two streams of the same type (condition_occurrence) combined into one stream**
 
 ```JSON
 ["union",["icd9","412"],["icd9","250.01"]]
@@ -610,7 +745,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 16 - Two condition_occurrence streams combined, then combined with a procedure_occurrence stream**
+**Example 21 - Two condition_occurrence streams combined, then combined with a procedure_occurrence stream**
 
 ```JSON
 ["union",["union",["icd9","412"],["icd9","250.01"]],["cpt","99214"]]
@@ -635,7 +770,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 17 - The same result as the example above, from a single union**
+**Example 22 - The same result as the example above, from a single union**
 
 ```JSON
 ["union",["icd9","412"],["icd9","250.01"],["cpt","99214"]]
@@ -669,7 +804,7 @@ A left-hand record matches only a right-hand record from the same table, and onl
 
 ______________________________________________________________________
 
-**Example 18 - All males who are not white**
+**Example 23 - All males who are not white**
 
 ```JSON
 ["except",{"left":["gender","male"],"right":["race","white"]}]
@@ -696,7 +831,7 @@ If no right-hand record comes from the same table as a left-hand record, the lef
 
 ______________________________________________________________________
 
-**Example 19 - All Conditions that are MI**
+**Example 24 - All Conditions that are MI**
 
 ```JSON
 ["except",{"left":["icd9","412"],"right":["cpt","99214"]}]
@@ -723,7 +858,7 @@ And with several types in the left-hand stream:
 
 ______________________________________________________________________
 
-**Example 20 - Passes two types downstream: Conditions that are MI (unaffected by the right-hand stream) and People that are Male but not White**
+**Example 25 - Passes two types downstream: Conditions that are MI (unaffected by the right-hand stream) and People that are Male but not White**
 
 ```JSON
 ["except",{"left":["union",["icd9","412"],["gender","Male"]],"right":["race","White"]}]
@@ -752,7 +887,7 @@ Why can one stream hold records of several types? Because operators such as `fir
 
 ______________________________________________________________________
 
-**Example 21 - First occurrence of either MI or Death for each patient**
+**Example 26 - First occurrence of either MI or Death for each patient**
 
 ```JSON
 ["first",["union",["icd9","412"],["death"]]]
@@ -803,7 +938,7 @@ For each patient, passes along the nth record in order of start_date.
 
 ______________________________________________________________________
 
-**Example 22 - For each patient, select the Condition that represents the second occurrence of an MI**
+**Example 27 - For each patient, select the Condition that represents the second occurrence of an MI**
 
 ```JSON
 ["occurrence",2,["icd9","412"]]
@@ -830,7 +965,7 @@ With `group_by_date`, several codes on the same day count as one occurrence. Thi
 
 ______________________________________________________________________
 
-**Example 23 - For each patient, the first record on the second day with any of these diagnoses**
+**Example 28 - For each patient, the first record on the second day with any of these diagnoses**
 
 ```JSON
 ["occurrence",2,["icd9","410.00","410.01","250.00","250.01"],{"group_by_date":true}]
@@ -859,7 +994,7 @@ For each patient, passes along the record with the earliest start_date. It is th
 
 ______________________________________________________________________
 
-**Example 24 - For each patient, select the Condition that represents the first occurrence of an MI**
+**Example 29 - For each patient, select the Condition that represents the first occurrence of an MI**
 
 ```JSON
 ["first",["icd9","412"]]
@@ -888,7 +1023,7 @@ For each patient, passes along the record with the latest start_date. It is the 
 
 ______________________________________________________________________
 
-**Example 25 - For each patient, select the Condition that represents the last occurrence of an MI**
+**Example 30 - For each patient, select the Condition that represents the last occurrence of an MI**
 
 ```JSON
 ["last",["icd9","412"]]
@@ -941,6 +1076,8 @@ A temporal operator takes two streams: the left-hand records (LHR) and the right
 - A patient who has LHR but no RHR loses all of their LHR.
 - A record that is in both streams can match itself. For example, a record is during itself.
 
+Edge behaviors: `during`, `contains` and `any_overlap` compare each LHR with every RHR of the patient. `before` and `after` do not. Without the `within` option, `before` compares each LHR only with the latest start_date of the patient's RHR, and `after` compares each LHR only with the earliest end_date of the patient's RHR. [`before`](#before-operator) and [`after`](#after-operator) explain why, and [Working Around `Before`/`After` Behavior](#working-around-beforeafter-behavior) shows how to choose another RHR.
+
 Each operator compares the dates in a different way. All of them take [some options](#temporal-comparison-operator-options), which are described later.
 
 ### `During` Operator
@@ -949,7 +1086,7 @@ Passes along each LHR whose date range is inside the date range of an RHR: `RHR 
 
 ______________________________________________________________________
 
-**Example 26 - All MIs for the year 2010**
+**Example 31 - All MIs for the year 2010**
 
 ```JSON
 ["during",{"left":["icd9","412"],"right":["date_range",{"start":"2010-01-01","end":"2010-12-31"}]}]
@@ -978,7 +1115,7 @@ Passes along each LHR whose date range encloses the date range of an RHR: `LHR s
 
 ______________________________________________________________________
 
-**Example 27 - All MIs occurring on 2010-06-22**
+**Example 32 - All MIs occurring on 2010-06-22**
 
 ```JSON
 ["contains",{"left":["icd9","412"],"right":["date_range",{"start":"2010-06-22","end":"2010-06-22"}]}]
@@ -1000,7 +1137,7 @@ Passes along each LHR whose date range shares at least one day with the date ran
 
 ______________________________________________________________________
 
-**Example 28 - All MIs that overlap with the month of 2010-06**
+**Example 33 - All MIs that overlap with the month of 2010-06**
 
 ```JSON
 ["any_overlap",{"left":["icd9","412"],"right":["date_range",{"start":"2010-06-01","end":"2010-06-30"}]}]
@@ -1023,7 +1160,7 @@ This rule needs some explanation. Imagine the events A-A-B-A-B-A. How many A's c
 
 ______________________________________________________________________
 
-**Example 29 - All MIs that occurred before a patient's __last__ case of diabetes (250.01)**
+**Example 34 - All MIs that occurred before a patient's __last__ case of diabetes (250.01)**
 
 ```JSON
 ["before",{"left":["icd9","412"],"right":["icd9","250.01"]}]
@@ -1054,7 +1191,7 @@ Imagine the events A-A-B-A-B-A again. How many A's come after a B? One could arg
 
 ______________________________________________________________________
 
-**Example 30 - All MIs that occurred after a patient's __first__ case of diabetes (250.01)**
+**Example 35 - All MIs that occurred after a patient's __first__ case of diabetes (250.01)**
 
 ```JSON
 ["after",{"left":["icd9","412"],"right":["icd9","250.01"]}]
@@ -1082,7 +1219,7 @@ If you want a different RHR for the comparison, use a relative temporal operator
 
 ______________________________________________________________________
 
-**Example 31 - All MIs that occurred before a patient's __first__ case of diabetes (250.01)**
+**Example 36 - All MIs that occurred before a patient's __first__ case of diabetes (250.01)**
 
 ```JSON
 ["before",{"left":["icd9","412"],"right":["first",["icd9","250.01"]]}]
@@ -1132,7 +1269,7 @@ Each option takes a date adjustment, which is one of:
 
 ______________________________________________________________________
 
-**Example 32 - All Diagnoses of Diabetes (ICD-9 250.01) within 30 days of an MI**
+**Example 37 - All Diagnoses of Diabetes (ICD-9 250.01) within 30 days of an MI**
 
 ```JSON
 ["during",{"left":["icd9","250.01"],"right":["time_window",["icd9","412"],{"start":"-30d","end":"30d"}]}]
@@ -1149,7 +1286,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 33 - Shift the dates of all MIs back by 200 years**
+**Example 38 - Shift the dates of all MIs back by 200 years**
 
 ```JSON
 ["time_window",["icd9","412"],{"start":"-200y","end":"-200y"}]
@@ -1174,7 +1311,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 34 - Widen the dates of all MIs to run from 2 months and 2 days before the MI to 1 year and 3 days after it**
+**Example 39 - Widen the dates of all MIs to run from 2 months and 2 days before the MI to 1 year and 3 days after it**
 
 ```JSON
 ["time_window",["icd9","412"],{"start":"-2m-2d","end":"3d1y"}]
@@ -1199,7 +1336,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 35 - Collapse the date range of all MIs to the start date: leave start_date unchanged and set end_date to start_date**
+**Example 40 - Collapse the date range of all MIs to the start date: leave start_date unchanged and set end_date to start_date**
 
 ```JSON
 ["time_window",["icd9","412"],{"start":"","end":"start"}]
@@ -1224,7 +1361,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 36 - Nonsensical, but allowed: swap the start_date and end_date**
+**Example 41 - Nonsensical, but allowed: swap the start_date and end_date**
 
 ```JSON
 ["time_window",["icd9","412"],{"start":"end","end":"start"}]
@@ -1267,7 +1404,7 @@ There are four cases:
 
 ______________________________________________________________________
 
-**Example 37 - Each patient's span from birth to age 50, trimmed to start no earlier than 1980-01-01 (patients who were 50 before 1980 are dropped)**
+**Example 42 - Each patient's span from birth to age 50, trimmed to start no earlier than 1980-01-01 (patients who were 50 before 1980 are dropped)**
 
 ```JSON
 ["trim_date_start",{"left":["time_window",["person"],{"end":"+50y"}],"right":["date_range",{"start":"1980-01-01","end":"1980-01-01"}]}]
@@ -1310,7 +1447,7 @@ There are four cases:
 
 ______________________________________________________________________
 
-**Example 38 - Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)**
+**Example 43 - Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)**
 
 ```JSON
 ["trim_date_end",{"left":["time_window",["person"],{"end":"+50y"}],"right":["date_range",{"start":"1980-01-01","end":"1980-01-01"}]}]
@@ -1330,6 +1467,46 @@ ______________________________________________________________________
 | 8         | 8            | patients        | person           | 1935-09-01 | 1980-01-01 | 000308435E3E5B76 |
 | 9         | 9            | patients        | person           | 1976-09-01 | 1980-01-01 | 000345A39D4157C9 |
 | 10        | 10           | patients        | person           | 1938-10-01 | 1980-01-01 | 00036A21B65B0206 |
+
+______________________________________________________________________
+
+### The `join_columns`, `compare_all` and `uuid` Options
+
+Systems that build statements, such as Jigsaw's export engine, give `trim_date_start` and `trim_date_end` two more options. Jigsaw's diagram editor does not show them.
+
+- `join_columns`: a list of column names. Each LHR is compared only with the RHR of the same patient that have the same values in these columns. Without `compare_all`, the operator uses the first RHR (`trim_date_end`) or the last RHR (`trim_date_start`) of each patient and each set of `join_columns` values. The RHR are ordered by start_date and then by `criterion_id`.
+- `compare_all` (boolean): compare each LHR with every RHR of the patient (and of the `join_columns` values), not only with the first or the last RHR. Each LHR comes out at most once.
+  - `trim_date_end` moves the end_date of the LHR back to the earliest RHR start_date that is on or after the LHR start_date.
+  - `trim_date_start` moves the start_date of the LHR forward to the latest RHR end_date that is on or before the LHR end_date.
+  - The `within` option moves each RHR date before the comparison, as above.
+  - An LHR is discarded only when it has RHR (of its patient and its `join_columns` values) and none of them qualifies. An LHR without RHR passes through unchanged.
+
+These systems often join on the column `uuid`. A selection operator, such as a vocabulary operator, takes the option `uuid` (`{"uuid": true}`), which adds the column `uuid` to its records. The uuid is the `person_id`, `criterion_id`, `criterion_table`, start_date and end_date of the record, joined with `/`, such as `17/27269/observations/2008-08-25/2008-08-25`. An empty part is an empty string, so a record without an end_date has a uuid such as `1/2/observations/2008-03-10/`. The uuid keeps its value when a later operator, such as `time_window`, moves the dates. So two streams made from the same records can be joined record by record.
+
+This example makes a one-year window after each MI. Then it trims each window to end 30 days after its own MI. The `join_columns` option makes sure that no other MI of the same patient trims the window:
+
+______________________________________________________________________
+
+**Example 44 - Each MI's following year, trimmed to end 30 days after that same MI**
+
+```JSON
+["trim_date_end",{"left":["time_window",["icd9","412",{"uuid":true}],{"end":"+1y"}],"right":["time_window",["icd9","412",{"uuid":true}],{"start":"+30d","end":"+30d"}],"join_columns":["uuid"],"compare_all":true}]
+```
+
+![Each MI's following year, trimmed to end 30 days after that same MI](images/9cb1597573eb22efe0deba383e624113c650e52d2d7e4843855197fb74cbe072.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-11-28 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-09-24 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-05-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-03-14 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-07-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-08-18 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-08-24 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-12-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-11-05 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-02-27 | 412          |
 
 ______________________________________________________________________
 
@@ -1356,7 +1533,7 @@ Here are the options in use:
 
 ______________________________________________________________________
 
-**Example 39**
+**Example 45**
 
 ```JSON
 ["after",{"left":["ndc","61392070054","65084025214","65726040125",{"label":"Prescriptions of Interest"}],"right":["cpt","99214",{"label":"Office Visit"}],"within":"3d"}]
@@ -1380,7 +1557,7 @@ Walk-through of the example above:
 
 ______________________________________________________________________
 
-**Example 40**
+**Example 46**
 
 ```JSON
 ["before",{"left":["icd9","410.00","410.01","410.10","410.11"],"right":["death"],"within":"1y"}]
@@ -1402,7 +1579,7 @@ Walk-through of the example above:
 
 ______________________________________________________________________
 
-**Example 41 - Find all diagnoses of heart attack more than 1 week after a diagnosis of diabetes**
+**Example 47 - Find all diagnoses of heart attack more than 1 week after a diagnosis of diabetes**
 
 ```JSON
 ["after",{"left":["icd9","410.00","410.01","410.10","410.11",{"label":"Heart Attack Dx"}],"right":["icd9","250.01",{"label":"Diabetes Dx"}],"at_least":"1w"}]
@@ -1424,7 +1601,7 @@ The start and end dates of a person record are the patient's birth date. So a pe
 
 ______________________________________________________________________
 
-**Example 42 - All MIs that occurred after a male patient's 50th birthday**
+**Example 48 - All MIs that occurred after a male patient's 50th birthday**
 
 ```JSON
 ["after",{"left":["icd9","412"],"right":["time_window",["gender","Male"],{"start":"50y","end":"50y"}]}]
@@ -1453,12 +1630,14 @@ Merges each patient's records into episodes: spans of time in which the records 
 
 - **Upstream:** one operator.
 - **Options:**
-  - `gap_of` (integer number of days, default 0): the largest gap between the end of one record and the start of the next that stays in the same episode.
+  - `gap_of` (integer number of days, default 0): the largest gap that stays in the same episode. The gap is measured from the latest end_date of all the earlier records in the episode, not only from the end_date of the record just before.
 - **Returns:** one record for each episode. Its start_date is the earliest start_date in the episode, and its end_date is the latest end_date.
+
+The operator orders each patient's records by start_date and then by end_date. A record stays in the current episode when its start_date is no more than `gap_of` days after the latest end_date of the earlier records. Otherwise it starts a new episode. A record without an end_date counts as ending on its start_date. So a long record keeps the episode open: the records 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first record ends after the third record starts.
 
 ______________________________________________________________________
 
-**Example 43 - Episodes of diabetes diagnoses**
+**Example 49 - Episodes of diabetes diagnoses**
 
 ```JSON
 ["episode",["icd9","250.00"],{"gap_of":"90"}]
@@ -1496,7 +1675,7 @@ Claims often report the place of service of an event with a CMS place of service
 
 ______________________________________________________________________
 
-**Example 44**
+**Example 50**
 
 ```JSON
 ["place_of_service_filter",22,["icd9","250.00"]]
@@ -1531,7 +1710,7 @@ A keyword also includes the provenances under it. For example, `inpatient` inclu
 
 ______________________________________________________________________
 
-**Example 45**
+**Example 51**
 
 ```JSON
 ["provenance","inpatient",["icd9","250.00"]]
@@ -1572,7 +1751,7 @@ This example looks for diabetes diagnoses whose attending physician was an endoc
 
 ______________________________________________________________________
 
-**Example 46 - Diabetes diagnoses with an endocrinologist as the attending physician**
+**Example 52 - Diabetes diagnoses with an endocrinologist as the attending physician**
 
 ```JSON
 ["provider_filter",["icd9","250.00"],{"specialties":"38003868","roles":"100000067"}]
@@ -1597,7 +1776,7 @@ The `one_in_two_out` operator implements this pattern.
 
 ______________________________________________________________________
 
-**Example 47 - First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart**
+**Example 53 - First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart**
 
 ```JSON
 ["one_in_two_out",["icd9","250.00"],{"outpatient_minimum_gap":"30d","outpatient_event_to_return":"Initial Event"}]
@@ -1660,7 +1839,7 @@ Keeps each left-hand record whose patient appears anywhere in the right-hand str
 
 ______________________________________________________________________
 
-**Example 48 - All MI Conditions for people who are male**
+**Example 54 - All MI Conditions for people who are male**
 
 ```JSON
 ["person_filter",{"left":["icd9","412"],"right":["gender","Male"]}]
@@ -1687,7 +1866,7 @@ The right-hand stream need not be a person stream. Any record of a patient count
 
 ______________________________________________________________________
 
-**Example 49 - All MI Conditions for people who had an office visit at some point in the data**
+**Example 55 - All MI Conditions for people who had an office visit at some point in the data**
 
 ```JSON
 ["person_filter",{"left":["icd9","412"],"right":["cpt","99214"]}]
@@ -1712,7 +1891,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 50 - The same result as the example above, with the office visits converted to patients first**
+**Example 56 - The same result as the example above, with the office visits converted to patients first**
 
 ```JSON
 ["person_filter",{"left":["icd9","412"],"right":["person",["cpt","99214"]]}]
@@ -1737,7 +1916,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 51 - All MI Conditions for people who are Male OR had an office visit at some point in the data**
+**Example 57 - All MI Conditions for people who are Male OR had an office visit at some point in the data**
 
 ```JSON
 ["person_filter",{"left":["icd9","412"],"right":["union",["cpt","99214"],["gender","Male"]]}]
@@ -1764,7 +1943,7 @@ The left-hand stream can also have several types:
 
 ______________________________________________________________________
 
-**Example 52 - Yields two types: all MI Conditions for people who are Male, and all office visit Procedures for people who are Male**
+**Example 58 - Yields two types: all MI Conditions for people who are Male, and all office visit Procedures for people who are Male**
 
 ```JSON
 ["person_filter",{"left":["union",["icd9","412"],["cpt","99214"]],"right":["gender","Male"]}]
@@ -1817,7 +1996,7 @@ The operator does not compare dates. If one stream has no record in a context, t
 
 ______________________________________________________________________
 
-**Example 53 - Diabetes diagnoses reported as a reason for an office visit, and those office visits**
+**Example 59 - Diabetes diagnoses reported as a reason for an office visit, and those office visits**
 
 ```JSON
 ["co_reported",["icd9","250.00"],["cpt","99214"]]
@@ -1852,7 +2031,7 @@ For example, here are some diabetes diagnoses with a label:
 
 ______________________________________________________________________
 
-**Example 54**
+**Example 60**
 
 ```JSON
 ["icd9","250.00",{"label":"diabetes"}]
@@ -1879,7 +2058,7 @@ The label of the nearest labeled operator is the one in the output:
 
 ______________________________________________________________________
 
-**Example 55**
+**Example 61**
 
 ```JSON
 ["first",["icd9","250.00",{"label":"won't show"}],{"label":"1st diabetes"}]
@@ -1906,7 +2085,7 @@ Labels give hints about the output:
 
 ______________________________________________________________________
 
-**Example 56**
+**Example 62**
 
 ```JSON
 ["first",["union",["icd9","250.00",{"label":"diabetes"}],["icd9","401.9",{"label":"hypertension"}]]]
@@ -1942,7 +2121,7 @@ Each label that `recall` uses must exist in the statement. It can appear before 
 
 ______________________________________________________________________
 
-**Example 57 - Label neurological diagnoses as "neuro dxs". Recall them to remove those that were co-reported with a nervous-system MS-DRG. Then apply the one inpatient, two outpatient rule. (The code lists are shortened.)**
+**Example 63 - Label neurological diagnoses as "neuro dxs". Recall them to remove those that were co-reported with a nervous-system MS-DRG. Then apply the one inpatient, two outpatient rule. (The code lists are shortened.)**
 
 ```JSON
 ["one_in_two_out",["except",{"left":["union",["icd9","331.0","332.0","340","345.90"],["icd10cm","G20","G30.9","G35","G40.909"],{"label":"neuro dxs"}],"right":["co_reported",["recall","neuro dxs"],["ms_drg","056","057","058","059","060","100","101"]]}],{"outpatient_minimum_gap":"30d","outpatient_maximum_gap":"365d","outpatient_event_to_return":"Confirming Event"}]
@@ -1964,6 +2143,84 @@ ______________________________________________________________________
 | 88        | 89097        | observations    | condition_occurrence | 2009-02-03 | 2009-02-03 | 3320         |
 
 ______________________________________________________________________
+
+## Algorithms within Algorithms
+
+ConceptQL is flexible so that users can build statements from other statements. A system can store statements, and a new statement can use a stored statement as one of its parts.
+
+Say that a stored statement selects the pneumonia diagnoses (ICD-9-CM 486) and the hospital visits (CPT 99232, subsequent hospital care) that were reported in the same claim:
+
+______________________________________________________________________
+
+**Example 64 - All pneumonia diagnoses and hospital visits reported in the same claim**
+
+```JSON
+["co_reported",["icd9","486"],["cpt","99232"]]
+```
+
+![All pneumonia diagnoses and hospital visits reported in the same claim](images/a68a3531f407c5345773e40a3cc73c05abf30f33a51aaef60aade3017b4d8e1a.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 63        | 61990        | observations    | condition_occurrence | 2009-07-02 | 2009-07-04 | 486          |
+| 63        | 61991        | observations    | condition_occurrence | 2009-07-02 | 2009-07-04 | 486          |
+| 63        | 61994        | observations    | procedure_occurrence | 2009-07-02 | 2009-07-04 | 99232        |
+| 63        | 61995        | observations    | procedure_occurrence | 2009-07-02 | 2009-07-04 | 99232        |
+| 83        | 38139        | observations    | condition_occurrence | 2008-03-02 | 2008-03-02 | 486          |
+| 83        | 38140        | observations    | procedure_occurrence | 2008-03-02 | 2008-03-02 | 99232        |
+| 85        | 80214        | observations    | condition_occurrence | 2008-08-24 | 2008-08-30 | 486          |
+| 85        | 80215        | observations    | condition_occurrence | 2008-08-24 | 2008-08-30 | 486          |
+| 85        | 80216        | observations    | procedure_occurrence | 2008-08-24 | 2008-08-30 | 99232        |
+| 85        | 80217        | observations    | procedure_occurrence | 2008-08-24 | 2008-08-30 | 99232        |
+
+______________________________________________________________________
+
+The `algorithm` operator stands for a stored statement. Its argument is the ID of the stored statement. ConceptQL reads the stored statement from the `statement` column of the `concepts` table, in the row whose `concept_id` is that ID. If the ID 2031 is the statement above, this statement selects the people who have those records:
+
+```JSON
+[ "person", [ "algorithm", 2031 ] ]
+```
+
+ConceptQL replaces each `algorithm` operator with its stored statement when it reads the statement. So the result is the same as the result of the statement with the stored statement written in its place. A diagram also shows the stored statement. If no stored statement has the ID, the statement is invalid. Our test data has no stored statements, so this document shows the statement with the stored statement written in:
+
+______________________________________________________________________
+
+**Example 65 - All people with a pneumonia diagnosis and a hospital visit reported in the same claim**
+
+```JSON
+["person",["co_reported",["icd9","486"],["cpt","99232"]]]
+```
+
+![All people with a pneumonia diagnosis and a hospital visit reported in the same claim](images/f3dac9facdfac6f307c66d8c746ebed2b22773cf9f04d3d12148dfc4a8eb6946.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
+| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
+| 63        | 63           | patients        | person           | 1964-05-01 | 1964-05-01 | 00205821D74AA7D8 |
+| 83        | 83           | patients        | person           | 1963-05-01 | 1963-05-01 | 002578091E1953AF |
+| 85        | 85           | patients        | person           | 1937-01-01 | 1937-01-01 | 0025ACAB19F5DEC0 |
+| 141       | 141          | patients        | person           | 1933-04-01 | 1933-04-01 | 0040CF7315D51D01 |
+| 143       | 143          | patients        | person           | 1945-05-01 | 1945-05-01 | 00422125F788CC20 |
+| 149       | 149          | patients        | person           | 1943-02-01 | 1943-02-01 | 0045A5AFF076CBE6 |
+| 150       | 150          | patients        | person           | 1936-01-01 | 1936-01-01 | 0046020E72E1CBFD |
+| 176       | 176          | patients        | person           | 1939-03-01 | 1939-03-01 | 0057DAC8F6C528CB |
+| 178       | 178          | patients        | person           | 1928-06-01 | 1928-06-01 | 0058B2A556D74DC2 |
+| 214       | 214          | patients        | person           | 1914-07-01 | 1914-07-01 | 006D1BD234E5C844 |
+
+______________________________________________________________________
+
+## Window Tables
+
+A system can run a statement inside windows. A window is a date range of one patient. Jigsaw's export engine uses windows. The system gives the windows in a window table, and it wraps the statement like this:
+
+```JSON
+[ "window", <statement>, { "window_table": <window table> } ]
+```
+
+- The window table has the columns `person_id`, `start_date` and `end_date`. It is the name of a database table or a ConceptQL statement.
+- Each selection operator keeps only the records whose patient has a window and whose start_date is in that window. Both dates of the window are in the window. The person operators, such as `person` and `gender`, keep each patient who has a window, whatever the dates.
+- Each record gets the column `window_id`, which identifies its window. A record that is in two windows of its patient comes out once for each window.
+- Operators that work on each patient, such as `first`, `episode` and the temporal operators, work on each patient and window. For example, `first` keeps the first record of each window.
+- If the window table is a ConceptQL statement with errors, the statement that it wraps is invalid. A diagram reports the errors under `window_table`, and counts nothing.
 
 ## Appendix A - Experimental Operators
 
@@ -2001,7 +2258,7 @@ These algorithms are based on [OMOP's Health Outcomes of Interest](http://omop.o
 
 ______________________________________________________________________
 
-**Example 58**
+**Example 66**
 
 ```JSON
 ["during",{"left":["except",{"left":["first",["icd9","584.5","584.6","584.7","584.8","584.9"],{"label":"First AKI diagnosis"}],"right":["after",{"left":["recall","First AKI diagnosis"],"right":["icd9","V45.1","V56.0","V56.31","V56.32","V56.8"]}]}],"right":["time_window",["icd9_procedure","39.95","54.98"],{"start":"-60d","end":"0"}]}]
@@ -2025,7 +2282,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 59**
+**Example 67**
 
 ```JSON
 ["during",{"left":["before",{"left":["icd9","410.00","410.01","410.02","410.10","410.11","410.12","410.20","410.21","410.22","410.30","410.31","410.32","410.40","410.41","410.42","410.50","410.51","410.52","410.60","410.61","410.62","410.70","410.71","410.72","410.80","410.81","410.82","410.90","410.91","410.92"],"right":["death"]}],"right":["union",["time_window",["union",["cpt","0146T","75898","82554","92980","93010","93233","93508","93540","93545"],["icd9_procedure","00.24","36.02","89.53","89.57","89.69"],["loinc","10839-9","13969-1","18843-3","2154-3","33204-9","48425-3","49259-5","6597-9","8634-8"]],{"start":"0","end":"30d"}],["time_window",["union",["cpt","0146T","75898","82554","92980","93010","93233"],["icd9_procedure","00.24","36.02","89.53","89.57","89.69"]],{"start":"-60d","end":"0"}]]}]
@@ -2051,17 +2308,20 @@ ConceptQL was first written for PostgreSQL, and it was later adapted to MSSQL, O
 
 ## Appendix D - Regenerating This Document
 
-`README.md` is generated from `README.cql.md`, so edit `README.cql.md` and then run `./prep_readme.sh`. Add `--clean` to delete the cached results and diagrams first. The cache does not depend on the version of ConceptQL, so use `--clean` after you change the ConceptQL version or the database.
+This document is part of the [ConceptQL](https://github.com/outcomesinsights/conceptql) repository, in `docs/spec/`. `README.md` is generated from `README.cql.md`. Edit `README.cql.md`, and then run `just spec` in the repository. This document describes the version of ConceptQL in the same commit.
 
-For each `ConceptQL` block, `exe/knit.rb` runs the statement against a GDM database to produce the example's results table. It draws the diagram with the [Jigsaw](https://jigsaw.io) Diagram Editor's renderer, which labels each stream with the records (`rows=`) and people (`n=`) that flow along it and lists each operator's options. Each diagram is saved as a self-contained SVG under `README/`, named after the SHA-256 of its statement.
+`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md`, the build writes the example: the statement as JSON, its diagram, and the first 10 records of its result. It orders the records by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same records. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
 
-This document describes ConceptQL 0.6.0.
+The results and the counts come from ConceptQL's DuckDB test data, `synpuf_test_data.duckdb`, with the data model `gdm_wide` and the OHDSI vocabulary tables. `just spec` runs the build through `just test-duckdb`, so it needs what the DuckDB tests need:
 
-Regenerating needs:
+- Linux on x86-64. `just test-duckdb` downloads the pinned version of the DuckDB library on the first run.
+- The DuckDB test data. `just test-duckdb` copies it from the path in `DUCKDB_TEST_DATA_SOURCE`, and it fails unless the copy matches the checksum in `.github/synpuf_test_data.sha256`.
 
-- Ruby 4.0, pinned in `mise.toml` and `.ruby-version`, with Bundler (`bundle install`), plus [mdl](https://github.com/markdownlint/markdownlint) (in the Gemfile) and [doctoc](https://github.com/thlorenz/doctoc) (run through `npx` when it is not installed). With [mise](https://mise.jdx.dev), run `mise trust` once in a fresh checkout and `mise install` if the pinned Ruby is missing. `prep_readme.sh` then runs Ruby and Bundler through `mise exec`, so the pinned Ruby is used even when another Ruby comes first on `PATH`. Without mise, it uses whichever `ruby` and `bundle` are on `PATH`.
-- A GDM database. `exe/knit.rb` reads the connection settings from a `.env` file, which must exist and must set `SEQUELIZER_URL`. `CONCEPTQL_DATA_MODEL` picks the data model (default `gdm`). The results and counts in this document come from ConceptQL's test data, with `SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs`. This repository's `docker-compose.yml` runs the `outcomesinsights/misc:test_data.ignitor` image on `127.0.0.1:55432`. Start it with `docker compose up -d --wait test_data`, and copy `.env.example` to `.env`. `.env.example` also points `LEXICON_URL` at the same database, for the vocabulary tables. `just readme` starts the database and then runs `prep_readme.sh`.
-- Node.js 22 or later, and the diagram renderer's command-line tool from a checkout of the Jigsaw Diagram Editor. Run `npm ci` in its `frontend/lib/conceptql-diagram/cli` directory, and then set `CONCEPTQL_DIAGRAM_CLI` to the full path of `frontend/lib/conceptql-diagram/cli/bin/conceptql-diagram.js` in that checkout. `prep_readme.sh` stops with an error when `CONCEPTQL_DIAGRAM_CLI` is not set.
+The diagrams are drawn with the Jigsaw diagram renderer, which is not public yet. The renderer labels each line with the records (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. Set `CONCEPTQL_DIAGRAM_CLI` to the full path of the renderer's command-line script (Node.js 22 or later) to draw the diagrams. The build then writes each diagram as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
+
+Without `CONCEPTQL_DIAGRAM_CLI`, the build keeps the committed images. It deletes no image, and it does not fail. It names each image that it did not draw, and it marks an image that does not exist as `MISSING`. So a new example needs one run with the renderer.
+
+Between releases, the results and the images on the main branch can be out of date. Before a release, `just release-check` runs `just spec-check`, which rebuilds the document and the diagram data and fails when `README.md` or an image does not match the code.
 
 ## Appendix E - Operator Quick Reference
 
