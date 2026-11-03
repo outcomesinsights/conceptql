@@ -31,7 +31,7 @@ For instance, using ConceptQL we can take a statement that looks like this:
 
 And generate a diagram that looks like this:
 
-![](doc/diagram_0.png)
+![](docs/spec/images/511539320d6cfd34954d3b092148bda1cb870caadc44211e3f189262d160f89f.svg)
 
 And generate SQL that looks like this:
 
