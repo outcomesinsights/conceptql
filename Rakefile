@@ -70,8 +70,7 @@ task :make_vocabs_csv, [ :csv_path ] do |_t, args|
       id: amgen_vocab[:vocabulary_short_name],
       vocabulary_full_name: amgen_vocab[:vocabulary_long_name],
       vocabulary_short_name: amgen_vocab[:vocabulary_short_name],
-      domain: amgen_vocab[:omop_table],
-      hidden: nil
+      domain: amgen_vocab[:omop_table]
     }
     h[new_vocab[:id]] = new_vocab
   end

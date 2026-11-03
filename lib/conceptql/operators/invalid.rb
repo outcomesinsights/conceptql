@@ -5,6 +5,10 @@ module ConceptQL
     class Invalid < Operator
       register __FILE__
 
+      # Stands in for an operator that did not resolve, so no user picks it
+      hidden
+      category "Select by Clinical Codes"
+
       no_desc
       default_query_columns
 

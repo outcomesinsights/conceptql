@@ -108,20 +108,12 @@ module ConceptQL
         hash[:domain].present?
       end
 
-      def hidden?
-        hash[:hidden].present?
-      end
-
       def is_labish?
         hash[:domain] =~ /observation|measurement/i
       end
 
       def is_drugish?
         hash[:domain] =~ /drug_exposure/i
-      end
-
-      def visible?
-        !hidden?
       end
 
       def omopv5_id

@@ -34,7 +34,7 @@ describe "the deprecated count operator" do
     _(warnings_for([ "sum", [ "numeric", 1, [ "icd9", "412" ] ], { "group_by_person" => true } ]).to_h).must_be_empty
   end
 
-  # count has no category, so ConceptQL.metadata leaves it out, as it leaves
+  # count is hidden, so ConceptQL.metadata leaves it out, as it leaves
   # out sum. Ask each operator class for its metadata instead.
   describe "in the operator metadata" do
     let(:operators) { cdb.operators(:gdm) }

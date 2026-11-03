@@ -6,6 +6,10 @@ module ConceptQL
   module Operators
     class Sum < PassThru
       register __FILE__
+      # "We do not yet support numeric or sum in any meaningful way"
+      # (Ryan, 2026-11-03, seed conceptql-mdo.4)
+      hidden
+      category "Modify Data"
 
       def events_per_patient
         group_by_person? ? :single : :multiple

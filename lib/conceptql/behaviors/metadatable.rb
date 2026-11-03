@@ -47,6 +47,18 @@ module ConceptQL
       @deprecated = message
     end
 
+    # Marks an operator as hidden. It still runs, but ConceptQL.metadata
+    # (Nodifier#to_metadata) leaves it out, so an editor does not offer it.
+    # An operator is not hidden unless it says so. A subclass does not
+    # inherit the mark.
+    def hidden
+      @hidden = true
+    end
+
+    def hidden?
+      @hidden || false
+    end
+
     def predominant_domains(*values)
       return @predominant_domains if values.empty?
 
