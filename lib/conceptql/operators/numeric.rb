@@ -15,6 +15,10 @@ module ConceptQL
     # - An optional stream
     class Numeric < PassThru
       register __FILE__
+      # "We do not yet support numeric or sum in any meaningful way"
+      # (Ryan, 2026-11-03, seed conceptql-mdo.4)
+      hidden
+      category "Modify Data"
 
       desc "Sets the value_as_number of each record of its upstream stream. " \
            "The argument is a number, or the name of a column whose value is copied from the same record. " \

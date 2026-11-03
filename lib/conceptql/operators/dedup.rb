@@ -6,6 +6,8 @@ module ConceptQL
   module Operators
     class Dedup < PassThru
       register __FILE__
+      hidden
+      category "Filter Single Stream"
 
       desc "Passes along each distinct record once. Records that have the same value in every column become one record."
       allows_one_upstream

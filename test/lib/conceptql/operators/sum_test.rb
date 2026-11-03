@@ -103,7 +103,7 @@ describe ConceptQL::Operators::Sum do
     _(scope_for([ "sum", stream, { "group_by_person" => nil } ])[:errors]).must_be_empty
   end
 
-  # sum has no category, so ConceptQL.metadata leaves it out. Ask the class.
+  # sum is hidden, so ConceptQL.metadata leaves it out. Ask the class.
   it "declares group_by_person in its metadata, so an editor can show it" do
     option = cdb.operators(:gdm).fetch("sum").to_metadata("sum")[:options][:group_by_person]
     _(option[:type]).must_equal :boolean

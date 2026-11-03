@@ -6,6 +6,8 @@ module ConceptQL
   module Operators
     class Count < PassThru
       register __FILE__
+      hidden
+      category "Modify Data"
 
       desc "Counts the number of records that exactly match across all columns."
       # Every stream is a set, so count returns 1 for nearly every row

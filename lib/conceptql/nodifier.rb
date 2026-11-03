@@ -42,10 +42,12 @@ module ConceptQL
       end
     end
 
+    # The metadata of each operator that is not hidden, sorted by name
     def to_metadata(opts = {})
-      Hash[operators.map do |k, v|
-        [ k, v.to_metadata(k, opts) ]
-      end.reject { |_k, v| v[:categories].empty? }.sort_by { |_k, v| v[:name] }]
+      operators.reject { |_name, klass| klass.hidden? }
+               .map { |name, klass| [ name, klass.to_metadata(name, opts) ] }
+               .sort_by { |_name, metadata| metadata[:name] }
+               .to_h
     end
 
     # The operators this nodifier can create: its Database's registry for

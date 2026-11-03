@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- An operator class can say `hidden`. A hidden operator still runs, but `ConceptQL.metadata`
+  leaves it out. An operator is not hidden unless it says so, and a subclass does not inherit
+  the mark. `invalid`, `from`, `numeric`, `dedup`, `sum` and `count` are hidden. Before,
+  `ConceptQL.metadata` left out each operator without a category, and these six were the only
+  such operators. Now every operator has a category from `ConceptQL.categories`. The metadata
+  has no `hidden` key, and it publishes the same 119 operators on `gdm` as before.
+
 ### Changed
 
 - **Breaking:** a code lookup raises `ConceptQL::CodeCaseMismatchError` for a code that its
@@ -28,6 +37,12 @@ All notable changes to this project will be documented in this file.
   `trim_date_end`, `trim_date_start` and `read`. The first twelve take their operands from the
   `left` and `right` options, and `read` takes codes. Before, each of them ignored a positional
   upstream without a word.
+
+### Removed
+
+- The `hidden` column of `config/vocabularies.csv`, with `Vocabularies::Entry#hidden?` and
+  `Vocabularies::Entry#visible?`. No code used them. The column did not hide any operator, and
+  it is not connected to the new `hidden` mark of an operator.
 
 ### Fixed
 
