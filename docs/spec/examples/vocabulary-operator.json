@@ -1,0 +1,232 @@
+{
+  "spec_id": "vocabulary-operator",
+  "examples": [
+    {
+      "title": "All records with the ICD-9-CM diagnosis code 412 (old myocardial infarction)",
+      "statement": ["icd9cm", "412"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "2008-10-29",
+          "2008-10-29",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-06-05",
+          "2008-06-05",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "2009-07-19",
+          "2009-07-22",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-07-25",
+          "2009-07-25",
+          "412"
+        ],
+        [
+          73,
+          52843,
+          "observations",
+          "condition_occurrence",
+          "2008-11-16",
+          "2008-11-16",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-10-06",
+          "2010-10-06",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2009-01-28",
+          "2009-01-30",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "icd9cm",
+            "base": "selection",
+            "humanName": "ICD-9 CM",
+            "vocabularyId": "ICD9CM",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": ["412"],
+            "children": [],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity",
+      "statement": ["ms_drg", "205"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          17,
+          1365,
+          "observations",
+          "procedure_occurrence",
+          "2010-06-02",
+          "2010-06-06",
+          "205"
+        ],
+        [
+          68,
+          18,
+          "observations",
+          "procedure_occurrence",
+          "2008-04-19",
+          "2008-04-23",
+          "205"
+        ],
+        [
+          95,
+          603,
+          "observations",
+          "procedure_occurrence",
+          "2008-08-27",
+          "2008-09-01",
+          "205"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "ms_drg",
+            "base": "selection",
+            "humanName": "MS-DRG",
+            "vocabularyId": "MS-DRG",
+            "outputTypes": ["procedure_occurrence"],
+            "parameters": {},
+            "values": ["205"],
+            "children": [],
+            "counts": {
+              "procedure_occurrence": {
+                "rows": 3,
+                "n": 3
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "All CMS-DRG 205 records (a liver disorder)",
+      "statement": ["cms_drg", "205"],
+      "help": false,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "cms_drg",
+            "base": "selection",
+            "humanName": "CMS-DRG",
+            "vocabularyId": "CMS-DRG",
+            "outputTypes": ["procedure_occurrence"],
+            "parameters": {},
+            "values": ["205"],
+            "children": [],
+            "counts": {
+              "procedure_occurrence": {
+                "rows": 0,
+                "n": 0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

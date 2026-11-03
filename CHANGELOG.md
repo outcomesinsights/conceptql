@@ -21,6 +21,13 @@ All notable changes to this project will be documented in this file.
   option. A subclass does not inherit `returns` or the examples. The vocabulary operators serve
   the `returns` text and the examples of `ConceptQL::Operators::Vocabulary`, each operator
   only the examples whose statement starts with its own name. All texts are plain text.
+- `ConceptQL.spec_examples_path`, the directory `docs/spec/examples/` in the gem. It holds one
+  file, `<spec_id>.json`, for each spec_id of the operator reference. The file has the
+  examples of that section, each with its `title`, `statement`, `help`, the `columns` and the
+  first 10 `rows` of its result on the test data, and its diagram `tree`
+  (`conceptql-diagram/v1`, with counts). An application can show an operator's help from the
+  file of that operator, without a database. `just spec` writes the files, and
+  `just spec-check` fails when one of them would change.
 
 ### Changed
 

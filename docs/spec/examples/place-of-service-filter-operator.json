@@ -1,0 +1,57 @@
+{
+  "spec_id": "place-of-service-filter-operator",
+  "examples": [
+    {
+      "title": "Diabetes diagnoses (ICD-9 250.00) with the place of service outpatient hospital (22)",
+      "statement": ["place_of_service_filter", 22, ["icd9", "250.00"]],
+      "help": false,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "place_of_service_filter",
+            "base": "temporal",
+            "humanName": "Place Of Service Filter",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [22],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.00"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 1036,
+                    "n": 162
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 0,
+                "n": 0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

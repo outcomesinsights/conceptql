@@ -1,0 +1,40 @@
+{
+  "spec_id": "snf-operator",
+  "examples": [
+    {
+      "title": "All SNF admissions",
+      "statement": ["snf"],
+      "help": false,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "snf",
+            "base": "selection",
+            "humanName": "Snf",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 0,
+                "n": 0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

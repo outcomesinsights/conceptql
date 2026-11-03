@@ -1,0 +1,158 @@
+{
+  "spec_id": "one-in-two-out-operator",
+  "examples": [
+    {
+      "title": "First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart",
+      "statement": [
+        "one_in_two_out",
+        ["icd9", "250.00"],
+        {
+          "outpatient_minimum_gap": "30d",
+          "outpatient_event_to_return": "Initial Event"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          2,
+          89752,
+          "observations",
+          "condition_occurrence",
+          "2009-05-11",
+          "2009-05-11",
+          "25000"
+        ],
+        [
+          7,
+          15942,
+          "observations",
+          "condition_occurrence",
+          "2008-04-23",
+          "2008-04-23",
+          "25000"
+        ],
+        [
+          8,
+          95135,
+          "observations",
+          "condition_occurrence",
+          "2008-10-17",
+          "2008-10-17",
+          "25000"
+        ],
+        [
+          9,
+          24929,
+          "observations",
+          "condition_occurrence",
+          "2010-08-01",
+          "2010-08-01",
+          "25000"
+        ],
+        [
+          11,
+          73103,
+          "observations",
+          "condition_occurrence",
+          "2008-06-17",
+          "2008-06-17",
+          "25000"
+        ],
+        [
+          12,
+          15443,
+          "observations",
+          "condition_occurrence",
+          "2009-04-20",
+          "2009-04-20",
+          "25000"
+        ],
+        [
+          13,
+          19968,
+          "observations",
+          "condition_occurrence",
+          "2008-03-05",
+          "2008-03-05",
+          "25000"
+        ],
+        [
+          14,
+          77991,
+          "observations",
+          "condition_occurrence",
+          "2009-06-05",
+          "2009-06-05",
+          "25000"
+        ],
+        [
+          15,
+          47045,
+          "observations",
+          "condition_occurrence",
+          "2008-09-24",
+          "2008-09-24",
+          "25000"
+        ],
+        [
+          17,
+          83187,
+          "observations",
+          "condition_occurrence",
+          "2008-04-14",
+          "2008-04-14",
+          "25000"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "one_in_two_out",
+            "base": "temporal",
+            "humanName": "One In Two Out",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "outpatient_minimum_gap": "30d",
+              "outpatient_event_to_return": "Initial Event"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.00"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 1036,
+                    "n": 162
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 132,
+                "n": 132
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

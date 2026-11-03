@@ -113,6 +113,13 @@ module SpecBuild
       ConceptQL::Operators::Vocabulary.desc
     end
 
+    # The examples ({title:, statement:, help:}) of every operator of the
+    # section of +spec_id+, in the order of the section: the examples that an
+    # editor shows in its help come first.
+    def section_examples(spec_id)
+      @sections.fetch(spec_id).flat_map { |operator| operator[:examples] }.partition { |example| example[:help] }.flatten(1)
+    end
+
     private
 
     def markdown(directive, headings)
@@ -179,10 +186,9 @@ module SpecBuild
       facts.empty? ? "" : " (#{facts.join(', ')})"
     end
 
-    # The examples of every operator of the section as ConceptQL blocks. The
-    # examples that an editor shows in its help come first.
+    # The examples of every operator of the section as ConceptQL blocks
     def examples(spec_id)
-      @sections.fetch(spec_id).flat_map { |operator| operator[:examples] }.partition { |example| example[:help] }.flatten(1).map do |example|
+      section_examples(spec_id).map do |example|
         "```ConceptQL\n# #{example.fetch(:title)}\n#{JSON.generate(example.fetch(:statement))}\n```"
       end
     end

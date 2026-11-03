@@ -1,0 +1,131 @@
+{
+  "spec_id": "information-periods-operator",
+  "examples": [
+    {
+      "title": "All information periods",
+      "statement": ["information_periods"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          1,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          1,
+          2,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          1,
+          3,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          1,
+          4,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          2,
+          5,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          2,
+          6,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          2,
+          793,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          2,
+          7,
+          "information_periods",
+          "observation_period",
+          "2009-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          3,
+          8,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ],
+        [
+          3,
+          9,
+          "information_periods",
+          "observation_period",
+          "2008-01-01",
+          "2010-12-31",
+          null
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "information_periods",
+            "base": "selection",
+            "humanName": "Information Periods",
+            "outputTypes": ["observation_period"],
+            "parameters": {},
+            "values": [],
+            "children": [],
+            "counts": {
+              "observation_period": {
+                "rows": 946,
+                "n": 249
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

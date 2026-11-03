@@ -1,0 +1,106 @@
+{
+  "spec_id": "any-overlap-operator",
+  "examples": [
+    {
+      "title": "All MIs that overlap with the month of 2010-06",
+      "statement": [
+        "any_overlap",
+        {
+          "left": ["icd9", "412"],
+          "right": [
+            "date_range",
+            {
+              "start": "2010-06-01",
+              "end": "2010-06-30"
+            }
+          ]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          110,
+          62592,
+          "observations",
+          "condition_occurrence",
+          "2010-06-27",
+          "2010-06-27",
+          "412"
+        ],
+        [
+          217,
+          56467,
+          "observations",
+          "condition_occurrence",
+          "2010-06-22",
+          "2010-06-23",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "any_overlap",
+            "base": "filter",
+            "humanName": "Any Overlap",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "date_range",
+                "base": "selection",
+                "humanName": "Date Range",
+                "outputTypes": ["person"],
+                "parameters": {
+                  "start": "2010-06-01",
+                  "end": "2010-06-30"
+                },
+                "values": [],
+                "children": [],
+                "counts": {
+                  "person": {
+                    "rows": 249,
+                    "n": 249
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 2,
+                "n": 2
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

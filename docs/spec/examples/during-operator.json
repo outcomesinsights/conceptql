@@ -1,0 +1,178 @@
+{
+  "spec_id": "during-operator",
+  "examples": [
+    {
+      "title": "All MIs for the year 2010",
+      "statement": [
+        "during",
+        {
+          "left": ["icd9", "412"],
+          "right": [
+            "date_range",
+            {
+              "start": "2010-01-01",
+              "end": "2010-12-31"
+            }
+          ]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-10-06",
+          "2010-10-06",
+          "412"
+        ],
+        [
+          90,
+          33940,
+          "observations",
+          "condition_occurrence",
+          "2010-05-26",
+          "2010-05-26",
+          "412"
+        ],
+        [
+          109,
+          89334,
+          "observations",
+          "condition_occurrence",
+          "2010-07-06",
+          "2010-07-06",
+          "412"
+        ],
+        [
+          110,
+          62592,
+          "observations",
+          "condition_occurrence",
+          "2010-06-27",
+          "2010-06-27",
+          "412"
+        ],
+        [
+          152,
+          84298,
+          "observations",
+          "condition_occurrence",
+          "2010-11-22",
+          "2010-11-22",
+          "412"
+        ],
+        [
+          187,
+          87583,
+          "observations",
+          "condition_occurrence",
+          "2010-12-26",
+          "2010-12-26",
+          "412"
+        ],
+        [
+          213,
+          15005,
+          "observations",
+          "condition_occurrence",
+          "2010-02-07",
+          "2010-02-07",
+          "412"
+        ],
+        [
+          217,
+          56467,
+          "observations",
+          "condition_occurrence",
+          "2010-06-22",
+          "2010-06-23",
+          "412"
+        ],
+        [
+          239,
+          49718,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "during",
+            "base": "filter",
+            "humanName": "During",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "date_range",
+                "base": "selection",
+                "humanName": "Date Range",
+                "outputTypes": ["person"],
+                "parameters": {
+                  "start": "2010-01-01",
+                  "end": "2010-12-31"
+                },
+                "values": [],
+                "children": [],
+                "counts": {
+                  "person": {
+                    "rows": 249,
+                    "n": 249
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 10,
+                "n": 10
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

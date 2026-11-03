@@ -1,0 +1,148 @@
+{
+  "spec_id": "provenance-operator",
+  "examples": [
+    {
+      "title": "Diabetes diagnoses (ICD-9 250.00) from inpatient files",
+      "statement": ["provenance", "inpatient", ["icd9", "250.00"]],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          17,
+          929,
+          "observations",
+          "condition_occurrence",
+          "2010-05-22",
+          "2010-06-12",
+          "25000"
+        ],
+        [
+          21,
+          1024,
+          "observations",
+          "condition_occurrence",
+          "2008-10-15",
+          "2008-10-21",
+          "25000"
+        ],
+        [
+          28,
+          1446,
+          "observations",
+          "condition_occurrence",
+          "2008-04-21",
+          "2008-04-26",
+          "25000"
+        ],
+        [
+          32,
+          257,
+          "observations",
+          "condition_occurrence",
+          "2010-08-30",
+          "2010-09-07",
+          "25000"
+        ],
+        [
+          37,
+          310,
+          "observations",
+          "condition_occurrence",
+          "2009-01-19",
+          "2009-01-20",
+          "25000"
+        ],
+        [
+          60,
+          983,
+          "observations",
+          "condition_occurrence",
+          "2009-07-19",
+          "2009-07-22",
+          "25000"
+        ],
+        [
+          66,
+          1146,
+          "observations",
+          "condition_occurrence",
+          "2008-12-08",
+          "2008-12-13",
+          "25000"
+        ],
+        [
+          66,
+          1507,
+          "observations",
+          "condition_occurrence",
+          "2009-12-29",
+          "2009-12-31",
+          "25000"
+        ],
+        [
+          68,
+          19,
+          "observations",
+          "condition_occurrence",
+          "2008-04-19",
+          "2008-04-23",
+          "25000"
+        ],
+        [
+          68,
+          1596,
+          "observations",
+          "condition_occurrence",
+          "2008-11-10",
+          "2008-11-11",
+          "25000"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "provenance",
+            "base": "temporal",
+            "humanName": "Provenance",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": ["inpatient"],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.00"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 1036,
+                    "n": 162
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 35,
+                "n": 29
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

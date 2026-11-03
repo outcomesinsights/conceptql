@@ -1,0 +1,186 @@
+{
+  "spec_id": "match-operator",
+  "examples": [
+    {
+      "title": "MIs that are a patient's first MI",
+      "statement": [
+        "match",
+        {
+          "left": ["icd9", "412"],
+          "right": ["first", ["icd9", "412"]]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "2008-10-29",
+          "2008-10-29",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-06-05",
+          "2008-06-05",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "2009-07-19",
+          "2009-07-22",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-07-25",
+          "2009-07-25",
+          "412"
+        ],
+        [
+          73,
+          52843,
+          "observations",
+          "condition_occurrence",
+          "2008-11-16",
+          "2008-11-16",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-10-06",
+          "2010-10-06",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2009-01-28",
+          "2009-01-30",
+          "412"
+        ],
+        [
+          88,
+          1572,
+          "observations",
+          "condition_occurrence",
+          "2009-01-03",
+          "2009-01-09",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "match",
+            "base": "filter",
+            "humanName": "Match",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "first",
+                "base": "temporal",
+                "humanName": "First",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": [],
+                "children": [
+                  {
+                    "name": "icd9",
+                    "base": "selection",
+                    "humanName": "ICD-9 CM",
+                    "vocabularyId": "ICD9CM",
+                    "outputTypes": ["condition_occurrence"],
+                    "parameters": {},
+                    "values": ["412"],
+                    "children": [],
+                    "counts": {
+                      "condition_occurrence": {
+                        "rows": 48,
+                        "n": 37
+                      }
+                    }
+                  }
+                ],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 37,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 37,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

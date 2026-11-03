@@ -122,14 +122,15 @@ jobs:
       # complete and works: install it, with only its declared runtime
       # dependencies, into an empty GEM_HOME; load it from there, not from the
       # checkout; require every tracked file under config/ and schemas/, and
-      # docs/spec/README.md (ConceptQL.spec_path), to be in it; and create a ConceptQL::Database and generate SQL (the call
+      # docs/spec/README.md (ConceptQL.spec_path) and docs/spec/examples/
+      # (ConceptQL.spec_examples_path), to be in it; and create a ConceptQL::Database and generate SQL (the call
       # that failed against sequelizer 0.2.0). That install, outside any
       # lockfile, is deliberate (ruled 2026-10-01), hence the zizmor ignore.
       - name: Check the built gem loads and resolves config/ and schemas/ when installed
         run: | # zizmor: ignore[adhoc-packages]
           set -euo pipefail
           home=$(mktemp -d); empty=$(mktemp -d)
-          RUNTIME_FILES=$(git ls-files config schemas docs/spec/README.md | tr '\n' ' ')
+          RUNTIME_FILES=$(git ls-files config schemas docs/spec/README.md docs/spec/examples | tr '\n' ' ')
           export RUNTIME_FILES
           # GEM_PATH too, so already-installed gems cannot satisfy a dependency:
           # with GEM_HOME alone, gem install sees the system's gems, skips them,
@@ -145,8 +146,10 @@ jobs:
             abort "ConceptQL.root is #{ConceptQL.root}, not #{dir}" unless ConceptQL.root.to_s == dir
             abort "config/, schemas/ or the spec is not under #{dir}" unless [ConceptQL.config_dir, ConceptQL.schemas_dir, ConceptQL.spec_path].all? { |d| d.to_s.start_with?(dir) }
             abort "ConceptQL.spec_path #{ConceptQL.spec_path} is not a file" unless ConceptQL.spec_path.file?
+            abort "ConceptQL.spec_examples_path #{ConceptQL.spec_examples_path} is not a directory under #{dir}" unless ConceptQL.spec_examples_path.directory? && ConceptQL.spec_examples_path.to_s.start_with?(dir)
             wanted = ENV.fetch("RUNTIME_FILES").split
             abort "no tracked files under config/ and schemas/" if wanted.empty?
+            abort "no tracked example files under docs/spec/examples/" if wanted.none? { |f| f.start_with?("docs/spec/examples/") }
             missing = wanted.reject { |f| File.file?(File.join(dir, f)) }
             abort "missing from the built gem: #{missing.join(", ")}" unless missing.empty?
             cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres))
