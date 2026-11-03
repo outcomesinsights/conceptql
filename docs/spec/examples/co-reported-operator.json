@@ -1,0 +1,168 @@
+{
+  "spec_id": "co-reported-operator",
+  "examples": [
+    {
+      "title": "Diabetes diagnoses reported as a reason for an office visit, and those office visits",
+      "statement": ["co_reported", ["icd9", "250.00"], ["cpt", "99214"]],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          25,
+          93217,
+          "observations",
+          "condition_occurrence",
+          "2008-09-18",
+          "2008-09-18",
+          "25000"
+        ],
+        [
+          25,
+          93220,
+          "observations",
+          "procedure_occurrence",
+          "2008-09-18",
+          "2008-09-18",
+          "99214"
+        ],
+        [
+          31,
+          87695,
+          "observations",
+          "condition_occurrence",
+          "2008-06-17",
+          "2008-06-17",
+          "25000"
+        ],
+        [
+          31,
+          87696,
+          "observations",
+          "procedure_occurrence",
+          "2008-06-17",
+          "2008-06-17",
+          "99214"
+        ],
+        [
+          40,
+          81973,
+          "observations",
+          "condition_occurrence",
+          "2009-05-01",
+          "2009-05-01",
+          "25000"
+        ],
+        [
+          40,
+          81993,
+          "observations",
+          "procedure_occurrence",
+          "2009-05-01",
+          "2009-05-01",
+          "99214"
+        ],
+        [
+          44,
+          44702,
+          "observations",
+          "condition_occurrence",
+          "2008-01-10",
+          "2008-01-10",
+          "25000"
+        ],
+        [
+          44,
+          44715,
+          "observations",
+          "procedure_occurrence",
+          "2008-01-10",
+          "2008-01-10",
+          "99214"
+        ],
+        [
+          58,
+          35093,
+          "observations",
+          "condition_occurrence",
+          "2009-06-15",
+          "2009-06-15",
+          "25000"
+        ],
+        [
+          58,
+          35095,
+          "observations",
+          "procedure_occurrence",
+          "2009-06-15",
+          "2009-06-15",
+          "99214"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "co_reported",
+            "base": "set",
+            "humanName": "Co Reported",
+            "outputTypes": ["condition_occurrence", "procedure_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.00"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 1036,
+                    "n": 162
+                  }
+                }
+              },
+              {
+                "name": "cpt",
+                "base": "selection",
+                "humanName": "CPT",
+                "vocabularyId": "CPT4",
+                "outputTypes": ["procedure_occurrence"],
+                "parameters": {},
+                "values": ["99214"],
+                "children": [],
+                "counts": {
+                  "procedure_occurrence": {
+                    "rows": 1073,
+                    "n": 175
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 49,
+                "n": 39
+              },
+              "procedure_occurrence": {
+                "rows": 49,
+                "n": 39
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

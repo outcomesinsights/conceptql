@@ -53,5 +53,13 @@ module ConceptQL
     def spec_path
       root / "docs" / "spec" / "README.md"
     end
+
+    # The directory of the spec's example files, one <spec_id>.json for each
+    # published spec_id: the title, statement, help flag, result columns and
+    # rows, and diagram tree (conceptql-diagram/v1) of each example. An
+    # application reads the file of the operator it shows.
+    def spec_examples_path
+      root / "docs" / "spec" / "examples"
+    end
   end
 end

@@ -1,0 +1,97 @@
+{
+  "spec_id": "contains-operator",
+  "examples": [
+    {
+      "title": "All MIs occurring on 2010-06-22",
+      "statement": [
+        "contains",
+        {
+          "left": ["icd9", "412"],
+          "right": [
+            "date_range",
+            {
+              "start": "2010-06-22",
+              "end": "2010-06-22"
+            }
+          ]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          217,
+          56467,
+          "observations",
+          "condition_occurrence",
+          "2010-06-22",
+          "2010-06-23",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "contains",
+            "base": "filter",
+            "humanName": "Contains",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "date_range",
+                "base": "selection",
+                "humanName": "Date Range",
+                "outputTypes": ["person"],
+                "parameters": {
+                  "start": "2010-06-22",
+                  "end": "2010-06-22"
+                },
+                "values": [],
+                "children": [],
+                "counts": {
+                  "person": {
+                    "rows": 249,
+                    "n": 249
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

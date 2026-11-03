@@ -1,0 +1,131 @@
+{
+  "spec_id": "hospitalization-operator",
+  "examples": [
+    {
+      "title": "All inpatient hospital admissions",
+      "statement": ["hospitalization"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          95,
+          "collections",
+          "condition_occurrence",
+          "2010-03-12",
+          "2010-03-13",
+          "V4501"
+        ],
+        [
+          2,
+          37,
+          "collections",
+          "condition_occurrence",
+          "2009-04-12",
+          "2009-04-18",
+          "2724"
+        ],
+        [
+          2,
+          96,
+          "collections",
+          "condition_occurrence",
+          "2009-08-31",
+          "2009-09-02",
+          "7092"
+        ],
+        [
+          2,
+          12,
+          "collections",
+          "condition_occurrence",
+          "2009-09-17",
+          "2009-09-20",
+          "32723"
+        ],
+        [
+          2,
+          43,
+          "collections",
+          "condition_occurrence",
+          "2010-06-26",
+          "2010-07-01",
+          "7856"
+        ],
+        [
+          14,
+          151,
+          "collections",
+          "condition_occurrence",
+          "2008-09-12",
+          "2008-09-12",
+          "2724"
+        ],
+        [
+          17,
+          93,
+          "collections",
+          "condition_occurrence",
+          "2008-09-19",
+          "2008-09-22",
+          "33811"
+        ],
+        [
+          17,
+          83,
+          "collections",
+          "condition_occurrence",
+          "2010-05-22",
+          "2010-06-12",
+          "5845"
+        ],
+        [
+          17,
+          122,
+          "collections",
+          "condition_occurrence",
+          "2010-06-02",
+          "2010-06-06",
+          "4280"
+        ],
+        [
+          17,
+          124,
+          "collections",
+          "condition_occurrence",
+          "2010-06-16",
+          "2010-06-19",
+          "V4365"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "hospitalization",
+            "base": "selection",
+            "humanName": "Hospitalization",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 153,
+                "n": 84
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

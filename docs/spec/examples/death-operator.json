@@ -1,0 +1,103 @@
+{
+  "spec_id": "death-operator",
+  "examples": [
+    {
+      "title": "All death records",
+      "statement": ["death"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [16, 1, "deaths", "death", "2010-12-01", "2010-12-01", null],
+        [26, 2, "deaths", "death", "2009-07-01", "2009-07-01", null],
+        [65, 3, "deaths", "death", "2009-01-01", "2009-01-01", null],
+        [119, 4, "deaths", "death", "2008-09-01", "2008-09-01", null],
+        [166, 5, "deaths", "death", "2008-07-01", "2008-07-01", null],
+        [181, 6, "deaths", "death", "2010-07-01", "2010-07-01", null],
+        [190, 7, "deaths", "death", "2009-09-01", "2009-09-01", null],
+        [191, 8, "deaths", "death", "2009-09-01", "2009-09-01", null],
+        [201, 9, "deaths", "death", "2008-05-01", "2008-05-01", null],
+        [215, 10, "deaths", "death", "2008-01-01", "2008-01-01", null]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "death",
+            "base": "cast",
+            "humanName": "Death",
+            "outputTypes": ["death"],
+            "parameters": {},
+            "values": [],
+            "children": [],
+            "counts": {
+              "death": {
+                "rows": 10,
+                "n": 10
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "The deaths of the patients with an old myocardial infarction (ICD-9-CM 412)",
+      "statement": ["death", ["icd9cm", "412"]],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [[190, 7, "deaths", "death", "2009-09-01", "2009-09-01", null]],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "death",
+            "base": "cast",
+            "humanName": "Death",
+            "outputTypes": ["death"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9cm",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "death": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

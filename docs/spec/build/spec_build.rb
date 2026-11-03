@@ -6,19 +6,25 @@ require "fileutils"
 require "json"
 require "open3"
 require_relative "reference"
+require_relative "../../../test/prettier_json"
 
 # Builds docs/spec/README.md from docs/spec/README.cql.md. First each
 # directive of the source becomes its generated markdown (SpecBuild::Reference):
 # the operator reference sections, the label option and Appendix E. Then each
 # ```ConceptQL block becomes an example: the statement as JSON, its diagram
-# (images/<name>.svg) and the first 10 rows of its result. `just spec` runs
-# docs/spec/build/run.rb, which calls this, on the DuckDB fixture.
+# (images/<name>.svg) and the first 10 rows of its result. Last, the examples
+# of each published spec_id go to examples/<spec_id>.json, with their rows and
+# diagram trees. `just spec` runs docs/spec/build/run.rb, which calls this, on
+# the DuckDB fixture.
 module SpecBuild
   DIR = File.expand_path("..", __dir__)
   SOURCE = File.join(DIR, "README.cql.md")
   OUTPUT = File.join(DIR, "README.md")
   IMAGES = File.join(DIR, "images")
   MANIFEST = File.join(IMAGES, "manifest.tsv")
+  # One JSON file of example results and diagram trees for each published
+  # spec_id (ConceptQL.spec_examples_path)
+  EXAMPLES = File.join(DIR, "examples")
 
   CLI_ENV = "CONCEPTQL_DIAGRAM_CLI"
   CLI_FLAGS = %w[--show-counts --show-options].freeze
@@ -104,10 +110,12 @@ module SpecBuild
       expanded = @reference.expand(File.readlines(SOURCE))
       lines = expanded.map(&:text)
       blocks = SpecBuild.blocks(lines, expanded.map(&:origin))
-      examples = blocks.to_h { |b| [ b.line, example(b) ] }
-      outdated = images(blocks)
-      File.write(OUTPUT, knit(lines, examples))
+      results = blocks.to_h { |b| [ SpecBuild.sha(b.statement), result(b) ] }
+      trees = blocks.to_h { |b| [ SpecBuild.image_name(b.statement), tree(b) ] }
+      outdated = images(trees)
+      File.write(OUTPUT, knit(lines, blocks.to_h { |b| [ b.line, example(b, results.fetch(SpecBuild.sha(b.statement))) ] }))
       puts "wrote #{OUTPUT} (#{blocks.size} examples)"
+      write_examples(results, trees)
       return unless @check && outdated.any?
 
       abort(<<~MSG)
@@ -123,14 +131,19 @@ module SpecBuild
       !@cli.empty?
     end
 
-    # The markdown of one example.
-    def example(block)
+    # The first LIMIT rows of the result of one example
+    def result(block)
       errors = cdb.query(block.statement).validation_errors
       raise "example #{block.number} (#{block.origin}) is not valid: #{errors}" unless errors.empty?
 
       ds = db.from(cdb.query(block.statement).query)
       rows = ds.order(*ORDER).limit(LIMIT).all
       puts format("[%02d] %-24s rows=%-6d %s", block.number, block.origin[/\A\S+/], ds.count, block.title[0, 70])
+      rows
+    end
+
+    # The markdown of one example, with the +rows+ of its result
+    def example(block, rows)
       heading = [ "**Example #{block.number}", block.title.empty? ? nil : block.title ].compact.join(" - ")
       [ "---", "#{heading}**", "```JSON\n#{JSON.generate(block.statement)}\n```",
         "![#{block.title.delete('[]')}](images/#{SpecBuild.image_name(block.statement)})",
@@ -152,11 +165,11 @@ module SpecBuild
       text.gsub("|", "\\|")
     end
 
-    # Each diagram tree, with its counts, as the renderer draws it. Without the
-    # renderer the committed images stay: nothing is deleted and nothing fails.
-    # It returns the images that are missing or stale (SpecBuild.outdated).
-    def images(blocks)
-      trees = blocks.to_h { |b| [ SpecBuild.image_name(b.statement), tree(b) ] }
+    # Draws each diagram tree of +trees+ (image name => tree, with its counts).
+    # Without the renderer the committed images stay: nothing is deleted and
+    # nothing fails. It returns the images that are missing or stale
+    # (SpecBuild.outdated).
+    def images(trees)
       unless draw?
         manifest = File.file?(MANIFEST) ? File.read(MANIFEST) : ""
         outdated = SpecBuild.outdated(trees, manifest)
@@ -198,6 +211,38 @@ module SpecBuild
       File.rename(tmp, path)
     ensure
       FileUtils.rm_f(tmp)
+    end
+
+    # Writes EXAMPLES/<spec_id>.json for each published spec_id: the examples
+    # of its section, each with the rows of its result (in the columns of the
+    # spec's tables) and its diagram tree, the tree that manifest.tsv hashes.
+    # A file of a spec_id that is no longer published is removed.
+    def write_examples(results, trees)
+      FileUtils.mkdir_p(EXAMPLES)
+      written = @reference.spec_ids.sort.map do |spec_id|
+        examples = @reference.section_examples(spec_id).map { |example| example_entry(example, results, trees) }
+        path = File.join(EXAMPLES, "#{spec_id}.json")
+        File.write(path, PrettierJson.generate({ spec_id: spec_id, examples: examples }))
+        path
+      end
+      stale = Dir[File.join(EXAMPLES, "*.json")] - written
+      FileUtils.rm(stale)
+      puts "examples: #{written.size} written, #{stale.size} stale removed, #{EXAMPLES}"
+    end
+
+    def example_entry(example, results, trees)
+      statement = example.fetch(:statement)
+      rows = results.fetch(SpecBuild.sha(statement)).map { |row| row.values_at(*RESULT_KEYS).map { |v| json_value(v) } }
+      { title: example.fetch(:title), statement: statement, help: example.fetch(:help),
+        columns: RESULT_KEYS, rows: rows, tree: trees.fetch(SpecBuild.image_name(statement)) }
+    end
+
+    def json_value(value)
+      case value
+      when Date then value.iso8601
+      when BigDecimal then value.to_s("F")
+      else value
+      end
     end
 
     def knit(lines, examples)

@@ -1,0 +1,77 @@
+{
+  "spec_id": "numeric-filter-operator",
+  "examples": [
+    {
+      "title": "Hemoglobin A1c results (LOINC 4548-4) with a value from 5 to 7",
+      "statement": [
+        "numeric_filter",
+        ["loinc", "4548-4"],
+        {
+          "greater_than_or_equal_to": 5,
+          "less_than_or_equal_to": 7
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          200,
+          100001,
+          "observations",
+          "observation",
+          "2009-03-03",
+          "2009-03-03",
+          "4548-4"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "numeric_filter",
+            "base": "temporal",
+            "humanName": "Numeric Filter",
+            "outputTypes": ["observation"],
+            "parameters": {
+              "greater_than_or_equal_to": 5,
+              "less_than_or_equal_to": 7
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "loinc",
+                "base": "selection",
+                "humanName": "Logical Observation Identifiers Names and Codes (Regenstrief Institute)",
+                "vocabularyId": "LOINC",
+                "outputTypes": ["observation"],
+                "parameters": {},
+                "values": ["4548-4"],
+                "children": [],
+                "counts": {
+                  "observation": {
+                    "rows": 1,
+                    "n": 1
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "observation": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

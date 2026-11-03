@@ -1,0 +1,289 @@
+{
+  "spec_id": "recall-operator",
+  "examples": [
+    {
+      "title": "Label neurological diagnoses as \"neuro dxs\". Recall them to remove those that were co-reported with a nervous-system MS-DRG. Then apply the one inpatient, two outpatient rule. (The code lists are shortened.)",
+      "statement": [
+        "one_in_two_out",
+        [
+          "except",
+          {
+            "left": [
+              "union",
+              ["icd9", "331.0", "332.0", "340", "345.90"],
+              ["icd10cm", "G20", "G30.9", "G35", "G40.909"],
+              {
+                "label": "neuro dxs"
+              }
+            ],
+            "right": [
+              "co_reported",
+              ["recall", "neuro dxs"],
+              ["ms_drg", "056", "057", "058", "059", "060", "100", "101"]
+            ]
+          }
+        ],
+        {
+          "outpatient_minimum_gap": "30d",
+          "outpatient_maximum_gap": "365d",
+          "outpatient_event_to_return": "Confirming Event"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          2,
+          122,
+          "observations",
+          "condition_occurrence",
+          "2009-09-17",
+          "2009-09-20",
+          "34590"
+        ],
+        [
+          7,
+          27644,
+          "observations",
+          "condition_occurrence",
+          "2008-09-21",
+          "2008-09-30",
+          "3320"
+        ],
+        [
+          28,
+          131,
+          "observations",
+          "condition_occurrence",
+          "2008-04-26",
+          "2008-04-30",
+          "3310"
+        ],
+        [
+          35,
+          34819,
+          "observations",
+          "condition_occurrence",
+          "2009-05-02",
+          "2009-05-02",
+          "340"
+        ],
+        [
+          42,
+          72000,
+          "observations",
+          "condition_occurrence",
+          "2008-08-28",
+          "2008-08-28",
+          "3310"
+        ],
+        [
+          44,
+          39145,
+          "observations",
+          "condition_occurrence",
+          "2008-08-31",
+          "2008-08-31",
+          "3310"
+        ],
+        [
+          68,
+          28936,
+          "observations",
+          "condition_occurrence",
+          "2009-12-01",
+          "2009-12-01",
+          "340"
+        ],
+        [
+          72,
+          91104,
+          "observations",
+          "condition_occurrence",
+          "2009-09-07",
+          "2009-09-07",
+          "3320"
+        ],
+        [
+          83,
+          58845,
+          "observations",
+          "condition_occurrence",
+          "2010-09-05",
+          "2010-09-05",
+          "3320"
+        ],
+        [
+          88,
+          89097,
+          "observations",
+          "condition_occurrence",
+          "2009-02-03",
+          "2009-02-03",
+          "3320"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "one_in_two_out",
+            "base": "temporal",
+            "humanName": "One In Two Out",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "outpatient_minimum_gap": "30d",
+              "outpatient_maximum_gap": "365d",
+              "outpatient_event_to_return": "Confirming Event"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "except",
+                "base": "filter",
+                "humanName": "Except",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": [],
+                "children": [
+                  {
+                    "name": "union",
+                    "base": "set",
+                    "humanName": "Union",
+                    "outputTypes": ["condition_occurrence"],
+                    "parameters": {
+                      "label": "neuro dxs"
+                    },
+                    "values": [],
+                    "children": [
+                      {
+                        "name": "icd9",
+                        "base": "selection",
+                        "humanName": "ICD-9 CM",
+                        "vocabularyId": "ICD9CM",
+                        "outputTypes": ["condition_occurrence"],
+                        "parameters": {},
+                        "values": ["331.0", "332.0", "340", "345.90"],
+                        "children": [],
+                        "counts": {
+                          "condition_occurrence": {
+                            "rows": 136,
+                            "n": 72
+                          }
+                        }
+                      },
+                      {
+                        "name": "icd10cm",
+                        "base": "selection",
+                        "humanName": "ICD-10 CM",
+                        "vocabularyId": "ICD10CM",
+                        "outputTypes": ["condition_occurrence"],
+                        "parameters": {},
+                        "values": ["G20", "G30.9", "G35", "G40.909"],
+                        "children": [],
+                        "counts": {
+                          "condition_occurrence": {
+                            "rows": 0,
+                            "n": 0
+                          }
+                        }
+                      }
+                    ],
+                    "counts": {
+                      "condition_occurrence": {
+                        "rows": 136,
+                        "n": 72
+                      }
+                    }
+                  },
+                  {
+                    "name": "co_reported",
+                    "base": "set",
+                    "humanName": "Co Reported",
+                    "outputTypes": [
+                      "condition_occurrence",
+                      "procedure_occurrence"
+                    ],
+                    "parameters": {},
+                    "values": [],
+                    "children": [
+                      {
+                        "name": "recall",
+                        "base": "selection",
+                        "humanName": "Recall",
+                        "outputTypes": ["condition_occurrence"],
+                        "parameters": {},
+                        "values": ["neuro dxs"],
+                        "children": [],
+                        "counts": {
+                          "condition_occurrence": {
+                            "rows": 136,
+                            "n": 72
+                          }
+                        }
+                      },
+                      {
+                        "name": "ms_drg",
+                        "base": "selection",
+                        "humanName": "MS-DRG",
+                        "vocabularyId": "MS-DRG",
+                        "outputTypes": ["procedure_occurrence"],
+                        "parameters": {},
+                        "values": [
+                          "056",
+                          "057",
+                          "058",
+                          "059",
+                          "060",
+                          "100",
+                          "101"
+                        ],
+                        "children": [],
+                        "counts": {
+                          "procedure_occurrence": {
+                            "rows": 3,
+                            "n": 3
+                          }
+                        }
+                      }
+                    ],
+                    "counts": {
+                      "condition_occurrence": {
+                        "rows": 0,
+                        "n": 0
+                      },
+                      "procedure_occurrence": {
+                        "rows": 0,
+                        "n": 0
+                      }
+                    }
+                  }
+                ],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 136,
+                    "n": 72
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 24,
+                "n": 24
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

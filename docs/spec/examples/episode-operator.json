@@ -1,0 +1,80 @@
+{
+  "spec_id": "episode-operator",
+  "examples": [
+    {
+      "title": "Episodes of diabetes diagnoses",
+      "statement": [
+        "episode",
+        ["icd9", "250.00"],
+        {
+          "gap_of": "90"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [2, 0, "episode", "episode", "2009-05-11", "2009-07-31", null],
+        [3, 0, "episode", "episode", "2009-11-17", "2009-11-17", null],
+        [5, 0, "episode", "episode", "2009-06-28", "2009-06-28", null],
+        [7, 0, "episode", "episode", "2008-04-23", "2008-06-09", null],
+        [7, 0, "episode", "episode", "2008-10-02", "2008-11-30", null],
+        [7, 0, "episode", "episode", "2009-07-12", "2009-09-13", null],
+        [7, 0, "episode", "episode", "2010-04-22", "2010-07-18", null],
+        [8, 0, "episode", "episode", "2008-10-17", "2008-10-17", null],
+        [8, 0, "episode", "episode", "2009-03-01", "2009-03-03", null],
+        [8, 0, "episode", "episode", "2009-07-16", "2009-07-16", null]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "episode",
+            "base": "temporal",
+            "humanName": "Episode",
+            "outputTypes": ["condition_occurrence", "episode"],
+            "parameters": {
+              "gap_of": "90"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.00"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 1036,
+                    "n": 162
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 0,
+                "n": 0
+              },
+              "episode": {
+                "rows": 439,
+                "n": 162
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

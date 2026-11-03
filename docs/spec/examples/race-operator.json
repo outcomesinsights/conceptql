@@ -1,0 +1,131 @@
+{
+  "spec_id": "race-operator",
+  "examples": [
+    {
+      "title": "All patients recorded as white",
+      "statement": ["race", "White"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          1,
+          "patients",
+          "person",
+          "1923-05-01",
+          "1923-05-01",
+          "00013D2EFD8E45D1"
+        ],
+        [
+          2,
+          2,
+          "patients",
+          "person",
+          "1943-01-01",
+          "1943-01-01",
+          "00016F745862898F"
+        ],
+        [
+          3,
+          3,
+          "patients",
+          "person",
+          "1936-09-01",
+          "1936-09-01",
+          "0001FDD721E223DC"
+        ],
+        [
+          5,
+          5,
+          "patients",
+          "person",
+          "1936-08-01",
+          "1936-08-01",
+          "00024B3D2352D2D0"
+        ],
+        [
+          7,
+          7,
+          "patients",
+          "person",
+          "1922-07-01",
+          "1922-07-01",
+          "0002F28CE057345B"
+        ],
+        [
+          8,
+          8,
+          "patients",
+          "person",
+          "1935-09-01",
+          "1935-09-01",
+          "000308435E3E5B76"
+        ],
+        [
+          9,
+          9,
+          "patients",
+          "person",
+          "1976-09-01",
+          "1976-09-01",
+          "000345A39D4157C9"
+        ],
+        [
+          11,
+          11,
+          "patients",
+          "person",
+          "1934-02-01",
+          "1934-02-01",
+          "000489E7EAAD463F"
+        ],
+        [
+          12,
+          12,
+          "patients",
+          "person",
+          "1929-06-01",
+          "1929-06-01",
+          "00048EF1F4791C68"
+        ],
+        [
+          13,
+          13,
+          "patients",
+          "person",
+          "1936-07-01",
+          "1936-07-01",
+          "0004F0ABD505251D"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "race",
+            "base": "selection",
+            "humanName": "Race",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": ["White"],
+            "children": [],
+            "counts": {
+              "person": {
+                "rows": 204,
+                "n": 204
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

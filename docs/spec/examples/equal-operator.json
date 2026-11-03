@@ -1,0 +1,89 @@
+{
+  "spec_id": "equal-operator",
+  "examples": [
+    {
+      "title": "HbA1c results (LOINC 4548-4) with the same value as an HbA1c result of the same patient",
+      "statement": [
+        "equal",
+        {
+          "left": ["loinc", "4548-4"],
+          "right": ["loinc", "4548-4"]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          200,
+          100001,
+          "observations",
+          "observation",
+          "2009-03-03",
+          "2009-03-03",
+          "4548-4"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "equal",
+            "base": "filter",
+            "humanName": "Equal",
+            "outputTypes": ["observation"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "loinc",
+                "base": "selection",
+                "humanName": "Logical Observation Identifiers Names and Codes (Regenstrief Institute)",
+                "vocabularyId": "LOINC",
+                "outputTypes": ["observation"],
+                "parameters": {},
+                "values": ["4548-4"],
+                "children": [],
+                "counts": {
+                  "observation": {
+                    "rows": 1,
+                    "n": 1
+                  }
+                }
+              },
+              {
+                "name": "loinc",
+                "base": "selection",
+                "humanName": "Logical Observation Identifiers Names and Codes (Regenstrief Institute)",
+                "vocabularyId": "LOINC",
+                "outputTypes": ["observation"],
+                "parameters": {},
+                "values": ["4548-4"],
+                "children": [],
+                "counts": {
+                  "observation": {
+                    "rows": 1,
+                    "n": 1
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "observation": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

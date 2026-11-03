@@ -1,0 +1,536 @@
+{
+  "spec_id": "except-operator",
+  "examples": [
+    {
+      "title": "All males who are not white",
+      "statement": [
+        "except",
+        {
+          "left": ["gender", "male"],
+          "right": ["race", "white"]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "1941-06-01",
+          "1941-06-01",
+          "00021CA6FF03E670"
+        ],
+        [
+          6,
+          6,
+          "patients",
+          "person",
+          "1943-10-01",
+          "1943-10-01",
+          "0002DAE1C81CC70D"
+        ],
+        [
+          21,
+          21,
+          "patients",
+          "person",
+          "1932-08-01",
+          "1932-08-01",
+          "000C7486B11E7030"
+        ],
+        [
+          22,
+          22,
+          "patients",
+          "person",
+          "1942-08-01",
+          "1942-08-01",
+          "000D6D88463D8A76"
+        ],
+        [
+          50,
+          50,
+          "patients",
+          "person",
+          "1941-08-01",
+          "1941-08-01",
+          "001AEDD510C92C87"
+        ],
+        [
+          68,
+          68,
+          "patients",
+          "person",
+          "1954-11-01",
+          "1954-11-01",
+          "0021D4CDAFC0609F"
+        ],
+        [
+          69,
+          69,
+          "patients",
+          "person",
+          "1925-05-01",
+          "1925-05-01",
+          "00225409819CF5F6"
+        ],
+        [
+          71,
+          71,
+          "patients",
+          "person",
+          "1931-01-01",
+          "1931-01-01",
+          "0022CC1943D038E2"
+        ],
+        [
+          72,
+          72,
+          "patients",
+          "person",
+          "1933-04-01",
+          "1933-04-01",
+          "002354398A00234E"
+        ],
+        [
+          75,
+          75,
+          "patients",
+          "person",
+          "1932-08-01",
+          "1932-08-01",
+          "00241223F034F97B"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "except",
+            "base": "filter",
+            "humanName": "Except",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "gender",
+                "base": "selection",
+                "humanName": "Gender",
+                "outputTypes": ["person"],
+                "parameters": {},
+                "values": ["male"],
+                "children": [],
+                "counts": {
+                  "person": {
+                    "rows": 124,
+                    "n": 124
+                  }
+                }
+              },
+              {
+                "name": "race",
+                "base": "selection",
+                "humanName": "Race",
+                "outputTypes": ["person"],
+                "parameters": {},
+                "values": ["white"],
+                "children": [],
+                "counts": {
+                  "person": {
+                    "rows": 204,
+                    "n": 204
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "person": {
+                "rows": 27,
+                "n": 27
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "All Conditions that are MI",
+      "statement": [
+        "except",
+        {
+          "left": ["icd9", "412"],
+          "right": ["cpt", "99214"]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "2008-10-29",
+          "2008-10-29",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-06-05",
+          "2008-06-05",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "2009-07-19",
+          "2009-07-22",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-07-25",
+          "2009-07-25",
+          "412"
+        ],
+        [
+          73,
+          52843,
+          "observations",
+          "condition_occurrence",
+          "2008-11-16",
+          "2008-11-16",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-10-06",
+          "2010-10-06",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2009-01-28",
+          "2009-01-30",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "except",
+            "base": "filter",
+            "humanName": "Except",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "cpt",
+                "base": "selection",
+                "humanName": "CPT",
+                "vocabularyId": "CPT4",
+                "outputTypes": ["procedure_occurrence"],
+                "parameters": {},
+                "values": ["99214"],
+                "children": [],
+                "counts": {
+                  "procedure_occurrence": {
+                    "rows": 1073,
+                    "n": 175
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Passes two types downstream: Conditions that are MI (unaffected by the right-hand stream) and People that are Male but not White",
+      "statement": [
+        "except",
+        {
+          "left": ["union", ["icd9", "412"], ["gender", "Male"]],
+          "right": ["race", "White"]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "1941-06-01",
+          "1941-06-01",
+          "00021CA6FF03E670"
+        ],
+        [
+          6,
+          6,
+          "patients",
+          "person",
+          "1943-10-01",
+          "1943-10-01",
+          "0002DAE1C81CC70D"
+        ],
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "2008-10-29",
+          "2008-10-29",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          21,
+          21,
+          "patients",
+          "person",
+          "1932-08-01",
+          "1932-08-01",
+          "000C7486B11E7030"
+        ],
+        [
+          22,
+          22,
+          "patients",
+          "person",
+          "1942-08-01",
+          "1942-08-01",
+          "000D6D88463D8A76"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ],
+        [
+          50,
+          50,
+          "patients",
+          "person",
+          "1941-08-01",
+          "1941-08-01",
+          "001AEDD510C92C87"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-06-05",
+          "2008-06-05",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "except",
+            "base": "filter",
+            "humanName": "Except",
+            "outputTypes": ["condition_occurrence", "person"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "union",
+                "base": "set",
+                "humanName": "Union",
+                "outputTypes": ["condition_occurrence", "person"],
+                "parameters": {},
+                "values": [],
+                "children": [
+                  {
+                    "name": "icd9",
+                    "base": "selection",
+                    "humanName": "ICD-9 CM",
+                    "vocabularyId": "ICD9CM",
+                    "outputTypes": ["condition_occurrence"],
+                    "parameters": {},
+                    "values": ["412"],
+                    "children": [],
+                    "counts": {
+                      "condition_occurrence": {
+                        "rows": 48,
+                        "n": 37
+                      }
+                    }
+                  },
+                  {
+                    "name": "gender",
+                    "base": "selection",
+                    "humanName": "Gender",
+                    "outputTypes": ["person"],
+                    "parameters": {},
+                    "values": ["Male"],
+                    "children": [],
+                    "counts": {
+                      "person": {
+                        "rows": 124,
+                        "n": 124
+                      }
+                    }
+                  }
+                ],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  },
+                  "person": {
+                    "rows": 124,
+                    "n": 124
+                  }
+                }
+              },
+              {
+                "name": "race",
+                "base": "selection",
+                "humanName": "Race",
+                "outputTypes": ["person"],
+                "parameters": {},
+                "values": ["White"],
+                "children": [],
+                "counts": {
+                  "person": {
+                    "rows": 204,
+                    "n": 204
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              },
+              "person": {
+                "rows": 27,
+                "n": 27
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

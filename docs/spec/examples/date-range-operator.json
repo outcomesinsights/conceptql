@@ -1,0 +1,275 @@
+{
+  "spec_id": "date-range-operator",
+  "examples": [
+    {
+      "title": "Each patient, with the dates of the year 2010",
+      "statement": [
+        "date_range",
+        {
+          "start": "2010-01-01",
+          "end": "2010-12-31"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          1,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "00013D2EFD8E45D1"
+        ],
+        [
+          2,
+          2,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "00016F745862898F"
+        ],
+        [
+          3,
+          3,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "0001FDD721E223DC"
+        ],
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "00021CA6FF03E670"
+        ],
+        [
+          5,
+          5,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "00024B3D2352D2D0"
+        ],
+        [
+          6,
+          6,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "0002DAE1C81CC70D"
+        ],
+        [
+          7,
+          7,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "0002F28CE057345B"
+        ],
+        [
+          8,
+          8,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "000308435E3E5B76"
+        ],
+        [
+          9,
+          9,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "000345A39D4157C9"
+        ],
+        [
+          10,
+          10,
+          "patients",
+          "person",
+          "2010-01-01",
+          "2010-12-31",
+          "00036A21B65B0206"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "date_range",
+            "base": "selection",
+            "humanName": "Date Range",
+            "outputTypes": ["person"],
+            "parameters": {
+              "start": "2010-01-01",
+              "end": "2010-12-31"
+            },
+            "values": [],
+            "children": [],
+            "counts": {
+              "person": {
+                "rows": 249,
+                "n": 249
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Each patient, with the dates from the start to the end of the data",
+      "statement": [
+        "date_range",
+        {
+          "start": "START",
+          "end": "END"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          1,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "00013D2EFD8E45D1"
+        ],
+        [
+          2,
+          2,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "00016F745862898F"
+        ],
+        [
+          3,
+          3,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "0001FDD721E223DC"
+        ],
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "00021CA6FF03E670"
+        ],
+        [
+          5,
+          5,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "00024B3D2352D2D0"
+        ],
+        [
+          6,
+          6,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "0002DAE1C81CC70D"
+        ],
+        [
+          7,
+          7,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "0002F28CE057345B"
+        ],
+        [
+          8,
+          8,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "000308435E3E5B76"
+        ],
+        [
+          9,
+          9,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "000345A39D4157C9"
+        ],
+        [
+          10,
+          10,
+          "patients",
+          "person",
+          "2008-01-01",
+          "2010-12-31",
+          "00036A21B65B0206"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "date_range",
+            "base": "selection",
+            "humanName": "Date Range",
+            "outputTypes": ["person"],
+            "parameters": {
+              "start": "START",
+              "end": "END"
+            },
+            "values": [],
+            "children": [],
+            "counts": {
+              "person": {
+                "rows": 249,
+                "n": 249
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,437 @@
+{
+  "spec_id": "before-operator",
+  "examples": [
+    {
+      "title": "All MIs that occurred before a patient's last case of diabetes (250.01)",
+      "statement": [
+        "before",
+        {
+          "left": ["icd9", "412"],
+          "right": ["icd9", "250.01"]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-07-25",
+          "2009-07-25",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2009-01-28",
+          "2009-01-30",
+          "412"
+        ],
+        [
+          109,
+          89334,
+          "observations",
+          "condition_occurrence",
+          "2010-07-06",
+          "2010-07-06",
+          "412"
+        ],
+        [
+          131,
+          172,
+          "observations",
+          "condition_occurrence",
+          "2008-03-22",
+          "2008-03-23",
+          "412"
+        ],
+        [
+          152,
+          82988,
+          "observations",
+          "condition_occurrence",
+          "2008-08-16",
+          "2008-08-16",
+          "412"
+        ],
+        [
+          184,
+          24281,
+          "observations",
+          "condition_occurrence",
+          "2008-01-07",
+          "2008-01-07",
+          "412"
+        ],
+        [
+          187,
+          90638,
+          "observations",
+          "condition_occurrence",
+          "2009-01-31",
+          "2009-01-31",
+          "412"
+        ],
+        [
+          214,
+          89463,
+          "observations",
+          "condition_occurrence",
+          "2008-02-17",
+          "2008-02-17",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "before",
+            "base": "filter",
+            "humanName": "Before",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.01"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 82,
+                    "n": 45
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 11,
+                "n": 9
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "All MIs that occurred before a patient's first case of diabetes (250.01)",
+      "statement": [
+        "before",
+        {
+          "left": ["icd9", "412"],
+          "right": ["first", ["icd9", "250.01"]]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-07-25",
+          "2009-07-25",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2009-01-28",
+          "2009-01-30",
+          "412"
+        ],
+        [
+          109,
+          89334,
+          "observations",
+          "condition_occurrence",
+          "2010-07-06",
+          "2010-07-06",
+          "412"
+        ],
+        [
+          131,
+          172,
+          "observations",
+          "condition_occurrence",
+          "2008-03-22",
+          "2008-03-23",
+          "412"
+        ],
+        [
+          152,
+          82988,
+          "observations",
+          "condition_occurrence",
+          "2008-08-16",
+          "2008-08-16",
+          "412"
+        ],
+        [
+          184,
+          24281,
+          "observations",
+          "condition_occurrence",
+          "2008-01-07",
+          "2008-01-07",
+          "412"
+        ],
+        [
+          187,
+          90638,
+          "observations",
+          "condition_occurrence",
+          "2009-01-31",
+          "2009-01-31",
+          "412"
+        ],
+        [
+          214,
+          89463,
+          "observations",
+          "condition_occurrence",
+          "2008-02-17",
+          "2008-02-17",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "before",
+            "base": "filter",
+            "humanName": "Before",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "first",
+                "base": "temporal",
+                "humanName": "First",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": [],
+                "children": [
+                  {
+                    "name": "icd9",
+                    "base": "selection",
+                    "humanName": "ICD-9 CM",
+                    "vocabularyId": "ICD9CM",
+                    "outputTypes": ["condition_occurrence"],
+                    "parameters": {},
+                    "values": ["250.01"],
+                    "children": [],
+                    "counts": {
+                      "condition_occurrence": {
+                        "rows": 82,
+                        "n": 45
+                      }
+                    }
+                  }
+                ],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 45,
+                    "n": 45
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 10,
+                "n": 9
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Heart attacks that end no more than 1 year before death",
+      "statement": [
+        "before",
+        {
+          "left": ["icd9", "410.00", "410.01", "410.10", "410.11"],
+          "right": ["death"],
+          "within": "1y"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          191,
+          42977,
+          "observations",
+          "condition_occurrence",
+          "2009-05-21",
+          "2009-05-21",
+          "41010"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "before",
+            "base": "filter",
+            "humanName": "Before",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "within": "1y"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["410.00", "410.01", "410.10", "410.11"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 13,
+                    "n": 8
+                  }
+                }
+              },
+              {
+                "name": "death",
+                "base": "cast",
+                "humanName": "Death",
+                "outputTypes": ["death"],
+                "parameters": {},
+                "values": [],
+                "children": [],
+                "counts": {
+                  "death": {
+                    "rows": 10,
+                    "n": 10
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

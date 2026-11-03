@@ -1,0 +1,300 @@
+{
+  "spec_id": "nth-occurrence-operator",
+  "examples": [
+    {
+      "title": "For each patient, select the Condition that represents the second occurrence of an MI",
+      "statement": ["occurrence", 2, ["icd9", "412"]],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          88,
+          73803,
+          "observations",
+          "condition_occurrence",
+          "2009-05-30",
+          "2009-05-30",
+          "412"
+        ],
+        [
+          152,
+          84298,
+          "observations",
+          "condition_occurrence",
+          "2010-11-22",
+          "2010-11-22",
+          "412"
+        ],
+        [
+          177,
+          507,
+          "observations",
+          "condition_occurrence",
+          "2009-06-13",
+          "2009-06-16",
+          "412"
+        ],
+        [
+          187,
+          87583,
+          "observations",
+          "condition_occurrence",
+          "2010-12-26",
+          "2010-12-26",
+          "412"
+        ],
+        [
+          212,
+          34052,
+          "observations",
+          "condition_occurrence",
+          "2009-10-07",
+          "2009-10-07",
+          "412"
+        ],
+        [
+          213,
+          15005,
+          "observations",
+          "condition_occurrence",
+          "2010-02-07",
+          "2010-02-07",
+          "412"
+        ],
+        [
+          214,
+          83257,
+          "observations",
+          "condition_occurrence",
+          "2009-11-12",
+          "2009-11-12",
+          "412"
+        ],
+        [
+          220,
+          20660,
+          "observations",
+          "condition_occurrence",
+          "2009-10-31",
+          "2009-10-31",
+          "412"
+        ],
+        [
+          223,
+          39893,
+          "observations",
+          "condition_occurrence",
+          "2008-10-31",
+          "2008-10-31",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "occurrence",
+            "base": "temporal",
+            "humanName": "Nth Occurrence",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [2],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 11,
+                "n": 11
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "For each patient, the first record on the second day with any of these diagnoses",
+      "statement": [
+        "occurrence",
+        2,
+        ["icd9", "410.00", "410.01", "250.00", "250.01"],
+        {
+          "group_by_date": true
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          2,
+          57897,
+          "observations",
+          "condition_occurrence",
+          "2009-05-16",
+          "2009-05-16",
+          "25000"
+        ],
+        [
+          7,
+          69706,
+          "observations",
+          "condition_occurrence",
+          "2008-05-12",
+          "2008-05-12",
+          "25000"
+        ],
+        [
+          8,
+          90541,
+          "observations",
+          "condition_occurrence",
+          "2009-03-01",
+          "2009-03-03",
+          "25000"
+        ],
+        [
+          9,
+          84726,
+          "observations",
+          "condition_occurrence",
+          "2010-09-12",
+          "2010-09-12",
+          "25000"
+        ],
+        [
+          11,
+          35227,
+          "observations",
+          "condition_occurrence",
+          "2008-12-08",
+          "2008-12-08",
+          "25000"
+        ],
+        [
+          12,
+          43800,
+          "observations",
+          "condition_occurrence",
+          "2009-05-21",
+          "2009-05-21",
+          "25000"
+        ],
+        [
+          13,
+          57738,
+          "observations",
+          "condition_occurrence",
+          "2008-11-22",
+          "2008-11-22",
+          "25000"
+        ],
+        [
+          14,
+          28741,
+          "observations",
+          "condition_occurrence",
+          "2009-06-27",
+          "2009-06-27",
+          "25001"
+        ],
+        [
+          15,
+          68873,
+          "observations",
+          "condition_occurrence",
+          "2010-11-18",
+          "2010-11-18",
+          "25000"
+        ],
+        [
+          17,
+          73012,
+          "observations",
+          "condition_occurrence",
+          "2008-04-26",
+          "2008-04-26",
+          "25000"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "occurrence",
+            "base": "temporal",
+            "humanName": "Nth Occurrence",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "group_by_date": true
+            },
+            "values": [2],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["410.00", "410.01", "250.00", "250.01"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 1120,
+                    "n": 163
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 134,
+                "n": 134
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

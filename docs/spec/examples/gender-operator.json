@@ -1,0 +1,257 @@
+{
+  "spec_id": "gender-operator",
+  "examples": [
+    {
+      "title": "All female patients",
+      "statement": ["gender", "Female"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          3,
+          3,
+          "patients",
+          "person",
+          "1936-09-01",
+          "1936-09-01",
+          "0001FDD721E223DC"
+        ],
+        [
+          9,
+          9,
+          "patients",
+          "person",
+          "1976-09-01",
+          "1976-09-01",
+          "000345A39D4157C9"
+        ],
+        [
+          10,
+          10,
+          "patients",
+          "person",
+          "1938-10-01",
+          "1938-10-01",
+          "00036A21B65B0206"
+        ],
+        [
+          11,
+          11,
+          "patients",
+          "person",
+          "1934-02-01",
+          "1934-02-01",
+          "000489E7EAAD463F"
+        ],
+        [
+          13,
+          13,
+          "patients",
+          "person",
+          "1936-07-01",
+          "1936-07-01",
+          "0004F0ABD505251D"
+        ],
+        [
+          15,
+          15,
+          "patients",
+          "person",
+          "1936-03-01",
+          "1936-03-01",
+          "00070B63745BE497"
+        ],
+        [
+          17,
+          17,
+          "patients",
+          "person",
+          "1919-09-01",
+          "1919-09-01",
+          "0007F12A492FD25D"
+        ],
+        [
+          18,
+          18,
+          "patients",
+          "person",
+          "1919-10-01",
+          "1919-10-01",
+          "000A005BA0BED3EA"
+        ],
+        [
+          19,
+          19,
+          "patients",
+          "person",
+          "1942-07-01",
+          "1942-07-01",
+          "000B4662348C35B4"
+        ],
+        [
+          26,
+          26,
+          "patients",
+          "person",
+          "1939-12-01",
+          "1939-12-01",
+          "0010D6F80D245D62"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "gender",
+            "base": "selection",
+            "humanName": "Gender",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": ["Female"],
+            "children": [],
+            "counts": {
+              "person": {
+                "rows": 125,
+                "n": 125
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "All male patients",
+      "statement": ["gender", "Male"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          1,
+          "patients",
+          "person",
+          "1923-05-01",
+          "1923-05-01",
+          "00013D2EFD8E45D1"
+        ],
+        [
+          2,
+          2,
+          "patients",
+          "person",
+          "1943-01-01",
+          "1943-01-01",
+          "00016F745862898F"
+        ],
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "1941-06-01",
+          "1941-06-01",
+          "00021CA6FF03E670"
+        ],
+        [
+          5,
+          5,
+          "patients",
+          "person",
+          "1936-08-01",
+          "1936-08-01",
+          "00024B3D2352D2D0"
+        ],
+        [
+          6,
+          6,
+          "patients",
+          "person",
+          "1943-10-01",
+          "1943-10-01",
+          "0002DAE1C81CC70D"
+        ],
+        [
+          7,
+          7,
+          "patients",
+          "person",
+          "1922-07-01",
+          "1922-07-01",
+          "0002F28CE057345B"
+        ],
+        [
+          8,
+          8,
+          "patients",
+          "person",
+          "1935-09-01",
+          "1935-09-01",
+          "000308435E3E5B76"
+        ],
+        [
+          12,
+          12,
+          "patients",
+          "person",
+          "1929-06-01",
+          "1929-06-01",
+          "00048EF1F4791C68"
+        ],
+        [
+          14,
+          14,
+          "patients",
+          "person",
+          "1934-05-01",
+          "1934-05-01",
+          "00052705243EA128"
+        ],
+        [
+          16,
+          16,
+          "patients",
+          "person",
+          "1934-01-01",
+          "1934-01-01",
+          "0007E57CC13CE880"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "gender",
+            "base": "selection",
+            "humanName": "Gender",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": ["Male"],
+            "children": [],
+            "counts": {
+              "person": {
+                "rows": 124,
+                "n": 124
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

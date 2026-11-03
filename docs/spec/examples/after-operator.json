@@ -1,0 +1,562 @@
+{
+  "spec_id": "after-operator",
+  "examples": [
+    {
+      "title": "All MIs that occurred after a patient's first case of diabetes (250.01)",
+      "statement": [
+        "after",
+        {
+          "left": ["icd9", "412"],
+          "right": ["icd9", "250.01"]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-10-06",
+          "2010-10-06",
+          "412"
+        ],
+        [
+          96,
+          20748,
+          "observations",
+          "condition_occurrence",
+          "2008-09-21",
+          "2008-09-24",
+          "412"
+        ],
+        [
+          110,
+          62592,
+          "observations",
+          "condition_occurrence",
+          "2010-06-27",
+          "2010-06-27",
+          "412"
+        ],
+        [
+          152,
+          84298,
+          "observations",
+          "condition_occurrence",
+          "2010-11-22",
+          "2010-11-22",
+          "412"
+        ],
+        [
+          187,
+          87583,
+          "observations",
+          "condition_occurrence",
+          "2010-12-26",
+          "2010-12-26",
+          "412"
+        ],
+        [
+          190,
+          61423,
+          "observations",
+          "condition_occurrence",
+          "2009-04-09",
+          "2009-04-09",
+          "412"
+        ],
+        [
+          214,
+          83257,
+          "observations",
+          "condition_occurrence",
+          "2009-11-12",
+          "2009-11-12",
+          "412"
+        ],
+        [
+          223,
+          38682,
+          "observations",
+          "condition_occurrence",
+          "2008-07-28",
+          "2008-07-28",
+          "412"
+        ],
+        [
+          223,
+          39893,
+          "observations",
+          "condition_occurrence",
+          "2008-10-31",
+          "2008-10-31",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "after",
+            "base": "filter",
+            "humanName": "After",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.01"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 82,
+                    "n": 45
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 9,
+                "n": 8
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Prescriptions of interest within three days after an office visit",
+      "statement": [
+        "after",
+        {
+          "left": [
+            "ndc",
+            "61392070054",
+            "65084025214",
+            "65726040125",
+            {
+              "label": "Prescriptions of Interest"
+            }
+          ],
+          "right": [
+            "cpt",
+            "99214",
+            {
+              "label": "Office Visit"
+            }
+          ],
+          "within": "3d"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          207,
+          11312,
+          "observations",
+          "drug_exposure",
+          "2010-08-13",
+          "2010-08-13",
+          "61392070054"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "after",
+            "base": "filter",
+            "humanName": "After",
+            "outputTypes": ["drug_exposure"],
+            "parameters": {
+              "within": "3d"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "ndc",
+                "base": "selection",
+                "humanName": "National Drug Code (FDA and manufacturers)",
+                "vocabularyId": "NDC",
+                "outputTypes": ["drug_exposure"],
+                "parameters": {
+                  "label": "Prescriptions of Interest"
+                },
+                "values": ["61392070054", "65084025214", "65726040125"],
+                "children": [],
+                "counts": {
+                  "drug_exposure": {
+                    "rows": 9,
+                    "n": 8
+                  }
+                }
+              },
+              {
+                "name": "cpt",
+                "base": "selection",
+                "humanName": "CPT",
+                "vocabularyId": "CPT4",
+                "outputTypes": ["procedure_occurrence"],
+                "parameters": {
+                  "label": "Office Visit"
+                },
+                "values": ["99214"],
+                "children": [],
+                "counts": {
+                  "procedure_occurrence": {
+                    "rows": 1073,
+                    "n": 175
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "drug_exposure": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Heart attack diagnoses more than 1 week after a diagnosis of diabetes",
+      "statement": [
+        "after",
+        {
+          "left": [
+            "icd9",
+            "410.00",
+            "410.01",
+            "410.10",
+            "410.11",
+            {
+              "label": "Heart Attack Dx"
+            }
+          ],
+          "right": [
+            "icd9",
+            "250.01",
+            {
+              "label": "Diabetes Dx"
+            }
+          ],
+          "at_least": "1w"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          58,
+          79480,
+          "observations",
+          "condition_occurrence",
+          "2009-02-24",
+          "2009-02-24",
+          "41011"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "after",
+            "base": "filter",
+            "humanName": "After",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "at_least": "1w"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {
+                  "label": "Heart Attack Dx"
+                },
+                "values": ["410.00", "410.01", "410.10", "410.11"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 13,
+                    "n": 8
+                  }
+                }
+              },
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {
+                  "label": "Diabetes Dx"
+                },
+                "values": ["250.01"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 82,
+                    "n": 45
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "All MIs that occurred after a male patient's 50th birthday",
+      "statement": [
+        "after",
+        {
+          "left": ["icd9", "412"],
+          "right": [
+            "time_window",
+            ["gender", "Male"],
+            {
+              "start": "50y",
+              "end": "50y"
+            }
+          ]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-06-05",
+          "2008-06-05",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "2009-07-19",
+          "2009-07-22",
+          "412"
+        ],
+        [
+          93,
+          82295,
+          "observations",
+          "condition_occurrence",
+          "2009-11-08",
+          "2009-11-08",
+          "412"
+        ],
+        [
+          96,
+          20748,
+          "observations",
+          "condition_occurrence",
+          "2008-09-21",
+          "2008-09-24",
+          "412"
+        ],
+        [
+          109,
+          89334,
+          "observations",
+          "condition_occurrence",
+          "2010-07-06",
+          "2010-07-06",
+          "412"
+        ],
+        [
+          110,
+          62592,
+          "observations",
+          "condition_occurrence",
+          "2010-06-27",
+          "2010-06-27",
+          "412"
+        ],
+        [
+          131,
+          172,
+          "observations",
+          "condition_occurrence",
+          "2008-03-22",
+          "2008-03-23",
+          "412"
+        ],
+        [
+          149,
+          28518,
+          "observations",
+          "condition_occurrence",
+          "2008-04-07",
+          "2008-04-07",
+          "412"
+        ],
+        [
+          152,
+          82988,
+          "observations",
+          "condition_occurrence",
+          "2008-08-16",
+          "2008-08-16",
+          "412"
+        ],
+        [
+          152,
+          84298,
+          "observations",
+          "condition_occurrence",
+          "2010-11-22",
+          "2010-11-22",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "after",
+            "base": "filter",
+            "humanName": "After",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              },
+              {
+                "name": "time_window",
+                "base": "temporal",
+                "humanName": "Time Window",
+                "outputTypes": ["person"],
+                "parameters": {
+                  "start": "50y",
+                  "end": "50y"
+                },
+                "values": [],
+                "children": [
+                  {
+                    "name": "gender",
+                    "base": "selection",
+                    "humanName": "Gender",
+                    "outputTypes": ["person"],
+                    "parameters": {},
+                    "values": ["Male"],
+                    "children": [],
+                    "counts": {
+                      "person": {
+                        "rows": 124,
+                        "n": 124
+                      }
+                    }
+                  }
+                ],
+                "counts": {
+                  "person": {
+                    "rows": 124,
+                    "n": 124
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 28,
+                "n": 20
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

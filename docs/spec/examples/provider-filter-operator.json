@@ -1,0 +1,77 @@
+{
+  "spec_id": "provider-filter-operator",
+  "examples": [
+    {
+      "title": "Diabetes diagnoses with an endocrinologist as the attending physician",
+      "statement": [
+        "provider_filter",
+        ["icd9", "250.00"],
+        {
+          "specialties": "38003868",
+          "roles": "100000067"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          17,
+          18184,
+          "observations",
+          "condition_occurrence",
+          "2010-08-22",
+          "2010-08-22",
+          "25000"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "provider_filter",
+            "base": "temporal",
+            "humanName": "Provider Filter",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "specialties": "38003868",
+              "roles": "100000067"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.00"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 1117,
+                    "n": 162
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 1,
+                "n": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

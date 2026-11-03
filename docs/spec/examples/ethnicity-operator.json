@@ -1,0 +1,86 @@
+{
+  "spec_id": "ethnicity-operator",
+  "examples": [
+    {
+      "title": "All patients recorded as Hispanic",
+      "statement": ["ethnicity", "Hispanic"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "1941-06-01",
+          "1941-06-01",
+          "00021CA6FF03E670"
+        ],
+        [
+          22,
+          22,
+          "patients",
+          "person",
+          "1942-08-01",
+          "1942-08-01",
+          "000D6D88463D8A76"
+        ],
+        [
+          72,
+          72,
+          "patients",
+          "person",
+          "1933-04-01",
+          "1933-04-01",
+          "002354398A00234E"
+        ],
+        [
+          76,
+          76,
+          "patients",
+          "person",
+          "1938-03-01",
+          "1938-03-01",
+          "00242FF5E7A3F2D9"
+        ],
+        [
+          181,
+          181,
+          "patients",
+          "person",
+          "1939-11-01",
+          "1939-11-01",
+          "005E0AB5172E715F"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "ethnicity",
+            "base": "selection",
+            "humanName": "Ethnicity",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": ["Hispanic"],
+            "children": [],
+            "counts": {
+              "person": {
+                "rows": 5,
+                "n": 5
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

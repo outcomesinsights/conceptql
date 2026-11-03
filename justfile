@@ -123,11 +123,14 @@ test-duckdb *ARGS:
 # (frontend/lib/conceptql-diagram/cli/bin/conceptql-diagram.js), it also draws
 # docs/spec/images/<sha>.svg and writes docs/spec/images/manifest.tsv. Without
 # it, the committed images stay and the build names each image it did not draw.
+# It also writes docs/spec/examples/<spec_id>.json (ConceptQL.spec_examples_path):
+# the result rows and the diagram tree of each example of each published spec_id.
+# The renderer does not change them.
 # Edit docs/spec/README.cql.md, never docs/spec/README.md.
 # Like fmt-check, it rewrites first and THEN fails: commit what it changed.
 # When the build fails (spec-check's stale images, an invalid example), it still
 # names the files that changed, and then fails with the build's exit status.
-# Rebuild docs/spec/README.md and its images; fail if they changed
+# Rebuild docs/spec/README.md, its images and its example files; fail if they changed
 spec:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -144,11 +147,12 @@ spec:
     }
     trap finish EXIT
 
-    snapshot() { find docs/spec/README.md docs/spec/images -type f 2>/dev/null | sort | xargs -r sha256sum; }
+    # find fails on a path that does not exist yet (the first build writes it).
+    snapshot() { { find docs/spec/README.md docs/spec/images docs/spec/examples -type f 2>/dev/null || true; } | sort | xargs -r sha256sum; }
     before=$(snapshot)
     build_rc=0
     {{ just_executable() }} test-duckdb docs/spec/build/run.rb || build_rc=$?
-    treefmt --no-cache docs/spec/README.md
+    treefmt --no-cache docs/spec/README.md docs/spec/examples
     changed=0
     after=$(snapshot)
     if [ "$after" != "$before" ]; then
@@ -159,7 +163,7 @@ spec:
     fi
     [ "$build_rc" -eq 0 ] || { echo "docs/spec/build/run.rb failed (exit $build_rc)"; exit "$build_rc"; }
     [ "$changed" -eq 0 ] || exit 1
-    echo "docs/spec/README.md and docs/spec/images are up to date"
+    echo "docs/spec/README.md, docs/spec/images and docs/spec/examples are up to date"
 
 # A step of release-check, and only of release-check: between releases, main
 # may hold a stale spec and stale images (seed conceptql-mdo, decision 09), so
@@ -169,8 +173,9 @@ spec:
 # it used. It never draws: it rebuilds each diagram tree and compares the
 # sha256 of the tree's canonical JSON with docs/spec/images/manifest.tsv. A
 # missing image or a different hash fails and names the image. Like `spec`, it
-# rewrites docs/spec/README.md first and THEN fails.
-# Fail if docs/spec/README.md or a diagram image does not match the code
+# rewrites docs/spec/README.md and docs/spec/examples first and THEN fails, also
+# when an example file changed.
+# Fail if docs/spec/README.md, a diagram image or an example file does not match the code
 spec-check:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -292,8 +297,8 @@ vocabulary-formats $ref="main":
 # - a bound in conceptql.gemspec or the Gemfile excludes the newest release.
 # A gem held back only by another gem's constraint is printed and does not fail,
 # because conceptql cannot change it. Fix a failure with `just bundle-update`.
-# Then it runs spec-check, which fails when docs/spec/README.md or a diagram
-# image does not match the code.
+# Then it runs spec-check, which fails when docs/spec/README.md, a diagram
+# image or an example file does not match the code.
 # Fail if a gem is behind the newest version conceptql could use, or the spec is stale
 release-check:
     #!/usr/bin/env bash

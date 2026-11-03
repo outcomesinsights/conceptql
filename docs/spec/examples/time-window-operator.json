@@ -1,0 +1,736 @@
+{
+  "spec_id": "time-window-operator",
+  "examples": [
+    {
+      "title": "All Diagnoses of Diabetes (ICD-9 250.01) within 30 days of an MI",
+      "statement": [
+        "during",
+        {
+          "left": ["icd9", "250.01"],
+          "right": [
+            "time_window",
+            ["icd9", "412"],
+            {
+              "start": "-30d",
+              "end": "30d"
+            }
+          ]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          96,
+          46366,
+          "observations",
+          "condition_occurrence",
+          "2008-09-13",
+          "2008-09-13",
+          "25001"
+        ],
+        [
+          223,
+          81480,
+          "observations",
+          "condition_occurrence",
+          "2008-07-03",
+          "2008-07-03",
+          "25001"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "during",
+            "base": "filter",
+            "humanName": "During",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["250.01"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 82,
+                    "n": 45
+                  }
+                }
+              },
+              {
+                "name": "time_window",
+                "base": "temporal",
+                "humanName": "Time Window",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {
+                  "start": "-30d",
+                  "end": "30d"
+                },
+                "values": [],
+                "children": [
+                  {
+                    "name": "icd9",
+                    "base": "selection",
+                    "humanName": "ICD-9 CM",
+                    "vocabularyId": "ICD9CM",
+                    "outputTypes": ["condition_occurrence"],
+                    "parameters": {},
+                    "values": ["412"],
+                    "children": [],
+                    "counts": {
+                      "condition_occurrence": {
+                        "rows": 48,
+                        "n": 37
+                      }
+                    }
+                  }
+                ],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 2,
+                "n": 2
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Shift the dates of all MIs back by 200 years",
+      "statement": [
+        "time_window",
+        ["icd9", "412"],
+        {
+          "start": "-200y",
+          "end": "-200y"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "1808-10-29",
+          "1808-10-29",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "1808-08-25",
+          "1808-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "1809-04-30",
+          "1809-04-30",
+          "412"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "1810-02-12",
+          "1810-02-12",
+          "412"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "1808-06-05",
+          "1808-06-05",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "1809-07-19",
+          "1809-07-22",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "1809-07-25",
+          "1809-07-25",
+          "412"
+        ],
+        [
+          73,
+          52843,
+          "observations",
+          "condition_occurrence",
+          "1808-11-16",
+          "1808-11-16",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "1810-10-06",
+          "1810-10-06",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "1809-01-28",
+          "1809-01-30",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "time_window",
+            "base": "temporal",
+            "humanName": "Time Window",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "start": "-200y",
+              "end": "-200y"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Widen the dates of all MIs to run from 2 months and 2 days before the MI to 1 year and 3 days after it",
+      "statement": [
+        "time_window",
+        ["icd9", "412"],
+        {
+          "start": "-2m-2d",
+          "end": "3d1y"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "2008-08-27",
+          "2009-11-01",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-06-23",
+          "2009-08-28",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-02-26",
+          "2010-05-03",
+          "412"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2009-12-10",
+          "2011-02-15",
+          "412"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-04-03",
+          "2009-06-08",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "2009-05-17",
+          "2010-07-25",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-05-23",
+          "2010-07-28",
+          "412"
+        ],
+        [
+          73,
+          52843,
+          "observations",
+          "condition_occurrence",
+          "2008-09-14",
+          "2009-11-19",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-08-04",
+          "2011-10-09",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2008-11-26",
+          "2010-02-02",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "time_window",
+            "base": "temporal",
+            "humanName": "Time Window",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "start": "-2m-2d",
+              "end": "3d1y"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Collapse the date range of all MIs to the start date: leave start_date unchanged and set end_date to start_date",
+      "statement": [
+        "time_window",
+        ["icd9", "412"],
+        {
+          "start": "",
+          "end": "start"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "2008-10-29",
+          "2008-10-29",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-06-05",
+          "2008-06-05",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "2009-07-19",
+          "2009-07-19",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-07-25",
+          "2009-07-25",
+          "412"
+        ],
+        [
+          73,
+          52843,
+          "observations",
+          "condition_occurrence",
+          "2008-11-16",
+          "2008-11-16",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-10-06",
+          "2010-10-06",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2009-01-28",
+          "2009-01-28",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "time_window",
+            "base": "temporal",
+            "humanName": "Time Window",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "start": "",
+              "end": "start"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "Nonsensical, but allowed: swap the start_date and end_date",
+      "statement": [
+        "time_window",
+        ["icd9", "412"],
+        {
+          "start": "end",
+          "end": "start"
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          82614,
+          "observations",
+          "condition_occurrence",
+          "2008-10-29",
+          "2008-10-29",
+          "412"
+        ],
+        [
+          17,
+          27269,
+          "observations",
+          "condition_occurrence",
+          "2008-08-25",
+          "2008-08-25",
+          "412"
+        ],
+        [
+          17,
+          46165,
+          "observations",
+          "condition_occurrence",
+          "2009-04-30",
+          "2009-04-30",
+          "412"
+        ],
+        [
+          38,
+          40556,
+          "observations",
+          "condition_occurrence",
+          "2010-02-12",
+          "2010-02-12",
+          "412"
+        ],
+        [
+          54,
+          74606,
+          "observations",
+          "condition_occurrence",
+          "2008-06-05",
+          "2008-06-05",
+          "412"
+        ],
+        [
+          60,
+          986,
+          "observations",
+          "condition_occurrence",
+          "2009-07-22",
+          "2009-07-19",
+          "412"
+        ],
+        [
+          66,
+          16171,
+          "observations",
+          "condition_occurrence",
+          "2009-07-25",
+          "2009-07-25",
+          "412"
+        ],
+        [
+          73,
+          52843,
+          "observations",
+          "condition_occurrence",
+          "2008-11-16",
+          "2008-11-16",
+          "412"
+        ],
+        [
+          77,
+          58165,
+          "observations",
+          "condition_occurrence",
+          "2010-10-06",
+          "2010-10-06",
+          "412"
+        ],
+        [
+          81,
+          1405,
+          "observations",
+          "condition_occurrence",
+          "2009-01-30",
+          "2009-01-28",
+          "412"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "time_window",
+            "base": "temporal",
+            "humanName": "Time Window",
+            "outputTypes": ["condition_occurrence"],
+            "parameters": {
+              "start": "end",
+              "end": "start"
+            },
+            "values": [],
+            "children": [
+              {
+                "name": "icd9",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "condition_occurrence": {
+                "rows": 48,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

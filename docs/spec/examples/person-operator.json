@@ -1,0 +1,274 @@
+{
+  "spec_id": "person-operator",
+  "examples": [
+    {
+      "title": "All patients",
+      "statement": ["person"],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          1,
+          "patients",
+          "person",
+          "1923-05-01",
+          "1923-05-01",
+          "00013D2EFD8E45D1"
+        ],
+        [
+          2,
+          2,
+          "patients",
+          "person",
+          "1943-01-01",
+          "1943-01-01",
+          "00016F745862898F"
+        ],
+        [
+          3,
+          3,
+          "patients",
+          "person",
+          "1936-09-01",
+          "1936-09-01",
+          "0001FDD721E223DC"
+        ],
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "1941-06-01",
+          "1941-06-01",
+          "00021CA6FF03E670"
+        ],
+        [
+          5,
+          5,
+          "patients",
+          "person",
+          "1936-08-01",
+          "1936-08-01",
+          "00024B3D2352D2D0"
+        ],
+        [
+          6,
+          6,
+          "patients",
+          "person",
+          "1943-10-01",
+          "1943-10-01",
+          "0002DAE1C81CC70D"
+        ],
+        [
+          7,
+          7,
+          "patients",
+          "person",
+          "1922-07-01",
+          "1922-07-01",
+          "0002F28CE057345B"
+        ],
+        [
+          8,
+          8,
+          "patients",
+          "person",
+          "1935-09-01",
+          "1935-09-01",
+          "000308435E3E5B76"
+        ],
+        [
+          9,
+          9,
+          "patients",
+          "person",
+          "1976-09-01",
+          "1976-09-01",
+          "000345A39D4157C9"
+        ],
+        [
+          10,
+          10,
+          "patients",
+          "person",
+          "1938-10-01",
+          "1938-10-01",
+          "00036A21B65B0206"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "person",
+            "base": "cast",
+            "humanName": "Person",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": [],
+            "children": [],
+            "counts": {
+              "person": {
+                "rows": 249,
+                "n": 249
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "title": "The patients with an old myocardial infarction (ICD-9-CM 412)",
+      "statement": ["person", ["icd9cm", "412"]],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          11,
+          11,
+          "patients",
+          "person",
+          "1934-02-01",
+          "1934-02-01",
+          "000489E7EAAD463F"
+        ],
+        [
+          17,
+          17,
+          "patients",
+          "person",
+          "1919-09-01",
+          "1919-09-01",
+          "0007F12A492FD25D"
+        ],
+        [
+          38,
+          38,
+          "patients",
+          "person",
+          "1922-12-01",
+          "1922-12-01",
+          "001731EB127233DA"
+        ],
+        [
+          54,
+          54,
+          "patients",
+          "person",
+          "1931-02-01",
+          "1931-02-01",
+          "001CAFF084B21E14"
+        ],
+        [
+          60,
+          60,
+          "patients",
+          "person",
+          "1925-07-01",
+          "1925-07-01",
+          "001EA2F4DB30F105"
+        ],
+        [
+          66,
+          66,
+          "patients",
+          "person",
+          "1920-04-01",
+          "1920-04-01",
+          "0021B3C854C968C8"
+        ],
+        [
+          73,
+          73,
+          "patients",
+          "person",
+          "1925-09-01",
+          "1925-09-01",
+          "00237322613CFC3C"
+        ],
+        [
+          77,
+          77,
+          "patients",
+          "person",
+          "1929-03-01",
+          "1929-03-01",
+          "00244B6D9AB50F9B"
+        ],
+        [
+          81,
+          81,
+          "patients",
+          "person",
+          "1940-06-01",
+          "1940-06-01",
+          "0024E5A7B7272E75"
+        ],
+        [
+          88,
+          88,
+          "patients",
+          "person",
+          "1922-05-01",
+          "1922-05-01",
+          "00291F39917544B1"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "person",
+            "base": "cast",
+            "humanName": "Person",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "icd9cm",
+                "base": "selection",
+                "humanName": "ICD-9 CM",
+                "vocabularyId": "ICD9CM",
+                "outputTypes": ["condition_occurrence"],
+                "parameters": {},
+                "values": ["412"],
+                "children": [],
+                "counts": {
+                  "condition_occurrence": {
+                    "rows": 48,
+                    "n": 37
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "person": {
+                "rows": 37,
+                "n": 37
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

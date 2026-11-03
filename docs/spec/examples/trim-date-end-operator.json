@@ -1,0 +1,201 @@
+{
+  "spec_id": "trim-date-end-operator",
+  "examples": [
+    {
+      "title": "Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)",
+      "statement": [
+        "trim_date_end",
+        {
+          "left": [
+            "time_window",
+            ["person"],
+            {
+              "end": "+50y"
+            }
+          ],
+          "right": [
+            "date_range",
+            {
+              "start": "1980-01-01",
+              "end": "1980-01-01"
+            }
+          ]
+        }
+      ],
+      "help": true,
+      "columns": [
+        "person_id",
+        "criterion_id",
+        "criterion_table",
+        "criterion_domain",
+        "start_date",
+        "end_date",
+        "source_value"
+      ],
+      "rows": [
+        [
+          1,
+          1,
+          "patients",
+          "person",
+          "1923-05-01",
+          "1973-05-01",
+          "00013D2EFD8E45D1"
+        ],
+        [
+          2,
+          2,
+          "patients",
+          "person",
+          "1943-01-01",
+          "1980-01-01",
+          "00016F745862898F"
+        ],
+        [
+          3,
+          3,
+          "patients",
+          "person",
+          "1936-09-01",
+          "1980-01-01",
+          "0001FDD721E223DC"
+        ],
+        [
+          4,
+          4,
+          "patients",
+          "person",
+          "1941-06-01",
+          "1980-01-01",
+          "00021CA6FF03E670"
+        ],
+        [
+          5,
+          5,
+          "patients",
+          "person",
+          "1936-08-01",
+          "1980-01-01",
+          "00024B3D2352D2D0"
+        ],
+        [
+          6,
+          6,
+          "patients",
+          "person",
+          "1943-10-01",
+          "1980-01-01",
+          "0002DAE1C81CC70D"
+        ],
+        [
+          7,
+          7,
+          "patients",
+          "person",
+          "1922-07-01",
+          "1972-07-01",
+          "0002F28CE057345B"
+        ],
+        [
+          8,
+          8,
+          "patients",
+          "person",
+          "1935-09-01",
+          "1980-01-01",
+          "000308435E3E5B76"
+        ],
+        [
+          9,
+          9,
+          "patients",
+          "person",
+          "1976-09-01",
+          "1980-01-01",
+          "000345A39D4157C9"
+        ],
+        [
+          10,
+          10,
+          "patients",
+          "person",
+          "1938-10-01",
+          "1980-01-01",
+          "00036A21B65B0206"
+        ]
+      ],
+      "tree": {
+        "format": "conceptql-diagram/v1",
+        "statements": [
+          {
+            "name": "trim_date_end",
+            "base": "filter",
+            "humanName": "Trim Date End",
+            "outputTypes": ["person"],
+            "parameters": {},
+            "values": [],
+            "children": [
+              {
+                "name": "time_window",
+                "base": "temporal",
+                "humanName": "Time Window",
+                "outputTypes": ["person"],
+                "parameters": {
+                  "end": "+50y"
+                },
+                "values": [],
+                "children": [
+                  {
+                    "name": "person",
+                    "base": "cast",
+                    "humanName": "Person",
+                    "outputTypes": ["person"],
+                    "parameters": {},
+                    "values": [],
+                    "children": [],
+                    "counts": {
+                      "person": {
+                        "rows": 249,
+                        "n": 249
+                      }
+                    }
+                  }
+                ],
+                "counts": {
+                  "person": {
+                    "rows": 249,
+                    "n": 249
+                  }
+                }
+              },
+              {
+                "name": "date_range",
+                "base": "selection",
+                "humanName": "Date Range",
+                "outputTypes": ["person"],
+                "parameters": {
+                  "start": "1980-01-01",
+                  "end": "1980-01-01"
+                },
+                "values": [],
+                "children": [],
+                "counts": {
+                  "person": {
+                    "rows": 249,
+                    "n": 249
+                  }
+                }
+              }
+            ],
+            "counts": {
+              "person": {
+                "rows": 249,
+                "n": 249
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
