@@ -299,7 +299,7 @@ Selects patients by ethnicity.
 
 #### `Person` Operator
 
-Selects patients. With no upstream operator, it selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream. That use is called casting (see [Type Conversion](#type-conversion)).
+Selects patients. With no upstream operator, it selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream.
 
 - **Upstream:** none, or one operator.
 
@@ -312,7 +312,7 @@ Selects patients. With no upstream operator, it selects every patient. With one 
 
 #### `Death` Operator
 
-Selects death records from the `deaths` table. The type of these records is `death`, and their start_date and end_date are both the date of death. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream (see [Type Conversion](#type-conversion)).
+Selects death records from the `deaths` table. The type of these records is `death`, and their start_date and end_date are both the date of death. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream.
 
 - **Upstream:** none, or one operator.
 
@@ -360,66 +360,6 @@ Selects inpatient hospital admissions.
 
 ```ConceptQL
 [ "hospitalization" ]
-```
-
-## Type Conversion
-
-Sometimes a stream of one type must become a stream of another type. Programmers call this "casting". Think of a metal candle holder that is melted down and cast again as a lamp. In the same way, `person` can take a stream of `condition_occurrence` records and cast it again as a stream of `person` records.
-
-ConceptQL has two casting operators: `person` and `death`. The GDM has no visit table, so there is no cast to a visit. To find the conditions and procedures that were reported in the same claim, use [`co_reported`](#co-reported-operator).
-
-### Casting to Person
-
-Cast a stream to `person` when you need to know *whether* a patient has a record, not when or how often. The result has one record for each patient who has at least one record in the upstream stream, however many records the patient has.
-
-```ConceptQL
-# All people who had an MI
-[
-  "person",
-  [
-    "icd9",
-    "412"
-  ]
-]
-```
-
-### Casting to Death
-
-Cast a stream to `death` to replace the records of each patient with the patient's death records. A patient who has no death record has no records in the result.
-
-```ConceptQL
-# The deaths of all people who had an MI
-[
-  "death",
-  [
-    "icd9",
-    "412"
-  ]
-]
-```
-
-### Casting Loses the Original Information
-
-A cast record does not keep the ID, the code or the dates of the upstream record. For example, a `condition_occurrence` record cast to `person` points at the patient's row in `patients`, and its start_date and end_date are the patient's birth date. This is useful when a stream of person records had its dates moved by [`time_window`](#time-window-operator), and you need the birth dates again: cast the stream to `person` again.
-
-### Casting as a Way to Fetch All Rows
-
-With no upstream operator, a casting operator selects every row of its table: `["person"]` selects every patient, and `["death"]` selects every death record. This is useful as the right-hand stream of an operator such as [`person_filter`](#person-filter-operator):
-
-```ConceptQL
-# All male patients who died
-[
-  "person_filter",
-  {
-    "left": [
-      "gender",
-      "Male"
-    ],
-    "right": [
-      "death"
-    ]
-  }
-]
 ```
 
 ## Set Operators
@@ -1493,53 +1433,6 @@ Each label that `recall` uses must exist in the statement. It can appear before 
     "outpatient_maximum_gap": "365d",
     "outpatient_event_to_return": "Confirming Event"
   }
-]
-```
-
-## Algorithms within Algorithms
-
-ConceptQL is flexible so that users can build statements from other statements. A system can store statements, and a new statement can use a stored statement as one of its parts.
-
-Say that a stored statement selects the pneumonia diagnoses (ICD-9-CM 486) and the hospital visits (CPT 99232, subsequent hospital care) that were reported in the same claim:
-
-```ConceptQL
-# All pneumonia diagnoses and hospital visits reported in the same claim
-[
-  "co_reported",
-  [
-    "icd9",
-    "486"
-  ],
-  [
-    "cpt",
-    "99232"
-  ]
-]
-```
-
-The `algorithm` operator stands for a stored statement. Its argument is the ID of the stored statement. ConceptQL reads the stored statement from the `statement` column of the `concepts` table, in the row whose `concept_id` is that ID. If the ID 2031 is the statement above, this statement selects the people who have those records:
-
-```JSON
-[ "person", [ "algorithm", 2031 ] ]
-```
-
-ConceptQL replaces each `algorithm` operator with its stored statement when it reads the statement. So the result is the same as the result of the statement with the stored statement written in its place. A diagram also shows the stored statement. If no stored statement has the ID, the statement is invalid. Our test data has no stored statements, so this document shows the statement with the stored statement written in:
-
-```ConceptQL
-# All people with a pneumonia diagnosis and a hospital visit reported in the same claim
-[
-  "person",
-  [
-    "co_reported",
-    [
-      "icd9",
-      "486"
-    ],
-    [
-      "cpt",
-      "99232"
-    ]
-  ]
 ]
 ```
 
