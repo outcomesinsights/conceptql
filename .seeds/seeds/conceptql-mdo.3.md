@@ -5,7 +5,7 @@ status: captured
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:51.179198+00:00
-updated_at: 2026-11-03T18:14:51.179198+00:00
+updated_at: 2026-11-03T18:36:46.603127+00:00
 tags:
   - spec
   - examples
@@ -39,3 +39,11 @@ Ryan expects some part of the spec to be the help that JDE shows for each operat
 - Size of the shipped data: default to the README's current limit of 10 result rows per example (conceptql_spec lib/knitter.rb), unless the implementer finds a reason to change it and records it.
 - A link inside help text to another operator should open that operator's help in JDE.
 - How JDE draws the diagram depends on the renderer decision (conceptql_spec seed conceptql-spec-dcn, a separate pursuit).
+
+## REVIEW 2026-11-03 (findings that apply here; report docs/reviews/2026-11-03-spec-migration-seeds-review.md)
+
+- Finding 1 (NEEDS RULING, question attached to the parent). The ruling "the release workflow rebuilds the results with no cache and fails on any difference" cannot run in release.yml as it is (no fixture, bundle, libduckdb or treefmt, by a ruling of 2026-10-02), and a failure there comes after the tag. Options in the parent seed. The check must also name the Ruby version and the libduckdb version of the rebuild, because CI tests libduckdb 1.5.6 and 2.0.0 and Ruby 3.3 and 3.4.
+- Finding 2 (FACT FIX). Rule to add: the build orders every result by a total order before the limit of 10 rows (person_id, criterion_domain, start_date, criterion_table, criterion_id). Without it, 15 of 59 examples change between runs, and "fail on any difference" fails at random.
+- Finding 6 (FACT FIX). Name each artifact by the sha256 of the statement's canonical JSON, not of Ruby `inspect`, which differs between Ruby 3.3 and 3.4.
+- Verified: ConceptQL::Diagram.render(..., counts: true) gives the same JSON on repeated runs. The snf, hospice and place_of_service_filter examples return 0 rows on the fixture, so under the rule above JDE shows no example for those 3 operators until the fixture has that data.
+- Not tested: libduckdb 2.0 results, and whether a tag-triggered run can restore the fixture cache that runs on main create.

@@ -4,12 +4,28 @@ title: Move the ConceptQL spec, operator documentation and example results into 
 status: captured
 type: decision
 created_at: 2026-11-03T18:14:43.431733+00:00
-updated_at: 2026-11-03T18:14:59.740641+00:00
+updated_at: 2026-11-03T18:36:58.901174+00:00
 tags:
   - spec
   - migration
   - metadata
   - jde
+relationships:
+  - target_id: conceptql-5hn
+    rel_type: questioned-by
+    created_at: 2026-11-03T18:36:56.885228+00:00
+  - target_id: conceptql-q8n
+    rel_type: questioned-by
+    created_at: 2026-11-03T18:36:57.384769+00:00
+  - target_id: conceptql-3i7
+    rel_type: questioned-by
+    created_at: 2026-11-03T18:36:57.864536+00:00
+  - target_id: conceptql-59n
+    rel_type: questioned-by
+    created_at: 2026-11-03T18:36:58.356063+00:00
+  - target_id: conceptql-ivi
+    rel_type: questioned-by
+    created_at: 2026-11-03T18:36:58.899738+00:00
 ---
 
 Captured 2026-11-03 in conceptql from a handoff by the conceptql_spec session. That session deliberated with Ryan on 2026-11-03 and recorded the result in conceptql_spec seeds conceptql-spec-6sm (with children 6sm.1, 6sm.2, 6sm.3, 6sm.5 and the answered questions conceptql-spec-74c and conceptql-spec-8fv), merged to conceptql_spec main at commit 40fcafc. This seed and its four children carry that deliberation into conceptql, so that conceptql has one current record. They supersede conceptql seeds conceptql-mhm, conceptql-mhm.1 and conceptql-mhm.2, which predate the review and the rulings.
@@ -36,7 +52,7 @@ One source for everything that describes ConceptQL, released with the code that 
 12. The spec lives in a NEW docs/spec/ directory of conceptql, with its own build. conceptql's current spec build is removed: doc/spec.md.cql, doc/spec.md, doc/spec/\*.png, script/spec/ and the `just spec` recipe. The new build may reuse code from script/spec/, such as its DuckDB harness. ConceptQL.spec_path then returns the generated spec under docs/spec/. The gemspec allowlist, test/lib/conceptql/spec_path_test.rb and release.yml's installed-gem check change with it. JDE's MCP slicer reads whatever spec_path returns.
 13. Until the renderer is decided, the build draws diagram images with JDE's renderer from a local checkout when CONCEPTQL_DIAGRAM_CLI is set, as conceptql_spec does today. The images are committed. CI checks only the text and the data. Nothing becomes worse than today.
 14. The operator code is the source of all operator metadata, examples included (conceptql_spec question conceptql-spec-74c). An example's title and statement are written in the operator class and appear in ConceptQL.metadata. Results and diagram data are never written in code: the spec build generates them as artifacts at predictable paths, which the API, MCP and the editor read. Whether the editor puts examples into the metadata that every page carries is the editor's choice.
-15. Delete conceptql's doc/'ConceptQL Specification (alpha).pdf' and doc/diagram_0.png, both last changed 2014-09-04 (conceptql_spec question conceptql-spec-8fv). Git history keeps them.
+15. Delete conceptql's doc/'ConceptQL Specification (alpha).pdf' and doc/diagram_0.png. The PDF last changed on 2014-09-04 (befeb7de), and diagram_0.png on 2014-07-11 (f53c6060, the initial commit) (conceptql_spec question conceptql-spec-8fv). Git history keeps them.
 
 ## How the deliberation went (each step and why)
 
@@ -89,3 +105,23 @@ An adversarial review of this seed and its children against conceptql's code fol
 - conceptql-mdo.2: operator documentation as code, and the prerequisite fix of the upstream counts.
 - conceptql-mdo.3: example results and diagram trees as build artifacts.
 - conceptql-mdo.4: the hidden flag and the deletion of the vocabularies.csv hidden column.
+
+## REVIEW 2026-11-03 (adversarial review of these seeds)
+
+Report: docs/reviews/2026-11-03-spec-migration-seeds-review.md (16 findings, checked against conceptql HEAD 44be502d and the pinned DuckDB fixture with libduckdb 1.5.6). The main session spot-checked findings 1, 2, 3, 8, 10 and 13 and confirmed them. False facts were corrected in place in each seed. Each child seed records the findings that apply to it.
+
+Not ruled. These findings need Ryan's decision (each is also a question attached to the seed it concerns):
+
+- Finding 1 (decision 09, where the release staleness check runs). release.yml:15-17 records a 2026-10-02 ruling that keeps the 2 GB fixture and the test suite out of release.yml. Its jobs install no bundle, no libduckdb and no treefmt. A failure there also comes after the public tag exists. Options: (a) a new release.yml job, as decision 09 says; (b) a step in `just release-check`, which runs locally before the version bump; (c) a run_tests.yml job that rebuilds and compares, and fails only on a commit that changes lib/conceptql/version.rb. The reviewer recommends (b) plus (c).
+- Finding 5 (decision 13, interim images). Today the renderer raises when CONCEPTQL_DIAGRAM_CLI is not set, and conceptql_spec's knitter deletes every image at the start of a build. The images show counts but are named by the statement only, so stale counts are not visible. Two choices: what the build does without the CLI, and how stale images are detected.
+- Finding 7 (decisions 05 and 11, step 7). The renderer seeds conceptql-spec-dcn, dcn.1, 3pr and 9je stay open in conceptql_spec, and an archived repository is read-only. conceptql_spec main is also 6 commits ahead of origin, including the seeds and the review that this seed cites.
+- Finding 14 (decision 12). After step 3, doc/ holds only metadata.md and implementation_notes.md, and docs/ holds perf/ and spec/.
+- Finding 16 (low). Public conceptql seeds and the review report name files in the private JDE repository. Seeds already on origin/main do the same. No secrets were found.
+
+Proposed changes to the bead order (fact fixes, not ruled):
+
+- Step 1 also breaks JDE's ember_operator_metadata_spec: JDE's committed metadata copy holds the wrong upstream counts of 10 operators. Tell JDE's session when step 1 merges (finding 9).
+- Step 3 also: removes test/lib/conceptql/spec_diagram_draw_test.rb and spec_diagram_name_test.rb, which require script/spec/ and run in `just ci`; updates CLAUDE.md:9 and the justfile comments at lines 118-125; drops the knitter cache and its `.gitignore:27` rule; carries conceptql_spec bead conceptql_spec-vvf.2 (heading levels), which no step owned; writes an empty result as plain text, not a fence; adds a conceptql test that splits the spec with JDE's rule and checks balanced fences and the 40,000-byte limit; rewrites Appendix D (it sends public readers to the private JDE); and updates README.md:9 (findings 3, 8, 12, 15). Removing `just spec` drops no gate check, because `ci` does not run it (justfile:304).
+- A new step between 5 and 6: release conceptql. JDE pins `~> 0.6.0` (JDE Gemfile:40), and decision 10 makes a release the only route for help to reach JDE. The release waits until the round is done (finding 11).
+- Each step that changes the public surface writes a CHANGELOG entry under \[Unreleased\]: spec_path moves, upstream counts change, new metadata keys, a new path method, Entry#hidden? and Entry#visible? removed (finding 11).
+- Step 7 also: push conceptql_spec main before the archive, and change the 4 outcomesinsights.github.io links (findings 7 and 15).

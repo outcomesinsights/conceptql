@@ -5,7 +5,7 @@ status: captured
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:50.728093+00:00
-updated_at: 2026-11-03T18:14:50.728093+00:00
+updated_at: 2026-11-03T18:36:46.182580+00:00
 tags:
   - spec
   - metadata
@@ -50,7 +50,7 @@ The spec build makes each operator's reference section from the metadata in a fi
 
 - Ruled: two texts per option. `instructions:` is the form hint for typing a value. 8 of today's 11 instructions texts are that hint ('Enter a numeric value and specify "d", "m", or "y" ...'). Only 3 describe a meaning (episode gap_of, occurrence group_by_date, sum group_by_person). The new text says what the option does.
 - one_in_two_out.rb:24 and :30 already use an option key `desc:`, a third text that JDE does not read. Fold it into the new text.
-- Options are inherited (Metadatable#inherited): 11 texts appear 21 times. For example, temporal_operator.rb:18 gives `within` to every temporal operator. A subclass needs a way to replace the meaning of one inherited option.
+- Options are inherited (Metadatable#inherited): the 11 instructions: call sites hold 5 different strings, which appear 21 times over all registered operators (20 times in the published metadata, because sum is hidden). For example, temporal_operator.rb:18 gives `within` to every temporal operator. A subclass needs a way to replace the meaning of one inherited option.
 - `desc` is not inherited today. `returns` and `example` must not be inherited either, because an inherited example would show the wrong operator.
 - Every published operator has a desc, a returns text, a meaning for each option and argument, and at least one example. Every example validates.
 - The 84 vocabulary operators share one section and keep their generated text (standard_description, multiple_vocabularies' desc).
@@ -71,3 +71,12 @@ Bead conceptql-o29p (derive desc from the README) and the YAML design.
 ## Ruled 2026-11-03 (conceptql_spec question conceptql-spec-74c)
 
 The operator code is the source of all operator metadata, examples included. An example's title and statement are written in the operator class and appear in ConceptQL.metadata. Results and diagram data are never written in code: the spec build generates them as artifacts (child seed on example results). Whether the editor puts examples into the metadata that every page carries is the editor's choice.
+
+## REVIEW 2026-11-03 (findings that apply here; report docs/reviews/2026-11-03-spec-migration-seeds-review.md)
+
+- Finding 4 (FACT FIX). The rules say the build's database is gdm with no lexicon, but decision 08 runs the examples on the DuckDB fixture, whose database has a lexicon from ohdsi_vocabs (test/db_helper.rb builds CDB with cache_lookups: true). On the fixture, ConceptQL.metadata publishes 431 operators, not 119 (still 36 spec_ids), and 53 of the shared 119 have other short_name and long_name values. Proposed: name two databases. `Database.new(nil, data_model: :gdm)` decides which operators get a section and which metadata is printed. The fixture database runs the examples and draws the trees. The build unsets CONCEPTQL_CUSTOM_VOCABULARIES.
+- Finding 4, second part (FACT FIX). "Every published operator has ... at least one example" must apply to each spec_id. Otherwise each of the 84 vocabulary operators needs its own example, because `example` is not inherited.
+- Finding 9 (FACT FIX). The prerequisite fix of the upstream counts also fails JDE's suite. JDE's committed metadata copy (frontend/tests/helpers/operator-metadata.json) holds the wrong counts of union, first, last, co_reported, occurrence, before, after, during, trim_date_end and trim_date_start. Add this to the JDE effects, and tell JDE's session when it merges.
+- Finding 13 (FACT FIX). The count of instructions texts was corrected above.
+- Plausible, not demonstrated: no README example uses equal, filter, match or numeric_filter. Nobody has checked that the fixture gives rows for new examples of them.
+- Verified: all 59 README examples validate with no errors or warnings on Database.new(nil), on a mock Postgres database and on the fixture. No README example uses a hidden operator.
