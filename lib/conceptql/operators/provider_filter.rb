@@ -10,12 +10,24 @@ module ConceptQL
       register __FILE__
 
       desc "Passes along the records whose provider matches the given specialties and roles. " \
-           "Each option is a comma-separated list of concept IDs, and * matches any value. " \
-           "A record matches the specialties when its context specialty or its practitioner specialty " \
-           "is in the list. " \
-           "A record can have more than one specialty, so the operator can pass along the same record more than once."
-      option :specialties, type: :string
-      option :roles, type: :string
+           "Each option is a comma-separated list of concept IDs, and * matches any value."
+
+      returns "The upstream records that have a provider who matches both the specialties and the roles. " \
+              "A record can have more than one provider, so a record comes out once for each provider who matches. " \
+              "Each record gets the columns provider_id, context_specialty_concept_id, practitioner_specialty_concept_id " \
+              "and role_type_concept_id."
+
+      option :specialties, type: :string,
+                           meaning: "A comma-separated list of specialty concept IDs, such as 38003868 (Endocrinology, Diabetes & Metabolism Physician), " \
+                                    "or * for any specialty. A provider matches when the specialty recorded for the provider on the claim, " \
+                                    "or the provider's own specialty, is in the list."
+      option :roles, type: :string,
+                     meaning: "A comma-separated list of role concept IDs of the GDM_ROLE vocabulary, " \
+                              "such as 100000067 (Attending physician) or 100176860 (Billing provider), or * for any role."
+
+      example "Diabetes diagnoses with an endocrinologist as the attending physician",
+              [ "provider_filter", [ "icd9", "250.00" ], { "specialties" => "38003868", "roles" => "100000067" } ]
+
       category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream

@@ -12,10 +12,20 @@ module ConceptQL
     class NumericFilter < Operator
       register __FILE__
 
-      desc "Includes records with a value_as_number that match the given criteria."
+      desc "Passes along the records whose value_as_number is in the given range. " \
+           "Lab records, such as those of loinc, carry this value."
 
-      option :greater_than_or_equal_to, type: :float
-      option :less_than_or_equal_to, type: :float
+      returns "The upstream records whose value_as_number is in the range. " \
+              "A record that has no value_as_number is not passed along."
+
+      option :greater_than_or_equal_to, type: :float,
+                                        meaning: "The lowest value_as_number that passes. Without this option, the range has no lower limit."
+      option :less_than_or_equal_to, type: :float,
+                                     meaning: "The highest value_as_number that passes. Without this option, the range has no upper limit."
+
+      example "Hemoglobin A1c results (LOINC 4548-4) with a value from 5 to 7",
+              [ "numeric_filter", [ "loinc", "4548-4" ], { "greater_than_or_equal_to" => 5, "less_than_or_equal_to" => 7 } ]
+
       category "Filter Single Stream"
       basic_type :temporal
       allows_one_upstream

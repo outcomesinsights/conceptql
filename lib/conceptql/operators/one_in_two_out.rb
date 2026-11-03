@@ -12,7 +12,15 @@ module ConceptQL
 
       register __FILE__
 
-      desc "Identifies an event that appears either once in an inpatient setting or twice within a specified interval in an outpatient setting."
+      desc "For each person, passes along the earliest confirmed condition record. " \
+           "One inpatient record confirms a condition, and so do two outpatient records whose start dates are a given gap apart."
+
+      returns "One record per person: the earliest confirmed condition record. " \
+              "A returned inpatient record has the admission date as its start_date and the discharge date as its end_date, " \
+              "when the claim has them. Only condition records with inpatient, outpatient or carrier_claim provenance can be confirmed."
+
+      example "First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart",
+              [ "one_in_two_out", [ "icd9", "250.00" ], { "outpatient_minimum_gap" => "30d", "outpatient_event_to_return" => "Initial Event" } ]
 
       allows_one_upstream
       validate_one_upstream
@@ -21,13 +29,22 @@ module ConceptQL
       basic_type :temporal
 
       option :inpatient_length_of_stay, type: :integer, min: 0, default: 0,
-                                        meaning: "The minimum length in days of an inpatient stay. A shorter stay is not a valid inpatient event.", label: "Inpatient Length of Stay (Days)"
+                                        meaning: "An inpatient stay must be longer than this many days: an inpatient record counts only when its discharge date " \
+                                                 "is more than this many days after its admission date. 0 or no value means no length-of-stay check.",
+                                        label: "Inpatient Length of Stay (Days)"
       option :outpatient_minimum_gap, type: :string, default: "30d",
-                                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
+                                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".',
+                                      meaning: "A date adjustment, such as 30d. The confirming outpatient record must start at least this long " \
+                                               "after the initial outpatient record. Without this option, the gap is 30 days."
       option :outpatient_maximum_gap, type: :string, default: "365d",
-                                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".'
+                                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".',
+                                      meaning: "A date adjustment, such as 365d. The confirming outpatient record must start no more than this long " \
+                                               "after the initial outpatient record. Without this option, there is no maximum gap."
       option :outpatient_event_to_return, type: :string, options: [ "Initial Event", "Confirming Event" ],
-                                          default: "Initial Event", meaning: "Which outpatient event the operator passes on: the initial event or the confirming event."
+                                          default: "Initial Event",
+                                          meaning: "Which outpatient record the operator passes on when two outpatient records confirm the condition: " \
+                                                   "the initial record or the confirming record. " \
+                                                   "Without this option, or with any value other than Initial Event, it passes on the confirming record."
 
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 
