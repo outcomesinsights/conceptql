@@ -10,10 +10,12 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Selects all information period records, which have the observation_period domain. " \
-           "The operator takes no upstream stream. " \
-           "Each argument is an information type concept ID, and with arguments, " \
-           "the operator selects only the information periods of those types."
+      desc "Selects information periods: the spans of time in which the data has information about a patient, " \
+           "such as periods of insurance enrollment. Each argument is an information type concept ID, " \
+           "and with arguments, the operator selects only the information periods of those types."
+      returns "One record for each selected information period, from the information_periods table. " \
+              "The type of the records is observation_period."
+      example "All information periods", [ "information_periods" ]
       domains :observation_period
       category "Get Related Data"
       basic_type :selection

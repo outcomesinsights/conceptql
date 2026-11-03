@@ -177,7 +177,9 @@ describe "operator documentation in the metadata" do
 
     it "gives each vocabulary operator a copy of the codes argument of Vocabulary" do
       _(vocabulary.argument_options(:codes)[:type]).must_equal :codelist
-      _(operators_metadata.fetch("icd9cm")[:arguments]).must_equal [ [ :codes, { type: :codelist, label: "ICD9CM Codes" } ] ]
+      codes_meaning = vocabulary.argument_options(:codes)[:meaning]
+      _(codes_meaning).must_match(/\A[A-Z].*\.\z/)
+      _(operators_metadata.fetch("icd9cm")[:arguments]).must_equal [ [ :codes, { type: :codelist, meaning: codes_meaning, label: "ICD9CM Codes" } ] ]
     end
 
     it "lets each declared Vocabulary example appear in ConceptQL.metadata" do

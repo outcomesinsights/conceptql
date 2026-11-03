@@ -10,8 +10,16 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Selects all person records that match the selected gender."
-      argument :gender, type: :string, options: %w[Male Female Unknown]
+      desc "Selects the patients with the given genders."
+      argument :gender, type: :string, options: %w[Male Female Unknown],
+                        meaning: "One or more genders. A value that starts with M selects the male patients, " \
+                                 "and a value that starts with F selects the female patients. " \
+                                 "Any other value, such as Unknown, selects the patients whose gender is " \
+                                 "neither male nor female, including the patients with no gender. Case does not matter."
+      returns "One person record for each patient whose gender is one of the given genders. " \
+              "The start_date and the end_date of each record are the patient's birth date."
+      example "All female patients", [ "gender", "Female" ]
+      example "All male patients", [ "gender", "Male" ]
       domains :person
       category "Select by Property"
       basic_type :selection

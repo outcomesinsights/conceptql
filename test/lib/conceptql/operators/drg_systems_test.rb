@@ -105,7 +105,8 @@ describe "the ms_drg and cms_drg operators" do
     it "names each operator after its DRG system" do
       _(operators.fetch("ms_drg")[:preferred_name]).must_equal "MS-DRG"
       _(operators.fetch("cms_drg")[:preferred_name]).must_equal "CMS-DRG"
-      _(operators.fetch("ms_drg")[:arguments]).must_equal [ [ :codes, { type: :codelist, label: "MS-DRG Codes" } ] ]
+      codes_meaning = ConceptQL::Operators::Vocabulary.argument_options(:codes)[:meaning]
+      _(operators.fetch("ms_drg")[:arguments]).must_equal [ [ :codes, { type: :codelist, meaning: codes_meaning, label: "MS-DRG Codes" } ] ]
       _(operators.fetch("ms_drg")[:short_name]).must_equal "MS-DRG"
       _(operators.fetch("cms_drg")[:short_name]).must_equal "CMS-DRG"
     end

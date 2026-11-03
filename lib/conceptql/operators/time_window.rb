@@ -24,11 +24,33 @@ module ConceptQL
     class TimeWindow < PassThru
       register __FILE__
 
-      desc "Adjusts start_date and end_date to create a new window of time for each record."
+      # The values that the start and end options take (DateAdjuster)
+      DATE_ADJUSTMENT_TEXT = "The value is an amount of time, made of one or more numbers, each with a unit: " \
+                             "d (days), w (weeks), m (months) or y (years). Each part can have a - or + sign, " \
+                             "a bare number means days, and a unit without a number means 1 of it. " \
+                             "For example, -1m is 1 month back, and 10d3m is 3 months and 10 days. " \
+                             "An empty value or 0 leaves the date unchanged. The value start or end uses the " \
+                             "record's start_date or end_date, and a date in YYYY-MM-DD format sets the date to that date."
+
+      desc "Moves the start_date and the end_date of each record. " \
+           "Use it to shift or widen a record's dates before you compare them with other records."
       option :start, type: :string,
-                     instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.'
+                     instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.',
+                     meaning: "How to change the start_date. If you omit it, the start_date does not change. #{DATE_ADJUSTMENT_TEXT}"
       option :end, type: :string,
-                   instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.'
+                   instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.',
+                   meaning: "How to change the end_date. If you omit it, the end_date does not change. #{DATE_ADJUSTMENT_TEXT}"
+      returns "One record for each upstream record, with the start_date and the end_date that the options give. " \
+              "The other columns do not change."
+      example "All Diagnoses of Diabetes (ICD-9 250.01) within 30 days of an MI",
+              [ "during", { "left" => [ "icd9", "250.01" ], "right" => [ "time_window", [ "icd9", "412" ], { "start" => "-30d", "end" => "30d" } ] } ]
+      example "Shift the dates of all MIs back by 200 years", [ "time_window", [ "icd9", "412" ], { "start" => "-200y", "end" => "-200y" } ]
+      example "Widen the dates of all MIs to run from 2 months and 2 days before the MI to 1 year and 3 days after it",
+              [ "time_window", [ "icd9", "412" ], { "start" => "-2m-2d", "end" => "3d1y" } ]
+      example "Collapse the date range of all MIs to the start date: leave start_date unchanged and set end_date to start_date",
+              [ "time_window", [ "icd9", "412" ], { "start" => "", "end" => "start" } ]
+      example "Nonsensical, but allowed: swap the start_date and end_date",
+              [ "time_window", [ "icd9", "412" ], { "start" => "end", "end" => "start" } ]
       allows_one_upstream
       validate_one_upstream
       validate_no_arguments

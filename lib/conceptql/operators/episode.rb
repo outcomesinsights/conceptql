@@ -7,12 +7,23 @@ module ConceptQL
     class Episode < PassThru
       register __FILE__
 
-      desc "Groups each person's records into episodes, allowing for a gap between the end_date of one record and the start_date of the next."
+      desc "Merges each patient's records into episodes: spans of time in which the records are close together. " \
+           "For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug."
+      returns "One record for each episode. Its start_date is the earliest start_date in the episode, " \
+              "and its end_date is the latest end_date. Its criterion_table and criterion_domain are episode, " \
+              "and its criterion_id is 0, because an episode merges several records."
+      example "Episodes of diabetes diagnoses", [ "episode", [ "icd9", "250.00" ], { "gap_of" => "90" } ]
 
       allows_one_upstream
       validate_one_upstream
       option :gap_of, type: :integer,
-                      instructions: "Allowed gap in days between end date of one event and start date of the next to consider them the same episode"
+                      instructions: "Allowed gap in days between end date of one event and start date of the next to consider them the same episode",
+                      meaning: "The largest gap in days that stays in the same episode. The operator orders each " \
+                               "patient's records by start_date and then by end_date. A record stays in the current " \
+                               "episode when its start_date is no more than this many days after the latest end_date " \
+                               "of the earlier records, not only of the record just before. Otherwise it starts a " \
+                               "new episode. A record without an end_date counts as ending on its start_date. " \
+                               "The default is 0."
       category "Modify Data"
       basic_type :temporal
 

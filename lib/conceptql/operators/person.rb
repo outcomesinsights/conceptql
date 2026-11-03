@@ -10,7 +10,11 @@ module ConceptQL
 
       register __FILE__
 
-      desc "Selects all person records. With an upstream stream, the operator selects the person record of each person in that stream."
+      desc "Selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream."
+      returns "One record for each selected patient, from the patients table. The type of the records is person, " \
+              "and their start_date and end_date are both the patient's birth date."
+      example "All patients", [ "person" ]
+      example "The patients with an old myocardial infarction (ICD-9-CM 412)", [ "person", [ "icd9cm", "412" ] ]
 
       allows_one_upstream
       domains :person

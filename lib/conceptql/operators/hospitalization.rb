@@ -8,7 +8,12 @@ module ConceptQL
       register __FILE__
       include ConceptQL::Behaviors::Utilizable
 
-      desc "Selects inpatient admission records."
+      desc "Selects inpatient hospital admissions: one record for each admission whose claim came from an inpatient file."
+      returns "One record for each inpatient admission. The type of the records is condition_occurrence, " \
+              "and their criterion_table is collections, the table of claims. Their start_date and end_date " \
+              "are the dates of the claim, and source_value holds the primary code of the admission when it has one. " \
+              "Each record also has admission and discharge columns, such as admission_date, discharge_date and length_of_stay."
+      example "All inpatient hospital admissions", [ "hospitalization" ]
 
       def collection_type
         "inpatient"
