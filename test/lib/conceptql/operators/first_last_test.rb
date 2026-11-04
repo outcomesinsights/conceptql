@@ -6,8 +6,12 @@ require_relative "../../../helper"
 # option Occurrence's timed query returns every upstream row instead of one row
 # per person. So the two options are not in their metadata, and a statement
 # that sets one fails validation (bead conceptql-w7y). Occurrence keeps both.
+#
+# group_by_date does not change the result of first or last, so Ryan ruled
+# on 2026-11-03 that it is unsupported on them too (seed conceptql-ufn).
+# Before, their metadata had label and group_by_date. Occurrence keeps it.
 # No live database: the mock never answers a query.
-describe "first and last without at_least and within" do
+describe "first and last without at_least, within and group_by_date" do
   let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide) }
   let(:operators_metadata) { ConceptQL.metadata(cdb)[:operators] }
 
@@ -21,8 +25,14 @@ describe "first and last without at_least and within" do
   end
 
   %w[first last].each do |name|
-    it "leaves at_least and within out of the #{name} metadata" do
-      _(operators_metadata[name][:options].keys).must_equal %i[label group_by_date]
+    it "leaves at_least, within and group_by_date out of the #{name} metadata" do
+      _(operators_metadata[name][:options].keys).must_equal %i[label]
+    end
+
+    it "rejects group_by_date on #{name}" do
+      statement = [ name, %w[icd9 412], { group_by_date: true } ]
+
+      _(errors_for(statement)).must_equal [ [ "unsupported option", "group_by_date", true ] ]
     end
 
     it "rejects at_least and within on #{name}" do
@@ -43,11 +53,12 @@ describe "first and last without at_least and within" do
     end
   end
 
-  it "keeps at_least and within in the occurrence metadata" do
+  it "keeps at_least, within and group_by_date in the occurrence metadata" do
     _(operators_metadata["occurrence"][:options].keys).must_equal %i[label at_least within group_by_date]
   end
 
-  it "accepts at_least and within on occurrence" do
-    _(errors_for([ "occurrence", 2, %w[icd9 412], { at_least: "30d", within: "1y" } ])).must_be_nil
+  it "accepts at_least, within and group_by_date on occurrence" do
+    statement = [ "occurrence", 2, %w[icd9 412], { at_least: "30d", within: "1y", group_by_date: true } ]
+    _(errors_for(statement)).must_be_nil
   end
 end

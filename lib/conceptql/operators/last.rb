@@ -24,16 +24,14 @@ module ConceptQL
       returns "One record per person: the upstream record with the latest start_date. " \
               "When several records have that start_date, the one with the highest criterion_id."
 
-      option_meaning :group_by_date,
-                     "Treats the records of a person on one start_date as one occurrence. " \
-                     "It does not change the result of last, which passes along one record of the latest date either way."
-
       example "For each patient, select the Condition that represents the last occurrence of an MI",
               [ "last", [ "icd9", "412" ] ]
 
-      # With either option, Occurrence's timed query returns every upstream
-      # row instead of one row per person
-      unsupported_options :at_least, :within
+      # With at_least or within, Occurrence's timed query returns every
+      # upstream row instead of one row per person. group_by_date does not
+      # change the result, because last passes along one record of the
+      # latest date either way (seed conceptql-ufn).
+      unsupported_options :at_least, :within, :group_by_date
 
       def occurrence
         -1
