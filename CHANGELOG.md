@@ -85,6 +85,18 @@ All notable changes to this project will be documented in this file.
   block with a directive, `<!-- conceptql-spec: operator <spec_id> -->`, and the spec's
   Appendix D describes the directives. The hand-written copies of these texts are removed from
   the spec.
+- The spec lists every vocabulary operator with the full name of its vocabulary and its
+  domain, in a table that the build writes from `ConceptQL.metadata` at the new directive
+  `<!-- conceptql-spec: vocabulary-operators -->`. It marks a deprecated operator, such as
+  `drg`. The `Vocabulary` Operator section is now a `##` section of its own, so that it stays
+  under the 40,000-byte limit of a spec section. The other selection operators moved under a
+  new heading, Other Selection Operators. The anchors of the operator sections did not change.
+- `ConceptQL.metadata` gives `read` and the multiple vocabulary operators, such as
+  `cpt_or_hcpcs`, a `long_name`. Before, it was empty. `read` has the long name of the Read
+  vocabulary in the OHDSI vocabulary table, "NHS UK Read Codes Version 2 (HSCIC)". A multiple
+  vocabulary operator names its vocabularies, for example "CPT4, HCPCS and CPT4_HCPCS". The
+  metadata of `read` also has `predominant_domains`, `["condition_occurrence"]`. Before, it was
+  empty.
 
 ### Removed
 

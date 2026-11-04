@@ -13,6 +13,10 @@ module ConceptQL
       register __FILE__
 
       preferred_name "READ"
+      # The vocabulary_name of Read in the OHDSI vocabulary table
+      long_name "NHS UK Read Codes Version 2 (HSCIC)"
+      # Metadata only: the records come from ReadGDM, which selects condition_occurrence
+      predominant_domains :condition_occurrence
       desc "Selects records based on the Read vocabulary."
       argument :read_codes, type: :codelist, vocab: "Read",
                             meaning: "One or more Read codes. Write each code as the Read vocabulary writes it. " \

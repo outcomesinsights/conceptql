@@ -280,7 +280,9 @@ ConceptQL finds the concept of each code in the vocabulary tables. It uses eithe
 
 Selection operators select records from the database. For example, a search for diagnoses of old myocardial infarction (ICD-9-CM 412) is a selection. Most selection operators are leaf operators: no other operator flows into them. `person` and `death` can also take one upstream operator (see [`person`](#person-operator)).
 
-### `Vocabulary` Operator
+The vocabulary operators select records by their codes. The next section describes them, and [Other Selection Operators](#other-selection-operators) describes the rest.
+
+## `Vocabulary` Operator
 
 Selects the records whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. Each vocabulary has its own operator, and a few operators search several vocabularies at once.
 
@@ -346,7 +348,7 @@ No results.
 
 ______________________________________________________________________
 
-ConceptQL creates one vocabulary operator for each vocabulary that it knows, so the list of operators depends on the vocabulary tables. The operator name is the vocabulary ID in lower case, with spaces and punctuation replaced by `_`. Some operators also have a shorter alias.
+ConceptQL creates one vocabulary operator for each vocabulary that it knows, so the list of operators depends on the vocabulary tables. The operator name is the vocabulary ID in lower case, with spaces and punctuation replaced by `_`. Some operators also have a shorter alias. [All Vocabulary Operators](#all-vocabulary-operators) lists every vocabulary operator.
 
 These are the most common vocabulary operators:
 
@@ -377,7 +379,7 @@ Examples of how codes match:
 - A code that has more than one meaning in the vocabulary gives the warning "code(s) with more than one meaning".
 - `rxnorm` does not find records coded with NDC, because an operator does not follow mappings between vocabularies.
 
-#### DRG Codes
+### DRG Codes
 
 CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning. For example, DRG 205 meant a liver disorder in CMS-DRG, and it means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a record does not say which meaning applied. So a statement names the DRG system, and ConceptQL selects each record by its code and by its start_date:
 
@@ -389,6 +391,101 @@ The examples above show both operators. Our test data has no DRG record before 2
 Both operators check codes as the other vocabulary operators do. A DRG code has 3 digits, with leading zeros. A code that the DRG vocabulary does not have gets the warning "unknown code(s)". These operators never give the warning "code(s) with more than one meaning", because the operator chooses the meaning.
 
 The `drg` operator is deprecated. It selects the DRG records of both systems, whatever their dates. A statement that uses `drg` still runs, but `drg` gets the warning "deprecated operator", and a later release will make it an error. Use `ms_drg` or `cms_drg`.
+
+### All Vocabulary Operators
+
+The build writes this table from the metadata of the operators. It lists the vocabulary operators of a ConceptQL database with no vocabulary tables, ordered by name. Each row gives the full name of the operator's vocabulary and the domain, which is the type of the records that the operator returns. The vocabulary tables of a database can add more operators. A deprecated operator still runs, with a warning.
+
+| Operator                 | Vocabulary                                                                                             | Domain               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ | -------------------- |
+| `admsrce`                | ADMSRCE                                                                                                | condition_occurrence |
+| `admtype`                | ADMTYPE                                                                                                | condition_occurrence |
+| `atc`                    | WHO Anatomic Therapeutic Chemical Classification                                                       | drug_exposure        |
+| `betos`                  | BETOS                                                                                                  | condition_occurrence |
+| `clinical_code_type`     | Clinical Code Type                                                                                     | condition_occurrence |
+| `cms_drg`                | CMS Diagnosis-Related Group, events before 2007-10-01                                                  | procedure_occurrence |
+| `concept_class`          | OMOP Concept Class                                                                                     | condition_occurrence |
+| `condition_type`         | OMOP Condition Occurrence Type                                                                         | condition_occurrence |
+| `cpt4`                   | Current Procedural Terminology version 4 (AMA)                                                         | procedure_occurrence |
+| `cpt_or_hcpcs`           | CPT4, HCPCS and CPT4_HCPCS                                                                             | procedure_occurrence |
+| `cs_schema`              | CS_Schema                                                                                              | condition_occurrence |
+| `currency`               | International Currency Symbol (ISO 4217)                                                               | condition_occurrence |
+| `death_type`             | OMOP Death Type                                                                                        | death                |
+| `device_type`            | OMOP Device Type                                                                                       | observation          |
+| `domain`                 | OMOP Domain                                                                                            | condition_occurrence |
+| `drg` (deprecated)       | Diagnosis-related group (CMS)                                                                          | procedure_occurrence |
+| `drug_type`              | OMOP Drug Exposure Type                                                                                | drug_exposure        |
+| `drugtextstring`         | Drug Text String                                                                                       | drug_exposure        |
+| `duration_unit`          | DURATION_UNIT                                                                                          | condition_occurrence |
+| `gdm_cen_tract_meas`     | Census Tract Measures from SEER                                                                        | observation          |
+| `gemscript`              | Gemscript                                                                                              | drug_exposure        |
+| `hcfaspec`               | HCFASPEC                                                                                               | condition_occurrence |
+| `hcfatype`               | HCFATYPE                                                                                               | condition_occurrence |
+| `hcpcs`                  | Healthcare Common Procedure Coding System (CMS)                                                        | procedure_occurrence |
+| `icd03_morphology`       | ICD03_Morphology                                                                                       | condition_occurrence |
+| `icd03_topography`       | ICD03_Topography                                                                                       | condition_occurrence |
+| `icd10cm`                | International Classification of Diseases, Tenth Revision, Clinical Modification (NCHS)                 | condition_occurrence |
+| `icd10pcs`               | ICD-10 Procedure Coding System (CMS)                                                                   | procedure_occurrence |
+| `icd10who`               | International Classification of Diseases, Tenth Revision (WHO)                                         | condition_occurrence |
+| `icd9cm`                 | International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 1 and 2 (NCHS) | condition_occurrence |
+| `icd9proc`               | International Classification of Diseases, Ninth Revision, Clinical Modification, Volume 3 (NCHS)       | procedure_occurrence |
+| `loinc`                  | Logical Observation Identifiers Names and Codes (Regenstrief Institute)                                | observation          |
+| `marcla_obs_type`        | Market Clarity Observation Type                                                                        | observation          |
+| `meas_type`              | OMOP Measurement Type                                                                                  | observation          |
+| `ms_drg`                 | Medicare Severity Diagnosis-Related Group (CMS), events from 2007-10-01                                | procedure_occurrence |
+| `ndc`                    | National Drug Code (FDA and manufacturers)                                                             | drug_exposure        |
+| `note_type`              | OMOP Note Type                                                                                         | condition_occurrence |
+| `nucc`                   | National Uniform Claim Committee Health Care Provider Taxonomy Code Set (NUCC)                         | condition_occurrence |
+| `obs_period_type`        | OMOP Observation Period Type                                                                           | observation_period   |
+| `observation_type`       | OMOP Observation Type                                                                                  | observation          |
+| `oi_file_type`           | OI_FILE_TYPE                                                                                           | condition_occurrence |
+| `oi_information_type`    | OI_INFORMATION_TYPE                                                                                    | condition_occurrence |
+| `oi_prov`                | OI_PROV                                                                                                | condition_occurrence |
+| `plcsrvc`                | PLCSRVC                                                                                                | condition_occurrence |
+| `procedure_type`         | OMOP Procedure Occurrence Type                                                                         | procedure_occurrence |
+| `provider_facility_type` | PROVIDER_FACILITY_TYPE                                                                                 | condition_occurrence |
+| `read`                   | NHS UK Read Codes Version 2 (HSCIC)                                                                    | condition_occurrence |
+| `relationship`           | OMOP Relationship                                                                                      | condition_occurrence |
+| `revenue_code`           | UB04/CMS1450 Revenue Codes (CMS)                                                                       | procedure_occurrence |
+| `rxnorm`                 | RxNorm (NLM)                                                                                           | drug_exposure        |
+| `seer_adjajc6m`          | SEER_ADJAJC6M                                                                                          | condition_occurrence |
+| `seer_adjajc6n`          | SEER_ADJAJC6N                                                                                          | condition_occurrence |
+| `seer_adjajc6t`          | SEER_ADJAJC6T                                                                                          | condition_occurrence |
+| `seer_beh`               | SEER_BEH                                                                                               | condition_occurrence |
+| `seer_census_pov_ind`    | SEER_CENSUS_POV_IND                                                                                    | condition_occurrence |
+| `seer_dajcc7`            | SEER_DAJCC7                                                                                            | condition_occurrence |
+| `seer_dajccstg`          | SEER_DAJCCSTG                                                                                          | condition_occurrence |
+| `seer_dxconf`            | SEER_DXCONF                                                                                            | condition_occurrence |
+| `seer_grade`             | SEER_GRADE                                                                                             | condition_occurrence |
+| `seer_lat`               | SEER_LAT                                                                                               | condition_occurrence |
+| `seer_marst`             | SEER_MARST                                                                                             | condition_occurrence |
+| `seer_msex`              | SEER_MSEX                                                                                              | condition_occurrence |
+| `seer_nhiade`            | SEER_NHIADE                                                                                            | condition_occurrence |
+| `seer_nosrg`             | SEER_NOSRG                                                                                             | condition_occurrence |
+| `seer_rad`               | SEER_RAD                                                                                               | condition_occurrence |
+| `seer_radsurg`           | SEER_RADSURG                                                                                           | condition_occurrence |
+| `seer_seq`               | SEER_SEQ                                                                                               | condition_occurrence |
+| `seer_siterwho`          | SEER_SITERWHO                                                                                          | condition_occurrence |
+| `seer_srace`             | SEER_SRACE                                                                                             | condition_occurrence |
+| `seer_src`               | SEER_SRC                                                                                               | condition_occurrence |
+| `seer_sxprif`            | SEER_SXPRIF                                                                                            | condition_occurrence |
+| `seer_sxsitf`            | SEER_SXSITF                                                                                            | condition_occurrence |
+| `seer_typefu`            | SEER_TYPEFU                                                                                            | condition_occurrence |
+| `seer_urbrur`            | SEER_URBRUR                                                                                            | condition_occurrence |
+| `seer_yost_acs_06_10`    | SEER's Yost Index calculated from ACS 2006-2010                                                        | observation          |
+| `seer_yost_acs_10_14`    | SEER's Yost Index calculated from ACS 2010-2014                                                        | observation          |
+| `seer_yost_acs_13_17`    | SEER's Yost Index calculated from ACS 2013-2017                                                        | observation          |
+| `snomed`                 | SNOMED-CT                                                                                              | condition_occurrence |
+| `stus_cd`                | STUS_CD                                                                                                | condition_occurrence |
+| `typesrvc`               | TYPESRVC                                                                                               | condition_occurrence |
+| `ucum`                   | Unified Code for Units of Measure (Regenstrief Institute)                                              | condition_occurrence |
+| `visit`                  | OMOP Visit                                                                                             | visit_occurrence     |
+| `visit_type`             | OMOP Visit Type                                                                                        | visit_occurrence     |
+| `vocabulary`             | OMOP Vocabulary                                                                                        | condition_occurrence |
+
+## Other Selection Operators
+
+This section describes the selection operators that are not vocabulary operators.
 
 ### Person-related Operators
 
@@ -2464,13 +2561,14 @@ ConceptQL was first written for PostgreSQL, and it was later adapted to MSSQL, O
 
 This document is part of the [ConceptQL](https://github.com/outcomesinsights/conceptql) repository, in `docs/spec/`. `README.md` is generated from `README.cql.md`. Edit `README.cql.md`, and then run `just spec` in the repository. This document describes the version of ConceptQL in the same commit.
 
-The reference section of each operator, the text of the `label` option and Appendix E come from the metadata of the operators (`ConceptQL.metadata`), so the texts in the operator classes are their only copy. A directive in `README.cql.md`, an HTML comment on a line of its own, marks the place of each generated block:
+The reference section of each operator, the text of the `label` option, the table of all vocabulary operators and Appendix E come from the metadata of the operators (`ConceptQL.metadata`), so the texts in the operator classes are their only copy. A directive in `README.cql.md`, an HTML comment on a line of its own, marks the place of each generated block:
 
 - `<!-- conceptql-spec: operator <spec_id> -->` writes the reference section of the operators with that `spec_id`. It comes directly after the heading of the section, whose anchor is the `spec_id`. The section has the operator's description, its upstream operators or its operands (`left` and `right`), its arguments, its options, the records it returns, and its examples. Text about more than one operator, and longer explanations of one operator, follow the directive as markdown.
 - `<!-- conceptql-spec: label-option -->` writes the text of the `label` option, which every operator takes.
 - `<!-- conceptql-spec: quick-reference -->` writes the table of Appendix E, with one row for each `spec_id`.
+- `<!-- conceptql-spec: vocabulary-operators -->` writes the table of [All Vocabulary Operators](#all-vocabulary-operators), with one row for each vocabulary operator: its name, the full name of its vocabulary and its domain. It marks a deprecated operator.
 
-The metadata comes from a ConceptQL database with the data model `gdm`, no data database and no custom vocabularies, so it decides which operators get a section. Each `spec_id` of that metadata needs exactly one directive, and the build stops when one is missing, repeated or not after its heading.
+The metadata comes from a ConceptQL database with the data model `gdm`, no data database and no custom vocabularies, so it decides which operators get a section. Each `spec_id` of that metadata needs exactly one directive, and the build stops when one is missing, repeated or not after its heading. The other directives appear exactly once each, and the build also stops on an unknown directive.
 
 `just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md` and each example of a reference section, the build writes the example: the statement as JSON, its diagram, and the first 10 records of its result. It orders the records by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same records. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
 

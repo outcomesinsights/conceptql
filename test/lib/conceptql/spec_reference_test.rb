@@ -201,12 +201,87 @@ describe "SpecBuild::Reference" do
     end
   end
 
+  # bead conceptql-rx42
+  describe "the table of the vocabulary operators" do
+    def vocabulary(name, long_name, domains = [ "condition_occurrence" ], **overrides)
+      operator(name, "vocabulary-operator", long_name: long_name, predominant_domains: domains, **overrides)
+    end
+
+    let(:vocabularies) do
+      SpecBuild::Reference.new(metadata(vocabulary("icd9cm", "ICD-9-CM | NCHS"),
+                                        vocabulary("cpt_or_hcpcs", "CPT4 and HCPCS", %w[procedure_occurrence observation]),
+                                        vocabulary("drg", "DRG", deprecated: true),
+                                        joiner))
+    end
+
+    let(:vocabulary_source) do
+      source + [ "## `Vocabulary` Operator\n", "<!-- conceptql-spec: operator vocabulary-operator -->\n",
+                 "### All Vocabulary Operators\n", "<!-- conceptql-spec: vocabulary-operators -->\n" ]
+    end
+
+    def expand(reference, lines)
+      reference.expand(lines).map(&:text).join
+    end
+
+    it "has one row per vocabulary operator, ordered by name, with its long name and its domains" do
+      _(vocabularies.vocabulary_operators).must_equal <<~MD
+        | Operator | Vocabulary | Domain |
+        | --- | --- | --- |
+        | `cpt_or_hcpcs` | CPT4 and HCPCS | procedure_occurrence, observation |
+        | `drg` (deprecated) | DRG | condition_occurrence |
+        | `icd9cm` | ICD-9-CM \\| NCHS | condition_occurrence |
+      MD
+    end
+
+    it "fails for a vocabulary operator without a long name or a domain" do
+      blank = SpecBuild::Reference.new(metadata(vocabulary("read", "")))
+      _(_ { blank.vocabulary_operators }.must_raise(RuntimeError).message).must_include "read has no long_name"
+      none = SpecBuild::Reference.new(metadata(vocabulary("read", "Read", [])))
+      _(_ { none.vocabulary_operators }.must_raise(RuntimeError).message).must_include "read has no domain"
+    end
+
+    it "replaces its directive" do
+      text = expand(vocabularies, vocabulary_source.reject { |line| line.include?("merger-operator") })
+      _(text).must_include "### All Vocabulary Operators\n#{vocabularies.vocabulary_operators}"
+    end
+
+    it "fails when its directive is missing or repeated" do
+      lines = vocabulary_source.reject { |line| line.include?("merger-operator") }
+      missing = _ { vocabularies.expand(lines.reject { |line| line.include?("vocabulary-operators") }) }.must_raise RuntimeError
+      _(missing.message).must_include "0 vocabulary-operators directives, not 1"
+      repeated = _ { vocabularies.expand(lines + [ "<!-- conceptql-spec: vocabulary-operators -->\n" ]) }.must_raise RuntimeError
+      _(repeated.message).must_include "2 vocabulary-operators directives, not 1"
+    end
+
+    it "is not allowed without a published vocabulary operator" do
+      _(error(source + [ "<!-- conceptql-spec: vocabulary-operators -->\n" ])).must_include "1 vocabulary-operators directives, not 0"
+    end
+
+    it "lists every published vocabulary operator once, with no hidden operator" do
+      vocabulary_operators = published[:operators].values.select { |operator| operator[:spec_id] == "vocabulary-operator" }
+      rows = SpecBuild::Reference.new(published).vocabulary_operators.lines.drop(2)
+      _(rows.map { |row| row[/\A\| `([^`]+)`/, 1] }).must_equal vocabulary_operators.map { |operator| operator[:name] }.sort
+      hidden = ConceptQL::Database.new(nil, data_model: :gdm).operators(:gdm).select { |_, klass| klass.hidden? }.keys
+      _(hidden).wont_be_empty
+      _(rows.join).wont_match(/`(#{hidden.map { |name| Regexp.escape(name) }.join('|')})`/)
+    end
+
+    it "marks drg, the deprecated vocabulary operator, and has a long name for read and cpt_or_hcpcs" do
+      table = SpecBuild::Reference.new(published).vocabulary_operators
+      _(table).must_include "| `drg` (deprecated) | Diagnosis-related group (CMS) | procedure_occurrence |"
+      _(table).must_include "| `read` | NHS UK Read Codes Version 2 (HSCIC) | condition_occurrence |"
+      _(table).must_include "| `cpt_or_hcpcs` | CPT4, HCPCS and CPT4_HCPCS | procedure_occurrence |"
+    end
+  end
+
   # just ci does not run the spec build, so this checks the directives of the
   # real source against the published operators
   it "expands docs/spec/README.cql.md with every published spec_id" do
     real = SpecBuild::Reference.new(published)
     lines = real.expand(File.readlines(SpecBuild::SOURCE)).map(&:text)
     real.spec_ids.each { |spec_id| _(lines.join).must_include real.section(spec_id) }
+    _(lines.join).must_include real.vocabulary_operators
+    _(File.readlines(SpecBuild::SOURCE).grep(/\A<!-- conceptql-spec: vocabulary-operators -->/).size).must_equal 1
     _(lines.grep(/\A<!-- conceptql-spec:/)).must_be_empty
   end
 end
