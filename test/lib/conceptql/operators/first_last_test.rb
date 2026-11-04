@@ -10,6 +10,8 @@ require_relative "../../../helper"
 # group_by_date does not change the result of first or last, so Ryan ruled
 # on 2026-11-03 that it is unsupported on them too (seed conceptql-ufn).
 # Before, their metadata had label and group_by_date. Occurrence keeps it.
+# A false group_by_date counts as not set (bead conceptql-w7k6), because the
+# Jigsaw diagram editor writes false when a user clears the checkbox.
 # No live database: the mock never answers a query.
 describe "first and last without at_least, within and group_by_date" do
   let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide) }
@@ -33,6 +35,14 @@ describe "first and last without at_least, within and group_by_date" do
       statement = [ name, %w[icd9 412], { group_by_date: true } ]
 
       _(errors_for(statement)).must_equal [ [ "unsupported option", "group_by_date", true ] ]
+    end
+
+    it "treats a false group_by_date on #{name} as not set" do
+      plain = [ name, %w[icd9 412] ]
+      cleared = [ name, %w[icd9 412], { group_by_date: false } ]
+
+      _(errors_for(cleared)).must_be_nil
+      _(masked_sql(cleared)).must_equal masked_sql(plain)
     end
 
     it "rejects at_least and within on #{name}" do
