@@ -4,7 +4,7 @@ require "bigdecimal"
 require "digest"
 require "fileutils"
 require "json"
-require "open3"
+require "tmpdir"
 require_relative "reference"
 require_relative "../../../test/prettier_json"
 
@@ -12,7 +12,8 @@ require_relative "../../../test/prettier_json"
 # directive of the source becomes its generated markdown (SpecBuild::Reference):
 # the operator reference sections, the label option and Appendix E. Then each
 # ```ConceptQL block becomes an example: the statement as JSON, its diagram
-# (images/<name>.svg) and the first 10 rows of its result. Last, the examples
+# (images/<name>.svg, drawn by ConceptQL::DiagramRenderer) and the first 10
+# rows of its result. Last, the examples
 # of each published spec_id go to examples/<spec_id>.json, with their rows and
 # diagram trees. `just spec` runs docs/spec/build/run.rb, which calls this, on
 # the DuckDB fixture.
@@ -25,9 +26,6 @@ module SpecBuild
   # One JSON file of example results and diagram trees for each published
   # spec_id (ConceptQL.spec_examples_path)
   EXAMPLES = File.join(DIR, "examples")
-
-  CLI_ENV = "CONCEPTQL_DIAGRAM_CLI"
-  CLI_FLAGS = %w[--show-counts --show-options].freeze
 
   # Every result is ordered completely before the limit, so each run shows the
   # same rows (a criterion_id is unique only within its criterion_table).
@@ -69,16 +67,18 @@ module SpecBuild
       "#{sha(statement)}.svg"
     end
 
-    # The images in +trees+ (image name => diagram tree) that are not current:
+    # The images that do not match +trees+ (image name => diagram tree):
     # image name => "MISSING" when the file is not in +dir+, "stale" when the
-    # manifest (the text of manifest.tsv) has no hash or another hash for it.
+    # manifest (the text of manifest.tsv) has no hash or another hash for it,
+    # and "unused" for an SVG file in +dir+ that no tree names.
     def outdated(trees, manifest, dir = IMAGES)
       drawn = manifest.lines.to_h { |line| line.chomp.split("\t", 2) }
+      unused = Dir[File.join(dir, "*.svg")].map { |f| File.basename(f) } - trees.keys
       trees.filter_map do |name, tree|
         if !File.file?(File.join(dir, name)) then [ name, "MISSING" ]
         elsif drawn[name] != sha(tree) then [ name, "stale" ]
         end
-      end.to_h
+      end.to_h.merge(unused.sort.to_h { |name| [ name, "unused" ] })
     end
 
     def canonical(obj)
@@ -95,15 +95,15 @@ module SpecBuild
     attr_reader :db, :cdb
 
     # +reference+ (a SpecBuild::Reference) writes the generated markdown.
-    # With check: true (`just spec-check`) it never draws, and it fails after
-    # it writes the output when an image is missing or stale.
+    # With check: true (`just spec-check`) it draws the images into a
+    # temporary directory and leaves IMAGES alone. It fails after it writes the
+    # output when a committed image differs from its new drawing, or is
+    # missing, stale or unused (SpecBuild.outdated).
     def initialize(db, cdb, reference:, check: false)
       @db = db
       @cdb = cdb
       @reference = reference
       @check = check
-      @cli = check ? "" : ENV.fetch(CLI_ENV, "")
-      raise "#{CLI_ENV}=#{@cli} is not a file" unless @cli.empty? || File.file?(@cli)
     end
 
     def run
@@ -112,24 +112,20 @@ module SpecBuild
       blocks = SpecBuild.blocks(lines, expanded.map(&:origin))
       results = blocks.to_h { |b| [ SpecBuild.sha(b.statement), result(b) ] }
       trees = blocks.to_h { |b| [ SpecBuild.image_name(b.statement), tree(b) ] }
-      outdated = images(trees)
+      outdated = @check ? check_images(trees) : draw_images(trees)
       File.write(OUTPUT, knit(lines, blocks.to_h { |b| [ b.line, example(b, results.fetch(SpecBuild.sha(b.statement))) ] }))
       puts "wrote #{OUTPUT} (#{blocks.size} examples)"
       write_examples(results, trees)
       return unless @check && outdated.any?
 
       abort(<<~MSG)
-        These images do not show the current diagram tree (#{outdated.size}):
+        These images do not match the code (#{outdated.size}):
         #{outdated.map { |name, state| "  #{state} images/#{name}" }.join("\n")}
-        Redraw them: run `just spec` with #{CLI_ENV} set to the renderer CLI.
+        Redraw them: run `just spec`, and commit what it changes.
       MSG
     end
 
     private
-
-    def draw?
-      !@cli.empty?
-    end
 
     # The first LIMIT rows of the result of one example
     def result(block)
@@ -165,20 +161,10 @@ module SpecBuild
       text.gsub("|", "\\|")
     end
 
-    # Draws each diagram tree of +trees+ (image name => tree, with its counts).
-    # Without the renderer the committed images stay: nothing is deleted and
-    # nothing fails. It returns the images that are missing or stale
-    # (SpecBuild.outdated).
-    def images(trees)
-      unless draw?
-        manifest = File.file?(MANIFEST) ? File.read(MANIFEST) : ""
-        outdated = SpecBuild.outdated(trees, manifest)
-        trees.each_key do |name|
-          puts "not drawn (#{CLI_ENV} is not set, #{outdated.fetch(name, 'kept')}): images/#{name}"
-        end
-        return outdated
-      end
-
+    # Draws each diagram tree of +trees+ (image name => tree, with its counts)
+    # into IMAGES, removes the SVG files that no tree names, and writes
+    # MANIFEST. It returns {}: no image is left that does not match.
+    def draw_images(trees)
       FileUtils.mkdir_p(IMAGES)
       trees.each { |name, tree| draw(tree, File.join(IMAGES, name)) }
       stale = Dir[File.join(IMAGES, "*.svg")].reject { |f| trees.key?(File.basename(f)) }
@@ -186,6 +172,27 @@ module SpecBuild
       File.write(MANIFEST, trees.sort.map { |name, tree| "#{name}\t#{SpecBuild.sha(tree)}\n" }.join)
       puts "images: #{trees.size} drawn, #{stale.size} stale removed, #{MANIFEST} written"
       {}
+    end
+
+    # spec-check: draws each tree into a temporary directory and compares the
+    # drawing with the committed image, byte for byte. It returns the images
+    # that do not match: SpecBuild.outdated, plus "differs" for each committed
+    # image whose new drawing is another file.
+    def check_images(trees)
+      manifest = File.file?(MANIFEST) ? File.read(MANIFEST) : ""
+      outdated = SpecBuild.outdated(trees, manifest)
+      Dir.mktmpdir("conceptql-spec-images") do |dir|
+        trees.each do |name, tree|
+          committed = File.join(IMAGES, name)
+          next unless File.file?(committed)
+
+          drawn = File.join(dir, name)
+          draw(tree, drawn)
+          outdated[name] ||= "differs" unless FileUtils.identical?(committed, drawn)
+        end
+      end
+      puts "images: #{trees.size} drawn in a temporary directory, #{outdated.size} do not match images/"
+      outdated
     end
 
     def tree(block)
@@ -200,14 +207,13 @@ module SpecBuild
       node[:children].each { |child| check_counts(child, block) }
     end
 
-    # The renderer writes a temporary file beside +path+, and only a finished
-    # drawing replaces +path+. The renderer picks the format by the extension.
+    # The static SVG of +tree+ (ConceptQL::DiagramRenderer.render_static), with
+    # the counts on each stream and the options of each operator. It goes to a
+    # temporary file beside +path+ first, and only a finished drawing replaces
+    # +path+.
     def draw(tree, path)
       tmp = File.join(File.dirname(path), ".#{Process.pid}.#{File.basename(path)}")
-      _out, err, status = Open3.capture3("node", @cli, "render", "-", "-o", tmp, *CLI_FLAGS,
-                                         stdin_data: JSON.generate(tree))
-      raise "conceptql-diagram failed for #{path} (#{status}):\n#{err}" unless status.success?
-
+      File.write(tmp, ConceptQL::DiagramRenderer.render_static(tree, show_counts: true, show_options: true))
       File.rename(tmp, path)
     ensure
       FileUtils.rm_f(tmp)
