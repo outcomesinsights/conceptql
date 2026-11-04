@@ -76,7 +76,7 @@ module ConceptQL
                                       omopv5_vocabulary_id: VOCABULARY_ID,
                                       preferred_name: system.name,
                                       vocabulary_short_name: system.name,
-                                      vocabulary_long_name: system.long_name))
+                                      vocabulary_full_name: system.long_name))
           end
         end
       end

@@ -13,7 +13,7 @@ module ConceptQL
         omopv5_vocabulary_id
         domain
         vocabulary_short_name
-        vocabulary_long_name
+        vocabulary_full_name
       ].freeze
 
       METHODS.each do |meth|
@@ -69,12 +69,17 @@ module ConceptQL
         Formats.pattern(omopv5_id)
       end
 
+      # A vocabulary without a short name has none. It does not fall back to
+      # the long name: the operator's preferred_name falls back to the
+      # vocabulary ID (Operators::Vocabulary#preferred_name).
       def short_name
-        vocabulary_short_name || vocabulary_long_name
+        vocabulary_short_name
       end
 
+      # The column vocabulary_full_name of config/vocabularies.csv and of both
+      # lexicons (bead conceptql-txmo)
       def long_name
-        vocabulary_long_name || vocabulary_short_name
+        vocabulary_full_name || vocabulary_short_name
       end
 
       # A preferred_name in the hash wins: ms_drg and cms_drg select vocabulary
