@@ -4,7 +4,7 @@ title: Options and arguments that the metadata offers but the code ignores (equa
 status: resolved
 type: question
 created_at: 2026-11-04T00:12:41.925927+00:00
-updated_at: 2026-11-04T00:52:04.194022+00:00
+updated_at: 2026-11-04T01:26:03.685957+00:00
 resolved_at: 2026-11-04T00:52:04.194013+00:00
 resolution: "Shipped 2026-11-03: equal's within and first/last's group_by_date are unsupported_options (bead conceptql-jf79), and information_periods declares an optional codelist argument, Information Type Concept IDs (bead conceptql-oq4r; codelist, not integer, because it takes several IDs). Efficacy: minor tweak — the bead said integer; the agent chose codelist to match provenance and race. Open: group_by_date false now fails validation, because validate_unsupported_options treats false as set and the editor writes false when a checkbox is cleared."
 ---
@@ -52,3 +52,5 @@ yes, only one upstream". A second positional upstream becomes a validation error
 metadata reports 1/1.
 
 RULED 2026-11-03 (Ryan, through AskUserQuestion): items 1 and 2: mark unsupported. equal's within and first/last's group_by_date use unsupported_options: the editor stops offering them, and a saved statement that sets them gets a validation error. Item 3: declare the argument. information_periods declares an integer argument for information type concept IDs, so the editor offers the field.
+
+RULED 2026-11-03 (Ryan): "allow concept_code for information_periods, for options, use option 1". (1) information_periods accepts information type concept codes (such as PART D, which test/statements/information_periods/count_enrollment.json passes) as well as concept IDs. Today gdm.rb maps every argument with to_i, so PART D became concept ID 0 with no error. (2) group_by_date false is treated like a blank value: validate_unsupported_options skips false, so a cleared editor checkbox passes, and only true is an error.
