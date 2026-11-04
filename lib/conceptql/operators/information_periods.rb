@@ -11,8 +11,11 @@ module ConceptQL
       include ConceptQL::Behaviors::Timeless
 
       desc "Selects information periods: the spans of time in which the data has information about a patient, " \
-           "such as periods of insurance enrollment. Each argument is an information type concept ID, " \
-           "and with arguments, the operator selects only the information periods of those types."
+           "such as periods of insurance enrollment."
+      argument :information_types, label: "Information Type Concept IDs", type: :codelist,
+                                   meaning: "Zero or more information type concept IDs, as integers. " \
+                                            "With no IDs, the operator selects every information period. " \
+                                            "With IDs, it selects only the information periods whose type is one of them."
       returns "One record for each selected information period, from the information_periods table. " \
               "The type of the records is observation_period."
       example "All information periods", [ "information_periods" ]
