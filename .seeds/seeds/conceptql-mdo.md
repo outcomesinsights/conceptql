@@ -4,7 +4,7 @@ title: Move the ConceptQL spec, operator documentation and example results into 
 status: captured
 type: decision
 created_at: 2026-11-03T18:14:43.431733+00:00
-updated_at: 2026-11-04T00:13:26.108963+00:00
+updated_at: 2026-11-04T15:11:21.603939+00:00
 tags:
   - spec
   - migration
@@ -156,3 +156,10 @@ Epic conceptql-jwsv holds the conceptql work: conceptql-jwsv.1 (upstream counts)
 conceptql_spec's 2023 overhaul (commit e54ec7a) removed the casting section ("Type Conversion") and "Algorithms within Algorithms" on purpose. Bead conceptql-jwsv.4 ported both back from conceptql's old doc/spec.md.cql, because conceptql_spec bead conceptql_spec-vvf.1 listed them as gaps. That list was wrong on these two items. Both sections are removed again. The person and death operator sections keep the README's one sentence about an upstream operator, as conceptql_spec's README has it. No operator text, example or generated section may describe casting, type conversion, or an algorithm stored inside another algorithm.
 
 RULED 2026-11-03 (Ryan): occurrence, first and last take exactly one upstream: "about occurrence, yes, only one upstream". A second positional upstream is a validation error, and their metadata reports 1/1. This extends the stray-upstream ruling (bead conceptql-jwsv.1) to these three operators. Seed conceptql-ufn holds the related option rulings.
+
+UPDATE 2026-11-04: the conceptql work is done. Children conceptql-mdo.1 to conceptql-mdo.5 are resolved, and epics conceptql-jwsv (spec move) and conceptql-tf8u (renderer move) are closed. Two steps of the bead order remain:
+
+- Release conceptql. The step between 5 and 6, because JDE pins conceptql ~> 0.6.0 and help reaches JDE only through a release. On 2026-11-04, just release-check passed after commit d5de32fc (activesupport 8.1.4.1).
+- JDE changes its links (step 6). frontend/app/models/tree-node.js:388, the three diagram routes (algorithms/algorithm, algorithms/algorithm/edit, algorithms/new) and AGENTS.md:54 still link github.com/outcomesinsights/conceptql_spec.
+
+Resolve this seed when JDE has switched to the released gem.

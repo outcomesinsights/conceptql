@@ -1,10 +1,12 @@
 ---
 id: conceptql-oji
 title: Match codes case-sensitively unless vocabulary_formats declares a vocabulary case-insensitive? ("i16.5" should not pass)
-status: captured
+status: resolved
 type: question
 created_at: 2026-10-31T13:36:44.334573+00:00
-updated_at: 2026-10-31T13:48:53.928430+00:00
+updated_at: 2026-11-04T15:11:25.112343+00:00
+resolved_at: 2026-11-04T15:11:25.112334+00:00
+resolution: "Ruling b shipped by conceptql-9okk (commit da1917db, merged 2c5f415a). Codes match case-exactly unless the vocabulary_formats row declares (?i:...): lib/conceptql/lexicon/lexicon_strategy.rb:45 and Vocabularies::Formats.case_insensitive? (formats.rb:44). Provenance keywords match exactly. The pin config/vocabulary_formats.sha (dbd670ae) is on vocabulary_formats origin/main. Efficacy: minor tweak, an inherent unknown. Exact matching exposed snf's provenance code SNF, which 9okk fixed to snf."
 ---
 
 ## Question

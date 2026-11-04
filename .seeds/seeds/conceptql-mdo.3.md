@@ -1,11 +1,13 @@
 ---
 id: conceptql-mdo.3
 title: Example results and diagram trees as build artifacts at predictable paths, for the diagram editor's operator help
-status: captured
+status: resolved
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:51.179198+00:00
-updated_at: 2026-11-03T18:41:51.997067+00:00
+updated_at: 2026-11-04T15:11:23.448240+00:00
+resolved_at: 2026-11-04T15:11:23.448228+00:00
+resolution: 'Shipped by conceptql-jwsv.11. ConceptQL.spec_examples_path returns docs/spec/examples/ (lib/conceptql/paths.rb:61), which holds 36 <spec_id>.json files with title, statement, help, columns, rows and diagram tree. The gemspec ships them. just spec-check fails when one would change. Efficacy: no tweak needed.'
 tags:
   - spec
   - examples
