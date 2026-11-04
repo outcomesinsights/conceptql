@@ -28,6 +28,9 @@ All notable changes to this project will be documented in this file.
   (`conceptql-diagram/v1`, with counts). An application can show an operator's help from the
   file of that operator, without a database. `just spec` writes the files, and
   `just spec-check` fails when one of them would change.
+- `information_periods` declares its argument, Information Type Concept IDs (a comma-separated
+  list), so an editor can offer the field. The argument is optional: without it, the operator
+  still selects every information period.
 
 ### Changed
 
@@ -56,6 +59,13 @@ All notable changes to this project will be documented in this file.
   `trim_date_end`, `trim_date_start` and `read`. The first twelve take their operands from the
   `left` and `right` options, and `read` takes codes. Before, each of them ignored a positional
   upstream without a word.
+- `occurrence`, `first` and `last` accept exactly one upstream. A second positional upstream is
+  a validation error (`has multiple upstreams`). Before, they used only the first upstream and
+  dropped the others without a word.
+- `equal` no longer offers the `within` option, and `first` and `last` no longer offer
+  `group_by_date`. The options had no effect on these operators. A statement that sets one of
+  them fails validation (`unsupported option`). A blank value passes, but `group_by_date: false`
+  counts as set and fails.
 - The specification moved to `docs/spec/README.md`, and `ConceptQL.spec_path` returns it. Its
   text comes from the conceptql_spec repository, which held the published spec, and it replaces
   the copy that was `doc/spec.md`. `just spec` builds it from `docs/spec/README.cql.md` on the
@@ -83,9 +93,22 @@ All notable changes to this project will be documented in this file.
 
 - `min_upstreams` and `max_upstreams` in `ConceptQL.metadata` say how many positional
   upstreams pass validation (99 means no limit). Before, `min_upstreams` always equalled
-  `max_upstreams`. `union`, `first`, `last`, `co_reported` and `occurrence` served 99/99 and now
-  serve 1/99. `person` and `death` served 1/1 and now serve 0/1. `trim_date_end` and
-  `trim_date_start` served 1/1 and now serve 0/0.
+  `max_upstreams`. `union` and `co_reported` served 99/99 and now serve 1/99. `first`, `last`
+  and `occurrence` served 99/99 and now serve 1/1. `person` and `death` served 1/1 and now
+  serve 0/1. `trim_date_end` and `trim_date_start` served 1/1 and now serve 0/0.
+
+- `race`: an Unknown argument selected no patients. It now selects the patients with no race or
+  race concept ID 0. A race concept ID argument now also selects the more detailed races of
+  `config/race.yml`, as a race name does. Before, that was missed, which showed only with the
+  GDM vocabularies.
+
+- `ethnicity`: Unknown now also selects the patients with no ethnicity, not only ethnicity
+  concept ID 0.
+
+- Operator help texts that disagreed with the code: the input hints of `within` and `at_least`
+  (the temporal operators and `occurrence`), of `time_window`'s `start` and `end`, and of
+  `episode`'s `gap_of`; the old `desc` of the `TrimDate` base class; and the summary `desc` of
+  the vocabulary operators.
 
 - A vocabulary whose domain is blank has no domain, so its operators select
   `condition_occurrence` records. The GDM vocabulary table (`gdm_vocabs.vocabularies` in the

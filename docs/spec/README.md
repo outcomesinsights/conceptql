@@ -282,7 +282,7 @@ Selection operators select records from the database. For example, a search for 
 
 ### `Vocabulary` Operator
 
-Selects records based on the given vocabulary.
+Selects the records whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. Each vocabulary has its own operator, and a few operators search several vocabularies at once.
 
 - **Upstream:** none.
 - **Arguments:**
@@ -459,7 +459,7 @@ Selects the patients with the given races.
 
 - **Upstream:** none.
 - **Arguments:**
-  - `races` (codelist): One or more race names, such as White, or race concept IDs. A name matches the concepts with that name in any vocabulary, and case does not matter. The operator also selects the more detailed races under each named race, and each concept that is a kind of one of the race concepts through an is-a relationship.
+  - `races` (codelist): One or more race names, such as White, or race concept IDs. A name matches the concepts with that name in any vocabulary, and case does not matter. The operator also selects the more detailed races under each given race, and each concept that is a kind of one of the race concepts through an is-a relationship. A value that contains Unknown also selects the patients who have no race or race concept ID 0.
 - **Returns:** One person record for each patient whose race is one of the given races. The start_date and the end_date of each record are the patient's birth date.
 
 ______________________________________________________________________
@@ -493,7 +493,7 @@ Selects the patients with the given ethnicities.
 
 - **Upstream:** none.
 - **Arguments:**
-  - `ethnicity` (string, one of `Hispanic or Latino`, `Not Hispanic or Latino`): One or more ethnicities. A value that starts with Hispanic selects the Hispanic or Latino patients, and a value that starts with Not Hispanic selects the patients who are not Hispanic or Latino. A value that contains Unknown selects the patients whose ethnicity concept ID is 0. Case does not matter, and any other value selects no patients.
+  - `ethnicity` (string, one of `Hispanic or Latino`, `Not Hispanic or Latino`): One or more ethnicities. A value that starts with Hispanic selects the Hispanic or Latino patients, and a value that starts with Not Hispanic selects the patients who are not Hispanic or Latino. A value that contains Unknown selects the patients who have no ethnicity or ethnicity concept ID 0. Case does not matter, and any other value selects no patients.
 - **Returns:** One person record for each patient whose ethnicity is one of the given ethnicities. The start_date and the end_date of each record are the patient's birth date.
 
 ______________________________________________________________________
@@ -625,9 +625,11 @@ ______________________________________________________________________
 
 #### `Information Periods` Operator
 
-Selects information periods: the spans of time in which the data has information about a patient, such as periods of insurance enrollment. Each argument is an information type concept ID, and with arguments, the operator selects only the information periods of those types.
+Selects information periods: the spans of time in which the data has information about a patient, such as periods of insurance enrollment.
 
 - **Upstream:** none.
+- **Arguments:**
+  - `information_types` (codelist): Zero or more information type concept IDs, as integers. With no IDs, the operator selects every information period. With IDs, it selects only the information periods whose type is one of them.
 - **Returns:** One record for each selected information period, from the information_periods table. The type of the records is observation_period.
 
 ______________________________________________________________________
@@ -956,7 +958,7 @@ For each patient, we may want only the chronologically first or last record, or 
 
 For each person, orders the records by start_date and passes along the record at the given position. A positive position counts from the earliest record and a negative one from the most recent record.
 
-- **Upstream:** one or more operators.
+- **Upstream:** one operator.
 - **Arguments:**
   - `occurrence` (integer): The position of the record to pass along, as an integer. A positive number counts from the earliest record, so 1 is the first record and 2 is the second. A negative number counts from the most recent record, so -1 is the last record and -3 is the third from the last. 0 selects nothing.
 - **Options:**
@@ -1021,9 +1023,7 @@ ______________________________________________________________________
 
 For each person, passes along the record with the earliest start_date.
 
-- **Upstream:** one or more operators.
-- **Options:**
-  - `group_by_date` (boolean): Treats the records of a person on one start_date as one occurrence. It does not change the result of first, which passes along one record of the earliest date either way.
+- **Upstream:** one operator.
 - **Returns:** One record per person: the upstream record with the earliest start_date. When several records have that start_date, the one with the lowest criterion_id.
 
 ______________________________________________________________________
@@ -1051,15 +1051,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-`first` is the same as `["occurrence", 1, ...]`. It does not accept `at_least` or `within`.
+`first` is the same as `["occurrence", 1, ...]`. It does not accept `at_least`, `within` or `group_by_date`.
 
 ### `Last` Operator
 
 For each person, passes along the record with the most recent start_date.
 
-- **Upstream:** one or more operators.
-- **Options:**
-  - `group_by_date` (boolean): Treats the records of a person on one start_date as one occurrence. It does not change the result of last, which passes along one record of the latest date either way.
+- **Upstream:** one operator.
 - **Returns:** One record per person: the upstream record with the latest start_date. When several records have that start_date, the one with the highest criterion_id.
 
 ______________________________________________________________________
@@ -1087,7 +1085,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-`last` is the same as `["occurrence", -1, ...]`. It does not accept `at_least` or `within`.
+`last` is the same as `["occurrence", -1, ...]`. It does not accept `at_least`, `within` or `group_by_date`.
 
 ## Date Literals
 
@@ -1720,7 +1718,7 @@ ______________________________________________________________________
 
 ## Temporal Comparison Operator Options
 
-It can be hard to reason with [`time_window`](#time-window-operator) when you use temporal comparison operators. The options `within` and `at_least` describe some common temporal relationships more directly. Every temporal comparison operator takes `within`, and `before` and `after` also take `at_least`. The reference section of each operator says what the options do for it.
+It can be hard to reason with [`time_window`](#time-window-operator) when you use temporal comparison operators. The options `within` and `at_least` describe some common temporal relationships more directly. Every temporal comparison operator except `equal` takes `within`, and `before` and `after` also take `at_least`. The reference section of each operator says what the options do for it.
 
 When `before` or `after` has the `within` option, it compares each LHR with every RHR of the patient, not only with the patient's last or earliest RHR.
 
@@ -2379,8 +2377,6 @@ For each patient, keeps the left-hand records whose value_as_number equals the v
 - **Operands:**
   - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
   - `right` (required): The right-hand stream. The operator compares the left-hand records with these records and does not pass them on.
-- **Options:**
-  - `within` (string): Equal does not compare dates, so this option has no effect.
 - **Returns:** The left-hand records that have a right-hand record of the same patient with the same value_as_number, each record once. Left-hand records without a value_as_number (NULL) are not returned. The right-hand records are not returned.
 
 ______________________________________________________________________
@@ -2495,7 +2491,7 @@ The build writes this table from the metadata of the operators. It has one row f
 
 | Operator                                                       | Jigsaw category          | What it does                                                                                                                                                                                                                                                                                           |
 | -------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`Vocabulary` Operator](#vocabulary-operator)                  | Select by Clinical Codes | Selects records based on the given vocabulary.                                                                                                                                                                                                                                                         |
+| [`Vocabulary` Operator](#vocabulary-operator)                  | Select by Clinical Codes | Selects the records whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. Each vocabulary has its own operator, and a few operators search several vocabularies at once.                                                                                 |
 | [`gender`](#gender-operator)                                   | Select by Property       | Selects the patients with the given genders.                                                                                                                                                                                                                                                           |
 | [`race`](#race-operator)                                       | Select by Property       | Selects the patients with the given races.                                                                                                                                                                                                                                                             |
 | [`ethnicity`](#ethnicity-operator)                             | Select by Property       | Selects the patients with the given ethnicities.                                                                                                                                                                                                                                                       |
@@ -2505,7 +2501,7 @@ The build writes this table from the metadata of the operators. It has one row f
 | [`date_range`](#date-range-operator)                           | Select by Property       | Makes one person record for each patient, with the given start_date and end_date. Use it to compare other records with a fixed range of dates.                                                                                                                                                         |
 | [`person`](#person-operator)                                   | Get Related Data         | Selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream.                                                                                                                                                                                   |
 | [`death`](#death-operator)                                     | Get Related Data         | Selects every death record. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream.                                                                                                                                                                |
-| [`information_periods`](#information-periods-operator)         | Get Related Data         | Selects information periods: the spans of time in which the data has information about a patient, such as periods of insurance enrollment. Each argument is an information type concept ID, and with arguments, the operator selects only the information periods of those types.                      |
+| [`information_periods`](#information-periods-operator)         | Get Related Data         | Selects information periods: the spans of time in which the data has information about a patient, such as periods of insurance enrollment.                                                                                                                                                             |
 | [`recall`](#recall-operator)                                   | Get Related Data         | Passes on the records of the operator in the statement that has the given label. Use it to break a complex statement into parts, or to use a stream of records more than once.                                                                                                                         |
 | [`time_window`](#time-window-operator)                         | Modify Data              | Moves the start_date and the end_date of each record. Use it to shift or widen a record's dates before you compare them with other records.                                                                                                                                                            |
 | [`episode`](#episode-operator)                                 | Modify Data              | Merges each patient's records into episodes: spans of time in which the records are close together. For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug.                                                                                            |
