@@ -595,12 +595,15 @@ module ConceptQL
         end
       end
 
-      # A blank value counts as not set, as in Occurrence#at_least_option
+      # A blank value counts as not set, as in Occurrence#at_least_option.
+      # So does false: the Jigsaw diagram editor writes false when a user
+      # clears a checkbox (seed conceptql-ufn).
       def validate_unsupported_options(*opts)
         opts.each do |opt|
-          next if options[opt].to_s.strip.empty?
+          value = options[opt]
+          next if value == false || value.to_s.strip.empty?
 
-          add_error("unsupported option", opt.to_s, options[opt])
+          add_error("unsupported option", opt.to_s, value)
         end
       end
 
