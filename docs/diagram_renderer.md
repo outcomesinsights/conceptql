@@ -20,6 +20,10 @@ Ruby output with those files: the same elements in the same order, the same attr
 numbers equal to 6 decimal places (`test/diagram_renderer/svg_comparison.rb`). When the two
 disagree, the Ruby code is wrong. Never edit a reference to make a test pass.
 
+A reference holds each `<style>` text as its digest (`sha256:<hex>`). The digests are those of
+the gem's `diagram.css`. When the editor's page rules were removed from it, only these digests
+changed in the references.
+
 `just test-diagram` runs these tests on the host. They need no database, and they need resvg
 0.33.0 exactly (`ConceptQL::DiagramRenderer::Resvg::VERSION`), which `mise.toml` pins and
 `just setup` installs. resvg 0.34 measures the bounding box without the stroke, so the viewBox of
@@ -75,6 +79,7 @@ drawn as it is.
 - `lock_nodes` adds the `is-new` class, which hides the "+" insert buttons.
 - `summary` adds the fixed `viewBox="0 0 800 500"` of the summary preview.
 - `styles` is the CSS of the `<style>` element. The default is the configuration's `styles_path`.
+  In a browser page, the rules of an inline SVG's `<style>` apply to the whole page.
 - `icons` is the sprite markup, copied into a hidden `<div>`. The default is the content of the
   configuration's `sprite_path` (the content of its `<div class="operators">` block, if it has
   one). The copy leaves out `xmlns="http://www.w3.org/2000/svg"`, as the browser's serializer
@@ -109,7 +114,9 @@ A host needs no configure call:
 - `operators.svg`: the operator icon `<symbol>`s. It is the content of the hidden
   `<div class="operators">` block of the editor's `frontend/index.html`, byte for byte, because
   the app references hash the sprite as the browser serializes it.
-- `diagram.css`: the diagram CSS (the editor's `lib/diagram_styles.css`).
+- `diagram.css`: the diagram CSS. It holds the rules of the editor's `lib/diagram_styles.css`
+  whose selectors can match an element that the renderer draws. The editor's page rules (for
+  `html`, `body`, `h1`, `.sidebar` and the like) are left out.
 - `fonts/Roboto-Normal-Latin.woff2`, `fonts/Roboto-Italic-Latin.woff2`: the Roboto webfonts that
   the SVG embeds.
 - `fonts/Roboto-400.ttf`, `fonts/Roboto-700.ttf`, `fonts/Roboto-Italic-400.ttf`: the Roboto files

@@ -15,6 +15,10 @@ All notable changes to this project will be documented in this file.
   none of the renderer until its first use. `render_static` and `png` run the resvg program,
   version 0.33.0. `just test-diagram` runs the renderer's tests against the
   editor's JavaScript references, and `just ci` runs it. See `docs/diagram_renderer.md`.
+  - The renderer's diagram CSS (`assets/diagram/diagram.css`) holds only the rules of the
+    editor's stylesheet that can match an element of a diagram. The editor's page rules (for
+    `html`, `body`, `h1`, `.sidebar` and the like) are left out. In a page, the `<style>` of the
+    in-app SVG applies to the whole page, so a page that used those rules must supply them.
 - An operator class can say `hidden`. A hidden operator still runs, but `ConceptQL.metadata`
   leaves it out. An operator is not hidden unless it says so, and a subclass does not inherit
   the mark. `invalid`, `from`, `numeric`, `dedup`, `sum` and `count` are hidden. Before,
