@@ -1,0 +1,19 @@
+{
+  "name": "first",
+  "base": "temporal",
+  "humanName": "First",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["412"],
+      "children": []
+    }
+  ]
+}

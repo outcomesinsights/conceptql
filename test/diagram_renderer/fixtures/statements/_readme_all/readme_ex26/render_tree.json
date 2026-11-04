@@ -1,0 +1,31 @@
+{
+  "name": "during",
+  "base": "filter",
+  "humanName": "During",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["412"],
+      "children": []
+    },
+    {
+      "name": "date_range",
+      "base": "selection",
+      "humanName": "Date Range",
+      "outputTypes": ["person"],
+      "parameters": {
+        "start": "2010-01-01",
+        "end": "2010-12-31"
+      },
+      "values": [],
+      "children": []
+    }
+  ]
+}

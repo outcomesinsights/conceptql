@@ -1,0 +1,47 @@
+{
+  "name": "during",
+  "base": "filter",
+  "humanName": "During",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "union",
+      "base": "set",
+      "humanName": "Union",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["250.00", "250.02"],
+          "children": []
+        },
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["401.9"],
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "condition_type",
+      "base": "selection",
+      "humanName": "Condition Type",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["inpatient"],
+      "children": []
+    }
+  ]
+}

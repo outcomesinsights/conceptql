@@ -1,0 +1,9 @@
+{
+  "name": "hospice",
+  "base": "selection",
+  "humanName": "Hospice",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": []
+}

@@ -1,0 +1,9 @@
+{
+  "name": "person",
+  "base": "cast",
+  "humanName": "Person",
+  "outputTypes": ["person"],
+  "parameters": {},
+  "values": [],
+  "children": []
+}

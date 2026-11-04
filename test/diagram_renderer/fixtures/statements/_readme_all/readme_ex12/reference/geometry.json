@@ -1,0 +1,53 @@
+{
+  "nodes": {
+    "root": {
+      "name": "root",
+      "depth": 0,
+      "dataIndex": 0,
+      "x": 0,
+      "y": 0,
+      "nodePosition": {
+        "x": -20,
+        "y": -20
+      },
+      "nodeTitle": null,
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "condition_occurrence"
+    },
+    "n0": {
+      "name": "snf",
+      "depth": 1,
+      "dataIndex": 1,
+      "x": 0,
+      "y": 140,
+      "nodePosition": {
+        "x": -20,
+        "y": -160
+      },
+      "nodeTitle": "Snf",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "condition_occurrence"
+    }
+  },
+  "links": {
+    "n0": {
+      "source": "root",
+      "connectorPath": "M0,-120v10L0.01,0",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -66
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": "url(#gradient-placeholder)"
+        }
+      ]
+    }
+  },
+  "recalls": {}
+}

@@ -1,0 +1,42 @@
+{
+  "name": "first",
+  "base": "temporal",
+  "humanName": "First",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "union",
+      "base": "set",
+      "humanName": "Union",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {
+            "label": "diabetes"
+          },
+          "values": ["250.00"],
+          "children": []
+        },
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {
+            "label": "hypertension"
+          },
+          "values": ["401.9"],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

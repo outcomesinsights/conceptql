@@ -1,0 +1,88 @@
+{
+  "nodes": {
+    "root": {
+      "name": "root",
+      "depth": 0,
+      "dataIndex": 0,
+      "x": 0,
+      "y": 0,
+      "nodePosition": {
+        "x": -20,
+        "y": -20
+      },
+      "nodeTitle": null,
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "procedure_occurrence"
+    },
+    "n0": {
+      "name": "first",
+      "depth": 1,
+      "dataIndex": 1,
+      "x": 0,
+      "y": 140,
+      "nodePosition": {
+        "x": -20,
+        "y": -160
+      },
+      "nodeTitle": "First",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "procedure_occurrence"
+    },
+    "n0.0": {
+      "name": "cpt",
+      "depth": 2,
+      "dataIndex": 2,
+      "x": 0,
+      "y": 280,
+      "nodePosition": {
+        "x": -20,
+        "y": -300
+      },
+      "nodeTitle": "CPT",
+      "descriptionLines": [
+        "99214"
+      ],
+      "descriptionLinesWithOptions": [
+        "99214"
+      ],
+      "pointColor": "procedure_occurrence"
+    }
+  },
+  "links": {
+    "n0": {
+      "source": "root",
+      "connectorPath": "M0,-120v10L0.01,0",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -66
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": "url(#gradient-placeholder)"
+        }
+      ]
+    },
+    "n0.0": {
+      "source": "n0",
+      "connectorPath": "M0,-280v30L0.01,-160v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -206
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    }
+  },
+  "recalls": {}
+}

@@ -1,0 +1,57 @@
+{
+  "nodes": {
+    "root": {
+      "name": "root",
+      "depth": 0,
+      "dataIndex": 0,
+      "x": 0,
+      "y": 0,
+      "nodePosition": {
+        "x": -20,
+        "y": -20
+      },
+      "nodeTitle": null,
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "person"
+    },
+    "n0": {
+      "name": "gender",
+      "depth": 1,
+      "dataIndex": 1,
+      "x": 0,
+      "y": 140,
+      "nodePosition": {
+        "x": -20,
+        "y": -160
+      },
+      "nodeTitle": "Gender",
+      "descriptionLines": [
+        "Male"
+      ],
+      "descriptionLinesWithOptions": [
+        "Male"
+      ],
+      "pointColor": "person"
+    }
+  },
+  "links": {
+    "n0": {
+      "source": "root",
+      "connectorPath": "M0,-120v10L0.01,0",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -66
+      },
+      "streams": [
+        {
+          "type": "person",
+          "streamOffset": 0,
+          "sourceGradient": "url(#gradient-placeholder)"
+        }
+      ]
+    }
+  },
+  "recalls": {}
+}

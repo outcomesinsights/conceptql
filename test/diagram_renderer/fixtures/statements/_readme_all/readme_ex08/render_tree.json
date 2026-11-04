@@ -1,0 +1,9 @@
+{
+  "name": "ethnicity",
+  "base": "selection",
+  "humanName": "Ethnicity",
+  "outputTypes": ["person"],
+  "parameters": {},
+  "values": ["Hispanic"],
+  "children": []
+}

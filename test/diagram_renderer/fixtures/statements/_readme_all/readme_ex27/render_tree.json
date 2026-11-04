@@ -1,0 +1,31 @@
+{
+  "name": "contains",
+  "base": "filter",
+  "humanName": "Contains",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["412"],
+      "children": []
+    },
+    {
+      "name": "date_range",
+      "base": "selection",
+      "humanName": "Date Range",
+      "outputTypes": ["person"],
+      "parameters": {
+        "start": "2010-06-22",
+        "end": "2010-06-22"
+      },
+      "values": [],
+      "children": []
+    }
+  ]
+}

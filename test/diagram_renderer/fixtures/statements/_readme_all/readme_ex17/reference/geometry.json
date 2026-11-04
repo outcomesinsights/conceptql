@@ -1,0 +1,163 @@
+{
+  "nodes": {
+    "root": {
+      "name": "root",
+      "depth": 0,
+      "dataIndex": 0,
+      "x": 0,
+      "y": 0,
+      "nodePosition": {
+        "x": -20,
+        "y": -20
+      },
+      "nodeTitle": null,
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "mixed"
+    },
+    "n0": {
+      "name": "union",
+      "depth": 1,
+      "dataIndex": 1,
+      "x": 0,
+      "y": 140,
+      "nodePosition": {
+        "x": -20,
+        "y": -160
+      },
+      "nodeTitle": "Union",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "mixed"
+    },
+    "n0.0": {
+      "name": "icd9",
+      "depth": 2,
+      "dataIndex": 2,
+      "x": -200,
+      "y": 280,
+      "nodePosition": {
+        "x": -220,
+        "y": -300
+      },
+      "nodeTitle": "ICD-9 CM",
+      "descriptionLines": [
+        "412"
+      ],
+      "descriptionLinesWithOptions": [
+        "412"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.1": {
+      "name": "icd9",
+      "depth": 2,
+      "dataIndex": 3,
+      "x": 0,
+      "y": 280,
+      "nodePosition": {
+        "x": -20,
+        "y": -300
+      },
+      "nodeTitle": "ICD-9 CM",
+      "descriptionLines": [
+        "250.01"
+      ],
+      "descriptionLinesWithOptions": [
+        "250.01"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.2": {
+      "name": "cpt",
+      "depth": 2,
+      "dataIndex": 4,
+      "x": 200,
+      "y": 280,
+      "nodePosition": {
+        "x": 180,
+        "y": -300
+      },
+      "nodeTitle": "CPT",
+      "descriptionLines": [
+        "99214"
+      ],
+      "descriptionLinesWithOptions": [
+        "99214"
+      ],
+      "pointColor": "procedure_occurrence"
+    }
+  },
+  "links": {
+    "n0": {
+      "source": "root",
+      "connectorPath": "M0,-120v10L0.01,0",
+      "linkOffset": -2.5,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -66
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": "url(#gradient-placeholder)"
+        },
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 5,
+          "sourceGradient": "url(#gradient-placeholder)"
+        }
+      ]
+    },
+    "n0.0": {
+      "source": "n0",
+      "connectorPath": "M-200,-280v30L0.01,-160v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -100,
+        "y": -206
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1": {
+      "source": "n0",
+      "connectorPath": "M0,-280v30L0.01,-160v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -206
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.2": {
+      "source": "n0",
+      "connectorPath": "M200,-280v30L0.01,-160v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 100,
+        "y": -206
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    }
+  },
+  "recalls": {}
+}

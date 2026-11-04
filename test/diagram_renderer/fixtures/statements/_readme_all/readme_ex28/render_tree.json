@@ -1,0 +1,31 @@
+{
+  "name": "any_overlap",
+  "base": "filter",
+  "humanName": "Any Overlap",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["412"],
+      "children": []
+    },
+    {
+      "name": "date_range",
+      "base": "selection",
+      "humanName": "Date Range",
+      "outputTypes": ["person"],
+      "parameters": {
+        "start": "2010-06-01",
+        "end": "2010-06-30"
+      },
+      "values": [],
+      "children": []
+    }
+  ]
+}

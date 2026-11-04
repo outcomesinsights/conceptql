@@ -1,0 +1,1287 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="vis" height="100%" width="100%"><style>/*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
+/**
+ * 1. Change the default font family in all browsers (opinionated).
+ * 2. Correct the line height in all browsers.
+ * 3. Prevent adjustments of font size after orientation changes in
+ *    IE on Windows Phone and in iOS.
+ */
+/* Document
+   ========================================================================== */
+/* line 13, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+html {
+  font-family: sans-serif;
+  /* 1 */
+  line-height: 1.15;
+  /* 2 */
+  -ms-text-size-adjust: 100%;
+  /* 3 */
+  -webkit-text-size-adjust: 100%;
+  /* 3 */
+}
+
+/* Sections
+   ========================================================================== */
+/**
+ * Remove the margin in all browsers (opinionated).
+ */
+/* line 27, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+body {
+  margin: 0;
+}
+
+/**
+ * Add the correct display in IE 9-.
+ */
+/* line 35, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+article,
+aside,
+footer,
+header,
+nav,
+section {
+  display: block;
+}
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+/* line 49, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/* Grouping content
+   ========================================================================== */
+/**
+ * Add the correct display in IE 9-.
+ * 1. Add the correct display in IE.
+ */
+/* line 62, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+figcaption,
+figure,
+main {
+  /* 1 */
+  display: block;
+}
+
+/**
+ * Add the correct margin in IE 8.
+ */
+/* line 72, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+figure {
+  margin: 1em 40px;
+}
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+/* line 81, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+hr {
+  box-sizing: content-box;
+  /* 1 */
+  height: 0;
+  /* 1 */
+  overflow: visible;
+  /* 2 */
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+/* line 92, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+pre {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
+}
+
+/* Text-level semantics
+   ========================================================================== */
+/**
+ * 1. Remove the gray background on active links in IE 10.
+ * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.
+ */
+/* line 105, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+a {
+  background-color: transparent;
+  /* 1 */
+  -webkit-text-decoration-skip: objects;
+  /* 2 */
+}
+
+/**
+ * Remove the outline on focused links when they are also active or hovered
+ * in all browsers (opinionated).
+ */
+/* line 115, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+a:active,
+a:hover {
+  outline-width: 0;
+}
+
+/**
+ * 1. Remove the bottom border in Firefox 39-.
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+/* line 125, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+abbr[title] {
+  border-bottom: none;
+  /* 1 */
+  text-decoration: underline;
+  /* 2 */
+  text-decoration: underline dotted;
+  /* 2 */
+}
+
+/**
+ * Prevent the duplicate application of `bolder` by the next rule in Safari 6.
+ */
+/* line 135, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+b,
+strong {
+  font-weight: inherit;
+}
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+/* line 144, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+b,
+strong {
+  font-weight: bolder;
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+/* line 154, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
+}
+
+/**
+ * Add the correct font style in Android 4.3-.
+ */
+/* line 165, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+dfn {
+  font-style: italic;
+}
+
+/**
+ * Add the correct background and color in IE 9-.
+ */
+/* line 173, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+mark {
+  background-color: #ff0;
+  color: #000;
+}
+
+/**
+ * Add the correct font size in all browsers.
+ */
+/* line 182, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+small {
+  font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+/* line 191, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+/* line 199, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+sub {
+  bottom: -0.25em;
+}
+
+/* line 203, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+sup {
+  top: -0.5em;
+}
+
+/* Embedded content
+   ========================================================================== */
+/**
+ * Add the correct display in IE 9-.
+ */
+/* line 214, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+audio,
+video {
+  display: inline-block;
+}
+
+/**
+ * Add the correct display in iOS 4-7.
+ */
+/* line 223, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+ * Remove the border on images inside links in IE 10-.
+ */
+/* line 232, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+img {
+  border-style: none;
+}
+
+/**
+ * Hide the overflow in IE.
+ */
+/* line 240, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Forms
+   ========================================================================== */
+/**
+ * 1. Change the font styles in all browsers (opinionated).
+ * 2. Remove the margin in Firefox and Safari.
+ */
+/* line 252, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: sans-serif;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  line-height: 1.15;
+  /* 1 */
+  margin: 0;
+  /* 2 */
+}
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ */
+/* line 268, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+button,
+input {
+  /* 1 */
+  overflow: visible;
+}
+
+/**
+ * Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text transform in Firefox.
+ */
+/* line 278, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+button,
+select {
+  /* 1 */
+  text-transform: none;
+}
+
+/**
+ * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`
+ *    controls in Android 4.
+ * 2. Correct the inability to style clickable types in iOS and Safari.
+ */
+/* line 289, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+button,
+html [type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */
+}
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+/* line 300, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+/* line 312, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+/**
+ * Change the border, margin, and padding in all browsers (opinionated).
+ */
+/* line 323, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+/* line 336, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+legend {
+  box-sizing: border-box;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  display: table;
+  /* 1 */
+  max-width: 100%;
+  /* 1 */
+  padding: 0;
+  /* 3 */
+  white-space: normal;
+  /* 1 */
+}
+
+/**
+ * 1. Add the correct display in IE 9-.
+ * 2. Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+/* line 350, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+progress {
+  display: inline-block;
+  /* 1 */
+  vertical-align: baseline;
+  /* 2 */
+}
+
+/**
+ * Remove the default vertical scrollbar in IE.
+ */
+/* line 359, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+textarea {
+  overflow: auto;
+}
+
+/**
+ * 1. Add the correct box sizing in IE 10-.
+ * 2. Remove the padding in IE 10-.
+ */
+/* line 368, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+}
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+/* line 378, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Correct the odd appearance in Chrome and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+/* line 388, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+[type="search"] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
+}
+
+/**
+ * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.
+ */
+/* line 397, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * 1. Correct the inability to style clickable types in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+/* line 407, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
+}
+
+/* Interactive
+   ========================================================================== */
+/*
+ * Add the correct display in IE 9-.
+ * 1. Add the correct display in Edge, IE, and Firefox.
+ */
+/* line 420, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+details,
+menu {
+  display: block;
+}
+
+/*
+ * Add the correct display in all browsers.
+ */
+/* line 429, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+summary {
+  display: list-item;
+}
+
+/* Scripting
+   ========================================================================== */
+/**
+ * Add the correct display in IE 9-.
+ */
+/* line 440, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+canvas {
+  display: inline-block;
+}
+
+/**
+ * Add the correct display in IE.
+ */
+/* line 448, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+template {
+  display: none;
+}
+
+/* Hidden
+   ========================================================================== */
+/**
+ * Add the correct display in IE 10-.
+ */
+/* line 459, frontend/app/styles/mvcss/modules/../_01_reset.scss */
+[hidden] {
+  display: none;
+}
+
+/* line 8, frontend/app/styles/mvcss/modules/../_04_base.sass */
+html {
+  background: #e0dcdf;
+  color: #40373f;
+  font: normal 15px/1.5 "Roboto", sans-serif;
+  overflow: hidden;
+}
+
+/* line 14, frontend/app/styles/mvcss/modules/../_04_base.sass */
+body {
+  font-size: 90%;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 67em) {
+  /* line 14, frontend/app/styles/mvcss/modules/../_04_base.sass */
+  body {
+    font-size: 100%;
+  }
+}
+
+/* line 20, frontend/app/styles/mvcss/modules/../_04_base.sass */
+[aria-hidden="true"] {
+  display: none;
+}
+
+/* line 25, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.app {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-top: 60px;
+}
+
+@media screen and (min-width: 67em) {
+  /* line 25, frontend/app/styles/mvcss/modules/../_04_base.sass */
+  .app {
+    padding-left: 60px;
+    padding-top: 0;
+  }
+}
+
+/* line 37, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.app.is-fullscreen {
+  background: #f4f2f3;
+  padding-top: 0;
+}
+
+/* line 41, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.app.is-standalone {
+  padding-left: 0;
+}
+
+/* line 46, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.app-content {
+  display: flex;
+  flex: 1 1 100%;
+}
+
+/* line 52, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.main {
+  background: #f4f2f3;
+  flex: 1 1;
+  order: 1;
+  position: relative;
+}
+
+/* line 58, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.sidebar + .main {
+  margin-right: 40px;
+}
+
+@media screen and (min-width: 67em) {
+  /* line 58, frontend/app/styles/mvcss/modules/../_04_base.sass */
+  .sidebar + .main {
+    margin-right: 0;
+  }
+}
+
+/* line 66, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.is-fullscreen .main {
+  border: 0;
+  box-shadow: none;
+}
+
+/* line 71, frontend/app/styles/mvcss/modules/../_04_base.sass */
+.is-sidebar .sidebar + .main {
+  margin-right: 0;
+}
+
+/* line 80, frontend/app/styles/mvcss/modules/../_04_base.sass */
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
+/* line 83, frontend/app/styles/mvcss/modules/../_04_base.sass */
+h1, .h1 {
+  font: bold 180.8%/1.3 "Roboto", sans-serif;
+  margin-bottom: 20px;
+}
+
+@media screen and (min-width: 40em) {
+  /* line 83, frontend/app/styles/mvcss/modules/../_04_base.sass */
+  h1, .h1 {
+    font-size: 205.8%;
+  }
+}
+
+/* line 89, frontend/app/styles/mvcss/modules/../_04_base.sass */
+h2, .h2 {
+  font: bold 127.2%/1.3 "Roboto", sans-serif;
+  margin-bottom: 20px;
+}
+
+/* line 93, frontend/app/styles/mvcss/modules/../_04_base.sass */
+h3, .h3 {
+  font: bold 100%/1.3 "Roboto", sans-serif;
+  margin-bottom: 20px;
+}
+
+/* line 97, frontend/app/styles/mvcss/modules/../_04_base.sass */
+h4, .h4 {
+  color: #817980;
+  font-size: 73.3%;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin-bottom: 2.5px;
+  text-transform: uppercase;
+}
+
+/* line 107, frontend/app/styles/mvcss/modules/../_04_base.sass */
+ol, ul {
+  margin: 0 0 20px;
+  padding: 0 0 0 15px;
+}
+
+/* line 111, frontend/app/styles/mvcss/modules/../_04_base.sass */
+li {
+  margin: 0 0 5px;
+}
+
+/* line 114, frontend/app/styles/mvcss/modules/../_04_base.sass */
+p {
+  margin: 0 0 20px;
+}
+
+/* line 119, frontend/app/styles/mvcss/modules/../_04_base.sass */
+fieldset {
+  border: 0;
+  margin: 0 0 20px;
+  min-width: auto;
+  padding: 0;
+}
+
+/* line 125, frontend/app/styles/mvcss/modules/../_04_base.sass */
+figure {
+  margin: 0;
+}
+
+/* line 128, frontend/app/styles/mvcss/modules/../_04_base.sass */
+button, input, select, table, textarea {
+  font-family: inherit;
+}
+
+/* line 131, frontend/app/styles/mvcss/modules/../_04_base.sass */
+pre {
+  background: rgba(255, 255, 255, 0.5);
+  color: #817980;
+  font-family: monospace;
+  margin-bottom: 0;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+/* line 141, frontend/app/styles/mvcss/modules/../_04_base.sass */
+svg {
+  display: block;
+}
+
+/* line 148, frontend/app/styles/mvcss/modules/../_04_base.sass */
+a {
+  color: #7193cd;
+  text-decoration: none;
+}
+
+/* line 151, frontend/app/styles/mvcss/modules/../_04_base.sass */
+a:hover, a:focus {
+  color: #5f6493;
+}
+
+/* line 157, frontend/app/styles/mvcss/modules/../_04_base.sass */
+span.flag-good-bad::after {
+  margin-left: 0.25em;
+  display: inline-block;
+  border-radius: 50%;
+  content: '';
+  height: 8px;
+  width: 8px;
+}
+
+/* line 164, frontend/app/styles/mvcss/modules/../_04_base.sass */
+span.flag-good-bad.good::after {
+  background: #90d796;
+}
+
+/* line 166, frontend/app/styles/mvcss/modules/../_04_base.sass */
+span.flag-good-bad.bad::after {
+  background: #d6758a;
+}
+
+/* line 17, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  animation: vis 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s backwards;
+  background: #f4f2f3;
+  cursor: move;
+}
+
+/* line 30, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis.is-new .vis-link-new,
+.vis.is-new .vis-link-text {
+  display: none;
+}
+
+@keyframes vis {
+  from {
+    opacity: 0;
+  }
+}
+
+/* line 52, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-connect {
+  fill: none;
+  opacity: 0;
+  pointer-events: none;
+  stroke: rgba(96, 82, 93, 0.5);
+  stroke-linecap: round;
+  stroke-width: 2px;
+  transition: all 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* line 63, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-connect.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* line 71, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-copyright {
+  bottom: 20px;
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 73.3%;
+  pointer-events: none;
+  position: absolute;
+  right: 20px;
+}
+
+/* line 87, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new {
+  cursor: pointer;
+}
+
+/* line 91, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new:hover circle, .vis-link-new:focus circle {
+  fill: #60525d;
+  stroke: #60525d;
+  stroke-width: 4px;
+}
+
+/* line 95, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new:hover use, .vis-link-new:focus use {
+  color: white;
+}
+
+/* line 97, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new circle {
+  fill: #f4f2f3;
+  stroke: rgba(64, 55, 63, 0.2);
+  stroke-width: 2px;
+  transition: fill 0.1s cubic-bezier(0.215, 0.61, 0.355, 1), stroke 0.4s cubic-bezier(0.215, 0.61, 0.355, 1), stroke-width 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* line 102, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new use {
+  color: rgba(64, 55, 63, 0.2);
+  transition: color 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* line 106, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new.is-selectable {
+  display: block !important;
+}
+
+/* line 110, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new.is-selectable:hover circle, .vis-link-new.is-selectable:focus circle {
+  fill: #7193cd;
+  stroke: #7193cd;
+}
+
+/* line 113, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new.is-selectable circle {
+  animation: vis-link-new 1s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  fill: rgba(113, 147, 205, 0.8);
+  stroke: #7193cd;
+}
+
+/* line 117, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-new.is-selectable use {
+  display: none;
+}
+
+@keyframes vis-link-new {
+  to {
+    stroke: rgba(113, 147, 205, 0);
+    stroke-width: 8px;
+  }
+}
+
+/* line 127, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-source {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 5.5px;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* line 133, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target {
+  fill: none;
+  stroke-linecap: round;
+  stroke: #959294;
+  stroke-width: 5px;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* line 140, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="condition_occurrence"] {
+  stroke: #d6758a;
+}
+
+/* line 142, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="death"] {
+  stroke: #a7736f;
+}
+
+/* line 144, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="drug_exposure"] {
+  stroke: #cf92d2;
+}
+
+/* line 146, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="observation_period"] {
+  stroke: #a6dddc;
+}
+
+/* line 148, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="person"] {
+  stroke: #a9c9e7;
+}
+
+/* line 150, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="placeholder"] {
+  stroke: #f6f3f5;
+}
+
+/* line 152, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="procedure_occurrence"] {
+  stroke: #a7e2ac;
+}
+
+/* line 154, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-path-target[data-color="visit_occurrence"] {
+  stroke: #e8d4b3;
+}
+
+/* line 159, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-link-text {
+  dominant-baseline: middle;
+  font-size: 86.7%;
+  font-weight: bold;
+  user-select: none;
+}
+
+/* line 169, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node {
+  cursor: pointer;
+}
+
+/* line 174, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node:hover .vis-node-warning circle, .vis-node:hover .vis-node-error circle, .vis-node:focus .vis-node-warning circle, .vis-node:focus .vis-node-error circle {
+  fill: #833341;
+}
+
+/* line 176, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node:hover .vis-node-heading, .vis-node:focus .vis-node-heading {
+  fill: #60525d;
+}
+
+/* line 178, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node:hover .vis-node-point, .vis-node:focus .vis-node-point {
+  color: #60525d !important;
+}
+
+/* line 184, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node.is-active .vis-node-description-heading {
+  fill: #5f6493 !important;
+}
+
+/* line 188, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node.is-warning .vis-node-warning {
+  opacity: 1;
+  transform: translate(6px, 34px);
+  visibility: visible;
+}
+
+/* line 194, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node.is-error .vis-node-error {
+  opacity: 1;
+  transform: translate(6px, 34px);
+  visibility: visible;
+}
+
+/* line 203, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-description {
+  transition: opacity 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  user-select: none;
+}
+
+/* line 206, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-description tspan {
+  dominant-baseline: middle;
+}
+
+/* line 209, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-description-heading {
+  font-weight: bold;
+}
+
+/* line 212, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-description-value {
+  fill: #817980;
+}
+
+/* line 216, frontend/app/styles/mvcss/modules/_vis.sass */
+.is-label .vis-node-description-heading + .vis-node-description-value {
+  fill: #afa8ad;
+  font-style: italic;
+}
+
+/* line 222, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-warning, .vis-node-error {
+  color: white;
+  opacity: 0;
+  transform: scale(0.0001) translate(6px, 34px);
+  transform-origin: 6px 34px;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  visibility: hidden;
+}
+
+/* line 229, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-warning circle, .vis-node-error circle {
+  fill: #262125;
+  stroke: #f4f2f3;
+  stroke-width: 3px;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* line 237, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-icon {
+  color: white;
+}
+
+/* line 242, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-label {
+  color: #afa8ad;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  visibility: hidden;
+}
+
+/* line 249, frontend/app/styles/mvcss/modules/_vis.sass */
+.is-label .vis-node-label {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* line 255, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point {
+  color: #959294;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* line 259, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="condition_occurrence"] {
+  color: #ad4a5b;
+}
+
+/* line 261, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="death"] {
+  color: #704a4a;
+}
+
+/* line 263, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="drug_exposure"] {
+  color: #9f57a5;
+}
+
+/* line 265, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="observation_period"] {
+  color: #6fbbba;
+}
+
+/* line 267, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="person"] {
+  color: #7193cd;
+}
+
+/* line 269, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="placeholder"] {
+  color: #f6f3f5;
+}
+
+/* line 271, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="procedure_occurrence"] {
+  color: #90d796;
+}
+
+/* line 273, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point[data-color="visit_occurrence"] {
+  color: #d1a776;
+}
+
+/* line 276, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-node-point-base {
+  stroke: #f4f2f3;
+  stroke-width: 3px;
+}
+
+/* line 284, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-tip {
+  background: rgba(232, 229, 231, 0.975);
+  border-radius: 4px;
+  box-shadow: 0 10px 20px rgba(38, 33, 37, 0.25);
+  color: #833341;
+  font-size: 73.3%;
+  font-weight: bold;
+  max-width: 240px;
+  min-width: 80px;
+  opacity: 0;
+  padding: 10px 20px;
+  text-align: center;
+  transition: opacity 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  z-index: 30;
+}
+
+/* line 298, frontend/app/styles/mvcss/modules/_vis.sass */
+.vis-tip::after {
+  border-bottom: 0;
+  border: 5px solid transparent;
+  border-top-color: rgba(232, 229, 231, 0.975);
+  content: '';
+  left: 50%;
+  margin-left: -5px;
+  position: absolute;
+  top: 100%;
+}
+</style><div style="display: none;">
+      <svg>
+
+  <!-- **********************
+
+    Base Operator Shapes
+
+  ********************** -->
+
+  <symbol id="operator-base-cast" viewBox="0 0 43 43">
+    <path transform="translate(1.5, 1.5)" class="vis-node-point-base" fill="currentColor" d="M39.2,18.2L21.8,0.8c-1-1-2.6-1-3.6,0L0.8,18.2c-1,1-1,2.6,0,3.6l17.4,17.4c0.5,0.5,1.1,0.7,1.8,0.7s1.3-0.3,1.8-0.7l17.4-17.4c0.5-0.5,0.7-1.1,0.7-1.8S39.7,18.7,39.2,18.2z"/>
+  </symbol>
+
+  <symbol id="operator-base-default" viewBox="0 0 43 43">
+    <path transform="translate(1.5, 1.5)" class="vis-node-point-base" fill="currentColor" d="M40,20c0,11-9,20-20,20S0,31,0,20S9,0,20,0S40,9,40,20z"/>
+  </symbol>
+
+  <symbol id="operator-base-filter" viewBox="0 0 43 43">
+    <path transform="translate(1.5, 1.5)" class="vis-node-point-base" fill="currentColor" d="M37,36.2l3-32.3C40,2,38,0,36.2,0H3.8C2,0,0,2,0,3.8l3,32.3c0,0.9,0.6,2,1.2,2.6S6,40,6.8,40h26.3c0.9,0,2-0.6,2.6-1.2S37,37,37,36.2z"/>
+    <circle fill="#271f26" cx="37" cy="5.5" r="4"/>
+  </symbol>
+
+  <symbol id="operator-base-selection" viewBox="0 0 43 43">
+    <path transform="translate(1.5, 1.5)" class="vis-node-point-base" fill="currentColor" d="M39,23c0,11-8,17-19,17S1,34,1,23S13.2,0,20,0C26.2,0,39,12,39,23z"/>
+  </symbol>
+
+  <symbol id="operator-base-set" viewBox="0 0 43 43">
+    <path transform="translate(1.5, 1.5)" class="vis-node-point-base" fill="currentColor" d="M40,20c0,11-9,20-20,20S0,31,0,20S9,0,20,0S40,9,40,20z"/>
+  </symbol>
+
+  <symbol id="operator-base-temporal" viewBox="0 0 43 43">
+    <path transform="translate(1.5, 1.5)" class="vis-node-point-base" fill="currentColor" d="M40,36.2V3.8C40,2,38,0,36.2,0H3.8C2,0,0,2,0,3.8v32.3c0,0.9,0.6,2,1.2,2.6S3,40,3.8,40h32.3c0.9,0,2-0.6,2.6-1.2S40,37,40,36.2z"/>
+  </symbol>
+
+  <!-- **********************
+
+    Icons
+
+  ********************** -->
+
+  <symbol id="operator-label" viewBox="0 0 10 8">
+    <path fill="currentColor" d="M6.4,8H1.2C0.6,8,0,7.5,0,6.8V1.2C0,0.5,0.6,0,1.2,0h5.2c0,0,1.3,0,1.9,0.9l1.3,2c0.5,0.7,0.5,1.5,0,2.2L8.3,7.1C7.7,8.1,6.4,8,6.4,8z"/>
+  </symbol>
+
+  <symbol id="operator-new" viewBox="0 0 20 20">
+    <path fill="currentColor" d="M14,9h-3V6c0-0.5-0.5-1-1-1S9,5.5,9,6v3H6c-0.5,0-1,0.5-1,1s0.5,1,1,1h3v3c0,0.5,0.5,1,1,1s1-0.5,1-1v-3h3c0.5,0,1-0.5,1-1S14.5,9,14,9z"/>
+  </symbol>
+
+  <symbol id="operator-error" viewBox="0 0 20 20">
+    <path fill="currentColor" d="M10.1,11.8H9.9c-0.5,0-0.9-0.4-0.9-0.9v-5C9,5.4,9.4,5,9.9,5h0.2C10.6,5,11,5.4,11,5.9v5C11,11.4,10.6,11.8,10.1,11.8z"/>
+    <path fill="currentColor" d="M10,15L10,15c-0.6,0-1-0.4-1-1v0c0-0.5,0.4-1,1-1h0c0.5,0,1,0.4,1,1v0C11,14.6,10.6,15,10,15z"/>
+  </symbol>
+
+  <symbol id="operator-warning" viewBox="0 0 20 20">
+    <path fill="currentColor" d="M9.8,15.3L9.8,15.3c-0.6,0-1-0.4-1-1v0c0-0.5,0.4-1,1-1h0c0.5,0,1,0.4,1,1v0C10.8,14.9,10.3,15.3,9.8,15.3z"/>
+    <path fill="currentColor" d="M9.8,12.3c-0.6,0-1-0.4-1-1c0-2.1,1.1-2.7,1.8-3.1C11.1,8,11.1,8,11.1,7.5c0-0.3-0.1-0.5-0.2-0.6c-0.2-0.1-0.4-0.2-0.7-0.2c-0.4,0-1.3,0.2-1.3,1.1c0,0.6-0.4,1-1,1s-1-0.4-1-1c0-2,1.7-3.1,3.3-3.1c0.8,0,1.5,0.2,2,0.7c0.6,0.5,1,1.3,1,2.1c0,1.7-1,2.2-1.6,2.6c-0.5,0.3-0.7,0.4-0.7,1.3C10.8,11.9,10.3,12.3,9.8,12.3z"/>
+  </symbol>
+
+  <!-- **********************
+
+    Select by Property
+
+  ********************** -->
+
+  <symbol id="operator-date_range" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M28.6,7H28c0-1.1-0.9-2-2-2c-1.1,0-2,0.9-2,2h-4h-4c0-1.1-0.9-2-2-2c-1.1,0-2,0.9-2,2h-0.6C9,7,7,9,7,11.4V28v0.6C7,31,9,33,11.4,33H20h8.6c2.4,0,4.4-2,4.4-4.4V28V11.4C33,9,31,7,28.6,7z M30,28.6c0,0.8-0.6,1.4-1.4,1.4H20h-8.6c-0.8,0-1.4-0.6-1.4-1.4V28V15h10h10v13V28.6z"/>
+    <rect fill="currentColor" x="12" y="17" width="4" height="4"/>
+    <rect fill="currentColor" x="12" y="23" width="4" height="4"/>
+    <rect fill="currentColor" x="18" y="17" width="4" height="4"/>
+  </symbol>
+
+  <!-- **********************
+
+    Filter Single Stream
+
+  ********************** -->
+
+  <symbol id="operator-first" viewBox="0 0 40 40">
+    <circle fill="currentColor" cx="10" cy="10" r="5"/>
+    <path fill="currentColor" d="M20,17c1.7,0,3,1.3,3,3s-1.3,3-3,3s-3-1.3-3-3S18.3,17,20,17 M20,15c-2.8,0-5,2.2-5,5s2.2,5,5,5s5-2.2,5-5S22.8,15,20,15L20,15z"/>
+    <path fill="currentColor" d="M30,27c1.7,0,3,1.3,3,3s-1.3,3-3,3s-3-1.3-3-3S28.3,27,30,27 M30,25c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5s5-2.2,5-5C35,27.2,32.8,25,30,25L30,25z"/>
+  </symbol>
+
+  <symbol id="operator-last" viewBox="0 0 40 40">
+    <circle fill="currentColor" cx="30" cy="30" r="5"/>
+    <path fill="currentColor" d="M20,17c1.7,0,3,1.3,3,3s-1.3,3-3,3s-3-1.3-3-3S18.3,17,20,17 M20,15c-2.8,0-5,2.2-5,5s2.2,5,5,5s5-2.2,5-5S22.8,15,20,15L20,15z"/>
+    <path fill="currentColor" d="M10,7c1.7,0,3,1.3,3,3s-1.3,3-3,3s-3-1.3-3-3S8.3,7,10,7 M10,5c-2.8,0-5,2.2-5,5s2.2,5,5,5s5-2.2,5-5S12.8,5,10,5L10,5z"/>
+  </symbol>
+
+  <symbol id="operator-occurrence" viewBox="0 0 40 40">
+    <circle fill="currentColor" cx="20" cy="20" r="5"/>
+    <path fill="currentColor" d="M10,7c1.7,0,3,1.3,3,3s-1.3,3-3,3s-3-1.3-3-3S8.3,7,10,7 M10,5c-2.8,0-5,2.2-5,5s2.2,5,5,5s5-2.2,5-5S12.8,5,10,5L10,5z"/>
+    <path fill="currentColor" d="M30,27c1.7,0,3,1.3,3,3s-1.3,3-3,3s-3-1.3-3-3S28.3,27,30,27 M30,25c-2.8,0-5,2.2-5,5s2.2,5,5,5s5-2.2,5-5S32.8,25,30,25L30,25z"/>
+  </symbol>
+
+  <symbol id="operator-complement" viewBox="0 0 40 40">
+    <path fill="currentColor" opacity="0.5" d="M20,4.3c-8.7,0-15.7,7-15.7,15.7c0,8.7,7,15.7,15.7,15.7c8.7,0,15.7-7,15.7-15.7C35.7,11.3,28.7,4.3,20,4.3zM16.8,20c-1.9,0-3.5-1.6-3.5-3.5c0-1.9,1.6-3.5,3.5-3.5c1.9,0,3.5,1.6,3.5,3.5C20.3,18.4,18.7,20,16.8,20z"/>
+    <path fill="currentColor" d="M20,37c-9.4,0-17-7.6-17-17S10.6,3,20,3s17,7.6,17,17S29.4,37,20,37z M20,5.6C12.1,5.6,5.6,12.1,5.6,20S12.1,34.4,20,34.4S34.4,27.9,34.4,20S27.9,5.6,20,5.6z"/>
+    <path fill="currentColor" d="M16.4,21.3c-2.4,0-4.4-2-4.4-4.4s2-4.4,4.4-4.4s4.4,2,4.4,4.4S18.8,21.3,16.4,21.3z M16.4,14.3c-1.4,0-2.6,1.2-2.6,2.6c0,1.4,1.2,2.6,2.6,2.6s2.6-1.2,2.6-2.6C19,15.5,17.8,14.3,16.4,14.3z"/>
+  </symbol>
+
+  <symbol id="operator-one_in_two_out" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M16.9,30L16.9,30c-0.6,0-1-0.4-1-1V11c0-0.5,0.4-1,1-1h0c0.5,0,1,0.4,1,1v18C17.9,29.6,17.4,30,16.9,30z"/>
+    <path fill="currentColor" d="M20.9,30L20.9,30c-0.6,0-1-0.4-1-1V11c0-0.5,0.4-1,1-1h0c0.5,0,1,0.4,1,1v18C21.9,29.6,21.4,30,20.9,30z"/>
+    <path fill="currentColor" d="M7.3,18.2h0.2c0.5,0,0.9,0.4,0.9,0.9v5C8.4,24.6,8,25,7.5,25H7.3c-0.5,0-0.9-0.4-0.9-0.9v-5C6.4,18.6,6.8,18.2,7.3,18.2z"/>
+    <path fill="currentColor" d="M7.4,15L7.4,15c0.6,0,1,0.4,1,1v0c0,0.5-0.4,1-1,1h0c-0.5,0-1-0.4-1-1v0C6.4,15.4,6.8,15,7.4,15z"/>
+    <path fill="currentColor" d="M30,19c-2,0-3.6-1.8-3.6-4s1.6-4,3.6-4s3.6,1.8,3.6,4S32,19,30,19z M30,13c-0.9,0-1.6,0.9-1.6,2s0.7,2,1.6,2s1.6-0.9,1.6-2S30.9,13,30,13z"/>
+    <path fill="currentColor" d="M30,29c-2,0-3.6-1.8-3.6-4s1.6-4,3.6-4s3.6,1.8,3.6,4S32,29,30,29z M30,23c-0.9,0-1.6,0.9-1.6,2s0.7,2,1.6,2s1.6-0.9,1.6-2S30.9,23,30,23z"/>
+  </symbol>
+
+  <!-- **********************
+
+    Filter by Comparing
+
+  ********************** -->
+
+  <symbol id="operator-during" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M23.3,14.4h-6.5c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h6.5c1,0,1.7,0.8,1.7,1.7v0.5C25,13.6,24.2,14.4,23.3,14.4z"/>
+    <path fill="currentColor" d="M29,29.6H11c-0.5,0-1-0.4-1-1v0c0-0.5,0.4-1,1-1h18c0.5,0,1,0.4,1,1v0C30,29.2,29.6,29.6,29,29.6z"/>
+  </symbol>
+
+  <symbol id="operator-after" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M19,29.2h-8c-0.5,0-1-0.4-1-1v0c0-0.5,0.4-1,1-1h8c0.5,0,1,0.4,1,1v0C20,28.8,19.6,29.2,19,29.2z"/>
+    <path fill="currentColor" d="M28.3,14.8h-6.5c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h6.5c1,0,1.7,0.8,1.7,1.7V13C30,14,29.2,14.8,28.3,14.8z"/>
+  </symbol>
+
+  <symbol id="operator-contains" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M24,29.6h-8c-0.5,0-1-0.4-1-1v0c0-0.5,0.4-1,1-1h8c0.5,0,1,0.4,1,1v0C25,29.2,24.6,29.6,24,29.6z"/>
+    <path fill="currentColor" d="M28.3,13.9H11.7c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h16.5c1,0,1.7,0.8,1.7,1.7v0.5C30,13.1,29.2,13.9,28.3,13.9z"/>
+  </symbol>
+
+  <symbol id="operator-started_by" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M18.3,29.5h-6.5c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h6.5c1,0,1.7,0.8,1.7,1.7v0.5C20,28.7,19.2,29.5,18.3,29.5z"/>
+    <path fill="currentColor" d="M28.3,14.5H11.7c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h16.5c1,0,1.7,0.8,1.7,1.7v0.5C30,13.7,29.2,14.5,28.3,14.5z"/>
+  </symbol>
+
+  <symbol id="operator-except" viewBox="0 0 40 40">
+    <path fill="currentColor" opacity="0.5" d="M12.8,25c0-6.7,5.4-12.1,12.1-12.1c0.6,0,1.1,0.1,1.7,0.1c-1.2-5-5.7-8.6-11-8.6C9.4,4.4,4.3,9.5,4.3,15.8c0,5.3,3.7,9.8,8.7,11C12.9,26.2,12.8,25.6,12.8,25z"/>
+    <path fill="currentColor" d="M27.8,12.2C26.3,6.9,21.4,3,15.7,3C8.7,3,3,8.7,3,15.7c0,5.8,3.9,10.6,9.2,12.2c1.5,5.3,6.4,9.2,12.2,9.2c7,0,12.7-5.7,12.7-12.7C37,18.6,33.1,13.7,27.8,12.2z M5.4,15.7C5.4,10,10,5.4,15.7,5.4c4.2,0,7.9,2.6,9.5,6.3c-0.3,0-0.5,0-0.8,0c-7,0-12.7,5.7-12.7,12.7c0,0.3,0,0.5,0,0.8C8,23.6,5.4,19.9,5.4,15.7z M25.9,15.7c0,5.7-4.6,10.3-10.3,10.3c-0.5,0-1,0-1.5-0.1c-0.1-0.5-0.1-1-0.1-1.5c0-5.7,4.6-10.3,10.3-10.3c0.5,0,1,0,1.5,0.1C25.9,14.7,25.9,15.2,25.9,15.7z M24.3,34.6c-4.2,0-7.9-2.6-9.5-6.3c0.3,0,0.5,0,0.8,0c7,0,12.7-5.7,12.7-12.7c0-0.3,0-0.5,0-0.8c3.7,1.6,6.3,5.2,6.3,9.5C34.6,30,30,34.6,24.3,34.6z"/>
+  </symbol>
+
+  <symbol id="operator-person_filter" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M27.5,28.8h-15c-1.4,0-2.5-1.1-2.5-2.5v0c0-1.4,1.1-2.5,2.5-2.5h15c1.4,0,2.5,1.1,2.5,2.5v0C30,27.6,28.9,28.8,27.5,28.8z"/>
+    <circle fill="currentColor" cx="20" cy="16.2" r="5"/>
+  </symbol>
+
+  <symbol id="operator-before" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M29,29h-8c-0.5,0-1-0.4-1-1v0c0-0.5,0.4-1,1-1h8c0.5,0,1,0.4,1,1v0C30,28.6,29.6,29,29,29z"/>
+    <path fill="currentColor" d="M18.3,14.5h-6.5c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h6.5c1,0,1.7,0.8,1.7,1.7v0.5C20,13.7,19.2,14.5,18.3,14.5z"/>
+  </symbol>
+
+  <symbol id="operator-overlapped_by" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M11.1,29h13.3c0.5,0,0.9-0.4,0.9-0.9v-0.3c0-0.5-0.4-0.9-0.9-0.9H11.1c-0.5,0-0.9,0.4-0.9,0.9v0.3C10.2,28.6,10.6,29,11.1,29z"/>
+    <path fill="currentColor" d="M21.5,14.5H28c1,0,1.7-0.8,1.7-1.7v-0.5c0-1-0.8-1.7-1.7-1.7h-6.5c-1,0-1.7,0.8-1.7,1.7v0.5C19.8,13.7,20.5,14.5,21.5,14.5z"/>
+  </symbol>
+
+  <symbol id="operator-any_overlap" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M25.8,30H14.2c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h11.5c1,0,1.7,0.8,1.7,1.7v0.5C27.5,29.2,26.7,30,25.8,30z"/>
+    <path fill="currentColor" d="M16.3,14h-4.5c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h4.5c1,0,1.7,0.8,1.7,1.7v0.5C18,13.2,17.2,14,16.3,14z"/>
+    <path fill="currentColor" d="M28.3,14h-4.5c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h4.5c1,0,1.7,0.8,1.7,1.7v0.5C30,13.2,29.2,14,28.3,14z"/>
+  </symbol>
+
+  <symbol id="operator-overlaps" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M28.9,29H15.6c-0.5,0-0.9-0.4-0.9-0.9v-0.3c0-0.5,0.4-0.9,0.9-0.9h13.3c0.5,0,0.9,0.4,0.9,0.9v0.3C29.8,28.6,29.4,29,28.9,29z"/>
+    <path fill="currentColor" d="M18.5,14.5H12c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h6.5c1,0,1.7,0.8,1.7,1.7v0.5C20.2,13.7,19.5,14.5,18.5,14.5z"/>
+  </symbol>
+
+  <symbol id="operator-equal" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M28.3,14H11.7c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h16.5c1,0,1.7,0.8,1.7,1.7v0.5C30,13.2,29.2,14,28.3,14z"/>
+    <path fill="currentColor" d="M28.3,30H11.7c-1,0-1.7-0.8-1.7-1.7v-0.5c0-1,0.8-1.7,1.7-1.7h16.5c1,0,1.7,0.8,1.7,1.7v0.5C30,29.2,29.2,30,28.3,30z"/>
+  </symbol>
+
+  <symbol id="operator-trim_date_start" viewBox="0 0 40 40">
+    <rect fill="currentColor" x="1" y="19" transform="matrix(1.470653e-10 1 -1 1.470653e-10 31 9)" width="20" height="2"/>
+    <path fill="currentColor" d="M28.3,18H14v4h14.3c1,0,1.7-0.8,1.7-1.7v-0.5C30,18.8,29.2,18,28.3,18z"/>
+  </symbol>
+
+  <symbol id="operator-trim_date_end" viewBox="0 0 40 40">
+    <rect fill="currentColor" x="19" y="19" transform="matrix(1.471559e-10 1 -1 1.471559e-10 49 -9)" width="20" height="2"/>
+    <path fill="currentColor" d="M26,18H11.7c-1,0-1.7,0.8-1.7,1.7v0.5c0,1,0.8,1.7,1.7,1.7H26V18z"/>
+  </symbol>
+
+  <!-- **********************
+
+    Combine Streams
+
+  ********************** -->
+
+  <symbol id="operator-union" viewBox="0 0 40 40">
+    <path fill="currentColor" opacity="0.5" d="M26.6,13c-1.2-5-5.6-8.7-11-8.7C9.4,4.3,4.3,9.4,4.3,15.6c0,5.5,3.9,10,9,11.1c1.2,5,5.6,8.7,11,8.7c6.2,0,11.3-5.1,11.3-11.3C35.7,18.7,31.8,14.1,26.6,13z"/>
+    <path fill="currentColor" d="M27.8,12.2C26.3,6.9,21.4,3,15.7,3C8.7,3,3,8.7,3,15.7c0,5.8,3.9,10.6,9.2,12.2c1.5,5.3,6.4,9.2,12.2,9.2c7,0,12.7-5.7,12.7-12.7C37,18.6,33.1,13.7,27.8,12.2z M5.4,15.7C5.4,10,10,5.4,15.7,5.4c4.2,0,7.9,2.6,9.5,6.3c-0.3,0-0.5,0-0.8,0c-7,0-12.7,5.7-12.7,12.7c0,0.3,0,0.5,0,0.8C8,23.6,5.4,19.9,5.4,15.7z M25.9,15.7c0,5.7-4.6,10.3-10.3,10.3c-0.5,0-1,0-1.5-0.1c-0.1-0.5-0.1-1-0.1-1.5c0-5.7,4.6-10.3,10.3-10.3c0.5,0,1,0,1.5,0.1C25.9,14.7,25.9,15.2,25.9,15.7z M24.3,34.6c-4.2,0-7.9-2.6-9.5-6.3c0.3,0,0.5,0,0.8,0c7,0,12.7-5.7,12.7-12.7c0-0.3,0-0.5,0-0.8c3.7,1.6,6.3,5.2,6.3,9.5C34.6,30,30,34.6,24.3,34.6z"/>
+  </symbol>
+
+  <symbol id="operator-intersect" viewBox="0 0 40 40">
+    <path fill="currentColor" opacity="0.5" d="M26.5,13.5c-0.5-0.1-1.1-0.1-1.7-0.1c-6.4,0-11.5,5.2-11.5,11.5c0,0.6,0.1,1.1,0.1,1.7c0.5,0.1,1.1,0.1,1.7,0.1c6.4,0,11.5-5.2,11.5-11.5C26.7,14.6,26.6,14,26.5,13.5z"/>
+    <path fill="currentColor" d="M27.8,12.2C26.3,6.9,21.4,3,15.7,3C8.7,3,3,8.7,3,15.7c0,5.8,3.9,10.6,9.2,12.2c1.5,5.3,6.4,9.2,12.2,9.2c7,0,12.7-5.7,12.7-12.7C37,18.6,33.1,13.7,27.8,12.2z M5.4,15.7C5.4,10,10,5.4,15.7,5.4c4.2,0,7.9,2.6,9.5,6.3c-0.3,0-0.5,0-0.8,0c-7,0-12.7,5.7-12.7,12.7c0,0.3,0,0.5,0,0.8C8,23.6,5.4,19.9,5.4,15.7z M25.9,15.7c0,5.7-4.6,10.3-10.3,10.3c-0.5,0-1,0-1.5-0.1c-0.1-0.5-0.1-1-0.1-1.5c0-5.7,4.6-10.3,10.3-10.3c0.5,0,1,0,1.5,0.1C25.9,14.7,25.9,15.2,25.9,15.7z M24.3,34.6c-4.2,0-7.9-2.6-9.5-6.3c0.3,0,0.5,0,0.8,0c7,0,12.7-5.7,12.7-12.7c0-0.3,0-0.5,0-0.8c3.7,1.6,6.3,5.2,6.3,9.5C34.6,30,30,34.6,24.3,34.6z"/>
+  </symbol>
+
+  <!-- **********************
+
+    Get Related Data
+
+  ********************** -->
+
+  <symbol id="operator-recall" viewBox="0 0 40 40">
+    <path fill="currentColor" d="M24,19c-1.1,0-2.1,0.4-2.9,0.9l-4.4-4.4l-0.2,0.2c0.4-0.5,0.6-1.1,0.6-1.8c0-1.7-1.3-3-3-3s-3,1.3-3,3s1.3,3,3,3c0.7,0,1.3-0.2,1.8-0.6l-0.5,0.5l4.5,4.5C19.3,22.2,19,23,19,24c0,2.8,2.2,5,5,5s5-2.2,5-5S26.8,19,24,19z M14,15c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S14.6,15,14,15z"/>
+  </symbol>
+
+  <!-- **********************
+
+    Modify Data
+
+  ********************** -->
+
+  <symbol id="operator-time_window" viewBox="0 0 40 40">
+    <rect fill="currentColor" x="16" y="11" width="8" height="8"/>
+    <path fill="currentColor" d="M12,13v4H8v-4H12 M14,11H6v8h8V11L14,11z"/>
+    <rect fill="currentColor" x="26" y="11" width="8" height="8"/>
+    <path fill="currentColor" d="M22,23v4h-4v-4H22 M24,21h-8v8h8V21L24,21z"/>
+    <rect fill="currentColor" x="6" y="21" width="8" height="8"/>
+    <path fill="currentColor" d="M32,23v4h-4v-4H32 M34,21h-8v8h8V21L34,21z"/>
+  </symbol>
+</svg>
+    </div><defs><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-condition_occurrence"><stop offset="5%" stop-color="#d6758a" stop-opacity="0"/><stop offset="95%" stop-color="#d6758a" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-death"><stop offset="5%" stop-color="#a7736f" stop-opacity="0"/><stop offset="95%" stop-color="#a7736f" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-drug_exposure"><stop offset="5%" stop-color="#cf92d2" stop-opacity="0"/><stop offset="95%" stop-color="#cf92d2" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-person"><stop offset="5%" stop-color="#a9c9e7" stop-opacity="0"/><stop offset="95%" stop-color="#a9c9e7" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-placeholder"><stop offset="5%" stop-color="#f6f3f5" stop-opacity="0"/><stop offset="95%" stop-color="#f6f3f5" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-procedure_cost"><stop offset="5%" stop-color="#e0d67f" stop-opacity="0"/><stop offset="95%" stop-color="#e0d67f" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-procedure_occurrence"><stop offset="5%" stop-color="#a7e2ac" stop-opacity="0"/><stop offset="95%" stop-color="#a7e2ac" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-unknown"><stop offset="5%" stop-color="#958c93" stop-opacity="0"/><stop offset="95%" stop-color="#958c93" stop-opacity="1"/></linearGradient><linearGradient x1="0" x2="0" y1="0" y2="1" id="gradient-visit_occurrence"><stop offset="5%" stop-color="#e8d4b3" stop-opacity="0"/><stop offset="95%" stop-color="#e8d4b3" stop-opacity="1"/></linearGradient></defs><g class="vis-algorithm" data-test-diagram-group=""><g class="vis-link" transform="translate(0,0)"><g class="vis-link-path" transform="translate(0,0)"><path class="vis-link-path-target" data-color="condition_occurrence" d="M0,-120v10L0.01,0"/><path class="vis-link-path-source" stroke="url(#gradient-placeholder)" d="M0,-120v10L0.01,0"/></g><g class="vis-link-new" transform="translate(0,-66)"><circle r="15"/><use xlink:href="#operator-new" height="20" width="20" x="-10" y="-10"/><text class="vis-link-text" x="30" y="1"/></g></g><g operator-type="root-0" class="vis-node" data-test-node="" transform="translate(-20,-20)"><use class="vis-node-point" height="40" width="40" data-color="condition_occurrence" xlink:href="#operator-base-undefined"/><use class="vis-node-icon" height="26" width="26" transform="translate(7,7)" xlink:href="#operator-root"/><use class="vis-node-label" xlink:href="#operator-label" height="8" width="10" transform="translate(45, 32)"/><g class="vis-node-warning"><circle r="12"/><use xlink:href="#operator-warning" height="22" width="22" transform="translate(-11,-11)"/></g><g class="vis-node-error"><circle r="12"/><use xlink:href="#operator-error" height="22" width="22" transform="translate(-11,-11)"/></g><text class="vis-node-description" transform="translate(45,21)"><tspan class="vis-node-description-heading" style="font-size: 12px;"/></text></g><g operator-type="icd9-1" class="vis-node" data-test-node="" transform="translate(-20,-160)"><use class="vis-node-point" height="40" width="40" data-color="condition_occurrence" xlink:href="#operator-base-selection"/><use class="vis-node-icon" height="26" width="26" transform="translate(7,7)" xlink:href="#operator-icd9"/><use class="vis-node-label" xlink:href="#operator-label" height="8" width="10" transform="translate(45, 32)"/><g class="vis-node-warning"><circle r="12"/><use xlink:href="#operator-warning" height="22" width="22" transform="translate(-11,-11)"/></g><g class="vis-node-error"><circle r="12"/><use xlink:href="#operator-error" height="22" width="22" transform="translate(-11,-11)"/></g><text class="vis-node-description" transform="translate(45,21)"><tspan class="vis-node-description-heading" style="font-size: 12px;">ICD-9 CM</tspan><tspan class="vis-node-description-value" style="font-size: 10px;" x="0" y="1.5999999999999999em">412</tspan></text></g></g></svg>

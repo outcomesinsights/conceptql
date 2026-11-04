@@ -1,0 +1,47 @@
+{
+  "name": "person_filter",
+  "base": "filter",
+  "humanName": "Person Filter",
+  "outputTypes": ["condition_occurrence", "procedure_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "union",
+      "base": "set",
+      "humanName": "Union",
+      "outputTypes": ["condition_occurrence", "procedure_occurrence"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["412"],
+          "children": []
+        },
+        {
+          "name": "cpt",
+          "base": "selection",
+          "humanName": "CPT",
+          "outputTypes": ["procedure_occurrence"],
+          "parameters": {},
+          "values": ["99214"],
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "gender",
+      "base": "selection",
+      "humanName": "Gender",
+      "outputTypes": ["person"],
+      "parameters": {},
+      "values": ["Male"],
+      "children": []
+    }
+  ]
+}

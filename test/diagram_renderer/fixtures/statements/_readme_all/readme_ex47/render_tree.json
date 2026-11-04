@@ -1,0 +1,22 @@
+{
+  "name": "provider_filter",
+  "base": "temporal",
+  "humanName": "Provider Filter",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "specialties": "12301023"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["250.00"],
+      "children": []
+    }
+  ],
+  "errors": [["required option not present", "roles"]]
+}

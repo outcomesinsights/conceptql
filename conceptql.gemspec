@@ -21,9 +21,12 @@ Gem::Specification.new do |spec|
   # docs/spec/README.md is the specification that ConceptQL.spec_path returns.
   # docs/spec/examples/*.json are the example files that
   # ConceptQL.spec_examples_path returns. The spec's diagram images
-  # (docs/spec/images/) stay in the repository.
+  # (docs/spec/images/) stay in the repository. assets/diagram/ holds the
+  # diagram renderer's assets (ConceptQL::DiagramRenderer::Configuration): the
+  # operator icons, the diagram CSS, the Roboto fonts and their license. The
+  # renderer's tests and references (test/diagram_renderer/) are not shipped.
   spec.files = %w[CHANGELOG.md LICENSE README.md docs/spec/README.md] + Dir['docs/spec/examples/*.json'] +
-               Dir['lib/**/*.rb'] + Dir['config/*'] + Dir['schemas/*'] +
+               Dir['lib/**/*.rb'] + Dir['config/*'] + Dir['schemas/*'] + Dir['assets/diagram/**/*'] +
                %w[bin/conceptql bin/conceptql_utils]
   spec.bindir        = 'bin'
   spec.executables   = %w[conceptql conceptql_utils]
@@ -41,6 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'climate_control'
   spec.add_development_dependency 'minitest', '~> 6.0'
   spec.add_development_dependency 'minitest-mock', '~> 5.0'
+  spec.add_development_dependency 'nokogiri', '~> 1.19'
   spec.add_development_dependency 'pry-byebug', '~> 3'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rubocop', '~> 1.0'

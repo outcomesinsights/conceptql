@@ -1,0 +1,9 @@
+{
+  "name": "race",
+  "base": "selection",
+  "humanName": "Race",
+  "outputTypes": ["person"],
+  "parameters": {},
+  "values": ["White"],
+  "children": []
+}

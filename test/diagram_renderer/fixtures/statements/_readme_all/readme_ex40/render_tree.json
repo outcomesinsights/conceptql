@@ -1,0 +1,30 @@
+{
+  "name": "before",
+  "base": "filter",
+  "humanName": "Before",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "within": "1y"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["410.00", "410.01", "410.10", "410.11"],
+      "children": []
+    },
+    {
+      "name": "death",
+      "base": "cast",
+      "humanName": "Death",
+      "outputTypes": ["death"],
+      "parameters": {},
+      "values": [],
+      "children": []
+    }
+  ]
+}

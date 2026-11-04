@@ -1,0 +1,30 @@
+{
+  "name": "union",
+  "base": "set",
+  "humanName": "Union",
+  "outputTypes": ["invalid"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "not_a_real_op",
+      "base": null,
+      "humanName": "Invalid",
+      "outputTypes": ["invalid"],
+      "parameters": {},
+      "values": ["x"],
+      "children": [],
+      "errors": [["invalid operator", "not_a_real_op"]]
+    },
+    {
+      "name": "recall",
+      "base": "selection",
+      "humanName": "Recall",
+      "outputTypes": ["invalid"],
+      "parameters": {},
+      "values": ["No Such Label"],
+      "children": [],
+      "errors": [["no matching label", "No Such Label"]]
+    }
+  ]
+}

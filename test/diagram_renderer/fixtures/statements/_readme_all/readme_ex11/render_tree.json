@@ -1,0 +1,9 @@
+{
+  "name": "information_periods",
+  "base": "selection",
+  "humanName": "Information Periods",
+  "outputTypes": ["observation_period"],
+  "parameters": {},
+  "values": [],
+  "children": []
+}

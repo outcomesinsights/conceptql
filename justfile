@@ -115,6 +115,49 @@ test-duckdb *ARGS:
       bundle exec ruby -e 'files = ARGV.dup; ARGV.clear; files.each { |f| require File.expand_path(f) }' "${args[@]}"
     fi
 
+# The diagram renderer's tests (test/diagram_renderer/) need no database and
+# need resvg at exactly ConceptQL::DiagramRenderer::Resvg::VERSION (mise.toml
+# pins it; `just setup` installs it). The Postgres docker image and the DuckDB
+# runs have no resvg, so test/all.rb leaves these tests out and this recipe
+# runs them on the host. It fails, never skips, when resvg is missing or is
+# another version. Part of `ci` (the pre-push gate).
+# Run the diagram renderer tests on the host (args: test files; default all)
+test-diagram *ARGS:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p {{ log_dir }}/diagram
+    log={{ log_dir }}/diagram/$(date +%Y%m%d%H%M%S).txt
+    exec 3>&1 > >(tee "$log") 2>&1
+    tee_pid=$!
+    finish() {
+      rc=$?
+      exec >&- 2>&-
+      wait "$tee_pid" || true
+      echo "Log: $log" >&3
+      exit $rc
+    }
+    trap finish EXIT
+
+    want=$(ruby -Ilib -rconceptql/diagram_renderer -e 'print ConceptQL::DiagramRenderer::Resvg::VERSION')
+    if ! command -v resvg >/dev/null; then
+      echo "resvg is not on PATH. The diagram renderer tests need resvg ${want}: run \`just setup\` (mise.toml pins it)."
+      exit 1
+    fi
+    have=$(resvg --version)
+    if [ "$have" != "$want" ]; then
+      echo "resvg ${have} is on PATH ($(command -v resvg)). The diagram renderer tests need resvg ${want}: run \`just setup\` (mise.toml pins it)."
+      exit 1
+    fi
+    echo "resvg ${have} ($(command -v resvg))"
+
+    export CONCEPTQL_COVERAGE_DIR="{{ justfile_directory() }}/{{ log_dir }}/diagram/coverage"
+    args=({{ ARGS }})
+    if [ ${#args[@]} -eq 0 ]; then
+      bundle exec ruby test/diagram_renderer/all.rb
+    else
+      bundle exec ruby -e 'files = ARGV.dup; ARGV.clear; files.each { |f| require File.expand_path(f) }' "${args[@]}"
+    fi
+
 # Rebuilds docs/spec/README.md from docs/spec/README.cql.md. docs/spec/build/run.rb
 # runs every ConceptQL block on the DuckDB fixture (through test-duckdb, so it
 # needs what test-duckdb needs) and writes each example: the statement, its
@@ -337,14 +380,15 @@ release-check:
 # runs `test-duckdb`. Locally `test` runs only the default Postgres gdm_wide
 # config (the primary platform). The other 2 Postgres configs and Spark stay in
 # remote CI as the last line of defense for cross-env edge cases. test-duckdb
-# fails, never skips, when its fixture or libduckdb is unavailable. Run
-# `just test-full` for all 3 Postgres configs.
+# fails, never skips, when its fixture or libduckdb is unavailable. Then
+# test-diagram runs the diagram renderer tests, which fail when resvg is not
+# the pinned version. Run `just test-full` for all 3 Postgres configs.
 #
 # The pre-push hook (.githooks/pre-push, gator's standard) runs this at each pushed
 # commit, in a gate worktree under ~/.cache/gator-gate/, then publishes the beads
 # with bd-publish. A commit that already passed there is not re-run.
-# Lint, then the Postgres and DuckDB suites in parallel, then hygiene
-ci: lint fmt-check test-both hygiene
+# Lint, then the Postgres and DuckDB suites in parallel, then the diagram renderer tests and hygiene
+ci: lint fmt-check test-both test-diagram hygiene
 
 # The two suites share no state: test uses the docker test_data database and
 # writes coverage/; test-duckdb tests a per-run copy of its fixture and writes its

@@ -1,0 +1,167 @@
+{
+  "name": "during",
+  "base": "filter",
+  "humanName": "During",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "before",
+      "base": "filter",
+      "humanName": "Before",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["410*"],
+          "children": [],
+          "warnings": [["improperly formatted code", "410*"]]
+        },
+        {
+          "name": "death",
+          "base": "cast",
+          "humanName": "Death",
+          "outputTypes": ["death"],
+          "parameters": {},
+          "values": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "union",
+      "base": "set",
+      "humanName": "Union",
+      "outputTypes": ["procedure_occurrence", "observation"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "time_window",
+          "base": "temporal",
+          "humanName": "Time Window",
+          "outputTypes": ["procedure_occurrence", "observation"],
+          "parameters": {
+            "start": "-30d",
+            "end": "0"
+          },
+          "values": [],
+          "children": [
+            {
+              "name": "union",
+              "base": "set",
+              "humanName": "Union",
+              "outputTypes": ["procedure_occurrence", "observation"],
+              "parameters": {},
+              "values": [],
+              "children": [
+                {
+                  "name": "cpt",
+                  "base": "selection",
+                  "humanName": "CPT",
+                  "outputTypes": ["procedure_occurrence"],
+                  "parameters": {},
+                  "values": [
+                    "0146T",
+                    "75898",
+                    "82554",
+                    "92980",
+                    "93010",
+                    "93233",
+                    "93508",
+                    "93540",
+                    "93545"
+                  ],
+                  "children": []
+                },
+                {
+                  "name": "icd9_procedure",
+                  "base": "selection",
+                  "humanName": "ICD-9 Proc",
+                  "outputTypes": ["procedure_occurrence"],
+                  "parameters": {},
+                  "values": ["00.24", "36.02", "89.53", "89.57", "89.69"],
+                  "children": []
+                },
+                {
+                  "name": "loinc",
+                  "base": "selection",
+                  "humanName": "LOINC",
+                  "outputTypes": ["observation"],
+                  "parameters": {},
+                  "values": [
+                    "10839-9",
+                    "13969-1",
+                    "18843-3",
+                    "2154-3",
+                    "33204-9",
+                    "48425-3",
+                    "49259-5",
+                    "6597-9",
+                    "8634-8"
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "time_window",
+          "base": "temporal",
+          "humanName": "Time Window",
+          "outputTypes": ["procedure_occurrence"],
+          "parameters": {
+            "start": "",
+            "end": "60d"
+          },
+          "values": [],
+          "children": [
+            {
+              "name": "union",
+              "base": "set",
+              "humanName": "Union",
+              "outputTypes": ["procedure_occurrence"],
+              "parameters": {},
+              "values": [],
+              "children": [
+                {
+                  "name": "cpt",
+                  "base": "selection",
+                  "humanName": "CPT",
+                  "outputTypes": ["procedure_occurrence"],
+                  "parameters": {},
+                  "values": [
+                    "0146T",
+                    "75898",
+                    "82554",
+                    "92980",
+                    "93010",
+                    "93233"
+                  ],
+                  "children": []
+                },
+                {
+                  "name": "icd9_procedure",
+                  "base": "selection",
+                  "humanName": "ICD-9 Proc",
+                  "outputTypes": ["procedure_occurrence"],
+                  "parameters": {},
+                  "values": ["00.24", "36.02", "89.53", "89.57", "89.69"],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

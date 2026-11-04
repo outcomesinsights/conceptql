@@ -19,6 +19,9 @@ excludes = [
   "node_modules/**",
   "vendor/**",
   ".claude/worktrees/**",
+  # conceptql only: the diagram renderer's references, byte-identical copies of the
+  # files the JavaScript renderer wrote. Reformatting one would break the copy.
+  "test/diagram_renderer/fixtures/**",
 ]
 
 # --- Ruby: omakase + Lint via the repo's tracked .rubocop.yml (gator-rga.1). -----------

@@ -1,0 +1,19 @@
+{
+  "name": "first",
+  "base": "temporal",
+  "humanName": "First",
+  "outputTypes": ["procedure_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "cpt",
+      "base": "selection",
+      "humanName": "CPT",
+      "outputTypes": ["procedure_occurrence"],
+      "parameters": {},
+      "values": ["99214"],
+      "children": []
+    }
+  ]
+}
