@@ -57,7 +57,8 @@ describe ConceptQL::Operators::Vocabulary do
     end)
     Tempfile.create("blah.csv") do |f|
       CSV(f) do |csv|
-        csv << %w[id vocabulary_full_name vocabulary_short_name domain hidden format_regexp]
+        # The columns of config/vocabularies.csv
+        csv << %w[id vocabulary_full_name vocabulary_short_name domain aliases requires_lexicon]
         csv << %w[test test_full test_short test_domain] + [ nil, nil ]
       end
       f.rewind
