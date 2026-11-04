@@ -6,13 +6,15 @@ module ConceptQL
   module Operators
     # Represents a operator that will grab the first occurrence of something
     #
-    # The operator treats all streams as a single, large stream.  It partitions
-    # that larget stream by person_id, then sorts within those groupings
-    # by start_date and then select at most one row per person, regardless
-    # of how many different types of streams enter the operator
+    # The operator takes exactly one upstream. It partitions the records of
+    # that upstream by person_id, sorts the records of each person by
+    # start_date, and selects at most one row per person, even when the
+    # upstream mixes records from several criterion tables
     #
-    # If two rows have the same start_date, the order of their ranking
-    # is arbitrary
+    # If two rows have the same start_date, the row with the lowest
+    # criterion_id comes first. criterion_id is unique within one
+    # criterion_table, so only rows from two different tables with the same
+    # id and start_date still rank in arbitrary order
     #
     # If we ask for the first occurrence of something and a person has no
     # occurrences, this operator returns nothing for that person
@@ -24,16 +26,14 @@ module ConceptQL
       returns "One record per person: the upstream record with the earliest start_date. " \
               "When several records have that start_date, the one with the lowest criterion_id."
 
-      option_meaning :group_by_date,
-                     "Treats the records of a person on one start_date as one occurrence. " \
-                     "It does not change the result of first, which passes along one record of the earliest date either way."
-
       example "For each patient, select the Condition that represents the first occurrence of an MI",
               [ "first", [ "icd9", "412" ] ]
 
-      # With either option, Occurrence's timed query returns every upstream
-      # row instead of one row per person
-      unsupported_options :at_least, :within
+      # With at_least or within, Occurrence's timed query returns every
+      # upstream row instead of one row per person. group_by_date does not
+      # change the result, because first passes along one record of the
+      # earliest date either way (seed conceptql-ufn).
+      unsupported_options :at_least, :within, :group_by_date
 
       def occurrence
         1

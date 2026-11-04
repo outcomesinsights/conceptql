@@ -14,10 +14,11 @@ module ConceptQL
     # -1 => last
     # -2 => second-to-last
     #
-    # The operator treats all streams as a single, large stream.  It partitions
-    # that larget stream by person_id, then sorts within those groupings
-    # by start_date and then select at most one row per person, regardless
-    # of how many different types of streams enter the operator
+    # The operator takes exactly one upstream. It partitions the records of
+    # that upstream by person_id, sorts the records of each person by
+    # start_date, and selects at most one row per person, even when the
+    # upstream mixes records from several criterion tables. With at_least or
+    # within, a person can have more than one row
     #
     # If two rows have the same start_date, criterion_id breaks the tie.
     # criterion_id is unique within one criterion_table, so only rows from
@@ -47,15 +48,15 @@ module ConceptQL
                                      "0 selects nothing."
       category "Filter Single Stream"
       basic_type :temporal
-      validate_at_least_one_upstream
+      validate_one_upstream
 
       option :at_least, type: :string,
-                        instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                        instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
                         meaning: "A date adjustment, such as 30d. For each record, the operator counts that record and the later records " \
                                  "that start at least this long after it ends, and passes along the record at the given position. " \
                                  "So a person can have more than one record in the result."
       option :within, type: :string,
-                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                      instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
                       meaning: "A date adjustment, such as 365d. For each record, the operator counts that record and the later records " \
                                "that start at most this long after it ends, and passes along the record at the given position. " \
                                "So a person can have more than one record in the result."

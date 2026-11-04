@@ -4,6 +4,11 @@ require_relative "temporal_operator"
 
 module ConceptQL
   module Operators
+    # The base class of trim_date_end and trim_date_start. It does not
+    # register, so trim_date is not an operator name, and its subclasses set
+    # their own desc. The rest of this comment describes trim_date_end.
+    # trim_date_start does the same with the dates reversed.
+    #
     # Trims the end_date of the LHS set of records by the RHS's earliest
     # start_date (per person)
     # If a the RHS contains a start_date that comes before the LHS's start_date
@@ -27,18 +32,7 @@ module ConceptQL
     # (trim_date_start). An LHS record is discarded only when it has RHS
     # records and none of them passes.
     class TrimDate < TemporalOperator
-      desc <<~EOF
-        Trims the end_date of the left hand records (LHR) by the earliest
-        start_date (per person) in the right hand records (RHR)
-        If the RHR contains a start_date that comes before the start_date in the LHR
-        that record in the LHR is completely discarded.
-
-        If there is no record in the RHR for a record in the LHR, the record in the LHR is passed
-        through unaffected.
-
-        If the start_date of the record in the RHR is later than the end_date of the record in the LHR, the record in the LHR
-        is passed through unaffected.
-      EOF
+      no_desc
 
       def query(db)
         # If the RHS's min start date is less than the LHS start date,
