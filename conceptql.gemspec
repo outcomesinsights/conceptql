@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Generate OMOP CDMv4-compatible queries from a ConceptQL file'
   spec.description   = 'ConceptQL is a query language for specifying queries to be run OMOP CDMv4 structured data'
   spec.homepage      = 'https://github.com/outcomesinsights/conceptql'
-  spec.license       = 'MIT'
+  spec.licenses      = [ 'MIT', 'OFL-1.1' ]
   spec.required_ruby_version = '>= 3.3'
   spec.metadata['rubygems_mfa_required'] = 'true'
 

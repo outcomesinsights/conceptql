@@ -8,9 +8,11 @@ All notable changes to this project will be documented in this file.
 
 - `ConceptQL::DiagramRenderer`, the diagram renderer of the Jigsaw diagram editor, moved into
   the gem. It draws a diagram tree (`ConceptQL::Diagram.render`) as a standalone static SVG
-  (`render_static`), a PNG (`png`) or the in-app SVG (`render_app`), with the same output as in
-  the editor. The gem ships its assets under `assets/diagram/`: the operator icons, the diagram
-  CSS, and the Roboto fonts with their license (SIL Open Font License 1.1). The configuration
+  (`render_static`), a PNG (`png`) or the in-app SVG (`render_app`), with the same drawing as in
+  the editor. Its SVG output differs from the editor's only in the text of the `<style>` element,
+  and its PNG output is byte-identical. The gem ships its assets under `assets/diagram/`: the
+  operator icons, the diagram CSS, and the Roboto fonts with their license (SIL Open Font
+  License 1.1). The gemspec lists both licenses, `MIT` and `OFL-1.1`. The configuration
   points at them by default, so a host needs no configure call. `require "conceptql"` loads
   none of the renderer until its first use. `render_static` and `png` run the resvg program,
   version 0.33.0. `just test-diagram` runs the renderer's tests against the
@@ -66,24 +68,30 @@ All notable changes to this project will be documented in this file.
   `Lexicon` and on the data model. `concepts` and `concepts_ds` check when they build the
   dataset. A code that a lookup vocabulary stores in this case is no error, and neither is a
   code that matches nothing in any case: it still finds no concept. A vocabulary whose
-  vocabulary_formats row declares `(?i:...)` already ignores case, so it never raises. Each
-  of these lookups takes `check_case: false`, which skips the check and keeps the 0.6.0
-  answer. A statement does not raise: a vocabulary operator, `provenance` and
-  `place_of_service_filter` pass `check_case: false`. So `["icd10cm", "i16.5"]` still gets
-  the warning `improperly formatted code` and selects no rows. The utilization operators
+  vocabulary_formats row declares `(?i:...)` already ignores case, so it never raises. The
+  check reads the concept table without a guard. When the concept table is missing,
+  `known_codes`, `code_meanings` and `concepts_to_codes_in_class` raise
+  `Sequel::DatabaseError`. 0.6.0 returned `[]`, `{}` and `nil`. Each of these lookups takes
+  `check_case: false`, which skips the check and keeps the 0.6.0 answer. A statement does not
+  raise: a vocabulary operator, `provenance` and `place_of_service_filter` pass
+  `check_case: false`. So `["icd10cm", "i16.5"]` still gets the warning
+  `improperly formatted code` and selects no rows. The utilization operators
   (`hospitalization`, `hospice`, `snf`) look up their own codes with the check.
-- A positional upstream is a validation error (`has upstreams`) on `after`, `any_overlap`,
-  `before`, `contains`, `during`, `equal`, `except`, `filter`, `match`, `person_filter`,
-  `trim_date_end`, `trim_date_start` and `read`. The first twelve take their operands from the
-  `left` and `right` options, and `read` takes codes. Before, each of them ignored a positional
-  upstream without a word.
-- `occurrence`, `first` and `last` accept exactly one upstream. A second positional upstream is
-  a validation error (`has multiple upstreams`). Before, they used only the first upstream and
-  dropped the others without a word.
-- `equal` no longer offers the `within` option, and `first` and `last` no longer offer
-  `group_by_date`. The options had no effect on these operators. A statement that sets one of
-  them fails validation (`unsupported option`). A blank value or `false` passes, so a cleared
-  checkbox in the Jigsaw diagram editor still validates.
+- **Breaking:** a positional upstream is a validation error (`has upstreams`) on `after`,
+  `any_overlap`, `before`, `contains`, `during`, `equal`, `except`, `filter`, `match`,
+  `person_filter`, `trim_date_end`, `trim_date_start` and `read`. The first twelve take their
+  operands from the `left` and `right` options, and `read` takes codes. Before, each of them
+  ignored a positional upstream without a word.
+- **Breaking:** `occurrence`, `first` and `last` accept exactly one upstream. A second
+  positional upstream is a validation error (`has multiple upstreams`). Before, they used only
+  the first upstream and dropped the others without a word.
+- **Breaking:** `equal` no longer offers the `within` option, and `first` and `last` no longer
+  offer `group_by_date`. The options had no effect on these operators. A statement that sets
+  one of them fails validation (`unsupported option`). A blank value or `false` passes, so a
+  cleared checkbox in the Jigsaw diagram editor still validates.
+- **Breaking:** `DataModel::Gdm#information_period_where_clause` takes the database as its
+  first argument: `(db, arguments)`. Before, it took only `(arguments)`. It needs the database
+  to look up the concept codes of `information_periods`.
 - The specification moved to `docs/spec/README.md`, and `ConceptQL.spec_path` returns it. Its
   text comes from the conceptql_spec repository, which held the published spec, and it replaces
   the copy that was `doc/spec.md`. `just spec` builds it from `docs/spec/README.cql.md` on the
@@ -121,6 +129,10 @@ All notable changes to this project will be documented in this file.
 - The `hidden` column of `config/vocabularies.csv`, with `Vocabularies::Entry#hidden?` and
   `Vocabularies::Entry#visible?`. No code used them. The column did not hide any operator, and
   it is not connected to the new `hidden` mark of an operator.
+- **Breaking:** `Vocabularies::Entry#vocabulary_long_name`.
+  `Vocabularies::Entry#vocabulary_full_name` replaces it and reads the `vocabulary_full_name`
+  column. An `Entry` built from a hash takes the key `vocabulary_full_name`, not
+  `vocabulary_long_name`. `Entry#long_name` stays.
 
 ### Fixed
 
@@ -150,7 +162,8 @@ All notable changes to this project will be documented in this file.
 
 - A vocabulary whose domain is blank has no domain, so its operators select
   `condition_occurrence` records. The GDM vocabulary table (`gdm_vocabs.vocabularies` in the
-  test data) gives 40 of its 41 vocabularies the domain `''`. Before, their operators, such as
+  test data) gives all but one of its vocabularies the domain `''`, and the last one a NULL
+  domain. Before, the operators of the `''` vocabularies, such as
   `cms_place_of_service`, got `criterion_domain` `''`, their predominant domain in the
   metadata was `''`, and their annotation counts were keyed by `''`. The OHDSI vocabulary
   tables give no domain, so they were not affected.
