@@ -28,7 +28,8 @@ changed in the references.
 0.33.0 exactly (`ConceptQL::DiagramRenderer::Resvg::VERSION`), which `mise.toml` pins and
 `just setup` installs. resvg 0.34 measures the bounding box without the stroke, so the viewBox of
 none of the 70 fixtures matches. `just test-diagram` fails when resvg is missing or is another
-version. `just ci` runs it. `test/all.rb` leaves these tests out, because the Postgres docker
+version. `just ci` runs it, and so does the GitHub CI job `Run-Diagram-Renderer-Tests`, which
+installs resvg with `.github/install-resvg.sh`. `test/all.rb` leaves these tests out, because the Postgres docker
 image and the DuckDB runs have no resvg.
 
 ## Input

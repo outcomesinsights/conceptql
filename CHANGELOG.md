@@ -14,7 +14,9 @@ All notable changes to this project will be documented in this file.
   points at them by default, so a host needs no configure call. `require "conceptql"` loads
   none of the renderer until its first use. `render_static` and `png` run the resvg program,
   version 0.33.0. `just test-diagram` runs the renderer's tests against the
-  editor's JavaScript references, and `just ci` runs it. See `docs/diagram_renderer.md`.
+  editor's JavaScript references, and `just ci` and GitHub CI run it. The release workflow
+  checks that the built gem contains every file under `assets/diagram/`, and it draws one
+  diagram with the installed gem. See `docs/diagram_renderer.md`.
   - The renderer's diagram CSS (`assets/diagram/diagram.css`) holds only the rules of the
     editor's stylesheet that can match an element of a diagram. The editor's page rules (for
     `html`, `body`, `h1`, `.sidebar` and the like) are left out. In a page, the `<style>` of the
