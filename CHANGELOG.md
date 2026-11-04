@@ -28,9 +28,12 @@ All notable changes to this project will be documented in this file.
   (`conceptql-diagram/v1`, with counts). An application can show an operator's help from the
   file of that operator, without a database. `just spec` writes the files, and
   `just spec-check` fails when one of them would change.
-- `information_periods` declares its argument, Information Type Concept IDs (a comma-separated
-  list), so an editor can offer the field. The argument is optional: without it, the operator
-  still selects every information period.
+- `information_periods` declares its argument, Information Types (a comma-separated list), so
+  an editor can offer the field. The argument is optional: without it, the operator still
+  selects every information period. Each value is a concept ID or a concept code of the
+  `GDM_INFORMATION_TYPE` vocabulary, such as `PARTD`, and a statement can mix both. An unknown
+  code gets the warning `unknown code(s)` and selects no period. Before, every argument went
+  through `to_i`, so a code silently became concept ID 0.
 
 ### Changed
 
@@ -64,8 +67,8 @@ All notable changes to this project will be documented in this file.
   dropped the others without a word.
 - `equal` no longer offers the `within` option, and `first` and `last` no longer offer
   `group_by_date`. The options had no effect on these operators. A statement that sets one of
-  them fails validation (`unsupported option`). A blank value passes, but `group_by_date: false`
-  counts as set and fails.
+  them fails validation (`unsupported option`). A blank value or `false` passes, so a cleared
+  checkbox in the Jigsaw diagram editor still validates.
 - The specification moved to `docs/spec/README.md`, and `ConceptQL.spec_path` returns it. Its
   text comes from the conceptql_spec repository, which held the published spec, and it replaces
   the copy that was `doc/spec.md`. `just spec` builds it from `docs/spec/README.cql.md` on the
@@ -96,6 +99,11 @@ All notable changes to this project will be documented in this file.
   `max_upstreams`. `union` and `co_reported` served 99/99 and now serve 1/99. `first`, `last`
   and `occurrence` served 99/99 and now serve 1/1. `person` and `death` served 1/1 and now
   serve 0/1. `trim_date_end` and `trim_date_start` served 1/1 and now serve 0/0.
+
+- The `long_name` in a vocabulary operator's metadata is the vocabulary's full name, read from
+  the `vocabulary_full_name` column of `config/vocabularies.csv` and the lexicons. Before, it
+  fell back to the short name (`atc` served "WHO ATC", not "WHO Anatomic Therapeutic Chemical
+  Classification") or was nil. The `short_name` does not change.
 
 - `race`: an Unknown argument selected no patients. It now selects the patients with no race or
   race concept ID 0. A race concept ID argument now also selects the more detailed races of

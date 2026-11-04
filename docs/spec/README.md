@@ -629,7 +629,7 @@ Selects information periods: the spans of time in which the data has information
 
 - **Upstream:** none.
 - **Arguments:**
-  - `information_types` (codelist): Zero or more information type concept IDs, as integers. With no IDs, the operator selects every information period. With IDs, it selects only the information periods whose type is one of them.
+  - `information_types` (codelist): Zero or more information types, each as a concept ID (an integer) or a concept code of the GDM_INFORMATION_TYPE vocabulary, such as PARTD (Medicare Part D). A statement may mix both. With no information types, the operator selects every information period. With information types, it selects only the information periods whose type is one of them. An unknown code gets a warning and selects no period.
 - **Returns:** One record for each selected information period, from the information_periods table. The type of the records is observation_period.
 
 ______________________________________________________________________
