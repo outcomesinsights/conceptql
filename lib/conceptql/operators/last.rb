@@ -11,8 +11,10 @@ module ConceptQL
     # start_date, and selects at most one row per person, even when the
     # upstream mixes records from several criterion tables
     #
-    # If two rows have the same start_date, the order of their ranking
-    # is arbitrary
+    # If two rows have the same start_date, the row with the highest
+    # criterion_id comes first. criterion_id is unique within one
+    # criterion_table, so only rows from two different tables with the same
+    # id and start_date still rank in arbitrary order
     #
     # If we ask for the last occurrence of something and a person has no
     # occurrences, this operator returns nothing for that person

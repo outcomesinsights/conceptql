@@ -8,8 +8,9 @@ module ConceptQL
     # A TimeWindow adjusts the start_date and end_date the incoming stream by the values specified in
     # the start and end arguments.
     #
-    # Start and end take the format of ([+-]\d*[mdy])+.  For example:
+    # Start and end take the format of ([+-]\d*[dwmy])+.  For example:
     # 'd' => adjust date by one day.  2012-10-07 => 2012-10-08
+    # 'w' => adjust date by one week. 2012-10-07 => 2012-10-14
     # 'm' => adjust date by one month. 2012-10-07 => 2012-11-07
     # 'y' => adjust date by one year. 2012-10-07 => 2013-10-07
     # '1y' => adjust date by one year. 2012-10-07 => 2013-10-07
@@ -35,10 +36,10 @@ module ConceptQL
       desc "Moves the start_date and the end_date of each record. " \
            "Use it to shift or widen a record's dates before you compare them with other records."
       option :start, type: :string,
-                     instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.',
+                     instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years, such as 30d. A negative number moves the date earlier. You can also enter start, end or a date in YYYY-MM-DD format.',
                      meaning: "How to change the start_date. If you omit it, the start_date does not change. #{DATE_ADJUSTMENT_TEXT}"
       option :end, type: :string,
-                   instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date.',
+                   instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years, such as 30d. A negative number moves the date earlier. You can also enter start, end or a date in YYYY-MM-DD format.',
                    meaning: "How to change the end_date. If you omit it, the end_date does not change. #{DATE_ADJUSTMENT_TEXT}"
       returns "One record for each upstream record, with the start_date and the end_date that the options give. " \
               "The other columns do not change."

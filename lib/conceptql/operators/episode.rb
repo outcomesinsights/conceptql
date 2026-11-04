@@ -17,7 +17,7 @@ module ConceptQL
       allows_one_upstream
       validate_one_upstream
       option :gap_of, type: :integer,
-                      instructions: "Allowed gap in days between end date of one event and start date of the next to consider them the same episode",
+                      instructions: "Enter a number of days. A record stays in the current episode when it starts no more than this many days after the latest end date of the earlier records. The default is 0.",
                       meaning: "The largest gap in days that stays in the same episode. The operator orders each " \
                                "patient's records by start_date and then by end_date. A record stays in the current " \
                                "episode when its start_date is no more than this many days after the latest end_date " \

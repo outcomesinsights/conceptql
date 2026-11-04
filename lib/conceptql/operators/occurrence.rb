@@ -51,12 +51,12 @@ module ConceptQL
       validate_one_upstream
 
       option :at_least, type: :string,
-                        instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                        instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
                         meaning: "A date adjustment, such as 30d. For each record, the operator counts that record and the later records " \
                                  "that start at least this long after it ends, and passes along the record at the given position. " \
                                  "So a person can have more than one record in the result."
       option :within, type: :string,
-                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                      instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
                       meaning: "A date adjustment, such as 365d. For each record, the operator counts that record and the later records " \
                                "that start at most this long after it ends, and passes along the record at the given position. " \
                                "So a person can have more than one record in the result."

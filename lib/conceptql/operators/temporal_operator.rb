@@ -15,7 +15,7 @@ module ConceptQL
       default_query_columns
 
       option :within, type: :string,
-                      instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                      instructions: 'Enter a positive number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
                       meaning: "A date adjustment, such as 30d, 2m or 1y-3d, that lets the compared dates be up to this amount apart. Each temporal operator applies it to its own comparison. Use a positive amount."
 
       # The temporal operators read join_columns through
@@ -29,7 +29,7 @@ module ConceptQL
       class << self
         def allows_at_least_option
           option :at_least, type: :string,
-                            instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years". Negative numbers change dates prior to the existing date. Example: -30d = 30 days before the existing date.',
+                            instructions: 'Enter a positive number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
                             meaning: "A date adjustment, such as 7d or 1w, that sets the smallest gap between the compared dates. The gap must be larger than this amount. Use a positive amount."
         end
       end
