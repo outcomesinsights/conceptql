@@ -352,13 +352,13 @@ For each patient, we may want only the chronologically first or last record, or 
 
 <!-- conceptql-spec: operator first-operator -->
 
-`first` is the same as `["occurrence", 1, ...]`. It does not accept `at_least` or `within`.
+`first` is the same as `["occurrence", 1, ...]`. It does not accept `at_least`, `within` or `group_by_date`.
 
 ### `Last` Operator
 
 <!-- conceptql-spec: operator last-operator -->
 
-`last` is the same as `["occurrence", -1, ...]`. It does not accept `at_least` or `within`.
+`last` is the same as `["occurrence", -1, ...]`. It does not accept `at_least`, `within` or `group_by_date`.
 
 ## Date Literals
 
@@ -502,7 +502,7 @@ This example makes a one-year window after each MI. Then it trims each window to
 
 ## Temporal Comparison Operator Options
 
-It can be hard to reason with [`time_window`](#time-window-operator) when you use temporal comparison operators. The options `within` and `at_least` describe some common temporal relationships more directly. Every temporal comparison operator takes `within`, and `before` and `after` also take `at_least`. The reference section of each operator says what the options do for it.
+It can be hard to reason with [`time_window`](#time-window-operator) when you use temporal comparison operators. The options `within` and `at_least` describe some common temporal relationships more directly. Every temporal comparison operator except `equal` takes `within`, and `before` and `after` also take `at_least`. The reference section of each operator says what the options do for it.
 
 When `before` or `after` has the `within` option, it compares each LHR with every RHR of the patient, not only with the patient's last or earliest RHR.
 
