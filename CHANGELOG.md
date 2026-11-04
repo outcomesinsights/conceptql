@@ -85,7 +85,10 @@ All notable changes to this project will be documented in this file.
 - The specification moved to `docs/spec/README.md`, and `ConceptQL.spec_path` returns it. Its
   text comes from the conceptql_spec repository, which held the published spec, and it replaces
   the copy that was `doc/spec.md`. `just spec` builds it from `docs/spec/README.cql.md` on the
-  DuckDB test data. The gem does not ship its diagram images.
+  DuckDB test data. It draws the diagram images with `ConceptQL::DiagramRenderer`, so it needs
+  resvg 0.33.0, and it needs no checkout of the Jigsaw diagram editor. `just spec-check`
+  draws every image again and fails when a committed image differs from its new drawing, is
+  missing, or is not used. The gem does not ship its diagram images.
 - The `desc` of the published operators changed. The operator classes now hold the reference
   documentation of the spec, so each `desc` is the summary of its operator's reference section.
   `ConceptQL.metadata` serves the new texts, so a system that keeps a copy of the metadata,

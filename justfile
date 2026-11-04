@@ -138,17 +138,7 @@ test-diagram *ARGS:
     }
     trap finish EXIT
 
-    want=$(ruby -Ilib -rconceptql/diagram_renderer -e 'print ConceptQL::DiagramRenderer::Resvg::VERSION')
-    if ! command -v resvg >/dev/null; then
-      echo "resvg is not on PATH. The diagram renderer tests need resvg ${want}: run \`just setup\` (mise.toml pins it)."
-      exit 1
-    fi
-    have=$(resvg --version)
-    if [ "$have" != "$want" ]; then
-      echo "resvg ${have} is on PATH ($(command -v resvg)). The diagram renderer tests need resvg ${want}: run \`just setup\` (mise.toml pins it)."
-      exit 1
-    fi
-    echo "resvg ${have} ($(command -v resvg))"
+    {{ just_executable() }} --justfile {{ justfile() }} resvg-check
 
     export CONCEPTQL_COVERAGE_DIR="{{ justfile_directory() }}/{{ log_dir }}/diagram/coverage"
     args=({{ ARGS }})
@@ -158,20 +148,38 @@ test-diagram *ARGS:
       bundle exec ruby -e 'files = ARGV.dup; ARGV.clear; files.each { |f| require File.expand_path(f) }' "${args[@]}"
     fi
 
+# The diagram renderer (ConceptQL::DiagramRenderer) runs resvg, and its output
+# is right only with resvg at exactly ConceptQL::DiagramRenderer::Resvg::VERSION.
+# test-diagram and spec (so also spec-check) run this first. It fails, never
+# skips, when resvg is missing or is another version.
+# Fail unless resvg is on PATH at the version the diagram renderer needs
+resvg-check:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    want=$(ruby -Ilib -rconceptql/diagram_renderer -e 'print ConceptQL::DiagramRenderer::Resvg::VERSION')
+    if ! command -v resvg >/dev/null; then
+      echo "resvg is not on PATH. The diagram renderer needs resvg ${want}: run \`just setup\` (mise.toml pins it)."
+      exit 1
+    fi
+    have=$(resvg --version)
+    if [ "$have" != "$want" ]; then
+      echo "resvg ${have} is on PATH ($(command -v resvg)). The diagram renderer needs resvg ${want}: run \`just setup\` (mise.toml pins it)."
+      exit 1
+    fi
+    echo "resvg ${have} ($(command -v resvg))"
+
 # Rebuilds docs/spec/README.md from docs/spec/README.cql.md. docs/spec/build/run.rb
 # runs every ConceptQL block on the DuckDB fixture (through test-duckdb, so it
 # needs what test-duckdb needs) and writes each example: the statement, its
-# diagram and the first 10 rows of its result. With CONCEPTQL_DIAGRAM_CLI set to
-# the Jigsaw diagram editor's renderer CLI
-# (frontend/lib/conceptql-diagram/cli/bin/conceptql-diagram.js), it also draws
-# docs/spec/images/<sha>.svg and writes docs/spec/images/manifest.tsv. Without
-# it, the committed images stay and the build names each image it did not draw.
-# It also writes docs/spec/examples/<spec_id>.json (ConceptQL.spec_examples_path):
-# the result rows and the diagram tree of each example of each published spec_id.
-# The renderer does not change them.
+# diagram and the first 10 rows of its result. It draws every
+# docs/spec/images/<sha>.svg with ConceptQL::DiagramRenderer, so it needs resvg
+# (resvg-check), removes the SVG files that no example uses, and writes
+# docs/spec/images/manifest.tsv. It also writes
+# docs/spec/examples/<spec_id>.json (ConceptQL.spec_examples_path): the result
+# rows and the diagram tree of each example of each published spec_id.
 # Edit docs/spec/README.cql.md, never docs/spec/README.md.
 # Like fmt-check, it rewrites first and THEN fails: commit what it changed.
-# When the build fails (spec-check's stale images, an invalid example), it still
+# When the build fails (spec-check's images, an invalid example), it still
 # names the files that changed, and then fails with the build's exit status.
 # Rebuild docs/spec/README.md, its images and its example files; fail if they changed
 spec:
@@ -190,6 +198,7 @@ spec:
     }
     trap finish EXIT
 
+    {{ just_executable() }} --justfile {{ justfile() }} resvg-check
     # find fails on a path that does not exist yet (the first build writes it).
     snapshot() { { find docs/spec/README.md docs/spec/images docs/spec/examples -type f 2>/dev/null || true; } | sort | xargs -r sha256sum; }
     before=$(snapshot)
@@ -212,10 +221,12 @@ spec:
 # may hold a stale spec and stale images (seed conceptql-mdo, decision 09), so
 # ci, the pre-push hook and the workflows do not run it. It runs `just spec`
 # with CONCEPTQL_SPEC_CHECK=1, so it needs what test-duckdb needs (the DuckDB
-# fixture, linux amd64). The build prints the Ruby and libduckdb versions that
-# it used. It never draws: it rebuilds each diagram tree and compares the
-# sha256 of the tree's canonical JSON with docs/spec/images/manifest.tsv. A
-# missing image or a different hash fails and names the image. Like `spec`, it
+# fixture, linux amd64) and resvg (resvg-check). The build prints the Ruby and
+# libduckdb versions that it used. It draws every image into a temporary
+# directory and leaves docs/spec/images alone. It fails and names each image
+# that differs from its new drawing, is missing, or is not used by an example.
+# It also compares the sha256 of each diagram tree's canonical JSON with
+# docs/spec/images/manifest.tsv, and names each image whose hash differs. Like `spec`, it
 # rewrites docs/spec/README.md and docs/spec/examples first and THEN fails, also
 # when an example file changed.
 # Fail if docs/spec/README.md, a diagram image or an example file does not match the code

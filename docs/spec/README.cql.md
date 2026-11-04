@@ -863,11 +863,9 @@ The results and the counts come from ConceptQL's DuckDB test data, `synpuf_test_
 - Linux on x86-64. `just test-duckdb` downloads the pinned version of the DuckDB library on the first run.
 - The DuckDB test data. `just test-duckdb` copies it from the path in `DUCKDB_TEST_DATA_SOURCE`, and it fails unless the copy matches the checksum in `.github/synpuf_test_data.sha256`.
 
-The diagrams are drawn with the Jigsaw diagram renderer, which is not public yet. The renderer labels each line with the records (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. Set `CONCEPTQL_DIAGRAM_CLI` to the full path of the renderer's command-line script (Node.js 22 or later) to draw the diagrams. The build then writes each diagram as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
+The diagrams are drawn with ConceptQL's diagram renderer, `ConceptQL::DiagramRenderer`, which runs the resvg program. The build needs resvg 0.33.0 exactly, which `mise.toml` pins and `just setup` installs. It fails when resvg is missing or is another version. The renderer labels each line with the records (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. The build draws every diagram on each run, and writes each one as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the SVG images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
 
-Without `CONCEPTQL_DIAGRAM_CLI`, the build keeps the committed images. It deletes no image, and it does not fail. It names each image that it did not draw, and it marks an image that does not exist as `MISSING`. So a new example needs one run with the renderer.
-
-Between releases, the results and the images on the main branch can be out of date. Before a release, `just release-check` runs `just spec-check`, which rebuilds the document and the diagram data and fails when `README.md` or an image does not match the code.
+Between releases, the results and the images on the main branch can be out of date. Before a release, `just release-check` runs `just spec-check`. It rebuilds the document and the diagram data, and it draws every image into a temporary directory. It fails when `README.md` does not match the code, or when an image differs from its new drawing, is missing, or is not used. It names each such image.
 
 ## Appendix E - Operator Quick Reference
 

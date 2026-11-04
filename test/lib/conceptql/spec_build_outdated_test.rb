@@ -42,4 +42,11 @@ describe "SpecBuild.outdated" do
       _(SpecBuild.outdated({ "a.svg" => tree }, "a.svg\t#{SpecBuild.sha(tree)}\n", dir)).must_equal("a.svg" => "MISSING")
     end
   end
+
+  # An image that README.cql.md places by hand (images/any_overlap.png) is not an SVG.
+  it "names an SVG file that no tree names as unused, and ignores other files" do
+    with_images("a.svg", "b.svg", "c.png") do |dir|
+      _(SpecBuild.outdated({ "a.svg" => tree }, "a.svg\t#{SpecBuild.sha(tree)}\n", dir)).must_equal("b.svg" => "unused")
+    end
+  end
 end
