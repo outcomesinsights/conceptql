@@ -127,10 +127,31 @@ module ConceptQL
         end
       end
 
-      def information_period_where_clause(arguments)
+      # Each argument is an information type concept ID or a concept code of
+      # information_types_vocab. A statement may mix both. A code that names
+      # no concept adds no ID, so it matches no period: it does not become
+      # concept ID 0. With only unknown codes, the clause matches nothing.
+      # Validation warns about an unknown code, so the lookup does not raise
+      # CodeCaseMismatchError.
+      def information_period_where_clause(db, arguments)
         return if arguments.empty?
 
-        { information_type_concept_id: arguments.map(&:to_i) }
+        codes = information_type_codes(arguments)
+        ids = (arguments - codes).map(&:to_i)
+        ids += concept_ids(db, information_types_vocab, codes, check_case: false) unless codes.empty?
+        { information_type_concept_id: ids }
+      end
+
+      # The arguments that are not concept IDs, as strings. A concept ID is
+      # an Integer or a string of digits.
+      def information_type_codes(arguments)
+        arguments.reject { |arg| arg.is_a?(Integer) || arg.to_s.match?(/\A\d+\z/) }.map(&:to_s)
+      end
+
+      # The vocabulary of the information type concepts, such as PARTD
+      # (Medicare Part D). The GDM and the OHDSI vocabulary tables both name it so.
+      def information_types_vocab
+        "GDM_INFORMATION_TYPE"
       end
 
       def code_provenance_type(_query, _domain)
