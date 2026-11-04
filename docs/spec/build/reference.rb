@@ -8,16 +8,20 @@ module SpecBuild
   # README.cql.md marks the place of each generated block with a directive, a
   # line of its own:
   #
-  #   <!-- conceptql-spec: operator SPEC_ID -->  the reference section of SPEC_ID
-  #   <!-- conceptql-spec: label-option -->      the text of the label option
-  #   <!-- conceptql-spec: quick-reference -->   Appendix E, one row per spec_id
+  #   <!-- conceptql-spec: operator SPEC_ID -->       the reference section of SPEC_ID
+  #   <!-- conceptql-spec: label-option -->           the text of the label option
+  #   <!-- conceptql-spec: quick-reference -->        Appendix E, one row per spec_id
+  #   <!-- conceptql-spec: vocabulary-operators -->   one row per vocabulary operator
   #
   # An operator directive comes directly after the heading of its section, and
   # the anchor of that heading is the spec_id. Each published spec_id has one
-  # operator directive, and the other two directives appear once each.
+  # operator directive, and the other directives appear once each. Without a
+  # published vocabulary operator, the vocabulary-operators directive must not
+  # appear.
   class Reference
     DIRECTIVE = /\A<!-- conceptql-spec: (?<kind>[a-z-]+)(?: (?<arg>\S+))? -->\s*\z/
-    KINDS = %w[operator label-option quick-reference].freeze
+    KINDS = %w[operator label-option quick-reference vocabulary-operators].freeze
+    SINGLE_KINDS = KINDS - %w[operator]
 
     # min_upstreams and max_upstreams (99 means no limit) as text
     UPSTREAMS = {
@@ -103,6 +107,23 @@ module SpecBuild
         .join("\n") + "\n"
     end
 
+    # The table of the vocabulary operators: one row for each published
+    # operator of the shared section, ordered by name, with its full
+    # vocabulary name (long_name) and its domains. A deprecated operator is
+    # marked. An operator without a long_name or a domain raises.
+    def vocabulary_operators
+      rows = @sections.fetch(SHARED_SECTION).sort_by { |operator| operator[:name] }.map do |operator|
+        long_name = operator[:long_name].to_s
+        domains = operator[:predominant_domains].to_a
+        raise "the vocabulary operator #{operator[:name]} has no long_name" if long_name.strip.empty?
+        raise "the vocabulary operator #{operator[:name]} has no domain" if domains.empty?
+
+        name = "`#{operator[:name]}`#{' (deprecated)' if operator[:deprecated]}"
+        "| #{name} | #{cell(long_name)} | #{domains.join(', ')} |"
+      end
+      [ "| Operator | Vocabulary | Domain |", "| --- | --- | --- |", *rows ].join("\n") + "\n"
+    end
+
     # The desc of the section. Operators of one spec_id have one desc, except
     # the vocabulary operators.
     def desc(spec_id)
@@ -127,6 +148,7 @@ module SpecBuild
       when "operator" then section(directive[:arg])
       when "label-option" then label_option
       when "quick-reference" then quick_reference(headings)
+      when "vocabulary-operators" then vocabulary_operators
       end
     end
 
@@ -151,9 +173,10 @@ module SpecBuild
           end
         end
       end
-      %w[label-option quick-reference].each do |kind|
+      SINGLE_KINDS.each do |kind|
         count = found.count { |directive, _| directive && directive[:kind] == kind }
-        errors << "#{@source}: #{count} #{kind} directives, not 1" unless count == 1
+        expected = kind == "vocabulary-operators" && !@sections.key?(SHARED_SECTION) ? 0 : 1
+        errors << "#{@source}: #{count} #{kind} directives, not #{expected}" unless count == expected
       end
       missing = spec_ids - headings.keys
       errors << "#{@source}: no section for #{missing.join(', ')}" if missing.any?

@@ -45,6 +45,18 @@ describe "the long name of a vocabulary" do
     _(metadata(cdb, "ms_drg")[:long_name]).must_equal ConceptQL::Vocabularies::DrgSystems.system("ms_drg").long_name
   end
 
+  # bead conceptql-rx42: the spec's table of the vocabulary operators shows
+  # each long_name, so no published vocabulary operator may lack one
+  it "is set for read and for a multiple vocabulary operator" do
+    cdb = ConceptQL::Database.new(nil, data_model: :gdm)
+
+    _(metadata(cdb, "read")[:long_name]).must_equal "NHS UK Read Codes Version 2 (HSCIC)"
+    _(metadata(cdb, "read")[:predominant_domains]).must_equal [ "condition_occurrence" ]
+    _(metadata(cdb, "cpt_or_hcpcs")[:long_name]).must_equal "CPT4, HCPCS and CPT4_HCPCS"
+    blank = ConceptQL.metadata(cdb)[:operators].values.select { |op| op[:spec_id] == "vocabulary-operator" && op[:long_name].to_s.strip.empty? }
+    _(blank.map { |op| op[:name] }).must_be_empty
+  end
+
   describe "with a GDM lexicon" do
     let(:ldb) do
       Sequel.connect("sqlite:/").tap do |ldb|

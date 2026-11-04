@@ -29,12 +29,19 @@ module ConceptQL
           end
         end
 
+        def long_name_of(vocabulary_ids)
+          return vocabulary_ids.first if vocabulary_ids.one?
+
+          "#{vocabulary_ids[0...-1].join(', ')} and #{vocabulary_ids.last}"
+        end
+
         def operator_symbol(word)
           word.gsub(/\W+/, "_").downcase
         end
 
         # This will override the to_metadata method and return the preferred name
-        # based on the name listed in the file.
+        # based on the name listed in the file. The long_name names the
+        # operator's vocabularies, for example "CPT4, HCPCS and CPT4_HCPCS".
         #
         # This method will be called once for each vocabulary we register
         # for this operator
@@ -42,6 +49,7 @@ module ConceptQL
           h = super
           op_info = multiple_vocabularies[name].first
           h[:preferred_name] = op_info[:operator]
+          h[:long_name] = long_name_of(multiple_vocabularies[name].map { |mv| mv[:vocabulary_id] })
           h[:predominant_domains] = multiple_vocabularies[name].map { |mv| mv[:domain] }.uniq.compact
           h
         end
