@@ -23,9 +23,9 @@ module ConceptQL
       option_meaning :right, "The right-hand stream. For each patient, the earliest start_date of these records sets the latest end_date of the left-hand records. These records are not passed on."
       option_meaning :within, "A date adjustment, such as 30d, 2m or 1y-3d, that is subtracted from the start_date of the right-hand record before the comparison. The adjusted date is the one that moves the end_date of the left-hand record."
 
-      example "Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)",
+      example "Each patient's span from birth to age 50 or to 1970-01-01, whichever is earlier (patients born after 1970 are dropped)",
               [ "trim_date_end", { left: [ "time_window", [ "person" ], { end: "+50y" } ],
-                                   right: [ "date_range", { start: "1980-01-01", end: "1980-01-01" } ] } ]
+                                   right: [ "date_range", { start: "1970-01-01", end: "1970-01-01" } ] } ]
 
       private
 

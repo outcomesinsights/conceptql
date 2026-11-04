@@ -1739,26 +1739,26 @@ For each patient, moves the end_date of each left-hand record back to the start_
 
 ______________________________________________________________________
 
-**Example 50 - Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)**
+**Example 50 - Each patient's span from birth to age 50 or to 1970-01-01, whichever is earlier (patients born after 1970 are dropped)**
 
 ```JSON
-["trim_date_end",{"left":["time_window",["person"],{"end":"+50y"}],"right":["date_range",{"start":"1980-01-01","end":"1980-01-01"}]}]
+["trim_date_end",{"left":["time_window",["person"],{"end":"+50y"}],"right":["date_range",{"start":"1970-01-01","end":"1970-01-01"}]}]
 ```
 
-![Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)](images/d8d846e9c398caf655ab4b7c79703295a34a6f59d44eba4b33da773519ac498b.svg)
+![Each patient's span from birth to age 50 or to 1970-01-01, whichever is earlier (patients born after 1970 are dropped)](images/837688f7f2855128d64fd5efc9350196414deb8ecb0f3f3f33ab7cd4e4df2963.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
 | --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
-| 1         | 1            | patients        | person           | 1923-05-01 | 1973-05-01 | 00013D2EFD8E45D1 |
-| 2         | 2            | patients        | person           | 1943-01-01 | 1980-01-01 | 00016F745862898F |
-| 3         | 3            | patients        | person           | 1936-09-01 | 1980-01-01 | 0001FDD721E223DC |
-| 4         | 4            | patients        | person           | 1941-06-01 | 1980-01-01 | 00021CA6FF03E670 |
-| 5         | 5            | patients        | person           | 1936-08-01 | 1980-01-01 | 00024B3D2352D2D0 |
-| 6         | 6            | patients        | person           | 1943-10-01 | 1980-01-01 | 0002DAE1C81CC70D |
-| 7         | 7            | patients        | person           | 1922-07-01 | 1972-07-01 | 0002F28CE057345B |
-| 8         | 8            | patients        | person           | 1935-09-01 | 1980-01-01 | 000308435E3E5B76 |
-| 9         | 9            | patients        | person           | 1976-09-01 | 1980-01-01 | 000345A39D4157C9 |
-| 10        | 10           | patients        | person           | 1938-10-01 | 1980-01-01 | 00036A21B65B0206 |
+| 1         | 1            | patients        | person           | 1923-05-01 | 1970-01-01 | 00013D2EFD8E45D1 |
+| 2         | 2            | patients        | person           | 1943-01-01 | 1970-01-01 | 00016F745862898F |
+| 3         | 3            | patients        | person           | 1936-09-01 | 1970-01-01 | 0001FDD721E223DC |
+| 4         | 4            | patients        | person           | 1941-06-01 | 1970-01-01 | 00021CA6FF03E670 |
+| 5         | 5            | patients        | person           | 1936-08-01 | 1970-01-01 | 00024B3D2352D2D0 |
+| 6         | 6            | patients        | person           | 1943-10-01 | 1970-01-01 | 0002DAE1C81CC70D |
+| 7         | 7            | patients        | person           | 1922-07-01 | 1970-01-01 | 0002F28CE057345B |
+| 8         | 8            | patients        | person           | 1935-09-01 | 1970-01-01 | 000308435E3E5B76 |
+| 10        | 10           | patients        | person           | 1938-10-01 | 1970-01-01 | 00036A21B65B0206 |
+| 11        | 11           | patients        | person           | 1934-02-01 | 1970-01-01 | 000489E7EAAD463F |
 
 ______________________________________________________________________
 
@@ -2478,17 +2478,15 @@ For each patient, keeps the left-hand records whose value_as_number equals the v
 
 ______________________________________________________________________
 
-**Example 71 - HbA1c results (LOINC 4548-4) with the same value as an HbA1c result of the same patient**
+**Example 71 - HbA1c results (LOINC 4548-4) with the same value as an HbA1c result by HPLC (LOINC 17856-6) of the same patient**
 
 ```JSON
-["equal",{"left":["loinc","4548-4"],"right":["loinc","4548-4"]}]
+["equal",{"left":["loinc","4548-4"],"right":["loinc","17856-6"]}]
 ```
 
-![HbA1c results (LOINC 4548-4) with the same value as an HbA1c result of the same patient](images/202cf10a41bc67ec744361f70c971b5e9bdefa9e60983704c3e42477623890ea.svg)
+![HbA1c results (LOINC 4548-4) with the same value as an HbA1c result by HPLC (LOINC 17856-6) of the same patient](images/640863651a92ac2a8f78139b0cbefead9e9309958b8549dd5a6cc44e37e6e122.svg)
 
-| person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value |
-| --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ------------ |
-| 200       | 100001       | observations    | observation      | 2009-03-03 | 2009-03-03 | 4548-4       |
+No results.
 
 ______________________________________________________________________
 
