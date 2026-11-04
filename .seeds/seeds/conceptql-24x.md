@@ -1,10 +1,12 @@
 ---
 id: conceptql-24x
 title: 'Use the moved diagram renderer in conceptql: spec images without JDE, and a CLI command?'
-status: captured
+status: resolved
 type: question
 created_at: 2026-11-04T03:09:26.587861+00:00
-updated_at: 2026-11-04T03:09:26.587861+00:00
+updated_at: 2026-11-04T03:12:07.414311+00:00
+resolved_at: 2026-11-04T03:12:07.414303+00:00
+resolution: 'Ruled (a): spec images drawn by the gem renderer. Bead conceptql-tf8u.4.'
 tags:
   - diagram
   - spec
@@ -25,3 +27,5 @@ When the renderer is in conceptql (bead conceptql-tf8u, ruled 2026-11-03), conce
 (c) Neither for now. The renderer serves JDE only.
 
 Recommendation: (a) after the move, because it removes the only dependency of conceptql's release on a JDE checkout. (b) only if someone asks for it.
+
+RULED 2026-11-03: option (a). Ryan, verbatim: "24x, yes, use conceptql gem to render". The spec build draws its images with ConceptQL::DiagramRenderer, and CONCEPTQL_DIAGRAM_CLI goes away. Bead conceptql-tf8u.4 holds the work, after conceptql-tf8u.1. Option (b), a CLI render command, was not chosen and is not filed.
