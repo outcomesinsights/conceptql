@@ -32,6 +32,16 @@ version. `just ci` runs it, and so does the GitHub CI job `Run-Diagram-Renderer-
 installs resvg with `.github/install-resvg.sh`. `test/all.rb` leaves these tests out, because the Postgres docker
 image and the DuckDB runs have no resvg.
 
+`render_static` and `png` also check the version of resvg. The first call in a process runs
+`resvg --version`. When resvg reports another version than 0.33.0, that call writes one warning to
+stderr and then draws the diagram anyway. The warning names both versions:
+
+```text
+ConceptQL::DiagramRenderer: resvg 0.34.0 is not the required version 0.33.0. The diagrams can be wrong.
+```
+
+Later calls in the same process do not check again, and `configure` does not reset the check.
+
 ## Input
 
 The input is parsed JSON (hashes with string keys) in one of three shapes:

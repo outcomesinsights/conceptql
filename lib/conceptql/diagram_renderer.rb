@@ -31,6 +31,7 @@ module ConceptQL
       # input), as text. show_counts labels each stream with its child's
       # counts; show_options lists each node's options under its values.
       def render_static(input, show_counts: false, show_options: false)
+        check_resvg_version
         Static.new(configuration).render(input, show_counts:, show_options:)
       end
 
@@ -46,6 +47,22 @@ module ConceptQL
       # and css_transforms (see App#render and docs/diagram_renderer.md).
       def render_app(tree, **options)
         App.new(configuration).render(tree, **options)
+      end
+
+      private
+
+      # The first call in a process runs `resvg --version`. Another version
+      # than Resvg::VERSION can draw wrong diagrams, so it prints one warning
+      # to stderr and draws anyway. Later calls do not check again, even after
+      # configure. png calls render_static, so png checks too.
+      def check_resvg_version
+        return if @resvg_version_checked
+
+        @resvg_version_checked = true
+        found = configuration.resvg.version
+        return if found == Resvg::VERSION
+
+        warn "ConceptQL::DiagramRenderer: resvg #{found} is not the required version #{Resvg::VERSION}. The diagrams can be wrong."
       end
     end
   end
