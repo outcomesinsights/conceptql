@@ -6,10 +6,10 @@ module ConceptQL
   module Operators
     # Represents a operator that will grab the last occurrence of something
     #
-    # The operator treats all streams as a single, large stream.  It partitions
-    # that larget stream by person_id, then sorts within those groupings
-    # by start_date and then select at most one row per person, regardless
-    # of how many different types of streams enter the operator
+    # The operator takes exactly one upstream. It partitions the records of
+    # that upstream by person_id, sorts the records of each person by
+    # start_date, and selects at most one row per person, even when the
+    # upstream mixes records from several criterion tables
     #
     # If two rows have the same start_date, the order of their ranking
     # is arbitrary

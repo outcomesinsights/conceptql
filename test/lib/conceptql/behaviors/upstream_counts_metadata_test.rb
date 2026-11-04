@@ -12,6 +12,10 @@ require_relative "../../../helper"
 # The operators whose operands are the left and right options, and read, take
 # no positional upstream. Ryan ruled on 2026-11-03 that a positional upstream
 # on them is a validation error, because they ignored it.
+#
+# occurrence, first and last use only their first upstream, so a second one
+# was dropped with no error. Ryan ruled on 2026-11-03 that they take exactly
+# one upstream, so they serve 1/1 (bead conceptql-pqy5). Before, 1/99.
 # No database: Database.new(nil) decides which operators are published.
 describe "upstream counts in ConceptQL.metadata" do
   let(:cdb) { ConceptQL::Database.new(nil, data_model: :gdm) }
@@ -47,10 +51,10 @@ describe "upstream counts in ConceptQL.metadata" do
 
   {
     "union" => [ 1, 99 ],
-    "first" => [ 1, 99 ],
-    "last" => [ 1, 99 ],
+    "first" => [ 1, 1 ],
+    "last" => [ 1, 1 ],
     "co_reported" => [ 1, 99 ],
-    "occurrence" => [ 1, 99 ],
+    "occurrence" => [ 1, 1 ],
     "person" => [ 0, 1 ],
     "death" => [ 0, 1 ],
     "episode" => [ 1, 1 ],
@@ -76,6 +80,23 @@ describe "upstream counts in ConceptQL.metadata" do
   it "accepts the same statement without the positional upstream" do
     statement = [ "before", { left: [ "icd9", "412" ], right: [ "icd9", "401.9" ] } ]
     _(cdb.query(statement).scope_annotate(skip_counts: true)[:errors].to_h).must_be_empty
+  end
+
+  {
+    "occurrence" => [ "occurrence", 2 ],
+    "first" => [ "first" ],
+    "last" => [ "last" ]
+  }.each do |name, head|
+    it "reports a second upstream on #{name} as an error" do
+      statement = head + [ [ "icd9", "412" ], [ "icd9", "401.9" ] ]
+      errors = cdb.query(statement).scope_annotate(skip_counts: true)[:errors]
+      _(errors).must_equal(name => [ [ "has multiple upstreams", %w[icd9 icd9] ] ])
+    end
+
+    it "accepts one upstream on #{name}" do
+      statement = head + [ [ "icd9", "412" ] ]
+      _(cdb.query(statement).scope_annotate(skip_counts: true)[:errors].to_h).must_be_empty
+    end
   end
 
   it "reports a positional upstream on read as an error" do
