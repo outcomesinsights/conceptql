@@ -96,7 +96,8 @@ jobs:
 
   # Holds publish rights, so it installs no bundle and runs no development
   # dependency: Ruby, the gemspec, the built gem and its declared runtime
-  # dependencies, nothing else.
+  # dependencies, and the resvg program that the diagram renderer runs,
+  # nothing else.
   publish:
     needs: verify
     runs-on: ubuntu-latest
@@ -122,15 +123,18 @@ jobs:
       # complete and works: install it, with only its declared runtime
       # dependencies, into an empty GEM_HOME; load it from there, not from the
       # checkout; require every tracked file under config/ and schemas/, and
-      # docs/spec/README.md (ConceptQL.spec_path) and docs/spec/examples/
-      # (ConceptQL.spec_examples_path), to be in it; and create a ConceptQL::Database and generate SQL (the call
+      # docs/spec/README.md (ConceptQL.spec_path), docs/spec/examples/
+      # (ConceptQL.spec_examples_path) and assets/diagram/ (the diagram
+      # renderer's assets), to be in it; and create a ConceptQL::Database and generate SQL (the call
       # that failed against sequelizer 0.2.0). That install, outside any
       # lockfile, is deliberate (ruled 2026-10-01), hence the zizmor ignore.
       - name: Check the built gem loads and resolves config/ and schemas/ when installed
         run: | # zizmor: ignore[adhoc-packages]
           set -euo pipefail
-          home=$(mktemp -d); empty=$(mktemp -d)
-          RUNTIME_FILES=$(git ls-files config schemas docs/spec/README.md docs/spec/examples | tr '\n' ' ')
+          # A fixed path, not mktemp: the render step below loads the gem from it.
+          home="$RUNNER_TEMP/gem-home"; empty=$(mktemp -d)
+          mkdir "$home"
+          RUNTIME_FILES=$(git ls-files config schemas docs/spec/README.md docs/spec/examples assets/diagram | tr '\n' ' ')
           export RUNTIME_FILES
           # GEM_PATH too, so already-installed gems cannot satisfy a dependency:
           # with GEM_HOME alone, gem install sees the system's gems, skips them,
@@ -150,6 +154,7 @@ jobs:
             wanted = ENV.fetch("RUNTIME_FILES").split
             abort "no tracked files under config/ and schemas/" if wanted.empty?
             abort "no tracked example files under docs/spec/examples/" if wanted.none? { |f| f.start_with?("docs/spec/examples/") }
+            abort "no tracked files under assets/diagram/" if wanted.none? { |f| f.start_with?("assets/diagram/") }
             missing = wanted.reject { |f| File.file?(File.join(dir, f)) }
             abort "missing from the built gem: #{missing.join(", ")}" unless missing.empty?
             cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres))
@@ -157,9 +162,32 @@ jobs:
             abort "only #{operators} operators" if operators < 50
             sql = cdb.query(["icd9", "412"]).sql
             abort "unexpected SQL from the installed gem: #{sql}" unless sql.include?("SELECT")
-            puts "installed gem at #{dir}: #{wanted.size} config/schemas files, #{operators} operators"
+            puts "installed gem at #{dir}: #{wanted.size} config/, schemas/, spec and assets files, #{operators} operators"
             puts sql[0, 200]'
           "$home/bin/conceptql" help >/dev/null
+      # render_static runs resvg, at the version that
+      # ConceptQL::DiagramRenderer::Resvg::VERSION names. The script checks the
+      # tarball against .github/resvg-linux-x86_64.tar.gz.sha256.
+      - name: Install resvg
+        run: |
+          .github/install-resvg.sh "$RUNNER_TEMP/resvg"
+          echo "$RUNNER_TEMP/resvg" >> "$GITHUB_PATH"
+      # Draw one diagram with the installed gem and the assets/diagram/ files
+      # in it, as a host does: the static SVG of ["icd9", "412"].
+      - name: Render a diagram with the installed gem
+        run: |
+          set -euo pipefail
+          export GEM_HOME="$RUNNER_TEMP/gem-home" GEM_PATH="$RUNNER_TEMP/gem-home"
+          cd "$(mktemp -d)"
+          ruby -e '
+            gem "conceptql"; require "conceptql"
+            dir = Gem.loaded_specs["conceptql"].gem_dir
+            abort "loaded #{dir}, not the built gem" unless dir.start_with?(ENV["GEM_HOME"])
+            assets = ConceptQL::DiagramRenderer::Configuration::ASSETS
+            abort "the renderer assets #{assets} are not under #{dir}" unless assets.to_s.start_with?(dir)
+            svg = ConceptQL::DiagramRenderer.render_static(ConceptQL::Diagram.render([["icd9", "412"]]))
+            abort "render_static returned no diagram of icd9 412: #{svg[0, 200]}" unless svg.start_with?("<svg") && svg.include?(">412</tspan>")
+            puts "rendered #{svg.bytesize} bytes of static SVG with the assets in #{assets}"'
       # Trusted publishing: exchanges this job's OIDC token for a short-lived
       # rubygems API key.
       - uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0

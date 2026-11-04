@@ -223,10 +223,48 @@ jobs:
           name: coverage-duckdb-ruby-${{ matrix.ruby }}-libduckdb-${{ matrix.libduckdb }}
           path: claude_stuff/test-logs/duckdb/coverage/
           retention-days: 90
+  # The diagram renderer's tests (test/diagram_renderer/), as `just ci` runs
+  # them. They need no database, only resvg at the exact version that
+  # ConceptQL::DiagramRenderer::Resvg::VERSION names.
+  Run-Diagram-Renderer-Tests:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1"
+      # Downloads the release tarball and checks it against
+      # .github/resvg-linux-x86_64.tar.gz.sha256.
+      - name: Install resvg
+        run: |
+          .github/install-resvg.sh "$RUNNER_TEMP/resvg"
+          echo "$RUNNER_TEMP/resvg" >> "$GITHUB_PATH"
+      - name: Run Tests
+        run: just test-diagram
+      - name: Upload Coverage
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage-diagram-renderer
+          path: claude_stuff/test-logs/diagram/coverage/
+          retention-days: 90
   ci:
     if: always()
     permissions: {}
-    needs: [lint, Run-PostgreSQL-Tests, Run-Spark-Tests, Run-DuckDB-Tests]
+    needs:
+      - lint
+      - Run-PostgreSQL-Tests
+      - Run-Spark-Tests
+      - Run-DuckDB-Tests
+      - Run-Diagram-Renderer-Tests
     runs-on: ubuntu-latest
     steps:
       # Allowlists success: a skipped, cancelled or failed needed job (or any
