@@ -1,10 +1,12 @@
 ---
 id: conceptql-ufn
 title: Options and arguments that the metadata offers but the code ignores (equal within, first/last group_by_date, information_periods arguments)
-status: captured
+status: resolved
 type: question
 created_at: 2026-11-04T00:12:41.925927+00:00
-updated_at: 2026-11-04T00:13:25.036387+00:00
+updated_at: 2026-11-04T00:52:04.194022+00:00
+resolved_at: 2026-11-04T00:52:04.194013+00:00
+resolution: "Shipped 2026-11-03: equal's within and first/last's group_by_date are unsupported_options (bead conceptql-jf79), and information_periods declares an optional codelist argument, Information Type Concept IDs (bead conceptql-oq4r; codelist, not integer, because it takes several IDs). Efficacy: minor tweak — the bead said integer; the agent chose codelist to match provenance and race. Open: group_by_date false now fails validation, because validate_unsupported_options treats false as set and the editor writes false when a checkbox is cleared."
 ---
 
 ## Context
