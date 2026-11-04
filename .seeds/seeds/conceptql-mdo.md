@@ -4,7 +4,7 @@ title: Move the ConceptQL spec, operator documentation and example results into 
 status: captured
 type: decision
 created_at: 2026-11-03T18:14:43.431733+00:00
-updated_at: 2026-11-03T21:36:31.170011+00:00
+updated_at: 2026-11-04T00:13:26.108963+00:00
 tags:
   - spec
   - migration
@@ -154,3 +154,5 @@ Epic conceptql-jwsv holds the conceptql work: conceptql-jwsv.1 (upstream counts)
 "those were removed for good reason and need to be left out -- we don't support any of that anymore"
 
 conceptql_spec's 2023 overhaul (commit e54ec7a) removed the casting section ("Type Conversion") and "Algorithms within Algorithms" on purpose. Bead conceptql-jwsv.4 ported both back from conceptql's old doc/spec.md.cql, because conceptql_spec bead conceptql_spec-vvf.1 listed them as gaps. That list was wrong on these two items. Both sections are removed again. The person and death operator sections keep the README's one sentence about an upstream operator, as conceptql_spec's README has it. No operator text, example or generated section may describe casting, type conversion, or an algorithm stored inside another algorithm.
+
+RULED 2026-11-03 (Ryan): occurrence, first and last take exactly one upstream: "about occurrence, yes, only one upstream". A second positional upstream is a validation error, and their metadata reports 1/1. This extends the stray-upstream ruling (bead conceptql-jwsv.1) to these three operators. Seed conceptql-ufn holds the related option rulings.
