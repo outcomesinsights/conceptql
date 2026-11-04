@@ -8,6 +8,8 @@ This gem interprets the ConceptQL language and translates it into SQL queries co
 
 The ConceptQL specification is [docs/spec/README.md](docs/spec/README.md).
 
+`ConceptQL::DiagramRenderer` draws a statement's diagram as an SVG or a PNG. See [docs/diagram_renderer.md](docs/diagram_renderer.md).
+
 ## Motivation for ConceptQL
 
 Outcomes Insights has built a vast library of research algorithms and applied those algorithms to large databases of claims data. Early into building the library, we realized we had to overcome two major issues:

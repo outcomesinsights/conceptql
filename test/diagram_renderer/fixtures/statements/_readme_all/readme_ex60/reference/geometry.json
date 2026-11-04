@@ -1,0 +1,514 @@
+{
+  "nodes": {
+    "root": {
+      "name": "root",
+      "depth": 0,
+      "dataIndex": 0,
+      "x": 0,
+      "y": 0,
+      "nodePosition": {
+        "x": -20,
+        "y": -20
+      },
+      "nodeTitle": null,
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "condition_occurrence"
+    },
+    "n0": {
+      "name": "during",
+      "depth": 1,
+      "dataIndex": 1,
+      "x": 0,
+      "y": 140,
+      "nodePosition": {
+        "x": -20,
+        "y": -160
+      },
+      "nodeTitle": "During",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0": {
+      "name": "before",
+      "depth": 2,
+      "dataIndex": 2,
+      "x": -275,
+      "y": 280,
+      "nodePosition": {
+        "x": -295,
+        "y": -300
+      },
+      "nodeTitle": "Before",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.1": {
+      "name": "union",
+      "depth": 2,
+      "dataIndex": 5,
+      "x": 275,
+      "y": 280,
+      "nodePosition": {
+        "x": 255,
+        "y": -300
+      },
+      "nodeTitle": "Union",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "mixed"
+    },
+    "n0.0.0": {
+      "name": "icd9",
+      "depth": 3,
+      "dataIndex": 3,
+      "x": -375,
+      "y": 420,
+      "nodePosition": {
+        "x": -395,
+        "y": -440
+      },
+      "nodeTitle": "ICD-9 CM",
+      "descriptionLines": [
+        "410*"
+      ],
+      "descriptionLinesWithOptions": [
+        "410*"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0.1": {
+      "name": "death",
+      "depth": 3,
+      "dataIndex": 4,
+      "x": -175,
+      "y": 420,
+      "nodePosition": {
+        "x": -195,
+        "y": -440
+      },
+      "nodeTitle": "Death",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "death"
+    },
+    "n0.1.0": {
+      "name": "time_window",
+      "depth": 3,
+      "dataIndex": 6,
+      "x": 25,
+      "y": 420,
+      "nodePosition": {
+        "x": 5,
+        "y": -440
+      },
+      "nodeTitle": "Time Window",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [
+        "start: -30d",
+        "end: 0"
+      ],
+      "pointColor": "mixed"
+    },
+    "n0.1.1": {
+      "name": "time_window",
+      "depth": 3,
+      "dataIndex": 11,
+      "x": 525,
+      "y": 420,
+      "nodePosition": {
+        "x": 505,
+        "y": -440
+      },
+      "nodeTitle": "Time Window",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [
+        "end: 60d"
+      ],
+      "pointColor": "procedure_occurrence"
+    },
+    "n0.1.0.0": {
+      "name": "union",
+      "depth": 4,
+      "dataIndex": 7,
+      "x": 25,
+      "y": 560,
+      "nodePosition": {
+        "x": 5,
+        "y": -580
+      },
+      "nodeTitle": "Union",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "mixed"
+    },
+    "n0.1.1.0": {
+      "name": "union",
+      "depth": 4,
+      "dataIndex": 12,
+      "x": 525,
+      "y": 560,
+      "nodePosition": {
+        "x": 505,
+        "y": -580
+      },
+      "nodeTitle": "Union",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "procedure_occurrence"
+    },
+    "n0.1.0.0.0": {
+      "name": "cpt",
+      "depth": 5,
+      "dataIndex": 8,
+      "x": -175,
+      "y": 700,
+      "nodePosition": {
+        "x": -195,
+        "y": -720
+      },
+      "nodeTitle": "CPT",
+      "descriptionLines": [
+        "0146T, 75898, 82554, 92980",
+        "93010, 93233, 93508, 93540",
+        "93545"
+      ],
+      "descriptionLinesWithOptions": [
+        "0146T, 75898, 82554, 92980",
+        "93010, 93233, 93508, 93540",
+        "93545"
+      ],
+      "pointColor": "procedure_occurrence"
+    },
+    "n0.1.0.0.1": {
+      "name": "icd9_procedure",
+      "depth": 5,
+      "dataIndex": 9,
+      "x": 25,
+      "y": 700,
+      "nodePosition": {
+        "x": 5,
+        "y": -720
+      },
+      "nodeTitle": "ICD-9 Proc",
+      "descriptionLines": [
+        "00.24, 36.02, 89.53, 89.57",
+        "89.69"
+      ],
+      "descriptionLinesWithOptions": [
+        "00.24, 36.02, 89.53, 89.57",
+        "89.69"
+      ],
+      "pointColor": "procedure_occurrence"
+    },
+    "n0.1.0.0.2": {
+      "name": "loinc",
+      "depth": 5,
+      "dataIndex": 10,
+      "x": 225,
+      "y": 700,
+      "nodePosition": {
+        "x": 205,
+        "y": -720
+      },
+      "nodeTitle": "LOINC",
+      "descriptionLines": [
+        "10839-9, 13969-1",
+        "18843-3, 2154-3, 33204-9",
+        "48425-3, 49259-5, 6597-9…"
+      ],
+      "descriptionLinesWithOptions": [
+        "10839-9, 13969-1",
+        "18843-3, 2154-3, 33204-9",
+        "48425-3, 49259-5, 6597-9…"
+      ],
+      "pointColor": "observation"
+    },
+    "n0.1.1.0.0": {
+      "name": "cpt",
+      "depth": 5,
+      "dataIndex": 13,
+      "x": 425,
+      "y": 700,
+      "nodePosition": {
+        "x": 405,
+        "y": -720
+      },
+      "nodeTitle": "CPT",
+      "descriptionLines": [
+        "0146T, 75898, 82554, 92980",
+        "93010, 93233"
+      ],
+      "descriptionLinesWithOptions": [
+        "0146T, 75898, 82554, 92980",
+        "93010, 93233"
+      ],
+      "pointColor": "procedure_occurrence"
+    },
+    "n0.1.1.0.1": {
+      "name": "icd9_procedure",
+      "depth": 5,
+      "dataIndex": 14,
+      "x": 625,
+      "y": 700,
+      "nodePosition": {
+        "x": 605,
+        "y": -720
+      },
+      "nodeTitle": "ICD-9 Proc",
+      "descriptionLines": [
+        "00.24, 36.02, 89.53, 89.57",
+        "89.69"
+      ],
+      "descriptionLinesWithOptions": [
+        "00.24, 36.02, 89.53, 89.57",
+        "89.69"
+      ],
+      "pointColor": "procedure_occurrence"
+    }
+  },
+  "links": {
+    "n0": {
+      "source": "root",
+      "connectorPath": "M0,-120v10L0.01,0",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -66
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": "url(#gradient-placeholder)"
+        }
+      ]
+    },
+    "n0.0": {
+      "source": "n0",
+      "connectorPath": "M-275,-280v30L0.01,-160v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -137.5,
+        "y": -206
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1": {
+      "source": "n0",
+      "connectorPath": "M275,-260v10L30,-155h-10",
+      "linkOffset": -2.5,
+      "insertButtonPosition": {
+        "x": 157,
+        "y": -206
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        },
+        {
+          "type": "observation",
+          "streamOffset": 5,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.0": {
+      "source": "n0.0",
+      "connectorPath": "M-375,-420v30L-274.99,-300v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -325,
+        "y": -346
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.1": {
+      "source": "n0.0",
+      "connectorPath": "M-175,-400v10L-245,-295h-10",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -208,
+        "y": -346
+      },
+      "streams": [
+        {
+          "type": "death",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.0": {
+      "source": "n0.1",
+      "connectorPath": "M25,-420v30L275.01,-300v20",
+      "linkOffset": -2.5,
+      "insertButtonPosition": {
+        "x": 152.5,
+        "y": -346
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        },
+        {
+          "type": "observation",
+          "streamOffset": 5,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.1": {
+      "source": "n0.1",
+      "connectorPath": "M525,-420v30L275.01,-300v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 400,
+        "y": -346
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.0.0": {
+      "source": "n0.1.0",
+      "connectorPath": "M25,-560v30L25.01,-440v20",
+      "linkOffset": -2.5,
+      "insertButtonPosition": {
+        "x": 27.5,
+        "y": -486
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        },
+        {
+          "type": "observation",
+          "streamOffset": 5,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.1.0": {
+      "source": "n0.1.1",
+      "connectorPath": "M525,-560v30L525.01,-440v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 525,
+        "y": -486
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.0.0.0": {
+      "source": "n0.1.0.0",
+      "connectorPath": "M-175,-700v30L25.01,-580v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -75,
+        "y": -626
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.0.0.1": {
+      "source": "n0.1.0.0",
+      "connectorPath": "M25,-700v30L25.01,-580v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 25,
+        "y": -626
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.0.0.2": {
+      "source": "n0.1.0.0",
+      "connectorPath": "M225,-700v30L25.01,-580v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 125,
+        "y": -626
+      },
+      "streams": [
+        {
+          "type": "observation",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.1.0.0": {
+      "source": "n0.1.1.0",
+      "connectorPath": "M425,-700v30L525.01,-580v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 475,
+        "y": -626
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.1.1.0.1": {
+      "source": "n0.1.1.0",
+      "connectorPath": "M625,-700v30L525.01,-580v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 575,
+        "y": -626
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    }
+  },
+  "recalls": {}
+}

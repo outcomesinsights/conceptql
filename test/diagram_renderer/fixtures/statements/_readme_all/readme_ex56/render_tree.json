@@ -1,0 +1,23 @@
+{
+  "name": "first",
+  "base": "temporal",
+  "humanName": "First",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "label": "1st diabetes"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {
+        "label": "won't show"
+      },
+      "values": ["250.00"],
+      "children": []
+    }
+  ]
+}

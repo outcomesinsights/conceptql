@@ -1,0 +1,9 @@
+{
+  "name": "gender",
+  "base": "selection",
+  "humanName": "Gender",
+  "outputTypes": ["person"],
+  "parameters": {},
+  "values": ["Male"],
+  "children": []
+}

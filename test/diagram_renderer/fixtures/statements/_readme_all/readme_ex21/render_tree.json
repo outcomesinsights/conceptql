@@ -1,0 +1,38 @@
+{
+  "name": "first",
+  "base": "temporal",
+  "humanName": "First",
+  "outputTypes": ["condition_occurrence", "death"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "union",
+      "base": "set",
+      "humanName": "Union",
+      "outputTypes": ["condition_occurrence", "death"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["412"],
+          "children": []
+        },
+        {
+          "name": "death",
+          "base": "cast",
+          "humanName": "Death",
+          "outputTypes": ["death"],
+          "parameters": {},
+          "values": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "time_window",
+  "base": "temporal",
+  "humanName": "Time Window",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "start": "-2m-2d",
+    "end": "3d1y"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["412"],
+      "children": []
+    }
+  ]
+}

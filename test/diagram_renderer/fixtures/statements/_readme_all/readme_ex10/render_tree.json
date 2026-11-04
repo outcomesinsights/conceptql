@@ -1,0 +1,9 @@
+{
+  "name": "death",
+  "base": "cast",
+  "humanName": "Death",
+  "outputTypes": ["death"],
+  "parameters": {},
+  "values": [],
+  "children": []
+}

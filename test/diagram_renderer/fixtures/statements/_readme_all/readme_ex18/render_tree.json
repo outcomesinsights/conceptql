@@ -1,0 +1,28 @@
+{
+  "name": "except",
+  "base": "filter",
+  "humanName": "Except",
+  "outputTypes": ["person"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "gender",
+      "base": "selection",
+      "humanName": "Gender",
+      "outputTypes": ["person"],
+      "parameters": {},
+      "values": ["male"],
+      "children": []
+    },
+    {
+      "name": "race",
+      "base": "selection",
+      "humanName": "Race",
+      "outputTypes": ["person"],
+      "parameters": {},
+      "values": ["white"],
+      "children": []
+    }
+  ]
+}

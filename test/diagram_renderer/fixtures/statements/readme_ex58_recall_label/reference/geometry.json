@@ -1,0 +1,316 @@
+{
+  "nodes": {
+    "root": {
+      "name": "root",
+      "depth": 0,
+      "dataIndex": 0,
+      "x": 0,
+      "y": 0,
+      "nodePosition": {
+        "x": -20,
+        "y": -20
+      },
+      "nodeTitle": null,
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "condition_occurrence"
+    },
+    "n0": {
+      "name": "one_in_two_out",
+      "depth": 1,
+      "dataIndex": 1,
+      "x": 0,
+      "y": 140,
+      "nodePosition": {
+        "x": -20,
+        "y": -160
+      },
+      "nodeTitle": "One In Two Out",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [
+        "outpatient_event_to_return: Confirming…",
+        "outpatient_minimum_gap: 30d",
+        "inpatient_return_date: Discharge Date…"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0": {
+      "name": "except",
+      "depth": 2,
+      "dataIndex": 2,
+      "x": 0,
+      "y": 280,
+      "nodePosition": {
+        "x": -20,
+        "y": -300
+      },
+      "nodeTitle": "Except",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0.0": {
+      "name": "union",
+      "depth": 3,
+      "dataIndex": 3,
+      "x": -200,
+      "y": 420,
+      "nodePosition": {
+        "x": -220,
+        "y": -440
+      },
+      "nodeTitle": "Union",
+      "descriptionLines": [
+        "neuro dxs"
+      ],
+      "descriptionLinesWithOptions": [
+        "neuro dxs"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0.1": {
+      "name": "co_reported",
+      "depth": 3,
+      "dataIndex": 6,
+      "x": 200,
+      "y": 420,
+      "nodePosition": {
+        "x": 180,
+        "y": -440
+      },
+      "nodeTitle": "Co Reported",
+      "descriptionLines": [],
+      "descriptionLinesWithOptions": [],
+      "pointColor": "mixed"
+    },
+    "n0.0.0.0": {
+      "name": "icd9",
+      "depth": 4,
+      "dataIndex": 4,
+      "x": -300,
+      "y": 560,
+      "nodePosition": {
+        "x": -320,
+        "y": -580
+      },
+      "nodeTitle": "ICD-9 CM",
+      "descriptionLines": [
+        "330.0, 330.1, 330.2, 330.3",
+        "330.8, 330.9, 331.0",
+        "331.11, 331.19, 331.2…"
+      ],
+      "descriptionLinesWithOptions": [
+        "330.0, 330.1, 330.2, 330.3",
+        "330.8, 330.9, 331.0",
+        "331.11, 331.19, 331.2…"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0.0.1": {
+      "name": "icd10cm",
+      "depth": 4,
+      "dataIndex": 5,
+      "x": -100,
+      "y": 560,
+      "nodePosition": {
+        "x": -120,
+        "y": -580
+      },
+      "nodeTitle": "ICD-10 CM",
+      "descriptionLines": [
+        "E75.00, E75.01, E75.02",
+        "E75.09, E75.10, E75.11",
+        "E75.19, E75.23, E75.25…"
+      ],
+      "descriptionLinesWithOptions": [
+        "E75.00, E75.01, E75.02",
+        "E75.09, E75.10, E75.11",
+        "E75.19, E75.23, E75.25…"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0.1.0": {
+      "name": "recall",
+      "depth": 4,
+      "dataIndex": 7,
+      "x": 100,
+      "y": 560,
+      "nodePosition": {
+        "x": 80,
+        "y": -580
+      },
+      "nodeTitle": "Recall",
+      "descriptionLines": [
+        "neuro dxs"
+      ],
+      "descriptionLinesWithOptions": [
+        "neuro dxs"
+      ],
+      "pointColor": "condition_occurrence"
+    },
+    "n0.0.1.1": {
+      "name": "drg",
+      "depth": 4,
+      "dataIndex": 8,
+      "x": 300,
+      "y": 560,
+      "nodePosition": {
+        "x": 280,
+        "y": -580
+      },
+      "nodeTitle": "DRG",
+      "descriptionLines": [
+        "020, 021, 022, 023, 024, 025",
+        "026, 027, 028, 029, 030, 031",
+        "032, 033, 034, 035, 036, 037…"
+      ],
+      "descriptionLinesWithOptions": [
+        "020, 021, 022, 023, 024, 025",
+        "026, 027, 028, 029, 030, 031",
+        "032, 033, 034, 035, 036, 037…"
+      ],
+      "pointColor": "procedure_occurrence"
+    }
+  },
+  "links": {
+    "n0": {
+      "source": "root",
+      "connectorPath": "M0,-120v10L0.01,0",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -66
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": "url(#gradient-placeholder)"
+        }
+      ]
+    },
+    "n0.0": {
+      "source": "n0",
+      "connectorPath": "M0,-280v30L0.01,-160v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 0,
+        "y": -206
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.0": {
+      "source": "n0.0",
+      "connectorPath": "M-200,-420v30L0.01,-300v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -100,
+        "y": -346
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.1": {
+      "source": "n0.0",
+      "connectorPath": "M200,-400v10L30,-295h-10",
+      "linkOffset": -2.5,
+      "insertButtonPosition": {
+        "x": 119.5,
+        "y": -346
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        },
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 5,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.0.0": {
+      "source": "n0.0.0",
+      "connectorPath": "M-300,-560v30L-199.99,-440v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -250,
+        "y": -486
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.0.1": {
+      "source": "n0.0.0",
+      "connectorPath": "M-100,-560v30L-199.99,-440v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": -150,
+        "y": -486
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.1.0": {
+      "source": "n0.0.1",
+      "connectorPath": "M100,-560v30L200.01,-440v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 150,
+        "y": -486
+      },
+      "streams": [
+        {
+          "type": "condition_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    },
+    "n0.0.1.1": {
+      "source": "n0.0.1",
+      "connectorPath": "M300,-560v30L200.01,-440v20",
+      "linkOffset": 0,
+      "insertButtonPosition": {
+        "x": 250,
+        "y": -486
+      },
+      "streams": [
+        {
+          "type": "procedure_occurrence",
+          "streamOffset": 0,
+          "sourceGradient": null
+        }
+      ]
+    }
+  },
+  "recalls": {
+    "n0.0.1.0": {
+      "recalled": "n0.0.0",
+      "recallPath": "M100,-560A264.84712571594963,264.84712571594963 0 0,1 -200,-420"
+    }
+  }
+}

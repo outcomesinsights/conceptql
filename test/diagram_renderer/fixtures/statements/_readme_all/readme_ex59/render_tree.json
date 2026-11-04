@@ -1,0 +1,79 @@
+{
+  "name": "during",
+  "base": "filter",
+  "humanName": "During",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "except",
+      "base": "filter",
+      "humanName": "Except",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["584"],
+          "children": []
+        },
+        {
+          "name": "after",
+          "base": "filter",
+          "humanName": "After",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": [],
+          "children": [
+            {
+              "name": "icd9",
+              "base": "selection",
+              "humanName": "ICD-9 CM",
+              "outputTypes": ["condition_occurrence"],
+              "parameters": {},
+              "values": ["584"],
+              "children": []
+            },
+            {
+              "name": "icd9",
+              "base": "selection",
+              "humanName": "ICD-9 CM",
+              "outputTypes": ["condition_occurrence"],
+              "parameters": {},
+              "values": ["V45.1", "V56.0", "V56.31", "V56.32", "V56.8"],
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "time_window",
+      "base": "temporal",
+      "humanName": "Time Window",
+      "outputTypes": ["procedure_occurrence"],
+      "parameters": {
+        "start": "0",
+        "end": "60d"
+      },
+      "values": [],
+      "children": [
+        {
+          "name": "icd9_procedure",
+          "base": "selection",
+          "humanName": "ICD-9 Proc",
+          "outputTypes": ["procedure_occurrence"],
+          "parameters": {},
+          "values": ["39.95", "54.98"],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "snf",
+  "base": "selection",
+  "humanName": "Snf",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": []
+}

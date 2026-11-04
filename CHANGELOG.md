@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `ConceptQL::DiagramRenderer`, the diagram renderer of the Jigsaw diagram editor, moved into
+  the gem. It draws a diagram tree (`ConceptQL::Diagram.render`) as a standalone static SVG
+  (`render_static`), a PNG (`png`) or the in-app SVG (`render_app`), with the same output as in
+  the editor. The gem ships its assets under `assets/diagram/`: the operator icons, the diagram
+  CSS, and the Roboto fonts with their license (SIL Open Font License 1.1). The configuration
+  points at them by default, so a host needs no configure call. `require "conceptql"` loads
+  none of the renderer until its first use. `render_static` and `png` run the resvg program,
+  version 0.33.0. `just test-diagram` runs the renderer's tests against the
+  editor's JavaScript references, and `just ci` runs it. See `docs/diagram_renderer.md`.
 - An operator class can say `hidden`. A hidden operator still runs, but `ConceptQL.metadata`
   leaves it out. An operator is not hidden unless it says so, and a subclass does not inherit
   the mark. `invalid`, `from`, `numeric`, `dedup`, `sum` and `count` are hidden. Before,

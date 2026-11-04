@@ -1,0 +1,21 @@
+{
+  "name": "one_in_two_out",
+  "base": "temporal",
+  "humanName": "One In Two Out",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "outpatient_minimum_gap": "30d"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["250.00"],
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "co_reported",
+  "base": "set",
+  "humanName": "Co Reported",
+  "outputTypes": ["condition_occurrence", "procedure_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["250.00"],
+      "children": []
+    },
+    {
+      "name": "cpt",
+      "base": "selection",
+      "humanName": "CPT",
+      "outputTypes": ["procedure_occurrence"],
+      "parameters": {},
+      "values": ["99214"],
+      "children": []
+    }
+  ]
+}

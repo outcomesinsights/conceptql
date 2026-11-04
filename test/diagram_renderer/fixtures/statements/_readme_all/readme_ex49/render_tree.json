@@ -1,0 +1,28 @@
+{
+  "name": "person_filter",
+  "base": "filter",
+  "humanName": "Person Filter",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["412"],
+      "children": []
+    },
+    {
+      "name": "gender",
+      "base": "selection",
+      "humanName": "Gender",
+      "outputTypes": ["person"],
+      "parameters": {},
+      "values": ["Male"],
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "format": "conceptql-diagram/v1",
+  "statements": [
+    {
+      "name": "during",
+      "base": "filter",
+      "humanName": "During",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "union",
+          "base": "set",
+          "humanName": "Union",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": [],
+          "children": [
+            {
+              "name": "icd9",
+              "base": "selection",
+              "humanName": "ICD-9 CM",
+              "outputTypes": ["condition_occurrence"],
+              "parameters": {},
+              "values": ["250.00", "250.02"],
+              "children": [],
+              "counts": {
+                "condition_occurrence": {
+                  "rows": 800,
+                  "n": 650
+                }
+              }
+            },
+            {
+              "name": "icd9",
+              "base": "selection",
+              "humanName": "ICD-9 CM",
+              "outputTypes": ["condition_occurrence"],
+              "parameters": {},
+              "values": ["401.9"],
+              "children": [],
+              "counts": {
+                "condition_occurrence": {
+                  "rows": 801,
+                  "n": 650
+                }
+              }
+            }
+          ],
+          "counts": {
+            "condition_occurrence": {
+              "rows": 1234,
+              "n": 980
+            }
+          }
+        },
+        {
+          "name": "condition_type",
+          "base": "selection",
+          "humanName": "Condition Type",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["inpatient"],
+          "children": [],
+          "counts": {
+            "condition_occurrence": {
+              "rows": 5210,
+              "n": 4100
+            }
+          }
+        }
+      ],
+      "counts": {
+        "condition_occurrence": {
+          "rows": 48,
+          "n": 37
+        }
+      }
+    }
+  ]
+}

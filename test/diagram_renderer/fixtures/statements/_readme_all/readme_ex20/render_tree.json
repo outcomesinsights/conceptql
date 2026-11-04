@@ -1,0 +1,47 @@
+{
+  "name": "except",
+  "base": "filter",
+  "humanName": "Except",
+  "outputTypes": ["condition_occurrence", "person"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "union",
+      "base": "set",
+      "humanName": "Union",
+      "outputTypes": ["condition_occurrence", "person"],
+      "parameters": {},
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["412"],
+          "children": []
+        },
+        {
+          "name": "gender",
+          "base": "selection",
+          "humanName": "Gender",
+          "outputTypes": ["person"],
+          "parameters": {},
+          "values": ["Male"],
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "race",
+      "base": "selection",
+      "humanName": "Race",
+      "outputTypes": ["person"],
+      "parameters": {},
+      "values": ["White"],
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "concurrent_within",
+  "base": "set",
+  "humanName": "Concurrent Within",
+  "outputTypes": ["procedure_occurrence", "condition_occurrence"],
+  "parameters": {
+    "start": "-30d",
+    "end": "30d"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "cpt_or_hcpcs",
+      "base": "selection",
+      "humanName": "CPT or HCPCS",
+      "outputTypes": ["procedure_occurrence"],
+      "parameters": {},
+      "values": ["99214"],
+      "children": []
+    },
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["250.00"],
+      "children": []
+    }
+  ]
+}

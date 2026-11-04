@@ -1,0 +1,11 @@
+{
+  "name": "icd9",
+  "base": "selection",
+  "humanName": "ICD-9 CM",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "label": "diabetes"
+  },
+  "values": ["250.00"],
+  "children": []
+}

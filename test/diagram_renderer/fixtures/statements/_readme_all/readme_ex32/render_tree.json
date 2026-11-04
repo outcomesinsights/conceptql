@@ -1,0 +1,41 @@
+{
+  "name": "during",
+  "base": "filter",
+  "humanName": "During",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["250.01"],
+      "children": []
+    },
+    {
+      "name": "time_window",
+      "base": "temporal",
+      "humanName": "Time Window",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {
+        "start": "-30d",
+        "end": "30d"
+      },
+      "values": [],
+      "children": [
+        {
+          "name": "icd9",
+          "base": "selection",
+          "humanName": "ICD-9 CM",
+          "outputTypes": ["condition_occurrence"],
+          "parameters": {},
+          "values": ["412"],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

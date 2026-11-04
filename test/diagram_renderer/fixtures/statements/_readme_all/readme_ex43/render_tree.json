@@ -1,0 +1,21 @@
+{
+  "name": "episode",
+  "base": "temporal",
+  "humanName": "Episode",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "gap_of": "90"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["250.00"],
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "after",
+  "base": "filter",
+  "humanName": "After",
+  "outputTypes": ["drug_exposure"],
+  "parameters": {
+    "within": "3d"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "ndc",
+      "base": "selection",
+      "humanName": "NDC",
+      "outputTypes": ["drug_exposure"],
+      "parameters": {
+        "label": "Prescriptions of Interest"
+      },
+      "values": ["61392070054", "65084025214", "65726040125"],
+      "children": []
+    },
+    {
+      "name": "cpt",
+      "base": "selection",
+      "humanName": "CPT",
+      "outputTypes": ["procedure_occurrence"],
+      "parameters": {
+        "label": "Office Visit"
+      },
+      "values": ["99214"],
+      "children": []
+    }
+  ]
+}

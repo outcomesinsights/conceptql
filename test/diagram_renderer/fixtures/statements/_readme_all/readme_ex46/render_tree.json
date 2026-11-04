@@ -1,0 +1,19 @@
+{
+  "name": "provenance",
+  "base": "temporal",
+  "humanName": "Provenance",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": ["inpatient"],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["250.00"],
+      "children": []
+    }
+  ]
+}

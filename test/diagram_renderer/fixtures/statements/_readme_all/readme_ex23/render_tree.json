@@ -1,0 +1,21 @@
+{
+  "name": "occurrence",
+  "base": "temporal",
+  "humanName": "Nth Occurrence",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "unique": true
+  },
+  "values": [2],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {},
+      "values": ["410.00", "410.01", "250.00", "250.01"],
+      "children": []
+    }
+  ]
+}

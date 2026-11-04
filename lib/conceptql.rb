@@ -30,6 +30,9 @@ end
 module ConceptQL
   DEFAULT_DATA_MODEL = :gdm
 
+  # The diagram renderer (docs/diagram_renderer.md) loads on first use.
+  autoload :DiagramRenderer, "conceptql/diagram_renderer"
+
   def self.avoid_ctes?
     ENV["CONCEPTQL_AVOID_CTES"] == "true"
   end

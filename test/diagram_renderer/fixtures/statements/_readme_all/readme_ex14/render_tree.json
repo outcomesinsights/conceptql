@@ -1,0 +1,9 @@
+{
+  "name": "hospitalization",
+  "base": "selection",
+  "humanName": "Hospitalization",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {},
+  "values": [],
+  "children": []
+}

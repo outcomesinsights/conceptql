@@ -17,3 +17,8 @@ shellcheck = "0"
 zizmor = "1"
 cocogitto = "7"
 hadolint = "2"
+# The diagram renderer's resvg (ConceptQL::DiagramRenderer::Resvg::VERSION), for
+# `just test-diagram`. This pin is exact, not major-only like the others: the
+# test references were measured with 0.33.0, and resvg 0.34 fails the
+# bounding-box check on all 70 fixtures.
+"github:linebender/resvg" = "0.33.0"

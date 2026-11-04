@@ -1,0 +1,34 @@
+{
+  "name": "after",
+  "base": "filter",
+  "humanName": "After",
+  "outputTypes": ["condition_occurrence"],
+  "parameters": {
+    "at_least": "1w"
+  },
+  "values": [],
+  "children": [
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {
+        "label": "Heart Attack Dx"
+      },
+      "values": ["410.00", "410.01", "410.10", "410.11"],
+      "children": []
+    },
+    {
+      "name": "icd9",
+      "base": "selection",
+      "humanName": "ICD-9 CM",
+      "outputTypes": ["condition_occurrence"],
+      "parameters": {
+        "label": "Diabetes Dx"
+      },
+      "values": ["250.01"],
+      "children": []
+    }
+  ]
+}
