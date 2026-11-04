@@ -2,15 +2,15 @@
   "spec_id": "equal-operator",
   "examples": [
     {
-      "title": "HbA1c results (LOINC 4548-4) with the same value as an HbA1c result of the same patient",
+      "title": "HbA1c results (LOINC 4548-4) with the same value as an HbA1c result by HPLC (LOINC 17856-6) of the same patient",
       "statement": [
         "equal",
         {
           "left": ["loinc", "4548-4"],
-          "right": ["loinc", "4548-4"]
+          "right": ["loinc", "17856-6"]
         }
       ],
-      "help": true,
+      "help": false,
       "columns": [
         "person_id",
         "criterion_id",
@@ -20,17 +20,7 @@
         "end_date",
         "source_value"
       ],
-      "rows": [
-        [
-          200,
-          100001,
-          "observations",
-          "observation",
-          "2009-03-03",
-          "2009-03-03",
-          "4548-4"
-        ]
-      ],
+      "rows": [],
       "tree": {
         "format": "conceptql-diagram/v1",
         "statements": [
@@ -65,20 +55,20 @@
                 "vocabularyId": "LOINC",
                 "outputTypes": ["observation"],
                 "parameters": {},
-                "values": ["4548-4"],
+                "values": ["17856-6"],
                 "children": [],
                 "counts": {
                   "observation": {
-                    "rows": 1,
-                    "n": 1
+                    "rows": 0,
+                    "n": 0
                   }
                 }
               }
             ],
             "counts": {
               "observation": {
-                "rows": 1,
-                "n": 1
+                "rows": 0,
+                "n": 0
               }
             }
           }

@@ -2,7 +2,7 @@
   "spec_id": "trim-date-end-operator",
   "examples": [
     {
-      "title": "Each patient's span from birth to age 50 or to 1980-01-01, whichever is earlier (patients born after 1980 are dropped)",
+      "title": "Each patient's span from birth to age 50 or to 1970-01-01, whichever is earlier (patients born after 1970 are dropped)",
       "statement": [
         "trim_date_end",
         {
@@ -16,8 +16,8 @@
           "right": [
             "date_range",
             {
-              "start": "1980-01-01",
-              "end": "1980-01-01"
+              "start": "1970-01-01",
+              "end": "1970-01-01"
             }
           ]
         }
@@ -39,7 +39,7 @@
           "patients",
           "person",
           "1923-05-01",
-          "1973-05-01",
+          "1970-01-01",
           "00013D2EFD8E45D1"
         ],
         [
@@ -48,7 +48,7 @@
           "patients",
           "person",
           "1943-01-01",
-          "1980-01-01",
+          "1970-01-01",
           "00016F745862898F"
         ],
         [
@@ -57,7 +57,7 @@
           "patients",
           "person",
           "1936-09-01",
-          "1980-01-01",
+          "1970-01-01",
           "0001FDD721E223DC"
         ],
         [
@@ -66,7 +66,7 @@
           "patients",
           "person",
           "1941-06-01",
-          "1980-01-01",
+          "1970-01-01",
           "00021CA6FF03E670"
         ],
         [
@@ -75,7 +75,7 @@
           "patients",
           "person",
           "1936-08-01",
-          "1980-01-01",
+          "1970-01-01",
           "00024B3D2352D2D0"
         ],
         [
@@ -84,7 +84,7 @@
           "patients",
           "person",
           "1943-10-01",
-          "1980-01-01",
+          "1970-01-01",
           "0002DAE1C81CC70D"
         ],
         [
@@ -93,7 +93,7 @@
           "patients",
           "person",
           "1922-07-01",
-          "1972-07-01",
+          "1970-01-01",
           "0002F28CE057345B"
         ],
         [
@@ -102,17 +102,8 @@
           "patients",
           "person",
           "1935-09-01",
-          "1980-01-01",
+          "1970-01-01",
           "000308435E3E5B76"
-        ],
-        [
-          9,
-          9,
-          "patients",
-          "person",
-          "1976-09-01",
-          "1980-01-01",
-          "000345A39D4157C9"
         ],
         [
           10,
@@ -120,8 +111,17 @@
           "patients",
           "person",
           "1938-10-01",
-          "1980-01-01",
+          "1970-01-01",
           "00036A21B65B0206"
+        ],
+        [
+          11,
+          11,
+          "patients",
+          "person",
+          "1934-02-01",
+          "1970-01-01",
+          "000489E7EAAD463F"
         ]
       ],
       "tree": {
@@ -174,8 +174,8 @@
                 "humanName": "Date Range",
                 "outputTypes": ["person"],
                 "parameters": {
-                  "start": "1980-01-01",
-                  "end": "1980-01-01"
+                  "start": "1970-01-01",
+                  "end": "1970-01-01"
                 },
                 "values": [],
                 "children": [],
@@ -189,8 +189,8 @@
             ],
             "counts": {
               "person": {
-                "rows": 249,
-                "n": 249
+                "rows": 247,
+                "n": 247
               }
             }
           }
