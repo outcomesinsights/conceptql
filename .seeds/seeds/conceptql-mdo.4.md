@@ -1,11 +1,13 @@
 ---
 id: conceptql-mdo.4
 title: Explicit hidden flag; numeric, sum, count and dedup stay hidden; delete the unused hidden column of vocabularies.csv
-status: captured
+status: resolved
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:51.589865+00:00
-updated_at: 2026-11-03T18:36:47.007020+00:00
+updated_at: 2026-11-04T15:11:24.024198+00:00
+resolved_at: 2026-11-04T15:11:24.024188+00:00
+resolution: 'Shipped by conceptql-voth. Metadatable#hidden and #hidden? (lib/conceptql/behaviors/metadatable.rb:54-59). dedup, count, invalid, numeric, from and sum say hidden. config/vocabularies.csv has no hidden column. Efficacy: no tweak needed. The seed named four operators; invalid and from were the other two operators without a category, so six are hidden.'
 tags:
   - operators
   - metadata

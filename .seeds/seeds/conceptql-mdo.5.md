@@ -1,11 +1,13 @@
 ---
 id: conceptql-mdo.5
 title: The spec check runs only in just release-check, and a committed manifest of diagram-tree hashes detects stale images
-status: captured
+status: resolved
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:54:27.423077+00:00
-updated_at: 2026-11-03T18:54:27.423077+00:00
+updated_at: 2026-11-04T15:11:24.586314+00:00
+resolved_at: 2026-11-04T15:11:24.586304+00:00
+resolution: "Shipped by conceptql-jwsv.5, with images by conceptql-tf8u.4. The just spec-check recipe runs only in just release-check (justfile:233, 386). docs/spec/images/manifest.tsv records each image and the sha256 of its diagram tree. On 2026-11-04, release-check's spec check passed: 71 images drawn, 0 differ. Efficacy: minor tweak, an inherent unknown. The in-gem renderer let the check redraw every image, so the question of stale counts in kept images no longer applies."
 tags:
   - spec
   - release

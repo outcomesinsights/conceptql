@@ -1,11 +1,13 @@
 ---
 id: conceptql-mdo.1
 title: Copy the spec into a new docs/spec/ without history, switch links in a safe order, and archive conceptql_spec
-status: captured
+status: resolved
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:50.066549+00:00
-updated_at: 2026-11-03T18:41:52.444477+00:00
+updated_at: 2026-11-04T15:11:22.244479+00:00
+resolved_at: 2026-11-04T15:11:22.244468+00:00
+resolution: 'Shipped by conceptql-jwsv.2 and .4. ConceptQL.spec_path returns docs/spec/README.md (lib/conceptql/paths.rb:54). doc/ and script/spec/ are removed. The build lives in docs/spec/build/ and names images by the sha256 of canonical JSON (spec_build.rb:58). test/lib/conceptql/spec_sections_test.rb checks balanced fences and the 40,000-byte limit. conceptql_spec_test.rb reads the local spec. README.md links docs/spec/README.md. The JDE link switch and the archive belong to JDE and conceptql_spec. Efficacy: significant tweak, an inherent unknown. The interim CONCEPTQL_DIAGRAM_CLI images were replaced by the in-gem renderer (conceptql-tf8u.4), because the renderer move finished in the same round.'
 tags:
   - spec
   - migration
@@ -67,3 +69,10 @@ Until the renderer is decided (separate pursuit, conceptql_spec seed conceptql-s
 - Without CONCEPTQL_DIAGRAM_CLI, the build keeps the committed images. It does not delete the image directory (conceptql_spec's knitter.rb:35 does) and does not fail. Not ruled: how stale counts in kept images are detected.
 - Step 3 also moves doc/metadata.md and doc/implementation_notes.md into docs/ and removes doc/. Every reference to doc/ changes with it (the gemspec, spec_path_test.rb, release.yml, CLAUDE.md, AGENTS.md:99, cog.toml:2).
 - The archive of conceptql_spec, the push of its main and its open renderer seeds belong to conceptql_spec. conceptql's plan covers only conceptql.
+
+UPDATE 2026-11-04: shipped by beads conceptql-jwsv.2 and conceptql-jwsv.4, with two changes from the plan.
+
+- The interim images through CONCEPTQL_DIAGRAM_CLI were replaced. Epic conceptql-tf8u moved the diagram renderer into the gem as ConceptQL::DiagramRenderer, and bead conceptql-tf8u.4 made the spec build draw every image with it and removed CONCEPTQL_DIAGRAM_CLI.
+- The 9 open beads of conceptql_spec (epic conceptql_spec-vvf and its children, conceptql_spec-201, -oa9, -vj2) concern only that repository's own build. None needs to move to conceptql. Their fate belongs to conceptql_spec (ruling 18).
+
+Still open outside conceptql: JDE changes its links (4 frontend sites and AGENTS.md:54 still point at github.com/outcomesinsights/conceptql_spec on 2026-11-04), and conceptql_spec gets its banner and is archived.

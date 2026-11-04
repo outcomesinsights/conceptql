@@ -1,11 +1,13 @@
 ---
 id: conceptql-mdo.2
 title: 'Operator documentation as code: desc, two texts per option, returns and examples in each operator class'
-status: captured
+status: resolved
 type: decision
 parent: conceptql-mdo
 created_at: 2026-11-03T18:14:50.728093+00:00
-updated_at: 2026-11-03T18:36:46.182580+00:00
+updated_at: 2026-11-04T15:11:22.873251+00:00
+resolved_at: 2026-11-04T15:11:22.873241+00:00
+resolution: 'Shipped by conceptql-jwsv.1 and .6 to .10. The Metadatable DSL has option_meaning, returns and example (lib/conceptql/behaviors/metadatable.rb:90-107). All 119 published operators have a returns text, and each spec_id has at least one example. Efficacy: minor tweak, caught in planning. Review finding 4 moved the example rule from each operator to each spec_id before the beads were written.'
 tags:
   - spec
   - metadata
@@ -80,3 +82,5 @@ The operator code is the source of all operator metadata, examples included. An 
 - Finding 13 (FACT FIX). The count of instructions texts was corrected above.
 - Plausible, not demonstrated: no README example uses equal, filter, match or numeric_filter. Nobody has checked that the fixture gives rows for new examples of them.
 - Verified: all 59 README examples validate with no errors or warnings on Database.new(nil), on a mock Postgres database and on the fixture. No README example uses a hidden operator.
+
+UPDATE 2026-11-04: shipped by beads conceptql-jwsv.1 and conceptql-jwsv.6 to conceptql-jwsv.10. The rule "at least one example" applies to each spec_id, as review finding 4 corrected it. On 2026-11-04, all 119 published operators on gdm have a returns text. The 81 operators without their own examples are vocabulary operators, which share the spec_id "vocabulary".
