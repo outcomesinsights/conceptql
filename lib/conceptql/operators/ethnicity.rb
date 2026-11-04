@@ -15,7 +15,7 @@ module ConceptQL
                            meaning: "One or more ethnicities. A value that starts with Hispanic selects the " \
                                     "Hispanic or Latino patients, and a value that starts with Not Hispanic selects " \
                                     "the patients who are not Hispanic or Latino. A value that contains Unknown " \
-                                    "selects the patients whose ethnicity concept ID is 0. Case does not matter, " \
+                                    "selects the patients who have no ethnicity or ethnicity concept ID 0. Case does not matter, " \
                                     "and any other value selects no patients."
       returns "One person record for each patient whose ethnicity is one of the given ethnicities. " \
               "The start_date and the end_date of each record are the patient's birth date."
@@ -32,21 +32,25 @@ module ConceptQL
       end
 
       def query(db)
-        db.from(source_table)
-          .where(ethnicity_concept_id: ethnicity_concept_ids)
+        ids = ethnicity_concept_ids
+        condition = Sequel.expr(ethnicity_concept_id: ids)
+        # Unknown (ID 0) also means no ethnicity, and IN never matches NULL.
+        condition = Sequel.|(condition, { ethnicity_concept_id: nil }) if ids.include?(0)
+
+        db.from(source_table).where(condition)
       end
 
       def ethnicity_concept_ids
-        arguments.map do |words|
+        arguments.filter_map do |words|
           case words
           when /^Not Hispanic/i
             38_003_564
           when /^Hispanic/i
             38_003_563
           when /unknown/i
-            [ 0, nil ]
+            0
           end
-        end.flatten
+        end
       end
     end
   end

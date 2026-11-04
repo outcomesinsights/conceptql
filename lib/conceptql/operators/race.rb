@@ -21,8 +21,9 @@ module ConceptQL
       argument :races, type: :codelist, vocab: "Race",
                        meaning: "One or more race names, such as White, or race concept IDs. " \
                                 "A name matches the concepts with that name in any vocabulary, and case does not matter. " \
-                                "The operator also selects the more detailed races under each named race, " \
-                                "and each concept that is a kind of one of the race concepts through an is-a relationship."
+                                "The operator also selects the more detailed races under each given race, " \
+                                "and each concept that is a kind of one of the race concepts through an is-a relationship. " \
+                                "A value that contains Unknown also selects the patients who have no race or race concept ID 0."
       returns "One person record for each patient whose race is one of the given races. " \
               "The start_date and the end_date of each record are the patient's birth date."
       example "All patients recorded as white", [ "race", "White" ]
@@ -49,17 +50,14 @@ module ConceptQL
 
         concept_ids = dm.concept_ids_by_name(db, words)
 
-        c_ids = (concept_ids + actual_ids).map { |i| [ i, race_descendents[i] ] }.flatten.compact.uniq.sort
+        c_ids = (concept_ids + actual_ids.map(&:to_i)).map { |i| [ i, race_descendents[i] ] }.flatten.compact.uniq.sort
 
         c_ids = dm.related_concept_ids(db, c_ids)
 
-        q = db.from(source_table)
-        if words.any? { |w| w.match(/unknown/i) }
-          c_ids += [ 0 ]
-          q = q.where(race_concept_id: nil)
-        end
+        condition = Sequel.expr(race_concept_id: c_ids)
+        condition = Sequel.|(condition, { race_concept_id: 0 }, { race_concept_id: nil }) if words.any? { |w| w.match(/unknown/i) }
 
-        q.where(race_concept_id: c_ids)
+        db.from(source_table).where(condition)
       end
 
       def actual_ids
