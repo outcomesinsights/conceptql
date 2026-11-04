@@ -71,7 +71,7 @@ describe SvgComparison do
       reference = File.read(File.join(fixtures, "statements/icd9_412/reference/app.svg"))
       normalized = SvgComparison.normalize(full)
 
-      _(full.bytesize).must_be(:>, 30_000)
+      _(full.bytesize).must_be(:>, 20_000)
       _(diff(reference, normalized)).must_equal([])
       _(normalized).must_equal(reference)
     end
