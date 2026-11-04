@@ -23,6 +23,9 @@ All notable changes to this project will be documented in this file.
     editor's stylesheet that can match an element of a diagram. The editor's page rules (for
     `html`, `body`, `h1`, `.sidebar` and the like) are left out. In a page, the `<style>` of the
     in-app SVG applies to the whole page, so a page that used those rules must supply them.
+  - The first `render_static` or `png` call in a process runs `resvg --version`. When resvg
+    reports another version than 0.33.0, the call writes one warning to stderr that names both
+    versions. Then it draws the diagram anyway, and later calls do not check again.
 - An operator class can say `hidden`. A hidden operator still runs, but `ConceptQL.metadata`
   leaves it out. An operator is not hidden unless it says so, and a subclass does not inherit
   the mark. `invalid`, `from`, `numeric`, `dedup`, `sum` and `count` are hidden. Before,
