@@ -69,8 +69,25 @@ module ConceptQL
         vocab_entry.predominant_domains.map(&:to_sym)
       end
 
+      # Production ETL data stores CPT-4 and HCPCS codes only under the merged
+      # vocabulary CPT4_HCPCS. cpt and hcpcs read only their own vocabulary,
+      # so they select no rows there (known issue conceptql-rpy3). Each key is
+      # a vocabulary whose codes can be stored under the merged vocabulary,
+      # and each value names that vocabulary and the operator that reads it.
+      MERGED_VOCABULARIES = {
+        "CPT4" => { vocabulary_id: "CPT4_HCPCS", operator: "cpt_or_hcpcs" },
+        "HCPCS" => { vocabulary_id: "CPT4_HCPCS", operator: "cpt_or_hcpcs" }
+      }.freeze
+      NO_RECORDS_IN_DATA = "the data has no records of this vocabulary"
+
+      # MultipleVocabularies passes skip_merged_vocabulary_check to its
+      # vocabulary operators. It reads the merged vocabulary itself, and it
+      # would drop this warning anyway (see #warn_about_merged_vocabulary).
       def additional_validation(db, opts = {})
-        return unless add_warnings?(db, opts) && !select_all?
+        return unless add_warnings?(db, opts)
+
+        warn_about_merged_vocabulary(db) unless opts[:skip_merged_vocabulary_check]
+        return if select_all?
 
         args = arguments.dup
         args -= bad_arguments
@@ -81,6 +98,23 @@ module ConceptQL
         add_warning(UNKNOWN_CODE, *missing_args) unless missing_args.empty?
 
         warn_about_reused_codes(db, args - missing_args)
+      end
+
+      # Warns when the data has no record of this vocabulary but has records
+      # of the merged vocabulary that holds its codes, and the Database's
+      # lexicon carries that merged vocabulary (bead conceptql-k5ho). The
+      # warning names the operator to use instead. The test fixture keeps
+      # CPT4 and HCPCS rows, so it never shows this warning.
+      def warn_about_merged_vocabulary(db)
+        merged = MERGED_VOCABULARIES[vocabulary_id]
+        return unless merged && nodifier.operators.key?(merged[:vocabulary_id].downcase)
+
+        table = db[criterion_table]
+        return unless table.where(vocabulary_condition).empty?
+        return if table.where(vocabulary_condition.transform_values { merged[:vocabulary_id] }).empty?
+
+        add_warning(NO_RECORDS_IN_DATA,
+                    "the data stores #{vocabulary_id} codes as #{merged[:vocabulary_id]}, so use #{merged[:operator]}")
       end
 
       # A code that the vocabulary reused for a new meaning selects records of
