@@ -125,7 +125,7 @@ module ConceptQL
       CODE_WARNINGS = [ *BAD_FORMATS, UNKNOWN_CODE ].freeze
 
       def additional_validation(db, opts = {})
-        vocab_ops.each { |vo| vo.valid?(db, opts) }
+        vocab_ops.each { |vo| vo.valid?(db, opts.merge(skip_merged_vocabulary_check: true)) }
 
         @errors += aggregate_messages(vocab_ops.map(&:errors))
         @warnings += aggregate_messages(vocab_ops.map { |vo| vo.warnings.reject { |w| CODE_WARNINGS.include?(w.first) } })

@@ -230,6 +230,7 @@ Examples of how codes match:
 - A code that does not have the vocabulary's format gives the warning "improperly formatted code".
 - A code that the vocabulary does not contain gives the warning "unknown code(s)".
 - A code that has more than one meaning in the vocabulary gives the warning "code(s) with more than one meaning".
+- Some data stores CPT-4 and HCPCS codes only in the merged vocabulary CPT4_HCPCS. On that data, `cpt` and `hcpcs` select nothing, because they read only CPT4 and HCPCS. They give the warning "the data has no records of this vocabulary", which names `cpt_or_hcpcs`. Use `cpt_or_hcpcs`, which reads all three vocabularies.
 - `rxnorm` does not find records coded with NDC, because an operator does not follow mappings between vocabularies.
 
 ### DRG Codes

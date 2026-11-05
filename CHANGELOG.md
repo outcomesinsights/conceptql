@@ -54,6 +54,13 @@ All notable changes to this project will be documented in this file.
   `GDM_INFORMATION_TYPE` vocabulary, such as `PARTD`, and a statement can mix both. An unknown
   code gets the warning `unknown code(s)` and selects no period. Before, every argument went
   through `to_i`, so a code silently became concept ID 0.
+- `cpt` and `hcpcs` warn when the data has no record of their vocabulary but has CPT4_HCPCS
+  records, and the lexicon carries CPT4_HCPCS. Production ETL data stores CPT-4 and HCPCS codes
+  only as CPT4_HCPCS, so on that data the two operators select nothing (known issue, bead
+  `conceptql-rpy3`). The warning is "the data has no records of this vocabulary", and it says
+  to use `cpt_or_hcpcs`, which also reads CPT4_HCPCS. `cpt_or_hcpcs` does not give it. The
+  check runs two small existence queries on the data, and it skips a mock database as the
+  other code warnings do.
 
 ### Changed
 
