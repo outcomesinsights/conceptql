@@ -4,7 +4,7 @@ title: Let cpt and hcpcs also find their codes stored as CPT4_HCPCS, through a m
 status: deferred
 type: idea
 created_at: 2026-11-05T14:05:18.588711+00:00
-updated_at: 2026-11-05T14:05:29.920034+00:00
+updated_at: 2026-11-05T14:15:38.271748+00:00
 tags:
   - cpt
   - hcpcs
@@ -39,3 +39,18 @@ QUESTIONS TO SETTLE BEFORE ANY BUILD:
 - The 381 shared codes have one CPT4_HCPCS row, copied from HCPCS. Should cpt find that row for a code that is also a CPT4 code?
 - Today a vocabulary operator does not follow mappings to other vocabularies (the spec says so). This idea is an exception to that rule.
 - Seed conceptql-1 records that in about a year cpt_or_hcpcs will use CPT4_HCPCS alone. Does that plan make this idea unnecessary?
+
+RULED 2026-11-05 (Ryan), answers to the questions above:
+
+```
+in terms of answers, yes, built upstream in osv or vocabulation
+agreed that it violates the rule, that's why it is only proposed for consideration at this point
+also agree taht cpt_or_hcpcs is another fine option here as well.  cpt and hcpcs specific operators work against their specific vocabularies
+```
+
+- Where the mapping lives: upstream, in ohdsi_supplemental_vocabs or vocabulation, not inside conceptql.
+- The rule conflict: Ryan agrees that the idea breaks the rule that a vocabulary operator does not follow mappings to other vocabularies. That is why the idea stays only proposed for consideration.
+- cpt_or_hcpcs: it is a fine way to find these codes today. The cpt and hcpcs operators read only their own vocabularies, by design.
+- Still open: whether cpt should find the CPT4_HCPCS row of the 381 codes that are in both CPT4 and HCPCS (that row is a copy of the HCPCS row). It matters only if the idea is ever built.
+
+The seed stays deferred.
