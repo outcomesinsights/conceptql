@@ -4,7 +4,7 @@ title: Let cpt and hcpcs also find their codes stored as CPT4_HCPCS, through a m
 status: deferred
 type: idea
 created_at: 2026-11-05T14:05:18.588711+00:00
-updated_at: 2026-11-05T14:15:38.271748+00:00
+updated_at: 2026-11-05T14:24:31.945914+00:00
 tags:
   - cpt
   - hcpcs
@@ -54,3 +54,12 @@ also agree taht cpt_or_hcpcs is another fine option here as well.  cpt and hcpcs
 - Still open: whether cpt should find the CPT4_HCPCS row of the 381 codes that are in both CPT4 and HCPCS (that row is a copy of the HCPCS row). It matters only if the idea is ever built.
 
 The seed stays deferred.
+
+RULED 2026-11-05 (Ryan), on the 381 codes that are in both CPT4 and HCPCS:
+
+```
+CPT should, but I'm even less convinced that I want to do mappings as cpt_or_hcpcs is a viable solution already
+```
+
+- If the mapping is ever built, cpt should find the CPT4_HCPCS row of a code that is in both CPT4 and HCPCS, although that row is a copy of the HCPCS row.
+- Ryan is even less convinced that the mapping is worth building, because cpt_or_hcpcs already finds these codes. No question is open now. The seed stays deferred.
