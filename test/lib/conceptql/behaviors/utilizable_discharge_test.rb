@@ -123,7 +123,7 @@ describe "ConceptQL::Behaviors::Utilizable gdm_wide discharge_date" do
 
   it "keeps the tied row with the lowest observations id" do
     with_observations do |db|
-      _(hospitalizations(db).transform_values { |row| row[:source_value] }).must_equal(90_010 => "A", 90_020 => "D")
+      _(hospitalizations(db).transform_values { |row| row[:source_value] }).must_equal({ 90_010 => "A", 90_020 => "D" })
     end
   end
 end

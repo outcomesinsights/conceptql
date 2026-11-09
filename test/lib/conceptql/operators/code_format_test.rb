@@ -153,18 +153,18 @@ describe "vocabulary code formats" do
 
     it "is a warning that names the code, and the statement stays valid" do
       _(cdb.query(%w[icd9 410*]).validation_errors).must_equal({})
-      _(format_warnings(%w[icd9 410*])).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
+      _(format_warnings(%w[icd9 410*])).must_equal({ "icd9" => [ [ "improperly formatted code", "410*" ] ] })
     end
 
     it "names only the malformed codes" do
       _(cdb.query(%w[icd9 412 410* 412.0]).validation_errors).must_equal({})
-      _(format_warnings(%w[icd9 412 410* 412.0])).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
+      _(format_warnings(%w[icd9 412 410* 412.0])).must_equal({ "icd9" => [ [ "improperly formatted code", "410*" ] ] })
     end
 
     it "is a warning for a multiple-vocabulary operator only when every vocabulary rejects its format" do
       _(cdb.query(%w[cpt_or_hcpcs 99214 A0382 AA0382]).validation_errors).must_equal({})
       _(format_warnings(%w[cpt_or_hcpcs 99214 A0382 AA0382]))
-        .must_equal("cpt_or_hcpcs" => [ [ "improperly formatted code", "AA0382" ] ])
+        .must_equal({ "cpt_or_hcpcs" => [ [ "improperly formatted code", "AA0382" ] ] })
       # 12345 is malformed for HCPCS but a well-formed CPT4 code.
       _(format_warnings(%w[cpt_or_hcpcs 12345])).must_equal({})
     end

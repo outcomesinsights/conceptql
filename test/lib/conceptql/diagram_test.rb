@@ -36,8 +36,8 @@ describe ConceptQL::Diagram do
   describe ".render" do
     it "renders a single selection operator" do
       _(render([ %w[icd9 412] ])).must_equal(
-        format: "conceptql-diagram/v1",
-        statements: [ icd9("412") ]
+        { format: "conceptql-diagram/v1",
+        statements: [ icd9("412") ] }
       )
     end
 
@@ -217,7 +217,7 @@ describe ConceptQL::Diagram do
 
       _(rows).must_be :>, 0 # a 0 == 0 match would prove nothing
 
-      _(node[:counts]).must_equal("condition_occurrence" => { rows: rows, n: n })
+      _(node[:counts]).must_equal({ "condition_occurrence" => { rows: rows, n: n } })
       _(node[:outputTypes]).must_equal([ "condition_occurrence" ])
     end
   end

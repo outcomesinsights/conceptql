@@ -70,7 +70,7 @@ describe ConceptQL::CLI do
 
         _(from_json).must_equal(from_js)
         _(from_json["operators"].keys).must_include("union")
-        _(from_json["categories"].first).must_equal("name" => "Select by Clinical Codes", "priority" => 0)
+        _(from_json["categories"].first).must_equal({ "name" => "Select by Clinical Codes", "priority" => 0 })
       end
     end
   end

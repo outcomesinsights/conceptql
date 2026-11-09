@@ -17,7 +17,7 @@ describe ConceptQL::Operators::Invalid do
       end
 
       it "reports its error under the key invalid" do
-        _(cdb.query(statement).validation_errors).must_equal("invalid" => [ [ "invalid operator", "" ] ])
+        _(cdb.query(statement).validation_errors).must_equal({ "invalid" => [ [ "invalid operator", "" ] ] })
       end
     end
   end
@@ -35,7 +35,7 @@ describe ConceptQL::Operators::Invalid do
     end
 
     it "reports its error under its name" do
-      _(cdb.query(%w[nope_op 412]).validation_errors).must_equal("nope_op" => [ [ "invalid operator", "nope_op" ] ])
+      _(cdb.query(%w[nope_op 412]).validation_errors).must_equal({ "nope_op" => [ [ "invalid operator", "nope_op" ] ] })
     end
   end
 
@@ -51,13 +51,13 @@ describe ConceptQL::Operators::Invalid do
     end
 
     it "reports the invalid-operator error" do
-      _(query.validation_errors).must_equal("concurrent_within" => [ [ "invalid operator", "concurrent_within" ] ])
+      _(query.validation_errors).must_equal({ "concurrent_within" => [ [ "invalid operator", "concurrent_within" ] ] })
       _(query.annotate.last[:annotation][:errors]).must_equal [ [ "invalid operator", "concurrent_within" ] ]
     end
 
     it "raises InvalidStatementError from the plain query" do
       error = _ { query.sql }.must_raise ConceptQL::InvalidStatementError
-      _(error.errors).must_equal("concurrent_within" => [ [ "invalid operator", "concurrent_within" ] ])
+      _(error.errors).must_equal({ "concurrent_within" => [ [ "invalid operator", "concurrent_within" ] ] })
     end
   end
 end

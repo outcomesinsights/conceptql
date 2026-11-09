@@ -86,14 +86,14 @@ describe ConceptQL::Operators::InformationPeriods do
     end
 
     it "warns about an unknown code and does not make it concept ID 0" do
-      _(warnings("PART D", "PARTD")).must_equal("information_periods" => [ [ "unknown code(s)", "PART D" ] ])
+      _(warnings("PART D", "PARTD")).must_equal({ "information_periods" => [ [ "unknown code(s)", "PART D" ] ] })
       _(CDB.query([ "information_periods", "PART D" ]).sql).wont_match(/IN \(0\)/)
       _(periods("PART D")).must_be_empty
       _(periods("PART D", "PARTD")).must_equal periods("PARTD")
     end
 
     it "compares the case of a code exactly" do
-      _(warnings("partd")).must_equal("information_periods" => [ [ "unknown code(s)", "partd" ] ])
+      _(warnings("partd")).must_equal({ "information_periods" => [ [ "unknown code(s)", "partd" ] ] })
       _(periods("partd")).must_be_empty
     end
 

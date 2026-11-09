@@ -71,7 +71,7 @@ describe "the warning for codes with more than one meaning" do
     let(:lexicon) { ConceptQL::Lexicon.new(lexicon_db) }
 
     it "counts names that differ only in case or spacing as one name" do
-      _(lexicon.code_meanings(lexicon_db, "DRG", %w[410 871 999])).must_equal("410" => [ "Biliary tract", "Chemotherapy" ])
+      _(lexicon.code_meanings(lexicon_db, "DRG", %w[410 871 999])).must_equal({ "410" => [ "Biliary tract", "Chemotherapy" ] })
     end
 
     it "returns nothing without codes" do

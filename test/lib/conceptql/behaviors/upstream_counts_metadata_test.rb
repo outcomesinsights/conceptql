@@ -74,7 +74,7 @@ describe "upstream counts in ConceptQL.metadata" do
   it "reports a positional upstream on a left/right operator as an error" do
     statement = [ "before", [ "icd9", "412" ], { left: [ "icd9", "412" ], right: [ "icd9", "401.9" ] } ]
     errors = cdb.query(statement).scope_annotate(skip_counts: true)[:errors]
-    _(errors).must_equal("before" => [ [ "has upstreams", [ "icd9" ] ] ])
+    _(errors).must_equal({ "before" => [ [ "has upstreams", [ "icd9" ] ] ] })
   end
 
   it "accepts the same statement without the positional upstream" do
@@ -90,7 +90,7 @@ describe "upstream counts in ConceptQL.metadata" do
     it "reports a second upstream on #{name} as an error" do
       statement = head + [ [ "icd9", "412" ], [ "icd9", "401.9" ] ]
       errors = cdb.query(statement).scope_annotate(skip_counts: true)[:errors]
-      _(errors).must_equal(name => [ [ "has multiple upstreams", %w[icd9 icd9] ] ])
+      _(errors).must_equal({ name => [ [ "has multiple upstreams", %w[icd9 icd9] ] ] })
     end
 
     it "accepts one upstream on #{name}" do

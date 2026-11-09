@@ -23,11 +23,11 @@ describe "the deprecated count operator" do
   end
 
   it "warns on a count statement" do
-    _(warnings_for([ "count", [ "icd9", "412" ] ])).must_equal("count" => [ deprecation ])
+    _(warnings_for([ "count", [ "icd9", "412" ] ])).must_equal({ "count" => [ deprecation ] })
   end
 
   it "warns on count when count also has errors" do
-    _(warnings_for([ "count" ])).must_equal("count" => [ deprecation ])
+    _(warnings_for([ "count" ])).must_equal({ "count" => [ deprecation ] })
   end
 
   it "gives no warning for the numeric and sum idiom" do

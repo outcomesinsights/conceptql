@@ -86,7 +86,7 @@ describe "the ms_drg and cms_drg operators" do
       _(warnings_for([ name, "001" ]).to_h).must_be_empty
       # A malformed code is a warning (seeds conceptql-0eb and conceptql-ysx, ruled 2026-10-30).
       _(cdb.query([ name, "001", "1", "0001" ]).validation_errors).must_equal({})
-      _(warnings_for([ name, "001", "1", "0001" ])).must_equal(name => [ [ "improperly formatted code", "1", "0001" ] ])
+      _(warnings_for([ name, "001", "1", "0001" ])).must_equal({ name => [ [ "improperly formatted code", "1", "0001" ] ] })
     end
   end
 
@@ -127,7 +127,7 @@ describe "the ms_drg and cms_drg operators" do
     end
 
     it "warns on a drg statement" do
-      _(warnings_for(%w[drg 001])).must_equal("drg" => [ deprecation ])
+      _(warnings_for(%w[drg 001])).must_equal({ "drg" => [ deprecation ] })
     end
 
     it "still runs" do
@@ -229,7 +229,7 @@ describe "the ms_drg and cms_drg operators" do
     it "warns about a code the DRG vocabulary does not know" do
       database = live_cdb(ohdsi_lexicon_db)
 
-      _(warnings_for(%w[ms_drg 410 999], database)).must_equal("ms_drg" => [ [ "unknown code(s)", "999" ] ])
+      _(warnings_for(%w[ms_drg 410 999], database)).must_equal({ "ms_drg" => [ [ "unknown code(s)", "999" ] ] })
     end
   end
 end

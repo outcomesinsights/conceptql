@@ -96,7 +96,7 @@ describe ConceptQL::Operators::Sum do
 
   it "rejects a group_by_person that is not true or false" do
     _(scope_for([ "sum", stream, { "group_by_person" => "yes" } ])[:errors])
-      .must_equal("sum" => [ [ "wrong option format", "group_by_person", "yes" ] ])
+      .must_equal({ "sum" => [ [ "wrong option format", "group_by_person", "yes" ] ] })
   end
 
   it "accepts a group_by_person without a value, as an editor can send it" do

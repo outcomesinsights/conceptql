@@ -27,26 +27,26 @@ describe "SpecBuild.outdated" do
   it "names an image whose tree changed as stale" do
     with_images("a.svg", "b.svg") do |dir|
       manifest = "a.svg\t#{SpecBuild.sha(tree)}\nb.svg\t#{SpecBuild.sha(tree)}\n"
-      _(SpecBuild.outdated({ "a.svg" => tree, "b.svg" => other }, manifest, dir)).must_equal("b.svg" => "stale")
+      _(SpecBuild.outdated({ "a.svg" => tree, "b.svg" => other }, manifest, dir)).must_equal({ "b.svg" => "stale" })
     end
   end
 
   it "names an image that the manifest does not list as stale" do
     with_images("a.svg") do |dir|
-      _(SpecBuild.outdated({ "a.svg" => tree }, "", dir)).must_equal("a.svg" => "stale")
+      _(SpecBuild.outdated({ "a.svg" => tree }, "", dir)).must_equal({ "a.svg" => "stale" })
     end
   end
 
   it "names an image file that does not exist as MISSING" do
     with_images do |dir|
-      _(SpecBuild.outdated({ "a.svg" => tree }, "a.svg\t#{SpecBuild.sha(tree)}\n", dir)).must_equal("a.svg" => "MISSING")
+      _(SpecBuild.outdated({ "a.svg" => tree }, "a.svg\t#{SpecBuild.sha(tree)}\n", dir)).must_equal({ "a.svg" => "MISSING" })
     end
   end
 
   # An image that README.cql.md places by hand (images/any_overlap.png) is not an SVG.
   it "names an SVG file that no tree names as unused, and ignores other files" do
     with_images("a.svg", "b.svg", "c.png") do |dir|
-      _(SpecBuild.outdated({ "a.svg" => tree }, "a.svg\t#{SpecBuild.sha(tree)}\n", dir)).must_equal("b.svg" => "unused")
+      _(SpecBuild.outdated({ "a.svg" => tree }, "a.svg\t#{SpecBuild.sha(tree)}\n", dir)).must_equal({ "b.svg" => "unused" })
     end
   end
 end

@@ -73,7 +73,7 @@ describe ConceptQL::DateAdjuster do
       it "should work" do
         adj = da.adjust(:end_date)
         _(adj.expr.value).must_equal("start_date")
-        _(adj.interval).must_equal(years: -6)
+        _(adj.interval).must_equal({ years: -6 })
       end
     end
 
@@ -83,7 +83,7 @@ describe ConceptQL::DateAdjuster do
       it "should work" do
         adj = da.adjust(:start_date)
         _(adj.expr.value).must_equal("end_date")
-        _(adj.interval).must_equal(years: 6)
+        _(adj.interval).must_equal({ years: 6 })
       end
     end
 
@@ -94,27 +94,27 @@ describe ConceptQL::DateAdjuster do
         adj = da.adjust(Sequel.qualify(:table, :start_date))
         _(adj.expr.table).must_equal(:table)
         _(adj.expr.column).must_equal(:end_date)
-        _(adj.interval).must_equal(years: -6)
+        _(adj.interval).must_equal({ years: -6 })
       end
 
       it "should work with Sequel Identifier" do
         adj = da.adjust(Sequel[:table][:start_date])
         _(adj.expr.table).must_equal(:table)
         _(adj.expr.column).must_equal(:end_date)
-        _(adj.interval).must_equal(years: -6)
+        _(adj.interval).must_equal({ years: -6 })
       end
 
       it "should preserve with original string" do
         adj = da.adjust(Sequel[:table][:start_date])
         _(adj.expr.table).must_equal(:table)
         _(adj.expr.column).must_equal(:end_date)
-        _(adj.interval).must_equal(years: -6)
+        _(adj.interval).must_equal({ years: -6 })
 
         op.expect :rdbms, rdbms
         adj = da.adjust(Sequel[:table][:start_date])
         _(adj.expr.table).must_equal(:table)
         _(adj.expr.column).must_equal(:end_date)
-        _(adj.interval).must_equal(years: -6)
+        _(adj.interval).must_equal({ years: -6 })
       end
     end
 
@@ -237,8 +237,8 @@ describe ConceptQL::DateAdjuster do
       %w[365 365d].each do |adjustment|
         it "does not reuse the adjustments of the first call for #{adjustment}" do
           adjuster = ConceptQL::DateAdjuster.new(stub_op, adjustment)
-          _(adjuster.adjust(:start_date).interval).must_equal(days: 365)
-          _(adjuster.adjust(:start_date, true).interval).must_equal(days: -365)
+          _(adjuster.adjust(:start_date).interval).must_equal({ days: 365 })
+          _(adjuster.adjust(:start_date, true).interval).must_equal({ days: -365 })
           _(adjuster.adjustments(true)).must_equal([ [ :days, -365 ] ])
           _(adjuster.adjustments).must_equal([ [ :days, 365 ] ])
         end

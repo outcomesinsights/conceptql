@@ -116,10 +116,10 @@ describe ConceptQL::DiagramRenderer::DiagramData do
 
     it "puts the statements under a synthetic root with path ids and defaults" do
       root = data.from([ node, { "name" => "person", "outputTypes" => [ "person" ] } ])
-      _(root.slice("name", "id", "outputTypes")).must_equal("name" => "root", "id" => "root", "outputTypes" => %w[condition_occurrence person])
+      _(root.slice("name", "id", "outputTypes")).must_equal({ "name" => "root", "id" => "root", "outputTypes" => %w[condition_occurrence person] })
       first = root["children"][0]
-      _(first.slice("id", "parameters", "isSelected", "isAttachable")).must_equal("id" => "n0", "parameters" => {}, "isSelected" => false, "isAttachable" => false)
-      _(first["children"][0].slice("id", "outputTypes", "children")).must_equal("id" => "n0.0", "outputTypes" => [ "unknown" ], "children" => [])
+      _(first.slice("id", "parameters", "isSelected", "isAttachable")).must_equal({ "id" => "n0", "parameters" => {}, "isSelected" => false, "isAttachable" => false })
+      _(first["children"][0].slice("id", "outputTypes", "children")).must_equal({ "id" => "n0.0", "outputTypes" => [ "unknown" ], "children" => [] })
       _(root["children"][1]["id"]).must_equal("n1")
     end
 

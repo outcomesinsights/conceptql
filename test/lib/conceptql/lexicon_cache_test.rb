@@ -268,7 +268,7 @@ describe "ConceptQL::Lexicon lookup cache" do
 
       3.times { _(gdm.table_is_missing?(db)).must_equal false }
 
-      _(db.calls).must_equal(patients: 1, clinical_codes: 1)
+      _(db.calls).must_equal({ patients: 1, clinical_codes: 1 })
     end
 
     it "keeps tables and data dbs apart" do
@@ -283,8 +283,8 @@ describe "ConceptQL::Lexicon lookup cache" do
       end
 
       # Only tables that exist are remembered; missing ones are asked again.
-      _(full.calls).must_equal(patients: 1, clinical_codes: 1)
-      _(partial.calls).must_equal(patients: 1, clinical_codes: 2, observations: 2)
+      _(full.calls).must_equal({ patients: 1, clinical_codes: 1 })
+      _(partial.calls).must_equal({ patients: 1, clinical_codes: 2, observations: 2 })
     end
 
     it "asks again after a missing table, and not after it appears" do
@@ -294,11 +294,11 @@ describe "ConceptQL::Lexicon lookup cache" do
       # A transient error looks the same: Sequel's table_exists? answers false.
       _(cdb.source_table_exists?(db, :observations)).must_equal false
       _(cdb.source_table_exists?(db, :observations)).must_equal false
-      _(db.calls).must_equal(observations: 2)
+      _(db.calls).must_equal({ observations: 2 })
 
       db.tables << :observations
       2.times { _(cdb.source_table_exists?(db, :observations)).must_equal true }
-      _(db.calls).must_equal(observations: 3)
+      _(db.calls).must_equal({ observations: 3 })
     end
 
     it "gives each Database its own answers" do
@@ -306,7 +306,7 @@ describe "ConceptQL::Lexicon lookup cache" do
 
       2.times { _(data_model(:gdm_wide, cache: true).table_is_missing?(db)).must_equal false }
 
-      _(db.calls).must_equal(observations: 2)
+      _(db.calls).must_equal({ observations: 2 })
     end
 
     it "checks every time when caching is off" do
@@ -315,7 +315,7 @@ describe "ConceptQL::Lexicon lookup cache" do
 
       2.times { _(gdm_wide.table_is_missing?(db)).must_equal false }
 
-      _(db.calls).must_equal(observations: 2)
+      _(db.calls).must_equal({ observations: 2 })
     end
   end
 

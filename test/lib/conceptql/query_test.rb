@@ -48,7 +48,7 @@ describe ConceptQL::Query do
                                                     right: [ "recall", "Meyloma 90-day Lookback" ] } ] ] ] } ]
 
     error = _ { CDB.query(statement).all }.must_raise(ConceptQL::InvalidStatementError)
-    _(error.errors).must_equal("recall" => [ [ "no matching label", "Qualifying Meyloma Dx" ] ])
+    _(error.errors).must_equal({ "recall" => [ [ "no matching label", "Qualifying Meyloma Dx" ] ] })
   end
 
   # conceptql-g2v: the plain query validates the statement first. Each of
@@ -121,19 +121,19 @@ describe ConceptQL::Query do
     # one must be reported, not raise. [[]] unwraps to [].
     [ [], [ [] ], [ "union", [], [ "icd9", "412" ] ] ].each do |statement|
       it "reports #{statement.inspect} as an empty statement from #validation_errors" do
-        _(CDB.query(statement).validation_errors).must_equal("invalid" => [ [ "empty statement" ] ])
+        _(CDB.query(statement).validation_errors).must_equal({ "invalid" => [ [ "empty statement" ] ] })
       end
     end
 
     it "reports an empty statement without a database" do
       cdb = ConceptQL::Database.new(nil, data_model: :gdm)
-      _(cdb.query([]).validation_errors).must_equal("invalid" => [ [ "empty statement" ] ])
+      _(cdb.query([]).validation_errors).must_equal({ "invalid" => [ [ "empty statement" ] ] })
       _ { cdb.query([]).sql }.must_raise(ConceptQL::InvalidStatementError)
     end
 
     it "reports an algorithm whose stored statement is empty" do
       query = CDB.query([ "algorithm", "clia_lab_use" ], algorithm_fetcher: ->(_alg) { [ [], "CLIA lab use" ] })
-      _(query.validation_errors).must_equal("invalid" => [ [ "empty statement" ] ])
+      _(query.validation_errors).must_equal({ "invalid" => [ [ "empty statement" ] ] })
     end
 
     it "keeps the 0.4.0 names: a Query::QueryError, also named Query::InvalidStatementError" do
@@ -202,7 +202,7 @@ describe ConceptQL::Query do
     it "reports the errors of a window table inside a window table" do
       nested = [ "window", [ "icd9", "412" ], { "window_table" => statement } ]
       _(CDB.query(nested).scope_annotate[:errors]).must_equal(
-        "window_table" => [ [ "window_table: provider_filter: required option not present", "roles" ] ]
+        { "window_table" => [ [ "window_table: provider_filter: required option not present", "roles" ] ] }
       )
     end
   end

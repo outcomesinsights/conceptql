@@ -106,8 +106,8 @@ describe ConceptQL::Lexicon::NoVocabularyError do
 
       _(err.searches.map(&:role)).must_equal %i[data_database]
       _(err.searches.first.missing_tables).must_equal(
-        ohdsi: %i[concept concept_ancestor concept_relationship vocabulary],
-        gdm: %i[ancestors concepts mappings vocabularies]
+        { ohdsi: %i[concept concept_ancestor concept_relationship vocabulary],
+        gdm: %i[ancestors concepts mappings vocabularies] }
       )
       _(err.message).must_include "sqlite database"
       _(err.message).must_include "OHDSI tables #{ohdsi_tables}"

@@ -56,14 +56,14 @@ describe "the warning for a vocabulary that the data stores as a merged vocabula
   it "warns for cpt and hcpcs when the data has only CPT4_HCPCS rows" do
     cdb = database(data_vocabularies: %w[CPT4_HCPCS])
 
-    _(warnings_for(cdb, %w[cpt 99214])).must_equal("cpt" => [ merged_warning("CPT4") ])
-    _(warnings_for(cdb, %w[hcpcs A0425])).must_equal("hcpcs" => [ merged_warning("HCPCS") ])
+    _(warnings_for(cdb, %w[cpt 99214])).must_equal({ "cpt" => [ merged_warning("CPT4") ] })
+    _(warnings_for(cdb, %w[hcpcs A0425])).must_equal({ "hcpcs" => [ merged_warning("HCPCS") ] })
   end
 
   it "warns for the code * too" do
     cdb = database(data_vocabularies: %w[CPT4_HCPCS])
 
-    _(warnings_for(cdb, %w[cpt *])).must_equal("cpt" => [ merged_warning("CPT4") ])
+    _(warnings_for(cdb, %w[cpt *])).must_equal({ "cpt" => [ merged_warning("CPT4") ] })
   end
 
   it "gives no warning for cpt_or_hcpcs or cpt4_hcpcs" do
@@ -84,7 +84,7 @@ describe "the warning for a vocabulary that the data stores as a merged vocabula
     cdb = database(data_vocabularies: %w[CPT4 CPT4_HCPCS])
 
     _(warnings_for(cdb, %w[cpt 99214])).must_be_empty
-    _(warnings_for(cdb, %w[hcpcs A0425])).must_equal("hcpcs" => [ merged_warning("HCPCS") ])
+    _(warnings_for(cdb, %w[hcpcs A0425])).must_equal({ "hcpcs" => [ merged_warning("HCPCS") ] })
   end
 
   it "gives no warning when the data has no CPT4_HCPCS rows" do

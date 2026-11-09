@@ -15,14 +15,14 @@ describe ConceptQL::Operators do
     it "only warns" do
       query = cdb.query(%w[icd9 412 000.00])
       _(query.validation_errors).must_equal({})
-      _(query.scope_annotate(skip_counts: true)[:warnings]).must_equal("icd9" => [ [ "unknown code(s)", "000.00" ] ])
+      _(query.scope_annotate(skip_counts: true)[:warnings]).must_equal({ "icd9" => [ [ "unknown code(s)", "000.00" ] ] })
     end
 
     it "still warns next to a malformed code" do
       annotation = cdb.query(%w[icd9 410* 000.00]).scope_annotate(skip_counts: true)
       _(annotation[:errors]).must_equal({})
       _(annotation[:warnings]).must_equal(
-        "icd9" => [ [ "improperly formatted code", "410*" ], [ "unknown code(s)", "000.00" ] ]
+        { "icd9" => [ [ "improperly formatted code", "410*" ], [ "unknown code(s)", "000.00" ] ] }
       )
     end
   end
@@ -35,8 +35,8 @@ describe ConceptQL::Operators do
     it "warns and leaves the statement valid" do
       query = cdb.query(%w[icd9 410*])
       _(query.validation_errors).must_equal({})
-      _(query.scope_annotate[:warnings]).must_equal("icd9" => [ [ "improperly formatted code", "410*" ] ])
-      _(query.scope_annotate[:counts]).must_equal("icd9" => { condition_occurrence: { rows: 0, n: 0 } })
+      _(query.scope_annotate[:warnings]).must_equal({ "icd9" => [ [ "improperly formatted code", "410*" ] ] })
+      _(query.scope_annotate[:counts]).must_equal({ "icd9" => { condition_occurrence: { rows: 0, n: 0 } } })
     end
 
     it "does not stop annotate from counting the operator's other codes" do
