@@ -84,10 +84,11 @@ module ConceptQL
       # MultipleVocabularies passes skip_merged_vocabulary_check to its
       # vocabulary operators. It reads the merged vocabulary itself, and it
       # would drop this warning anyway (see #warn_about_merged_vocabulary).
+      # The merged-vocabulary check reads the data, so it needs a data
+      # database. The code checks read only the lexicon.
       def additional_validation(db, opts = {})
-        return unless add_warnings?(db, opts)
-
-        warn_about_merged_vocabulary(db) unless opts[:skip_merged_vocabulary_check]
+        warn_about_merged_vocabulary(db) if add_warnings?(db, opts) && !opts[:skip_merged_vocabulary_check]
+        return unless lexicon_checks?(opts)
         return if select_all?
 
         args = arguments.dup

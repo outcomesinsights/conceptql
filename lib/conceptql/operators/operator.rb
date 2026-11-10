@@ -645,6 +645,15 @@ module ConceptQL
         @errors.empty? && !no_db?(db, opts)
       end
 
+      # Whether to run the checks that read only the lexicon, such as the
+      # unknown-code check. They need no data database, so they also run for
+      # a Database whose data database is nil or a Sequel mock but that has a
+      # lexicon (the Jigsaw editor, bead conceptql-0ubo). skip_db turns them
+      # off, as it turns off add_warnings?.
+      def lexicon_checks?(opts = {})
+        @errors.empty? && dm.lexicon.strategy != :no_db && !skip_db?(opts)
+      end
+
       def add_error(*args)
         errors << args
       end

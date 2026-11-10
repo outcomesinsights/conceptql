@@ -41,9 +41,10 @@ module ConceptQL
       private
 
       # A code that names no concept selects no period. A code is known only
-      # in its own case, as the lookup finds it.
+      # in its own case, as the lookup finds it. The check reads only the
+      # lexicon, so it needs no data database.
       def additional_validation(db, opts = {})
-        return unless add_warnings?(db, opts)
+        return unless lexicon_checks?(opts)
 
         codes = dm.information_type_codes(arguments)
         return if codes.empty?

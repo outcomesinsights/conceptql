@@ -30,6 +30,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- A vocabulary operator gives the unknown-code and the reused-code warnings, and
+  `information_periods` gives its unknown-code warning, when the Database has a lexicon but
+  its data database is nil or a Sequel mock. Before, these checks ran only with a real data
+  database, although they read only the lexicon, so the Jigsaw editor
+  (`ConceptQL::Database.new(lexicon_db)`) got no unknown-code warning. `skip_db: true` still
+  turns them off. The warning that the data stores CPT4 or HCPCS codes as CPT4_HCPCS reads the
+  data, so it still needs a real data database.
 - **Breaking:** `InvalidStatementError#errors` and `Query#validation_errors` are a list of
   every error, in the form of `ConceptQL::Annotation#errors`
   (`{ operator:, id:, message:, details: }`). Before, they were a hash of operator name =>
