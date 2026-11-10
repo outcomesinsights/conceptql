@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T19:17:38.018055+00:00
+updated_at: 2026-11-10T19:27:27.574336+00:00
 ---
 
 ## The question
@@ -212,3 +212,7 @@ Ryan: "I agree with the challenge to the 2020 rule / full code lists please".
 - conceptql-0h2n: re-architect cpt_or_hcpcs code checks. Depends on conceptql-8oim and conceptql-d1bd.
 
 Still open: whether the reference lexicon is an explicit Database option that JDE passes (proposed) or found from LEXICON_URL. conceptql-8oim waits for that answer.
+
+## RULED 2026-11-10: how a Database gets the reference lexicon
+
+Ryan: "explicit option with a fall back to LEXICON_URL". The reference lexicon is an explicit Database option (reference_lexicon:). When it is not given and LEXICON_URL is set, the Database uses the LEXICON_URL lexicon. Recorded in bead conceptql-8oim.
