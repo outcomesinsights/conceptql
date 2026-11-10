@@ -4,6 +4,7 @@
     "start": "-2y",
     "end": "-2y",
     "annotation": {
+      "id": "time_window-1",
       "counts": {
         "invalid": {
           "rows": 0,

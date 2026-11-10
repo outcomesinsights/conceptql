@@ -5,6 +5,7 @@
     1,
     {
       "annotation": {
+        "id": "numeric-1",
         "counts": {
           "person": {
             "rows": 249,
@@ -18,6 +19,7 @@
   21,
   {
     "annotation": {
+      "id": "sum-1",
       "counts": {
         "person": {
           "rows": 0,

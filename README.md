@@ -10,6 +10,8 @@ The ConceptQL specification is [docs/spec/README.md](docs/spec/README.md).
 
 `ConceptQL::DiagramRenderer` draws a statement's diagram as an SVG or a PNG. See [docs/diagram_renderer.md](docs/diagram_renderer.md).
 
+`ConceptQL::Annotation` reads the errors, warnings and counts of an annotated statement. See [docs/annotation.md](docs/annotation.md).
+
 ## Motivation for ConceptQL
 
 Outcomes Insights has built a vast library of research algorithms and applied those algorithms to large databases of claims data. Early into building the library, we realized we had to overcome two major issues:

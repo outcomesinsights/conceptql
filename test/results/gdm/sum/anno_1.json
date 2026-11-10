@@ -2,6 +2,7 @@
   "sum",
   {
     "annotation": {
+      "id": "sum-1",
       "counts": {
         "invalid": {
           "rows": 0,

@@ -3,6 +3,7 @@
   "412",
   {
     "annotation": {
+      "id": "person-1",
       "counts": {
         "person": {
           "rows": 0,

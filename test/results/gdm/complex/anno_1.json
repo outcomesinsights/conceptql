@@ -6,6 +6,7 @@
     {
       "label": "a",
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 48,
@@ -22,6 +23,7 @@
     {
       "label": "A",
       "annotation": {
+        "id": "icd9-2",
         "counts": {
           "condition_occurrence": {
             "rows": 0,
@@ -39,6 +41,7 @@
     {
       "label": "A ",
       "annotation": {
+        "id": "icd9-3",
         "counts": {
           "condition_occurrence": {
             "rows": 0,
@@ -55,6 +58,7 @@
     "a",
     {
       "annotation": {
+        "id": "recall-1",
         "counts": {
           "condition_occurrence": {
             "rows": 48,
@@ -67,6 +71,7 @@
   ],
   {
     "annotation": {
+      "id": "union-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,

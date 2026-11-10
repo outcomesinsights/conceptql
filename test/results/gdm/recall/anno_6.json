@@ -12,6 +12,7 @@
             {
               "label": "Meyloma Dx",
               "annotation": {
+                "id": "icd9-1",
                 "counts": {
                   "condition_occurrence": {
                     "rows": 0,
@@ -26,6 +27,7 @@
           4,
           {
             "annotation": {
+              "id": "occurrence-1",
               "counts": {
                 "condition_occurrence": {
                   "rows": 0,
@@ -45,6 +47,7 @@
               "Meyloma Dx",
               {
                 "annotation": {
+                  "id": "recall-1",
                   "counts": {
                     "condition_occurrence": {
                       "rows": 0,
@@ -57,6 +60,7 @@
             ],
             {
               "annotation": {
+                "id": "first-1",
                 "counts": {
                   "condition_occurrence": {
                     "rows": 0,
@@ -71,6 +75,7 @@
             "start": "0",
             "end": "90d",
             "annotation": {
+              "id": "time_window-1",
               "counts": {
                 "condition_occurrence": {
                   "rows": 0,
@@ -82,6 +87,7 @@
           }
         ],
         "annotation": {
+          "id": "during-1",
           "counts": {
             "condition_occurrence": {
               "rows": 0,
@@ -104,6 +110,7 @@
               "Qualifying Meyloma Dx",
               {
                 "annotation": {
+                  "id": "recall-2",
                   "counts": {
                     "invalid": {
                       "rows": 0,
@@ -120,6 +127,7 @@
               "end": "0",
               "label": "Meyloma 90-day Lookback",
               "annotation": {
+                "id": "time_window-2",
                 "counts": {
                   "invalid": {
                     "rows": 0,
@@ -146,6 +154,7 @@
             {
               "label": "Bone Marrow",
               "annotation": {
+                "id": "cpt-1",
                 "counts": {
                   "procedure_occurrence": {
                     "rows": 0,
@@ -157,6 +166,7 @@
             }
           ],
           "annotation": {
+            "id": "during-2",
             "counts": {
               "invalid": {
                 "rows": 0,
@@ -193,6 +203,7 @@
               {
                 "label": "Other Tests",
                 "annotation": {
+                  "id": "cpt-2",
                   "counts": {
                     "procedure_occurrence": {
                       "rows": 0,
@@ -208,6 +219,7 @@
               "Meyloma 90-day Lookback",
               {
                 "annotation": {
+                  "id": "recall-3",
                   "counts": {
                     "invalid": {
                       "rows": 0,
@@ -219,6 +231,7 @@
               }
             ],
             "annotation": {
+              "id": "during-3",
               "counts": {
                 "procedure_occurrence": {
                   "rows": 0,
@@ -232,6 +245,7 @@
         2,
         {
           "annotation": {
+            "id": "occurrence-2",
             "counts": {
               "procedure_occurrence": {
                 "rows": 0,
@@ -244,6 +258,7 @@
       ],
       {
         "annotation": {
+          "id": "union-1",
           "counts": {
             "invalid": {
               "rows": 0,
@@ -259,6 +274,7 @@
       }
     ],
     "annotation": {
+      "id": "after-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,

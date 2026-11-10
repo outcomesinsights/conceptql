@@ -5,6 +5,7 @@
     "gap": 30,
     "blah": true,
     "annotation": {
+      "id": "one_in_two_out-1",
       "counts": {
         "invalid": {
           "rows": 0,

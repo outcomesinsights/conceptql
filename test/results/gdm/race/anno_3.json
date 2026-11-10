@@ -3,6 +3,7 @@
   "unknown",
   {
     "annotation": {
+      "id": "race-1",
       "counts": {
         "person": {
           "rows": 0,

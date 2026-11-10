@@ -2,6 +2,7 @@
   "occurrence",
   {
     "annotation": {
+      "id": "occurrence-1",
       "counts": {
         "invalid": {
           "rows": 0,

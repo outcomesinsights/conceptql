@@ -5,6 +5,7 @@
     "123",
     {
       "annotation": {
+        "id": "foo-1",
         "counts": {
           "invalid": {
             "rows": 0,
@@ -18,6 +19,7 @@
   ],
   {
     "annotation": {
+      "id": "union-1",
       "counts": {
         "invalid": {
           "rows": 0,

@@ -5,6 +5,7 @@
     "004.3",
     {
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 1,
@@ -20,6 +21,7 @@
     "69210",
     {
       "annotation": {
+        "id": "cpt_or_hcpcs-1",
         "counts": {
           "procedure_occurrence": {
             "rows": 14,
@@ -32,6 +34,7 @@
   ],
   {
     "annotation": {
+      "id": "co_reported-1",
       "counts": {
         "condition_occurrence": {
           "rows": 1,

@@ -5,6 +5,7 @@
     "412",
     {
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 48,
@@ -19,6 +20,7 @@
     "start": "-2b",
     "end": "-2y",
     "annotation": {
+      "id": "time_window-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,

@@ -5,6 +5,7 @@
     "412",
     {
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 48,
@@ -19,6 +20,7 @@
     "start": "START",
     "end": "END",
     "annotation": {
+      "id": "date_range-1",
       "counts": {
         "person": {
           "rows": 0,

@@ -3,6 +3,7 @@
   "XYS",
   {
     "annotation": {
+      "id": "icd9-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,

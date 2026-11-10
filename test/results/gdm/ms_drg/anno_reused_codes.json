@@ -5,6 +5,7 @@
   "410",
   {
     "annotation": {
+      "id": "ms_drg-1",
       "counts": {
         "procedure_occurrence": {
           "rows": 3,

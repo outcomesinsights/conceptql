@@ -5,6 +5,7 @@
     "412",
     {
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 48,
@@ -20,6 +21,7 @@
     "00.13",
     {
       "annotation": {
+        "id": "icd9_procedure-1",
         "counts": {
           "procedure_occurrence": {
             "rows": 1,
@@ -32,6 +34,7 @@
   ],
   {
     "annotation": {
+      "id": "numeric-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,
