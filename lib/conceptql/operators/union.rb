@@ -10,12 +10,22 @@ module ConceptQL
       class Combiner
         attr_reader :combinables
 
+        # The vocabulary leaves that one scan can select, in groups: the
+        # leaves of one domain and one column family. The scan takes its
+        # columns from its first leaf, so a leaf with the lab columns (read,
+        # whose domain is condition_occurrence) gets its own scan, and an icd9
+        # leaf beside it keeps the default columns (bead conceptql-qdn9).
+        def self.scans(combinables)
+          combinables.group_by { |combo| [ combo.domain, combo.column_family ] }.values
+        end
+
         def initialize(combinables)
           @combinables = combinables
         end
 
         def queries(db)
-          combinables.group_by(&:domain).map do |domain, combos|
+          self.class.scans(combinables).map do |combos|
+            domain = combos.first.domain
             include_uuid = combos.any? { |c| c.options[:uuid] }
             criteria = combos.map do |combo|
               combo.filter_clause(db)
@@ -113,7 +123,7 @@ module ConceptQL
       def disjoint_upstreams?
         combinables, individuals = upstreams.partition { |upstream| upstream.is_a?(Vocabulary) }
         queries = individuals.map { |upstream| branches_of(upstream) }
-        queries += combinables.group_by(&:domain).values.map { |combos| combos.flat_map { |c| branches_of(c) } }
+        queries += Combiner.scans(combinables).map { |combos| combos.flat_map { |c| branches_of(c) } }
         return false unless queries.all?
 
         queries.combination(2).all? do |one, other|

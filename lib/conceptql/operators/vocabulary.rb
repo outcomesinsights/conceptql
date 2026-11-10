@@ -6,12 +6,13 @@ module ConceptQL
   module Operators
     class Vocabulary < Operator
       # The vocabulary operators share one reference section (spec_id
-      # vocabulary-operator): each generated vocabulary operator, read and
-      # the multiple vocabulary operators. So the section's texts are written
-      # on this class: `returns`, the meaning: of the codes argument, and each
-      # `example`. An operator of the section extends this module and serves
-      # the returns text, and only the examples whose statement starts with
-      # its own name, so no operator shows an example of another one.
+      # vocabulary-operator): each generated vocabulary operator (read is
+      # one) and the multiple vocabulary operators. So the section's texts
+      # are written on this class: `returns`, the meaning: of the codes
+      # argument, and each `example`. An operator of the section extends this
+      # module and serves the returns text, and only the examples whose
+      # statement starts with its own name, so no operator shows an example
+      # of another one.
       module SharedDocumentation
         def get_returns
           super || Vocabulary.returns
@@ -125,7 +126,7 @@ module ConceptQL
       def warn_about_reused_codes(db, codes)
         meanings = dm.code_meanings(db, vocabulary_id, codes, check_case: false)
         reused = codes.filter_map do |code|
-          names = meanings[code.downcase]
+          names = meanings[code]
           "#{code}: #{names.join(' | ')}" if names
         end
         add_warning("code(s) with more than one meaning", *reused) unless reused.empty?

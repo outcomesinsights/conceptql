@@ -52,8 +52,26 @@ All notable changes to this project will be documented in this file.
   and an operator with no upstream keeps the error `has no upstream`. The check is the new
   class-level declaration `validate_at_least_two_upstreams`. Binary operators (`left` and
   `right`) do not get the warning. Before, a one-input `union` or `co_reported` had no message.
+- **Breaking:** `read` is a vocabulary operator, built from the new `Read` row of
+  `config/vocabularies.csv` like `icd9` or `ndc`, so it gets every vocabulary check. An
+  unknown Read code gets the warning `unknown code(s)` when the lexicon has the Read
+  vocabulary. So does a code in another case than the vocabulary stores, because Read codes
+  are case-sensitive: `13g4.00` and `13G4.00` are two codes. Before, `read` was the class
+  `ConceptQL::Operators::Read`, which wrapped one vocabulary operator, and it gave no
+  vocabulary warning. The class is removed. The records and the columns of `read` do not
+  change, and it keeps the lab columns (`value_as_number`, `range_high` and the others). A
+  `union` reads `read` in its own scan, so another vocabulary operator of the same domain in
+  the union keeps its own columns. In `ConceptQL.metadata`, `read` keeps its name, preferred
+  name `READ`, long name, description, category and domain. Its `short_name` is `READ`
+  (before, null), its `aliases` is an empty list (before, null), and its argument is `codes`
+  with the text of the other vocabulary operators (before, `read_codes`).
 
 ### Fixed
+
+- The warning `code(s) with more than one meaning` compares codes as the code lookup does: in
+  their own case, unless the vocabulary's vocabulary_formats row declares `(?i:...)`. Before,
+  two codes of a statement that differ only in case counted as one code with the names of
+  both.
 
 - `Query#annotate` keeps one result for each options hash, and it annotates a fresh operator
   tree for each new options hash. Before, a second call returned the first call's result

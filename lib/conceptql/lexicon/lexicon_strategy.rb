@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "sequel/adapters/mock"
 require_relative "../vocabularies/formats"
 
 module ConceptQL
@@ -140,22 +141,32 @@ module ConceptQL
       concepts(db, vocabulary_id, codes).select_map(%i[concept_code concept_text])
     end
 
-    # The distinct names of each code that has more than one name, as
-    # { downcased code => [name, ...] } with the names sorted. A vocabulary
-    # can reuse a code for a new meaning: DRG 410 meant chemotherapy until
-    # 2007-09-30 and a biliary tract procedure after that. OHDSI keeps each
-    # meaning as its own concept row, and the GDM vocabulary keeps both names.
-    # Names that differ only in case or spacing count as one name.
-    # A caller can answer "is the concept table missing?" with a block.
+    # The distinct names of each of the codes that has more than one name, as
+    # { code => [name, ...] } with the names sorted. A vocabulary can reuse a
+    # code for a new meaning: DRG 410 meant chemotherapy until 2007-09-30 and
+    # a biliary tract procedure after that. OHDSI keeps each meaning as its
+    # own concept row, and the GDM vocabulary keeps both names. Names that
+    # differ only in case or spacing count as one name.
+    #
+    # A stored code is one of the codes when it matches as code_condition
+    # matches: in its own case, unless the vocabulary declares (?i:...). So
+    # the Read codes 13g4.00 and 13G4.00 are two codes with one name each, not
+    # one code with two names (bead conceptql-qdn9). Each key is a code as the
+    # caller gave it. A caller can answer "is the concept table missing?" with
+    # a block.
     def code_meanings(data_db, vocabulary_id, codes)
       return {} if codes.blank? || db.nil? || db_is_mock?(data_db)
       return {} if block_given? ? yield : table_is_missing?(data_db)
 
-      concepts(db, vocabulary_id, codes)
-        .select_map(%i[concept_code concept_text])
-        .group_by { |code, _| code.downcase }
-        .transform_values { |rows| rows.map(&:last).compact.uniq { |name| name.downcase.split.join(" ") }.sort }
-        .select { |_, names| names.length > 1 }
+      key = case_insensitive?(vocabulary_id) ? :downcase.to_proc : :itself.to_proc
+      names = concepts(db, vocabulary_id, codes)
+              .select_map(%i[concept_code concept_text])
+              .group_by { |code, _| key.call(code) }
+              .transform_values { |rows| rows.map(&:last).compact.uniq { |name| name.downcase.split.join(" ") }.sort }
+              .select { |_, code_names| code_names.length > 1 }
+      Array(codes).each_with_object({}) do |code, meanings|
+        meanings[code] = names[key.call(code)] if names.key?(key.call(code))
+      end
     rescue Sequel::DatabaseError
       {}
     end

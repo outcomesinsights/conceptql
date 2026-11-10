@@ -3,6 +3,7 @@
 require "csv"
 require_relative "entry"
 require_relative "drg_systems"
+require_relative "read_codes"
 
 module ConceptQL
   module Vocabularies
@@ -28,7 +29,8 @@ module ConceptQL
       end
 
       # Every vocabulary entry, as id => Entry, and the entries of ms_drg and
-      # cms_drg, which copy the entry of drg (DrgSystems).
+      # cms_drg, which copy the entry of drg (DrgSystems). The entry of read
+      # gets its preferred name (ReadCodes).
       def all_vocabs
         @all_vocabs ||= begin
           vocabs = each_vocab.each_with_object({}) do |row, h|
@@ -36,7 +38,8 @@ module ConceptQL
             h[entry.id] ||= entry
             h[entry.id] = h[entry.id].merge(entry)
           end
-          vocabs.merge(DrgSystems.entries(vocabs[DrgSystems::DRG_OPERATOR]))
+          vocabs.merge(DrgSystems.entries(vocabs[DrgSystems::DRG_OPERATOR]),
+                       ReadCodes.entries(vocabs[ReadCodes::OPERATOR]))
         end
       end
 
