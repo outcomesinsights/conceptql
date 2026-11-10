@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T16:37:06.124630+00:00
+updated_at: 2026-11-10T16:52:19.930991+00:00
 ---
 
 ## The question
@@ -89,3 +89,37 @@ Assessment: part 3 is small and low risk, not medium. What remains is unmeasured
 - Each annotate without a data database now runs 2 lexicon lookups for each vocabulary operator against LEXICON_URL (Postgres). `cache_lookups: true` on the Database caches them. Latency is not measured.
 - No test covers "no data database, real lexicon". The bead needs one.
   Parts 1 and 2 (the second lexicon, and the split into two warnings) were not tried.
+
+## RULED 2026-11-10: a warning, never an error; the wording
+
+Ryan: "when JDE is going to ask if an algorithm is valid, it will be valid. Unless there's an error, right? And in this case, we are going to be issuing a warning if a database, a data set doesn't contain a particular code in the algorithm when we are doing a count statements ... I don't want to mark an algorithm as having an error just because one particular data set doesn't contain all of the concepts that it represents. That's not an actual error. And that is not an invalid algorithm. Okay, so the wording. The wording should be Code not present in this dataset."
+
+- A code that the lexicon knows and the dataset does not gets a warning, never an error. Valid means no operator has an error (bead conceptql-k7vg). An algorithm's validity never depends on a dataset.
+- The warning fires only when annotate runs against a dataset (JDE's count_statement and the editor's count view).
+- Wording: "code not present in this dataset". The existing messages are lower case with "(s)" ("unknown code(s)"), so the message may become "code(s) not present in this dataset" to match.
+
+## UPDATE 2026-11-10: measured impact of the gate change (part 3)
+
+Corpus: conceptql's 341 statement tests (test/statements/\*\*/\*.json, 872 operators). Setup: JDE's editing path, no data database, LEXICON_URL = titan ohdsi_vocabs, schema ohdsi20260829 (it includes the OI vocabularies CPT4_HCPCS and GDM_INFORMATION_TYPE). The gate change was applied as a monkeypatch of the experiment diff. Script: claude_stuff/lexicon-gate-measure.rb. Logs: claude_stuff/lexicon-gate-measure-main-20261110-084927.log and claude_stuff/lexicon-gate-measure-exp-20261110-085032.log.
+
+```
+                         main        gate change
+annotated                341         341 (0 raised)
+annotate ms, median      57.0        60.0
+annotate ms, p90         100.6       93.5
+annotate ms, total       22468       22966
+lexicon queries, total   365         1828
+lexicon queries, max     9           43 (a 20-operator statement)
+unknown code(s)          0           17
+more than one meaning    0           3
+statements gaining one   0           18
+```
+
+- The extra queries add about 3 ms per statement (median), run on titan against titan's Postgres. Lookup caching (`cache_lookups: true`) was off, as in JDE today.
+- With the data database present (main code, DuckDB fixture), the same warnings already fire for except/crit_412_inpatient (condition_type "inpatient_header"), co_reported/crit_somehow_bad_columns (cpt_or_hcpcs codes) and complex/count_required_columns (ndc "00000000000"). Log: claude_stuff/lexicon-gate-datadb-check-\*.log. The gate change adds no new kind of warning. It shows the existing warnings where no data database is attached.
+- revenue_code "100" is unknown in ohdsi20260829, which stores Revenue Code as "0100".
+
+Not measured:
+
+- Production algorithms: this session was denied reads of titan's jigsaw_production copy (auto-mode classifier, "Production Reads").
+- Parts 1 and 2 on a trimmed dataset (SEER-Medicare): its file is under /mnt/samba/confidential_data, and it was not read.
