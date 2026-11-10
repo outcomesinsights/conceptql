@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T15:48:11.781706+00:00
+updated_at: 2026-11-10T15:49:49.322675+00:00
 ---
 
 ## The gap
@@ -48,7 +48,7 @@ Ryan: "we'll need conceptql to be aware of the relevant etl\_\* tables when deal
 
 RULED: with no etl\_\* tables, no warning and a count of 0.
 
-Fixture: vocabulation builds synpuf_test_data.duckdb (scripts/duckdb_build.py) by copying a declared table list (SCHEMA_TABLES) from titan's test_data Postgres. roobetl computes etl_vocabulary_ids (lib/roobetl/metadata.rb). The fixture has no etl\_\* tables today. Whether the Postgres source has them was not checked (titan.jsaw.io:6432 refused the connection on 2026-11-10). The work routes to vocabulation: add the etl\_\* tables to the fixture, computed by roobetl's metadata code or copied from the source.
+Fixture: vocabulation builds synpuf_test_data.duckdb (scripts/duckdb_build.py) by copying a declared table list (SCHEMA_TABLES) from titan's test_data Postgres. roobetl computes etl_vocabulary_ids (lib/roobetl/metadata.rb). The fixture has no etl\_\* tables today. The Postgres source (titan test_data, port 5432) has slim.etl_info, etl_information_types, etl_tables and etl_vocabulary_ids, all with 0 rows, and its etl_vocabulary_ids has only (vocabulary_id, n_rows) (verified by the vocabulation session, 2026-11-10). The earlier connection failure was a wrong port, 6432. The work routes to vocabulation: add the etl\_\* tables to the fixture, computed by roobetl's metadata code or copied from the source.
 
 Candidate values for "not available", assessed:
 
@@ -61,3 +61,9 @@ Candidate values for "not available", assessed:
 ## RULED 2026-11-10
 
 Ryan: "zhn: null with warning please and the rest as discussed". conceptql reads etl_vocabulary_ids once for GDM data. An absent vocabulary gets the warning and null counts. No etl\_\* tables means no warning and counts of 0. Bead: conceptql-d1bd. The fixture work was sent to the live vocabulation session (vocabulation-b9) on 2026-11-10.
+
+## UPDATE 2026-11-10: fixture bead and the empty-table case
+
+vocabulation filed vocabulation-xd6: add a populated slim.etl_vocabulary_ids to synpuf_test_data.duckdb, filled from slim.clinical_codes. conceptql-d1bd depends on it. Open in vocabulation: fill the table in Postgres too (so the docker image and parquet carry it), or only in the DuckDB build.
+
+The Postgres test_data already has an empty etl_vocabulary_ids. conceptql-d1bd now treats an empty table like a missing one (no warning, normal counts), which follows the ruling for missing tables. Without that rule, the Postgres test configs would warn on every vocabulary.
