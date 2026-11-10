@@ -79,6 +79,11 @@ module ConceptQL
         nodifier.scope.fetch_operator(source)
       end
 
+      # The input of a recall is the labeled operator.
+      def no_records_in_data?(db, opts = {})
+        valid?(db, opts) && original.no_records_in_data?(db, opts)
+      end
+
       def code_list(db)
         original.code_list(db)
       end

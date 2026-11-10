@@ -220,6 +220,15 @@ describe ConceptQL::Diagram do
       _(node[:counts]).must_equal({ "condition_occurrence" => { rows: rows, n: n } })
       _(node[:outputTypes]).must_equal([ "condition_occurrence" ])
     end
+
+    # The fixtures' etl_vocabulary_ids does not list Gemscript, so its counts
+    # are null (bead conceptql-d1bd). They stay null, and do not become 0.
+    it "keeps null counts" do
+      node = render([ %w[gemscript 00003007] ], cdb: CDB, counts: true)[:statements].first
+
+      _(node[:counts]).must_equal({ "drug_exposure" => { rows: nil, n: nil } })
+      _(node[:warnings]).must_equal([ [ ConceptQL::Operators::Vocabulary::NO_RECORDS_IN_DATA ] ])
+    end
   end
 
   describe ConceptQL::Diagram::JigsawTree do

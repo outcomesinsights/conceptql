@@ -83,11 +83,17 @@ module ConceptQL
 
       # MultipleVocabularies passes skip_merged_vocabulary_check to its
       # vocabulary operators. It reads the merged vocabulary itself, and it
-      # would drop this warning anyway (see #warn_about_merged_vocabulary).
-      # The merged-vocabulary check reads the data, so it needs a data
-      # database. The code checks read only the lexicon.
+      # would drop these warnings anyway (see #warn_about_merged_vocabulary).
+      # The merged-vocabulary and the no-records checks read the data, so
+      # they need a data database. The code checks read only the lexicon.
+      # When the merged-vocabulary warning fires, it names the operator to
+      # use, so the no-records check does not add a second warning with the
+      # same text.
       def additional_validation(db, opts = {})
-        warn_about_merged_vocabulary(db) if add_warnings?(db, opts) && !opts[:skip_merged_vocabulary_check]
+        if add_warnings?(db, opts) && !opts[:skip_merged_vocabulary_check]
+          merged_warning = warn_about_merged_vocabulary(db)
+          check_for_records(db, warn: !merged_warning)
+        end
         return unless lexicon_checks?(opts)
         return if select_all?
 
@@ -106,7 +112,8 @@ module ConceptQL
       # of the merged vocabulary that holds its codes, and the Database's
       # lexicon carries that merged vocabulary (bead conceptql-k5ho). The
       # warning names the operator to use instead. The test fixture keeps
-      # CPT4 and HCPCS rows, so it never shows this warning.
+      # CPT4 and HCPCS rows, so it never shows this warning. It returns the
+      # warnings when it adds one, and nil otherwise.
       def warn_about_merged_vocabulary(db)
         merged = MERGED_VOCABULARIES[vocabulary_id]
         return unless merged && nodifier.operators.key?(merged[:vocabulary_id].downcase)
@@ -117,6 +124,31 @@ module ConceptQL
 
         add_warning(NO_RECORDS_IN_DATA,
                     "the data stores #{vocabulary_id} codes as #{merged[:vocabulary_id]}, so use #{merged[:operator]}")
+      end
+
+      # Warns when etl_vocabulary_ids lists the vocabularies of the data's
+      # clinical codes and this vocabulary is not among them (bead
+      # conceptql-d1bd). A count of 0 would then say that no patient has the
+      # codes, which the data cannot show, so #annotate reports null counts.
+      # With warn: false (the merged-vocabulary warning fired, with the same
+      # text), the counts are null and no second warning is added.
+      # etl_vocabulary_ids covers the clinical codes only, so an operator
+      # that reads another table (death type, observation period type) is
+      # not checked. Neither is a dataset without the table.
+      def check_for_records(db, warn: true)
+        return unless criterion_table == dm.table_by_domain(:clinical_codes)
+        return unless (ids = nodifier.etl_vocabulary_ids(db))
+        return if ids.include?(vocabulary_id)
+
+        @no_records_in_data = true
+        add_warning(NO_RECORDS_IN_DATA) if warn
+      end
+
+      # Whether the data has no records of this vocabulary at all, as
+      # #check_for_records found.
+      def no_records_in_data?(db, opts = {})
+        validate(db, opts)
+        @no_records_in_data || false
       end
 
       # A code that the vocabulary reused for a new meaning selects records of

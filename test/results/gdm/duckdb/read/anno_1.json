@@ -6,11 +6,14 @@
       "id": "read-1",
       "counts": {
         "condition_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": null,
+          "n": null
         }
       },
-      "warnings": [["unknown code(s)", "XYS"]]
+      "warnings": [
+        ["the data has no records of this vocabulary"],
+        ["unknown code(s)", "XYS"]
+      ]
     },
     "name": "READ"
   }

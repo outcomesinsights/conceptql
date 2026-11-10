@@ -182,13 +182,17 @@ module ConceptQL
         end
         res = [ op_name, *annotate_values(db, opts) ]
 
+        # An operator of a vocabulary that the data does not contain has null
+        # counts, and so does an operator whose inputs all have null counts.
+        # A 0 would say that no patient has the codes (bead conceptql-d1bd).
+        no_records = no_records_in_data?(db, opts)
         if countable?(db, opts)
-          counts.merge!(scope.one_query_counts&.for(self) || domain_counts(db))
+          counts.merge!(scope.one_query_counts&.for(self) || domain_counts(db)) unless no_records
         elsif !errors.empty?
           annotation[:errors] = errors
         end
 
-        domains(db).each { |domain| counts[domain] ||= { rows: 0, n: 0 } }
+        domains(db).each { |domain| counts[domain] ||= no_records ? { rows: nil, n: nil } : { rows: 0, n: 0 } }
         # The database returns its groups in no fixed order, and the zero
         # counts above come last. Sort them, so each run gives the same order.
         annotation[:counts] = counts.sort.to_h
@@ -334,6 +338,15 @@ module ConceptQL
       # Whether #annotate counts this operator's rows and people.
       def countable?(db, opts = {})
         upstreams_valid?(db, opts) && scope.valid? && include_counts?(db, opts)
+      end
+
+      # Whether the data has no records for this operator to count, so its
+      # counts are null. A Vocabulary operator decides for itself. Any other
+      # operator has none when every one of its inputs has none. An operator
+      # with one real input keeps its real counts (bead conceptql-d1bd).
+      def no_records_in_data?(db, opts = {})
+        inputs = all_upstreams.compact
+        !inputs.empty? && inputs.all? { |input| input.no_records_in_data?(db, opts) }
       end
 
       # Rows and distinct people of each criterion_domain in this operator's

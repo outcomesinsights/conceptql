@@ -7,10 +7,11 @@
       "id": "gemscript-1",
       "counts": {
         "drug_exposure": {
-          "rows": 0,
-          "n": 0
+          "rows": null,
+          "n": null
         }
-      }
+      },
+      "warnings": [["the data has no records of this vocabulary"]]
     },
     "name": "Gemscript"
   }

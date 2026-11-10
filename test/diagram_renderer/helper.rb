@@ -11,12 +11,15 @@ require_relative "svg_comparison"
 # resvg program (mise.toml pins it), so test/all.rb does not load them:
 # `just test-diagram` runs them (test/diagram_renderer/all.rb).
 #
-# The references under fixtures/ are copies of the Jigsaw diagram editor's
-# frontend/lib/conceptql-diagram/cli/test/fixtures/: the JavaScript renderer
-# wrote them.
+# The references under fixtures/statements are copies of the Jigsaw diagram
+# editor's frontend/lib/conceptql-diagram/cli/test/fixtures/: the JavaScript
+# renderer wrote them. The references under fixtures/ruby_references are for
+# cases that the JavaScript renderer does not have, such as null counts: this
+# renderer wrote them.
 module DiagramRendererTest
   FIXTURES = File.expand_path("fixtures", __dir__)
   STATEMENTS = File.join(FIXTURES, "statements")
+  RUBY_REFERENCES = File.join(FIXTURES, "ruby_references")
 
   module_function
 

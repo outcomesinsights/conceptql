@@ -8,12 +8,13 @@
       "id": "icd10_pcs-1",
       "counts": {
         "procedure_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": null,
+          "n": null
         }
       },
       "warnings": [
         ["improperly formatted code", "AA561123"],
+        ["the data has no records of this vocabulary"],
         ["unknown code(s)", "Z561123", "561123"]
       ]
     },
