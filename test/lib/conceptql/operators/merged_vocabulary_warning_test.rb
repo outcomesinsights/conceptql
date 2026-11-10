@@ -45,7 +45,7 @@ describe "the warning for a vocabulary that the data stores as a merged vocabula
   end
 
   def warnings_for(cdb, statement)
-    cdb.query(statement).scope_annotate(skip_counts: true)[:warnings].to_h
+    by_operator(cdb.query(statement).warnings)
   end
 
   def merged_warning(vocabulary_id)

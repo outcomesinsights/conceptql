@@ -1,0 +1,51 @@
+[
+  "union",
+  [
+    "icd9",
+    "412",
+    "XYS",
+    {
+      "id": 1,
+      "annotation": {
+        "id": 1,
+        "counts": {
+          "condition_occurrence": {
+            "rows": 48,
+            "n": 37
+          }
+        },
+        "warnings": [["improperly formatted code", "XYS"]]
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  [
+    "icd9",
+    "401.9",
+    {
+      "id": 2,
+      "annotation": {
+        "id": 2,
+        "counts": {
+          "condition_occurrence": {
+            "rows": 1548,
+            "n": 189
+          }
+        }
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  {
+    "annotation": {
+      "id": "union-1",
+      "counts": {
+        "condition_occurrence": {
+          "rows": 1596,
+          "n": 189
+        }
+      }
+    },
+    "name": "Union"
+  }
+]

@@ -8,7 +8,7 @@ require_relative "../../../db_helper"
 # wrong case selects no rows and gets the format warning.
 describe "the case of a code" do
   def format_warnings(statement)
-    CDB.query(statement).scope_annotate(skip_counts: true)[:warnings]
+    by_operator(CDB.query(statement).warnings)
        .fetch(statement.first, [])
        .select { |message, *| message == "improperly formatted code" }
   end

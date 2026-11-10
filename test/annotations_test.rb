@@ -14,14 +14,14 @@ describe ConceptQL::Operators do
   describe "a well-formed unknown code" do
     it "only warns" do
       query = cdb.query(%w[icd9 412 000.00])
-      _(query.validation_errors).must_equal({})
-      _(query.scope_annotate(skip_counts: true)[:warnings]).must_equal({ "icd9" => [ [ "unknown code(s)", "000.00" ] ] })
+      _(query.validation_errors).must_equal([])
+      _(by_operator(query.warnings)).must_equal({ "icd9" => [ [ "unknown code(s)", "000.00" ] ] })
     end
 
     it "still warns next to a malformed code" do
-      annotation = cdb.query(%w[icd9 410* 000.00]).scope_annotate(skip_counts: true)
-      _(annotation[:errors]).must_equal({})
-      _(annotation[:warnings]).must_equal(
+      query = cdb.query(%w[icd9 410* 000.00])
+      _(query.errors).must_equal([])
+      _(by_operator(query.warnings)).must_equal(
         { "icd9" => [ [ "improperly formatted code", "410*" ], [ "unknown code(s)", "000.00" ] ] }
       )
     end
@@ -34,9 +34,11 @@ describe ConceptQL::Operators do
   describe "a malformed code" do
     it "warns and leaves the statement valid" do
       query = cdb.query(%w[icd9 410*])
-      _(query.validation_errors).must_equal({})
-      _(query.scope_annotate[:warnings]).must_equal({ "icd9" => [ [ "improperly formatted code", "410*" ] ] })
-      _(query.scope_annotate[:counts]).must_equal({ "icd9" => { condition_occurrence: { rows: 0, n: 0 } } })
+      _(query.validation_errors).must_equal([])
+      counted = ConceptQL::Annotation.new(query.annotate)
+      _(by_operator(counted.warnings)).must_equal({ "icd9" => [ [ "improperly formatted code", "410*" ] ] })
+      _(counted.each_operator.to_h { |op| [ op.name, op.annotation["counts"] ] })
+        .must_equal({ "icd9" => { "condition_occurrence" => { "rows" => 0, "n" => 0 } } })
     end
 
     it "does not stop annotate from counting the operator's other codes" do
@@ -65,14 +67,17 @@ describe ConceptQL::Operators do
     it "should still report if codes aren't properly formatted" do
       db = ConceptQL::Database.new(nil)
       query = db.query([ "union", %w[cpt 0000], [ "icd9", "00.00" ] ])
-      _(query.scope_annotate(skip_counts: true)).must_equal(
-        { errors: {},
-          warnings: { "cpt" => [ [ "improperly formatted code", "0000" ] ],
-                      "icd9" => [ [ "improperly formatted code", "00.00" ] ] },
-          counts: { "cpt" => { procedure_occurrence: { rows: 0, n: 0 } },
-                    "icd9" => { condition_occurrence: { rows: 0, n: 0 } },
-                    "union" => { procedure_occurrence: { rows: 0, n: 0 },
-                                 condition_occurrence: { rows: 0, n: 0 } } } }
+      annotation = ConceptQL::Annotation.new(query.annotate(skip_counts: true))
+      _(annotation.errors).must_equal([])
+      _(by_operator(annotation.warnings)).must_equal(
+        { "cpt" => [ [ "improperly formatted code", "0000" ] ],
+          "icd9" => [ [ "improperly formatted code", "00.00" ] ] }
+      )
+      _(annotation.each_operator.to_h { |op| [ op.name, op.annotation["counts"] ] }).must_equal(
+        { "cpt" => { "procedure_occurrence" => { "rows" => 0, "n" => 0 } },
+          "icd9" => { "condition_occurrence" => { "rows" => 0, "n" => 0 } },
+          "union" => { "procedure_occurrence" => { "rows" => 0, "n" => 0 },
+                       "condition_occurrence" => { "rows" => 0, "n" => 0 } } }
       )
     end
   end

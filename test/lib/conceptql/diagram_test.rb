@@ -150,8 +150,8 @@ describe ConceptQL::Diagram do
       )
     end
 
-    # scope_annotate keys warnings by operator name, so these two nodes would
-    # share one entry there; the render tree keeps them apart. A malformed
+    # The two nodes have the same name, and the render tree keeps their
+    # warnings apart. A malformed
     # code is a warning (seed conceptql-0eb, ruled 2026-10-30).
     it "keeps warnings on the one of two same-named nodes that has them" do
       statement = [ "union", %w[icd9 412], [ "icd9", "00.00" ] ]

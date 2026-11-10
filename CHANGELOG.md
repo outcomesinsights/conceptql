@@ -18,14 +18,42 @@ All notable changes to this project will be documented in this file.
   operator's `id` option, or a generated `<operator>-<n>` in statement order (`icd9-1`,
   `icd9-2`) that never repeats a given id. The statement's options do not change.
 
+### Removed
+
+- **Breaking:** `Query#scope_annotate`, the CLI command `conceptql scope_annotate`, and the
+  scope hashes behind them (`Scope#annotation`, `#add_errors`, `#add_warnings` and
+  `#add_counts`). `Query#annotate`, `ConceptQL::Annotation` and `Query#errors`,
+  `#warnings` and `#valid?` are the only way to get errors, warnings and counts. The hash of
+  `scope_annotate` was keyed by the operator's name or `id` option, so of two operators with
+  the same key, only the last one's errors, warnings and counts were kept. The CLI command
+  `conceptql annotate_statement` remains.
+
+### Changed
+
+- **Breaking:** `InvalidStatementError#errors` and `Query#validation_errors` are a list of
+  every error, in the form of `ConceptQL::Annotation#errors`
+  (`{ operator:, id:, message:, details: }`). Before, they were a hash of operator name =>
+  list of `[message, *details]`, which kept the errors of only one of two operators with the
+  same name. The message of `InvalidStatementError` has one line for each error, as before.
+  `validation_errors` reads the kept result of `annotate(skip_counts: true)`, so `#sql` runs
+  no count SQL and does not annotate again.
+- **Breaking:** `Query#annotate` of a window statement keeps the `window` operator at the top
+  of its output, with the window's options and an annotation hash that holds its id
+  (`window-1`). A window table that is a ConceptQL statement is annotated in place, in the
+  `window_table` option, so each of its errors stays on the operator that has it, and
+  `Annotation#valid?` is false. Before, `annotate` dropped the window operator, and the
+  window table's errors were only in `scope_annotate`, under the key `window_table`. An
+  invalid window table still makes `#sql` raise, and the outer statement is still not
+  counted. For example, `["window", ["icd9", "412"], {"window_table": ["provider_filter", ["icd9", "412"], {"specialties": "*"}]}]` now reports the error "required option not
+  present" (`roles`) on `provider_filter-1`.
+
 ### Fixed
 
 - `Query#annotate` keeps one result for each options hash, and it annotates a fresh operator
   tree for each new options hash. Before, a second call returned the first call's result
   whatever its options, so `annotate` after `annotate(skip_counts: true)` gave zero counts.
   A second call on a statement with an unknown operator whose `left` had a label also added a
-  false "duplicate label" error and changed the first result. `scope_annotate` reads the scope
-  of the tree that `annotate` used for the same options.
+  false "duplicate label" error and changed the first result.
 
 ## [0.7.0] - 2026-11-09
 

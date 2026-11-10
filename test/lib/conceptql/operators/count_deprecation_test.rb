@@ -11,7 +11,7 @@ describe "the deprecated count operator" do
   let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm) }
 
   def warnings_for(statement)
-    cdb.query(statement).scope_annotate(skip_counts: true)[:warnings]
+    by_operator(cdb.query(statement).warnings)
   end
 
   let(:deprecation) do
@@ -31,7 +31,7 @@ describe "the deprecated count operator" do
   end
 
   it "gives no warning for the numeric and sum idiom" do
-    _(warnings_for([ "sum", [ "numeric", 1, [ "icd9", "412" ] ], { "group_by_person" => true } ]).to_h).must_be_empty
+    _(warnings_for([ "sum", [ "numeric", 1, [ "icd9", "412" ] ], { "group_by_person" => true } ])).must_be_empty
   end
 
   # count is hidden, so ConceptQL.metadata leaves it out, as it leaves

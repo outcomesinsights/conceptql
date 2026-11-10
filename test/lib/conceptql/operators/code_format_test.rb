@@ -76,7 +76,7 @@ describe "vocabulary code formats" do
   # row and no Gemscript row, so neither gets a format check.
   it "accepts the LOINC codes 20-8 and 1-8" do
     _(badly_formatted(%w[loinc 20-8 1-8])).must_be_empty
-    _(cdb.query(%w[loinc 20-8]).validation_errors).must_equal({})
+    _(cdb.query(%w[loinc 20-8]).validation_errors).must_equal([])
   end
 
   it "does not check the format of a vocabulary that has no vocabulary_formats row" do
@@ -98,7 +98,7 @@ describe "vocabulary code formats" do
   # warning, which the JDE algorithm spec looks for.
   describe "the format warning text" do
     def format_warning(statement)
-      cdb.query(statement).scope_annotate(skip_counts: true)[:warnings]
+      by_operator(cdb.query(statement).warnings)
          .fetch(statement.first)
          .find { |message, *| message.start_with?("improperly formatted code") }
     end
@@ -143,26 +143,26 @@ describe "vocabulary code formats" do
   # the ruling of 2026-10-29: a malformed code is a warning, not a validation
   # error, and the statement stays valid. There is no prefix matching.
   describe "a malformed code" do
-    # The format warnings of scope_annotate. The lexicon above has no codes,
+    # The format warnings of the statement. The lexicon above has no codes,
     # so every well-formed code also gets the warning "unknown code(s)".
     def format_warnings(statement)
-      cdb.query(statement).scope_annotate(skip_counts: true)[:warnings]
+      by_operator(cdb.query(statement).warnings)
          .transform_values { |warnings| warnings.select { |message, *| message == "improperly formatted code" } }
          .reject { |_, warnings| warnings.empty? }
     end
 
     it "is a warning that names the code, and the statement stays valid" do
-      _(cdb.query(%w[icd9 410*]).validation_errors).must_equal({})
+      _(cdb.query(%w[icd9 410*]).validation_errors).must_equal([])
       _(format_warnings(%w[icd9 410*])).must_equal({ "icd9" => [ [ "improperly formatted code", "410*" ] ] })
     end
 
     it "names only the malformed codes" do
-      _(cdb.query(%w[icd9 412 410* 412.0]).validation_errors).must_equal({})
+      _(cdb.query(%w[icd9 412 410* 412.0]).validation_errors).must_equal([])
       _(format_warnings(%w[icd9 412 410* 412.0])).must_equal({ "icd9" => [ [ "improperly formatted code", "410*" ] ] })
     end
 
     it "is a warning for a multiple-vocabulary operator only when every vocabulary rejects its format" do
-      _(cdb.query(%w[cpt_or_hcpcs 99214 A0382 AA0382]).validation_errors).must_equal({})
+      _(cdb.query(%w[cpt_or_hcpcs 99214 A0382 AA0382]).validation_errors).must_equal([])
       _(format_warnings(%w[cpt_or_hcpcs 99214 A0382 AA0382]))
         .must_equal({ "cpt_or_hcpcs" => [ [ "improperly formatted code", "AA0382" ] ] })
       # 12345 is malformed for HCPCS but a well-formed CPT4 code.
@@ -170,8 +170,8 @@ describe "vocabulary code formats" do
     end
 
     it "leaves the select-all wildcard valid" do
-      _(cdb.query(%w[icd9 *]).validation_errors).must_equal({})
-      _(cdb.query(%w[cpt_or_hcpcs *]).validation_errors).must_equal({})
+      _(cdb.query(%w[icd9 *]).validation_errors).must_equal([])
+      _(cdb.query(%w[cpt_or_hcpcs *]).validation_errors).must_equal([])
     end
   end
 

@@ -198,7 +198,7 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
 
     it "refuses an unknown code in the plain query" do
       error = _ { CDB.query(statement("98")).sql }.must_raise ConceptQL::InvalidStatementError
-      _(error.errors.values).must_equal [ [ [ unknown, "98" ] ] ]
+      _(by_operator(error.errors).values).must_equal [ [ [ unknown, "98" ] ] ]
     end
 
     # With no lexicon there are no codes to check against.

@@ -30,9 +30,10 @@ module ConceptQL
   # errors. An invalid statement can crash while it builds, or build SQL that
   # silently returns fewer rows. Warnings do not raise.
   #
-  # #errors is the errors hash that #scope_annotate reports (operator name =>
-  # list of [message, *details]), so it holds the errors that annotate shows.
-  # #statement is the statement that the Query holds.
+  # #errors is the list of every error that annotate shows, in the form of
+  # ConceptQL::Annotation#errors ({ operator:, id:, message:, details: }), so
+  # two operators with the same name keep their own errors. #statement is the
+  # statement that the Query holds.
   class InvalidStatementError < Query::QueryError
     attr_reader :statement, :errors
 
@@ -40,15 +41,15 @@ module ConceptQL
       @statement = statement
       @errors = errors
       super([ "Invalid ConceptQL statement. Validation errors:",
-             *errors.flat_map { |op, op_errors| op_errors.map { |e| "  #{op}: #{describe(e)}" } },
+             *errors.map { |error| "  #{error[:operator]}: #{describe(error)}" },
              "Statement: #{statement.inspect}" ].join("\n"))
     end
 
     private
 
     def describe(error)
-      message, *details = error
-      details.empty? ? message.to_s : "#{message} (#{details.flatten.map(&:to_s).join(', ')})"
+      details = error[:details]
+      details.empty? ? error[:message].to_s : "#{error[:message]} (#{details.flatten.map(&:to_s).join(', ')})"
     end
   end
 
@@ -64,6 +65,7 @@ module ConceptQL
 
     def initialize(cdb, statement, opts = {})
       @cdb = cdb
+      @given_statement = statement
       @statement, opts = extract_statement(statement, opts)
       @opts = opts
       opts[:algorithm_fetcher] ||= proc do |alg|
@@ -142,9 +144,12 @@ module ConceptQL
     # their own options, so each opts hash gets a fresh operator tree, and a
     # call with other opts gets its own correct result.
     #
-    # The errors of the window table's own statement are reported under
-    # "window_table" (see #window_table_errors). Then nothing is counted,
-    # because every count joins the window table, and building its SQL raises.
+    # A window statement keeps its window operator at the top, and a window
+    # table that is a ConceptQL statement is annotated in place, in the
+    # window_table option of the window operator, so each of its errors stays
+    # on its own operator. When the window table has errors, the outer
+    # statement is not counted, because every count joins the window table,
+    # and building its SQL raises.
     def annotate(opts = {})
       annotated_tree(opts).annotated
     end
@@ -176,11 +181,6 @@ module ConceptQL
       visitor = ConceptQL::Visitors::MetadataExtractor.new
       operator.accept(visitor)
       visitor.results
-    end
-
-    # The summary that the scope of the annotated tree for opts collects
-    def scope_annotate(opts = {})
-      annotated_tree(opts).nodifier.scope.annotation
     end
 
     def domains
@@ -220,12 +220,12 @@ module ConceptQL
       operator.code_list(db).uniq
     end
 
-    # The errors that #scope_annotate reports, the same check that callers use
-    # to decide whether a statement is valid. A fresh query runs it, because
-    # operators memoize #annotate and #validate, and this query's later
-    # #annotate calls must not get those results.
+    # Every error of the statement, the check that callers use to decide
+    # whether a statement is valid. It is #errors: it reads the kept
+    # annotation with skip_counts: true, so it never runs count SQL. #sql
+    # calls it.
     def validation_errors
-      Query.new(cdb, statement, @opts).scope_annotate(skip_counts: true)[:errors]
+      errors
     end
 
     def drop_temp_tables(opts = {})
@@ -239,24 +239,29 @@ module ConceptQL
     # Annotates this Query's own operator tree once. Only #annotated_tree
     # calls it, on a fresh Query.
     def annotate_own_tree(opts)
-      window_errors = window_table_errors
-      unless window_errors.empty?
-        nodifier.scope.add_errors("window_table", window_errors)
-        opts = opts.merge(skip_counts: true)
-      end
+      @annotated = Annotation.assign_ids(annotate_without_ids(opts))
+    end
+
+    # The annotated statement before Annotation.assign_ids, so that the ids
+    # of a window table statement are assigned with the ids of the statement
+    # around it. It annotates this Query's own operator tree, so only a fresh
+    # Query calls it.
+    def annotate_without_ids(opts)
+      opts = opts.merge(skip_counts: true) unless window_table_errors.empty?
       nodifier.scope.one_query_counts = OneQueryCounts.new(operator, db, opts)
-      @annotated = Annotation.assign_ids(operator.annotate(db, opts))
+      with_window(operator.annotate(db, opts), opts)
     end
 
     private
 
     attr_reader :cdb
 
-    # A fresh Query for each opts hash, with its own operator tree and scope,
-    # that has annotated its tree with those opts. This Query's own tree is
-    # never annotated, so #query and #sql do not depend on annotate calls.
+    # A fresh Query of the given statement (with its window operator) for
+    # each opts hash, with its own operator tree and scope, that has annotated
+    # its tree with those opts. This Query's own tree is never annotated, so
+    # #query and #sql do not depend on annotate calls.
     def annotated_tree(opts)
-      (@annotated_trees ||= {})[opts.dup] ||= Query.new(cdb, statement, @opts).tap do |tree|
+      (@annotated_trees ||= {})[opts.dup] ||= Query.new(cdb, @given_statement, @opts).tap do |tree|
         tree.annotate_own_tree(opts)
       end
     end
@@ -278,18 +283,37 @@ module ConceptQL
       @valid = true
     end
 
-    # The validation errors of the window table's statement, when the window
-    # table is a ConceptQL statement (an Array, as Window::Table reads it), as
-    # one list of [message, *details]. Each message starts with the name of
-    # the operator that reported it. A table name has no errors.
-    def window_table_errors
+    # The window table of the scope, as Window::Table reads it: a table name
+    # or a ConceptQL statement (an Array)
+    def window_table
       scope_opts = nodifier.scope.opts
-      window_table = scope_opts.merge(scope_opts[:window_opts] || {})[:window_table]
+      scope_opts.merge(scope_opts[:window_opts] || {})[:window_table]
+    end
+
+    # The validation errors of the window table's statement, when the window
+    # table is a ConceptQL statement, as one list of [message, *details]. Each
+    # message starts with the name of the operator that reported it. A table
+    # name has no errors.
+    def window_table_errors
       return [] unless window_table.is_a?(Array)
 
-      cdb.query(window_table).validation_errors.flat_map do |op, op_errors|
-        op_errors.map { |message, *details| [ "#{op}: #{message}", *details ] }
+      cdb.query(window_table).validation_errors.map do |error|
+        [ "#{error[:operator]}: #{error[:message]}", *error[:details] ]
       end
+    end
+
+    # The annotated statement inside its window operator, when the statement
+    # is a window statement or the scope's window table is a statement. The
+    # window operator has the options of the statement's window and an
+    # annotation hash, which holds only its id. A window table statement is
+    # annotated in place, with the same opts.
+    def with_window(annotated, opts)
+      table = window_table
+      return annotated unless @window_options || table.is_a?(Array)
+
+      options = (@window_options || {}).dup
+      options[:window_table] = cdb.query(table).annotate_without_ids(opts) if table.is_a?(Array)
+      [ "window", annotated, options.merge(annotation: {}) ]
     end
 
     def extract_statement(stmt, opts)
@@ -303,6 +327,7 @@ module ConceptQL
 
         opts[:scope_opts] = (opts[:scope_opts] || {})
         opts[:scope_opts].merge!(window_opts: stmt.last.merge(cdb: cdb))
+        @window_options = (@window_options || {}).merge(stmt.last)
         extract_statement(stmt[1], opts)
       elsif stmt.length == 1 && stmt.first.is_a?(Array)
         extract_statement(stmt.first, opts)

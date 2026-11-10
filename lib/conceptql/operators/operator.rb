@@ -171,7 +171,6 @@ module ConceptQL
       def annotate(db, opts = {})
         return @annotate if defined?(@annotate)
 
-        scope_key = options[:id] || op_name
         annotation = {}
         counts = (annotation[:counts] ||= {})
         metadata = { annotation: annotation }
@@ -185,20 +184,15 @@ module ConceptQL
           counts.merge!(scope.one_query_counts&.for(self) || domain_counts(db))
         elsif !errors.empty?
           annotation[:errors] = errors
-          scope.add_errors(scope_key, errors)
         end
 
-        domains(db).each do |domain|
-          cur_counts = counts[domain] ||= { rows: 0, n: 0 }
-          scope.add_counts(scope_key, domain, cur_counts)
-        end
+        domains(db).each { |domain| counts[domain] ||= { rows: 0, n: 0 } }
         # The database returns its groups in no fixed order, and the zero
         # counts above come last. Sort them, so each run gives the same order.
         annotation[:counts] = counts.sort.to_h
 
         if defined?(@warnings) && !warnings.empty?
           annotation[:warnings] = warnings
-          scope.add_warnings(scope_key, warnings.dup)
         end
 
         if res.last.is_a?(Hash)

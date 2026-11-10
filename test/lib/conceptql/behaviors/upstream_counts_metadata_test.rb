@@ -27,7 +27,7 @@ describe "upstream counts in ConceptQL.metadata" do
 
   def upstream_count_error?(name, count)
     statement = [ name ] + Array.new(count) { [ "icd9", "412" ] }
-    errors = cdb.query(statement).scope_annotate(skip_counts: true)[:errors]
+    errors = by_operator(cdb.query(statement).errors)
     errors.fetch(name, []).any? { |message, *| upstream_count_errors.include?(message) }
   end
 
@@ -73,13 +73,13 @@ describe "upstream counts in ConceptQL.metadata" do
 
   it "reports a positional upstream on a left/right operator as an error" do
     statement = [ "before", [ "icd9", "412" ], { left: [ "icd9", "412" ], right: [ "icd9", "401.9" ] } ]
-    errors = cdb.query(statement).scope_annotate(skip_counts: true)[:errors]
+    errors = by_operator(cdb.query(statement).errors)
     _(errors).must_equal({ "before" => [ [ "has upstreams", [ "icd9" ] ] ] })
   end
 
   it "accepts the same statement without the positional upstream" do
     statement = [ "before", { left: [ "icd9", "412" ], right: [ "icd9", "401.9" ] } ]
-    _(cdb.query(statement).scope_annotate(skip_counts: true)[:errors].to_h).must_be_empty
+    _(by_operator(cdb.query(statement).errors)).must_be_empty
   end
 
   {
@@ -89,18 +89,18 @@ describe "upstream counts in ConceptQL.metadata" do
   }.each do |name, head|
     it "reports a second upstream on #{name} as an error" do
       statement = head + [ [ "icd9", "412" ], [ "icd9", "401.9" ] ]
-      errors = cdb.query(statement).scope_annotate(skip_counts: true)[:errors]
+      errors = by_operator(cdb.query(statement).errors)
       _(errors).must_equal({ name => [ [ "has multiple upstreams", %w[icd9 icd9] ] ] })
     end
 
     it "accepts one upstream on #{name}" do
       statement = head + [ [ "icd9", "412" ] ]
-      _(cdb.query(statement).scope_annotate(skip_counts: true)[:errors].to_h).must_be_empty
+      _(by_operator(cdb.query(statement).errors)).must_be_empty
     end
   end
 
   it "reports a positional upstream on read as an error" do
-    errors = cdb.query([ "read", [ "icd9", "412" ], "H33" ]).scope_annotate(skip_counts: true)[:errors]
+    errors = by_operator(cdb.query([ "read", [ "icd9", "412" ], "H33" ]).errors)
     _(errors.fetch("read")).must_equal [ [ "has upstreams", [ "icd9" ] ] ]
   end
 end
