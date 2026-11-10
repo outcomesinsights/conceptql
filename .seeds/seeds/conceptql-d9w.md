@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T17:37:38.530034+00:00
+updated_at: 2026-11-10T18:01:08.575069+00:00
 ---
 
 ## The question
@@ -180,3 +180,17 @@ Findings for the two proposed beads (not yet created):
 - The proposed lexicon gate ignores the skip_db option, which add_warnings? honors.
 - PLAUSIBLE: against a dataset, an operator whose vocabulary the dataset lacks can be an "invalid operator" error, because each Database builds vocabulary operators from its own lexicon.
 - Confirmed correct: each Lexicon has its own cache, so a second lexicon shares no entries; the lexicon-gate diff matches its description.
+
+## UPDATE 2026-11-10: Ryan's questions on read, cpt_or_hcpcs and long lists
+
+Ryan, transcribed: "shouldn't read be based on vocabulary then? ... We need to handle the no records so that it's properly reporting. And then I would like to understand why not present in this database would never trigger either. Why are we accepting every code under CPT4 and or HCPCS? ... it sounds like we just need to re-architect this one. Use the message form that matches unknown codes. I don't know how to handle long lists. How have we done that in the past? Have we ever done a count plus a sample? Or is this new class of error larger than anything we've ever seen before."
+
+RULED: the message is "code(s) not present in this dataset", matching "unknown code(s)".
+
+Findings:
+
+- read: `Read < Operator` wraps one `ReadGDM < Vocabulary`. The wrapper existed because the omopv4_plus data model split Read over four tables (ReadCondition, ReadProcedure, ReadDrug, ReadObservation). The omopv4_plus removal (af3b2803, 2026-10-29) left a wrapper of one operator. Read has no row in config/vocabularies.csv. Direction (Ryan): read becomes a plain vocabulary operator, so every vocabulary check covers it.
+- Why CPT4 and HCPCS accept every code: `LexiconStrategy#known_codes` returns every code as known when the lexicon has no concept of the vocabulary (`vocabulary_is_empty?`, lib/conceptql/lexicon/lexicon_strategy.rb:125-132). The rule came from e32221cd (2020-09-14, "Ignore unknown codes if vocabulary has no concepts", refs #185; its test is drug_text_string/anno_1). SEER-Medicare's concept table has CPT4_HCPCS (15,876 rows) and no CPT4, HCPCS, ICD9CM or Read rows. So on that dataset the inner CPT4 and HCPCS operators of cpt_or_hcpcs accept every code, and `MultipleVocabularies#code_warnings` warns only about a code that every inner vocabulary rejects. The same rule makes icd9cm and read accept every code there.
+- Direction (Ryan): re-architect cpt_or_hcpcs. Proposed: it checks its codes as one set. A code is known when any of its vocabularies has it in the dataset. Otherwise, a code that the reference lexicon knows is "not present in this dataset", and the rest are unknown. The no-records warning fires when none of its vocabularies is in etl_vocabulary_ids. Its warnings no longer pass through aggregate_messages.
+- Proposed for the 2020 rule: where a reference lexicon or etl_vocabulary_ids exists, an empty vocabulary in the dataset's lexicon no longer hides codes; the no-records and not-present warnings replace it. Where neither exists, the rule stays, because a lexicon that lacks a vocabulary would otherwise call every code unknown.
+- Long lists: conceptql has never shortened a warning. "unknown code(s)" lists every code, and no operator code truncates or samples. On SEER-Medicare today, JDE's count path already reports each not-present code as "unknown code(s)", so the longest list (24,502 codes, antihypertensive_therapy) already appears today. The new warning relabels those codes; it does not make the list longer.
