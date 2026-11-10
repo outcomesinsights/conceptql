@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T18:01:08.575069+00:00
+updated_at: 2026-11-10T19:12:36.894811+00:00
 ---
 
 ## The question
@@ -194,3 +194,12 @@ Findings:
 - Direction (Ryan): re-architect cpt_or_hcpcs. Proposed: it checks its codes as one set. A code is known when any of its vocabularies has it in the dataset. Otherwise, a code that the reference lexicon knows is "not present in this dataset", and the rest are unknown. The no-records warning fires when none of its vocabularies is in etl_vocabulary_ids. Its warnings no longer pass through aggregate_messages.
 - Proposed for the 2020 rule: where a reference lexicon or etl_vocabulary_ids exists, an empty vocabulary in the dataset's lexicon no longer hides codes; the no-records and not-present warnings replace it. Where neither exists, the rule stays, because a lexicon that lacks a vocabulary would otherwise call every code unknown.
 - Long lists: conceptql has never shortened a warning. "unknown code(s)" lists every code, and no operator code truncates or samples. On SEER-Medicare today, JDE's count path already reports each not-present code as "unknown code(s)", so the longest list (24,502 codes, antihypertensive_therapy) already appears today. The new warning relabels those codes; it does not make the list longer.
+
+## RULED 2026-11-10 (Ryan, on the read, cpt_or_hcpcs and long-list findings)
+
+Ryan: "I agree with the challenge to the 2020 rule / full code lists please".
+
+1. cpt_or_hcpcs is re-architected as proposed above. It checks its codes as one set. A code is known when any of its vocabularies has it in the dataset. Otherwise a code that the reference lexicon knows is "code(s) not present in this dataset", and the rest are "unknown code(s)". The no-records warning fires when none of its vocabularies is in etl_vocabulary_ids. Its code warnings no longer pass through aggregate_messages.
+2. The 2020 empty-vocabulary rule (LexiconStrategy#known_codes, e32221cd) changes as proposed. Where etl_vocabulary_ids or a reference lexicon exists, an empty vocabulary in the dataset's lexicon no longer makes every code known. Where neither exists, the rule stays.
+3. Warnings keep the full code list. conceptql does not shorten or sample. JDE shortens the list for display if it needs to.
+4. read becomes a plain vocabulary operator (the direction Ryan gave earlier), so every vocabulary check covers it.

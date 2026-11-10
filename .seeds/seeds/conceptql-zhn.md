@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T17:53:51.685390+00:00
+updated_at: 2026-11-10T19:12:37.460561+00:00
 ---
 
 ## The gap
@@ -93,3 +93,7 @@ Findings for bead conceptql-d1bd (not yet acted on):
 3. NA in parents: Ryan: "If upstream is NA, then I would assume that the downstream would also be NA ... So that seems good." An operator whose inputs are all NA also reports NA counts. The warning stays on the vocabulary operator that reads the absent vocabulary.
 
 Fixture: vocabulation republished synpuf_test_data.duckdb to Dropbox at 2026-11-10 09:43 with the etl\_\* tables. Its sha256 is a675a69bc61e29aa1d38b953ace704a926a7fc0dafd49e246a9be4c1229dd5fd, the same as vocabulation's local build of 09:40 (the a4926bed... sum it reported came from an earlier build). conceptql's pin (.github/synpuf_test_data.sha256, d90fc4c9...) is now stale, so just test-duckdb refuses to run until the pin is updated after a green run.
+
+## UPDATE 2026-11-10: Postgres test image
+
+Ryan: "please ask vocabulation to rebuild -- I think it should be doing so already". The vocabulation session vocabulation-b9 was asked to rebuild ghcr.io/outcomesinsights/misc:test_data.jumper with the filled etl\_\* tables (ruling 1 above). conceptql then pins the new digest in docker-compose.yml.
