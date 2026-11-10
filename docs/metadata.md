@@ -64,8 +64,9 @@ The metadata for each operator should be complete enough that a UI can understan
   - The operator class sets it with `returns "..."`. A subclass does not inherit it
   - Every vocabulary operator serves the text of `ConceptQL::Operators::Vocabulary`, because
     the vocabulary operators share one reference section (spec_id `vocabulary-operator`). The
-    section holds the generated vocabulary operators, `read` and the multiple vocabulary
-    operators (`cpt_or_hcpcs`). Each extends `ConceptQL::Operators::Vocabulary::SharedDocumentation`
+    section holds the generated vocabulary operators (`read` is one) and the multiple
+    vocabulary operators (`cpt_or_hcpcs`). Each extends
+    `ConceptQL::Operators::Vocabulary::SharedDocumentation`
 - examples
   - An array of hashes, one for each example, in the order that the operator class declares them
   - Each hash has three keys:

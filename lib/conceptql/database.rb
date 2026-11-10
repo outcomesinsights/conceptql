@@ -2,6 +2,8 @@
 
 require "digest"
 require "logger"
+# Database#db_extensions names Sequel::Mock::Database before any mock exists
+require "sequel/adapters/mock"
 require_relative "lexicon"
 
 module ConceptQL

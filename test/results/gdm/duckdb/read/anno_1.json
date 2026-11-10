@@ -1,0 +1,17 @@
+[
+  "read",
+  "XYS",
+  {
+    "annotation": {
+      "id": "read-1",
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "warnings": [["unknown code(s)", "XYS"]]
+    },
+    "name": "READ"
+  }
+]
