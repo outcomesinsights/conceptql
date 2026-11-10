@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T15:09:06.939600+00:00
+updated_at: 2026-11-10T15:40:39.824545+00:00
 ---
 
 ## The defect
@@ -73,3 +73,21 @@ Option 1 example shape (path is a dig path into the statement):
 ```
 
 Recommended to Ryan: option 1, with counts in the same list form. Not ruled.
+
+## UPDATE 2026-11-10: Ryan's second round, and why scope_annotate exists
+
+Ryan: "I find "paths" to be opaque and hard to reason through. I'm wondering if scope-annotate couldn't assign each operator a "key" like "icd9cm-1" and "icd9cm-2" and then use that in something like option 1. The other thought I have is why are we using scope annotate? ... Why not just use normal annotate? Is there a reason why we're using scope annotate? Does anything else use scope annotate? I think scope annotate was specifically created to deliver errors and warnings. And honestly, I personally have never understood why we didn't just stick with annotate."
+
+History: Jeremy Evans added scope_annotate in 7fdda074 (2016-02-06). Its commit message: "This is the method that the API should call to get the errors and counts for all parts of the query, keyed by operator id." It calls annotate and returns the hashes that annotate collected on the side. The design assumed that every operator has an id. The fall-back to the operator name is where the data is lost.
+
+Every caller, 2026-11-10:
+
+- JDE StatementDraft#annotations and the diagram count endpoints (AlgorithmEditorController#counts, AlgorithmsController#count): they call `draft.statements(ids: true)`, which sets each operator's id to its node path ("0.1"). So they never collide.
+- JDE Algorithm#update_metadata (algorithm save): no ids, so it collides. It stores errors and warnings as JSON strings.
+- JDE CountStatements (count_statement MCP tool): returns both the scope hashes and the annotated statements.
+- JDE AnalyzeQueries merges the results of several streams with deep_merge and `v1 + v2`. So two streams that have operators with the same key are also merged by key.
+- conceptql: Query#validation_errors (and through it InvalidStatementError, window_table_errors) and the CLI.
+
+Assessment: annotate holds everything that scope_annotate holds, on the right operator. scope_annotate is only a flat index of it. A flat index is useful for two things: "does the statement have any errors?", and a list of problems to show a user or an agent. Both can be computed by walking the annotated statement.
+
+Direction under discussion (not ruled): annotate writes a key into each operator's annotation (its id when it has one, otherwise "<operator>-<n>" in statement order, for example "icd9-1" and "icd9-2"). conceptql derives the list of problems from the annotated statement, and each item names the operator by that key. scope_annotate is retired or becomes a thin wrapper of that list. JDE passes the annotated statement and the list through.

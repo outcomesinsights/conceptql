@@ -4,7 +4,7 @@ title: co_reported with one input is valid and gives no warning
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.710484+00:00
-updated_at: 2026-11-10T15:09:07.874828+00:00
+updated_at: 2026-11-10T15:40:38.401638+00:00
 ---
 
 ## The gap
@@ -44,3 +44,7 @@ So the direction is a warning, not an error, declared in the operator class like
 Scope check, main at 976a1195: only two operators declare `allows_many_upstreams`, `union` and `co_reported`. Both use `validate_at_least_one_upstream`. There is no intersect operator. Binary operators (before, after and others) take `left` and `right` and are not affected.
 
 This reverses the earlier note that a one-input union is out of scope: Ryan includes union.
+
+## RULED 2026-11-10
+
+Ryan: "xri: agreed. ready for a bead". A one-input union or co_reported stays valid and gets a warning, from a class-level declaration. Bead: conceptql-lmdm.
