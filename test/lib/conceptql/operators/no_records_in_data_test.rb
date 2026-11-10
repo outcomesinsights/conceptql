@@ -108,6 +108,21 @@ describe "the warning for a vocabulary that the data does not contain" do
     end
   end
 
+  # Its vocabulary operators do not give the warning themselves, so it
+  # appears once, on cpt_or_hcpcs (bead conceptql-0h2n). As for a vocabulary
+  # operator, the codes then get only the format check: 99999 is unknown to
+  # the lexicon, and AA0382 has the format of no vocabulary.
+  it "gives cpt_or_hcpcs the warning once and null counts when none of its vocabularies is present" do
+    cdb = database(etl_vocabulary_ids: %w[ICD9CM])
+
+    _(warnings_for(cdb, %w[cpt_or_hcpcs 99214 99999 AA0382])).must_equal(
+      { "cpt_or_hcpcs" => [ [ no_records ], [ "improperly formatted code", "AA0382" ] ] }
+    )
+    _(counts_of(cdb, %w[cpt_or_hcpcs 99214])).must_equal({ procedure_occurrence: { rows: nil, n: nil } })
+    _(counts_of(cdb, [ "union", %w[cpt_or_hcpcs 99214], %w[gemscript 00003007] ]))
+      .must_equal({ drug_exposure: { rows: nil, n: nil }, procedure_occurrence: { rows: nil, n: nil } })
+  end
+
   # etl_vocabulary_ids lists the vocabularies of clinical_codes only.
   it "gives no warning for a vocabulary operator that reads another table" do
     cdb = database(etl_vocabulary_ids: %w[ICD9CM])

@@ -65,10 +65,11 @@ The counts are from the DuckDB test fixture.
 
 A GDM dataset can list the vocabularies of its clinical codes in the table `etl_vocabulary_ids`. A Query reads the table once, when the table exists and has rows. A vocabulary operator whose vocabulary is not in the table gets the warning "the data has no records of this vocabulary", and its counts are null: `{"rows": null, "n": null}` for each domain. A count of 0 would say that no patient has the codes, which the data cannot show. An operator whose inputs all have null counts also has null counts, without the warning. An operator with at least one input that has real counts keeps its real counts.
 
+`cpt_or_hcpcs` and the other operators that read several vocabularies get the warning once, and null counts, only when the table lists none of their vocabularies. When it lists one of them, they get real counts and no warning.
+
 These operators are not checked:
 
 - the operators that read another table than the clinical codes, such as `death_type`.
-- `cpt_or_hcpcs` and the other operators that read several vocabularies.
 - `cpt` and `hcpcs` when they already give the warning that the data stores their codes as CPT4_HCPCS. That warning has the same text and names `cpt_or_hcpcs`, so they get no second warning. Their counts are null when `etl_vocabulary_ids` does not list their vocabulary.
 
 A dataset without `etl_vocabulary_ids`, or with an empty one, gives no warning, and its counts are real counts.
@@ -106,6 +107,8 @@ Both are warnings, never errors, so a statement stays valid on a dataset that la
 The vocabulary operators are built from the vocabularies of both lexicons. So an operator of a vocabulary that only the reference lexicon has is valid, and it is not an "invalid operator" error.
 
 A vocabulary that has no concepts in the dataset's lexicon accepts every code (a rule from 2020), but only when nothing else tells which vocabularies the data has. When the Database has a reference lexicon, or the data has an `etl_vocabulary_ids` table with rows, such a vocabulary accepts no code.
+
+`cpt_or_hcpcs` and the other operators that read several vocabularies check their codes as one set. A code is known when the dataset's lexicon has it in any of their vocabularies. Of the other codes, one that the reference lexicon has in any of the vocabularies is "code(s) not present in this dataset", and the rest are "unknown code(s)". A code is "improperly formatted code" only when it does not have the format of any of the vocabularies. Each warning appears once, on the operator. The 2020 rule applies to the set: the operator accepts every code only when all of its vocabularies have no concepts and nothing else tells which vocabularies the data has.
 
 ## The annotation cache of a Query
 

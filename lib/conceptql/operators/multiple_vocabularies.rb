@@ -121,39 +121,81 @@ module ConceptQL
 
       # The per-code warnings a Vocabulary operator gives, from most to least
       # specific (Operator::BAD_FORMATS, Vocabulary::NOT_PRESENT_IN_DATASET,
-      # Operator::UNKNOWN_CODE). See #code_warnings.
+      # Operator::UNKNOWN_CODE). This operator checks its codes itself (see
+      # #code_warnings), so it drops these warnings of its vocabulary
+      # operators.
       CODE_WARNINGS = [ *BAD_FORMATS, Vocabulary::NOT_PRESENT_IN_DATASET, UNKNOWN_CODE ].freeze
 
+      # The operator checks its codes as one set across its vocabularies
+      # (bead conceptql-0h2n). When etl_vocabulary_ids lists none of its
+      # vocabularies, it gives the no-records warning and null counts, and
+      # its codes get only the format check, as a Vocabulary operator's do
+      # (bead conceptql-8oim). The other warnings of its vocabulary operators
+      # appear only when every one of them gives the warning with the same
+      # details (#aggregate_messages).
       def additional_validation(db, opts = {})
-        vocab_ops.each { |vo| vo.valid?(db, opts.merge(skip_merged_vocabulary_check: true)) }
+        @no_records_in_data = add_warnings?(db, opts) && vocab_ops.all? { |vo| vo.absent_from_data?(db) }
+        inner_opts = opts.merge(skip_merged_vocabulary_check: true)
+        inner_opts[:skip_db] = true if @no_records_in_data
+        vocab_ops.each { |vo| vo.valid?(db, inner_opts) }
 
         @errors += aggregate_messages(vocab_ops.map(&:errors))
         @warnings += aggregate_messages(vocab_ops.map { |vo| vo.warnings.reject { |w| CODE_WARNINGS.include?(w.first) } })
-        @warnings += code_warnings
+        add_warning(Vocabulary::NO_RECORDS_IN_DATA) if @no_records_in_data
+        @warnings += code_warnings(db, opts)
       end
 
-      # A code gets a warning only when every vocabulary rejects it, for any
-      # reason. It is an improperly formatted code only when every vocabulary
-      # says so. When at least one vocabulary accepts its format but does not
-      # know it, it is an unknown code. (12345 is badly formatted for HCPCS but
-      # a well-formed, unknown CPT4 code, so it is unknown.) When the reference
-      # lexicon of at least one vocabulary knows it, it is a code not present
-      # in this dataset (bead conceptql-8oim).
-      def code_warnings
-        verdicts = vocab_ops.map do |vo|
-          vo.warnings.each_with_object({}) do |(message, *codes), verdict|
-            codes.each { |code| verdict[code] ||= message } if CODE_WARNINGS.include?(message)
-          end
-        end
+      def no_records_in_data?(db, opts = {})
+        validate(db, opts)
+        @no_records_in_data || false
+      end
 
-        rejected = arguments.uniq.select { |code| verdicts.all? { |verdict| verdict.key?(code) } }
-        bad_format, rest = rejected.partition { |code| verdicts.all? { |verdict| BAD_FORMATS.include?(verdict[code]) } }
-        not_present, unknown = rest.partition do |code|
-          verdicts.any? { |verdict| verdict[code] == Vocabulary::NOT_PRESENT_IN_DATASET }
-        end
+      # A code is improperly formatted when every vocabulary rejects its
+      # format. (12345 is badly formatted for HCPCS but has the format of
+      # CPT4, so it is checked.) A code is known when the Database's lexicon
+      # has it in any of the vocabularies. Of the other codes, one that the
+      # reference lexicon has in any of the vocabularies is not present in
+      # this dataset, and the rest are unknown. Each warning lists every code.
+      def code_warnings(db, opts = {})
+        return [] if arguments.include?("*")
 
-        [ [ BAD_FORMAT, *bad_format ], [ Vocabulary::NOT_PRESENT_IN_DATASET, *not_present ], [ UNKNOWN_CODE, *unknown ] ]
+        codes = arguments.uniq
+        bad_format = codes.select { |code| vocab_ops.all? { |vo| vo.bad_arguments.include?(code) } }
+        checked = codes - bad_format
+        missing = lexicon_checks?(opts) && !@no_records_in_data ? checked - known_codes(db, checked, opts) : []
+        reference = nodifier.cdb.reference_lexicon
+        not_present = reference ? known_codes_of(reference, db, missing) : []
+
+        [ [ BAD_FORMAT, *bad_format ], [ Vocabulary::NOT_PRESENT_IN_DATASET, *(missing & not_present) ],
+          [ UNKNOWN_CODE, *(missing - not_present) ] ]
           .reject { |warning| warning.length == 1 }
+      end
+
+      # The codes that the Database's lexicon has in any of the vocabularies.
+      # The 2020 rule (an empty vocabulary knows every code, refs #185)
+      # applies to the set: only when every vocabulary has no concepts, and
+      # only when no vocabulary operator has a reason against it
+      # (Vocabulary#empty_means_known?).
+      def known_codes(db, codes, opts)
+        return codes if codes.empty?
+
+        lexicon = dm.lexicon
+        empty_means_known = vocab_ops.all? do |vo|
+          vo.empty_means_known?(db, opts) && lexicon.vocabulary_is_empty?(db, vo.vocabulary_id)
+        end
+        return codes if empty_means_known
+
+        known_codes_of(lexicon, db, codes)
+      end
+
+      # The codes that the lexicon has in any of the vocabularies, with no
+      # exception for an empty vocabulary.
+      def known_codes_of(lexicon, db, codes)
+        return [] if codes.empty?
+
+        vocab_ops.map(&:vocabulary_id).uniq.flat_map do |vocabulary_id|
+          lexicon.known_codes(db, vocabulary_id, codes, check_case: false, empty_means_known: false)
+        end.uniq
       end
 
       def aggregate_messages(message_sets)

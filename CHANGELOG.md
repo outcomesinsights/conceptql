@@ -41,6 +41,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** `cpt_or_hcpcs` checks its codes as one set across CPT4, HCPCS and
+  CPT4_HCPCS. A code is known when the dataset's lexicon has it in any of them. Of the other
+  codes, one that the reference lexicon has in any of them gets "code(s) not present in this
+  dataset", and the rest get "unknown code(s)". An empty vocabulary accepts every code only
+  when all three are empty and the 2020 rule applies (no reference lexicon and no filled
+  `etl_vocabulary_ids`). Before, an empty CPT4 or HCPCS accepted every code, so on
+  SEER-Medicare, which has only CPT4_HCPCS, `cpt_or_hcpcs` never warned about a code. When
+  `etl_vocabulary_ids` lists none of the three, `cpt_or_hcpcs` gets "the data has no records
+  of this vocabulary" once and null counts. Before, it got neither.
 - **Breaking:** a vocabulary that has no concepts in the Database's lexicon no longer accepts
   every code when the Database has a reference lexicon or the data has an
   `etl_vocabulary_ids` table with rows. Its codes get "code(s) not present in this dataset"

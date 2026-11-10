@@ -96,55 +96,93 @@ describe ConceptQL::Operators::MultipleVocabularies do
     end)
   end
 
+  # A small sqlite database is both the data database and the OHDSI
+  # lexicon, so each test chooses the concepts of each vocabulary. The checks
+  # treat the codes as one set across the vocabularies (bead conceptql-0h2n).
   describe "code warnings" do
-    let(:operator) do
-      ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
-                         .query(%w[cpt_or_hcpcs 99214 12345 AA0382 A9999]).operator
+    # concepts: { vocabulary_id => [code, ...] }. etl_vocabulary_ids: nil
+    # leaves the table out.
+    def database(concepts, etl_vocabulary_ids: %w[CPT4 HCPCS])
+      db = Sequel.connect("sqlite:/")
+      db.create_table(:vocabulary) do
+        String :vocabulary_id
+        String :vocabulary_name
+      end
+      db.create_table(:concept_ancestor) { String :column }
+      db.create_table(:concept_relationship) { String :column }
+      db.create_table(:concept) do
+        Integer :concept_id
+        String :concept_code
+        String :concept_name
+        String :vocabulary_id
+      end
+      db.create_table(:patients) { Integer :id }
+      db.create_table(:clinical_codes) do
+        Integer :id
+        Integer :clinical_code_concept_id
+        String :clinical_code_vocabulary_id
+      end
+      %w[CPT4 HCPCS CPT4_HCPCS].each { |id| db[:vocabulary].insert(vocabulary_id: id, vocabulary_name: id) }
+      concepts.each do |vocabulary_id, codes|
+        codes.each { |code| db[:concept].insert(concept_code: code, concept_name: "A name", vocabulary_id: vocabulary_id) }
+      end
+      if etl_vocabulary_ids
+        db.create_table(:etl_vocabulary_ids) { String :vocabulary_id }
+        etl_vocabulary_ids.each { |id| db[:etl_vocabulary_ids].insert(vocabulary_id: id) }
+      end
+      ConceptQL::Database.new(db, data_model: :gdm, lexicon: ConceptQL::Lexicon.new(db))
     end
 
-    # Sets each vocabulary operator's warnings as validation would leave them.
-    def vocab_warnings(by_vocabulary)
-      operator.vocab_ops.each do |vocab_op|
-        vocab_op.instance_variable_set(:@warnings, by_vocabulary.fetch(vocab_op.op_name))
-      end
-      operator.code_warnings
+    def warnings_for(cdb, statement)
+      by_operator(cdb.query(statement).warnings)
     end
 
     it "calls a code unknown when one vocabulary rejects its format and another does not know it" do
-      warnings = vocab_warnings(
-        "cpt4" => [ [ "improperly formatted code", "AA0382" ], [ "unknown code(s)", "12345", "A9999" ] ],
-        "hcpcs" => [ [ "improperly formatted code", "99214", "12345", "AA0382" ], [ "unknown code(s)", "A9999" ] ]
-      )
+      cdb = database({ "CPT4" => %w[99214], "HCPCS" => %w[A0382] })
 
-      _(warnings).must_equal [ [ "improperly formatted code", "AA0382" ], [ "unknown code(s)", "12345", "A9999" ] ]
+      _(warnings_for(cdb, %w[cpt_or_hcpcs 99214 12345 AA0382 A9999 A0382])).must_equal(
+        { "cpt_or_hcpcs" => [ [ "improperly formatted code", "AA0382" ], [ "unknown code(s)", "12345", "A9999" ] ] }
+      )
     end
 
-    it "does not warn about a code that one vocabulary accepts" do
-      warnings = vocab_warnings(
-        "cpt4" => [ [ "unknown code(s)", "12345" ] ],
-        "hcpcs" => [ [ "improperly formatted code", "99214", "12345" ] ]
-      )
+    it "knows a code that only one vocabulary has, whichever it is" do
+      cdb = database({ "CPT4" => %w[99214], "HCPCS" => %w[A0382], "CPT4_HCPCS" => %w[99215 J9999] })
 
-      _(warnings).must_equal [ [ "unknown code(s)", "12345" ] ]
+      _(warnings_for(cdb, %w[cpt_or_hcpcs 99214 A0382 99215 J9999])).must_equal({})
+      _(warnings_for(cdb, %w[cpt_or_hcpcs 99214 99213])).must_equal({ "cpt_or_hcpcs" => [ [ "unknown code(s)", "99213" ] ] })
     end
 
-    # The NDC format warning carries a reason (bead conceptql-28h). A custom
-    # multiple_vocabularies file can put NDC beside other vocabularies, and
-    # its format verdict must still count as a format verdict.
-    it "counts the NDC format warning as a format verdict" do
-      ndc = "improperly formatted code (claims use 11-digit package NDCs, so it matches no rows)"
-      warnings = vocab_warnings(
-        "cpt4" => [ [ ndc, "AA0382" ] ],
-        "hcpcs" => [ [ "improperly formatted code", "AA0382" ] ]
-      )
+    # The 2020 rule (refs #185): an empty vocabulary knows every code, but
+    # only when nothing tells which vocabularies the data has.
+    describe "without etl_vocabulary_ids" do
+      it "accepts every code when every vocabulary has no concepts" do
+        _(warnings_for(database({}, etl_vocabulary_ids: nil), %w[cpt_or_hcpcs 99213 J9999])).must_equal({})
+      end
 
-      _(warnings).must_equal [ [ "improperly formatted code", "AA0382" ] ]
+      it "does not accept every code of an empty vocabulary when another vocabulary has concepts" do
+        cdb = database({ "CPT4_HCPCS" => %w[99214] }, etl_vocabulary_ids: nil)
+
+        _(warnings_for(cdb, %w[cpt_or_hcpcs 99214 99213 J9999]))
+          .must_equal({ "cpt_or_hcpcs" => [ [ "unknown code(s)", "99213", "J9999" ] ] })
+      end
+    end
+
+    it "does not accept every code of empty vocabularies with a filled etl_vocabulary_ids" do
+      _(warnings_for(database({}), %w[cpt_or_hcpcs 99213])).must_equal({ "cpt_or_hcpcs" => [ [ "unknown code(s)", "99213" ] ] })
+    end
+
+    it "checks the codes with a lexicon and no data database" do
+      lexicon = ConceptQL::Lexicon.new(database({ "CPT4" => %w[99214] }).db)
+      cdb = ConceptQL::Database.new(nil, data_model: :gdm, lexicon: lexicon)
+
+      _(warnings_for(cdb, %w[cpt_or_hcpcs 99214 99213])).must_equal({ "cpt_or_hcpcs" => [ [ "unknown code(s)", "99213" ] ] })
     end
 
     it "keeps a vocabulary operator's own warnings intact" do
+      operator = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
+                                    .query(%w[cpt_or_hcpcs 12345]).operator
       cpt4 = [ [ "unknown code(s)", "12345" ] ]
-      vocab_warnings("cpt4" => cpt4, "hcpcs" => [ [ "improperly formatted code", "12345" ] ])
-      operator.aggregate_messages([ cpt4 ])
+      operator.aggregate_messages([ cpt4, [ [ "improperly formatted code", "12345" ] ] ])
 
       _(cpt4).must_equal [ [ "unknown code(s)", "12345" ] ]
     end
