@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T17:04:45.799217+00:00
+updated_at: 2026-11-10T17:37:36.848415+00:00
 ---
 
 ## The gap
@@ -70,6 +70,18 @@ The Postgres test_data already has an empty etl_vocabulary_ids. conceptql-d1bd n
 
 ## UPDATE 2026-11-10: measured on SEER-Medicare; fixture ready locally
 
-On seer_medicare_all_cancer_2024_enriched_20261103 (80 vocabularies in etl_vocabulary_ids), 1,323 of the 2,940 vocabulary operators in the 1,256 current algorithms read a vocabulary that the dataset does not have, in 780 algorithms. By vocabulary: CPT4 444, HCPCS 442 (the data stores them as CPT4_HCPCS, the existing merged-vocabulary case), ICD9CM 341, ICD9Proc 37, Gemscript 20, LOINC 14, CPRD_TEST_ENTITY 8, MARCLA_OBS_TYPE 6, CPRD_ENTTYPE 5, USRDS_MODALITY 5, USRDS_DIALYSIS_START 1. Log: claude_stuff/two-lexicon-measure-20261110-090153.log (seed conceptql-d9w has the method).
+On seer_medicare_all_cancer_2024_enriched_20261103 (80 vocabularies in etl_vocabulary_ids), about 444 user-visible vocabulary operators in 385 of the 1,256 current algorithms read a vocabulary that the dataset does not have (corrected by the adversarial review, claude_stuff/adversarial-review-annotate-plan-20261110-093509.md; the first count, 1,323 operators in 780 algorithms, wrongly included the inner CPT4 and HCPCS operators of 452 cpt_or_hcpcs operators, whose vocabulary CPT4_HCPCS is present). By vocabulary: ICD9CM 341, ICD9Proc 37, Gemscript 20, LOINC 14, CPRD_TEST_ENTITY 8, MARCLA_OBS_TYPE 6, CPRD_ENTTYPE 5, USRDS_MODALITY 5, USRDS_DIALYSIS_START 1. Log: claude_stuff/two-lexicon-measure-20261110-090153.log (seed conceptql-d9w has the method).
 
 vocabulation-xd6 is closed: the local fixture /home/ryan/projects/outins/vocabulation/synpuf_test_data.duckdb (sha256 a4926bed...) has the 4 slim etl\_\* tables, filled by roobetl (roobetl-wu4). etl_vocabulary_ids has 7 rows (ICD9CM, CPT4, NDC, HCPCS, ICD9Proc, DRG, LOINC) with NULL source_table and source_column. It is not published to Dropbox yet; Ryan decides when.
+
+## UPDATE 2026-11-10: Adversarial review 2026-11-10 (claude_stuff/adversarial-review-annotate-plan-20261110-093509.md, probes in claude_stuff/review-annotate-plan/)
+
+Findings for bead conceptql-d1bd (not yet acted on):
+
+- CONFIRMED: d1bd cannot pass just ci as written. The Postgres and DuckDB suites compare against one expected-results file (test/statement_tests.rb:253-257 chooses by data model and lexicon strategy, not by database). The DuckDB fixture now has 7 rows in etl_vocabulary_ids, the Postgres test_data image has 0, so their annotations differ. Three anno tests use a vocabulary outside the 7: gemscript/anno_no_format_check, place_of_service_filter/anno_2, drug_text_string/anno_1. Either the Postgres test image gets the same filled table (roobetl filled titan's test_data.slim, bead roobetl-wu4, but the docker image is pinned by digest), or results get a per-database directory.
+- CONFIRMED: ConceptQL::Diagram turns a null count into 0 (lib/conceptql/diagram.rb:113, Integer(c[:rows] || 0)). So Diagram.render, the CLI and the spec show 0. Drawing NA in the Ruby renderer also breaks the rule that the JavaScript renderer's output is the reference (docs/diagram_renderer.md); JDE's JavaScript renderer needs the same change.
+- NA appears only on the operator that reads the absent vocabulary. On SEER-Medicare, 141 algorithms read only absent vocabularies; their top operator still shows a real 0 with no warning.
+- Read is not a Vocabulary class and is never validated: 34 read operators in production, and SEER has no Read data.
+- MultipleVocabularies (cpt_or_hcpcs) drops a warning that has no details (aggregate_messages, multiple_vocabularies.rb:164), so cpt_or_hcpcs would never warn.
+- cpt and cpt4 get the existing merged-vocabulary warning and the new one with the same text: 2 operators in production.
+- The corrected SEER count: about 444 user-visible operators in 385 algorithms (fixed above).

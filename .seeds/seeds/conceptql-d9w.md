@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T17:21:29.542592+00:00
+updated_at: 2026-11-10T17:37:38.530034+00:00
 ---
 
 ## The question
@@ -154,7 +154,7 @@ Dataset seer_medicare_all_cancer_2024_enriched_20261103 (DuckDB, opened read-onl
 
 - 2,940 vocabulary operators in the 1,256 algorithms.
 - In vocabularies that the dataset has: 174,452 codes. 106,335 are "not present in this dataset" (539 algorithms). 218 are unknown to the full lexicon too (25 algorithms).
-- By vocabulary, not present / unknown: NDC 101,234 / 144; CPT4_HCPCS 3,313 / 34; ICD10CM 1,032 / 1; ICD10PCS 324 / 0; ICD03_Morphology 75 / 29; Revenue Code 6 / 10; many SEER\_\* vocabularies with up to 90 each.
+- By vocabulary, not present / unknown: NDC 101,234 / 144; CPT4_HCPCS 3,313 / 34 (these come from the CPT4_HCPCS operator inside cpt_or_hcpcs; MultipleVocabularies' aggregation would drop such a warning today, see the review below); ICD10CM 1,032 / 1; ICD10PCS 324 / 0; ICD03_Morphology 75 / 29; Revenue Code 6 / 10; many SEER\_\* vocabularies with up to 90 each.
 - Length of the not-present list per operator: 739 operators have one; median 3 codes, p90 94, max 24,502; 71 operators over 100, 16 over 1,000. The longest: antihypertensive_therapy 24,502 of 27,203 codes; statin_therapy 11,350 of 13,073.
 - Each operator's annotated statement already holds all its codes as arguments, so a full not-present list is at most the size of the operator itself.
 
@@ -170,3 +170,13 @@ Proposed beads (not created yet):
 2. Reference lexicon: a Database option for the full lexicon beside the dataset's lexicon. Vocabulary#additional_validation asks the reference lexicon about each code the dataset's lexicon does not know. Known there: warning "code(s) not present in this dataset". Unknown there: "unknown code(s)". Code-to-concept translation and counts keep using the dataset's lexicon. When conceptql-d1bd's warning fires for the operator (the whole vocabulary is absent), the per-code warning does not also fire.
 
 Open, not ruled: the plural form of the wording; whether the not-present list holds every code (recommended) or a count with a sample; whether the reference lexicon is an explicit option (JDE passes it) or found from LEXICON_URL.
+
+## UPDATE 2026-11-10: Adversarial review 2026-11-10 (claude_stuff/adversarial-review-annotate-plan-20261110-093509.md, probes in claude_stuff/review-annotate-plan/)
+
+Findings for the two proposed beads (not yet created):
+
+- The proposed reference-lexicon bead depends on conceptql-d1bd (the suppression rule) and needs a test fixture with two lexicons that differ. Neither was stated.
+- MultipleVocabularies (cpt_or_hcpcs, 452 in production) warns about codes only when every inner vocabulary rejects them (code_warnings, multiple_vocabularies.rb:140-151), and aggregate_messages keeps only codes that every vocabulary shares. The not-present warning needs a rule there, or cpt_or_hcpcs never shows it.
+- The proposed lexicon gate ignores the skip_db option, which add_warnings? honors.
+- PLAUSIBLE: against a dataset, an operator whose vocabulary the dataset lacks can be an "invalid operator" error, because each Database builds vocabulary operators from its own lexicon.
+- Confirmed correct: each Lexicon has its own cache, so a second lexicon shares no entries; the lexicon-gate diff matches its description.
