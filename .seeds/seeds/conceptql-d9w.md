@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T17:04:45.277225+00:00
+updated_at: 2026-11-10T17:21:29.542592+00:00
 ---
 
 ## The question
@@ -159,3 +159,14 @@ Dataset seer_medicare_all_cancer_2024_enriched_20261103 (DuckDB, opened read-onl
 - Each operator's annotated statement already holds all its codes as arguments, so a full not-present list is at most the size of the operator itself.
 
 Open, with these counts: does the warning list every not-present code (up to 24,502), or a count with a sample? Recommended: the full list in the annotation, and JDE shortens it for display.
+
+## Proposed plan, 2026-11-10 (for adversarial review before beads)
+
+Ruled so far: a dataset-specific "not present" result is a warning, never an error; wording "code not present in this dataset" (proposed form "code(s) not present in this dataset" to match "unknown code(s)"; not confirmed).
+
+Proposed beads (not created yet):
+
+1. Lexicon gate: a new `lexicon_checks?` (`@errors.empty? && dm.lexicon.strategy != :no_db`). The unknown-code and reused-code checks in Vocabulary, and the check in InformationPeriods, move to it. The CPT4/HCPCS merged-vocabulary check stays behind `add_warnings?`, because it reads data. Tested by the throwaway experiment (diff claude_stuff/exp-lexicon-gate-20261110.diff).
+2. Reference lexicon: a Database option for the full lexicon beside the dataset's lexicon. Vocabulary#additional_validation asks the reference lexicon about each code the dataset's lexicon does not know. Known there: warning "code(s) not present in this dataset". Unknown there: "unknown code(s)". Code-to-concept translation and counts keep using the dataset's lexicon. When conceptql-d1bd's warning fires for the operator (the whole vocabulary is absent), the per-code warning does not also fire.
+
+Open, not ruled: the plural form of the wording; whether the not-present list holds every code (recommended) or a count with a sample; whether the reference lexicon is an explicit option (JDE passes it) or found from LEXICON_URL.
