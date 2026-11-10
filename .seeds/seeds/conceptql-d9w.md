@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T16:52:19.930991+00:00
+updated_at: 2026-11-10T17:04:45.277225+00:00
 ---
 
 ## The question
@@ -123,3 +123,39 @@ Not measured:
 
 - Production algorithms: this session was denied reads of titan's jigsaw_production copy (auto-mode classifier, "Production Reads").
 - Parts 1 and 2 on a trimmed dataset (SEER-Medicare): its file is under /mnt/samba/confidential_data, and it was not read.
+
+## UPDATE 2026-11-10: measured on production algorithms and on SEER-Medicare
+
+Ryan authorized the investigation ("Do what you need to in order to complete this investigation"), including read-only production reads. Corpus: the 1,256 current kept algorithms of titan's jigsaw_production (read-only export, claude_stuff/prod-current-algorithms-20261110-085558.jsonl, not committed). Full lexicon: titan ohdsi_vocabs, schema ohdsi20260829.
+
+### The gate change (part 3), JDE's editing and save paths
+
+Script claude_stuff/lexicon-gate-measure.rb. Logs claude_stuff/lexicon-gate-measure-prod-main-20261110-085615.log and claude_stuff/lexicon-gate-measure-prod-exp-20261110-085741.log.
+
+```
+                              main      gate change
+algorithms annotated          1256      1256 (0 raised)
+annotate ms, median           61.5      89.8
+annotate ms, p90              88.2      149.5
+annotate ms, max              208.4     1340.6
+lexicon queries, total        6387      17317
+unknown code(s) warnings      0         31
+more than one meaning         0         10
+algorithms gaining a warning  0         39
+```
+
+- Added time per algorithm: median 29 ms, p90 90 ms, p99 227 ms.
+- The cost grows with the length of the code list. The worst: antihypertensive_therapy (1 ndc operator, 33,747 codes) 185 -> 1341 ms; statin_therapy (13,073 ndc codes) 110 -> 1210 ms.
+- Examples of the new warnings: icd03_morphology 9666/3 (9 algorithms), cpt_or_hcpcs 85047 (4), drg codes with two meanings (10 Elixhauser-style algorithms), ndc package codes, revenue code 0453-0458, icd9cm 043 and 044, icd10cm I79.2.
+
+### Parts 1 and 2: the split on a trimmed dataset
+
+Dataset seer_medicare_all_cancer_2024_enriched_20261103 (DuckDB, opened read-only; only concept, vocabulary and etl_vocabulary_ids were read; the merged-vocabulary check, which scans clinical_codes, was skipped). Vocabulary#additional_validation was monkeypatched to ask the full lexicon about each code the dataset did not know. Script claude_stuff/two-lexicon-measure.rb. Log claude_stuff/two-lexicon-measure-20261110-090153.log.
+
+- 2,940 vocabulary operators in the 1,256 algorithms.
+- In vocabularies that the dataset has: 174,452 codes. 106,335 are "not present in this dataset" (539 algorithms). 218 are unknown to the full lexicon too (25 algorithms).
+- By vocabulary, not present / unknown: NDC 101,234 / 144; CPT4_HCPCS 3,313 / 34; ICD10CM 1,032 / 1; ICD10PCS 324 / 0; ICD03_Morphology 75 / 29; Revenue Code 6 / 10; many SEER\_\* vocabularies with up to 90 each.
+- Length of the not-present list per operator: 739 operators have one; median 3 codes, p90 94, max 24,502; 71 operators over 100, 16 over 1,000. The longest: antihypertensive_therapy 24,502 of 27,203 codes; statin_therapy 11,350 of 13,073.
+- Each operator's annotated statement already holds all its codes as arguments, so a full not-present list is at most the size of the operator itself.
+
+Open, with these counts: does the warning list every not-present code (up to 24,502), or a count with a sample? Recommended: the full list in the annotation, and JDE shortens it for display.
