@@ -20,6 +20,13 @@ Ruby output with those files: the same elements in the same order, the same attr
 numbers equal to 6 decimal places (`test/diagram_renderer/svg_comparison.rb`). When the two
 disagree, the Ruby code is wrong. Never edit a reference to make a test pass.
 
+The JavaScript renderer is no longer developed: the Ruby renderer is the only supported renderer.
+The 70 JavaScript references stay as they are. A new case gets its reference from the Ruby
+renderer, under `test/diagram_renderer/fixtures/ruby_references/<name>/`: its input
+`render_tree.json` and its output under `reference/`, normalized with `SvgComparison.normalize`.
+`test/diagram_renderer/ruby_references_test.rb` compares the output with it. The first such case
+is `null_counts`, the NA label of a null count.
+
 A reference holds each `<style>` text as its digest (`sha256:<hex>`). The digests are those of
 the gem's `diagram.css`. When the editor's page rules were removed from it, only these digests
 changed in the references.
@@ -70,7 +77,9 @@ svg = ConceptQL::DiagramRenderer.render_static(tree, show_counts: false, show_op
 png = ConceptQL::DiagramRenderer.png(tree, show_counts: false, show_options: false)           # => PNG bytes
 ```
 
-- `show_counts` labels each stream with its child's counts.
+- `show_counts` labels each stream with its child's counts. A null count is drawn as `NA`
+  (`rows=NA`, `n=NA`): conceptql gives null counts to an operator of a vocabulary that the data
+  does not contain.
 - `show_options` lists each node's options under its values.
 
 The PNG has the width and height of the SVG. The SVG is static: it does not animate.

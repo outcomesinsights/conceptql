@@ -8,11 +8,14 @@
         "id": "revenue_code-1",
         "counts": {
           "procedure_occurrence": {
-            "rows": 0,
-            "n": 0
+            "rows": null,
+            "n": null
           }
         },
-        "warnings": [["unknown code(s)", "280"]]
+        "warnings": [
+          ["the data has no records of this vocabulary"],
+          ["unknown code(s)", "280"]
+        ]
       },
       "name": "Revenue Code"
     }
@@ -23,8 +26,8 @@
       "id": "place_of_service_filter-1",
       "counts": {
         "procedure_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": null,
+          "n": null
         }
       }
     },

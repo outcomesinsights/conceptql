@@ -30,6 +30,18 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** a vocabulary operator whose vocabulary is not in the dataset's GDM table
+  `etl_vocabulary_ids` gets the warning "the data has no records of this vocabulary", and
+  `Query#annotate` gives it null counts (`{"rows": null, "n": null}`). An operator whose
+  inputs all have null counts also has null counts. Before, such an operator counted 0 rows
+  with no warning, which said that no patient had the codes: on SEER-Medicare, `icd9cm`
+  counted 0 although the data has no ICD9CM records. A Query reads `etl_vocabulary_ids`
+  once. A dataset without the table, or with an empty one, gives no warning and the counts
+  of before. Operators that read another table than the clinical codes (`death_type`,
+  `obs_period_type`) and `cpt_or_hcpcs` are not checked. `cpt` and `hcpcs` with the
+  CPT4_HCPCS warning, which has the same text, get no second warning.
+  `ConceptQL::Diagram` keeps null counts (before, it made them 0), and
+  `ConceptQL::DiagramRenderer` draws them as `rows=NA` and `n=NA`. See `docs/annotation.md`.
 - A vocabulary operator gives the unknown-code and the reused-code warnings, and
   `information_periods` gives its unknown-code warning, when the Database has a lexicon but
   its data database is nil or a Sequel mock. Before, these checks ran only with a real data

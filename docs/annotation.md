@@ -61,6 +61,26 @@ annotation.each_operator { |op| puts "#{op.id} #{op.annotation['counts'].to_json
 
 The counts are from the DuckDB test fixture.
 
+## Null counts
+
+A GDM dataset can list the vocabularies of its clinical codes in the table `etl_vocabulary_ids`. A Query reads the table once, when the table exists and has rows. A vocabulary operator whose vocabulary is not in the table gets the warning "the data has no records of this vocabulary", and its counts are null: `{"rows": null, "n": null}` for each domain. A count of 0 would say that no patient has the codes, which the data cannot show. An operator whose inputs all have null counts also has null counts, without the warning. An operator with at least one input that has real counts keeps its real counts.
+
+These operators are not checked:
+
+- the operators that read another table than the clinical codes, such as `death_type`.
+- `cpt_or_hcpcs` and the other operators that read several vocabularies.
+- `cpt` and `hcpcs` when they already give the warning that the data stores their codes as CPT4_HCPCS. That warning has the same text and names `cpt_or_hcpcs`, so they get no second warning. Their counts are null when `etl_vocabulary_ids` does not list their vocabulary.
+
+A dataset without `etl_vocabulary_ids`, or with an empty one, gives no warning, and its counts are real counts.
+
+```ruby
+cdb.query(["gemscript", "00003007"]).annotate
+# => ["gemscript", "00003007",
+#     { annotation: { id: "gemscript-1", counts: { drug_exposure: { rows: nil, n: nil } },
+#                     warnings: [["the data has no records of this vocabulary"]] },
+#       name: "Gemscript" }]
+```
+
 ## The annotation cache of a Query
 
 A `Query` keeps one result of `annotate` for each options hash. A repeated call with the same options returns the kept result and annotates nothing. A call with other options builds a fresh operator tree and annotates it, so `annotate` after `annotate(skip_counts: true)` gives real counts.

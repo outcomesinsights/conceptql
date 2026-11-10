@@ -56,6 +56,22 @@ module ConceptQL
       @operators ||= cdb.operators(@data_model)
     end
 
+    # The vocabulary ids of the data's clinical codes, as a Set, from the GDM
+    # table etl_vocabulary_ids (one row for each vocabulary in
+    # clinical_codes.clinical_code_vocabulary_id, written by the ETL). nil
+    # when the data has no such table, or when the table has no rows, which
+    # says nothing about the data (bead conceptql-d1bd). Only the
+    # vocabulary_id column is read, so the older 2-column table works too.
+    #
+    # Each Query has its own nodifier, so a Query reads the table once,
+    # whatever the number of its vocabulary operators.
+    def etl_vocabulary_ids(db)
+      return @etl_vocabulary_ids if defined?(@etl_vocabulary_ids)
+
+      ids = cdb.source_table_exists?(db, :etl_vocabulary_ids) ? db[:etl_vocabulary_ids].select_map(:vocabulary_id) : []
+      @etl_vocabulary_ids = ids.empty? ? nil : ids.to_set
+    end
+
     private
 
     def fetch_op(operator)

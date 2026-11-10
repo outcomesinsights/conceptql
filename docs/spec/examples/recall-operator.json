@@ -191,10 +191,13 @@
                         "children": [],
                         "counts": {
                           "condition_occurrence": {
-                            "rows": 0,
-                            "n": 0
+                            "rows": null,
+                            "n": null
                           }
-                        }
+                        },
+                        "warnings": [
+                          ["the data has no records of this vocabulary"]
+                        ]
                       }
                     ],
                     "counts": {

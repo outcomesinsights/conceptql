@@ -228,8 +228,13 @@ module ConceptQL
         DOMAIN_LABEL_COLORS.fetch(stream_type, COUNT_LABEL[:fill])
       end
 
-      # formatCount: 1234567 becomes "1,234,567".
+      # formatCount: 1234567 becomes "1,234,567". A null count is NA: the
+      # data has no records of the operator's vocabulary (bead
+      # conceptql-d1bd). The JavaScript renderer has no such case, so the
+      # reference of a null count comes from this renderer.
       def format_count(n)
+        return "NA" if n.nil?
+
         JsFormat.string(n).gsub(/\B(?=(\d{3})+(?!\d))/, ",")
       end
 

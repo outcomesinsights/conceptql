@@ -107,10 +107,13 @@ module ConceptQL
         (annotation[:counts] || {}).keys.flatten.map(&:to_s).uniq.sort
       end
 
+      # A null count stays null: the data has no records of the operator's
+      # vocabulary, so the count is unknown, not 0 (bead conceptql-d1bd).
+      # DiagramRenderer draws it as NA.
       def counts(annotation)
         (annotation[:counts] || {})
           .sort_by { |domain, _| domain.to_s }
-          .to_h { |domain, c| [ domain.to_s, { rows: Integer(c[:rows] || 0), n: Integer(c[:n] || 0) } ] }
+          .to_h { |domain, c| [ domain.to_s, { rows: c[:rows]&.then { Integer(_1) }, n: c[:n]&.then { Integer(_1) } } ] }
       end
 
       def metadata_for(name)
