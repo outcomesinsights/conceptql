@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T17:53:52.195108+00:00
+updated_at: 2026-11-10T17:54:11.409191+00:00
 ---
 
 ## The defect
@@ -159,3 +159,5 @@ Ryan asked to see what the window-table errors would look like. Document sent: c
 - Option A: the error goes on the top operator's annotation as "window_table: provider_filter: required option not present". The helper then names the wrong operator.
 - Option B (recommended): annotate keeps the window node and annotates the window table statement in place, so the error stays on provider_filter. annotate's shape changes for window statements only.
   Not ruled.
+
+RULED 2026-11-10: Ryan: "option B please". annotate keeps the window node and annotates the window table statement in place, so its errors stay on the operator that has them. The helpers walk into the window_table option.
