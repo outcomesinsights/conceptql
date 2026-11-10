@@ -12,6 +12,8 @@ The ConceptQL specification is [docs/spec/README.md](docs/spec/README.md).
 
 `ConceptQL::Annotation` reads the errors, warnings and counts of an annotated statement. See [docs/annotation.md](docs/annotation.md).
 
+The `reference_lexicon:` option of `ConceptQL::Database` gives a Database the full lexicon beside the lexicon of its dataset. Then a code that the dataset does not contain gets the warning "code(s) not present in this dataset", not "unknown code(s)". See [docs/annotation.md](docs/annotation.md#codes-that-the-dataset-does-not-contain).
+
 ## Motivation for ConceptQL
 
 Outcomes Insights has built a vast library of research algorithms and applied those algorithms to large databases of claims data. Early into building the library, we realized we had to overcome two major issues:

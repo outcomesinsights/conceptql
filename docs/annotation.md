@@ -81,6 +81,32 @@ cdb.query(["gemscript", "00003007"]).annotate
 #       name: "Gemscript" }]
 ```
 
+## Codes that the dataset does not contain
+
+The lexicon of a dataset can be trimmed to the codes that the data contains, for example `ConceptQL::Lexicon.for_dataset(db)` on a DuckDB dataset. Without more information, a real code that the trimmed lexicon lacks gets the warning "unknown code(s)". To tell such a code from a code that does not exist, give the Database a reference lexicon, which is the full lexicon:
+
+```ruby
+full = ConceptQL::Lexicon.new(nil, lexicon_db, cache: true)
+cdb = ConceptQL::Database.new(db, lexicon: ConceptQL::Lexicon.for_dataset(db), reference_lexicon: full)
+```
+
+The Database chooses its reference lexicon in this order:
+
+1. The `reference_lexicon:` option.
+2. When the option is not given and `LEXICON_URL` is set, a Lexicon of the `LEXICON_URL` database, with its own cache. A `LEXICON_URL` database without vocabulary tables raises `ConceptQL::Lexicon::NoVocabularyError`.
+3. When neither exists, the Database has no reference lexicon.
+
+Only the code checks of the vocabulary operators read the reference lexicon. The translation of codes to concepts, the SQL and the counts use the dataset's lexicon only, so they are the same with and without a reference lexicon. A code that the dataset's lexicon does not know gets one of these warnings:
+
+- "code(s) not present in this dataset", when the reference lexicon knows the code.
+- "unknown code(s)", when the reference lexicon does not know the code either, or when the Database has no reference lexicon.
+
+Both are warnings, never errors, so a statement stays valid on a dataset that lacks some of its codes. Each warning lists every code. When the operator gets the warning "the data has no records of this vocabulary" (see [Null counts](#null-counts)), that warning covers all of its codes. So its codes get no "code(s) not present in this dataset", no "unknown code(s)" and no "code(s) with more than one meaning" warning. A code that does not have the vocabulary's format still gets its warning.
+
+The vocabulary operators are built from the vocabularies of both lexicons. So an operator of a vocabulary that only the reference lexicon has is valid, and it is not an "invalid operator" error.
+
+A vocabulary that has no concepts in the dataset's lexicon accepts every code (a rule from 2020), but only when nothing else tells which vocabularies the data has. When the Database has a reference lexicon, or the data has an `etl_vocabulary_ids` table with rows, such a vocabulary accepts no code.
+
 ## The annotation cache of a Query
 
 A `Query` keeps one result of `annotate` for each options hash. A repeated call with the same options returns the kept result and annotates nothing. A call with other options builds a fresh operator tree and annotates it, so `annotate` after `annotate(skip_counts: true)` gives real counts.

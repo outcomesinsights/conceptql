@@ -120,9 +120,9 @@ module ConceptQL
       end
 
       # The per-code warnings a Vocabulary operator gives, from most to least
-      # specific (Operator::BAD_FORMATS, Operator::UNKNOWN_CODE). See
-      # #code_warnings.
-      CODE_WARNINGS = [ *BAD_FORMATS, UNKNOWN_CODE ].freeze
+      # specific (Operator::BAD_FORMATS, Vocabulary::NOT_PRESENT_IN_DATASET,
+      # Operator::UNKNOWN_CODE). See #code_warnings.
+      CODE_WARNINGS = [ *BAD_FORMATS, Vocabulary::NOT_PRESENT_IN_DATASET, UNKNOWN_CODE ].freeze
 
       def additional_validation(db, opts = {})
         vocab_ops.each { |vo| vo.valid?(db, opts.merge(skip_merged_vocabulary_check: true)) }
@@ -136,7 +136,9 @@ module ConceptQL
       # reason. It is an improperly formatted code only when every vocabulary
       # says so. When at least one vocabulary accepts its format but does not
       # know it, it is an unknown code. (12345 is badly formatted for HCPCS but
-      # a well-formed, unknown CPT4 code, so it is unknown.)
+      # a well-formed, unknown CPT4 code, so it is unknown.) When the reference
+      # lexicon of at least one vocabulary knows it, it is a code not present
+      # in this dataset (bead conceptql-8oim).
       def code_warnings
         verdicts = vocab_ops.map do |vo|
           vo.warnings.each_with_object({}) do |(message, *codes), verdict|
@@ -145,9 +147,13 @@ module ConceptQL
         end
 
         rejected = arguments.uniq.select { |code| verdicts.all? { |verdict| verdict.key?(code) } }
-        bad_format, unknown = rejected.partition { |code| verdicts.all? { |verdict| BAD_FORMATS.include?(verdict[code]) } }
+        bad_format, rest = rejected.partition { |code| verdicts.all? { |verdict| BAD_FORMATS.include?(verdict[code]) } }
+        not_present, unknown = rest.partition do |code|
+          verdicts.any? { |verdict| verdict[code] == Vocabulary::NOT_PRESENT_IN_DATASET }
+        end
 
-        [ [ BAD_FORMAT, *bad_format ], [ UNKNOWN_CODE, *unknown ] ].reject { |warning| warning.length == 1 }
+        [ [ BAD_FORMAT, *bad_format ], [ Vocabulary::NOT_PRESENT_IN_DATASET, *not_present ], [ UNKNOWN_CODE, *unknown ] ]
+          .reject { |warning| warning.length == 1 }
       end
 
       def aggregate_messages(message_sets)

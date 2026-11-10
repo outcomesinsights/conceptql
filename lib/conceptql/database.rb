@@ -39,6 +39,7 @@ module ConceptQL
       if @lexicon && @opts[:cache_lookups]
         raise ArgumentError, "cache_lookups needs the Database to build its own Lexicon; do not pass lexicon:"
       end
+      @reference_lexicon = opts[:reference_lexicon] if opts[:reference_lexicon]
 
       @opts[:database_type] ||= (ENV["CONCEPTQL_DATABASE_TYPE"] || db_type).to_sym
       @opts[:scope_opts] = {
@@ -137,11 +138,41 @@ module ConceptQL
       @lexicon ||= Lexicon.new(self.class.lexicon_db, db, cache: @opts[:cache_lookups])
     end
 
+    # The reference lexicon: the full lexicon, beside the lexicon of the
+    # dataset (#lexicon), which can be trimmed to the codes that the data
+    # contains (bead conceptql-8oim, seed conceptql-d9w). Only the code checks
+    # of the vocabulary operators read it: a code that the dataset's lexicon
+    # does not know is "not present in this dataset" when the reference
+    # lexicon knows it, and an unknown code when it does not. Code-to-concept
+    # translation, the SQL and the counts use #lexicon only. The vocabulary
+    # operators are built from both, so an operator is valid whatever the
+    # dataset contains.
+    #
+    # It is the reference_lexicon: option, or else, when LEXICON_URL is set,
+    # a Lexicon of the LEXICON_URL database (Database.lexicon_db) with its own
+    # cache. It is nil when neither exists. A LEXICON_URL database without
+    # vocabulary tables raises.
+    def reference_lexicon
+      return @reference_lexicon if defined?(@reference_lexicon)
+
+      @reference_lexicon = (lexicon_url_lexicon(self.class.lexicon_db) if self.class.lexicon_db)
+    end
+
+    def lexicon_url_lexicon(lexicon_db)
+      reference = Lexicon.new(lexicon_db, nil, cache: true)
+      return reference unless reference.strategy == :no_db
+
+      raise Lexicon::NoVocabularyError, "the LEXICON_URL database has no vocabulary tables, " \
+                                        "so it cannot be the reference lexicon"
+    end
+    private :lexicon_url_lexicon
+
     # This Database's operators for a data model, as a frozen name => class
     # Hash: a vocabulary operator for every vocabulary in config/vocabularies.csv
-    # (plus the custom file) and in this Database's lexicon, with the built-in
-    # operators merged over them. A built-in wins a name clash (gender, race and
-    # ethnicity are also vocabularies). Built lazily, once per data model.
+    # (plus the custom file), in this Database's lexicon and in its reference
+    # lexicon, with the built-in operators merged over them. A built-in wins a
+    # name clash (gender, race and ethnicity are also vocabularies). Built
+    # lazily, once per data model.
     #
     # The data model is an argument because a Nodifier can be given one that
     # differs from this Database's.
@@ -150,7 +181,7 @@ module ConceptQL
       ConceptQL::DataModel.assert_supported!(data_model)
       @operators ||= {}
       @operators[data_model] ||= begin
-        vocabulary_operators = Vocabularies::DynamicVocabularies.new(lexicon).operators(data_model)
+        vocabulary_operators = Vocabularies::DynamicVocabularies.new(lexicon, reference_lexicon).operators(data_model)
         vocabulary_operators.merge(Operators.static_operators.fetch(data_model)).freeze
       end
     end

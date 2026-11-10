@@ -138,6 +138,16 @@ describe "ConceptQL::Lexicon lookup cache" do
       _(vocab_strategy.calls[:vocabulary_is_empty?]).must_equal 2
     end
 
+    # The 2020 rule is off when a vocabulary operator knows better (bead
+    # conceptql-8oim), and the two answers are kept apart.
+    it "accepts no code of an empty vocabulary with empty_means_known: false" do
+      lexicon = ConceptQL::Lexicon.new(nil, strategy: vocab_strategy, cache: true)
+
+      _(lexicon.known_codes(nil, "EMPTY", %w[1 2], empty_means_known: false)).must_equal []
+      _(lexicon.known_codes(nil, "EMPTY", %w[1 2])).must_equal %w[1 2]
+      _(lexicon.known_codes(nil, "ICD9CM", %w[412 1], empty_means_known: false)).must_equal %w[412]
+    end
+
     it "asks every time when caching is off" do
       lexicon = ConceptQL::Lexicon.new(nil, strategy: vocab_strategy)
 

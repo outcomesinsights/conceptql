@@ -12,10 +12,7 @@
             "n": null
           }
         },
-        "warnings": [
-          ["the data has no records of this vocabulary"],
-          ["unknown code(s)", "280"]
-        ]
+        "warnings": [["the data has no records of this vocabulary"]]
       },
       "name": "Revenue Code"
     }
