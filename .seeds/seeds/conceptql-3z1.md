@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T15:48:30.747310+00:00
+updated_at: 2026-11-10T16:02:05.292362+00:00
 ---
 
 ## The defect
@@ -101,3 +101,17 @@ He is right: a flat list built from annotate is scope_annotate built again, corr
 Direction proposed to Ryan (not ruled): annotate is conceptql's only output for errors, warnings and counts. No flat copy and no keys, because each problem stays on its operator. conceptql keeps an internal tree walk for validation_errors and InvalidStatementError. scope_annotate is retired, and JDE moves its callers to annotate.
 
 Ryan's concern about the diagram renderer's intermediate node tree is recorded separately in conceptql-3o5.
+
+## UPDATE 2026-11-10: Ryan prefers retiring scope_annotate; consumer review done
+
+Ryan, transcribed speech: "My impression is we can retire scope annotate and keep annotate as the only output for errors. I'd like to do a code review of whoever's consuming scope annotate to see exactly how easy it is to surface all errors and warnings in order to determine if a for instance if an algorithm is valid or not ... my preference would be to get rid of scope annotate. As it's particularly problematic and solving it isn't straightforward and requires some amount of rewrite anyway. So if Annotate can be a relatively drop-in replacement for it, that'd be great."
+
+Review (document sent to Ryan: claude_stuff/conceptql-3z1-scope-annotate-consumers-20261110.md in the primary checkout; probe log claude_stuff/annotate-walk-probe-20261110-080052.log):
+
+- scope_annotate is annotate plus a return of side hashes, so the expensive work is the same. A tree walk of the annotated statement costs 0.65 ms for 151 operators (mock database), with no database query.
+- The walk finds every error and warning, including the ones scope_annotate loses.
+- conceptql: validation_errors, validate!/InvalidStatementError, window_table_errors and the CLI command change by a few lines each. 16 test files and 5 scanno\_\* statement tests migrate. InvalidStatementError#errors changes from a hash to a list (breaking, 0.x minor).
+- JDE: algorithm save (AnalyzeQueries, update_metadata, and the readers of conceptql_errors and conceptql_warnings), the diagram pages (StatementDraft#annotations, PageDiagram), and the count endpoints. The diagram pages already set unique ids (node paths), so they can index annotate's output by id.
+- Proposed: conceptql ships the walk as a public helper that computes from the annotated statement on each call and stores nothing, so JDE need not know where ConceptQL keeps an operator's inputs.
+
+Not yet ruled: Ryan's go-ahead after he reads the review, and whether the walk is a public helper.
