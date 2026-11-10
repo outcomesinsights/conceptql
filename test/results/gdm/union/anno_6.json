@@ -27,7 +27,8 @@
             "rows": 0,
             "n": 0
           }
-        }
+        },
+        "warnings": [["has only one upstream"]]
       },
       "name": "Union"
     }
@@ -40,7 +41,8 @@
           "rows": 0,
           "n": 0
         }
-      }
+      },
+      "warnings": [["has only one upstream"]]
     },
     "name": "Union"
   }

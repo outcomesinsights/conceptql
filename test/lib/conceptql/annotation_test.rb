@@ -126,6 +126,42 @@ describe ConceptQL::Annotation do
     end
   end
 
+  # union and co_reported pass the records of one upstream through
+  # unchanged (bead conceptql-lmdm)
+  describe "a combining operator with one upstream" do
+    def one_upstream_warnings(statement)
+      annotation(statement).warnings.select { |w| w[:message] == "has only one upstream" }
+    end
+
+    %w[union co_reported].each do |name|
+      it "warns on a #{name} with one upstream, and the statement stays valid" do
+        ann = annotation([ name, %w[icd9 412] ])
+
+        _(one_upstream_warnings([ name, %w[icd9 412] ])).must_equal [
+          { operator: name, id: "#{name}-1", message: "has only one upstream", details: [] }
+        ]
+        _(ann.valid?).must_equal true
+      end
+
+      it "does not warn on a #{name} with two upstreams" do
+        _(one_upstream_warnings([ name, %w[icd9 412], %w[cpt 99214] ])).must_be_empty
+      end
+
+      it "keeps the error, and gives no warning, for a #{name} with no upstream" do
+        ann = annotation([ name ])
+
+        _(ann.errors.map { |e| e.values_at(:id, :message) }).must_equal [ [ "#{name}-1", "has no upstream" ] ]
+        _(one_upstream_warnings([ name ])).must_be_empty
+      end
+    end
+
+    it "does not warn on a binary operator" do
+      statement = [ "after", { "left" => %w[icd9 412], "right" => %w[cpt 99214] } ]
+
+      _(one_upstream_warnings(statement)).must_be_empty
+    end
+  end
+
   # Statements built by hand, to show which values the walk takes as operators
   describe "the walk" do
     def op(name, *items, annotation: {})
