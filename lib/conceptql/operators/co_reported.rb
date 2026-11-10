@@ -31,6 +31,7 @@ module ConceptQL
       category "Combine Streams"
       default_query_columns
       validate_at_least_one_upstream
+      validate_at_least_two_upstreams
       validate_no_arguments
       require_column :context_id
 

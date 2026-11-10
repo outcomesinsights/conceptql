@@ -46,6 +46,12 @@ All notable changes to this project will be documented in this file.
   invalid window table still makes `#sql` raise, and the outer statement is still not
   counted. For example, `["window", ["icd9", "412"], {"window_table": ["provider_filter", ["icd9", "412"], {"specialties": "*"}]}]` now reports the error "required option not
   present" (`roles`) on `provider_filter-1`.
+- `union` and `co_reported` with exactly one upstream get the warning
+  `has only one upstream`. With one upstream, each passes the records of that upstream
+  through unchanged, which is almost never what the author meant. The statement stays valid,
+  and an operator with no upstream keeps the error `has no upstream`. The check is the new
+  class-level declaration `validate_at_least_two_upstreams`. Binary operators (`left` and
+  `right`) do not get the warning. Before, a one-input `union` or `co_reported` had no message.
 
 ### Fixed
 

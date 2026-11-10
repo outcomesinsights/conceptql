@@ -48,6 +48,7 @@ module ConceptQL
       NDC_BAD_FORMAT = "#{BAD_FORMAT} (claims use 11-digit package NDCs, so it matches no rows)"
       BAD_FORMATS = [ BAD_FORMAT, NDC_BAD_FORMAT ].freeze
       UNKNOWN_CODE = "unknown code(s)"
+      ONE_UPSTREAM = "has only one upstream"
 
       option :label, type: :string,
                      meaning: "A short description of the operator's records. The operator writes it into the label column of each of its records, and a recall operator selects those records by it. Each label in a statement must be different."
@@ -80,6 +81,7 @@ module ConceptQL
           no_upstreams
           one_upstream
           at_least_one_upstream
+          at_least_two_upstreams
           at_most_one_upstream
           no_arguments
           one_argument
@@ -556,6 +558,14 @@ module ConceptQL
 
       def validate_at_least_one_upstream
         add_error("has no upstream") if @upstreams.empty?
+      end
+
+      # A warning, not an error: an operator that combines its upstreams
+      # passes the records of one upstream through unchanged, which is almost
+      # never what the author meant. Zero upstreams is the error of
+      # validate_at_least_one_upstream, so declare both.
+      def validate_at_least_two_upstreams
+        add_warning(ONE_UPSTREAM) if @upstreams.length == 1
       end
 
       def validate_no_arguments
