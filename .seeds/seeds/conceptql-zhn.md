@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T15:41:03.810478+00:00
+updated_at: 2026-11-10T15:48:11.781706+00:00
 ---
 
 ## The gap
@@ -57,3 +57,7 @@ Candidate values for "not available", assessed:
 - A string such as "NA". It mixes strings and numbers in one field, and every reader must test the type. Rejected.
 - A sentinel such as -1. Summing or comparing gives wrong results with no error. Rejected.
   Recommended: null, with the warning that says why.
+
+## RULED 2026-11-10
+
+Ryan: "zhn: null with warning please and the rest as discussed". conceptql reads etl_vocabulary_ids once for GDM data. An absent vocabulary gets the warning and null counts. No etl\_\* tables means no warning and counts of 0. Bead: conceptql-d1bd. The fixture work was sent to the live vocabulation session (vocabulation-b9) on 2026-11-10.

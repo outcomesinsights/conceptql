@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T15:40:39.824545+00:00
+updated_at: 2026-11-10T15:48:30.747310+00:00
 ---
 
 ## The defect
@@ -91,3 +91,13 @@ Every caller, 2026-11-10:
 Assessment: annotate holds everything that scope_annotate holds, on the right operator. scope_annotate is only a flat index of it. A flat index is useful for two things: "does the statement have any errors?", and a list of problems to show a user or an agent. Both can be computed by walking the annotated statement.
 
 Direction under discussion (not ruled): annotate writes a key into each operator's annotation (its id when it has one, otherwise "<operator>-<n>" in statement order, for example "icd9-1" and "icd9-2"). conceptql derives the list of problems from the annotated statement, and each item names the operator by that key. scope_annotate is retired or becomes a thin wrapper of that list. JDE passes the annotated statement and the list through.
+
+## UPDATE 2026-11-10: Ryan's third round
+
+Ryan, transcribed speech: "your proposal sounds like we're just rewriting scope annotate ... your proposal of doing an annotation and then still flattening all errors and putting them up at the top to me sounds like a reinvention of scope annotate. So, what is the thinking behind this?"
+
+He is right: a flat list built from annotate is scope_annotate built again, correctly. The thinking behind it was convenience for the callers that want every problem in one place: algorithm save (is the statement valid, and the stored messages), the MCP tools, and InvalidStatementError's message. None of them needs a second format. A walk of the annotated tree gives each of them the same answer.
+
+Direction proposed to Ryan (not ruled): annotate is conceptql's only output for errors, warnings and counts. No flat copy and no keys, because each problem stays on its operator. conceptql keeps an internal tree walk for validation_errors and InvalidStatementError. scope_annotate is retired, and JDE moves its callers to annotate.
+
+Ryan's concern about the diagram renderer's intermediate node tree is recorded separately in conceptql-3o5.
