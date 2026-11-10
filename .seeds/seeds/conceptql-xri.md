@@ -4,7 +4,7 @@ title: co_reported with one input is valid and gives no warning
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.710484+00:00
-updated_at: 2026-11-10T14:59:40.710484+00:00
+updated_at: 2026-11-10T15:09:07.874828+00:00
 ---
 
 ## The gap
@@ -34,3 +34,13 @@ co_reported by input count, all versions:
 ## Related
 
 `union` is the only other operator with `allows_many_upstreams` and `validate_at_least_one_upstream`. A one-input union is harmless (it passes its input through), so it is not part of this question.
+
+## UPDATE 2026-11-10: Ryan's direction
+
+Ryan (transcribed speech, 2026-11-10): "For XRI, yes, a single input is valid, but should be a warning, right? Same with like a union or anything else that is expecting that really only works well if there's two or more operators. If we can make that like a validation statement or something like that that we put in those classes, that'd be great."
+
+So the direction is a warning, not an error, declared in the operator class like the existing `validate_*` statements (for example a class-level `warn_with_fewer_than_two_upstreams`).
+
+Scope check, main at 976a1195: only two operators declare `allows_many_upstreams`, `union` and `co_reported`. Both use `validate_at_least_one_upstream`. There is no intersect operator. Binary operators (before, after and others) take `left` and `right` and are not affected.
+
+This reverses the earlier note that a one-input union is out of scope: Ryan includes union.

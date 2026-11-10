@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T14:59:08.536367+00:00
+updated_at: 2026-11-10T15:09:06.939600+00:00
 ---
 
 ## The defect
@@ -51,3 +51,25 @@ Ryan, verbatim (2026-11-10): "honestly, I was expecting jde to do a passthrough 
 - Which direction?
 - Do counts belong in the same fix? Appending does not work for counts, because a reader cannot separate two operators' counts under one key.
 - What identifies an operator in a list item when it has no id? A path into the statement (for example `[1, 0]`) is one candidate.
+
+## UPDATE 2026-11-10: annotate verified, options shown with real output
+
+Ryan asked for concrete examples of the current output and of each option, and asked to confirm that plain annotation is not affected. A comparison document was sent to him (claude_stuff/conceptql-3z1-annotation-shapes-20261110.md in the primary checkout, not committed).
+
+Verified on the DuckDB fixture with `["union",["icd9","412","4100"],["icd9","250.00","ZZZ.99"]]`: `Query#annotate` keeps each operator's warnings and counts (48 rows / 37 patients and 1036 / 162). `scope_annotate` keeps only the second icd9's warning and counts. With ids `a` and `b` on the two operators, scope_annotate keeps both. So the work is in scope_annotate only.
+
+Option 2 cannot fix counts: 37 + 162 = 199 patients, but the union has 163 distinct patients.
+
+Option 1 example shape (path is a dig path into the statement):
+
+```json
+{"warnings": [
+  {"operator": "icd9", "id": null, "path": [1], "message": "improperly formatted code", "details": ["4100"]},
+  {"operator": "icd9", "id": null, "path": [2], "message": "improperly formatted code", "details": ["ZZZ.99"]}],
+ "counts": [
+  {"operator": "union", "id": null, "path": [], "counts": {"condition_occurrence": {"rows": 1084, "n": 163}}},
+  {"operator": "icd9", "id": null, "path": [1], "counts": {"condition_occurrence": {"rows": 48, "n": 37}}},
+  {"operator": "icd9", "id": null, "path": [2], "counts": {"condition_occurrence": {"rows": 1036, "n": 162}}}]}
+```
+
+Recommended to Ryan: option 1, with counts in the same list form. Not ruled.
