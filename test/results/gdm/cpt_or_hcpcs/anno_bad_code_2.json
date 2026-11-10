@@ -3,6 +3,7 @@
   "99214",
   {
     "annotation": {
+      "id": "cpt_or_hcpcs-1",
       "counts": {
         "procedure_occurrence": {
           "rows": 1073,

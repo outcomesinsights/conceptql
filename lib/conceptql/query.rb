@@ -5,6 +5,7 @@ require "forwardable"
 require_relative "scope"
 require_relative "nodifier"
 require_relative "one_query_counts"
+require_relative "annotation"
 require "sequel/sqlformat"
 
 module ConceptQL
@@ -131,21 +132,40 @@ module ConceptQL
       raise QueryError, "Failed to generate SQL for #{statement.inspect}"
     end
 
-    # With counts on, DuckDB and Postgres count every operator with one SQL
-    # statement (OneQueryCounts). Operators memoize #annotate, so a later call
-    # with other opts returns the first result.
+    # The statement, with an annotation hash in each operator: its effective
+    # id (see Annotation.assign_ids), its counts, errors and warnings. With
+    # counts on, DuckDB and Postgres count every operator with one SQL
+    # statement (OneQueryCounts). ConceptQL::Annotation reads the result.
+    #
+    # The Query keeps one result for each opts hash, so a repeated call with
+    # the same opts annotates once. Operators memoize #annotate and write into
+    # their own options, so each opts hash gets a fresh operator tree, and a
+    # call with other opts gets its own correct result.
     #
     # The errors of the window table's own statement are reported under
     # "window_table" (see #window_table_errors). Then nothing is counted,
     # because every count joins the window table, and building its SQL raises.
     def annotate(opts = {})
-      window_errors = window_table_errors
-      unless window_errors.empty?
-        nodifier.scope.add_errors("window_table", window_errors)
-        opts = opts.merge(skip_counts: true)
-      end
-      nodifier.scope.one_query_counts = OneQueryCounts.new(operator, db, opts)
-      operator.annotate(db, opts)
+      annotated_tree(opts).annotated
+    end
+
+    # The errors of the statement, as ConceptQL::Annotation#errors gives them.
+    # They come from the kept annotation with skip_counts: true, so no count
+    # SQL runs.
+    def errors
+      annotation.errors
+    end
+
+    # The warnings of the statement, as ConceptQL::Annotation#warnings gives
+    # them, from the same kept annotation as #errors.
+    def warnings
+      annotation.warnings
+    end
+
+    # True when no operator has an error. Warnings do not make a statement
+    # invalid.
+    def valid?
+      annotation.valid?
     end
 
     def accept(visitor, _opts = {})
@@ -158,9 +178,9 @@ module ConceptQL
       visitor.results
     end
 
+    # The summary that the scope of the annotated tree for opts collects
     def scope_annotate(opts = {})
-      annotate(opts)
-      nodifier.scope.annotation
+      annotated_tree(opts).nodifier.scope.annotation
     end
 
     def domains
@@ -212,9 +232,38 @@ module ConceptQL
       query.drop_temp_tables(opts)
     end
 
+    protected
+
+    attr_reader :nodifier, :annotated
+
+    # Annotates this Query's own operator tree once. Only #annotated_tree
+    # calls it, on a fresh Query.
+    def annotate_own_tree(opts)
+      window_errors = window_table_errors
+      unless window_errors.empty?
+        nodifier.scope.add_errors("window_table", window_errors)
+        opts = opts.merge(skip_counts: true)
+      end
+      nodifier.scope.one_query_counts = OneQueryCounts.new(operator, db, opts)
+      @annotated = Annotation.assign_ids(operator.annotate(db, opts))
+    end
+
     private
 
-    attr_reader :cdb, :nodifier
+    attr_reader :cdb
+
+    # A fresh Query for each opts hash, with its own operator tree and scope,
+    # that has annotated its tree with those opts. This Query's own tree is
+    # never annotated, so #query and #sql do not depend on annotate calls.
+    def annotated_tree(opts)
+      (@annotated_trees ||= {})[opts.dup] ||= Query.new(cdb, statement, @opts).tap do |tree|
+        tree.annotate_own_tree(opts)
+      end
+    end
+
+    def annotation
+      Annotation.new(annotate(skip_counts: true))
+    end
 
     # Raises InvalidStatementError if #validation_errors is not empty. The
     # statement and the opts of a Query do not change, so it checks once.

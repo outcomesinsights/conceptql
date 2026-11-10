@@ -4,6 +4,7 @@
     "start": "2008-03-13",
     "end": "2008-03-20",
     "annotation": {
+      "id": "date_range-1",
       "counts": {
         "person": {
           "rows": 249,

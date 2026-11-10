@@ -6,6 +6,7 @@
     {
       "label": "Heart Attack",
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 48,
@@ -23,6 +24,7 @@
       "412",
       {
         "annotation": {
+          "id": "icd9-2",
           "counts": {
             "condition_occurrence": {
               "rows": 48,
@@ -36,6 +38,7 @@
     "Heart Attack",
     {
       "annotation": {
+        "id": "recall-1",
         "counts": {
           "condition_occurrence": {
             "rows": 0,
@@ -49,6 +52,7 @@
   ],
   {
     "annotation": {
+      "id": "union-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,

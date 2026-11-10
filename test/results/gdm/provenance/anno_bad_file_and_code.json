@@ -5,6 +5,7 @@
     "250.00",
     {
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 1036,
@@ -21,6 +22,7 @@
   "garbage:first",
   {
     "annotation": {
+      "id": "provenance-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,

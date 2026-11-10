@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `ConceptQL::Annotation` reads a statement that `Query#annotate` annotated, or the same
+  statement parsed back from JSON. `#each_operator` gives each operator's name, effective id
+  and annotation hash. `#errors` and `#warnings` give every problem as
+  `{ operator:, id:, message:, details: }`, and `#valid?` is true when no operator has an
+  error. Warnings never make a statement invalid. It walks the positional upstreams and the
+  `left`, `right` and `window_table` options. `Query#errors`, `Query#warnings` and
+  `Query#valid?` use it on `annotate(skip_counts: true)`, so they run no count SQL. See
+  `docs/annotation.md`.
+- `Query#annotate` puts an effective id first in each operator's annotation hash: the
+  operator's `id` option, or a generated `<operator>-<n>` in statement order (`icd9-1`,
+  `icd9-2`) that never repeats a given id. The statement's options do not change.
+
+### Fixed
+
+- `Query#annotate` keeps one result for each options hash, and it annotates a fresh operator
+  tree for each new options hash. Before, a second call returned the first call's result
+  whatever its options, so `annotate` after `annotate(skip_counts: true)` gave zero counts.
+  A second call on a statement with an unknown operator whose `left` had a label also added a
+  false "duplicate label" error and changed the first result. `scope_annotate` reads the scope
+  of the tree that `annotate` used for the same options.
+
 ## [0.7.0] - 2026-11-09
 
 ### Added

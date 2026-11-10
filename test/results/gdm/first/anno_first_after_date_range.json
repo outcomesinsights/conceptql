@@ -6,6 +6,7 @@
       "start": "2009-01-01",
       "end": "2009-01-01",
       "annotation": {
+        "id": "date_range-1",
         "counts": {
           "person": {
             "rows": 249,
@@ -18,6 +19,7 @@
   ],
   {
     "annotation": {
+      "id": "first-1",
       "counts": {
         "person": {
           "rows": 249,

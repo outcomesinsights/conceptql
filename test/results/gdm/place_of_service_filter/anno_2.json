@@ -5,6 +5,7 @@
     "280",
     {
       "annotation": {
+        "id": "revenue_code-1",
         "counts": {
           "procedure_occurrence": {
             "rows": 0,
@@ -19,6 +20,7 @@
   "21",
   {
     "annotation": {
+      "id": "place_of_service_filter-1",
       "counts": {
         "procedure_occurrence": {
           "rows": 0,

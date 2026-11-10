@@ -3,6 +3,7 @@
   "tylenol",
   {
     "annotation": {
+      "id": "drugtextstring-1",
       "counts": {
         "drug_exposure": {
           "rows": 0,

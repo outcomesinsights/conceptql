@@ -9,7 +9,7 @@ describe ConceptQL::Query do
       [ :foo ]
     ).annotate).must_equal(
       [ "foo",
-       { annotation: { counts: { invalid: { rows: 0, n: 0 } }, errors: [ [ "invalid operator", "foo" ] ] },
+       { annotation: { id: "foo-1", counts: { invalid: { rows: 0, n: 0 } }, errors: [ [ "invalid operator", "foo" ] ] },
          name: "Invalid" } ]
     )
   end
@@ -187,7 +187,7 @@ describe ConceptQL::Query do
 
     it "annotates with counts and does not count" do
       _(CDB.query(statement).annotate).must_equal(
-        [ "icd9", "412", { annotation: { counts: { condition_occurrence: { rows: 0, n: 0 } } }, name: "ICD-9 CM" } ]
+        [ "icd9", "412", { annotation: { id: "icd9-1", counts: { condition_occurrence: { rows: 0, n: 0 } } }, name: "ICD-9 CM" } ]
       )
     end
 

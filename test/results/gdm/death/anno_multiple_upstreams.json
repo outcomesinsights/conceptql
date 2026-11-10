@@ -4,6 +4,7 @@
     "person",
     {
       "annotation": {
+        "id": "person-1",
         "counts": {
           "person": {
             "rows": 249,
@@ -19,6 +20,7 @@
     "412",
     {
       "annotation": {
+        "id": "icd9-1",
         "counts": {
           "condition_occurrence": {
             "rows": 48,
@@ -31,6 +33,7 @@
   ],
   {
     "annotation": {
+      "id": "death-1",
       "counts": {
         "death": {
           "rows": 0,

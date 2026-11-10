@@ -6,6 +6,7 @@
       "412",
       {
         "annotation": {
+          "id": "icd9-1",
           "counts": {
             "condition_occurrence": {
               "rows": 48,
@@ -23,6 +24,7 @@
         "Male",
         {
           "annotation": {
+            "id": "gender-1",
             "counts": {
               "person": {
                 "rows": 124,
@@ -37,6 +39,7 @@
         "start": "50y",
         "end": "50y",
         "annotation": {
+          "id": "time_window-1",
           "counts": {
             "person": {
               "rows": 124,
@@ -51,6 +54,7 @@
   1,
   {
     "annotation": {
+      "id": "after-1",
       "counts": {
         "condition_occurrence": {
           "rows": 0,

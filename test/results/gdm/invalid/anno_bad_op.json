@@ -6,6 +6,7 @@
       "412",
       {
         "annotation": {
+          "id": "icd9-1",
           "counts": {
             "condition_occurrence": {
               "rows": 48,
@@ -21,6 +22,7 @@
       "ZZZZZZZ",
       {
         "annotation": {
+          "id": "icd9-2",
           "counts": {
             "condition_occurrence": {
               "rows": 0,
@@ -33,6 +35,7 @@
       }
     ],
     "annotation": {
+      "id": "bad_op-1",
       "counts": {
         "invalid": {
           "rows": 0,
