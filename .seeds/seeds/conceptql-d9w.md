@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T16:19:07.430294+00:00
+updated_at: 2026-11-10T16:37:06.124630+00:00
 ---
 
 ## The question
@@ -40,7 +40,7 @@ Moderate. The lexicon is already an object with a `known_codes` call, so a secon
 
 1. **A second lexicon on Database.** An option such as `reference_lexicon:` holds the full lexicon beside the dataset's lexicon. Code-to-concept translation keeps using the dataset's lexicon. Only the unknown-code check reads the second one. Small.
 2. **The split in `Vocabulary#additional_validation`.** Codes that the dataset's lexicon does not know are asked again of the reference lexicon. Those it knows get the new "not in this dataset" warning. The rest keep "unknown code". Small.
-3. **The warning gate.** Path 1 and path 2 need the lexicon check without a data database. `add_warnings?` ties all lookups to a data database, and `LexiconStrategy#known_codes` reads the data database too. Separating "checks that need a lexicon" from "checks that need data" touches every warning that uses `add_warnings?`. Medium, and the riskiest part.
+3. **The warning gate.** Path 1 and path 2 need the lexicon check without a data database. `add_warnings?` ties all lookups to a data database, and `LexiconStrategy#known_codes` reads the data database too. Separating "checks that need a lexicon" from "checks that need data" is needed. Only two operators use `add_warnings?` (vocabulary and information_periods); see the risk exploration below.
 
 Tests need two lexicons that differ. The DuckDB fixture has one set of vocabulary tables. A test could build a trimmed copy in a temporary schema, or the fixture could gain one (vocabulation owns the fixture).
 
@@ -54,3 +54,38 @@ Tests need two lexicons that differ. The DuckDB fixture has one set of vocabular
 - The wording of the new warning. Ryan: "I just want to think about the warning message."
 - Is the reference lexicon an explicit option (JDE passes LEXICON_URL's lexicon), or does a Database that has a dataset lexicon find the full one by itself (`Database.lexicon_db` from LEXICON_URL)?
 - Does path 1 (no data database, no lexicon) gain a lexicon? That is a JDE change: StatementDraft#annotations would pass the full lexicon.
+
+## UPDATE 2026-11-10: risk exploration of part 3 (the warning gate)
+
+Ryan: "let's explore d9w and see how much "risk" there really is".
+
+Findings from the code (main 850fa4b6):
+
+- Only two operators use `add_warnings?`: Vocabulary#additional_validation and InformationPeriods#additional_validation. Provenance and PlaceOfServiceFilter already gate their lexicon lookups on `dm.lexicon.strategy == :no_db`, a lexicon gate. So the pattern exists.
+- Lexicon lookups (`known_codes`, `code_meanings`, `concepts_table`) query the lexicon strategy's own database. They ignore the data database. So they work with no data database.
+- Of the checks behind the gate, only the CPT4/HCPCS merged-vocabulary check reads data (`db[criterion_table]`). The unknown-code check and the reused-code check need only the lexicon.
+- `ConceptQL::Database.new(nil)` already gets the full lexicon when LEXICON_URL is set (Lexicon#determine_strategy falls back to the LEXICON_URL database). JDE's .env sets LEXICON_URL. So JDE's editing path 1 already has the full lexicon, and only the gate stops the check. The JDE handoff's "no lexicon" for path 1 holds only where LEXICON_URL is unset.
+
+Experiment, a throwaway worktree, not committed (diff: claude_stuff/exp-lexicon-gate-20261110.diff in the primary checkout):
+
+- A new gate `lexicon_checks?` = `@errors.empty? && dm.lexicon.strategy != :no_db`. The merged-vocabulary check stays behind `add_warnings?`. The unknown-code and reused-code checks in Vocabulary, and InformationPeriods, move to the new gate. 8 lines added, 4 removed, in 3 files.
+- `just test-both`: Postgres gdm_wide 1401 runs, 0 failures; DuckDB 1401 runs, 0 failures. No expected-results file changed. Log: claude_stuff/worktrees/exp-lexicon-gate/exp-lexicon-gate-test-both-20261110-083259.log.
+- Probe of JDE's editing path (no data database, the fixture as the LEXICON_URL lexicon), `["union", ["icd9","412","999.99","4100"], ["cpt","99214","00000"], ["drg","410"]]`:
+
+```
+main:       icd9 warnings=[["improperly formatted code","4100"]]
+            cpt  warnings=null
+            drg  warnings=[["deprecated operator", ...]]
+experiment: icd9 warnings=[["improperly formatted code","4100"],["unknown code(s)","999.99"]]
+            cpt  warnings=[["unknown code(s)","00000"]]
+            drg  warnings=[["deprecated operator", ...],["code(s) with more than one meaning","410: Biliary tract proc ... | Chemotherapy ..."]]
+```
+
+Logs: claude_stuff/lexicon-gate-probe-main-20261110-083348.log and claude_stuff/lexicon-gate-probe-exp-20261110-083559.log.
+
+Assessment: part 3 is small and low risk, not medium. What remains is unmeasured:
+
+- JDE starts to show unknown-code and reused-code warnings while editing and on save. The stored warnings of an algorithm change at its next save. That change is the goal. How many current algorithms gain a warning is not measured; JDE can count it.
+- Each annotate without a data database now runs 2 lexicon lookups for each vocabulary operator against LEXICON_URL (Postgres). `cache_lookups: true` on the Database caches them. Latency is not measured.
+- No test covers "no data database, real lexicon". The bead needs one.
+  Parts 1 and 2 (the second lexicon, and the split into two warnings) were not tried.
