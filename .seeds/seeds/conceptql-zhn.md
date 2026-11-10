@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T17:37:36.848415+00:00
+updated_at: 2026-11-10T17:53:51.685390+00:00
 ---
 
 ## The gap
@@ -85,3 +85,11 @@ Findings for bead conceptql-d1bd (not yet acted on):
 - MultipleVocabularies (cpt_or_hcpcs) drops a warning that has no details (aggregate_messages, multiple_vocabularies.rb:164), so cpt_or_hcpcs would never warn.
 - cpt and cpt4 get the existing merged-vocabulary warning and the new one with the same text: 2 operators in production.
 - The corrected SEER count: about 444 user-visible operators in 385 algorithms (fixed above).
+
+## RULED 2026-11-10 (after the adversarial review)
+
+1. Test data: the Postgres test image gets the same filled etl\_\* tables as the DuckDB fixture, so both suites keep one set of expected results (option a).
+2. Renderer: Ryan, transcribed: "There is only one renderer we're supporting now going forward and that is ... ConceptQL's Ruby renderer. The JavaScript renderer in my mind is dead. So yeah, I think that that's an internal change to ConceptQL, right?" So NA is drawn by conceptql's Ruby renderer only. ConceptQL::Diagram must pass null through (it turns nil into 0 today, diagram.rb:113). New renderer cases get reference output from the Ruby renderer; the JavaScript references stay for the existing 70 fixtures.
+3. NA in parents: Ryan: "If upstream is NA, then I would assume that the downstream would also be NA ... So that seems good." An operator whose inputs are all NA also reports NA counts. The warning stays on the vocabulary operator that reads the absent vocabulary.
+
+Fixture: vocabulation republished synpuf_test_data.duckdb to Dropbox at 2026-11-10 09:43 with the etl\_\* tables. Its sha256 is a675a69bc61e29aa1d38b953ace704a926a7fc0dafd49e246a9be4c1229dd5fd, the same as vocabulation's local build of 09:40 (the a4926bed... sum it reported came from an earlier build). conceptql's pin (.github/synpuf_test_data.sha256, d90fc4c9...) is now stale, so just test-duckdb refuses to run until the pin is updated after a green run.
