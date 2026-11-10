@@ -48,12 +48,17 @@ describe "a code in another case than the stored code" do
 
     # cms_type_of_service has no format row, so "a" passes the format check
     # and reaches the unknown-code check, the reused-code check and the code
-    # list. The vocabulary stores "A".
+    # list. The vocabulary stores "A". The test data has no records of the
+    # vocabulary, and that warning replaces the code checks there (bead
+    # conceptql-8oim), so the warning is read from a Database without a
+    # data database, which has the lexicon's checks only.
     it "reports a of cms_type_of_service as unknown, selects nothing and lists the code" do
       _(CDB.data_model.concept_codes(DB, "CMS_TYPE_OF_SERVICE")).must_include "A"
       statement = %w[cms_type_of_service a]
+      lexicon_only = ConceptQL::Database.new(nil, data_model: CDB.opts[:data_model], lexicon: CDB.lexicon)
 
-      _(warnings(statement)).must_include [ ConceptQL::Operators::Operator::UNKNOWN_CODE, "a" ]
+      _(by_operator(lexicon_only.query(statement).warnings).fetch(statement.first, []))
+        .must_include [ ConceptQL::Operators::Operator::UNKNOWN_CODE, "a" ]
       _(count(statement)).must_equal 0
       _(CDB.query(statement).code_list.map { |code| [ code.code, code.description ] }).must_equal [ [ "a", nil ] ]
     end

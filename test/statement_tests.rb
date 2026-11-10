@@ -244,17 +244,12 @@ module ConceptQL
     # Where a test's expected results live. A few expectations differ by
     # vocabulary source (ohdsi_vocabs and gdm_vocabs carry different text for
     # some codes), so a file under test/results/<data model>/<lexicon strategy>/
-    # (ohdsi or gdm) takes precedence over the shared one.
-    #
-    # A few differ by fixture: the vocabulary of the DuckDB fixture has the
-    # Read concepts, and the Postgres fixture has none, so only DuckDB warns
-    # about an unknown Read code (bead conceptql-qdn9). A file under
-    # test/results/<data model>/<database type>/ (duckdb) takes precedence
-    # over the other two.
+    # (ohdsi or gdm) takes precedence over the shared one. Postgres and DuckDB
+    # share one set of expected results.
     def expected_results_path
       base = "test/results/#{cdb.base_data_model}"
-      [ "#{base}/#{cdb.db.database_type}/#{test_name}", "#{base}/#{cdb.lexicon.strategy}/#{test_name}" ]
-        .find { |path| File.exist?(path) } || "#{base}/#{test_name}"
+      path = "#{base}/#{cdb.lexicon.strategy}/#{test_name}"
+      File.exist?(path) ? path : "#{base}/#{test_name}"
     end
 
     def get_expected_results(results)

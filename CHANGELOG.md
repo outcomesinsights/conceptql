@@ -14,6 +14,17 @@ All notable changes to this project will be documented in this file.
   `left`, `right` and `window_table` options. `Query#errors`, `Query#warnings` and
   `Query#valid?` use it on `annotate(skip_counts: true)`, so they run no count SQL. See
   `docs/annotation.md`.
+- The `reference_lexicon:` option of `ConceptQL::Database` gives a Database the full lexicon
+  beside the lexicon of its dataset (`Database#reference_lexicon`). When the option is not
+  given and `LEXICON_URL` is set, the `LEXICON_URL` lexicon is the reference lexicon, with
+  its own cache. Only the code checks of the vocabulary operators read it. A code that the
+  dataset's lexicon does not know gets the new warning "code(s) not present in this dataset"
+  when the reference lexicon knows it, and "unknown code(s)" when it does not. Before, every
+  such code was an unknown code: on SEER-Medicare, `M84.58XP` and `W56.22`, which OHDSI
+  has, were unknown codes. Each warning lists every code. The vocabulary operators
+  are also built from the reference lexicon's vocabularies, so an operator is not an
+  "invalid operator" only because the dataset lacks its vocabulary. The SQL and the counts
+  use the dataset's lexicon only, and do not change. See `docs/annotation.md`.
 - `Query#annotate` puts an effective id first in each operator's annotation hash: the
   operator's `id` option, or a generated `<operator>-<n>` in statement order (`icd9-1`,
   `icd9-2`) that never repeats a given id. The statement's options do not change.
@@ -30,6 +41,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** a vocabulary that has no concepts in the Database's lexicon no longer accepts
+  every code when the Database has a reference lexicon or the data has an
+  `etl_vocabulary_ids` table with rows. Its codes get "code(s) not present in this dataset"
+  or "unknown code(s)". Without either, it still accepts every code, as since 2020 (#185).
+- A vocabulary operator that gets "the data has no records of this vocabulary" gets no
+  code warning of the lexicon: no "unknown code(s)", no "code(s) not present in this
+  dataset" and no "code(s) with more than one meaning". That warning covers all of its
+  codes. A badly formatted code still gets its warning. So `["icd10pcs", "Z561123"]` on the
+  test fixtures gives only the no-records warning.
 - **Breaking:** a vocabulary operator whose vocabulary is not in the dataset's GDM table
   `etl_vocabulary_ids` gets the warning "the data has no records of this vocabulary", and
   `Query#annotate` gives it null counts (`{"rows": null, "n": null}`). An operator whose

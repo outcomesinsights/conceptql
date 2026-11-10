@@ -8,11 +8,12 @@ require_relative "read_codes"
 module ConceptQL
   module Vocabularies
     class DynamicVocabularies
-      # lexicon: the Lexicon whose vocabularies become operators, normally a
-      # ConceptQL::Database's own (Database#operators passes it). Without one,
-      # only the CSV vocabularies are used.
-      def initialize(lexicon = nil)
-        @lexicon = lexicon
+      # lexicons: the Lexicons whose vocabularies become operators, normally a
+      # ConceptQL::Database's own and its reference lexicon (Database#operators
+      # passes them). A nil one is left out. Without one, only the CSV
+      # vocabularies are used.
+      def initialize(*lexicons)
+        @lexicons = lexicons.compact
       end
 
       # Vocabulary operators for one data model, as name => operator class.
@@ -45,7 +46,7 @@ module ConceptQL
 
       private
 
-      attr_reader :lexicon
+      attr_reader :lexicons
 
       def each_vocab
         @each_vocab ||= get_all_vocabs
@@ -63,9 +64,10 @@ module ConceptQL
       end
 
       # A Database accepts any object as its lexicon (opts[:lexicon]); one that
-      # keeps no vocabulary list contributes no vocabulary operators.
+      # keeps no vocabulary list contributes no vocabulary operators. A
+      # vocabulary in two lexicons gets one entry (#all_vocabs merges them).
       def lexicon_vocabularies
-        lexicon.respond_to?(:vocabularies) ? lexicon.vocabularies : []
+        lexicons.flat_map { |lexicon| lexicon.respond_to?(:vocabularies) ? lexicon.vocabularies : [] }
       end
     end
   end

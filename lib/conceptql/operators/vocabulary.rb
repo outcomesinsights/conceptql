@@ -80,6 +80,7 @@ module ConceptQL
         "HCPCS" => { vocabulary_id: "CPT4_HCPCS", operator: "cpt_or_hcpcs" }
       }.freeze
       NO_RECORDS_IN_DATA = "the data has no records of this vocabulary"
+      NOT_PRESENT_IN_DATASET = "code(s) not present in this dataset"
 
       # MultipleVocabularies passes skip_merged_vocabulary_check to its
       # vocabulary operators. It reads the merged vocabulary itself, and it
@@ -88,24 +89,52 @@ module ConceptQL
       # they need a data database. The code checks read only the lexicon.
       # When the merged-vocabulary warning fires, it names the operator to
       # use, so the no-records check does not add a second warning with the
-      # same text.
+      # same text. When the data has no records of the vocabulary at all,
+      # that warning covers every code, so the codes get no code check of
+      # the lexicon (bead conceptql-8oim): no unknown-code, not-present or
+      # reused-code warning.
       def additional_validation(db, opts = {})
         if add_warnings?(db, opts) && !opts[:skip_merged_vocabulary_check]
           merged_warning = warn_about_merged_vocabulary(db)
           check_for_records(db, warn: !merged_warning)
         end
         return unless lexicon_checks?(opts)
-        return if select_all?
+        return if select_all? || @no_records_in_data
 
         args = arguments.dup
         args -= bad_arguments
 
         # A statement warns about a code in another case than the stored one,
         # so its lookups do not raise CodeCaseMismatchError (bead conceptql-rz8s).
-        missing_args = args - dm.known_codes(db, vocabulary_id, args, check_case: false)
-        add_warning(UNKNOWN_CODE, *missing_args) unless missing_args.empty?
+        missing_args = args - dm.known_codes(db, vocabulary_id, args, check_case: false,
+                                                                      empty_means_known: empty_means_known?(db, opts))
+        warn_about_missing_codes(db, missing_args) unless missing_args.empty?
 
         warn_about_reused_codes(db, args - missing_args)
+      end
+
+      # The codes that the Database's lexicon does not know. With a reference
+      # lexicon (Database#reference_lexicon), a code that it knows is not
+      # present in this dataset, and only a code that it does not know either
+      # is unknown (bead conceptql-8oim). Both are warnings, and each lists
+      # every code.
+      def warn_about_missing_codes(db, codes)
+        reference = nodifier.cdb.reference_lexicon
+        known = reference ? reference.known_codes(db, vocabulary_id, codes, check_case: false, empty_means_known: false) : []
+        not_present, unknown = codes.partition { |code| known.include?(code) }
+        add_warning(NOT_PRESENT_IN_DATASET, *not_present) unless not_present.empty?
+        add_warning(UNKNOWN_CODE, *unknown) unless unknown.empty?
+      end
+
+      # Whether a vocabulary without concepts in the Database's lexicon knows
+      # every code, the 2020 rule (refs #185). It does only when nothing else
+      # tells which vocabularies the data has: no reference lexicon, and no
+      # filled etl_vocabulary_ids in the data.
+      def empty_means_known?(db, opts)
+        return false if nodifier.cdb.reference_lexicon
+        return true unless add_warnings?(db, opts)
+
+        nodifier.etl_vocabulary_ids(db).nil?
       end
 
       # Warns when the data has no record of this vocabulary but has records
