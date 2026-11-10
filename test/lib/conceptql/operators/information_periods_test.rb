@@ -61,7 +61,7 @@ describe ConceptQL::Operators::InformationPeriods do
     end
 
     def warnings(*arguments)
-      CDB.query([ "information_periods", *arguments ]).scope_annotate(skip_counts: true)[:warnings]
+      by_operator(CDB.query([ "information_periods", *arguments ]).warnings)
     end
 
     def concept_id(code)

@@ -31,8 +31,6 @@ module ConceptQL
           CriteriaCountsResults.new(cdb, statement, remove_window_id)
         when "optcc"
           OptimizedCriteriaCountsResults.new(cdb, statement, remove_window_id)
-        when "scanno"
-          ScopeAnnotationResults.new(cdb, statement, remove_window_id)
         when "domains"
           DomainsResults.new(cdb, statement, remove_window_id)
         when "num"
@@ -106,15 +104,12 @@ module ConceptQL
     end
   end
 
+  # The windowed copies of a statement (remove_window_id) annotate inside
+  # their window operator, so they compare the statement in it.
   class AnnotationResults < StatementResults
     def fetch
-      cql_query.annotate
-    end
-  end
-
-  class ScopeAnnotationResults < StatementResults
-    def fetch
-      cql_query.scope_annotate
+      annotated = cql_query.annotate
+      remove_window_id ? annotated[1] : annotated
     end
   end
 

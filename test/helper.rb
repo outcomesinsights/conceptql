@@ -42,6 +42,19 @@ module Minitest
   end
 end
 
+# The errors or the warnings of a statement (Query#errors, Query#warnings or
+# ConceptQL::Annotation) as a hash of operator name => list of
+# [message, *details], for short assertions. Two operators with the same name
+# share one entry, which keeps the problems of both.
+module ProblemsByOperator
+  def by_operator(problems)
+    problems.each_with_object({}) do |problem, hash|
+      (hash[problem[:operator]] ||= []) << [ problem[:message], *problem[:details] ]
+    end
+  end
+end
+Minitest::Spec.include(ProblemsByOperator)
+
 # The SQL of a statement depends on CONCEPTQL_AVOID_CTES. A describe block that
 # checks the SQL of one mode includes SqlMode::CTES or SqlMode::AVOID_CTES, and
 # each of its tests runs in that mode, whatever mode the suite runs in. The

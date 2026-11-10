@@ -7,12 +7,8 @@ require_relative "../../../db_helper"
 # not: it keeps its warning or its validation error, selects nothing, and
 # still lists its codes. These run against the test data, in every config.
 describe "a code in another case than the stored code" do
-  def annotation(statement)
-    CDB.query(statement).scope_annotate(skip_counts: true)
-  end
-
   def warnings(statement)
-    annotation(statement)[:warnings].fetch(statement.first, [])
+    by_operator(CDB.query(statement).warnings).fetch(statement.first, [])
   end
 
   def count(statement)

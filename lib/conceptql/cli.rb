@@ -77,12 +77,6 @@ module ConceptQL
       pp q.annotate(skip_counts: true)
     end
 
-    desc "scope_annotate", "Reads in a statement and annotates it"
-    def scope_annotate(statement_file)
-      q = ConceptQL::Query.new(cdb(options), criteria_from_file(statement_file))
-      pp q.scope_annotate(skip_counts: true)
-    end
-
     desc "render_json STATEMENT_FILE",
          "Prints the statement(s) as a #{ConceptQL::Diagram::FORMAT} render tree (JSON) for the diagram renderer"
     long_desc <<~DESC

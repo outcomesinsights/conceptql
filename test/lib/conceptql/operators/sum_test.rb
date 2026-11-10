@@ -17,8 +17,12 @@ describe ConceptQL::Operators::Sum do
     cdb.query(statement).sql.gsub(/_\d+_\d+_\h{32}/, "_CTE")
   end
 
-  def scope_for(statement)
-    cdb.query(statement).scope_annotate(skip_counts: true)
+  def errors_for(statement)
+    by_operator(cdb.query(statement).errors)
+  end
+
+  def warnings_for(statement)
+    by_operator(cdb.query(statement).warnings)
   end
 
   # The SQL of the outermost SELECT of sum, the one with the GROUP BY.
@@ -89,18 +93,18 @@ describe ConceptQL::Operators::Sum do
     end
 
     it "is valid" do
-      _(scope_for(statement)[:errors]).must_be_empty
-      _(scope_for(statement)[:warnings]).must_be_empty
+      _(errors_for(statement)).must_be_empty
+      _(warnings_for(statement)).must_be_empty
     end
   end
 
   it "rejects a group_by_person that is not true or false" do
-    _(scope_for([ "sum", stream, { "group_by_person" => "yes" } ])[:errors])
+    _(errors_for([ "sum", stream, { "group_by_person" => "yes" } ]))
       .must_equal({ "sum" => [ [ "wrong option format", "group_by_person", "yes" ] ] })
   end
 
   it "accepts a group_by_person without a value, as an editor can send it" do
-    _(scope_for([ "sum", stream, { "group_by_person" => nil } ])[:errors]).must_be_empty
+    _(errors_for([ "sum", stream, { "group_by_person" => nil } ])).must_be_empty
   end
 
   # sum is hidden, so ConceptQL.metadata leaves it out. Ask the class.

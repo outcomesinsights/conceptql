@@ -1,0 +1,53 @@
+[
+  "union",
+  [
+    "cpt",
+    "00000",
+    {
+      "annotation": {
+        "id": "cpt-1",
+        "counts": {
+          "procedure_occurrence": {
+            "rows": 0,
+            "n": 0
+          }
+        },
+        "warnings": [["unknown code(s)", "00000"]]
+      },
+      "name": "CPT"
+    }
+  ],
+  [
+    "icd9",
+    "000.00",
+    {
+      "annotation": {
+        "id": "icd9-1",
+        "counts": {
+          "condition_occurrence": {
+            "rows": 0,
+            "n": 0
+          }
+        },
+        "warnings": [["unknown code(s)", "000.00"]]
+      },
+      "name": "ICD-9 CM"
+    }
+  ],
+  {
+    "annotation": {
+      "id": "union-1",
+      "counts": {
+        "condition_occurrence": {
+          "rows": 0,
+          "n": 0
+        },
+        "procedure_occurrence": {
+          "rows": 0,
+          "n": 0
+        }
+      }
+    },
+    "name": "Union"
+  }
+]

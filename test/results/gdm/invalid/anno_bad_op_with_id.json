@@ -1,0 +1,18 @@
+[
+  "cpt1",
+  "123",
+  {
+    "id": 1,
+    "annotation": {
+      "id": 1,
+      "counts": {
+        "invalid": {
+          "rows": 0,
+          "n": 0
+        }
+      },
+      "errors": [["invalid operator", "cpt1"]]
+    },
+    "name": "Invalid"
+  }
+]

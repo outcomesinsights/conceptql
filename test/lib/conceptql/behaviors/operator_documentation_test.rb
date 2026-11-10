@@ -206,7 +206,7 @@ describe "the declared examples" do
 
   def example_errors(klass)
     klass.examples.filter_map do |example|
-      errors = cdb.query(example[:statement]).scope_annotate(skip_counts: true)[:errors]
+      errors = by_operator(cdb.query(example[:statement]).errors)
       "#{klass}: #{example[:title]}: #{errors}" unless errors.empty?
     end
   end

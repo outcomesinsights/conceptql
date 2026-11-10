@@ -37,10 +37,10 @@ describe ConceptQL::Operators::Dedup do
 
     it "reports no error or warning for #{name}, and keeps it in the annotation" do
       query = cdb.query(plain + [ { name => columns } ])
-      scope = query.scope_annotate(skip_db: true)
+      annotation = ConceptQL::Annotation.new(query.annotate(skip_db: true))
 
-      _(scope[:errors]).must_be_empty
-      _(scope[:warnings]).must_be_empty
+      _(annotation.errors).must_be_empty
+      _(annotation.warnings).must_be_empty
       _(query.annotate(skip_db: true).last[name.to_sym]).must_equal columns
     end
   end

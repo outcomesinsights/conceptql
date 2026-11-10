@@ -90,7 +90,7 @@ module ConceptQL
     # Query#annotate sets it.
     attr_accessor :one_query_counts
 
-    attr_reader :known_operators, :recall_stack, :recall_dependencies, :annotation, :opts, :query_columns
+    attr_reader :known_operators, :recall_stack, :recall_dependencies, :opts, :query_columns
 
     def initialize(opts = {})
       @known_operators = {}
@@ -98,11 +98,7 @@ module ConceptQL
       @recall_stack = []
       @label_cte_names = {}
       @operator_cte_names = {}.compare_by_identity
-      @annotation = {}
       @opts = opts.dup
-      @annotation[:errors] = @errors = {}
-      @annotation[:warnings] = @warnings = {}
-      @annotation[:counts] = @counts = {}
       @query_columns = DEFAULT_COLUMNS.keys
       @query_columns << :window_id if opts.dig(:window_opts, :window_table)
 
@@ -114,19 +110,6 @@ module ConceptQL
 
       raise ArgumentError,
             "You must set the DOCKER_SCRATCH_DATABASE environment variable to the name of the scratch database if using the CONCEPTQL_FORCE_TEMP_TABLES environment variable"
-    end
-
-    def add_errors(key, errors)
-      @errors[key] = errors
-    end
-
-    def add_warnings(key, errors)
-      @warnings[key] = errors
-    end
-
-    def add_counts(key, domain, counts)
-      c = @counts[key] ||= {}
-      c[domain] = counts
     end
 
     # Operator#evaluate records the name of each CTE that holds an operator's

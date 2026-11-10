@@ -24,7 +24,7 @@ describe "the ms_drg and cms_drg operators" do
   end
 
   def warnings_for(statement, database = cdb)
-    database.query(statement).scope_annotate(skip_counts: true)[:warnings]
+    by_operator(database.query(statement).warnings)
   end
 
   it "names the first day of MS-DRG in one constant" do
@@ -83,9 +83,9 @@ describe "the ms_drg and cms_drg operators" do
       operator = cdb.query([ name, "001", "1", "0001" ]).operator
       _(cdb.query([ name, "001" ]).sql).must_include %("clinical_code_vocabulary_id" = 'DRG')
       _(operator.vocab_entry.format_regexp).must_equal ConceptQL::Vocabularies::Formats.pattern("DRG")
-      _(warnings_for([ name, "001" ]).to_h).must_be_empty
+      _(warnings_for([ name, "001" ])).must_be_empty
       # A malformed code is a warning (seeds conceptql-0eb and conceptql-ysx, ruled 2026-10-30).
-      _(cdb.query([ name, "001", "1", "0001" ]).validation_errors).must_equal({})
+      _(cdb.query([ name, "001", "1", "0001" ]).validation_errors).must_equal([])
       _(warnings_for([ name, "001", "1", "0001" ])).must_equal({ name => [ [ "improperly formatted code", "1", "0001" ] ] })
     end
   end

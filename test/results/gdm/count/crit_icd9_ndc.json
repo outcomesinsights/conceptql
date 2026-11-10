@@ -1,5 +1,10 @@
 {
-  "invalid_statement": {
-    "count": [["has multiple upstreams", ["icd9_procedure", "numeric"]]]
-  }
+  "invalid_statement": [
+    {
+      "operator": "count",
+      "id": "count-1",
+      "message": "has multiple upstreams",
+      "details": [["icd9_procedure", "numeric"]]
+    }
+  ]
 }

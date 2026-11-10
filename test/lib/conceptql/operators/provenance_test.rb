@@ -91,7 +91,7 @@ describe ConceptQL::Operators::Provenance do
 
     it "is refused in the plain query" do
       error = _ { CDB.query(statement).sql }.must_raise ConceptQL::InvalidStatementError
-      _(error.errors.values).must_equal [ [ no_keywords ] ]
+      _(by_operator(error.errors).values).must_equal [ [ no_keywords ] ]
     end
 
     it "reports that it has no keywords without a database" do
@@ -163,7 +163,7 @@ describe ConceptQL::Operators::Provenance do
 
       it "refuses #{keyword.inspect} in the plain query" do
         error = _ { CDB.query(statement(keyword)).sql }.must_raise ConceptQL::InvalidStatementError
-        _(error.errors.values).must_equal [ [ [ "unrecognized keywords", keyword ] ] ]
+        _(by_operator(error.errors).values).must_equal [ [ [ "unrecognized keywords", keyword ] ] ]
       end
     end
 
@@ -198,7 +198,7 @@ describe ConceptQL::Operators::Provenance do
 
       it "refuses #{keyword.inspect} in the plain query" do
         error = _ { CDB.query(statement(keyword)).sql }.must_raise ConceptQL::InvalidStatementError
-        _(error.errors.values).must_equal [ [ [ "unrecognized keywords", keyword ] ] ]
+        _(by_operator(error.errors).values).must_equal [ [ [ "unrecognized keywords", keyword ] ] ]
       end
     end
 

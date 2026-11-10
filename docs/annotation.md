@@ -26,6 +26,22 @@ annotation.each_operator  # each operator, root first: #name, #id, #annotation
 
 The helpers walk an operator's positional upstreams and its `left`, `right` and `window_table` options. A value is an operator only when it is an annotated operator, so an option whose value is a list of strings is not an operator.
 
+## Window statements
+
+`annotate` of a window statement keeps the `window` operator at the top. Its options are the window's options, and its annotation hash holds only its id (`window-1`). A window table that is a ConceptQL statement is annotated in place, in the `window_table` option, so each of its errors stays on the operator that has it:
+
+```ruby
+query = cdb.query(["window", ["icd9", "412"],
+                   { "window_table" => ["provider_filter", ["icd9", "412"], { "specialties" => "*" }] }])
+
+query.valid?  # => false
+query.errors
+# => [{ operator: "provider_filter", id: "provider_filter-1",
+#       message: "required option not present", details: ["roles"] }]
+```
+
+When the window table has errors, the statement around it is not counted, because every count joins the window table. `query.sql` raises `ConceptQL::InvalidStatementError` with the same errors.
+
 ## Example
 
 ```ruby

@@ -32,7 +32,7 @@ describe ConceptQL::CLI do
     end
   end
 
-  describe "scope_annotate" do
+  describe "annotate_statement" do
     it "connects with the command's connection options" do
       cli = ConceptQL::CLI.new([], { "database" => "from_options" })
       seen = []
@@ -40,7 +40,7 @@ describe ConceptQL::CLI do
         f.write(JSON.generate(%w[icd9 412]))
         f.flush
         ClimateControl.modify(CONCEPTQL_PARQUET_TEST_DIR: nil) do
-          cli.stub(:db, ->(opts) { DB.tap { seen << opts } }) { capture_io { cli.scope_annotate(f.path) }.first }
+          cli.stub(:db, ->(opts) { DB.tap { seen << opts } }) { capture_io { cli.annotate_statement(f.path) }.first }
         end
       end
 

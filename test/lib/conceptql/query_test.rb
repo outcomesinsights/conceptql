@@ -48,7 +48,7 @@ describe ConceptQL::Query do
                                                     right: [ "recall", "Meyloma 90-day Lookback" ] } ] ] ] } ]
 
     error = _ { CDB.query(statement).all }.must_raise(ConceptQL::InvalidStatementError)
-    _(error.errors).must_equal({ "recall" => [ [ "no matching label", "Qualifying Meyloma Dx" ] ] })
+    _(by_operator(error.errors)).must_equal({ "recall" => [ [ "no matching label", "Qualifying Meyloma Dx" ] ] })
   end
 
   # conceptql-g2v: the plain query validates the statement first. Each of
@@ -96,7 +96,7 @@ describe ConceptQL::Query do
         all: ->(q) { q.all } }.each do |meth, call|
         it "raises InvalidStatementError from ##{meth} for #{name}" do
           error = _ { call.(CDB.query(statement)) }.must_raise(ConceptQL::InvalidStatementError)
-          _(error.errors).must_equal(errors)
+          _(by_operator(error.errors)).must_equal(errors)
           _(error.statement).must_equal(CDB.query(statement).statement)
           _(error.message).must_include("Invalid ConceptQL statement")
           _(error.message).must_include("  #{line}")
@@ -107,7 +107,7 @@ describe ConceptQL::Query do
       it "raises InvalidStatementError for #{name} inside a window" do
         window = [ "window", statement, { "start_date" => "1900-01-01", "end_date" => "2100-12-31" } ]
         error = _ { CDB.query(window).sql }.must_raise(ConceptQL::InvalidStatementError)
-        _(error.errors).must_equal(errors)
+        _(by_operator(error.errors)).must_equal(errors)
       end
 
       it "does not change what annotate returns for #{name}" do
@@ -121,19 +121,33 @@ describe ConceptQL::Query do
     # one must be reported, not raise. [[]] unwraps to [].
     [ [], [ [] ], [ "union", [], [ "icd9", "412" ] ] ].each do |statement|
       it "reports #{statement.inspect} as an empty statement from #validation_errors" do
-        _(CDB.query(statement).validation_errors).must_equal({ "invalid" => [ [ "empty statement" ] ] })
+        _(by_operator(CDB.query(statement).validation_errors)).must_equal({ "invalid" => [ [ "empty statement" ] ] })
       end
     end
 
     it "reports an empty statement without a database" do
       cdb = ConceptQL::Database.new(nil, data_model: :gdm)
-      _(cdb.query([]).validation_errors).must_equal({ "invalid" => [ [ "empty statement" ] ] })
+      _(by_operator(cdb.query([]).validation_errors)).must_equal({ "invalid" => [ [ "empty statement" ] ] })
       _ { cdb.query([]).sql }.must_raise(ConceptQL::InvalidStatementError)
     end
 
     it "reports an algorithm whose stored statement is empty" do
       query = CDB.query([ "algorithm", "clia_lab_use" ], algorithm_fetcher: ->(_alg) { [ [], "CLIA lab use" ] })
-      _(query.validation_errors).must_equal({ "invalid" => [ [ "empty statement" ] ] })
+      _(by_operator(query.validation_errors)).must_equal({ "invalid" => [ [ "empty statement" ] ] })
+    end
+
+    # conceptql-si8t: #errors is a list, so two operators with the same name
+    # keep their own errors. Before, the errors hash was keyed by the operator
+    # name, and the second union replaced the first.
+    it "lists every error of two operators with the same name" do
+      statement = [ "union", [ "union" ], [ "union" ] ]
+      error = _ { CDB.query(statement).sql }.must_raise(ConceptQL::InvalidStatementError)
+      _(error.errors).must_equal [
+        { operator: "union", id: "union-2", message: "has no upstream", details: [] },
+        { operator: "union", id: "union-3", message: "has no upstream", details: [] }
+      ]
+      _(error.message.lines.grep(/\A  union: has no upstream\n\z/).size).must_equal 2
+      _(CDB.query(statement).validation_errors).must_equal(error.errors)
     end
 
     it "keeps the 0.4.0 names: a Query::QueryError, also named Query::InvalidStatementError" do
@@ -154,9 +168,9 @@ describe ConceptQL::Query do
       "a 9-digit NDC code" => [ "ndc", "003630641" ]
     }.each do |name, statement|
       it "builds the SQL of a statement whose only warning is #{name}" do
-        annotation = CDB.query(statement).scope_annotate(skip_counts: true)
-        _(annotation[:errors]).must_be_empty
-        _(annotation[:warnings]).wont_be_empty
+        query = CDB.query(statement)
+        _(query.errors).must_be_empty
+        _(query.warnings).wont_be_empty
         _(CDB.query(statement).sql).must_match(/SELECT/i)
         _(CDB.query(statement).count).must_be_kind_of(Integer)
       end
@@ -164,31 +178,56 @@ describe ConceptQL::Query do
   end
 
   # conceptql-fy3: the window table's own statement is a second statement.
-  # Annotate reports its errors under "window_table" and does not count, because
-  # every count joins the window table. The plain query of the outer statement
-  # raises with the same errors. Before, a counted annotate raised the window
-  # table's InvalidStatementError, and annotate without counts reported nothing.
+  # Annotate keeps the window operator at the top and annotates the window
+  # table's statement in place, in the window_table option, so each error
+  # stays on the operator that has it (conceptql-si8t, option B, ruled
+  # 2026-11-10). It does not count the outer statement, because every count
+  # joins the window table. The plain query of the outer statement raises
+  # with the same errors. Before conceptql-fy3, a counted annotate raised the
+  # window table's InvalidStatementError, and annotate without counts reported
+  # nothing. Until conceptql-si8t, only the scope hash (now removed) reported
+  # the errors, under "window_table".
   describe "a window whose window table statement is invalid" do
     let(:statement) do
       [ "window", [ "icd9", "412" ],
         { "window_table" => [ "provider_filter", [ "icd9", "412" ], { "specialties" => "*" } ] } ]
     end
     let(:errors) do
-      { "window_table" => [ [ "provider_filter: required option not present", "roles" ] ] }
+      [ { operator: "provider_filter", id: "provider_filter-1", message: "required option not present",
+          details: [ "roles" ] } ]
+    end
+    let(:no_rows) { { condition_occurrence: { rows: 0, n: 0 } } }
+
+    it "reports the window table's errors from a counted annotate" do
+      annotation = ConceptQL::Annotation.new(CDB.query(statement).annotate)
+      _(annotation.errors).must_equal(errors)
+      _(annotation.valid?).must_equal false
     end
 
-    it "reports the window table's errors from a counted scope_annotate" do
-      _(CDB.query(statement).scope_annotate[:errors]).must_equal(errors)
+    it "reports the window table's errors from annotate without counts" do
+      query = CDB.query(statement)
+      _(query.errors).must_equal(errors)
+      _(query.valid?).must_equal false
+      _(query.validation_errors).must_equal(errors)
     end
 
-    it "reports the window table's errors from scope_annotate without counts" do
-      _(CDB.query(statement).scope_annotate(skip_counts: true)[:errors]).must_equal(errors)
-    end
-
-    it "annotates with counts and does not count" do
+    it "annotates with counts, keeps the window at the top, and does not count" do
       _(CDB.query(statement).annotate).must_equal(
-        [ "icd9", "412", { annotation: { id: "icd9-1", counts: { condition_occurrence: { rows: 0, n: 0 } } }, name: "ICD-9 CM" } ]
+        [ "window",
+          [ "icd9", "412", { annotation: { id: "icd9-1", counts: no_rows }, name: "ICD-9 CM" } ],
+          { window_table: [ "provider_filter",
+                            [ "icd9", "412", { annotation: { id: "icd9-2", counts: no_rows }, name: "ICD-9 CM" } ],
+                            { specialties: "*",
+                              annotation: { id: "provider_filter-1", counts: no_rows,
+                                            errors: [ [ "required option not present", "roles" ] ] },
+                              name: "Provider Filter" } ],
+            annotation: { id: "window-1" } } ]
       )
+    end
+
+    it "prefixes each message of #window_table_errors with the operator name" do
+      _(CDB.query(statement).send(:window_table_errors))
+        .must_equal [ [ "provider_filter: required option not present", "roles" ] ]
     end
 
     it "raises InvalidStatementError for the outer statement from the plain query" do
@@ -196,14 +235,32 @@ describe ConceptQL::Query do
       error = _ { query.sql }.must_raise(ConceptQL::InvalidStatementError)
       _(error.errors).must_equal(errors)
       _(error.statement).must_equal(query.statement)
-      _(error.message).must_include("  window_table: provider_filter: required option not present (roles)")
+      _(error.message).must_include("  provider_filter: required option not present (roles)")
     end
 
     it "reports the errors of a window table inside a window table" do
       nested = [ "window", [ "icd9", "412" ], { "window_table" => statement } ]
-      _(CDB.query(nested).scope_annotate[:errors]).must_equal(
-        { "window_table" => [ [ "window_table: provider_filter: required option not present", "roles" ] ] }
-      )
+      annotated = CDB.query(nested).annotate
+      inner_window = annotated.last[:window_table]
+      _(inner_window.first).must_equal "window"
+      _(inner_window.last[:window_table].first).must_equal "provider_filter"
+      _(ConceptQL::Annotation.new(annotated).errors).must_equal(errors)
+      _ { CDB.query(nested).sql }.must_raise(ConceptQL::InvalidStatementError)
+    end
+  end
+
+  # A valid window table statement is counted in place, and the outer
+  # statement is counted too.
+  describe "a window whose window table statement is valid" do
+    let(:table) { [ "date_range", { "start" => "1900-01-01", "end" => "2100-12-31" } ] }
+    let(:statement) { [ "window", [ "icd9", "412" ], { "window_table" => table } ] }
+
+    it "keeps the window at the top and counts both statements" do
+      annotated = CDB.query(statement).annotate
+      _(annotated.first).must_equal "window"
+      _(annotated[1]).must_equal CDB.query([ "icd9", "412" ]).annotate
+      _(annotated.last[:window_table]).must_equal CDB.query(table).annotate
+      _(CDB.query(statement).valid?).must_equal true
     end
   end
 
@@ -304,7 +361,7 @@ describe ConceptQL::Query do
     # it is only a warning.
     it "should not raise on a statement with only warnings" do
       query = CDB.query(%w[icd9 412 000.00])
-      _(query.scope_annotate(skip_counts: true)[:warnings]).wont_be_empty
+      _(query.warnings).wont_be_empty
       _(query.code_list.map(&:code)).must_equal(%w[412 000.00])
     end
 
