@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T16:37:06.568879+00:00
+updated_at: 2026-11-10T17:54:11.409191+00:00
 ---
 
 ## The defect
@@ -141,3 +141,23 @@ Details proposed, not ruled:
 - The effective id (given or generated) goes into each operator's annotation hash, so a reader looks in one place. The statement's own options are not changed.
 - Generated form: `<operator>-<n>` in statement order (`icd9-1`, `icd9-2`), as Ryan suggested earlier. A generated id never repeats a given id.
 - One Query annotates one statement, so the numbering is per statement. JDE annotates each stream with its own Query; if JDE joins the lists of several streams, an item must also say its stream.
+
+## UPDATE 2026-11-10: Adversarial review 2026-11-10 (claude_stuff/adversarial-review-annotate-plan-20261110-093509.md, probes in claude_stuff/review-annotate-plan/)
+
+Findings for beads conceptql-k7vg and conceptql-si8t (not yet acted on):
+
+- CONFIRMED: the window table's errors exist only in the scope hash. Query#annotate adds them with nodifier.scope.add_errors("window_table", ...) (lib/conceptql/query.rb:142-145); no operator annotation carries them. Removing scope_annotate as written makes valid? true and validate! silent for a statement with an invalid window table, which reverses conceptql-fy3. The annotated output needs a place for them.
+- conceptql-k7vg acceptance item 2 says "its id option or nil", which contradicts the ruled generated ids. No acceptance item tests generated ids or two identical operators (Ryan's case).
+- The per-options cache must build a fresh operator tree for each options key. Operators memoize annotate and validate, and annotate changes each operator's options. A second annotate of an unrecognized operator with left and right inputs adds a false "duplicate label" error and changes the first result (probe in the review). JDE's CountQuery already annotates twice.
+- validation_errors must use skip_counts: true, or every sql call runs the count query.
+- docs/spec/build/spec_build.rb:132 calls validation_errors and is missing from si8t's caller list.
+
+## UPDATE 2026-11-10: window-table errors, two options shown
+
+Ryan asked to see what the window-table errors would look like. Document sent: claude_stuff/conceptql-si8t-window-table-errors-20261110.md (log claude_stuff/window-errors-probe-20261110-095303.log). Today annotate drops the window wrapper and shows no error; only scope_annotate has it. None of the 1,256 current algorithms has a window_table; t_shank builds window statements (exporter.rb, statistician.rb and others) but never calls annotate.
+
+- Option A: the error goes on the top operator's annotation as "window_table: provider_filter: required option not present". The helper then names the wrong operator.
+- Option B (recommended): annotate keeps the window node and annotates the window table statement in place, so the error stays on provider_filter. annotate's shape changes for window statements only.
+  Not ruled.
+
+RULED 2026-11-10: Ryan: "option B please". annotate keeps the window node and annotates the window table statement in place, so its errors stay on the operator that has them. The helpers walk into the window_table option.
