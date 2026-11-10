@@ -80,6 +80,8 @@ describe "the warning for codes with more than one meaning" do
   end
 
   it "gives no reused-code warning and no error without a lexicon" do
-    _(warnings_for(ConceptQL::Database.new(nil), %w[drg 410])).must_equal [ drg_deprecation ]
+    cdb = ConceptQL::Database.new(nil, lexicon: ConceptQL::Lexicon.new(nil))
+
+    _(warnings_for(cdb, %w[drg 410])).must_equal [ drg_deprecation ]
   end
 end

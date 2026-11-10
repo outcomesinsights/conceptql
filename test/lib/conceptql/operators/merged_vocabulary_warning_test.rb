@@ -99,6 +99,19 @@ describe "the warning for a vocabulary that the data stores as a merged vocabula
     _(warnings_for(cdb, %w[cpt 99214])).must_be_empty
   end
 
+  # The code checks run with only a lexicon (bead conceptql-0ubo), but this
+  # check reads the data, so it still needs a data database.
+  it "gives no warning with the lexicon but no data database" do
+    lexicon = ConceptQL::Lexicon.new(database(data_vocabularies: %w[CPT4_HCPCS]).db)
+
+    [ nil, Sequel.mock(host: :postgres) ].each do |data_db|
+      cdb = ConceptQL::Database.new(data_db, data_model: :gdm, lexicon: lexicon)
+
+      _(warnings_for(cdb, %w[cpt 99214])).must_be_empty
+      _(warnings_for(cdb, %w[cpt 12345])).must_equal({ "cpt" => [ [ "unknown code(s)", "12345" ] ] })
+    end
+  end
+
   it "gives no warning on a mock database" do
     cdb = ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm)
 
