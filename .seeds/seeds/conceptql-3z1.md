@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T16:02:05.292362+00:00
+updated_at: 2026-11-10T16:10:09.894879+00:00
 ---
 
 ## The defect
@@ -115,3 +115,13 @@ Review (document sent to Ryan: claude_stuff/conceptql-3z1-scope-annotate-consume
 - Proposed: conceptql ships the walk as a public helper that computes from the annotated statement on each call and stores nothing, so JDE need not know where ConceptQL keeps an operator's inputs.
 
 Not yet ruled: Ryan's go-ahead after he reads the review, and whether the walk is a public helper.
+
+## RULED 2026-11-10
+
+Ryan: "Ok, I think we should drop scope_annotate and provide helpers for jde to use. we might even be able to use caching of the annotation at that point to make subsequent helper calls to the same statement go faster?"
+
+- scope_annotate is removed. annotate is conceptql's only output for errors, warnings and counts.
+- conceptql provides helpers that read an annotated statement: every operator, every error, every warning, and validity.
+- Query caches its annotation by options, so later helper calls on the same Query do not annotate again. Today Operator#annotate keeps the result of its first call and ignores later options, which is why validation_errors builds a fresh Query. The cache replaces that work-around.
+
+Beads, 2026-11-10: conceptql-k7vg (annotation helpers and the per-options annotation cache on Query) and conceptql-si8t (remove scope_annotate; depends on conceptql-k7vg). The helper API in conceptql-k7vg's notes is proposed, not ruled.
