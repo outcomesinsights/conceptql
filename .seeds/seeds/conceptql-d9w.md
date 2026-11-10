@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T19:12:36.894811+00:00
+updated_at: 2026-11-10T19:17:38.018055+00:00
 ---
 
 ## The question
@@ -203,3 +203,12 @@ Ryan: "I agree with the challenge to the 2020 rule / full code lists please".
 2. The 2020 empty-vocabulary rule (LexiconStrategy#known_codes, e32221cd) changes as proposed. Where etl_vocabulary_ids or a reference lexicon exists, an empty vocabulary in the dataset's lexicon no longer makes every code known. Where neither exists, the rule stays.
 3. Warnings keep the full code list. conceptql does not shorten or sample. JDE shortens the list for display if it needs to.
 4. read becomes a plain vocabulary operator (the direction Ryan gave earlier), so every vocabulary check covers it.
+
+## UPDATE 2026-11-10: beads created
+
+- conceptql-qdn9: make read a plain vocabulary operator. conceptql-d1bd depends on it.
+- conceptql-0ubo: run the lexicon-only code checks when a lexicon exists without a data database (part 3; honors skip_db).
+- conceptql-8oim: reference lexicon, "code(s) not present in this dataset", and the limit on the 2020 rule. Depends on conceptql-d1bd and conceptql-0ubo.
+- conceptql-0h2n: re-architect cpt_or_hcpcs code checks. Depends on conceptql-8oim and conceptql-d1bd.
+
+Still open: whether the reference lexicon is an explicit Database option that JDE passes (proposed) or found from LEXICON_URL. conceptql-8oim waits for that answer.

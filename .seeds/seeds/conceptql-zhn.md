@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T19:12:37.460561+00:00
+updated_at: 2026-11-10T19:17:38.574446+00:00
 ---
 
 ## The gap
@@ -97,3 +97,7 @@ Fixture: vocabulation republished synpuf_test_data.duckdb to Dropbox at 2026-11-
 ## UPDATE 2026-11-10: Postgres test image
 
 Ryan: "please ask vocabulation to rebuild -- I think it should be doing so already". The vocabulation session vocabulation-b9 was asked to rebuild ghcr.io/outcomesinsights/misc:test_data.jumper with the filled etl\_\* tables (ruling 1 above). conceptql then pins the new digest in docker-compose.yml.
+
+## UPDATE 2026-11-10: Postgres test image needs no rebuild
+
+vocabulation-b9 reported that the test_data.jumper image published 2026-11-10 09:23-10:05 already has the filled etl\_\* tables (etl_vocabulary_ids 7 rows, source_table and source_column NULL). Digest sha256:59c88c99e9bb52c15269dfd6e930b6bf3fcaa6507f4086139ee865ebb34cb8f9. It comes from the same pipeline run as the DuckDB fixture a675a69b..., so it also has the CPT4_HCPCS change in ohdsi_vocabs. conceptql pins it on branch chore/repin-test-data-image.
