@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T15:09:07.421597+00:00
+updated_at: 2026-11-10T15:41:03.810478+00:00
 ---
 
 ## The gap
@@ -41,3 +41,19 @@ Findings:
 - The table covers clinical_codes only. Vocabulary operators that read other tables need checking.
 
 NA in counts: a count of `{"rows": null, "n": null}` (JSON null) instead of 0. Readers of counts must then handle null: conceptql's diagram renderer (`Geometry.count_label_lines` calls `format_count` on the value), JDE's diagram and its count tool. Open: NA together with the warning, or the warning alone. Open: what conceptql does when a dataset has no etl_vocabulary_ids (no warning and real counts is the likely answer).
+
+## UPDATE 2026-11-10: Ryan's second round
+
+Ryan: "we'll need conceptql to be aware of the relevant etl\_\* tables when dealing with GDM to make this check. we'll need to have roobetl (or something) enhance the synpuf250 test dataset to have the etl\_\* tables, yes? are you comfortable with NULL being passed to JDE? is there a more sensible value? I'm a fan of null, but I know a lot of programming practices try to avoid that. agree that in the absence of etl\_\* tables, no warning and a count of 0 works"
+
+RULED: with no etl\_\* tables, no warning and a count of 0.
+
+Fixture: vocabulation builds synpuf_test_data.duckdb (scripts/duckdb_build.py) by copying a declared table list (SCHEMA_TABLES) from titan's test_data Postgres. roobetl computes etl_vocabulary_ids (lib/roobetl/metadata.rb). The fixture has no etl\_\* tables today. Whether the Postgres source has them was not checked (titan.jsaw.io:6432 refused the connection on 2026-11-10). The work routes to vocabulation: add the etl\_\* tables to the fixture, computed by roobetl's metadata code or copied from the source.
+
+Candidate values for "not available", assessed:
+
+- JSON null for rows and n. JSON's own "no value", the same as SQL NULL and R NA. The advice against null concerns code paths in Ruby or Java, not data exchanged between programs.
+- Leave the counts out. JDE's JS diagram (js/lib/conceptql-diagram/src/geometry.js) and conceptql's renderer already draw no label when counts are absent. But "absent" also means "not counted", so it says less than null.
+- A string such as "NA". It mixes strings and numbers in one field, and every reader must test the type. Rejected.
+- A sentinel such as -1. Summing or comparing gives wrong results with no error. Rejected.
+  Recommended: null, with the warning that says why.
