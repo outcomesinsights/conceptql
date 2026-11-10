@@ -165,12 +165,21 @@ module ConceptQL
       # that reads another table (death type, observation period type) is
       # not checked. Neither is a dataset without the table.
       def check_for_records(db, warn: true)
-        return unless criterion_table == dm.table_by_domain(:clinical_codes)
-        return unless (ids = nodifier.etl_vocabulary_ids(db))
-        return if ids.include?(vocabulary_id)
+        return unless absent_from_data?(db)
 
         @no_records_in_data = true
         add_warning(NO_RECORDS_IN_DATA) if warn
+      end
+
+      # Whether etl_vocabulary_ids lists the vocabularies of the data's
+      # clinical codes and this vocabulary is not among them. See
+      # #check_for_records. MultipleVocabularies asks each of its vocabulary
+      # operators.
+      def absent_from_data?(db)
+        return false unless criterion_table == dm.table_by_domain(:clinical_codes)
+        return false unless (ids = nodifier.etl_vocabulary_ids(db))
+
+        !ids.include?(vocabulary_id)
       end
 
       # Whether the data has no records of this vocabulary at all, as
@@ -218,6 +227,10 @@ module ConceptQL
       # includes it, so Union can name every merged vocabulary in one IN list.
       def vocabulary_condition
         { clinical_code_vocabulary_id: vocabulary_id }
+      end
+
+      def vocabulary_id
+        @vocabulary_id ||= translated_vocabulary_id
       end
 
       private
@@ -283,10 +296,6 @@ module ConceptQL
 
       def bad_format_message
         vocab_entry.omopv5_id == "NDC" ? NDC_BAD_FORMAT : BAD_FORMAT
-      end
-
-      def vocabulary_id
-        @vocabulary_id ||= translated_vocabulary_id
       end
 
       def translated_vocabulary_id

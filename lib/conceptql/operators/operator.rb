@@ -634,6 +634,10 @@ module ConceptQL
         end
       end
 
+      # MultipleVocabularies reads the bad codes of each of its vocabulary
+      # operators.
+      protected :bad_arguments
+
       # Only Vocabulary operators carry a code format (Vocabulary#code_regexp)
       def code_regexp
         nil
