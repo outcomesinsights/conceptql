@@ -4,7 +4,7 @@ title: scope_annotate loses errors, warnings and counts when two operators share
 status: captured
 type: question
 created_at: 2026-11-10T14:59:08.536367+00:00
-updated_at: 2026-11-10T16:10:09.894879+00:00
+updated_at: 2026-11-10T16:37:06.568879+00:00
 ---
 
 ## The defect
@@ -125,3 +125,19 @@ Ryan: "Ok, I think we should drop scope_annotate and provide helpers for jde to 
 - Query caches its annotation by options, so later helper calls on the same Query do not annotate again. Today Operator#annotate keeps the result of its first call and ignores later options, which is why validation_errors builds a fresh Query. The cache replaces that work-around.
 
 Beads, 2026-11-10: conceptql-k7vg (annotation helpers and the per-options annotation cache on Query) and conceptql-si8t (remove scope_annotate; depends on conceptql-k7vg). The helper API in conceptql-k7vg's notes is proposed, not ruled.
+
+## UPDATE 2026-11-10: generated ids, not arguments
+
+The arguments example (claude_stuff/conceptql-k7vg-arguments-example-20261110.md, log claude_stuff/annotation-api-arguments-20261110-083301.log) showed two "has upstreams" errors on two icd9 operators that are identical without `arguments`.
+
+Ryan, transcribed speech: "your proposed solution for annotations API returning errors has simply recreated the very problem we were trying to solve in scope annotation ... what if I have for some reason put the exact same operators, selection operators, in twice? ... You would still get back to identical errors. So, my argument is going to be that if there is no provided ID, we create an ID and send that back when we are doing an annotation. And then we can continue to associate errors to a specific ID and not have to worry about carrying the arguments. Is there any other benefit to carrying the arguments in the error messages outside of just trying to differentiate between like operators."
+
+Answer given: no. The only other use is that a reader sees the codes without a lookup, and with an id `each_operator` gives the lookup. `arguments` is dropped.
+
+Direction (Ryan's): annotate gives every operator an id. A given id is kept. An operator without one gets a generated id. Each error and warning item names its operator by that id.
+
+Details proposed, not ruled:
+
+- The effective id (given or generated) goes into each operator's annotation hash, so a reader looks in one place. The statement's own options are not changed.
+- Generated form: `<operator>-<n>` in statement order (`icd9-1`, `icd9-2`), as Ryan suggested earlier. A generated id never repeats a given id.
+- One Query annotates one statement, so the numbering is per statement. JDE annotates each stream with its own Query; if JDE joins the lists of several streams, an item must also say its stream.

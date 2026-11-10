@@ -4,7 +4,7 @@ title: Vocabulary operators give no warning when the data has no records of the 
 status: captured
 type: question
 created_at: 2026-11-10T14:59:40.242561+00:00
-updated_at: 2026-11-10T15:49:49.322675+00:00
+updated_at: 2026-11-10T17:04:45.799217+00:00
 ---
 
 ## The gap
@@ -67,3 +67,9 @@ Ryan: "zhn: null with warning please and the rest as discussed". conceptql reads
 vocabulation filed vocabulation-xd6: add a populated slim.etl_vocabulary_ids to synpuf_test_data.duckdb, filled from slim.clinical_codes. conceptql-d1bd depends on it. Open in vocabulation: fill the table in Postgres too (so the docker image and parquet carry it), or only in the DuckDB build.
 
 The Postgres test_data already has an empty etl_vocabulary_ids. conceptql-d1bd now treats an empty table like a missing one (no warning, normal counts), which follows the ruling for missing tables. Without that rule, the Postgres test configs would warn on every vocabulary.
+
+## UPDATE 2026-11-10: measured on SEER-Medicare; fixture ready locally
+
+On seer_medicare_all_cancer_2024_enriched_20261103 (80 vocabularies in etl_vocabulary_ids), 1,323 of the 2,940 vocabulary operators in the 1,256 current algorithms read a vocabulary that the dataset does not have, in 780 algorithms. By vocabulary: CPT4 444, HCPCS 442 (the data stores them as CPT4_HCPCS, the existing merged-vocabulary case), ICD9CM 341, ICD9Proc 37, Gemscript 20, LOINC 14, CPRD_TEST_ENTITY 8, MARCLA_OBS_TYPE 6, CPRD_ENTTYPE 5, USRDS_MODALITY 5, USRDS_DIALYSIS_START 1. Log: claude_stuff/two-lexicon-measure-20261110-090153.log (seed conceptql-d9w has the method).
+
+vocabulation-xd6 is closed: the local fixture /home/ryan/projects/outins/vocabulation/synpuf_test_data.duckdb (sha256 a4926bed...) has the 4 slim etl\_\* tables, filled by roobetl (roobetl-wu4). etl_vocabulary_ids has 7 rows (ICD9CM, CPT4, NDC, HCPCS, ICD9Proc, DRG, LOINC) with NULL source_table and source_column. It is not published to Dropbox yet; Ryan decides when.
