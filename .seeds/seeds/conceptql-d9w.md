@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-11T04:29:20.733669+00:00
+updated_at: 2026-11-11T04:31:46.957701+00:00
 ---
 
 ## The question
@@ -226,4 +226,4 @@ Ryan: "provenance and place_of_service should check reference lexcicon and provi
 
 Beads: conceptql-dufi (the 2020 rule, one shared method; also information_periods), conceptql-amuu (provenance and place_of_service_filter; depends on conceptql-dufi).
 
-Still open: when the data has no records of a vocabulary, the vocabulary operator skips the unknown-code, not-present and reused-code checks of its own codes (conceptql-8oim). Proposed: skip only the not-present check. Downstream operators such as provenance are not affected: they check their own codes in every case.
+RULED 2026-11-10 (Ryan: "agreed on no records"): when the data has no records of a vocabulary, the vocabulary operator skips only the not-present check of its own codes. It still reports unknown and reused codes. conceptql-8oim had made it skip all three. Added to conceptql-dufi. Downstream operators such as provenance are not affected: they check their own codes in every case.
