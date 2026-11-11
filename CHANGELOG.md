@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-10
+
 ### Added
 
 - `ConceptQL::Annotation` reads a statement that `Query#annotate` annotated, or the same
