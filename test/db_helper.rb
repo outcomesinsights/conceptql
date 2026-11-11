@@ -15,7 +15,7 @@ if DB.database_type.to_sym == :spark && ENV["CONCEPTQL_PARQUET_TEST_DIR"].presen
 end
 
 if DB.database_type.to_sym == :duckdb
-  schemas = (ENV["SEQUELIZER_SEARCH_PATH"] || "slim,gdm_vocabs,ohdsi_vocabs")
+  schemas = (ENV["SEQUELIZER_SEARCH_PATH"] || "slim,ohdsi_vocabs")
             .split(",")
             .map(&:strip)
             .reject(&:empty?)

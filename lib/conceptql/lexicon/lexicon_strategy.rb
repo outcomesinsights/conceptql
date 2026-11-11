@@ -145,8 +145,8 @@ module ConceptQL
     # { code => [name, ...] } with the names sorted. A vocabulary can reuse a
     # code for a new meaning: DRG 410 meant chemotherapy until 2007-09-30 and
     # a biliary tract procedure after that. OHDSI keeps each meaning as its
-    # own concept row, and the GDM vocabulary keeps both names. Names that
-    # differ only in case or spacing count as one name.
+    # own concept row. Names that differ only in case or spacing count as one
+    # name.
     #
     # A stored code is one of the codes when it matches as code_condition
     # matches: in its own case, unless the vocabulary declares (?i:...). So

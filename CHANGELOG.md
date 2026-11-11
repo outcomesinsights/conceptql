@@ -38,6 +38,15 @@ All notable changes to this project will be documented in this file.
   `scope_annotate` was keyed by the operator's name or `id` option, so of two operators with
   the same key, only the last one's errors, warnings and counts were kept. The CLI command
   `conceptql annotate_statement` remains.
+- **Breaking:** the GDM lexicon (`ConceptQL::LexiconGDM`), which read the GDM vocabulary
+  tables `concepts`, `ancestors`, `mappings` and `vocabularies`. The lexicon now uses only
+  the OHDSI vocabulary tables (`concept`, `concept_ancestor`, `concept_relationship` and
+  `vocabulary`). A real data database whose search path, and whose `LEXICON_URL` database,
+  have only the GDM tables now raises `ConceptQL::Lexicon::NoVocabularyError`, and the
+  error lists only the missing OHDSI tables. The environment variables `LEXICON_GDM_ONLY`
+  and `LEXICON_OHDSI_ONLY` are removed. The test config `slim,gdm_vocabs` is removed from
+  CI and from `just test-full`, which now runs 2 Postgres configs. No production setup
+  read the GDM tables. The gdm data model stays.
 
 ### Changed
 

@@ -12,37 +12,14 @@ describe ConceptQL::DataModel::Gdm do
   end
 
   describe "#descendants_of" do
-    let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconGDM.new(db)) }
+    let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconOhdsi.new(db)) }
     let(:cdb) { ConceptQL::Database.new(db, lexicon: lexicon) }
 
     def get_descendants_of(ids_or_ds)
       dm.descendants_of(db, ids_or_ds).sort
     end
 
-    describe "using GDM vocab tables" do
-      def make_ancestor_row(a_id, d_id)
-        db.create_table?(:ancestors, temp: true) do
-          Integer :ancestor_id
-          Integer :descendant_id
-        end
-        db[:ancestors].insert([ a_id, d_id ])
-      end
-
-      it "should find passed in concept_id and descendants of concept_id" do
-        make_ancestor_row(1, 2)
-
-        _(get_descendants_of(1)).must_equal([ 1, 2 ])
-      end
-
-      it "should find passed in concept_id even if no descendants" do
-        make_ancestor_row(1, 2)
-
-        _(get_descendants_of(3)).must_equal([ 3 ])
-      end
-    end
-
     describe "using OHDSI vocab tables" do
-      let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconOhdsi.new(db)) }
       def make_ancestor_row(a_id, d_id)
         db.create_table?(:concept_ancestor, temp: true) do
           Integer :ancestor_concept_id
@@ -89,16 +66,16 @@ describe ConceptQL::DataModel::Gdm do
   end
 
   describe "#related_concept_ids" do
-    let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconGDM.new(db)) }
+    let(:lexicon) { ConceptQL::Lexicon.new(db, strategy: ConceptQL::LexiconOhdsi.new(db)) }
     let(:cdb) { ConceptQL::Database.new(db, lexicon: lexicon) }
 
     it "should find concept IDs related to standard concept ids" do
-      db.create_table(:mappings) do
-        column :concept_1_id, :Bigint
+      db.create_table(:concept_relationship) do
+        column :concept_id_1, :Bigint
         column :relationship_id, :text
-        column :concept_2_id, :Bigint
+        column :concept_id_2, :Bigint
       end
-      db[:mappings].import(%i[concept_1_id relationship_id concept_2_id], [ [ 111_111_111, "IS_A", 8532 ] ])
+      db[:concept_relationship].import(%i[concept_id_1 relationship_id concept_id_2], [ [ 111_111_111, "Is a", 8532 ] ])
       _(dm.related_concept_ids(db, 8532).sort).must_equal [ 8532, 111_111_111 ].sort
     end
   end

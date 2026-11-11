@@ -8,7 +8,7 @@
 - Lint: `just lint` (rubocop, shellcheck, actionlint, zizmor, hadolint and cog; part of `just ci`). `mise.toml` pins the tools and `just setup` installs them. `just fmt` runs treefmt (`treefmt.toml`), which formats every tracked file, including rubocop's safe autocorrections. The suite writes new expected-results files in prettier's layout (`test/prettier_json.rb`), so they already pass `fmt-check`.
 - Spec: edit `docs/spec/README.cql.md`, then run `just spec` (code in `docs/spec/build/`). Each operator's reference section, the table of the vocabulary operators and Appendix E are generated from `ConceptQL.metadata` at the `<!-- conceptql-spec: ... -->` directives, so change those texts in the operator class, not in the README. The build runs every ConceptQL block on the DuckDB fixture and rewrites `docs/spec/README.md` (`ConceptQL.spec_path`), and fails if anything changed. It also draws every diagram in `docs/spec/images/` with `ConceptQL::DiagramRenderer.render_static`, so it needs resvg 0.33.0 (`just resvg-check`, which fails, never skips), and it writes `docs/spec/images/manifest.tsv` (each image and the sha256 of the diagram tree it shows). It also writes `docs/spec/examples/<spec_id>.json` (`ConceptQL.spec_examples_path`) for each published spec_id: each example's title, statement, help flag, result columns and rows, and diagram tree, the tree that the manifest hashes. Between releases, the spec, the images and the example files can be stale: only `just release-check` runs `just spec-check`, and `ci` does not. The gem ships `docs/spec/README.md` and `docs/spec/examples/*.json` but no images.
 - Diagram renderer: `ConceptQL::DiagramRenderer` (`lib/conceptql/diagram_renderer/`, autoloaded; `docs/diagram_renderer.md`) is the Jigsaw diagram editor's renderer, moved here. Its assets are in `assets/diagram/` (shipped), and its tests and the editor's JavaScript references are in `test/diagram_renderer/` (not shipped; treefmt excludes the references, never reformat or edit one). `just test-diagram` runs those tests on the host. They need no database and need resvg 0.33.0 exactly (`mise.toml`), so `test/all.rb` leaves them out. `just ci` runs `test-diagram` after the two suites. In GitHub CI (`run_tests.yml` and `release.yml`), `.github/install-resvg.sh` installs resvg. It reads the version from `ConceptQL::DiagramRenderer::Resvg::VERSION` and checks the tarball against `.github/resvg-linux-x86_64.tar.gz.sha256`, so a new resvg version needs a new pin there.
-- Local CI gate: `just ci` — runs the default Postgres `gdm_wide` config (docker) AND the DuckDB suite (`just test-duckdb`, host Ruby, linux-amd64 only) before push. The two suites run in parallel (`just test-both`). Their output interleaves on the terminal, and each one writes its own log under `claude_stuff/test-logs/`. GitHub CI runs the same recipes: `just lint fmt-check hygiene`, `just test` for each Postgres config, `just test-duckdb` on Ruby 3.3 and 3.4, each against libduckdb 1.5.x and 2.x, and `just test-diagram` on Ruby 3.4. Local runs use 1.5.x (the justfile's `libduckdb_version`), because 2.x showed speed regressions. DuckDB runs only the gdm_wide setup, and that is enough (Ryan, 2026-10-26): it reads its vocabulary from `ohdsi_vocabs` through the OHDSI lexicon, the setup production uses. The **pre-push hook runs this automatically** at each pushed commit (see Git Hooks below). The other 2 Postgres configs + Spark stay in remote CI (billed) as the last line of defense for cross-env edge cases, not the first place a problem surfaces. If the DuckDB fixture or libduckdb is unavailable, the gate fails with a message saying what is missing; it never skips. Use `just test-full` to run all 3 Postgres configs manually.
+- Local CI gate: `just ci` — runs the default Postgres `gdm_wide` config (docker) AND the DuckDB suite (`just test-duckdb`, host Ruby, linux-amd64 only) before push. The two suites run in parallel (`just test-both`). Their output interleaves on the terminal, and each one writes its own log under `claude_stuff/test-logs/`. GitHub CI runs the same recipes: `just lint fmt-check hygiene`, `just test` for each Postgres config, `just test-duckdb` on Ruby 3.3 and 3.4, each against libduckdb 1.5.x and 2.x, and `just test-diagram` on Ruby 3.4. Local runs use 1.5.x (the justfile's `libduckdb_version`), because 2.x showed speed regressions. DuckDB runs only the gdm_wide setup, and that is enough (Ryan, 2026-10-26): it reads its vocabulary from `ohdsi_vocabs` through the OHDSI lexicon, the setup production uses. The **pre-push hook runs this automatically** at each pushed commit (see Git Hooks below). The other Postgres config + Spark stay in remote CI (billed) as the last line of defense for cross-env edge cases, not the first place a problem surfaces. If the DuckDB fixture or libduckdb is unavailable, the gate fails with a message saying what is missing; it never skips. Use `just test-full` to run both Postgres configs manually.
 - Git Hooks: the hooks follow gator's githooks standard. They are tracked in `.githooks/`, and `just setup` arms a checkout with `git config core.hooksPath .githooks`. Each clone, host and worktree runs `just setup` once.
   - `pre-commit`: `just pre-commit` on the working tree (lint, fmt-check, hygiene, seeds-check). If fmt-check reformats anything, the commit fails: re-stage the changes and commit again.
   - `pre-push`: `just ci` at each pushed commit, in a gate worktree under `~/.cache/gator-gate/`, then `bd-publish` to publish the beads. A commit that already passed there is not re-run.
@@ -64,16 +64,13 @@ Use `docker-compose.yml` which spins up a `test_data` Postgres container with al
 When `just test` or `just test-full` exits, it runs `just test-db-down`, which removes this checkout's `test_data` container and network. It leaves them up while another test run of the same checkout uses them, or when `KEEP_TEST_DB=1` is set. Every worktree has its own compose project, so before this rule each finished worktree left a database running.
 
 ```bash
-# GH Actions runs all 3 of these matrix configs — all must pass:
+# GH Actions runs both of these matrix configs — both must pass:
 
 # 1. gdm_wide (default for local dev, matches bin/run_tests)
 SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide docker compose run --rm conceptql
 
 # 2. gdm with ohdsi vocabs
 SEQUELIZER_SEARCH_PATH=slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose run --rm conceptql
-
-# 3. gdm with gdm vocabs
-SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs CONCEPTQL_DATA_MODEL=gdm docker compose run --rm conceptql
 ```
 
 The `test_data` image (`ghcr.io/outcomesinsights/misc:test_data.jumper`, pinned by digest in `docker-compose.yml`) is a private ghcr.io package: run `docker login ghcr.io` once on a new host. To move to a new build, change the digest. It contains:
@@ -81,9 +78,10 @@ The `test_data` image (`ghcr.io/outcomesinsights/misc:test_data.jumper`, pinned 
 - `slim` schema — GDM data tables (patients, clinical_codes, etc.)
 - `wide` schema — GDM wide tables (observations, supplemented_payer_reimbursements)
 - `ohdsi_vocabs` schema — OHDSI vocabulary tables (concept, concept_ancestor, etc.)
-- `gdm_vocabs` schema — GDM vocabulary tables (concepts, ancestors, mappings, vocabularies)
 
-No separate `LEXICON_URL` is needed — the lexicon auto-detects vocab tables in the search path of the data database.
+The image also still holds a schema of GDM vocabulary tables (concepts, ancestors, mappings, vocabularies). ConceptQL no longer reads it: the lexicon uses only the OHDSI tables. vocabulation removes that schema from the image in a later build.
+
+No separate `LEXICON_URL` is needed — the lexicon auto-detects the OHDSI vocabulary tables in the search path of the data database.
 
 ### Without Docker (direct)
 

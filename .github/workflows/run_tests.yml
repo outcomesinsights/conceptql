@@ -42,8 +42,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - search_path: slim,gdm_vocabs
-            data_model: gdm
           - search_path: slim,ohdsi_vocabs
             data_model: gdm
           - search_path: wide,slim,ohdsi_vocabs

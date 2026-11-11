@@ -2,7 +2,6 @@
 
 require "forwardable"
 require_relative "code_case_mismatch_error"
-require_relative "lexicon/lexicon_gdm"
 require_relative "lexicon/lexicon_no_db"
 require_relative "lexicon/lexicon_ohdsi"
 
@@ -35,9 +34,6 @@ module ConceptQL
                    :vocabularies,
                    :vocabularies_query
 
-    # The key of each lexicon kind in NoVocabularyError::Search#missing_tables.
-    LEXICON_KINDS = { LexiconOhdsi => :ohdsi, LexiconGDM => :gdm }.freeze
-
     # The cached results keyed on [method, arguments], or nil when caching is
     # off. Its size is the number of distinct lookups.
     attr_reader :cache
@@ -48,8 +44,8 @@ module ConceptQL
     #
     # ConceptQL::Database raises it (through Lexicon.new) when its data
     # database is real, which is not nil and not a Sequel mock, and neither
-    # that database nor the LEXICON_URL database has all the tables of one
-    # lexicon kind. A database-less Database keeps LexiconNoDB.
+    # that database nor the LEXICON_URL database has all the OHDSI
+    # vocabulary tables. A database-less Database keeps LexiconNoDB.
     # MissingVocabularyError (Lexicon.for_dataset) is a subclass, so one
     # rescue covers both.
     class NoVocabularyError < StandardError
@@ -58,8 +54,8 @@ module ConceptQL
       # :dataset (Lexicon.for_dataset). +database+ names it without a user or
       # a password. +search_path+ is the search path that the unqualified
       # table names resolved through, or nil where the adapter has none.
-      # +missing_tables+ maps each lexicon kind (:ohdsi, :gdm) that was
-      # looked for to its tables that were not found.
+      # +missing_tables+ maps the lexicon kind :ohdsi to its tables that were
+      # not found.
       Search = Data.define(:role, :database, :search_path, :missing_tables)
 
       ROLES = {
@@ -78,8 +74,7 @@ module ConceptQL
       # The error for a ConceptQL::Database whose data database is real.
       # +database_type+ is the data database's, and chooses the advice.
       # +lexicon_url_searched+ is false when LEXICON_URL is not set.
-      # +only+ is the LEXICON_*_ONLY variable that narrowed the kinds, or nil.
-      def self.for_database(searches, database_type:, lexicon_url_searched:, only: nil)
+      def self.for_database(searches, database_type:, lexicon_url_searched:)
         data = searches.first
         lines = [
           "ConceptQL::Database found no vocabulary tables for its data database (#{data.database}).",
@@ -89,7 +84,6 @@ module ConceptQL
         ]
         lines.concat(searches.map { |search| "  - #{describe_search(search)}" })
         lines << "  - LEXICON_URL is not set, so no lexicon database was searched." unless lexicon_url_searched
-        lines << "#{only} is set, so only the #{only.delete_prefix("LEXICON_").delete_suffix("_ONLY")} tables were looked for." if only
         lines << "Fix it in one of these ways:"
         lines.concat(advice(database_type).map { |line| "  - #{line}" })
         new(lines.join("\n"), searches: searches)
@@ -110,7 +104,7 @@ module ConceptQL
         dataset = "Build the lexicon from the DuckDB dataset itself: " \
                   "ConceptQL::Database.new(db, lexicon: ConceptQL::Lexicon.for_dataset(db))."
         search_path = "Put the schema that holds the vocabulary tables on the data database's " \
-                      "search path (in the test data, ohdsi_vocabs or gdm_vocabs)."
+                      "search path (in the test data, ohdsi_vocabs)."
         lexicon_url = "Set LEXICON_URL to a database that has the vocabulary tables."
         case database_type
         when :duckdb then [ dataset, search_path, lexicon_url ]
@@ -307,19 +301,16 @@ module ConceptQL
     end
     private :lookup
 
-    # The first lexicon kind whose tables are all in the data db (dataset_db)
-    # or else the lexicon db. When neither has them, LexiconNoDB, but only
-    # for a database-less caller: a real data db raises NoVocabularyError.
+    # LexiconOhdsi on the data db (dataset_db) when it has all the OHDSI
+    # vocabulary tables, or else on the lexicon db. When neither has them,
+    # LexiconNoDB, but only for a database-less caller: a real data db raises
+    # NoVocabularyError.
     # A Sequel mock data db is not searched: it answers yes to every
     # table_exists?, so it would hide the lexicon db behind a vocabulary
     # that has no rows.
     def determine_strategy(lexicon_db, dataset_db)
       [ (dataset_db if real_database?(dataset_db)), lexicon_db ].compact.each do |db|
-        lexicon_classes.each do |klass|
-          next unless klass.db_has_all_vocabulary_tables?(db)
-
-          return (klass.new(db))
-        end
+        return LexiconOhdsi.new(db) if LexiconOhdsi.db_has_all_vocabulary_tables?(db)
       end
       raise no_vocabulary_error(lexicon_db, dataset_db) if real_database?(dataset_db)
 
@@ -335,15 +326,12 @@ module ConceptQL
     def no_vocabulary_error(lexicon_db, dataset_db)
       searches = [ search(:data_database, dataset_db) ]
       searches << search(:lexicon_url, lexicon_db) if lexicon_db
-      only = %w[LEXICON_OHDSI_ONLY LEXICON_GDM_ONLY].find { |name| ENV[name] }
       NoVocabularyError.for_database(searches, database_type: dataset_db.database_type.to_sym,
-                                               lexicon_url_searched: !lexicon_db.nil?, only: only)
+                                               lexicon_url_searched: !lexicon_db.nil?)
     end
 
     def search(role, db)
-      missing = lexicon_classes.to_h do |klass|
-        [ LEXICON_KINDS.fetch(klass), klass::VOCABULARY_TABLES.reject { |table| db.table_exists?(table) } ]
-      end
+      missing = { ohdsi: LexiconOhdsi::VOCABULARY_TABLES.reject { |table| db.table_exists?(table) } }
       NoVocabularyError::Search.new(role: role, database: describe_database(db),
                                     search_path: search_path_of(db), missing_tables: missing)
     end
@@ -375,12 +363,5 @@ module ConceptQL
       end
     end
     private :real_database?, :no_vocabulary_error, :search, :describe_database, :search_path_of
-
-    def lexicon_classes
-      classes = []
-      classes << LexiconOhdsi unless ENV["LEXICON_GDM_ONLY"]
-      classes << LexiconGDM unless ENV["LEXICON_OHDSI_ONLY"]
-      classes
-    end
   end
 end

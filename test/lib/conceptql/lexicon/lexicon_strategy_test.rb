@@ -3,10 +3,10 @@
 require_relative "../../../helper"
 
 describe ConceptQL::LexiconStrategy do
-  # LexiconGDM is the thinnest concrete strategy — its concepts_table is just
-  # db[:concepts], so a mock DB is enough to exercise the base-class method.
+  # LexiconOhdsi builds its concepts_table as SQL only, so a mock DB is
+  # enough to exercise the base-class method.
   let(:db) { Sequel.mock(host: :postgres) }
-  let(:lexicon) { ConceptQL::LexiconGDM.new(db) }
+  let(:lexicon) { ConceptQL::LexiconOhdsi.new(db) }
 
   describe "#concepts vocabulary guard" do
     # There is no wildcard lookup. '*' is meaningful only in `arguments`, where
