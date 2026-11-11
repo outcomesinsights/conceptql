@@ -38,9 +38,9 @@ services:
       - "${PWD}:/home/conceptql"
   test_data:
     # Pinned by digest so local runs and CI test the same database: the
-    # 2026-10-02 build (FY2027 vocabulary rebuild). The package is private;
+    # 2026-11-10 build (no gdm_vocabs schema). The package is private;
     # CI logs in to ghcr.io with GITHUB_TOKEN (packages: read).
-    image: "ghcr.io/outcomesinsights/misc:test_data.jumper@sha256:59c88c99e9bb52c15269dfd6e930b6bf3fcaa6507f4086139ee865ebb34cb8f9"
+    image: "ghcr.io/outcomesinsights/misc:test_data.jumper@sha256:1f20662901fbea0b5146045e0bf6394e5391c573dc8bb7dcd5aff2a8ff4caa51"
     command: -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c work_mem=4GB -c shared_buffers=6GB -c effective_cache_size=6GB -c max_parallel_workers_per_gather=0
     shm_size: 6g
     expose:
