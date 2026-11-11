@@ -1,10 +1,12 @@
 ---
 id: conceptql-901
 title: 'A LEXICON_URL without vocabulary tables raises in 0.8.0: keep raising?'
-status: captured
+status: resolved
 type: question
 created_at: 2026-11-11T06:48:08.330842+00:00
-updated_at: 2026-11-11T06:48:37.403473+00:00
+updated_at: 2026-11-11T12:22:47.092106+00:00
+resolved_at: 2026-11-11T12:22:47.092097+00:00
+resolution: 'Keep raising: a LEXICON_URL database without vocabulary tables raises NoVocabularyError (Ryan, 2026-11-11). No code change.'
 ---
 
 ## The question
@@ -24,3 +26,11 @@ In conceptql 0.8.0, a set `LEXICON_URL` whose database shows no OHDSI vocabulary
 (c) Raise only when the data database also lacks the vocabulary (the 0.7.0 failure case), otherwise (b).
 
 Production (measured by t_shank, read-only, 2026-11-10): the production `LEXICON_URL` is titan.jsaw.io/ohdsi_vocabs?search_path=ohdsi20260829. That schema has concept, concept_ancestor, concept_relationship and vocabulary (11,393,905 concepts), so production does not raise on 0.8.0. Only t_shank's test config hit it. t_shank's pick: add ?search_path=ohdsi_vocabs to docker/.env's `LEXICON_URL`.
+
+RULED 2026-11-11 (Ryan): keep raising (direction a). ConceptQL::Database.new keeps raising Lexicon::NoVocabularyError when LEXICON_URL is set and its database has no vocabulary tables, even when the data database has its own vocabulary. No code change.
+
+How the ruling was reached. Ryan first said: "it's odd to me to make conceptql completely dependent on LEXICON_URL", and then: "I don't want conceptql to require a set of vocabulary tables, be they a dataset's or LEXICON_URL". The session explained that a vocabulary operator filters `clinical_code_concept_id IN (...)` with concept IDs it looks up in the concept table (lib/conceptql/operators/vocabulary.rb, where_clause). With no vocabulary, no row matches, which is why seed conceptql-ysx (option A, commit af39b5b5) made a missing vocabulary raise instead of returning 0 rows.
+
+The session offered one way to need no vocabulary tables: filter on clinical_code_vocabulary_id and clinical_code_source_value when no vocabulary exists. Measured on the DuckDB fixture (claude_stuff/source-value-vs-concept-code-20261111-042144.log): CPT4, NDC, DRG and LOINC source values equal the concept codes (37,785 rows). ICD9CM source values have no dots, "3488" against "348.8" (50,783 of 52,316 rows), and ICD9Proc is the same (109 of 215 rows). So it would need a rule for each vocabulary. Descendants, concept names and the unknown-code check cannot work without a vocabulary.
+
+Ryan then ruled: "oh, nevermind. let's keep raising". Not pursued: source-value matching, a reference lexicon that only logs a warning, and a raise only when the data database also lacks the vocabulary. t_shank's fix (?search_path=ohdsi_vocabs in docker/.env's LEXICON_URL, bead t_shank-njva) stays as planned.
