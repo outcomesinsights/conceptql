@@ -4,7 +4,7 @@ title: "annotate against a dataset: check each code against both the full lexico
 status: captured
 type: question
 created_at: 2026-11-10T16:19:07.430294+00:00
-updated_at: 2026-11-10T19:27:27.574336+00:00
+updated_at: 2026-11-11T04:31:46.957701+00:00
 ---
 
 ## The question
@@ -216,3 +216,14 @@ Still open: whether the reference lexicon is an explicit Database option that JD
 ## RULED 2026-11-10: how a Database gets the reference lexicon
 
 Ryan: "explicit option with a fall back to LEXICON_URL". The reference lexicon is an explicit Database option (reference_lexicon:). When it is not given and LEXICON_URL is set, the Database uses the LEXICON_URL lexicon. Recorded in bead conceptql-8oim.
+
+## RULED 2026-11-10: the 2020 rule, provenance and place_of_service_filter
+
+Ryan: "provenance and place_of_service should check reference lexcicon and provide warnings" and "202 rule it applies when dataset and reference lexcicon are missing the vocab, yes?" (answered yes).
+
+1. The 2020 empty-vocabulary rule applies only when both the dataset's lexicon and the reference lexicon have no concepts of the vocabulary. Without a reference lexicon, it applies when the dataset's lexicon has none. etl_vocabulary_ids no longer affects the rule. This replaces ruling 2 above, which conceptql-8oim shipped: today a filled etl_vocabulary_ids or any reference lexicon turns the rule off, so a vocabulary that neither lexicon has gets every code reported as unknown.
+2. provenance and place_of_service_filter check their codes against the reference lexicon too, and report "code(s) not present in this dataset" or "unknown code(s)" as warnings. Today an unknown code is an error there, checked against the dataset's lexicon only, so validity depended on the dataset.
+
+Beads: conceptql-dufi (the 2020 rule, one shared method; also information_periods), conceptql-amuu (provenance and place_of_service_filter; depends on conceptql-dufi).
+
+RULED 2026-11-10 (Ryan: "agreed on no records"): when the data has no records of a vocabulary, the vocabulary operator skips only the not-present check of its own codes. It still reports unknown and reused codes. conceptql-8oim had made it skip all three. Added to conceptql-dufi. Downstream operators such as provenance are not affected: they check their own codes in every case.
