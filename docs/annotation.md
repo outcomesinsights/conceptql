@@ -97,18 +97,28 @@ The Database chooses its reference lexicon in this order:
 2. When the option is not given and `LEXICON_URL` is set, a Lexicon of the `LEXICON_URL` database, with its own cache. A `LEXICON_URL` database without vocabulary tables raises `ConceptQL::Lexicon::NoVocabularyError`.
 3. When neither exists, the Database has no reference lexicon.
 
-Only the code checks of the vocabulary operators read the reference lexicon. The translation of codes to concepts, the SQL and the counts use the dataset's lexicon only, so they are the same with and without a reference lexicon. A code that the dataset's lexicon does not know gets one of these warnings:
+Only the code checks of the vocabulary operators and of `information_periods` read the reference lexicon. The translation of codes to concepts, the SQL and the counts use the dataset's lexicon only, so they are the same with and without a reference lexicon. A code that the dataset's lexicon does not know gets one of these warnings, unless the 2020 rule below applies:
 
 - "code(s) not present in this dataset", when the reference lexicon knows the code.
 - "unknown code(s)", when the reference lexicon does not know the code either, or when the Database has no reference lexicon.
 
-Both are warnings, never errors, so a statement stays valid on a dataset that lacks some of its codes. Each warning lists every code. When the operator gets the warning "the data has no records of this vocabulary" (see [Null counts](#null-counts)), that warning covers all of its codes. So its codes get no "code(s) not present in this dataset", no "unknown code(s)" and no "code(s) with more than one meaning" warning. A code that does not have the vocabulary's format still gets its warning.
+Both are warnings, never errors, so a statement stays valid on a dataset that lacks some of its codes. Each warning lists every code. When the operator gets the warning "the data has no records of this vocabulary" (see [Null counts](#null-counts)), that warning already says that none of its codes is in the data. So its codes get no "code(s) not present in this dataset" warning. A code that the reference lexicon does not know still gets "unknown code(s)", so a typo is not hidden. A code with more than one meaning and a code that does not have the vocabulary's format also still get their warnings.
 
 The vocabulary operators are built from the vocabularies of both lexicons. So an operator of a vocabulary that only the reference lexicon has is valid, and it is not an "invalid operator" error.
 
-A vocabulary that has no concepts in the dataset's lexicon accepts every code (a rule from 2020), but only when nothing else tells which vocabularies the data has. When the Database has a reference lexicon, or the data has an `etl_vocabulary_ids` table with rows, such a vocabulary accepts no code.
+A vocabulary that no lexicon of the Database has accepts every code (a rule from 2020), because such a lexicon cannot tell a real code from a typo. A lexicon has a vocabulary when it has at least one concept of it. For a code that the dataset's lexicon does not know:
 
-`cpt_or_hcpcs` and the other operators that read several vocabularies check their codes as one set. A code is known when the dataset's lexicon has it in any of their vocabularies. Of the other codes, one that the reference lexicon has in any of the vocabularies is "code(s) not present in this dataset", and the rest are "unknown code(s)". A code is "improperly formatted code" only when it does not have the format of any of the vocabularies. Each warning appears once, on the operator. The 2020 rule applies to the set: the operator accepts every code only when all of its vocabularies have no concepts and nothing else tells which vocabularies the data has.
+| The dataset's lexicon has the vocabulary | Reference lexicon | It has the vocabulary | Warning                                                                              |
+| ---------------------------------------- | ----------------- | --------------------- | ------------------------------------------------------------------------------------ |
+| yes                                      | none              | -                     | "unknown code(s)"                                                                    |
+| yes                                      | given             | yes or no             | "code(s) not present in this dataset" when it knows the code, else "unknown code(s)" |
+| no                                       | none              | -                     | none (the 2020 rule)                                                                 |
+| no                                       | given             | yes                   | "code(s) not present in this dataset" when it knows the code, else "unknown code(s)" |
+| no                                       | given             | no                    | none (the 2020 rule)                                                                 |
+
+`etl_vocabulary_ids` does not change this rule. `ConceptQL::Database#check_codes` applies it for every operator that checks codes.
+
+`cpt_or_hcpcs` and the other operators that read several vocabularies check their codes as one set. A code is known when the dataset's lexicon has it in any of their vocabularies. Of the other codes, one that the reference lexicon has in any of the vocabularies is "code(s) not present in this dataset", and the rest are "unknown code(s)". A code is "improperly formatted code" only when it does not have the format of any of the vocabularies. Each warning appears once, on the operator. The 2020 rule applies to the set: the operator accepts every code only when no lexicon of the Database has any of its vocabularies.
 
 ## The annotation cache of a Query
 

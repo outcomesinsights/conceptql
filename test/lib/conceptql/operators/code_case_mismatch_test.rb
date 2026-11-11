@@ -48,10 +48,10 @@ describe "a code in another case than the stored code" do
 
     # cms_type_of_service has no format row, so "a" passes the format check
     # and reaches the unknown-code check, the reused-code check and the code
-    # list. The vocabulary stores "A". The test data has no records of the
-    # vocabulary, and that warning replaces the code checks there (bead
-    # conceptql-8oim), so the warning is read from a Database without a
-    # data database, which has the lexicon's checks only.
+    # list. The vocabulary stores "A". The warning is read from a Database
+    # without a data database, which has the lexicon's checks only. (Bead
+    # conceptql-8oim made the no-records warning hide the code checks;
+    # conceptql-dufi made it hide only the not-present warning.)
     it "reports a of cms_type_of_service as unknown, selects nothing and lists the code" do
       _(CDB.data_model.concept_codes(DB, "CMS_TYPE_OF_SERVICE")).must_include "A"
       statement = %w[cms_type_of_service a]

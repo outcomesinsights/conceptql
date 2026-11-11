@@ -141,9 +141,9 @@ module ConceptQL
     # The reference lexicon: the full lexicon, beside the lexicon of the
     # dataset (#lexicon), which can be trimmed to the codes that the data
     # contains (bead conceptql-8oim, seed conceptql-d9w). Only the code checks
-    # of the vocabulary operators read it: a code that the dataset's lexicon
-    # does not know is "not present in this dataset" when the reference
-    # lexicon knows it, and an unknown code when it does not. Code-to-concept
+    # (#check_codes) read it: a code that the dataset's lexicon does not know
+    # is "not present in this dataset" when the reference lexicon knows it,
+    # and an unknown code when it does not. Code-to-concept
     # translation, the SQL and the counts use #lexicon only. The vocabulary
     # operators are built from both, so an operator is valid whatever the
     # dataset contains.
@@ -157,6 +157,43 @@ module ConceptQL
 
       @reference_lexicon = (lexicon_url_lexicon(self.class.lexicon_db) if self.class.lexicon_db)
     end
+
+    # The code check that every operator with codes calls (bead
+    # conceptql-dufi, seed conceptql-d9w). It returns [not_present, unknown]:
+    # of the codes that #lexicon does not know in any of the vocabularies,
+    # those that #reference_lexicon knows in any of them, and the rest. The
+    # caller gives "code(s) not present in this dataset" for the first and
+    # "unknown code(s)" for the second.
+    #
+    # The 2020 rule (refs #185): when no lexicon of the Database has a
+    # concept of any of the vocabularies, every code is accepted and both
+    # lists are empty. A lexicon that lacks a vocabulary cannot tell a real
+    # code from a typo. So with a reference lexicon, the rule applies only
+    # when both lexicons lack the vocabularies, and without one, when
+    # #lexicon lacks them. etl_vocabulary_ids does not change the rule.
+    #
+    # A code matches in its own case: a statement warns about a code in
+    # another case instead of raising CodeCaseMismatchError.
+    def check_codes(data_db, vocabulary_ids, codes)
+      vocabulary_ids = Array(vocabulary_ids).uniq
+      missing = codes - known_codes_in(lexicon, data_db, vocabulary_ids, codes)
+      return [ [], [] ] if missing.empty?
+
+      lexicons = [ lexicon, reference_lexicon ].compact
+      return [ [], [] ] if lexicons.all? { |lex| vocabulary_ids.all? { |id| lex.vocabulary_is_empty?(data_db, id) } }
+
+      not_present = reference_lexicon ? known_codes_in(reference_lexicon, data_db, vocabulary_ids, missing) : []
+      [ missing & not_present, missing - not_present ]
+    end
+
+    # The codes that a lexicon has in any of the vocabularies, with no
+    # exception for an empty vocabulary.
+    def known_codes_in(lex, data_db, vocabulary_ids, codes)
+      vocabulary_ids.flat_map do |vocabulary_id|
+        lex.known_codes(data_db, vocabulary_id, codes, check_case: false, empty_means_known: false)
+      end.uniq
+    end
+    private :known_codes_in
 
     def lexicon_url_lexicon(lexicon_db)
       reference = Lexicon.new(lexicon_db, nil, cache: true)

@@ -129,14 +129,13 @@ module ConceptQL
       # The operator checks its codes as one set across its vocabularies
       # (bead conceptql-0h2n). When etl_vocabulary_ids lists none of its
       # vocabularies, it gives the no-records warning and null counts, and
-      # its codes get only the format check, as a Vocabulary operator's do
-      # (bead conceptql-8oim). The other warnings of its vocabulary operators
+      # its codes get no not-present warning, as a Vocabulary operator's do
+      # (bead conceptql-dufi). The other warnings of its vocabulary operators
       # appear only when every one of them gives the warning with the same
       # details (#aggregate_messages).
       def additional_validation(db, opts = {})
         @no_records_in_data = add_warnings?(db, opts) && vocab_ops.all? { |vo| vo.absent_from_data?(db) }
         inner_opts = opts.merge(skip_merged_vocabulary_check: true)
-        inner_opts[:skip_db] = true if @no_records_in_data
         vocab_ops.each { |vo| vo.valid?(db, inner_opts) }
 
         @errors += aggregate_messages(vocab_ops.map(&:errors))
@@ -152,50 +151,23 @@ module ConceptQL
 
       # A code is improperly formatted when every vocabulary rejects its
       # format. (12345 is badly formatted for HCPCS but has the format of
-      # CPT4, so it is checked.) A code is known when the Database's lexicon
-      # has it in any of the vocabularies. Of the other codes, one that the
-      # reference lexicon has in any of the vocabularies is not present in
-      # this dataset, and the rest are unknown. Each warning lists every code.
+      # CPT4, so it is checked.) Database#check_codes sorts the other codes
+      # across all of the vocabularies: a code is known when the Database's
+      # lexicon has it in any of them, and the 2020 rule applies only when no
+      # lexicon has a concept of any of them. With no records of the
+      # vocabularies in the data, the not-present warning is not given. Each
+      # warning lists every code.
       def code_warnings(db, opts = {})
         return [] if arguments.include?("*")
 
         codes = arguments.uniq
         bad_format = codes.select { |code| vocab_ops.all? { |vo| vo.bad_arguments.include?(code) } }
         checked = codes - bad_format
-        missing = lexicon_checks?(opts) && !@no_records_in_data ? checked - known_codes(db, checked, opts) : []
-        reference = nodifier.cdb.reference_lexicon
-        not_present = reference ? known_codes_of(reference, db, missing) : []
+        not_present, unknown = lexicon_checks?(opts) ? nodifier.cdb.check_codes(db, vocab_ops.map(&:vocabulary_id), checked) : [ [], [] ]
+        not_present = [] if @no_records_in_data
 
-        [ [ BAD_FORMAT, *bad_format ], [ Vocabulary::NOT_PRESENT_IN_DATASET, *(missing & not_present) ],
-          [ UNKNOWN_CODE, *(missing - not_present) ] ]
+        [ [ BAD_FORMAT, *bad_format ], [ Vocabulary::NOT_PRESENT_IN_DATASET, *not_present ], [ UNKNOWN_CODE, *unknown ] ]
           .reject { |warning| warning.length == 1 }
-      end
-
-      # The codes that the Database's lexicon has in any of the vocabularies.
-      # The 2020 rule (an empty vocabulary knows every code, refs #185)
-      # applies to the set: only when every vocabulary has no concepts, and
-      # only when no vocabulary operator has a reason against it
-      # (Vocabulary#empty_means_known?).
-      def known_codes(db, codes, opts)
-        return codes if codes.empty?
-
-        lexicon = dm.lexicon
-        empty_means_known = vocab_ops.all? do |vo|
-          vo.empty_means_known?(db, opts) && lexicon.vocabulary_is_empty?(db, vo.vocabulary_id)
-        end
-        return codes if empty_means_known
-
-        known_codes_of(lexicon, db, codes)
-      end
-
-      # The codes that the lexicon has in any of the vocabularies, with no
-      # exception for an empty vocabulary.
-      def known_codes_of(lexicon, db, codes)
-        return [] if codes.empty?
-
-        vocab_ops.map(&:vocabulary_id).uniq.flat_map do |vocabulary_id|
-          lexicon.known_codes(db, vocabulary_id, codes, check_case: false, empty_means_known: false)
-        end.uniq
       end
 
       def aggregate_messages(message_sets)

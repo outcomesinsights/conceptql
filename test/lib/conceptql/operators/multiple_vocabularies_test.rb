@@ -152,8 +152,10 @@ describe ConceptQL::Operators::MultipleVocabularies do
       _(warnings_for(cdb, %w[cpt_or_hcpcs 99214 99213])).must_equal({ "cpt_or_hcpcs" => [ [ "unknown code(s)", "99213" ] ] })
     end
 
-    # The 2020 rule (refs #185): an empty vocabulary knows every code, but
-    # only when nothing tells which vocabularies the data has.
+    # The 2020 rule (refs #185): with no reference lexicon, every code is
+    # known when the lexicon has none of the vocabularies (bead
+    # conceptql-dufi). code_check_test.rb tests the rule with a reference
+    # lexicon.
     describe "without etl_vocabulary_ids" do
       it "accepts every code when every vocabulary has no concepts" do
         _(warnings_for(database({}, etl_vocabulary_ids: nil), %w[cpt_or_hcpcs 99213 J9999])).must_equal({})
@@ -167,8 +169,9 @@ describe ConceptQL::Operators::MultipleVocabularies do
       end
     end
 
-    it "does not accept every code of empty vocabularies with a filled etl_vocabulary_ids" do
-      _(warnings_for(database({}), %w[cpt_or_hcpcs 99213])).must_equal({ "cpt_or_hcpcs" => [ [ "unknown code(s)", "99213" ] ] })
+    # etl_vocabulary_ids no longer turns the rule off (bead conceptql-dufi).
+    it "accepts every code of empty vocabularies also with a filled etl_vocabulary_ids" do
+      _(warnings_for(database({}), %w[cpt_or_hcpcs 99213])).must_equal({})
     end
 
     it "checks the codes with a lexicon and no data database" do
