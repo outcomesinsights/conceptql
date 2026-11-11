@@ -206,4 +206,103 @@ describe "the code check of a Database" do
         .must_equal({ "information_periods" => [ [ unknown, "PARTX" ] ] })
     end
   end
+
+  # provenance and place_of_service_filter check their codes through the same
+  # rule, and give warnings, not errors (bead conceptql-amuu).
+  describe "provenance" do
+    def file_vocab = "JIGSAW_FILE_PROVENANCE_TYPE"
+    def code_vocab = "JIGSAW_CODE_PROVENANCE_TYPE"
+
+    # Both lexicons know inpatient and primary. Only the reference lexicon
+    # knows outpatient and first.
+    def provenance_dataset
+      lexicon_db([ [ file_vocab, "inpatient", "Inpatient" ], [ code_vocab, "primary", "Primary" ], %w[ICD9CM 412 Old] ])
+    end
+
+    def provenance_reference
+      ConceptQL::Lexicon.new(lexicon_db([ [ file_vocab, "inpatient", "Inpatient" ], [ file_vocab, "outpatient", "Outpatient" ],
+                                          [ code_vocab, "primary", "Primary" ], [ code_vocab, "first", "First" ] ]))
+    end
+
+    def provenance(cdb, *keywords)
+      query = cdb.query([ "provenance", %w[icd9 412], *keywords ])
+      _(query.errors).must_be_empty
+      by_operator(query.warnings)["provenance"]
+    end
+
+    it "calls a keyword not present when only the reference lexicon knows it" do
+      cdb = database(provenance_dataset, reference_lexicon: provenance_reference)
+
+      _(provenance(cdb, "inpatient", "outpatient", "first", "garbage"))
+        .must_equal [ [ not_present, "outpatient", "first" ], [ unknown, "garbage" ] ]
+    end
+
+    it "calls a keyword unknown when no lexicon knows it" do
+      _(provenance(database(provenance_dataset), "outpatient", "garbage")).must_equal [ [ unknown, "outpatient", "garbage" ] ]
+    end
+
+    it "gives no warning when no lexicon has the provenance vocabularies" do
+      cdb = database(dataset(has_icd9: true), reference_lexicon: reference(has_icd9: true))
+
+      _(provenance(cdb, "inpatient", "garbage", "inpatient:primary")).must_be_nil
+    end
+
+    it "gives no warning for keywords that the dataset's lexicon knows" do
+      cdb = database(provenance_dataset, reference_lexicon: provenance_reference)
+
+      _(provenance(cdb, "inpatient", "primary", "inpatient:primary", "*")).must_be_nil
+    end
+
+    # A pair is checked half by half, each half against its own vocabulary.
+    # An unknown half makes the pair unknown. Else a half that the reference
+    # lexicon alone knows makes the pair not present.
+    it "checks each half of a pair against its own vocabulary" do
+      cdb = database(provenance_dataset, reference_lexicon: provenance_reference)
+
+      _(provenance(cdb, "inpatient:first", "outpatient:primary", "outpatient:first", "outpatient:garbage",
+                   "primary:inpatient", "inpatient:primary:first", "inpatient:primary"))
+        .must_equal [ [ not_present, "inpatient:first", "outpatient:primary", "outpatient:first" ],
+                      [ unknown, "outpatient:garbage", "primary:inpatient", "inpatient:primary:first" ] ]
+    end
+  end
+
+  describe "place_of_service_filter" do
+    def pos_vocab = "CMS Place of Service"
+
+    def pos_dataset
+      lexicon_db([ [ pos_vocab, "21", "Inpatient Hospital" ], %w[ICD9CM 412 Old] ])
+    end
+
+    def pos_reference
+      ConceptQL::Lexicon.new(lexicon_db([ [ pos_vocab, "21", "Inpatient Hospital" ], [ pos_vocab, "22", "Outpatient Hospital" ] ]))
+    end
+
+    def place_of_service(cdb, *codes)
+      query = cdb.query([ "place_of_service_filter", %w[icd9 412], *codes ])
+      _(query.errors).must_be_empty
+      by_operator(query.warnings)["place_of_service_filter"]
+    end
+
+    it "calls a code not present when only the reference lexicon knows it" do
+      cdb = database(pos_dataset, reference_lexicon: pos_reference)
+
+      _(place_of_service(cdb, "21", 22, "98")).must_equal [ [ not_present, 22 ], [ unknown, "98" ] ]
+    end
+
+    it "calls a code unknown when no lexicon knows it" do
+      _(place_of_service(database(pos_dataset), "22", "98")).must_equal [ [ unknown, "22", "98" ] ]
+    end
+
+    it "gives no warning when no lexicon has the vocabulary" do
+      cdb = database(dataset(has_icd9: true), reference_lexicon: reference(has_icd9: true))
+
+      _(place_of_service(cdb, "21", "98")).must_be_nil
+    end
+
+    it "gives no warning for codes that the dataset's lexicon knows" do
+      cdb = database(pos_dataset, reference_lexicon: pos_reference)
+
+      _(place_of_service(cdb, "21", 21, "*")).must_be_nil
+    end
+  end
 end

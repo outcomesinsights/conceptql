@@ -25,11 +25,11 @@
       "id": "provenance-1",
       "counts": {
         "condition_occurrence": {
-          "rows": 0,
-          "n": 0
+          "rows": 6,
+          "n": 5
         }
       },
-      "errors": [["unrecognized keywords", "inpatient:", "garbage:first"]]
+      "warnings": [["unknown code(s)", "inpatient:", "garbage:first"]]
     },
     "name": "Provenance"
   }

@@ -17,8 +17,8 @@ All notable changes to this project will be documented in this file.
 - The `reference_lexicon:` option of `ConceptQL::Database` gives a Database the full lexicon
   beside the lexicon of its dataset (`Database#reference_lexicon`). When the option is not
   given and `LEXICON_URL` is set, the `LEXICON_URL` lexicon is the reference lexicon, with
-  its own cache. Only the code checks of the vocabulary operators and `information_periods`
-  read it. A code that the
+  its own cache. Only the code checks of the vocabulary operators, `information_periods`,
+  `provenance` and `place_of_service_filter` read it. A code that the
   dataset's lexicon does not know gets the new warning "code(s) not present in this dataset"
   when the reference lexicon knows it, and "unknown code(s)" when it does not. Before, every
   such code was an unknown code: on SEER-Medicare, `M84.58XP` and `W56.22`, which OHDSI
@@ -51,6 +51,19 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** `provenance` and `place_of_service_filter` give a warning, not an error, for
+  a keyword or code that the dataset's lexicon does not know, so the statement stays valid
+  and runs. The unknown keyword or code selects no record. They check it as the vocabulary
+  operators do (`ConceptQL::Database#check_codes`): "code(s) not present in this dataset"
+  when the reference lexicon knows it, "unknown code(s)" when it does not, and no warning
+  when no lexicon has the vocabulary (the 2020 rule). Each warning lists every keyword or
+  code. A `file:code` keyword of `provenance` is checked half by half, each half against its
+  own vocabularies, and a keyword with more than one `:` is unknown. Before, `provenance`
+  gave the error "unrecognized keywords" and `place_of_service_filter` the error "unknown
+  code(s)", and the plain query raised `InvalidStatementError`. So a statement could be
+  valid on one dataset and invalid on another. The checks run when the Database has a
+  lexicon but its data database is nil or a Sequel mock, and `skip_db: true` turns them off.
+  `provenance` with no keyword is still an error.
 - **Breaking:** `cpt_or_hcpcs` checks its codes as one set across CPT4, HCPCS and
   CPT4_HCPCS. A code is known when the dataset's lexicon has it in any of them. Of the other
   codes, one that the reference lexicon has in any of them gets "code(s) not present in this

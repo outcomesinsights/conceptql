@@ -33,7 +33,7 @@ module ConceptQL
                                            "A keyword also matches the provenances under it, so inpatient includes snf. " \
                                            "A keyword of the form file:code, such as inpatient:primary, needs both the file and the code provenance to match. " \
                                            "The keyword * matches a record that has any provenance. " \
-                                           "A statement with no keyword, or with an unknown keyword, is invalid."
+                                           "A statement with no keyword is invalid. An unknown keyword gets a warning and matches no record."
 
       example "Diabetes diagnoses (ICD-9 250.00) from inpatient files",
               [ "provenance", "inpatient", [ "icd9", "250.00" ] ]
@@ -55,18 +55,18 @@ module ConceptQL
 
       private
 
-      def additional_validation(db, _opts = {})
+      # A keyword that the dataset's lexicon does not know is a warning, as
+      # an unknown code of a vocabulary operator is: "code(s) not present in
+      # this dataset" when the reference lexicon knows it, and else "unknown
+      # code(s)" (bead conceptql-amuu). Such a keyword selects no record. The
+      # check reads only the lexicons, so it needs no data database.
+      def additional_validation(db, opts = {})
         return add_error('no provenance keywords; use "*" for any provenance') if arguments.empty?
+        return unless lexicon_checks?(opts)
 
-        # With no lexicon there are no provenance concepts to check against,
-        # and every keyword would be reported as unrecognized. Vocabulary
-        # operators skip their unknown-code check in the same situation.
-        return if dm.lexicon.strategy == :no_db
-
-        bad_keywords = find_bad_keywords(db, arguments)
-        return unless bad_keywords.present?
-
-        add_error("unrecognized keywords", *bad_keywords.uniq)
+        not_present, unknown = check_keywords(db, arguments)
+        add_warning(Vocabulary::NOT_PRESENT_IN_DATASET, *not_present) unless not_present.empty?
+        add_warning(UNKNOWN_CODE, *unknown) unless unknown.empty?
       end
     end
   end

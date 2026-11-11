@@ -97,7 +97,7 @@ The Database chooses its reference lexicon in this order:
 2. When the option is not given and `LEXICON_URL` is set, a Lexicon of the `LEXICON_URL` database, with its own cache. A `LEXICON_URL` database without vocabulary tables raises `ConceptQL::Lexicon::NoVocabularyError`.
 3. When neither exists, the Database has no reference lexicon.
 
-Only the code checks of the vocabulary operators and of `information_periods` read the reference lexicon. The translation of codes to concepts, the SQL and the counts use the dataset's lexicon only, so they are the same with and without a reference lexicon. A code that the dataset's lexicon does not know gets one of these warnings, unless the 2020 rule below applies:
+Only the code checks of the vocabulary operators, `information_periods`, `provenance` and `place_of_service_filter` read the reference lexicon. The translation of codes to concepts, the SQL and the counts use the dataset's lexicon only, so they are the same with and without a reference lexicon. A code that the dataset's lexicon does not know gets one of these warnings, unless the 2020 rule below applies:
 
 - "code(s) not present in this dataset", when the reference lexicon knows the code.
 - "unknown code(s)", when the reference lexicon does not know the code either, or when the Database has no reference lexicon.
@@ -119,6 +119,8 @@ A vocabulary that no lexicon of the Database has accepts every code (a rule from
 `etl_vocabulary_ids` does not change this rule. `ConceptQL::Database#check_codes` applies it for every operator that checks codes.
 
 `cpt_or_hcpcs` and the other operators that read several vocabularies check their codes as one set. A code is known when the dataset's lexicon has it in any of their vocabularies. Of the other codes, one that the reference lexicon has in any of the vocabularies is "code(s) not present in this dataset", and the rest are "unknown code(s)". A code is "improperly formatted code" only when it does not have the format of any of the vocabularies. Each warning appears once, on the operator. The 2020 rule applies to the set: the operator accepts every code only when no lexicon of the Database has any of its vocabularies.
+
+`provenance` checks a plain keyword, such as `inpatient`, as one set across the file and the code provenance vocabularies. It checks a keyword of the form `file:code` half by half: the file keyword against the file provenance vocabularies and the code keyword against the code provenance vocabularies. A pair with an unknown half is "unknown code(s)". Else a pair with a half that only the reference lexicon knows is "code(s) not present in this dataset". A pair with more than one `:` is "unknown code(s)". `place_of_service_filter` checks its codes against CMS Place of Service. For both operators, an unknown keyword or code is a warning, and it selects no record. `provenance` with no keyword is still an error.
 
 ## The annotation cache of a Query
 

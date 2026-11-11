@@ -30,6 +30,12 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
     CDB.query(statement(*codes)).annotate.last[:annotation][:errors]
   end
 
+  # The warnings of the place_of_service_filter operator. The test database
+  # has no reference lexicon, so a code that its lexicon lacks is unknown.
+  def warnings(*codes)
+    by_operator(CDB.query(statement(*codes)).warnings)["place_of_service_filter"]
+  end
+
   def concept_id(code)
     ids = CDB.lexicon.concept_ids(DB, "CMS Place of Service", [ code ])
     _(ids.size).must_equal 1, "CMS Place of Service #{code} is not in the lexicon"
@@ -151,28 +157,39 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
     _(CDB.query(statement("21")).sql).must_match(/["`]pos_concept_id["`]/)
   end
 
+  # Bead conceptql-amuu: an unknown code is a warning, not an error, so the
+  # statement runs, and the code selects no record.
   describe "with an unknown code" do
     let(:unknown) { ConceptQL::Operators::Operator::UNKNOWN_CODE }
 
     it "accepts the codes of the vocabulary" do
       _(errors("21", "22", 11, "99")).must_be_nil
+      _(warnings("21", "22", 11, "99")).must_be_nil
     end
 
-    it "reports a code that is not in the vocabulary" do
-      _(errors("21", "98")).must_equal [ [ unknown, "98" ] ]
+    it "warns about a code that is not in the vocabulary" do
+      _(errors("21", "98")).must_be_nil
+      _(warnings("21", "98")).must_equal [ [ unknown, "98" ] ]
     end
 
-    it "reports only the unknown codes, as written and in the order written" do
-      _(errors("garbage", "21", 98, "Inpatient")).must_equal [ [ unknown, "garbage", 98, "Inpatient" ] ]
+    it "warns about only the unknown codes, as written and in the order written" do
+      _(warnings("garbage", "21", 98, "Inpatient")).must_equal [ [ unknown, "garbage", 98, "Inpatient" ] ]
     end
 
     it 'accepts "*"' do
-      _(errors("*")).must_be_nil
-      _(errors("*", "21", 11)).must_be_nil
+      _(warnings("*")).must_be_nil
+      _(warnings("*", "21", 11)).must_be_nil
     end
 
-    it 'reports an unknown code that is given with "*"' do
-      _(errors("*", "98", "21")).must_equal [ [ unknown, "98" ] ]
+    it 'warns about an unknown code that is given with "*"' do
+      _(warnings("*", "98", "21")).must_equal [ [ unknown, "98" ] ]
+    end
+
+    it "keeps no record for an unknown code" do
+      with_places_of_service do |expected|
+        _(records("98")).must_be_empty
+        _(records("98", "21")).must_equal expected["21"]
+      end
     end
 
     # The form of Draft algorithm 7acf23d1 (stenting_femoral_artery_atherectomy)
@@ -184,21 +201,16 @@ describe ConceptQL::Operators::PlaceOfServiceFilter do
     # The vocabulary has no vocabulary_formats row, so a code matches only in
     # its own case, as the lookup matches it (seed conceptql-oji ruling "b").
     # Every real code is a number, so a code with a letter is added here.
-    it "reports a code in another case" do
-      CDB.lexicon.stub(:concept_codes, ->(*) { %w[21 22 0A] }) do
-        _(errors("0A", "21")).must_be_nil
-        _(errors("0a", "21")).must_equal [ [ unknown, "0a" ] ]
+    it "warns about a code in another case" do
+      CDB.lexicon.stub(:known_codes, ->(_db, _vocab, codes, **) { codes & %w[21 22 0A] }) do
+        _(warnings("0A", "21")).must_be_nil
+        _(warnings("0a", "21")).must_equal [ [ unknown, "0a" ] ]
       end
     end
 
     # The codes have two digits, so the number 1 is not the code 01 (Pharmacy).
-    it "reports a one-digit number" do
-      _(errors(1)).must_equal [ [ unknown, 1 ] ]
-    end
-
-    it "refuses an unknown code in the plain query" do
-      error = _ { CDB.query(statement("98")).sql }.must_raise ConceptQL::InvalidStatementError
-      _(by_operator(error.errors).values).must_equal [ [ [ unknown, "98" ] ] ]
+    it "warns about a one-digit number" do
+      _(warnings(1)).must_equal [ [ unknown, 1 ] ]
     end
 
     # With no lexicon there are no codes to check against.

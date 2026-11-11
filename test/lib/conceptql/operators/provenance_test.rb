@@ -20,6 +20,16 @@ describe ConceptQL::Operators::Provenance do
     CDB.query(statement(*keywords)).annotate.last[:annotation][:errors]
   end
 
+  # The warnings of the provenance operator. The test database has no
+  # reference lexicon, so a keyword that its lexicon lacks is unknown.
+  def warnings(*keywords)
+    by_operator(CDB.query(statement(*keywords)).warnings)["provenance"]
+  end
+
+  def unknown(*keywords)
+    [ [ ConceptQL::Operators::Operator::UNKNOWN_CODE, *keywords ] ]
+  end
+
   describe "with a plain keyword" do
     it "keeps the records whose file provenance is in the file keyword's concepts" do
       inpatient = records("inpatient")
@@ -45,8 +55,16 @@ describe ConceptQL::Operators::Provenance do
       _(records("inpatient", "outpatient")).must_equal (records("inpatient") + records("outpatient")).uniq.sort
     end
 
-    it "reports a keyword that names no provenance concept" do
-      _(errors("inpatient", "garbage")).must_equal [ [ "unrecognized keywords", "garbage" ] ]
+    it "warns about a keyword that names no provenance concept" do
+      _(errors("inpatient", "garbage")).must_be_nil
+      _(warnings("inpatient", "garbage")).must_equal unknown("garbage")
+    end
+
+    # Bead conceptql-amuu: an unknown keyword is a warning, so the statement
+    # runs, and the keyword selects no record.
+    it "keeps no record for an unknown keyword" do
+      _(records("garbage")).must_be_empty
+      _(records("inpatient", "garbage")).must_equal records("inpatient")
     end
   end
 
@@ -61,6 +79,7 @@ describe ConceptQL::Operators::Provenance do
 
     it "is valid" do
       _(errors("*")).must_be_nil
+      _(warnings("*")).must_be_nil
     end
 
     it "checks both columns" do
@@ -75,10 +94,11 @@ describe ConceptQL::Operators::Provenance do
 
     it "is valid with other keywords" do
       _(errors("*", "inpatient", "outpatient:unspecified")).must_be_nil
+      _(warnings("*", "inpatient", "outpatient:unspecified")).must_be_nil
     end
 
-    it "still reports an unrecognized keyword beside it" do
-      _(errors("*", "garbage")).must_equal [ [ "unrecognized keywords", "garbage" ] ]
+    it "still warns about an unknown keyword beside it" do
+      _(warnings("*", "garbage")).must_equal unknown("garbage")
     end
   end
 
@@ -130,6 +150,7 @@ describe ConceptQL::Operators::Provenance do
 
     it "is valid" do
       _(errors("inpatient:primary_or_first", "outpatient:unspecified", "carrier_claim")).must_be_nil
+      _(warnings("inpatient:primary_or_first", "outpatient:unspecified", "carrier_claim")).must_be_nil
     end
 
     # With no lexicon there are no provenance concepts, so nothing is checked.
@@ -142,6 +163,8 @@ describe ConceptQL::Operators::Provenance do
     end
   end
 
+  # Bead conceptql-amuu: an unknown keyword is a warning, not an error. A
+  # pair with more than one separator is unknown.
   describe "with a malformed or unknown file:code keyword" do
     [
       "inpatient:primary:first",
@@ -157,19 +180,19 @@ describe ConceptQL::Operators::Provenance do
       "inpatient:*",
       "*:*"
     ].each do |keyword|
-      it "reports #{keyword.inspect} as written" do
-        _(errors(keyword)).must_equal [ [ "unrecognized keywords", keyword ] ]
+      it "warns about #{keyword.inspect} as written" do
+        _(errors(keyword)).must_be_nil
+        _(warnings(keyword)).must_equal unknown(keyword)
       end
 
-      it "refuses #{keyword.inspect} in the plain query" do
-        error = _ { CDB.query(statement(keyword)).sql }.must_raise ConceptQL::InvalidStatementError
-        _(by_operator(error.errors).values).must_equal [ [ [ "unrecognized keywords", keyword ] ] ]
+      it "keeps no record for #{keyword.inspect}" do
+        _(records(keyword)).must_be_empty
       end
     end
 
-    it "reports only the bad keywords, in the order written" do
-      _(errors("inpatient:garbage", "inpatient:primary", "garbage", "outpatient"))
-        .must_equal [ [ "unrecognized keywords", "inpatient:garbage", "garbage" ] ]
+    it "warns about only the unknown keywords, in the order written" do
+      _(warnings("inpatient:garbage", "inpatient:primary", "garbage", "outpatient"))
+        .must_equal unknown("inpatient:garbage", "garbage")
     end
   end
 
@@ -192,24 +215,24 @@ describe ConceptQL::Operators::Provenance do
       "Inpatient:Outpatient",
       "INPATIENT:PRIMARY:FIRST"
     ].each do |keyword|
-      it "reports #{keyword.inspect} as written" do
-        _(errors(keyword)).must_equal [ [ "unrecognized keywords", keyword ] ]
+      it "warns about #{keyword.inspect} as written" do
+        _(errors(keyword)).must_be_nil
+        _(warnings(keyword)).must_equal unknown(keyword)
       end
 
-      it "refuses #{keyword.inspect} in the plain query" do
-        error = _ { CDB.query(statement(keyword)).sql }.must_raise ConceptQL::InvalidStatementError
-        _(by_operator(error.errors).values).must_equal [ [ [ "unrecognized keywords", keyword ] ] ]
+      it "keeps no record for #{keyword.inspect}" do
+        _(records(keyword)).must_be_empty
       end
     end
 
-    it "reports each keyword in another case beside the same keyword in lower case" do
-      _(errors("inpatient", "Inpatient", "inpatient:primary_or_first", "INPATIENT:PRIMARY_OR_FIRST"))
-        .must_equal [ [ "unrecognized keywords", "Inpatient", "INPATIENT:PRIMARY_OR_FIRST" ] ]
+    it "warns about each keyword in another case beside the same keyword in lower case" do
+      _(warnings("inpatient", "Inpatient", "inpatient:primary_or_first", "INPATIENT:PRIMARY_OR_FIRST"))
+        .must_equal unknown("Inpatient", "INPATIENT:PRIMARY_OR_FIRST")
     end
 
-    it "reports each spelling of an unknown keyword, in the order written" do
-      _(errors("Garbage", "Inpatient", "garbage", "INPATIENT:GARBAGE"))
-        .must_equal [ [ "unrecognized keywords", "Garbage", "Inpatient", "garbage", "INPATIENT:GARBAGE" ] ]
+    it "warns about each spelling of an unknown keyword, in the order written" do
+      _(warnings("Garbage", "Inpatient", "garbage", "INPATIENT:GARBAGE"))
+        .must_equal unknown("Garbage", "Inpatient", "garbage", "INPATIENT:GARBAGE")
     end
   end
 end
