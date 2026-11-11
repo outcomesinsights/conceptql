@@ -101,7 +101,7 @@ bundle exec rake test   # as CI: data model + database from the environment
 bundle exec rake test_gdm
 ```
 
-`rake test_gdm` sets only `CONCEPTQL_DATA_MODEL`. The database and the search path still come from the environment. When an expected-results file is missing, the suite writes a new one, so a run against the wrong fixture leaves untracked files under `test/results/`.
+`rake test_gdm` sets only `CONCEPTQL_DATA_MODEL`. The database and the search path still come from the environment. When an expected-results file is missing, the test fails and the suite writes a placeholder file that holds `{ "fail": true }`, so a run against the wrong fixture leaves untracked files under `test/results/`. Only `CONCEPTQL_OVERWRITE_TEST_RESULTS=1` writes real results.
 
 Default values from `bin/run_tests`:
 
