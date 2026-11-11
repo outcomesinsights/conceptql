@@ -141,7 +141,7 @@ describe "the ms_drg and cms_drg operators" do
 
   # The OHDSI vocabulary keeps each meaning of a DRG code as its own concept
   # row, with concept_class_id MS-DRG for the MS-DRG meaning and DRG for the
-  # CMS-DRG meaning. The GDM vocabulary keeps no class.
+  # CMS-DRG meaning.
   describe "with a small lexicon" do
     def ohdsi_lexicon_db(with_class: true)
       Sequel.connect("sqlite:/").tap do |db|

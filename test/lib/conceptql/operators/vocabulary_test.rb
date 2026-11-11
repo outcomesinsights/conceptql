@@ -73,41 +73,26 @@ describe ConceptQL::Operators::Vocabulary do
     end)
   end
 
-  describe "with example GDM vocabularies" do
+  describe "with example lexicon vocabularies" do
     let(:db) { Sequel.connect("sqlite:/") }
 
     before do
-      if ENV["LEXICON_GDM_ONLY"].present?
-        db.create_table!(:vocabularies) do
-          String :id
-          String :vocabulary_name
-          String :domain
-        end
-        # These are needed to fake out Lexicon
-        db.create_table!(:ancestors) { String :column }
-        db.create_table!(:concepts) { String :column }
-        db.create_table!(:mappings) { String :column }
-        db[:vocabularies].multi_insert([
-                                         { id: "EXAMPLE", vocabulary_name: "Example Vocabulary", domain: "measurement" }
-                                       ])
-      else
-        db.create_table!(:vocabulary) do
-          String :vocabulary_id
-          String :vocabulary_name
-        end
-        # These are needed to fake out Lexicon
-        db.create_table!(:concept_ancestor) { String :column }
-        db.create_table!(:concept) do
-          Integer :concept_id
-          String :concept_code
-          String :concept_name
-          String :vocabulary_id
-        end
-        db.create_table!(:concept_relationship) { String :column }
-        db[:vocabulary].multi_insert([
-                                       { vocabulary_id: "EXAMPLE", vocabulary_name: "Example Vocabulary" }
-                                     ])
+      db.create_table!(:vocabulary) do
+        String :vocabulary_id
+        String :vocabulary_name
       end
+      # These are needed to fake out Lexicon
+      db.create_table!(:concept_ancestor) { String :column }
+      db.create_table!(:concept) do
+        Integer :concept_id
+        String :concept_code
+        String :concept_name
+        String :vocabulary_id
+      end
+      db.create_table!(:concept_relationship) { String :column }
+      db[:vocabulary].multi_insert([
+                                     { vocabulary_id: "EXAMPLE", vocabulary_name: "Example Vocabulary" }
+                                   ])
     end
 
     it "should read from lexicon" do

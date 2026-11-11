@@ -11,7 +11,6 @@ require_relative "../../../db_helper"
 # A database-less Database (db nil or a Sequel mock) keeps LexiconNoDB.
 describe ConceptQL::Lexicon::NoVocabularyError do
   let(:ohdsi_tables) { "concept, concept_ancestor, concept_relationship, vocabulary" }
-  let(:gdm_tables) { "ancestors, concepts, mappings, vocabularies" }
 
   # Database.lexicon_db is built once per process from LEXICON_URL, so the
   # tests replace it. A lambda, because Minitest's stub calls a value that
@@ -100,20 +99,33 @@ describe ConceptQL::Lexicon::NoVocabularyError do
   end
 
   describe "a real data database without vocabulary" do
-    it "raises at Database.new, naming the database, the missing tables of each kind and LEXICON_URL" do
+    it "raises at Database.new, naming the database, the missing OHDSI tables and LEXICON_URL" do
       db = Sequel.connect("sqlite:/")
       err = with_lexicon_db(nil) { no_vocabulary_error(db) }
 
       _(err.searches.map(&:role)).must_equal %i[data_database]
       _(err.searches.first.missing_tables).must_equal(
-        { ohdsi: %i[concept concept_ancestor concept_relationship vocabulary],
-        gdm: %i[ancestors concepts mappings vocabularies] }
+        { ohdsi: %i[concept concept_ancestor concept_relationship vocabulary] }
       )
       _(err.message).must_include "sqlite database"
       _(err.message).must_include "OHDSI tables #{ohdsi_tables}"
-      _(err.message).must_include "GDM tables #{gdm_tables}"
       _(err.message).must_include "LEXICON_URL is not set"
       _(err.message).must_include "every code would match no rows"
+    ensure
+      db&.disconnect
+    end
+
+    # The GDM lexicon is removed (bead conceptql-jh58), so its four tables
+    # are not a lexicon.
+    it "raises for a database that has only the GDM vocabulary tables" do
+      db = Sequel.connect("sqlite:/")
+      %i[ancestors concepts mappings vocabularies].each { |table| db.create_table(table) { Integer :id } }
+      err = with_lexicon_db(nil) { no_vocabulary_error(db) }
+
+      _(err.searches.first.missing_tables).must_equal(
+        { ohdsi: %i[concept concept_ancestor concept_relationship vocabulary] }
+      )
+      _(err.message).wont_include "GDM"
     ensure
       db&.disconnect
     end

@@ -15,9 +15,9 @@ module ConceptQL
     # whatever the event date. So a statement names the system, and the system
     # decides by the event date. ["ms_drg", "010"] selects the DRG 010 events
     # from 2007-10-01, and ["cms_drg", "010"] selects the DRG 010 events before
-    # that day. The concept-ID lookup is the one that drg uses, so the
-    # operators work with the OHDSI and the GDM lexicons alike. They use no
-    # OHDSI validity date and no concept class to select events.
+    # that day. The concept-ID lookup is the one that drg uses. The
+    # operators use no OHDSI validity date and no concept class to select
+    # events.
     #
     # Each operator is a vocabulary operator of vocabulary DRG. So its code
     # format is the DRG row of vocabulary_formats (a vocabulary operator uses

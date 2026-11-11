@@ -2,7 +2,7 @@
 
 require_relative "../../../db_helper"
 
-# config/vocabularies.csv and both lexicons give a vocabulary's long name in
+# config/vocabularies.csv and the OHDSI lexicon give a vocabulary's long name in
 # the column vocabulary_full_name. Entry read vocabulary_long_name, which only
 # DrgSystems set, so every other vocabulary's long_name was its short name
 # (bead conceptql-txmo). The long_name goes into the operator's metadata.
@@ -57,34 +57,33 @@ describe "the long name of a vocabulary" do
     _(blank.map { |op| op[:name] }).must_be_empty
   end
 
-  describe "with a GDM lexicon" do
+  describe "with an OHDSI lexicon" do
     let(:ldb) do
       Sequel.connect("sqlite:/").tap do |ldb|
-        ldb.create_table!(:vocabularies) do
-          String :id
+        ldb.create_table!(:vocabulary) do
+          String :vocabulary_id
           String :vocabulary_name
-          String :domain
         end
-        ldb.create_table!(:concepts) do
-          Integer :id
+        ldb.create_table!(:concept) do
+          Integer :concept_id
           String :vocabulary_id
           String :concept_code
-          String :concept_text
+          String :concept_name
         end
-        ldb.create_table!(:ancestors) { Integer :ancestor_id }
-        ldb.create_table!(:mappings) { Integer :concept_1_id }
-        ldb[:vocabularies].import(%i[id vocabulary_name domain],
-                                  [ %w[GDM_ONLY Lexicon\ Only drug_exposure], %w[ATC Lexicon\ ATC drug_exposure] ])
+        ldb.create_table!(:concept_ancestor) { Integer :ancestor_concept_id }
+        ldb.create_table!(:concept_relationship) { Integer :concept_id_1 }
+        ldb[:vocabulary].import(%i[vocabulary_id vocabulary_name],
+                                [ %w[LEX_ONLY Lexicon\ Only], %w[ATC Lexicon\ ATC] ])
       end
     end
 
     let(:cdb) do
       ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm,
-                                                            lexicon: ConceptQL::Lexicon.new(nil, strategy: ConceptQL::LexiconGDM.new(ldb)))
+                                                            lexicon: ConceptQL::Lexicon.new(nil, strategy: ConceptQL::LexiconOhdsi.new(ldb)))
     end
 
     it "is the lexicon's vocabulary_name for a vocabulary that only the lexicon has" do
-      _(metadata(cdb, "gdm_only")[:long_name]).must_equal "Lexicon Only"
+      _(metadata(cdb, "lex_only")[:long_name]).must_equal "Lexicon Only"
     end
 
     it "is the CSV's vocabulary_full_name for a vocabulary that the CSV also has" do

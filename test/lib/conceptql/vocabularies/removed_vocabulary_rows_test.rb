@@ -32,7 +32,7 @@ describe "the removed vocabulary rows Place of Service and Specialty" do
     _(klass.entry.omopv5_id).must_equal "CMS Place of Service"
     _(klass.entry).must_be :from_lexicon?
     _(klass.entry).wont_be :from_csv?
-    # The OHDSI lexicon gives no domain and the GDM lexicon gives "".
+    # The OHDSI lexicon gives no domain.
     _(klass.entry.domain.to_s).must_be_empty
     _(CDB.query([ "cms_place_of_service", "21" ]).sql).must_match(/["`]clinical_code_vocabulary_id["`] = 'CMS Place of Service'/)
   end
@@ -55,7 +55,7 @@ describe "the removed vocabulary rows Place of Service and Specialty" do
     _(klass.entry.omopv5_id).must_equal "Medicare Specialty"
     _(klass.entry).must_be :from_lexicon?
     _(klass.entry).wont_be :from_csv?
-    # The OHDSI lexicon gives no domain and the GDM lexicon gives "".
+    # The OHDSI lexicon gives no domain.
     _(klass.entry.domain.to_s).must_be_empty
     _(CDB.query([ "medicare_specialty", "C0" ]).sql).must_match(/["`]clinical_code_vocabulary_id["`] = 'Medicare Specialty'/)
   end

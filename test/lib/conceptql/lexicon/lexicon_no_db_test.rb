@@ -3,7 +3,7 @@
 require_relative "../../../helper"
 
 # LexiconNoDB is what a db-less ConceptQL::Database falls back to. It must
-# answer the same table methods as LexiconGDM / LexiconOhdsi, because
+# answer the same table methods as LexiconOhdsi, because
 # LexiconStrategy's lookups are written against them; before it did,
 # provenance, gender, race, place_of_service_filter and lab/drug columns all
 # raised NoMethodError db-less.

@@ -241,15 +241,10 @@ module ConceptQL
                      .join("/")
     end
 
-    # Where a test's expected results live. A few expectations differ by
-    # vocabulary source (ohdsi_vocabs and gdm_vocabs carry different text for
-    # some codes), so a file under test/results/<data model>/<lexicon strategy>/
-    # (ohdsi or gdm) takes precedence over the shared one. Postgres and DuckDB
-    # share one set of expected results.
+    # Where a test's expected results live. Postgres and DuckDB share one set
+    # of expected results.
     def expected_results_path
-      base = "test/results/#{cdb.base_data_model}"
-      path = "#{base}/#{cdb.lexicon.strategy}/#{test_name}"
-      File.exist?(path) ? path : "#{base}/#{test_name}"
+      "test/results/#{cdb.base_data_model}/#{test_name}"
     end
 
     def get_expected_results(results)

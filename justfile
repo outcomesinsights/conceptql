@@ -16,7 +16,7 @@ export CONCEPTQL_UID := `id -u`
 export CONCEPTQL_GID := `id -g`
 
 # CI's Postgres matrix sets SEQUELIZER_SEARCH_PATH and CONCEPTQL_DATA_MODEL to
-# run its other two configs.
+# run its other config.
 # Run gdm_wide (default quick test)
 test *ARGS:
     #!/usr/bin/env bash
@@ -262,12 +262,12 @@ test-db-down:
     [ -z "$running" ] || { echo "test-db-down: another test run uses this checkout's database; leaving it up"; exit 0; }
     docker compose down --remove-orphans
 
-# Run all three CI matrix configs in parallel; fail if any fails
+# Run both Postgres CI matrix configs in parallel; fail if either fails
 test-full:
     #!/usr/bin/env bash
     set -euo pipefail
     ts=$(date +%Y%m%d%H%M%S)
-    mkdir -p {{ log_dir }}/gdm_wide {{ log_dir }}/gdm_ohdsi {{ log_dir }}/gdm_vocabs
+    mkdir -p {{ log_dir }}/gdm_wide {{ log_dir }}/gdm_ohdsi
 
     # Create or recreate test_data once, before the parallel runs. When its image
     # or config has changed, each `docker compose run` would try to recreate it,
@@ -275,7 +275,7 @@ test-full:
     trap '{{ just_executable() }} --justfile {{ justfile() }} test-db-down' EXIT
     docker compose up -d test_data
 
-    echo "Running all 3 CI matrix configs in parallel..."
+    echo "Running both Postgres CI matrix configs in parallel..."
 
     SEQUELIZER_SEARCH_PATH=wide,slim,ohdsi_vocabs CONCEPTQL_DATA_MODEL=gdm_wide \
       docker compose run --rm conceptql 2>&1 | tee {{ log_dir }}/gdm_wide/${ts}.txt &
@@ -285,12 +285,8 @@ test-full:
       docker compose run --rm conceptql 2>&1 | tee {{ log_dir }}/gdm_ohdsi/${ts}.txt &
     pid2=$!
 
-    SEQUELIZER_SEARCH_PATH=slim,gdm_vocabs CONCEPTQL_DATA_MODEL=gdm \
-      docker compose run --rm conceptql 2>&1 | tee {{ log_dir }}/gdm_vocabs/${ts}.txt &
-    pid3=$!
-
     failed=0
-    for pid in $pid1 $pid2 $pid3; do
+    for pid in $pid1 $pid2; do
       if ! wait $pid; then
         failed=1
       fi
@@ -389,11 +385,11 @@ release-check:
 # Local pre-push CI gate. GitHub CI runs the same recipes: its lint job runs
 # lint, fmt-check and hygiene, its Postgres job runs `test` and its DuckDB job
 # runs `test-duckdb`. Locally `test` runs only the default Postgres gdm_wide
-# config (the primary platform). The other 2 Postgres configs and Spark stay in
+# config (the primary platform). The other Postgres config and Spark stay in
 # remote CI as the last line of defense for cross-env edge cases. test-duckdb
 # fails, never skips, when its fixture or libduckdb is unavailable. Then
 # test-diagram runs the diagram renderer tests, which fail when resvg is not
-# the pinned version. Run `just test-full` for all 3 Postgres configs.
+# the pinned version. Run `just test-full` for both Postgres configs.
 #
 # The pre-push hook (.githooks/pre-push, gator's standard) runs this at each pushed
 # commit, in a gate worktree under ~/.cache/gator-gate/, then publishes the beads

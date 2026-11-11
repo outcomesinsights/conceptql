@@ -155,10 +155,10 @@ namespace :schemas do
   include Sequelizer
   namespace :dump do
     file 'schemas/gdm_wide.yml' do |t|
-      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,wide,ohdsi_vocabs,gdm_vocabs')))
+      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,wide,ohdsi_vocabs')))
     end
     file 'schemas/gdm.yml' do |t|
-      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,ohdsi_vocabs,gdm_vocabs')))
+      File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'slim,ohdsi_vocabs')))
     end
     file 'schemas/ohdsi_vocabs.yml' do |t|
       File.write(t.name, ConceptQL::Utils.schema_dump(db(search_path: 'ohdsi_vocabs')))
