@@ -181,23 +181,21 @@ describe "ConceptQL::Database with a reference lexicon" do
       _(with_reference.query(statement).query.count).must_be :>, 0
     end
 
-    # The trimmed lexicon has no CPT4 concepts. CPT4 is in etl_vocabulary_ids,
-    # so the no-records warning does not fire for cpt.
+    # The trimmed lexicon has no CPT4 concepts, and the full one has them.
+    # CPT4 is in etl_vocabulary_ids, so the no-records warning does not fire
+    # for cpt. The rule applies only when both lexicons lack the vocabulary
+    # (bead conceptql-dufi). code_check_test.rb tests each case of the rule.
     describe "the 2020 empty-vocabulary rule" do
-      it "does not accept every code of an empty vocabulary with a reference lexicon" do
+      it "does not apply when the reference lexicon has the vocabulary" do
         _(warnings(with_reference, %w[cpt 99213 00000])).must_equal({ "cpt" => [ [ not_present, "99213" ], [ unknown, "00000" ] ] })
         _(warnings(with_reference(nil), %w[cpt 99213])).must_equal({ "cpt" => [ [ not_present, "99213" ] ] })
       end
 
-      it "does not accept every code of an empty vocabulary with a filled etl_vocabulary_ids" do
+      it "applies without a reference lexicon, also with a filled etl_vocabulary_ids" do
         _(DB[:etl_vocabulary_ids].count).must_be :>, 0
-        _(warnings(dataset_only, %w[cpt 99213])).must_equal({ "cpt" => [ [ unknown, "99213" ] ] })
-      end
-
-      it "still accepts every code of an empty vocabulary with neither" do
         _(@trimmed_db.table_exists?(:etl_vocabulary_ids)).must_equal false
-        [ nil, @trimmed_db ].each do |data_db|
-          _(warnings(dataset_only(data_db), %w[cpt 99213])).must_equal({}, data_db.inspect)
+        [ DB, nil, @trimmed_db ].each do |data_db|
+          _(warnings(dataset_only(data_db), %w[cpt 99213 00000])).must_equal({}, data_db.inspect)
         end
       end
     end
@@ -207,11 +205,15 @@ describe "ConceptQL::Database with a reference lexicon" do
     end
 
     # ICD10CM is not in the fixture's etl_vocabulary_ids. I21.9 is only in the
-    # full lexicon, and Z99.999 is in neither.
-    it "gives an operator of a vocabulary that the data lacks only the no-records warning" do
+    # full lexicon, and Z99.999 is in neither. The no-records warning says
+    # that every code is absent, so the operator gives no not-present
+    # warning, but a code that the full lexicon does not know is still
+    # unknown (bead conceptql-dufi). Without the reference lexicon, no lexicon
+    # has ICD10CM, so the 2020 rule applies.
+    it "gives an operator of a vocabulary that the data lacks no not-present warning" do
       _(@full.known_codes(DB, "ICD10CM", %w[I21.9 Z99.999], check_case: false)).must_equal %w[I21.9]
 
-      _(warnings(with_reference, %w[icd10cm I21.9 Z99.999])).must_equal({ "icd10cm" => [ [ no_records ] ] })
+      _(warnings(with_reference, %w[icd10cm I21.9 Z99.999])).must_equal({ "icd10cm" => [ [ no_records ], [ unknown, "Z99.999" ] ] })
       _(warnings(dataset_only, %w[icd10cm I21.9 Z99.999])).must_equal({ "icd10cm" => [ [ no_records ] ] })
     end
 

@@ -216,10 +216,11 @@ module ConceptQL
     # The strategy's known_codes first asks whether the vocabulary is empty.
     # It asks through the block, so that question also reaches the cache.
     #
-    # An empty vocabulary knows every code (the 2020 rule, refs #185), unless
-    # empty_means_known is false. Then it knows none. A vocabulary operator
-    # passes false when its Database has a reference lexicon or its data has
-    # a filled etl_vocabulary_ids (bead conceptql-8oim).
+    # An empty vocabulary knows every code, unless empty_means_known is
+    # false. Then it knows none. The code checks of the operators pass false
+    # and apply the 2020 rule (refs #185) through Database#check_codes,
+    # because the rule needs both lexicons: it applies only when the
+    # reference lexicon lacks the vocabulary too (bead conceptql-dufi).
     def known_codes(data_db, vocabulary_id, codes, check_case: true, empty_means_known: true)
       known = lookup(:known_codes, [ data_db, vocabulary_id, codes, empty_means_known ]) do
         @strategy.known_codes(data_db, vocabulary_id, codes) do

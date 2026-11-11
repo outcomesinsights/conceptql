@@ -138,8 +138,9 @@ describe "ConceptQL::Lexicon lookup cache" do
       _(vocab_strategy.calls[:vocabulary_is_empty?]).must_equal 2
     end
 
-    # The 2020 rule is off when a vocabulary operator knows better (bead
-    # conceptql-8oim), and the two answers are kept apart.
+    # The code checks pass false and apply the 2020 rule themselves, with
+    # both lexicons (Database#check_codes, bead conceptql-dufi). The two
+    # answers are kept apart.
     it "accepts no code of an empty vocabulary with empty_means_known: false" do
       lexicon = ConceptQL::Lexicon.new(nil, strategy: vocab_strategy, cache: true)
 

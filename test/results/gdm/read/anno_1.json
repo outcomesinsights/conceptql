@@ -1,6 +1,6 @@
 [
   "read",
-  "XYS",
+  "G30..00",
   {
     "annotation": {
       "id": "read-1",

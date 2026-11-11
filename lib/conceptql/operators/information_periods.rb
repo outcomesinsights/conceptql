@@ -41,15 +41,18 @@ module ConceptQL
       private
 
       # A code that names no concept selects no period. A code is known only
-      # in its own case, as the lookup finds it. The check reads only the
-      # lexicon, so it needs no data database.
+      # in its own case, as the lookup finds it. Database#check_codes sorts
+      # the codes that the dataset's lexicon does not know, with the 2020
+      # rule, as for a vocabulary operator (bead conceptql-dufi). The check
+      # reads only the lexicons, so it needs no data database.
       def additional_validation(db, opts = {})
         return unless lexicon_checks?(opts)
 
         codes = dm.information_type_codes(arguments)
         return if codes.empty?
 
-        unknown = codes - dm.known_codes(db, dm.information_types_vocab, codes, check_case: false)
+        not_present, unknown = nodifier.cdb.check_codes(db, dm.information_types_vocab, codes)
+        add_warning(Vocabulary::NOT_PRESENT_IN_DATASET, *not_present) unless not_present.empty?
         add_warning(UNKNOWN_CODE, *unknown) unless unknown.empty?
       end
     end

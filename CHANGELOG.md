@@ -17,7 +17,8 @@ All notable changes to this project will be documented in this file.
 - The `reference_lexicon:` option of `ConceptQL::Database` gives a Database the full lexicon
   beside the lexicon of its dataset (`Database#reference_lexicon`). When the option is not
   given and `LEXICON_URL` is set, the `LEXICON_URL` lexicon is the reference lexicon, with
-  its own cache. Only the code checks of the vocabulary operators read it. A code that the
+  its own cache. Only the code checks of the vocabulary operators and `information_periods`
+  read it. A code that the
   dataset's lexicon does not know gets the new warning "code(s) not present in this dataset"
   when the reference lexicon knows it, and "unknown code(s)" when it does not. Before, every
   such code was an unknown code: on SEER-Medicare, `M84.58XP` and `W56.22`, which OHDSI
@@ -53,21 +54,28 @@ All notable changes to this project will be documented in this file.
 - **Breaking:** `cpt_or_hcpcs` checks its codes as one set across CPT4, HCPCS and
   CPT4_HCPCS. A code is known when the dataset's lexicon has it in any of them. Of the other
   codes, one that the reference lexicon has in any of them gets "code(s) not present in this
-  dataset", and the rest get "unknown code(s)". An empty vocabulary accepts every code only
-  when all three are empty and the 2020 rule applies (no reference lexicon and no filled
-  `etl_vocabulary_ids`). Before, an empty CPT4 or HCPCS accepted every code, so on
+  dataset", and the rest get "unknown code(s)". It accepts every code (the 2020 rule) only
+  when no lexicon of the Database has a concept of any of the three. Before, an empty CPT4 or
+  HCPCS accepted every code, so on
   SEER-Medicare, which has only CPT4_HCPCS, `cpt_or_hcpcs` never warned about a code. When
   `etl_vocabulary_ids` lists none of the three, `cpt_or_hcpcs` gets "the data has no records
   of this vocabulary" once and null counts. Before, it got neither.
 - **Breaking:** a vocabulary that has no concepts in the Database's lexicon no longer accepts
-  every code when the Database has a reference lexicon or the data has an
-  `etl_vocabulary_ids` table with rows. Its codes get "code(s) not present in this dataset"
-  or "unknown code(s)". Without either, it still accepts every code, as since 2020 (#185).
+  every code when the reference lexicon has concepts of it. Its codes get "code(s) not
+  present in this dataset" or "unknown code(s)". The 2020 rule (#185) now applies only when
+  no lexicon of the Database has the vocabulary: the dataset's lexicon and, when it is
+  given, the reference lexicon. `etl_vocabulary_ids` does not change the rule.
+  `ConceptQL::Database#check_codes` applies it for the vocabulary operators, `cpt_or_hcpcs`
+  and `information_periods`. So `information_periods` also asks the reference lexicon: with
+  a reference lexicon that has GDM_INFORMATION_TYPE, an information type code that it does
+  not know is "unknown code(s)", even when the dataset's lexicon lacks the vocabulary. See
+  the table in `docs/annotation.md`.
 - A vocabulary operator that gets "the data has no records of this vocabulary" gets no
-  code warning of the lexicon: no "unknown code(s)", no "code(s) not present in this
-  dataset" and no "code(s) with more than one meaning". That warning covers all of its
-  codes. A badly formatted code still gets its warning. So `["icd10pcs", "Z561123"]` on the
-  test fixtures gives only the no-records warning.
+  "code(s) not present in this dataset" warning, because that warning already says that none
+  of its codes is in the data. Its codes still get "unknown code(s)", "code(s) with more than
+  one meaning" and the format warning, so a typo is not hidden. `cpt_or_hcpcs` follows the
+  same rule for its set. So `["icd10pcs", "Z561123"]` on the test fixtures gives the
+  no-records warning and "unknown code(s)".
 - **Breaking:** a vocabulary operator whose vocabulary is not in the dataset's GDM table
   `etl_vocabulary_ids` gets the warning "the data has no records of this vocabulary", and
   `Query#annotate` gives it null counts (`{"rows": null, "n": null}`). An operator whose

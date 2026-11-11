@@ -14,7 +14,8 @@
       },
       "warnings": [
         ["improperly formatted code", "AA561123"],
-        ["the data has no records of this vocabulary"]
+        ["the data has no records of this vocabulary"],
+        ["unknown code(s)", "Z561123", "561123"]
       ]
     },
     "name": "ICD-10 PCS"
