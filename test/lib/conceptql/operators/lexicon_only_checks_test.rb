@@ -30,6 +30,13 @@ describe "the code checks with a lexicon and no data database" do
 
   let(:unknown_information_type) { { "information_periods" => [ [ "unknown code(s)", "PART D" ] ] } }
 
+  # provenance and place_of_service_filter check their codes the same way
+  # (bead conceptql-amuu).
+  let(:provenance) { [ "provenance", %w[icd9 412], "inpatient", "garbage" ] }
+  let(:place_of_service) { [ "place_of_service_filter", %w[icd9 412], "21", "98" ] }
+  let(:unknown_keyword) { { "provenance" => [ [ "unknown code(s)", "garbage" ] ] } }
+  let(:unknown_place_of_service) { { "place_of_service_filter" => [ [ "unknown code(s)", "98" ] ] } }
+
   describe "with a lexicon" do
     it "warns about an unknown code" do
       data_databases.each do |name, data_db|
@@ -55,6 +62,15 @@ describe "the code checks with a lexicon and no data database" do
       end
     end
 
+    it "warns about an unknown provenance keyword and an unknown place of service" do
+      data_databases.each do |name, data_db|
+        cdb = ConceptQL::Database.new(data_db, data_model: data_model, lexicon: lexicon)
+
+        _(warnings(cdb, provenance)).must_equal unknown_keyword, name
+        _(warnings(cdb, place_of_service)).must_equal unknown_place_of_service, name
+      end
+    end
+
     it "gives neither warning with skip_db" do
       data_databases.each do |name, data_db|
         cdb = ConceptQL::Database.new(data_db, data_model: data_model, lexicon: lexicon)
@@ -62,6 +78,8 @@ describe "the code checks with a lexicon and no data database" do
         _(warnings(cdb, %w[icd9 000.00 412], skip_db: true)).must_be_empty name
         _(warnings(cdb, %w[drg 410], skip_db: true)["drg"]).wont_include reused_drg, name
         _(warnings(cdb, [ "information_periods", "PART D" ], skip_db: true)).must_be_empty name
+        _(warnings(cdb, provenance, skip_db: true)).must_be_empty name
+        _(warnings(cdb, place_of_service, skip_db: true)).must_be_empty name
       end
     end
   end
@@ -75,6 +93,8 @@ describe "the code checks with a lexicon and no data database" do
         _(warnings(cdb, %w[icd9 000.00 412])).must_be_empty name
         _(warnings(cdb, %w[drg 410])["drg"]).wont_include reused_drg, name
         _(warnings(cdb, [ "information_periods", "PART D" ])).must_be_empty name
+        _(warnings(cdb, provenance)).must_be_empty name
+        _(warnings(cdb, place_of_service)).must_be_empty name
       end
     end
   end

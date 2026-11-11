@@ -28,7 +28,7 @@
           "n": 0
         }
       },
-      "errors": [["unrecognized keywords", "carrier", "garbage", "other"]]
+      "warnings": [["unknown code(s)", "carrier", "garbage", "other"]]
     },
     "name": "Provenance"
   }

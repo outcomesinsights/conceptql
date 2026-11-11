@@ -1,10 +1,1 @@
-{
-  "invalid_statement": [
-    {
-      "operator": "provenance",
-      "id": "provenance-1",
-      "message": "unrecognized keywords",
-      "details": ["38000204"]
-    }
-  ]
-}
+[]

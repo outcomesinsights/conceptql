@@ -4,8 +4,7 @@ require_relative "../../../db_helper"
 
 # A program that looks up a code in another case than the stored one gets
 # ConceptQL::CodeCaseMismatchError (bead conceptql-rz8s). A statement does
-# not: it keeps its warning or its validation error, selects nothing, and
-# still lists its codes. These run against the test data, in every config.
+# not: it keeps its warning, selects nothing, and still lists its codes. These run against the test data, in every config.
 describe "a code in another case than the stored code" do
   def warnings(statement)
     by_operator(CDB.query(statement).warnings).fetch(statement.first, [])
@@ -63,25 +62,25 @@ describe "a code in another case than the stored code" do
       _(CDB.query(statement).code_list.map { |code| [ code.code, code.description ] }).must_equal [ [ "a", nil ] ]
     end
 
-    # The CMS Place of Service vocabulary stores OMOP4822036. Query refuses
-    # the SQL of an invalid statement, so this builds the operator directly.
-    it "reports omop4822036 as an unknown place of service and builds its condition" do
+    # The CMS Place of Service vocabulary stores OMOP4822036.
+    it "reports omop4822036 as an unknown place of service and selects nothing" do
       _(CDB.data_model.concept_codes(DB, "CMS Place of Service")).must_include "OMOP4822036"
-      query = CDB.query([ "place_of_service_filter", %w[icd9 412], "omop4822036" ])
+      statement = [ "place_of_service_filter", %w[icd9 412], "omop4822036" ]
 
-      _(query.annotate.last[:annotation][:errors]).must_equal [ [ ConceptQL::Operators::Operator::UNKNOWN_CODE, "omop4822036" ] ]
-      _(query.operator.evaluate(DB).sql).must_match(/visit_source_concept_id/)
+      _(warnings(statement)).must_equal [ [ ConceptQL::Operators::Operator::UNKNOWN_CODE, "omop4822036" ] ]
+      _(CDB.query(statement).sql).must_match(/visit_source_concept_id/)
+      _(count(statement)).must_equal 0
     end
 
-    # Provenance keywords are concept codes in lower case. Query refuses the
-    # SQL of an invalid statement, but the operator still builds its
-    # condition (Provenanceable#pair_condition), so this builds it directly.
-    it "reports Inpatient as a bad provenance keyword and builds its condition" do
+    # Provenance keywords are concept codes in lower case
+    # (Provenanceable#pair_condition builds the condition of a pair).
+    it "reports Inpatient as an unknown provenance keyword and selects nothing" do
       %w[Inpatient inpatient:Primary].each do |keyword|
-        query = CDB.query([ "provenance", %w[icd9 250.00], keyword ])
+        statement = [ "provenance", %w[icd9 250.00], keyword ]
 
-        _(query.annotate.last[:annotation][:errors]).must_equal [ [ "unrecognized keywords", keyword ] ]
-        _(query.operator.evaluate(DB).sql).must_match(/file_provenance_type/)
+        _(warnings(statement)).must_equal [ [ ConceptQL::Operators::Operator::UNKNOWN_CODE, keyword ] ]
+        _(CDB.query(statement).sql).must_match(/file_provenance_type/)
+        _(count(statement)).must_equal 0
       end
     end
   end

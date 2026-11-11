@@ -27,7 +27,7 @@ module ConceptQL
     end
 
     # No keyword at all is a validation error of Provenance. It still builds
-    # the condition of "*", as an invalid pair still builds a condition.
+    # the condition of "*", as an unknown pair still builds a condition.
     def build_where_from_codes(db, codes)
       return plain_condition(db, []) if codes.empty? || codes.include?(ANY)
 
@@ -39,19 +39,31 @@ module ConceptQL
       Sequel.|(*conditions)
     end
 
-    # The keywords as written that name no provenance concept. A pair is
-    # recognized only when it has one separator, a file keyword on the left
-    # and a code keyword on the right. Case is compared exactly, as the lookup
-    # compares it: the provenance vocabularies have no vocabulary_formats row
-    # that declares case-insensitivity (seed conceptql-oji ruling "b"). So
-    # "Inpatient" names no concept, and the concept codes are in lower case.
-    # "*" is known. It is not a half of a pair.
-    def find_bad_keywords(db, codes)
-      pairs, plain = (codes - [ ANY ]).partition { |code| pair_keyword?(code) }
-      known = known_keywords(db, all_provenance_types_vocab)
-      bad = plain.reject { |code| known.include?(code.to_s) }
-      bad += pairs.reject { |pair| known_pair?(db, pair) }
-      codes & bad
+    # The keywords as written that the dataset's lexicon does not know, as
+    # [not_present, unknown] in the order written (bead conceptql-amuu).
+    # Database#check_codes sorts them with the 2020 rule, as it sorts the
+    # codes of a vocabulary operator: a keyword that the reference lexicon
+    # knows is not present in this dataset, and the rest are unknown.
+    #
+    # A plain keyword is checked against the file and the code provenance
+    # vocabularies together. A pair is checked half by half: the file keyword
+    # against the file vocabularies and the code keyword against the code
+    # vocabularies. A pair with an unknown half is unknown, and else a pair
+    # with a half that is not present is not present. A pair needs exactly
+    # one separator, or it is unknown.
+    #
+    # Case is compared exactly, as the lookup compares it: the provenance
+    # vocabularies have no vocabulary_formats row that declares
+    # case-insensitivity (seed conceptql-oji ruling "b"). So "Inpatient" names
+    # no concept, and the concept codes are in lower case. "*" is known. It is
+    # not a half of a pair.
+    def check_keywords(db, codes)
+      pairs, plain = (codes.map(&:to_s).uniq - [ ANY ]).partition { |code| pair_keyword?(code) }
+      not_present, unknown = check_codes(db, all_provenance_types_vocab, plain)
+      pair_not_present, pair_unknown = check_pairs(db, pairs)
+      [ not_present + pair_not_present, unknown + pair_unknown ].map do |bad|
+        codes.select { |code| bad.include?(code.to_s) }.uniq
+      end
     end
 
     private
@@ -60,25 +72,31 @@ module ConceptQL
       code.to_s.include?(PAIR_SEPARATOR)
     end
 
-    def known_pair?(db, pair)
-      file, code, *rest = pair.split(PAIR_SEPARATOR, -1)
-      rest.empty? &&
-        known_keywords(db, dm.file_provenance_types_vocab).include?(file) &&
-        known_keywords(db, dm.code_provenance_types_vocab).include?(code)
+    # [not_present, unknown] of the pairs.
+    def check_pairs(db, pairs)
+      halves = pairs.to_h { |pair| [ pair, pair.split(PAIR_SEPARATOR, -1) ] }
+      malformed, formed = halves.partition { |_, parts| parts.size != 2 }.map(&:to_h)
+      files_not_present, files_unknown = check_codes(db, dm.file_provenance_types_vocab, formed.values.map(&:first).uniq)
+      codes_not_present, codes_unknown = check_codes(db, dm.code_provenance_types_vocab, formed.values.map(&:last).uniq)
+      unknown = formed.select { |_, (file, code)| files_unknown.include?(file) || codes_unknown.include?(code) }.keys
+      not_present = formed.select { |_, (file, code)| files_not_present.include?(file) || codes_not_present.include?(code) }.keys
+      [ not_present - unknown, malformed.keys + unknown ]
     end
 
-    # The concept codes of the vocabularies.
-    def known_keywords(db, vocabularies)
-      dm.concept_codes(db, vocabularies)
+    # Database#check_codes, which is not asked about no codes.
+    def check_codes(db, vocabularies, codes)
+      return [ [], [] ] if codes.empty?
+
+      nodifier.cdb.check_codes(db, vocabularies, codes)
     end
 
     def all_provenance_types_vocab
       [ dm.file_provenance_types_vocab, dm.code_provenance_types_vocab ].flatten
     end
 
-    # The keywords come from the statement, whose validation reports a bad
-    # one (find_bad_keywords), so the lookup does not raise
-    # CodeCaseMismatchError.
+    # The keywords come from the statement, whose validation warns about a
+    # bad one (check_keywords), so the lookup does not raise
+    # CodeCaseMismatchError. A keyword that names no concept selects nothing.
     def prov_of(db, vocabularies, ancestors)
       dm.descendants_of(db, dm.concept_ids(db, vocabularies, ancestors, check_case: false))
     end
@@ -90,7 +108,7 @@ module ConceptQL
       )
     end
 
-    # An invalid pair (validation reports it) still builds a condition. A
+    # An unknown pair (validation warns about it) still builds a condition. A
     # half with no concept matches nothing, so the pair keeps no record.
     def pair_condition(db, pair)
       file, code = pair.split(PAIR_SEPARATOR, 2)

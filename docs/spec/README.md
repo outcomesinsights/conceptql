@@ -1886,7 +1886,7 @@ Passes along the records whose place of service is one of the given CMS Place of
 
 - **Upstream:** one operator.
 - **Arguments:**
-  - `places_of_service` (codelist): One or more CMS Place of Service codes, such as 21 (inpatient hospital) or 22 (outpatient hospital). The code * matches a record whose place of service is any code of that vocabulary. An unknown code makes the statement invalid.
+  - `places_of_service` (codelist): One or more CMS Place of Service codes, such as 21 (inpatient hospital) or 22 (outpatient hospital). The code * matches a record whose place of service is any code of that vocabulary. An unknown code gets a warning and matches no record.
 - **Returns:** The upstream records whose place of service is one of the given codes.
 
 ______________________________________________________________________
@@ -1911,7 +1911,7 @@ Passes along the records whose provenance matches at least one of the given keyw
 
 - **Upstream:** one operator.
 - **Arguments:**
-  - `provenance_types` (codelist): One or more provenance keywords, in lower case. A file keyword, such as inpatient, outpatient or carrier_claim, says which kind of file a record came from. A code keyword, such as primary or first, says where the code was on the claim. A plain keyword matches a record when its file provenance or its code provenance matches it. A keyword also matches the provenances under it, so inpatient includes snf. A keyword of the form file:code, such as inpatient:primary, needs both the file and the code provenance to match. The keyword * matches a record that has any provenance. A statement with no keyword, or with an unknown keyword, is invalid.
+  - `provenance_types` (codelist): One or more provenance keywords, in lower case. A file keyword, such as inpatient, outpatient or carrier_claim, says which kind of file a record came from. A code keyword, such as primary or first, says where the code was on the claim. A plain keyword matches a record when its file provenance or its code provenance matches it. A keyword also matches the provenances under it, so inpatient includes snf. A keyword of the form file:code, such as inpatient:primary, needs both the file and the code provenance to match. The keyword * matches a record that has any provenance. A statement with no keyword is invalid. An unknown keyword gets a warning and matches no record.
 - **Returns:** The upstream records whose provenance matches at least one of the keywords.
 
 ______________________________________________________________________
