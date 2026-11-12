@@ -61,7 +61,7 @@ Use `docker-compose.yml` which spins up a `test_data` Postgres container with al
 
 `just test` and `just test-full` run these. The container runs as the calling user, so raw `docker compose` also needs `CONCEPTQL_UID` and `CONCEPTQL_GID` exported (`id -u`, `id -g`). The justfile exports them. Without them, `docker compose run` fails with "unable to find user run-through-just-or-export-CONCEPTQL_UID".
 
-When `just test` or `just test-full` exits, it runs `just test-db-down`, which removes this checkout's `test_data` container and network. It leaves them up while another test run of the same checkout uses them, or when `KEEP_TEST_DB=1` is set. Every worktree has its own compose project, so before this rule each finished worktree left a database running.
+When `just test` or `just test-full` exits, it runs `just test-db-down`, which removes this checkout's `test_data` container, network and anonymous volume (`--volumes`). The test_data image declares a volume at `/var/lib/postgresql`, but its database is in `PGDATA=/data`, so the volume is always empty. Without `--volumes`, every run left one dangling volume. It leaves them up while another test run of the same checkout uses them, or when `KEEP_TEST_DB=1` is set. Every worktree has its own compose project, so before this rule each finished worktree left a database running.
 
 ```bash
 # GH Actions runs both of these matrix configs — both must pass:
