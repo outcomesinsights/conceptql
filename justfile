@@ -253,6 +253,10 @@ spec-check:
 # every finished worktree left its test_data database running (59 were found on
 # titan on 2026-11-02). It does nothing while another test run of this checkout
 # still uses the database, and nothing when KEEP_TEST_DB is set.
+# --volumes removes the anonymous volume that the test_data image declares
+# (/var/lib/postgresql). The database lives in PGDATA=/data inside the image, so
+# the volume is always empty. Without --volumes, every run left one dangling
+# volume (153 were traced to conceptql runs on titan by 2026-11-12).
 # Stop this checkout's test database unless a test run still uses it
 test-db-down:
     #!/usr/bin/env bash
@@ -260,7 +264,7 @@ test-db-down:
     [ -z "${KEEP_TEST_DB:-}" ] || exit 0
     running=$(docker ps -q --filter "label=com.docker.compose.project.working_dir=${PWD}" --filter "label=com.docker.compose.oneoff=True")
     [ -z "$running" ] || { echo "test-db-down: another test run uses this checkout's database; leaving it up"; exit 0; }
-    docker compose down --remove-orphans
+    docker compose down --remove-orphans --volumes
 
 # Run both Postgres CI matrix configs in parallel; fail if either fails
 test-full:
