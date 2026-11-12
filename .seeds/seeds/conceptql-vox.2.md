@@ -5,7 +5,7 @@ status: captured
 type: exploration
 parent: conceptql-vox
 created_at: 2026-11-12T18:31:31.813803+00:00
-updated_at: 2026-11-12T23:35:08.427194+00:00
+updated_at: 2026-11-12T23:55:26.247794+00:00
 tags:
   - cutting
   - ontology
@@ -173,3 +173,34 @@ Beads:
 - `conceptql-x9qv`: declare each operator's effects and export them as `facets[:effects]` (depends on mc54).
 - `conceptql-tc0q`: spec-build check of operator class terms against the facets. BLOCKED on the glossary ruling of the term rules (depends on mc54 and x9qv).
 - Defects found on the way: `conceptql-wsib` (ethnicity ignores scope windows; Ryan: it should be Timeless like gender and race) and `conceptql-wldf` (metadata min_upstreams is 1 for union and co_reported, which require 2).
+
+## UPDATE 2026-11-12: plan revised to replace the old metadata fields; adversarial review
+
+### RULED 2026-11-12 (Ryan)
+
+- "why not just outright replace the top level with these new facets and adapt jde and the spec to utilize this new information" → facets become TOP-LEVEL metadata keys; basic_type, arity, min_upstreams and max_upstreams are removed (conceptql 0.9.0, a breaking change of the metadata format). This supersedes the earlier ruling of one `facets` hash.
+- Diagram symbol: "Declared diagram_base". basic_type is renamed to diagram_base, declared per operator, used only for drawing. Reason: count and dedup draw "set" while episode, numeric_filter and time_window draw "temporal"; all five take one upstream, and count and episode are both aggregates, so no facet can produce the symbol.
+- Window facet: `timeless` (true/false), the code's own term. "window_by: person" was wrong: a whole-study date range skips a timeless operator entirely, and only a window table matches it by person.
+- "one_result_per_person": dropped. It is a property of a statement, not of an operator (Query#events_per_patient).
+- "compares_dates" renamed `temporal_comparison`, to match the spec term and the TemporalOperator class.
+- Ryan asked for an adversarial check before changes: "let's also have an advesary check our work before we make changes".
+
+### Adversarial review findings that changed the plan (all verified in code)
+
+- Mapping two_or_more to editor arity -3 would stop the editor from inserting union and co_reported (an insert wraps a node in a parent with one child). Keep -1. The editor's arity stays exactly as today.
+- The spec builder reads min_upstreams and max_upstreams (`docs/spec/build/reference.rb`), and `just ci` does not run spec-check. The union and co_reported "Upstream:" line in the README becomes "two or more", a correct fix.
+- The editor sets its node `kind` from basic_type, and kind "filter" drives how left and right are saved. The editor derives it from upstreams == left_right.
+- Effects and diagram_base must pass to subclasses: the 83 vocabulary operators are `Class.new(Vocabulary)`.
+- `codeset_only?` (metadata_extractor) must use upstreams == "none". Effects or reads_data change the set, and t_shank stores the value in its statistics.
+- provider_filter is keep and change (it outputs one result per matching provider and adds columns).
+- occurrence includes SingleEvent but can return several results per person: a real defect, filed as `conceptql-vsqm`.
+- count, dedup, sum, numeric, from and invalid are hidden from the metadata.
+
+### Beads now
+
+- `conceptql-wsib` ethnicity Timeless and Windowable → blocks `conceptql-mc54` (derived facets as top-level keys) → blocks `conceptql-9h85` (diagram_base and switching conceptql's readers).
+- `conceptql-x9qv` (effects; depends on mc54).
+- `conceptql-zi43` (remove the old keys; depends on 9h85 and x9qv; supersedes `conceptql-wldf`).
+- `conceptql-tc0q` (spec-term check) stays blocked on the term rules.
+- `conceptql-vsqm` (occurrence events_per_patient defect).
+- The editor bead is requested from a live session in the editor's repo, blocked until conceptql 0.9.0 is released.
