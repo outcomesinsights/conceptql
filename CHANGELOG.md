@@ -141,8 +141,9 @@ All notable changes to this project will be documented in this file.
   (`ConceptQL::Operators::Operator::NON_STRING_CODE`). The statement is invalid, so
   ConceptQL builds no SQL for it, and the diagram shows the error. Before, the statement
   was valid, and its SQL, its counts and its code list raised a database error: on
-  Postgres "operator does not exist: text = integer", and on DuckDB a conversion error. This applies to every vocabulary operator, including the
-  operators that search several vocabularies, such as `cpt_or_hcpcs`.
+  Postgres "operator does not exist: text = integer", and on DuckDB a conversion error.
+  This applies to every vocabulary operator, including the operators that search several
+  vocabularies, such as `cpt_or_hcpcs`.
 
 ## [0.8.0] - 2026-11-10
 
