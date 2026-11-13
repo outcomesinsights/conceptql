@@ -294,17 +294,20 @@ describe ConceptQL::Query do
         end
       end
 
-      describe "with #{name} in the scope options" do
-        let(:query) { CDB.query([ "icd9", "412" ], scope_opts: window_options.transform_keys(&:to_sym)) }
+      # conceptql-0vwh: String keys in the scope options had no effect.
+      { "Symbol" => :to_sym, "String" => :to_s }.each do |kind, key_type|
+        describe "with #{name} in the scope options with #{kind} keys" do
+          let(:query) { CDB.query([ "icd9", "412" ], scope_opts: window_options.transform_keys(&key_type)) }
 
-        it "reports the error on a window operator around the statement" do
-          _(query.errors).must_equal(errors)
-          _(query.annotate(skip_counts: true).first).must_equal "window"
-        end
+          it "reports the error on a window operator around the statement" do
+            _(query.errors).must_equal(errors)
+            _(query.annotate(skip_counts: true).first).must_equal "window"
+          end
 
-        it "builds no SQL" do
-          error = _ { query.sql }.must_raise(ConceptQL::InvalidStatementError)
-          _(error.errors).must_equal(errors)
+          it "builds no SQL" do
+            error = _ { query.sql }.must_raise(ConceptQL::InvalidStatementError)
+            _(error.errors).must_equal(errors)
+          end
         end
       end
     end
@@ -336,6 +339,41 @@ describe ConceptQL::Query do
       query = CDB.query([ "icd9", "412" ], scope_opts: { start_date: "2008-01-01", end_date: "2010-12-31" })
       _(query.annotate(skip_counts: true).first).must_equal "icd9"
       _(query.valid?).must_equal true
+    end
+  end
+
+  # conceptql-0vwh: Database#query did not rekey the scope options, so window
+  # options with String keys (from a calling program that reads JSON) had no
+  # effect, and the statement ran over all dates.
+  describe "window options with String keys in the scope options" do
+    statement = [ "icd9", "412" ]
+    # The CTE names end in a random hex.
+    sql = ->(query) { query.sql.gsub(/_\h{32}\b/, "_HEX") }
+    stringify = ->(hash) { hash.to_h { |key, value| [ key.to_s, value.is_a?(Hash) ? stringify.call(value) : value ] } }
+    # A calling program gives a window table as a table name or a dataset.
+    let(:window_table) { CDB.query([ "date_range", { start: "2008-01-01", end: "2008-12-31" } ]).query }
+    {
+      "a window table" => ->(table) { { window_table: table, scope_by: "end_date" } },
+      "a date range" => ->(_table) { { start_date: "2008-01-01", end_date: "2008-12-31" } },
+      "a window table in window_opts" => ->(table) { { window_opts: { window_table: table } } }
+    }.each do |name, options_for|
+      it "uses #{name} as Symbol keys do" do
+        options = options_for.call(window_table)
+        symbol_query = CDB.query(statement, scope_opts: options)
+        string_query = CDB.query(statement, scope_opts: stringify.call(options))
+        _(sql.call(string_query)).must_equal sql.call(symbol_query)
+        _(string_query.query.order(:criterion_id).all).must_equal symbol_query.query.order(:criterion_id).all
+        _(string_query.count).wont_equal CDB.query(statement).count
+      end
+    end
+
+    it "uses the String keys of the scope options of a Database" do
+      symbol_query, string_query = [ { start_date: "2008-01-01", end_date: "2008-12-31" },
+                                     { "start_date" => "2008-01-01", "end_date" => "2008-12-31" } ].map do |scope_opts|
+        ConceptQL::Database.new(DB, data_model: CDB.opts[:data_model], scope_opts: scope_opts).query(statement)
+      end
+      _(sql.call(string_query)).must_equal sql.call(symbol_query)
+      _(string_query.count).wont_equal CDB.query(statement).count
     end
   end
 
