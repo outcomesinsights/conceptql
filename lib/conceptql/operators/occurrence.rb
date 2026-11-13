@@ -153,6 +153,12 @@ module ConceptQL
           .with(joined_name, joined_ds)
       end
 
+      # The timed query can pass along several records of one person
+      # (bead conceptql-vsqm). First and Last are never timed.
+      def events_per_patient
+        timed? ? :multiple : super
+      end
+
       def grouped?
         options[:group_by_date]
       end

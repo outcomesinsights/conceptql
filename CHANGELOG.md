@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- `Query#events_per_patient` is `:multiple` for `occurrence` with `at_least` or `within`,
+  because the operator can then pass along several records of one person. Before, it was
+  always `:single`, so a Jigsaw export of such an algorithm said that each patient had at
+  most one event. `occurrence` without these options, `first` and `last` stay `:single`.
+
 ## [0.8.0] - 2026-11-10
 
 ### Added
