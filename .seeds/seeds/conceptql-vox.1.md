@@ -5,7 +5,7 @@ status: captured
 type: exploration
 parent: conceptql-vox
 created_at: 2026-11-12T18:31:14.399662+00:00
-updated_at: 2026-11-13T00:45:12.478410+00:00
+updated_at: 2026-11-13T14:02:12.382512+00:00
 tags:
   - glossary
   - ontology
@@ -257,3 +257,29 @@ Notes (Claude):
 ## UPDATE 2026-11-12 (end of session): the glossary moved to a CSV working copy
 
 Ryan did not accept the chat list of drafts ("Boy, I don't like most of this glossary", "This is no bueno"). All 30 terms, his own definitions, and his rewrites of algorithm, statement and event are now in `claude_stuff/conceptql-glossary-draft-20261112.csv` in the primary checkout (not committed). Columns: term, definition, close_terms_not_synonyms, also_called, status, notes. Ryan edits it on 2026-11-13. From then on, the CSV is the working source, not the draft definitions in this seed. When his edits come back, update this seed to match, and the CSV becomes the glossary source file that he ruled on.
+
+## UPDATE 2026-11-13: Ryan's edits to the glossary CSV
+
+Ryan returned his edits in chat. The working copy is now `claude_stuff/conceptql-glossary-20261113.csv` in the primary checkout (28 terms, not committed). It replaces `conceptql-glossary-draft-20261112.csv`, which is kept. The diff log is `claude_stuff/glossary-diff-20261113-060152.log`.
+
+RULED 2026-11-13 (Ryan): lexicon and time_window are not glossary terms.
+
+```
+I saw no need for lexicon or time_window.  those are details that are revealed elsewhere in the spec or the code
+```
+
+What he changed:
+
+- algorithm: "It says how to find the event, not when" moved from the definition to the notes.
+- statement: "A ConceptQL algorithm, commonly stored as JSON."
+- selection operator: "returns" became "generates" the initial results.
+- concept, vocabulary and code: his own definitions replace "Same idea as in the OHDSI vocabularies". The OHDSI meanings stay in the notes.
+- dataset: "currently only the GDM" moved to the notes, which add that ConceptQL can be made to support other data models.
+- provenance: a note with examples (medpar or ccaef for file provenance, admitting or primary for code provenance).
+- cohort and protocol: he wrote definitions. Both stay at status "Mark review".
+
+Not changed by him: the status column. 13 rows still say "draft". The open question in the label row (must labels be unique, because recall selects by label?) is still open.
+
+Wording kept verbatim, with three apparent typos not fixed: "appear in datat that represent a concepts" (vocabulary), "The focus on how to find" (algorithm notes), and no final period in cohort, protocol, concept, code and dataset.
+
+Next step (Claude, not ruled): by the 2026-11-12 ruling, this CSV becomes the one glossary source file. Committing it, generating the spec section from it, and serving it as JSON need beads first.
