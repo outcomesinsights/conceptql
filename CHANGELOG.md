@@ -21,6 +21,12 @@ All notable changes to this project will be documented in this file.
   key of `ConceptQL::Metadatable::FACET_KEYS`.
 - Each operator in `ConceptQL.metadata` has the key `diagram_base`: the symbol that a diagram
   draws for it (`:selection`, `:filter`, `:set`, `:temporal` or `:cast`). It is not a facet.
+- The spec build (`just spec`, `just spec-check`) checks the class terms of the spec against
+  the facets. An operator under a `##` heading of a class (for example "Temporal Comparison
+  Operators"), or in a section that says "It is a [term](...)", must meet the rule of that
+  class, or the build fails and names the operator, the term and its facets. "Set operator"
+  and "relative temporal operator" have no rule. `person_filter` moves from Inline-Filter
+  Operators to Comparison Operators in the spec, because it takes left and right streams.
 
 ### Removed
 

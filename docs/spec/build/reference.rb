@@ -42,6 +42,42 @@ module SpecBuild
     # texts (Vocabulary::SharedDocumentation).
     SHARED_SECTION = "vocabulary-operator"
 
+    # The class terms of the spec that have a rule: the facets that every
+    # operator of the class has (bead conceptql-tc0q). The spec puts an
+    # operator in a class with the "## " heading of its section, or with a
+    # sentence "It is a [term](...)" in its section. A term without a rule is
+    # not checked: "set operator" (union and except share no facet) and
+    # "relative temporal operator" (its facets equal an inline filter's).
+    ClassTerm = Struct.new(:rule, :facets, :test)
+    CLASS_TERMS = {
+      "selection operator" =>
+        ClassTerm.new('effects includes "select"', %i[effects], ->(op) { op.fetch(:effects).include?("select") }),
+      "temporal comparison operator" =>
+        ClassTerm.new("temporal_comparison is true", %i[temporal_comparison], ->(op) { op.fetch(:temporal_comparison) == true }),
+      "time manipulation operator" =>
+        ClassTerm.new('effects includes "change"', %i[effects], ->(op) { op.fetch(:effects).include?("change") }),
+      "inline filter operator" =>
+        ClassTerm.new('upstreams is "one" and effects includes "keep"', %i[upstreams effects],
+                      ->(op) { op.fetch(:upstreams) == "one" && op.fetch(:effects).include?("keep") }),
+      "comparison operator" =>
+        ClassTerm.new('upstreams is "left_right" or "two_or_more", and effects includes "keep"', %i[upstreams effects],
+                      ->(op) { %w[left_right two_or_more].include?(op.fetch(:upstreams)) && op.fetch(:effects).include?("keep") })
+    }.freeze
+
+    # The "## " headings that put the operators of their sections in a class
+    HEADING_TERMS = {
+      "Selection Operators" => "selection operator",
+      "`Vocabulary` Operator" => "selection operator",
+      "Other Selection Operators" => "selection operator",
+      "Temporal Comparison Operators" => "temporal comparison operator",
+      "Time Manipulation Operators" => "time manipulation operator",
+      "Inline-Filter Operators" => "inline filter operator",
+      "Comparison Operators" => "comparison operator"
+    }.freeze
+
+    # A sentence that puts the operator of its section in a class
+    CLAIM = /It is an? \[([^\]]+)\]\(/
+
     # One line of the expanded source and the place it came from
     Line = Struct.new(:text, :origin)
 
@@ -160,6 +196,7 @@ module SpecBuild
       found = lines.each_with_index.filter_map { |line, i| [ DIRECTIVE.match(line), i ] if line.start_with?("<!-- conceptql-spec:") }
       errors = []
       headings = {}
+      places = {}
       found.each do |directive, i|
         at = "#{@source}:#{i + 1}"
         if directive.nil? || !KINDS.include?(directive[:kind])
@@ -170,7 +207,9 @@ module SpecBuild
           if !@sections.key?(spec_id) then errors << "#{at}: no published operator has the spec_id #{spec_id}"
           elsif headings.key?(spec_id) then errors << "#{at}: a second section of #{spec_id}"
           elsif anchor(heading) != spec_id then errors << "#{at}: the heading before the directive of #{spec_id} is not #{spec_id}: #{heading.strip}"
-          else headings[spec_id] = heading.sub(/\A#+ /, "").strip
+          else
+            headings[spec_id] = heading.sub(/\A#+ /, "").strip
+            places[i] = spec_id
           end
         end
       end
@@ -181,9 +220,54 @@ module SpecBuild
       end
       missing = spec_ids - headings.keys
       errors << "#{@source}: no section for #{missing.join(', ')}" if missing.any?
+      errors.concat(class_term_errors(lines, places))
       raise "The operator reference cannot be generated:\n#{errors.join("\n")}" if errors.any?
 
       headings
+    end
+
+    # Each operator meets the rule of the class term of its "## " heading
+    # (HEADING_TERMS) and of each sentence "It is a [term](...)" in its
+    # section. +places+ maps the line index of each operator directive to its
+    # spec_id. A section ends at the next heading. Fenced lines are skipped.
+    def class_term_errors(lines, places)
+      errors = []
+      fence = false
+      heading = owner = nil
+      lines.each_with_index do |line, i|
+        fence = !fence if line.start_with?("```")
+        next if fence || line.start_with?("```")
+
+        at = "#{@source}:#{i + 1}"
+        if line.match?(/\A#+ /)
+          heading = line.sub(/\A#+ /, "").strip if line.match?(/\A##? /)
+          owner = nil
+        elsif places.key?(i)
+          owner = places.fetch(i)
+          errors.concat(term_errors(owner, HEADING_TERMS[heading], at, %(is under the heading "## #{heading}")))
+        else
+          line.scan(CLAIM) do
+            claim = Regexp.last_match
+            next unless CLASS_TERMS.key?(claim[1])
+
+            place = %(says "#{claim[0].chomp('(')}")
+            errors.concat(owner ? term_errors(owner, claim[1], at, place) : [ "#{at}: #{place} outside an operator section" ])
+          end
+        end
+      end
+      errors
+    end
+
+    # The operators of +spec_id+ that do not meet the rule of +term+, each as
+    # an error that names the operator, the term, the rule and the facets
+    def term_errors(spec_id, term, at, place)
+      return [] unless term
+
+      rule = CLASS_TERMS.fetch(term)
+      @sections.fetch(spec_id).reject { |operator| rule.test.call(operator) }.map do |operator|
+        facets = rule.facets.map { |key| "#{key} #{operator.fetch(key).inspect}" }.join(", ")
+        %(#{at}: #{operator[:name]} #{place}, the term "#{term}", whose rule is: #{rule.rule}. Its facets: #{facets})
+      end
     end
 
     # GitHub's anchor of a heading line: the text in lower case, without

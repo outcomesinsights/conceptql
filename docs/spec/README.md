@@ -2053,142 +2053,6 @@ More about the options:
 - `outpatient_maximum_gap` helps with acute diseases. For example, to confirm the flu, set a maximum gap so that the two diagnoses come from the same illness. Jigsaw fills in 365 days.
 - `outpatient_event_to_return`: use `Initial Event` in most cases, for example when the algorithm records an exposure of interest or an outcome. Use `Confirming Event` when the algorithm finds an index event. The initial event would introduce immortal time bias. Jigsaw fills in `Initial Event`, but a statement that omits the option gets `Confirming Event`. So always set this option.
 
-### `Person Filter` Operator
-
-Keeps each left-hand record whose patient has at least one record in the right-hand stream. The type and the dates of the right-hand records do not matter.
-
-- **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator keeps the left-hand records of each patient who has a record in this stream, and does not pass these records on.
-- **Returns:** The left-hand records of every type whose patient has at least one right-hand record. The right-hand records are not returned.
-
-______________________________________________________________________
-
-**Example 58 - All MI Conditions for people who are male**
-
-```JSON
-["person_filter",{"left":["icd9","412"],"right":["gender","Male"]}]
-```
-
-![All MI Conditions for people who are male](images/171f940407488fd8d925951d2e13a451699cae1d33110976aaea44fe4b3d7dd6.svg)
-
-| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
-| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
-| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 93        | 82295        | observations    | condition_occurrence | 2009-11-08 | 2009-11-08 | 412          |
-| 96        | 20748        | observations    | condition_occurrence | 2008-09-21 | 2008-09-24 | 412          |
-| 109       | 89334        | observations    | condition_occurrence | 2010-07-06 | 2010-07-06 | 412          |
-| 110       | 62592        | observations    | condition_occurrence | 2010-06-27 | 2010-06-27 | 412          |
-| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
-| 149       | 28518        | observations    | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
-| 152       | 82988        | observations    | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
-| 152       | 84298        | observations    | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
-
-______________________________________________________________________
-
-______________________________________________________________________
-
-**Example 59 - All MI Conditions for people who had an office visit at some point in the data**
-
-```JSON
-["person_filter",{"left":["icd9","412"],"right":["cpt","99214"]}]
-```
-
-![All MI Conditions for people who had an office visit at some point in the data](images/cc16bcf500d096db934dc11e48140704bf8b255d116e52aaf9bde84387f818a1.svg)
-
-| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
-| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
-| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
-| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-
-______________________________________________________________________
-
-______________________________________________________________________
-
-**Example 60 - The same result as the example above, with the office visits converted to patients first**
-
-```JSON
-["person_filter",{"left":["icd9","412"],"right":["person",["cpt","99214"]]}]
-```
-
-![The same result as the example above, with the office visits converted to patients first](images/4c4cf58a9aba91d5b6efbb208db24bcb816500b1456c7b0671752c055484fc72.svg)
-
-| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
-| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
-| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
-| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-
-______________________________________________________________________
-
-______________________________________________________________________
-
-**Example 61 - All MI Conditions for people who are Male OR had an office visit at some point in the data**
-
-```JSON
-["person_filter",{"left":["icd9","412"],"right":["union",["cpt","99214"],["gender","Male"]]}]
-```
-
-![All MI Conditions for people who are Male OR had an office visit at some point in the data](images/72bbf4f2895aa831fd4fc3a86969b5266aaac3c2e856cb3281f74780f0d4b927.svg)
-
-| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
-| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
-| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
-| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
-| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
-| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
-| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
-| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
-| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
-| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
-| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
-| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
-
-______________________________________________________________________
-
-______________________________________________________________________
-
-**Example 62 - Yields two types: all MI Conditions for people who are Male, and all office visit Procedures for people who are Male**
-
-```JSON
-["person_filter",{"left":["union",["icd9","412"],["cpt","99214"]],"right":["gender","Male"]}]
-```
-
-![Yields two types: all MI Conditions for people who are Male, and all office visit Procedures for people who are Male](images/803879e07c16ec1d76c35d2a21c9d79da48ca8228ffb924c5453d9906ab9bcf7.svg)
-
-| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
-| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
-| 2         | 58127        | observations    | procedure_occurrence | 2009-07-03 | 2009-07-03 | 99214        |
-| 2         | 83339        | observations    | procedure_occurrence | 2009-12-02 | 2009-12-02 | 99214        |
-| 5         | 38313        | observations    | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99214        |
-| 5         | 76788        | observations    | procedure_occurrence | 2009-07-04 | 2009-07-04 | 99214        |
-| 5         | 63847        | observations    | procedure_occurrence | 2009-12-21 | 2009-12-21 | 99214        |
-| 6         | 48992        | observations    | procedure_occurrence | 2009-09-12 | 2009-09-12 | 99214        |
-| 6         | 76651        | observations    | procedure_occurrence | 2010-02-23 | 2010-02-23 | 99214        |
-| 7         | 63797        | observations    | procedure_occurrence | 2008-08-13 | 2008-08-13 | 99214        |
-| 7         | 59555        | observations    | procedure_occurrence | 2008-09-21 | 2008-09-21 | 99214        |
-| 7         | 71597        | observations    | procedure_occurrence | 2008-09-22 | 2008-09-22 | 99214        |
-
-______________________________________________________________________
-
-For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any record of a patient counts. The left-hand stream can also have several types, as the last example shows.
-
 ## Comparison Operators
 
 These operators compare records of incoming streams to produce a set of records.
@@ -2204,7 +2068,7 @@ Keeps each left-hand record that also appears in the right-hand stream. Two reco
 
 ______________________________________________________________________
 
-**Example 63 - MIs that are a patient's first diagnosis of MI or diabetes**
+**Example 58 - MIs that are a patient's first diagnosis of MI or diabetes**
 
 ```JSON
 ["filter",{"left":["icd9","412"],"right":["first",["union",["icd9","412"],["icd9","250.01"]]]}]
@@ -2240,7 +2104,7 @@ Keeps each left-hand record that is equal to a right-hand record in every column
 
 ______________________________________________________________________
 
-**Example 64 - MIs that are a patient's first MI**
+**Example 59 - MIs that are a patient's first MI**
 
 ```JSON
 ["match",{"left":["icd9","412"],"right":["first",["icd9","412"]]}]
@@ -2264,6 +2128,142 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 It is stricter than [`filter`](#filter-operator), so most users want `filter`. Systems that build statements, such as Jigsaw's export engine, use match with options that Jigsaw does not show.
+
+### `Person Filter` Operator
+
+Keeps each left-hand record whose patient has at least one record in the right-hand stream. The type and the dates of the right-hand records do not matter.
+
+- **Operands:**
+  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator keeps the left-hand records of each patient who has a record in this stream, and does not pass these records on.
+- **Returns:** The left-hand records of every type whose patient has at least one right-hand record. The right-hand records are not returned.
+
+______________________________________________________________________
+
+**Example 60 - All MI Conditions for people who are male**
+
+```JSON
+["person_filter",{"left":["icd9","412"],"right":["gender","Male"]}]
+```
+
+![All MI Conditions for people who are male](images/171f940407488fd8d925951d2e13a451699cae1d33110976aaea44fe4b3d7dd6.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 93        | 82295        | observations    | condition_occurrence | 2009-11-08 | 2009-11-08 | 412          |
+| 96        | 20748        | observations    | condition_occurrence | 2008-09-21 | 2008-09-24 | 412          |
+| 109       | 89334        | observations    | condition_occurrence | 2010-07-06 | 2010-07-06 | 412          |
+| 110       | 62592        | observations    | condition_occurrence | 2010-06-27 | 2010-06-27 | 412          |
+| 131       | 172          | observations    | condition_occurrence | 2008-03-22 | 2008-03-23 | 412          |
+| 149       | 28518        | observations    | condition_occurrence | 2008-04-07 | 2008-04-07 | 412          |
+| 152       | 82988        | observations    | condition_occurrence | 2008-08-16 | 2008-08-16 | 412          |
+| 152       | 84298        | observations    | condition_occurrence | 2010-11-22 | 2010-11-22 | 412          |
+
+______________________________________________________________________
+
+______________________________________________________________________
+
+**Example 61 - All MI Conditions for people who had an office visit at some point in the data**
+
+```JSON
+["person_filter",{"left":["icd9","412"],"right":["cpt","99214"]}]
+```
+
+![All MI Conditions for people who had an office visit at some point in the data](images/cc16bcf500d096db934dc11e48140704bf8b255d116e52aaf9bde84387f818a1.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+
+______________________________________________________________________
+
+______________________________________________________________________
+
+**Example 62 - The same result as the example above, with the office visits converted to patients first**
+
+```JSON
+["person_filter",{"left":["icd9","412"],"right":["person",["cpt","99214"]]}]
+```
+
+![The same result as the example above, with the office visits converted to patients first](images/4c4cf58a9aba91d5b6efbb208db24bcb816500b1456c7b0671752c055484fc72.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+
+______________________________________________________________________
+
+______________________________________________________________________
+
+**Example 63 - All MI Conditions for people who are Male OR had an office visit at some point in the data**
+
+```JSON
+["person_filter",{"left":["icd9","412"],"right":["union",["cpt","99214"],["gender","Male"]]}]
+```
+
+![All MI Conditions for people who are Male OR had an office visit at some point in the data](images/72bbf4f2895aa831fd4fc3a86969b5266aaac3c2e856cb3281f74780f0d4b927.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 11        | 82614        | observations    | condition_occurrence | 2008-10-29 | 2008-10-29 | 412          |
+| 17        | 27269        | observations    | condition_occurrence | 2008-08-25 | 2008-08-25 | 412          |
+| 17        | 46165        | observations    | condition_occurrence | 2009-04-30 | 2009-04-30 | 412          |
+| 38        | 40556        | observations    | condition_occurrence | 2010-02-12 | 2010-02-12 | 412          |
+| 54        | 74606        | observations    | condition_occurrence | 2008-06-05 | 2008-06-05 | 412          |
+| 60        | 986          | observations    | condition_occurrence | 2009-07-19 | 2009-07-22 | 412          |
+| 66        | 16171        | observations    | condition_occurrence | 2009-07-25 | 2009-07-25 | 412          |
+| 73        | 52843        | observations    | condition_occurrence | 2008-11-16 | 2008-11-16 | 412          |
+| 77        | 58165        | observations    | condition_occurrence | 2010-10-06 | 2010-10-06 | 412          |
+| 81        | 1405         | observations    | condition_occurrence | 2009-01-28 | 2009-01-30 | 412          |
+
+______________________________________________________________________
+
+______________________________________________________________________
+
+**Example 64 - Yields two types: all MI Conditions for people who are Male, and all office visit Procedures for people who are Male**
+
+```JSON
+["person_filter",{"left":["union",["icd9","412"],["cpt","99214"]],"right":["gender","Male"]}]
+```
+
+![Yields two types: all MI Conditions for people who are Male, and all office visit Procedures for people who are Male](images/803879e07c16ec1d76c35d2a21c9d79da48ca8228ffb924c5453d9906ab9bcf7.svg)
+
+| person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
+| --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
+| 2         | 58127        | observations    | procedure_occurrence | 2009-07-03 | 2009-07-03 | 99214        |
+| 2         | 83339        | observations    | procedure_occurrence | 2009-12-02 | 2009-12-02 | 99214        |
+| 5         | 38313        | observations    | procedure_occurrence | 2008-12-14 | 2008-12-14 | 99214        |
+| 5         | 76788        | observations    | procedure_occurrence | 2009-07-04 | 2009-07-04 | 99214        |
+| 5         | 63847        | observations    | procedure_occurrence | 2009-12-21 | 2009-12-21 | 99214        |
+| 6         | 48992        | observations    | procedure_occurrence | 2009-09-12 | 2009-09-12 | 99214        |
+| 6         | 76651        | observations    | procedure_occurrence | 2010-02-23 | 2010-02-23 | 99214        |
+| 7         | 63797        | observations    | procedure_occurrence | 2008-08-13 | 2008-08-13 | 99214        |
+| 7         | 59555        | observations    | procedure_occurrence | 2008-09-21 | 2008-09-21 | 99214        |
+| 7         | 71597        | observations    | procedure_occurrence | 2008-09-22 | 2008-09-22 | 99214        |
+
+______________________________________________________________________
+
+For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any record of a patient counts. The left-hand stream can also have several types, as the last example shows.
 
 ### `Co-Reported` Operator
 
@@ -2612,9 +2612,9 @@ The build writes this table from the metadata of the operators. It has one row f
 | [`after`](#after-operator)                                     | Filter by Comparing      | For each patient, keeps the left-hand records whose start_date is after the earliest end_date of the patient's right-hand records. With the within option, each left-hand record is compared with every right-hand record of the patient instead.                                                      |
 | [`trim_date_start`](#trim-date-start-operator)                 | Filter by Comparing      | For each patient, moves the start_date of each left-hand record forward to the end_date of the right-hand record with the latest start_date. A left-hand record that ends before that end_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged.   |
 | [`trim_date_end`](#trim-date-end-operator)                     | Filter by Comparing      | For each patient, moves the end_date of each left-hand record back to the start_date of the right-hand record with the earliest start_date. A left-hand record that starts after that start_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged. |
-| [`person_filter`](#person-filter-operator)                     | Filter by Comparing      | Keeps each left-hand record whose patient has at least one record in the right-hand stream. The type and the dates of the right-hand records do not matter.                                                                                                                                            |
 | [`filter`](#filter-operator)                                   | Filter by Comparing      | Keeps each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date.                                                                                          |
 | [`match`](#match-operator)                                     | Filter by Comparing      | Keeps each left-hand record that is equal to a right-hand record in every column, including label. Two empty (NULL) values count as equal.                                                                                                                                                             |
+| [`person_filter`](#person-filter-operator)                     | Filter by Comparing      | Keeps each left-hand record whose patient has at least one record in the right-hand stream. The type and the dates of the right-hand records do not matter.                                                                                                                                            |
 | [`equal`](#equal-operator)                                     | Filter by Comparing      | For each patient, keeps the left-hand records whose value_as_number equals the value_as_number of a right-hand record. It does not compare dates.                                                                                                                                                      |
 | [`occurrence`](#nth-occurrence-operator)                       | Filter Single Stream     | For each person, orders the records by start_date and passes along the record at the given position. A positive position counts from the earliest record and a negative one from the most recent record.                                                                                               |
 | [`first`](#first-operator)                                     | Filter Single Stream     | For each person, passes along the record with the earliest start_date.                                                                                                                                                                                                                                 |
