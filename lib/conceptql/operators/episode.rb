@@ -15,7 +15,6 @@ module ConceptQL
               "and its criterion_id is 0, because an episode merges several records."
       example "Episodes of diabetes diagnoses", [ "episode", [ "icd9", "250.00" ], { "gap_of" => "90" } ]
 
-      allows_one_upstream
       validate_one_upstream
       option :gap_of, type: :integer,
                       instructions: "Enter a number of days. A record stays in the current episode when it starts no more than this many days after the latest end date of the earlier records. The default is 0.",

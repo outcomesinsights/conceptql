@@ -5,8 +5,9 @@ require_relative "../../helper"
 # Query#extract_metadata says codeset_only: true when every operator except
 # union takes no upstreams (the upstreams facet is "none"). t_shank saves
 # the value in its performance statistics. Before bead conceptql-9h85, the
-# rule was that every operator except union draws :selection (the old
-# basic_type, now diagram_base). This test computes the old rule and checks
+# rule was that every operator except union draws :selection (the key that
+# diagram_base replaced had the same values). This test computes the old
+# rule from diagram_base and checks
 # that the new rule gives the same value for every statement in
 # test/statements.
 #

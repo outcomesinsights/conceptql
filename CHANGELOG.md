@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
   `temporal_comparison`. Their values come from the code (the upstream validations, the
   behavior modules and the superclasses), so no operator declares them.
   `ConceptQL::Metadatable::FACET_KEYS` lists the keys. `docs/metadata.md` says what each one
-  means. `basic_type`, `arity`, `min_upstreams` and `max_upstreams` are unchanged.
+  means.
 - Each operator in `ConceptQL.metadata` has the top-level key `effects`: a list of strings
   that says what the operator does to rows. The values are `select`, `keep`, `change`,
   `combine`, `aggregate`, `cast` and `refer`, and `docs/metadata.md` says what each one
@@ -22,12 +22,19 @@ All notable changes to this project will be documented in this file.
 - Each operator in `ConceptQL.metadata` has the key `diagram_base`: the symbol that a diagram
   draws for it (`:selection`, `:filter`, `:set`, `:temporal` or `:cast`). It is not a facet.
 
+### Removed
+
+- **Breaking:** the operator metadata keys `basic_type`, `arity`, `min_upstreams` and
+  `max_upstreams`. The `upstreams` facet replaces `min_upstreams` and `max_upstreams`, and
+  says which upstreams the validations accept. `diagram_base` replaces `basic_type`, with
+  the same values, and `arity`, which was a number made from `basic_type`. The class methods
+  `arity`, `allows_one_upstream` and `allows_many_upstreams` are gone too. A reader of
+  `ConceptQL.metadata` must read the new keys.
+
 ### Changed
 
 - **Breaking:** an operator class declares its diagram symbol with `diagram_base :set`. The
-  class method `basic_type` is gone. The metadata keys `basic_type`, `arity`,
-  `min_upstreams` and `max_upstreams` still have the same values, and a later release
-  removes them.
+  class method `basic_type` is gone.
 - `ConceptQL::Diagram` (the render tree and the Jigsaw JSON), `Query#extract_metadata` and
   the spec build read `diagram_base` and the `upstreams` facet, not the old keys. Every
   diagram and every value of `codeset_only` is the same as before.

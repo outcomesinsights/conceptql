@@ -11,7 +11,6 @@ module ConceptQL
       category "Filter Single Stream"
 
       desc "Passes along each distinct record once. Records that have the same value in every column become one record."
-      allows_one_upstream
       validate_one_upstream
 
       def query(db)

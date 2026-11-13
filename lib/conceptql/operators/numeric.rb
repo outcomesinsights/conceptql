@@ -27,7 +27,6 @@ module ConceptQL
            "with value_as_number set to the argument. " \
            "A column name must then name a column of the person table."
       argument :value, type: :float
-      allows_one_upstream
       validate_at_most_one_upstream
       validate_one_argument
       default_query_columns

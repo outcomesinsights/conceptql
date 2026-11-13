@@ -78,7 +78,6 @@ module ConceptQL
       example "Two condition_occurrence streams and a procedure_occurrence stream combined by a single union",
               [ "union", [ "icd9", "412" ], [ "icd9", "250.01" ], [ "cpt", "99214" ] ]
 
-      allows_many_upstreams
       category "Combine Streams"
       default_query_columns
       validate_at_least_one_upstream

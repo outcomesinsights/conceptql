@@ -6,10 +6,11 @@ require_relative "../../../helper"
 # upstreams each operator takes: a statement with n positional upstreams
 # validates with no upstream-count error exactly when n is in the range of
 # the facet's value (upstream_ranges). Before, the metadata said it with
-# min_upstreams and max_upstreams, which always had the same value, so union,
-# first, last, co_reported and occurrence served 99/99, person and death
-# served 1/1, and trim_date_end and trim_date_start served 1/1 (bead
-# conceptql-jwsv.1). Bead conceptql-9h85 moved this test to the facet.
+# two number keys, a minimum and a maximum, which always had the same value,
+# so union, first, last, co_reported and occurrence served 99/99, person and
+# death served 1/1, and trim_date_end and trim_date_start served 1/1 (bead
+# conceptql-jwsv.1). Bead conceptql-9h85 moved this test to the facet, and
+# bead conceptql-zi43 removed the two keys.
 #
 # The operators whose operands are the left and right options, and read, take
 # no positional upstream. Ryan ruled on 2026-11-03 that a positional upstream

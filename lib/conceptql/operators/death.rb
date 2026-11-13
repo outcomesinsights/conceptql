@@ -16,7 +16,6 @@ module ConceptQL
       example "All death records", [ "death" ]
       example "The deaths of the patients with an old myocardial infarction (ICD-9-CM 412)", [ "death", [ "icd9cm", "412" ] ]
       domains :death
-      allows_one_upstream
 
       def my_domain
         :death

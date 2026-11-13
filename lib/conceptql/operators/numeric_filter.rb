@@ -29,7 +29,6 @@ module ConceptQL
 
       category "Filter Single Stream"
       diagram_base :temporal
-      allows_one_upstream
       validate_one_upstream
       require_column :value_as_number
       default_query_columns
