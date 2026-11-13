@@ -136,6 +136,13 @@ All notable changes to this project will be documented in this file.
   person, such as `first`, work on each person and window. Before, a window table there (a
   table name or a dataset) only filtered the results. The results had no `window_id`, and
   `first` kept one result for each person, not one for each window.
+- A code that is not a string, such as the number 412 in `["icd9", 412]`, is an error of
+  its vocabulary operator, with the message "codes must be strings" and the code
+  (`ConceptQL::Operators::Operator::NON_STRING_CODE`). The statement is invalid, so
+  ConceptQL builds no SQL for it, and the diagram shows the error. Before, the statement
+  was valid, and its SQL, its counts and its code list raised a database error: on
+  Postgres "operator does not exist: text = integer", and on DuckDB a conversion error. This applies to every vocabulary operator, including the
+  operators that search several vocabularies, such as `cpt_or_hcpcs`.
 
 ## [0.8.0] - 2026-11-10
 
