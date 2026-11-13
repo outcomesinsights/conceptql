@@ -293,8 +293,7 @@ module ConceptQL
     # scope options of the calling program, merged with the options of the
     # statement's window
     def window_opts
-      scope_opts = nodifier.scope.opts
-      scope_opts.merge(scope_opts[:window_opts] || {})
+      nodifier.scope.window_opts
     end
 
     # The window table of the scope, as Window::Table reads it: a table name
