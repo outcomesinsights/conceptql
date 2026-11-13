@@ -2,7 +2,7 @@
   "place_of_service_filter",
   [
     "revenue_code",
-    "280",
+    "0280",
     {
       "annotation": {
         "id": "revenue_code-1",
@@ -12,10 +12,7 @@
             "n": null
           }
         },
-        "warnings": [
-          ["the data has no records of this vocabulary"],
-          ["unknown code(s)", "280"]
-        ]
+        "warnings": [["the data has no records of this vocabulary"]]
       },
       "name": "Revenue Code"
     }

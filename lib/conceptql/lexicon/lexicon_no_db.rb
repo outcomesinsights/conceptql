@@ -11,10 +11,10 @@ module ConceptQL
   #
   # It must answer the same table methods as the other strategies, because
   # LexiconStrategy's lookups (concepts, descendants_of,
-  # related_concept_ids, ...) are written against them. The tables are named
-  # in the GDM layout (concepts / ancestors / mappings), matching
-  # #vocabularies_query, which already reads GDM's `vocabularies` table, and
-  # the columns that LexiconStrategy's queries use (id, concept_code,
+  # related_concept_ids, ...) are written against them. The table names
+  # (concepts, ancestors, mappings, vocabularies) are placeholders: the mock
+  # runs no query, so no database needs these tables. The columns are the
+  # ones that LexiconStrategy's queries use (id, concept_code,
   # vocabulary_id, concept_text; ancestor_id / descendant_id;
   # concept_1_id / concept_2_id).
   class LexiconNoDB < LexiconStrategy
