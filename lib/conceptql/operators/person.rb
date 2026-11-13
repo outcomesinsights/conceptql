@@ -9,6 +9,7 @@ module ConceptQL
       include ConceptQL::Behaviors::Timeless
 
       register __FILE__
+      effects :select, :cast
 
       desc "Selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream."
       returns "One record for each selected patient, from the patients table. The type of the records is person, " \

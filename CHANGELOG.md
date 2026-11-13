@@ -12,6 +12,13 @@ All notable changes to this project will be documented in this file.
   behavior modules and the superclasses), so no operator declares them.
   `ConceptQL::Metadatable::FACET_KEYS` lists the keys. `docs/metadata.md` says what each one
   means. `basic_type`, `arity`, `min_upstreams` and `max_upstreams` are unchanged.
+- Each operator in `ConceptQL.metadata` has the top-level key `effects`: a list of strings
+  that says what the operator does to rows. The values are `select`, `keep`, `change`,
+  `combine`, `aggregate`, `cast` and `refer`, and `docs/metadata.md` says what each one
+  means. Each operator class declares its effects with `effects :keep, :change`, and a
+  subclass inherits them, so every vocabulary operator is `select`. An unknown value raises
+  `ConceptQL::Metadatable::UnknownEffectError` when the class loads. `effects` is the last
+  key of `ConceptQL::Metadatable::FACET_KEYS`.
 
 ### Fixed
 

@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Hospitalization < Operator
       register __FILE__
+      effects :select
       include ConceptQL::Behaviors::Utilizable
 
       desc "Selects inpatient hospital admissions: one record for each admission whose claim came from an inpatient file."

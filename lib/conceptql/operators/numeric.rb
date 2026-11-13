@@ -15,6 +15,7 @@ module ConceptQL
     # - An optional stream
     class Numeric < PassThru
       register __FILE__
+      effects :select, :change
       # "We do not yet support numeric or sum in any meaningful way"
       # (Ryan, 2026-11-03, seed conceptql-mdo.4)
       hidden

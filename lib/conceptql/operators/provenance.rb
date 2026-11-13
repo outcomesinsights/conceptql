@@ -18,6 +18,7 @@ module ConceptQL
     # provenance. At least one keyword is required.
     class Provenance < Operator
       register __FILE__
+      effects :keep
 
       desc "Passes along the records whose provenance matches at least one of the given keywords. " \
            "The provenance of a record says which kind of file it came from, such as inpatient, " \

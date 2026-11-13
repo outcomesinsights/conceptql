@@ -7,6 +7,7 @@ module ConceptQL
       include ConceptQL::Behaviors::Timeless
 
       register __FILE__
+      effects :select
       # Reads a raw table. It is not a public operator.
       hidden
       category "Select by Property"

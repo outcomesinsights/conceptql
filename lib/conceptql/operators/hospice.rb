@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Hospice < Operator
       register __FILE__
+      effects :select
       include ConceptQL::Behaviors::Utilizable
 
       desc "Selects hospice admissions: one record for each admission whose claim came from a hospice file."

@@ -8,6 +8,7 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
 
       register __FILE__
+      effects :select, :cast
 
       desc "Selects every death record. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream."
       returns "One record for each selected death, from the deaths table. The type of the records is death, " \

@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Snf < Operator
       register __FILE__
+      effects :select
       include ConceptQL::Behaviors::Utilizable
 
       desc "Selects admissions to skilled nursing facilities (SNF): one record for each admission whose claim came from an SNF file."

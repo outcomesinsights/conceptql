@@ -26,6 +26,7 @@ module ConceptQL
     # checked.
     class PlaceOfServiceFilter < Operator
       register __FILE__
+      effects :keep
 
       VOCABULARY_ID = "CMS Place of Service"
       ANY = "*"

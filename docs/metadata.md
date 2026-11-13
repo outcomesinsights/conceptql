@@ -84,10 +84,10 @@ The metadata for each operator should be complete enough that a UI can understan
 
 #### Facets
 
-The facets are seven top-level keys whose values come from the code: the operator's
-upstream validations, the behavior modules it includes and its superclasses. No operator
-declares them. `ConceptQL::Metadatable::FACET_KEYS` lists them in the order below. A reader
-that needs every facet iterates that list and does not name the keys.
+The facets are eight top-level keys. The values of the first seven come from the code: the
+operator's upstream validations, the behavior modules it includes and its superclasses. Each
+operator declares its effects. `ConceptQL::Metadatable::FACET_KEYS` lists them in the order
+below. A reader that needs every facet iterates that list and does not name the keys.
 
 - upstreams
   - One of "none", "one", "none_or_one", "left_right", "one_or_more", "two_or_more", or null
@@ -126,6 +126,23 @@ that needs every facet iterates that list and does not name the keys.
     example before, during, trim_date_start)
   - except, filter, match and person_filter also take left and right, but they do not
     compare dates, so they are false
+- effects
+  - A list of strings that says what the operator does to rows. An operator can have
+    several, and the list is in the order that the operator declares them
+  - The values and their meanings:
+    - select: makes results from rows of the data set.
+    - keep: passes on some upstream results, unchanged.
+    - change: changes the dates or the values of results, or adds columns to them.
+    - combine: puts the results of several streams into one stream.
+    - aggregate: makes new results that each stand for several upstream results.
+    - cast: makes results of another table for the people in the upstream.
+    - refer: passes on the results of another operator in the statement.
+  - The operator class declares them with `effects :keep, :change`. A value outside the
+    seven raises `ConceptQL::Metadatable::UnknownEffectError` when the class loads.
+    `ConceptQL::Metadatable::EFFECTS` lists the seven
+  - A subclass inherits the effects, so every vocabulary operator has the effects of
+    `ConceptQL::Operators::Vocabulary` (select)
+  - Only invalid has an empty list
 
 ### Option Metadata Outline
 

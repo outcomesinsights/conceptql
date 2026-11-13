@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Union < PassThru
       register __FILE__
+      effects :combine
 
       class Combiner
         attr_reader :combinables

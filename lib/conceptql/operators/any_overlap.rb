@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class AnyOverlap < TemporalOperator
       register __FILE__
+      effects :keep
 
       desc "For each patient, keeps the left-hand records whose date range shares at least one day with the date range of a right-hand record."
       returns "The left-hand records that overlap the date range of at least one right-hand record of the same patient, each record once. The right-hand records are not returned."

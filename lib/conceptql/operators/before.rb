@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Before < TemporalOperator
       register __FILE__
+      effects :keep
 
       desc "For each patient, keeps the left-hand records whose end_date is before the latest start_date of the patient's right-hand records. With the within option, each left-hand record is compared with every right-hand record of the patient instead."
       returns "The left-hand records that end before a right-hand record of the same patient starts, each record once. The right-hand records are not returned."

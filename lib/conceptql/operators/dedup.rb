@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Dedup < PassThru
       register __FILE__
+      effects :keep
       hidden
       category "Filter Single Stream"
 

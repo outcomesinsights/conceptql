@@ -2,10 +2,11 @@
 
 require_relative "../../../helper"
 
-# The metadata of each operator has seven facets as top-level keys. Their
-# values come from the code: the upstream validations, the behavior modules
-# and the superclasses. No operator declares them (bead conceptql-mc54, seed
-# conceptql-vox.2). The hidden operators (invalid, sum) are not in
+# The metadata of each operator has eight facets as top-level keys. The
+# values of the first seven come from the code: the upstream validations, the
+# behavior modules and the superclasses (bead conceptql-mc54, seed
+# conceptql-vox.2). Each operator declares its effects (bead conceptql-x9qv,
+# effects_metadata_test.rb). The hidden operators (invalid, sum) are not in
 # ConceptQL.metadata, so their facets are read with the same call that
 # Nodifier#to_metadata makes for a published operator.
 # No database: Database.new(nil) builds the vocabulary operators from
@@ -18,7 +19,7 @@ describe "operator facets in ConceptQL.metadata" do
   end
 
   it "lists the facet keys in order" do
-    _(ConceptQL::Metadatable::FACET_KEYS).must_equal(%i[upstreams reads_data timeless takes_codes uses_provenance utilization temporal_comparison])
+    _(ConceptQL::Metadatable::FACET_KEYS).must_equal(%i[upstreams reads_data timeless takes_codes uses_provenance utilization temporal_comparison effects])
   end
 
   it "gives every published operator every facet key, on both data models" do
@@ -38,31 +39,31 @@ describe "operator facets in ConceptQL.metadata" do
 
   {
     "before" => { upstreams: "left_right", reads_data: false, timeless: false, takes_codes: false,
-                  uses_provenance: false, utilization: false, temporal_comparison: true },
+                  uses_provenance: false, utilization: false, temporal_comparison: true, effects: %w[keep] },
     "except" => { upstreams: "left_right", reads_data: false, timeless: false, takes_codes: false,
-                  uses_provenance: false, utilization: false, temporal_comparison: false },
+                  uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[keep] },
     "union" => { upstreams: "two_or_more", reads_data: false, timeless: false, takes_codes: false,
-                 uses_provenance: false, utilization: false, temporal_comparison: false },
+                 uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[combine] },
     "sum" => { upstreams: "one_or_more", reads_data: false, timeless: false, takes_codes: false,
-               uses_provenance: false, utilization: false, temporal_comparison: false },
+               uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[aggregate] },
     "person" => { upstreams: "none_or_one", reads_data: true, timeless: true, takes_codes: false,
-                  uses_provenance: false, utilization: false, temporal_comparison: false },
+                  uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[select cast] },
     "first" => { upstreams: "one", reads_data: false, timeless: false, takes_codes: false,
-                 uses_provenance: false, utilization: false, temporal_comparison: false },
+                 uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[keep] },
     "one_in_two_out" => { upstreams: "one", reads_data: false, timeless: false, takes_codes: false,
-                          uses_provenance: true, utilization: false, temporal_comparison: false },
+                          uses_provenance: true, utilization: false, temporal_comparison: false, effects: %w[keep change] },
     "hospice" => { upstreams: "none", reads_data: true, timeless: false, takes_codes: false,
-                   uses_provenance: false, utilization: true, temporal_comparison: false },
+                   uses_provenance: false, utilization: true, temporal_comparison: false, effects: %w[select] },
     "gender" => { upstreams: "none", reads_data: true, timeless: true, takes_codes: false,
-                  uses_provenance: false, utilization: false, temporal_comparison: false },
+                  uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[select] },
     "ethnicity" => { upstreams: "none", reads_data: true, timeless: true, takes_codes: false,
-                     uses_provenance: false, utilization: false, temporal_comparison: false },
+                     uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[select] },
     "recall" => { upstreams: "none", reads_data: false, timeless: false, takes_codes: false,
-                  uses_provenance: false, utilization: false, temporal_comparison: false },
+                  uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[refer] },
     "invalid" => { upstreams: nil, reads_data: false, timeless: false, takes_codes: false,
-                   uses_provenance: false, utilization: false, temporal_comparison: false },
+                   uses_provenance: false, utilization: false, temporal_comparison: false, effects: [] },
     "icd9cm" => { upstreams: "none", reads_data: true, timeless: false, takes_codes: true,
-                  uses_provenance: false, utilization: false, temporal_comparison: false }
+                  uses_provenance: false, utilization: false, temporal_comparison: false, effects: %w[select] }
   }.each do |name, expected|
     it "derives the facets of #{name}" do
       _(facets_of(name)).must_equal(expected)

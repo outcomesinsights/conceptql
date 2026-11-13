@@ -8,6 +8,7 @@ module ConceptQL
     # providers matching the given criteria.
     class ProviderFilter < Operator
       register __FILE__
+      effects :keep, :change
 
       desc "Passes along the records whose provider matches the given specialties and roles. " \
            "Each option is a comma-separated list of concept IDs, and * matches any value."

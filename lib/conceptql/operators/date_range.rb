@@ -12,6 +12,7 @@ module ConceptQL
     # 'END' represents the last date of data in the data source,
     class DateRange < Operator
       register __FILE__
+      effects :select
 
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless

@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Episode < PassThru
       register __FILE__
+      effects :aggregate
 
       desc "Merges each patient's records into episodes: spans of time in which the records are close together. " \
            "For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug."

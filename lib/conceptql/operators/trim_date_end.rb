@@ -16,6 +16,7 @@ module ConceptQL
     # record is passed thru unaffected.
     class TrimDateEnd < TrimDate
       register __FILE__
+      effects :keep, :change
 
       desc "For each patient, moves the end_date of each left-hand record back to the start_date of the right-hand record with the earliest start_date. A left-hand record that starts after that start_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged."
       returns "The left-hand records, each with its end_date set to the earlier of its own end_date and the start_date of the patient's right-hand record. Left-hand records that start after that start_date are not returned. The right-hand records are not returned."
