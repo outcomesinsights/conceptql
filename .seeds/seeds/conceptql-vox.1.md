@@ -5,7 +5,7 @@ status: captured
 type: exploration
 parent: conceptql-vox
 created_at: 2026-11-12T18:31:14.399662+00:00
-updated_at: 2026-11-12T20:42:30.658734+00:00
+updated_at: 2026-11-13T00:13:06.494911+00:00
 tags:
   - glossary
   - ontology
@@ -21,6 +21,9 @@ relationships:
   - target_id: conceptql-spe
     rel_type: questioned-by
     created_at: 2026-11-12T20:33:36.275601+00:00
+  - target_id: conceptql-2f6
+    rel_type: questioned-by
+    created_at: 2026-11-13T00:13:06.493564+00:00
 ---
 
 EXPLORATION (2026-11-12). NOT RULED. Workshop in progress: Ryan speaks at length, and the session consolidates the ideas into defined terms.
@@ -222,3 +225,31 @@ Code check (Claude): `one_in_two_out` calls `build_where_from_codes(db, ["inpati
 ### RULED 2026-11-12 (Ryan)
 
 "Weights" and "counting" are not poorly defined, and they have no place in the glossary.
+
+## UPDATE 2026-11-12: core terms, format ruling, Mark item
+
+### Ryan's definitions, verbatim (2026-11-12)
+
+```
+concept - same idea as in ohdsi vocabularies
+vocabulary - same idea as in ohdsi vocabularies
+code - same idea as in ohdsi vocabularies
+vocabulary operator - selection operator that takes one or more codes for a given vocabulary and finds corresponding rows in the dataset
+dataset - a set of healthcare claims files that have been ETL'd into a data model that ConceptQL supports (currently only GDM)
+data model - a database schema designed hold claims data in a consistent and predictable manner in a way that works for a diver set of healthcare claims sources
+lexicon - in terms of conceptql, it is the code we have written that query the vocabulary-related tables
+```
+
+Notes (Claude):
+
+- For concept, vocabulary and code, the glossary entry can state the OHDSI meaning and link to it: a concept is one entry of the OHDSI CONCEPT table (concept_id, name, domain, vocabulary, concept_code); a vocabulary is a coding system identified by vocabulary_id (ICD10CM, SNOMED, RxNorm); a code is a concept's concept_code in its vocabulary (for example 250.00).
+- Lexicon code: `lib/conceptql/lexicon.rb` and `lib/conceptql/lexicon/`.
+- Spelling: Ryan wrote "dataset" here and "data set" earlier. The spec uses "dataset" (4 lines) and never "data set". One word should have one spelling. Proposed: "dataset".
+
+### RULED 2026-11-12 (Ryan): glossary format
+
+"glossary can be a source file that is easily served via MCP/JSON API and also generates a section in the spec". One source file. The spec section is generated from it, and the same file is served through MCP or a JSON API.
+
+### For review with Mark (2026-11-13)
+
+"Mark and I need to discuss if ConceptQL 'builds cohorts' or something else". The spec's Motivation section says that ConceptQL builds and extracts cohorts. Ryan's account of algorithm versus cohort says that an algorithm finds events and a protocol builds the cohort.
