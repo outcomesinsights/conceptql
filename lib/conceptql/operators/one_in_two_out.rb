@@ -23,7 +23,6 @@ module ConceptQL
       example "First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart",
               [ "one_in_two_out", [ "icd9", "250.00" ], { "outpatient_minimum_gap" => "30d", "outpatient_event_to_return" => "Initial Event" } ]
 
-      allows_one_upstream
       validate_one_upstream
       validate_no_arguments
       category "Filter Single Stream"

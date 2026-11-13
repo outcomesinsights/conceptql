@@ -53,7 +53,6 @@ module ConceptQL
               [ "time_window", [ "icd9", "412" ], { "start" => "", "end" => "start" } ]
       example "Nonsensical, but allowed: swap the start_date and end_date",
               [ "time_window", [ "icd9", "412" ], { "start" => "end", "end" => "start" } ]
-      allows_one_upstream
       validate_one_upstream
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end

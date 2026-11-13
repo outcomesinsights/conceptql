@@ -47,7 +47,6 @@ module ConceptQL
 
       category "Filter Single Stream"
       diagram_base :temporal
-      allows_one_upstream
       validate_one_upstream
       validate_at_least_one_argument
       require_column :visit_source_concept_id

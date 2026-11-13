@@ -17,7 +17,6 @@ module ConceptQL
       example "All patients", [ "person" ]
       example "The patients with an old myocardial infarction (ICD-9-CM 412)", [ "person", [ "icd9cm", "412" ] ]
 
-      allows_one_upstream
       domains :person
 
       def my_domain

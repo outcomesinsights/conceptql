@@ -31,7 +31,6 @@ module ConceptQL
 
       category "Filter Single Stream"
       diagram_base :temporal
-      allows_one_upstream
       validate_one_upstream
       validate_required_options :specialties, :roles
       require_column :provider_id

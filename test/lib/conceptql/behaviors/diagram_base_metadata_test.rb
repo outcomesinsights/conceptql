@@ -3,9 +3,9 @@
 require_relative "../../../helper"
 
 # Each operator declares diagram_base: the symbol that a diagram draws for it
-# (bead conceptql-9h85). It is the old basic_type declaration with a new
-# name, so every value is the same. The metadata key basic_type still gives
-# the same value until a later bead removes it. diagram_base is not a facet.
+# (bead conceptql-9h85). It replaces an older declaration with the same
+# values, whose metadata key bead conceptql-zi43 removed (see
+# removed_metadata_keys_test.rb). diagram_base is not a facet.
 # No database: Database.new(nil) builds the vocabulary operators from
 # config/vocabularies.csv.
 describe "diagram_base in ConceptQL.metadata" do
@@ -17,7 +17,6 @@ describe "diagram_base in ConceptQL.metadata" do
       _(published.size).must_equal 119, dm
       published.each do |name, metadata|
         _(bases).must_include metadata[:diagram_base], "#{name} (#{dm})"
-        _(metadata[:basic_type]).must_equal metadata[:diagram_base], "#{name} (#{dm})"
       end
     end
   end
@@ -45,8 +44,7 @@ describe "diagram_base in ConceptQL.metadata" do
     _(ConceptQL::Metadatable::FACET_KEYS).wont_include :diagram_base
   end
 
-  it "replaces the basic_type declaration" do
-    _(ConceptQL::Operators::Union).wont_respond_to :basic_type
+  it "is declared on the operator class" do
     _(ConceptQL::Operators::Union.diagram_base).must_equal :set
   end
 end

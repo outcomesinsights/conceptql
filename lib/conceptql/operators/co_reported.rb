@@ -28,7 +28,6 @@ module ConceptQL
       example "Diabetes diagnoses reported as a reason for an office visit, and those office visits",
               [ "co_reported", [ "icd9", "250.00" ], [ "cpt", "99214" ] ]
 
-      allows_many_upstreams
       category "Combine Streams"
       default_query_columns
       validate_at_least_one_upstream

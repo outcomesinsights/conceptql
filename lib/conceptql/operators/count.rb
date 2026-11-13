@@ -15,7 +15,6 @@ module ConceptQL
       # (seed conceptql-e8n, ruled 2026-10-30).
       deprecated "count will become an error in a later release. To count the events of each person, " \
                  'use ["sum", ["numeric", 1, <stream>], {"group_by_person": true}].'
-      allows_one_upstream
       validate_one_upstream
       validate_no_arguments
       require_column :value_as_number

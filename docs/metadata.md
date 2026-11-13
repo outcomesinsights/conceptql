@@ -23,16 +23,6 @@ The metadata for each operator should be complete enough that a UI can understan
 
 ### Operator Metadata Outline
 
-- min_upstreams
-  - The upstreams facet replaces min_upstreams and max_upstreams. A later release removes both
-  - 0 or 1
-  - 0 means this operator does not need inputs from an upstream operator
-  - 1 means this operator needs input from at least one upstream operator
-- max_upstreams
-  - 0, 1, or 99
-  - 0 means this operator does not take input from an upstream operator
-  - 1 means this operator takes input from up to one upstream operator
-  - 99 means this operator takes input from unlimited upstream operators
 - preferred_name
   - If this option is present, this is the name of the operator to display in the UI
   - If this option is missing, run the name of the operator through the equivalent of ActiveSupport#humanize
@@ -65,8 +55,6 @@ The metadata for each operator should be complete enough that a UI can understan
     time_window draw "temporal", and all five take one upstream
   - It is not a facet. The operator class declares it with `diagram_base :temporal`. A
     subclass inherits it, so every vocabulary operator draws "selection". Only invalid has null
-- basic_type
-  - The old name of diagram_base, with the same value. A later release removes it
 - returns
   - A plain text that says which records the operator returns, or null
   - The operator class sets it with `returns "..."`. A subclass does not inherit it
