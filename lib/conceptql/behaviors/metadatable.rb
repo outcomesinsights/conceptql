@@ -2,6 +2,12 @@
 
 module ConceptQL
   module Metadatable
+    # The facets of an operator: top-level keys of its metadata whose values
+    # come from the code (validations, behavior modules and superclasses).
+    # No operator declares them. docs/metadata.md says what each one means.
+    # A reader that needs every facet iterates this list.
+    FACET_KEYS = %i[upstreams reads_data timeless takes_codes uses_provenance utilization temporal_comparison].freeze
+
     def preferred_name(value = nil)
       return @preferred_name unless value
 
@@ -224,7 +230,41 @@ module ConceptQL
         spec_id: spec_id,
         returns: get_returns,
         examples: examples_for(name)
+      }.merge(facets)
+    end
+
+    # The value of each key in FACET_KEYS
+    def facets
+      {
+        upstreams: upstreams_facet,
+        reads_data: include?(ConceptQL::Behaviors::Windowable),
+        timeless: include?(ConceptQL::Behaviors::Timeless),
+        takes_codes: include?(ConceptQL::Behaviors::CodeLister),
+        uses_provenance: include?(ConceptQL::Provenanceable),
+        utilization: include?(ConceptQL::Behaviors::Utilizable),
+        temporal_comparison: ancestors.include?(ConceptQL::Operators::TemporalOperator)
       }
+    end
+
+    # The upstreams that the validations accept, as one word. The first
+    # check that matches wins: union and co_reported also validate at least
+    # one upstream, but they are "two_or_more". nil when no validation says.
+    def upstreams_facet
+      meths = @validations.map(&:first)
+      required = @validations.select { |meth, *| meth == :validate_required_options }.flat_map { |_meth, *names| names }
+      if (%i[left right] - required).empty?
+        "left_right"
+      elsif meths.include?(:validate_at_least_two_upstreams)
+        "two_or_more"
+      elsif meths.include?(:validate_at_least_one_upstream)
+        "one_or_more"
+      elsif meths.include?(:validate_at_most_one_upstream)
+        "none_or_one"
+      elsif meths.include?(:validate_one_upstream)
+        "one"
+      elsif meths.include?(:validate_no_upstreams)
+        "none"
+      end
     end
 
     # The returns text that the metadata serves
