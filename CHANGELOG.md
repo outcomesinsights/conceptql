@@ -38,6 +38,10 @@ All notable changes to this project will be documented in this file.
   the same values, and `arity`, which was a number made from `basic_type`. The class methods
   `arity`, `allows_one_upstream` and `allows_many_upstreams` are gone too. A reader of
   `ConceptQL.metadata` must read the new keys.
+- The GDM vocabulary tables `concepts`, `vocabularies` and `mappings` are no longer in the
+  shipped table descriptions `schemas/gdm.yml` and `schemas/gdm_wide.yml`. No lexicon reads
+  them since 0.8.0. The SQL and the annotations that a Sequel mock database builds do not
+  change.
 
 ### Changed
 

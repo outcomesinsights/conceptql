@@ -52,7 +52,6 @@ describe ConceptQL::DataModel::Gdm do
     it "names the vocabulary column of a table, and nothing for a table without one" do
       _(dm.source_vocabulary_id(:clinical_codes)).must_equal :clinical_code_vocabulary_id
       _(dm.source_vocabulary_id("patient_details")).must_equal :patient_detail_vocabulary_id
-      _(dm.source_vocabulary_id(:vocabularies)).must_equal :omopv4_vocabulary_id
       _(dm.source_vocabulary_id(:patients)).must_be_nil
       _(dm.source_vocabulary_id(:deaths)).must_be_nil
     end
