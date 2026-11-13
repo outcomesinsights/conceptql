@@ -15,7 +15,7 @@
         "warnings": [
           [
             "deprecated operator",
-            "drg will become an error in a later release. A DRG code can have two meanings, and drg selects the events of both. Use ms_drg for the MS-DRG meaning (events from 2007-10-01) or cms_drg for the CMS-DRG meaning (events before 2007-10-01)."
+            "drg will become an error in a later release. A DRG code can have two meanings, and drg selects the results of both. Use ms_drg for the MS-DRG meaning (discharges from 2007-10-01) or cms_drg for the CMS-DRG meaning (discharges before 2007-10-01)."
           ],
           [
             "code(s) with more than one meaning",
