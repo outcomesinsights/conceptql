@@ -10,14 +10,8 @@ require_relative "../../helper"
 # rule from diagram_base and checks
 # that the new rule gives the same value for every statement in
 # test/statements.
-#
-# The left and right of after/anno_1, anno_2 and anno_3 are strings, not
-# statements, so extract_metadata raises NoMethodError on them, with either
-# rule. The test leaves them out.
 # No database: Database.new(nil) builds the operators of each statement.
 describe "codeset_only in Query#extract_metadata" do
-  let(:unvisitable) { %w[after/anno_1.json after/anno_2.json after/anno_3.json] }
-
   def old_codeset_only(query)
     visitor = ConceptQL::Visitors::MetadataExtractor.new
     query.accept(visitor)
@@ -29,8 +23,6 @@ describe "codeset_only in Query#extract_metadata" do
       cdb = ConceptQL::Database.new(nil, data_model: dm)
       files = Pathname.glob("./test/statements/**/*").reject(&:directory?)
       _(files.size).must_be :>, 300
-      files, skipped = files.partition { |file| unvisitable.none? { |name| file.to_s.end_with?("/#{name}") } }
-      _(skipped.size).must_equal unvisitable.size
       values = files.map do |file|
         query = cdb.query(JSON.parse(File.read(file)))
         value = query.extract_metadata[:codeset_only]

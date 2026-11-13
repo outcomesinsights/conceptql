@@ -29,13 +29,9 @@ module ConceptQL
 
       attr_reader :left, :right
 
-      def events_per_patient
-        left.events_per_patient
-      end
-
-      def multiple_vocabularies
-        left.multiple_vocabularies
-      end
+      # events_per_patient and multiple_vocabularies come from Operator, which
+      # reads upstreams.first, the left. A missing left gives :multiple and
+      # false, the values of an operator with no upstream.
 
       # A missing operand, or one that is not an array, is nil. The
       # validations report it, and the walk skips it.
