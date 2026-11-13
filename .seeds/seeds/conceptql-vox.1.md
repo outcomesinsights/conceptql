@@ -5,7 +5,7 @@ status: captured
 type: exploration
 parent: conceptql-vox
 created_at: 2026-11-12T18:31:14.399662+00:00
-updated_at: 2026-11-13T00:13:06.494911+00:00
+updated_at: 2026-11-13T00:45:12.478410+00:00
 tags:
   - glossary
   - ontology
@@ -253,3 +253,7 @@ Notes (Claude):
 ### For review with Mark (2026-11-13)
 
 "Mark and I need to discuss if ConceptQL 'builds cohorts' or something else". The spec's Motivation section says that ConceptQL builds and extracts cohorts. Ryan's account of algorithm versus cohort says that an algorithm finds events and a protocol builds the cohort.
+
+## UPDATE 2026-11-12 (end of session): the glossary moved to a CSV working copy
+
+Ryan did not accept the chat list of drafts ("Boy, I don't like most of this glossary", "This is no bueno"). All 30 terms, his own definitions, and his rewrites of algorithm, statement and event are now in `claude_stuff/conceptql-glossary-draft-20261112.csv` in the primary checkout (not committed). Columns: term, definition, close_terms_not_synonyms, also_called, status, notes. Ryan edits it on 2026-11-13. From then on, the CSV is the working source, not the draft definitions in this seed. When his edits come back, update this seed to match, and the CSV becomes the glossary source file that he ruled on.
