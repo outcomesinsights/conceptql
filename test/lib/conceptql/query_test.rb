@@ -377,6 +377,39 @@ describe ConceptQL::Query do
     end
   end
 
+  # conceptql-5dh8: the options of an inner window replace those of an outer
+  # window in the scope, so the SQL runs with the inner options. The
+  # annotation merged the two, so the diagram showed options that did not
+  # run (here the outer scope_by).
+  describe "a window inside a window" do
+    statement = [ "icd9", "412" ]
+    inner = { start_date: "2008-01-01", end_date: "2008-12-31" }
+    outer = { start_date: "2009-01-01", end_date: "2009-12-31", scope_by: "end_date" }
+    let(:query) { CDB.query([ "window", [ "window", statement, inner ], outer ]) }
+    # The CTE names end in a random hex.
+    sql = ->(query) { query.sql.gsub(/_\h{32}\b/, "_HEX") }
+
+    it "builds the SQL of the inner window, as before" do
+      _(sql.call(query)).must_equal sql.call(CDB.query([ "window", statement, inner ]))
+    end
+
+    it "annotates the options of the inner window" do
+      _(query.annotate(skip_counts: true).first).must_equal "window"
+      _(query.annotate(skip_counts: true).last).must_equal({ **inner, annotation: { id: "window-1" } })
+      _(query.annotate.last).must_equal({ **inner, annotation: { id: "window-1" } })
+    end
+
+    it "checks the options of the inner window" do
+      missing = [ ConceptQL::Window::MISSING_DATE_ERROR, "end_date" ]
+      inner_error = CDB.query([ "window", [ "window", statement, { start_date: "2008-01-01" } ], outer ])
+      _(inner_error.errors.map { |error| [ error[:message], *error[:details] ] }).must_equal [ missing ]
+      _(inner_error.annotate(skip_counts: true).last)
+        .must_equal({ start_date: "2008-01-01", annotation: { id: "window-1", errors: [ missing ] } })
+      outer_error = CDB.query([ "window", [ "window", statement, inner ], { start_date: "2009-01-01" } ])
+      _(outer_error.errors).must_be_empty
+    end
+  end
+
   describe "#code_list" do
     it "should handle nil for a DB" do
       ClimateControl.modify(LEXICON_URL: nil) do

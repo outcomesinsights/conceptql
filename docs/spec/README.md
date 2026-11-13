@@ -2492,6 +2492,8 @@ These are the window options:
 
 Jigsaw's export engine uses `window_table` and `scope_by`. A calling program can give several options, such as a window table and a list of person IDs. Then a result must pass each of them.
 
+If a window is inside another window, only the options of the inner window apply, and ConceptQL ignores the options of the outer window. A diagram shows the options of the inner window, and only those options can make the statement invalid.
+
 The windows change a statement in these ways:
 
 - Each selection operator keeps only the results that are inside a window, as `scope_by` says. Both dates of a window are in the window.
