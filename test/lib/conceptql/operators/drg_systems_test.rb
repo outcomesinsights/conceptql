@@ -35,7 +35,7 @@ describe "the ms_drg and cms_drg operators" do
     describe "on #{data_model}" do
       let(:table) { data_model == :gdm ? "clinical_codes" : "observations" }
 
-      it "selects DRG events from the cutover day with ms_drg" do
+      it "selects DRG results from the cutover day with ms_drg" do
         sql = cdb(data_model).query(%w[ms_drg 001]).sql
 
         _(sql).must_include %{FROM "#{table}" WHERE (("clinical_code_vocabulary_id" = 'DRG') AND }
@@ -43,7 +43,7 @@ describe "the ms_drg and cms_drg operators" do
         _(sql).wont_include %("start_date" < )
       end
 
-      it "selects DRG events before the cutover day with cms_drg" do
+      it "selects DRG results before the cutover day with cms_drg" do
         sql = cdb(data_model).query(%w[cms_drg 001]).sql
 
         _(sql).must_include %{FROM "#{table}" WHERE (("clinical_code_vocabulary_id" = 'DRG') AND }
