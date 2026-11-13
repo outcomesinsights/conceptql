@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Contains < TemporalOperator
       register __FILE__
+      effects :keep
 
       desc "For each patient, keeps the left-hand records whose date range encloses the date range of a right-hand record. The left-hand record starts on or before the start_date of the right-hand record and ends on or after its end_date."
       returns "The left-hand records that enclose the date range of at least one right-hand record of the same patient, each record once. The right-hand records are not returned."

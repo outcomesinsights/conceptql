@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Count < PassThru
       register __FILE__
+      effects :aggregate
       hidden
       category "Modify Data"
 

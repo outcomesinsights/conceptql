@@ -30,6 +30,7 @@ module ConceptQL
 
       category "Select by Clinical Codes"
       basic_type :selection
+      effects :select
       desc "Selects the records whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. " \
            "Each vocabulary has its own operator, and a few operators search several vocabularies at once."
       validate_no_upstreams

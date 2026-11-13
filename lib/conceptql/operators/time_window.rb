@@ -24,6 +24,7 @@ module ConceptQL
     # start: 'd', end: '' # Only adjust start_date by positive 1 day and leave end_date uneffected
     class TimeWindow < PassThru
       register __FILE__
+      effects :change
 
       # The values that the start and end options take (DateAdjuster)
       DATE_ADJUSTMENT_TEXT = "The value is an amount of time, made of one or more numbers, each with a unit: " \

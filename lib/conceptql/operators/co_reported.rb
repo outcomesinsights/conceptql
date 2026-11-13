@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class CoReported < PassThru
       register __FILE__
+      effects :combine, :keep
 
       def events_per_patient
         upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple

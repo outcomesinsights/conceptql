@@ -8,6 +8,7 @@ module ConceptQL
     # column, so a stream matched with itself keeps every record.
     class Match < BinaryOperatorOperator
       register __FILE__
+      effects :keep
 
       desc "Keeps each left-hand record that is equal to a right-hand record in every column, including label. Two empty (NULL) values count as equal."
       returns "The left-hand records that have a right-hand record with the same value in every column. The right-hand records are not returned."

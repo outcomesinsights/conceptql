@@ -2,11 +2,23 @@
 
 module ConceptQL
   module Metadatable
-    # The facets of an operator: top-level keys of its metadata whose values
-    # come from the code (validations, behavior modules and superclasses).
-    # No operator declares them. docs/metadata.md says what each one means.
-    # A reader that needs every facet iterates this list.
-    FACET_KEYS = %i[upstreams reads_data timeless takes_codes uses_provenance utilization temporal_comparison].freeze
+    # The facets of an operator: top-level keys of its metadata. The values of
+    # the first seven come from the code (validations, behavior modules and
+    # superclasses). Each operator declares its effects. docs/metadata.md
+    # says what each one means. A reader that needs every facet iterates this
+    # list.
+    FACET_KEYS = %i[upstreams reads_data timeless takes_codes uses_provenance utilization temporal_comparison effects].freeze
+
+    # What an operator can do to rows. docs/metadata.md says what each one
+    # means.
+    EFFECTS = %i[select keep change combine aggregate cast refer].freeze
+
+    # Raised when an operator class declares an effect outside EFFECTS
+    class UnknownEffectError < ArgumentError
+      def initialize(klass, unknown)
+        super("#{klass} declares unknown effects #{unknown.inspect}. The known effects are #{EFFECTS.inspect}.")
+      end
+    end
 
     def preferred_name(value = nil)
       return @preferred_name unless value
@@ -142,6 +154,20 @@ module ConceptQL
       end
     end
 
+    # Declares what the operator does to rows, for example effects :keep,
+    # :change. The metadata lists them in this order. Without values, gives
+    # the declared effects (an empty list when there are none). A subclass
+    # inherits them, so the vocabulary operators get the effects of
+    # Vocabulary.
+    def effects(*values)
+      return @effects || [] if values.empty?
+
+      unknown = values - EFFECTS
+      raise UnknownEffectError.new(self, unknown) unless unknown.empty?
+
+      @effects = values
+    end
+
     def basic_type(value = nil)
       return @basic_type unless value
 
@@ -189,6 +215,7 @@ module ConceptQL
       end
 
       upstream.basic_type @basic_type
+      upstream.effects(*@effects) if @effects
 
       case @max_upstreams
       when 1
@@ -242,7 +269,8 @@ module ConceptQL
         takes_codes: include?(ConceptQL::Behaviors::CodeLister),
         uses_provenance: include?(ConceptQL::Provenanceable),
         utilization: include?(ConceptQL::Behaviors::Utilizable),
-        temporal_comparison: ancestors.include?(ConceptQL::Operators::TemporalOperator)
+        temporal_comparison: ancestors.include?(ConceptQL::Operators::TemporalOperator),
+        effects: effects.map(&:to_s)
       }
     end
 

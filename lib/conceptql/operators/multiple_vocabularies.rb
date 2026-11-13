@@ -63,6 +63,7 @@ module ConceptQL
                                 "(CPT-4 and HCPCS for cpt_or_hcpcs) and selects the matching records of all of them. " \
                                 "A code gets a warning only when every one of the vocabularies rejects it."
       basic_type :selection
+      effects :select
       category "Select by Clinical Codes"
       validate_no_upstreams
       validate_at_least_one_argument

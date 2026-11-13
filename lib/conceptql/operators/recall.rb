@@ -13,6 +13,7 @@ module ConceptQL
     # "define" operator and will fetch the records cached in the corresponding table
     class Recall < Operator
       register __FILE__
+      effects :refer
 
       desc "Passes on the records of the operator in the statement that has the given label. " \
            "Use it to break a complex statement into parts, or to use a stream of records more than once."

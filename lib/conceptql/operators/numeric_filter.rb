@@ -11,6 +11,7 @@ module ConceptQL
     # If an record has NULL for value_as_number, it is filtered out.
     class NumericFilter < Operator
       register __FILE__
+      effects :keep
 
       desc "Passes along the records whose value_as_number is in the given range. " \
            "Lab records, such as those of loinc, carry this value."

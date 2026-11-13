@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Except < BinaryOperatorOperator
       register __FILE__
+      effects :keep
 
       desc "Removes each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same criterion_table, criterion_id, start_date and end_date."
       returns "The left-hand records that have no right-hand record with the same criterion_table, criterion_id, start_date and end_date. A left-hand record whose table has no right-hand record passes through unchanged. The right-hand records are not returned."

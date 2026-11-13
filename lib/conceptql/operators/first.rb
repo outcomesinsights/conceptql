@@ -20,6 +20,7 @@ module ConceptQL
     # occurrences, this operator returns nothing for that person
     class First < Occurrence
       register __FILE__
+      effects :keep
 
       desc "For each person, passes along the record with the earliest start_date."
 

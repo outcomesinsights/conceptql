@@ -31,6 +31,7 @@ module ConceptQL
       include ConceptQL::Behaviors::SingleEvent
 
       register __FILE__
+      effects :keep
 
       preferred_name "Nth Occurrence"
 

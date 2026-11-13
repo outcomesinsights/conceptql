@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class PersonFilter < BinaryOperatorOperator
       register __FILE__
+      effects :keep
 
       desc "Keeps each left-hand record whose patient has at least one record in the right-hand stream. The type and the dates of the right-hand records do not matter."
       returns "The left-hand records of every type whose patient has at least one right-hand record. The right-hand records are not returned."

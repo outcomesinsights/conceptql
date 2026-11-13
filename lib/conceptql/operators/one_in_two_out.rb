@@ -11,6 +11,7 @@ module ConceptQL
       include ConceptQL::Behaviors::SingleEvent
 
       register __FILE__
+      effects :keep, :change
 
       desc "For each person, passes along the earliest confirmed condition record. " \
            "One inpatient record confirms a condition, and so do two outpatient records whose start dates are a given gap apart."

@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Filter < BinaryOperatorOperator
       register __FILE__
+      effects :keep
 
       desc "Keeps each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date."
       returns "The left-hand records that have a right-hand record with the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date. The right-hand records are not returned."

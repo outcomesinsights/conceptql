@@ -6,6 +6,7 @@ module ConceptQL
   module Operators
     class Ethnicity < Operator
       register __FILE__
+      effects :select
 
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
