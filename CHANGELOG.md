@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
   `ConceptQL::Metadatable::FACET_KEYS` lists the keys. `docs/metadata.md` says what each one
   means.
 - Each operator in `ConceptQL.metadata` has the top-level key `effects`: a list of strings
-  that says what the operator does to rows. The values are `select`, `keep`, `change`,
+  that says what the operator does to results. The values are `select`, `keep`, `change`,
   `combine`, `aggregate`, `cast` and `refer`, and `docs/metadata.md` says what each one
   means. Each operator class declares its effects with `effects :keep, :change`, and a
   subclass inherits them, so every vocabulary operator is `select`. An unknown value raises
@@ -61,6 +61,12 @@ All notable changes to this project will be documented in this file.
   system. The standard description of a vocabulary operator is now "Selects results based
   on the ... vocabulary.". No warning or error message changed: the warning "the data has
   no records of this vocabulary" keeps its text, because Jigsaw's tests match it.
+- The deprecation message of `count`, which a calling program can show, now says "To count
+  the results of each person". Before, it said "To count the events of each person". The
+  rest of the message is the same.
+- The long names of `ms_drg` and `cms_drg` (`long_name` in `ConceptQL.metadata` and the
+  vocabulary table of the spec) say "discharges from 2007-10-01" and "discharges before
+  2007-10-01", because a DRG applies to a discharge. Before, they said "events".
 
 ### Fixed
 

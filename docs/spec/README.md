@@ -360,22 +360,22 @@ ConceptQL creates one vocabulary operator for each vocabulary that it knows, so 
 
 These are the most common vocabulary operators:
 
-| Operator     | Alias          | Vocabulary                                   | Stream type          |
-| ------------ | -------------- | -------------------------------------------- | -------------------- |
-| cpt4         | cpt            | CPT-4 procedure codes                        | procedure_occurrence |
-| hcpcs        |                | HCPCS procedure codes                        | procedure_occurrence |
-| cpt_or_hcpcs |                | CPT-4 and HCPCS together                     | procedure_occurrence |
-| icd9cm       | icd9           | ICD-9-CM diagnosis codes                     | condition_occurrence |
-| icd9proc     | icd9_procedure | ICD-9-CM procedure codes (volume 3)          | procedure_occurrence |
-| icd10cm      |                | ICD-10-CM diagnosis codes                    | condition_occurrence |
-| icd10pcs     | icd10_pcs      | ICD-10-PCS procedure codes                   | procedure_occurrence |
-| ms_drg       |                | MS-DRG codes, for events from 2007-10-01     | procedure_occurrence |
-| cms_drg      |                | CMS-DRG codes, for events before 2007-10-01  | procedure_occurrence |
-| revenue_code |                | UB-04 revenue codes                          | procedure_occurrence |
-| loinc        |                | LOINC lab codes                              | observation          |
-| ndc          |                | National Drug Codes (11-digit package codes) | drug_exposure        |
-| rxnorm       |                | RxNorm codes                                 | drug_exposure        |
-| snomed       |                | SNOMED CT codes                              | condition_occurrence |
+| Operator     | Alias          | Vocabulary                                      | Stream type          |
+| ------------ | -------------- | ----------------------------------------------- | -------------------- |
+| cpt4         | cpt            | CPT-4 procedure codes                           | procedure_occurrence |
+| hcpcs        |                | HCPCS procedure codes                           | procedure_occurrence |
+| cpt_or_hcpcs |                | CPT-4 and HCPCS together                        | procedure_occurrence |
+| icd9cm       | icd9           | ICD-9-CM diagnosis codes                        | condition_occurrence |
+| icd9proc     | icd9_procedure | ICD-9-CM procedure codes (volume 3)             | procedure_occurrence |
+| icd10cm      |                | ICD-10-CM diagnosis codes                       | condition_occurrence |
+| icd10pcs     | icd10_pcs      | ICD-10-PCS procedure codes                      | procedure_occurrence |
+| ms_drg       |                | MS-DRG codes, for discharges from 2007-10-01    | procedure_occurrence |
+| cms_drg      |                | CMS-DRG codes, for discharges before 2007-10-01 | procedure_occurrence |
+| revenue_code |                | UB-04 revenue codes                             | procedure_occurrence |
+| loinc        |                | LOINC lab codes                                 | observation          |
+| ndc          |                | National Drug Codes (11-digit package codes)    | drug_exposure        |
+| rxnorm       |                | RxNorm codes                                    | drug_exposure        |
+| snomed       |                | SNOMED CT codes                                 | condition_occurrence |
 
 Examples of how codes match:
 
@@ -414,7 +414,7 @@ The build writes this table from the metadata of the operators. It lists the voc
 | `atc`                    | WHO Anatomic Therapeutic Chemical Classification                                                       | drug_exposure        |
 | `betos`                  | BETOS                                                                                                  | condition_occurrence |
 | `clinical_code_type`     | Clinical Code Type                                                                                     | condition_occurrence |
-| `cms_drg`                | CMS Diagnosis-Related Group, events before 2007-10-01                                                  | procedure_occurrence |
+| `cms_drg`                | CMS Diagnosis-Related Group, discharges before 2007-10-01                                              | procedure_occurrence |
 | `concept_class`          | OMOP Concept Class                                                                                     | condition_occurrence |
 | `condition_type`         | OMOP Condition Occurrence Type                                                                         | condition_occurrence |
 | `cpt4`                   | Current Procedural Terminology version 4 (AMA)                                                         | procedure_occurrence |
@@ -443,7 +443,7 @@ The build writes this table from the metadata of the operators. It lists the voc
 | `loinc`                  | Logical Observation Identifiers Names and Codes (Regenstrief Institute)                                | observation          |
 | `marcla_obs_type`        | Market Clarity Observation Type                                                                        | observation          |
 | `meas_type`              | OMOP Measurement Type                                                                                  | observation          |
-| `ms_drg`                 | Medicare Severity Diagnosis-Related Group (CMS), events from 2007-10-01                                | procedure_occurrence |
+| `ms_drg`                 | Medicare Severity Diagnosis-Related Group (CMS), discharges from 2007-10-01                            | procedure_occurrence |
 | `ndc`                    | National Drug Code (FDA and manufacturers)                                                             | drug_exposure        |
 | `note_type`              | OMOP Note Type                                                                                         | condition_occurrence |
 | `nucc`                   | National Uniform Claim Committee Health Care Provider Taxonomy Code Set (NUCC)                         | condition_occurrence |

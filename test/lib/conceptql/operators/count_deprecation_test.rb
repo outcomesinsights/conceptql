@@ -17,7 +17,7 @@ describe "the deprecated count operator" do
   let(:deprecation) do
     [
       "deprecated operator",
-      "count will become an error in a later release. To count the events of each person, " \
+      "count will become an error in a later release. To count the results of each person, " \
       'use ["sum", ["numeric", 1, <stream>], {"group_by_person": true}].'
     ]
   end
