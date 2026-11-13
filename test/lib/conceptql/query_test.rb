@@ -410,6 +410,53 @@ describe ConceptQL::Query do
     end
   end
 
+  # conceptql-xdmk: only a window statement gave Window::Table the Database
+  # that queries a window table statement, so a window table statement in the
+  # scope options raised NoMethodError.
+  describe "a window table statement in the scope options" do
+    statement = [ "icd9", "412" ]
+    table = [ "date_range", { "start" => "2008-01-01", "end" => "2008-12-31" } ]
+    # The CTE names end in a random hex.
+    sql = ->(query) { query.sql.gsub(/_\h{32}\b/, "_HEX") }
+    rows = ->(query) { query.query.order(:criterion_id).all }
+    let(:window_statement) { CDB.query([ "window", statement, { window_table: table } ]) }
+
+    {
+      "in window_opts" => { window_opts: { window_table: table } },
+      "in window_opts, with String keys" => { "window_opts" => { "window_table" => table } }
+    }.each do |name, scope_opts|
+      it "runs and annotates #{name} as a window statement does" do
+        query = CDB.query(statement, scope_opts: scope_opts)
+        _(sql.call(query)).must_equal sql.call(window_statement)
+        _(rows.call(query)).must_equal rows.call(window_statement)
+        _(query.annotate(skip_counts: true)).must_equal window_statement.annotate(skip_counts: true)
+      end
+    end
+
+    # A window table at the top of the scope options does not add window_id
+    # to the columns that operators match on, for a table name too, so the
+    # SQL differs. The rows are the same.
+    it "gives the rows of a window statement at the top of the scope options" do
+      query = CDB.query(statement, scope_opts: { "window_table" => table })
+      _(rows.call(query)).must_equal rows.call(window_statement)
+      _(query.count).wont_equal CDB.query(statement).count
+    end
+
+    it "reports the errors of the window table statement" do
+      invalid = [ "provider_filter", [ "icd9", "412" ], { "specialties" => "*" } ]
+      query = CDB.query(statement, scope_opts: { window_table: invalid })
+      _(query.errors.map { |error| [ error[:operator], error[:message], *error[:details] ] })
+        .must_equal [ [ "provider_filter", "required option not present", "roles" ] ]
+      _ { query.query }.must_raise ConceptQL::InvalidStatementError
+    end
+
+    it "checks the window options" do
+      query = CDB.query(statement, scope_opts: { window_table: table, scope_by: "bogus" })
+      _(query.errors.map { |error| [ error[:operator], error[:message], *error[:details] ] })
+        .must_equal [ [ "window", ConceptQL::Window::SCOPE_BY_ERROR, "bogus" ] ]
+    end
+  end
+
   describe "#code_list" do
     it "should handle nil for a DB" do
       ClimateControl.modify(LEXICON_URL: nil) do
