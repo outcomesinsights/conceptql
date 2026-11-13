@@ -70,7 +70,15 @@ ConceptQL is a domain-specific, declarative language. It represents search crite
 - '412'
 ```
 
-The first element of each array is the name of an operator. The other elements are the operator's arguments, its upstream operators, and a hash of options. Codes are strings, so quote them in YAML. Operator names are not case-sensitive.
+A statement is an algorithm written in ConceptQL. It is commonly stored as JSON. Each array of a statement has these parts:
+
+- The first element is an operator. An operator is a function that is applied to the dataset or to results. Only a selection operator reads the dataset. Every other operator works on its upstream results.
+- The arguments follow the operator. An argument is an unnamed, positional input. It is a code, such as `412`, or an upstream statement. Many operators take a variable number of arguments.
+- An optional hash at the end holds the options. An option is a named input. Every operator takes the option `label` (see [`label`](#label-option-and-its-features)).
+
+The reference section of each operator lists its upstream statements under "Upstream" and its other arguments under "Arguments". Codes are strings, so quote them in YAML. Operator names are not case-sensitive.
+
+The words upstream and downstream describe the flow of results through a statement. The upstream of an operator is the results that come into it. An upstream statement is nested inside the array of the operator that takes its results. Downstream is everything in a statement that comes after a given operator. In the second diagram below, the results of `cpt` are the upstream of `first`, and `first` is downstream of `cpt`.
 
 ### ConceptQL Diagrams
 
@@ -287,6 +295,16 @@ Person operators select records from the `patients` table, which holds the patie
 #### `Information Periods` Operator
 
 <!-- conceptql-spec: operator information-periods-operator -->
+
+An information period is a span of time in which the dataset has a given kind of information about a person. The main kinds are periods of eligibility and periods of enrollment.
+
+A person can have several information periods of different types, and the periods can overlap. For example, a person can be enrolled in Medicare Part B for one span and in Part D for a different span. Without Part D enrollment, the dataset gives little insight into the prescription drugs of the person. So the type of a period tells which kinds of information exist for that span. In the example above, each person has several periods that overlap.
+
+The CDM of OMOP has a similar table, [`observation_period`](https://ohdsi.github.io/CommonDataModel/cdm54.html#observation_period). The CDM describes it so: "This table contains records which define spans of time during which two conditions are expected to hold: (i) Clinical Events that happened to the Person are recorded in the Event tables, and (ii) absence of records indicate such Events did not occur during this span of time."
+
+ConceptQL uses the name "information period", because each span says which information the dataset holds. In study design, an observation period is a choice of the analysis. It is often shorter than the span of information that exists.
+
+In general, a period is a span of time in the dataset, and a window is a span of time in a study (see [Windows](#windows)).
 
 ### Utilization Operators
 
@@ -559,14 +577,37 @@ Claims often report the place of service of an event with a CMS place of service
 
 <!-- conceptql-spec: operator provenance-operator -->
 
-Provenance is information about the origin of claims data. It is sometimes an important factor in research algorithms. For example, authors often describe "inpatient records", by which they mean claims from the inpatient file of a claims dataset. The [GDM](https://github.com/outcomesinsights/generalized_data_model#contexts) records the provenance of the data during ETL.
+Provenance is information about the origin of a row of claims data. It is sometimes an important factor in research algorithms. There are two kinds of provenance:
+
+- File provenance is the file of the dataset that a row came from. Examples are the MedPAR file and the carrier claims file of Medicare data.
+- Code provenance is the role of a code on its claim. Examples are a primary diagnosis and an admitting diagnosis.
+
+The [GDM](https://github.com/outcomesinsights/generalized_data_model#contexts) records both kinds during ETL. The file provenance of a row is the `source_type_concept_id` of its context. The code provenance of a row is its `provenance_concept_id`. ConceptQL names these two columns `file_provenance_type` and `code_provenance_type`.
+
+Each keyword names a concept in a provenance vocabulary. A file keyword names a concept of the file provenance vocabulary, and a code keyword names a concept of the code provenance vocabulary. A keyword matches its concept and each descendant of that concept in the `concept_ancestor` table of the dataset. For example, in our test data, the concept of the MedPAR file of inpatient stays is a descendant of `inpatient`.
 
 These are the keywords of each kind:
 
 - File keywords: `inpatient`, `outpatient`, `carrier_claim`, `claim`, `dme`, `hha`, `hospice`, `snf`, `prescription_drug` and `demographics`.
 - Code keywords: `primary`, `primary_or_first`, `first`, `second`, `admitting`, `discharge`, `problem_list`, `chief_complaint` and `unspecified`.
 
-Besides `inpatient`, which includes `snf`, `outpatient` includes `hha` and `hospice`, and `claim` includes every kind of claim file.
+The hierarchy of these concepts is part of the vocabulary tables of the dataset. It is not a rule of ConceptQL. In the vocabulary tables of our test data, `inpatient` includes `snf`, and `outpatient` includes `hha` and `hospice`. There, `carrier_claim` includes `dme`, and `claim` includes each claim file of the test data.
+
+#### Inpatient and Outpatient Settings
+
+Authors often describe "inpatient records" or "outpatient visits". An inpatient setting is meant to be a stay after admission to a hospital. In practice, the line between the inpatient and the outpatient setting is poorly defined. These are some of the hard cases:
+
+- In some data, the file decides. For example, the MedPAR file of Medicare data holds the inpatient stays.
+- A carrier claim can be for a service given in a hospital.
+- An emergency room visit can become an admission. Then the visit has an outpatient part and an inpatient part.
+- The place of service code of a claim may or may not decide the setting.
+- A stay in a skilled nursing facility may or may not count as inpatient.
+
+Outpatient visits have the same problems.
+
+ConceptQL does not decide these cases. The dataset declares what counts as inpatient and what counts as outpatient, through a mapping. The GDM stores the concrete facts of the data, such as the file that a row came from and the place of service. The mapping, not the ETL, decides which of these rows are inpatient. So the setting is a decision of the analysis. A different analysis can use a different mapping, with no new ETL.
+
+The mapping is the hierarchy of the file and code provenance concepts in the vocabulary tables of the dataset. For example, our test data maps its inpatient claims file to `inpatient` and its outpatient claims file to `outpatient`. [`one_in_two_out`](#one-in-two-out-operator) uses the keywords `inpatient`, `outpatient` and `carrier_claim`. As plain keywords, they match either kind of provenance. In our test data, only the file provenance matches them, because no code provenance of the data is a descendant of these keywords. The [utilization operators](#utilization-operators), such as `hospitalization`, use only the file provenance.
 
 ### `Provider Filter` Operator
 
@@ -587,7 +628,7 @@ Use `*` to skip one half of the filter. This example keeps the diabetes diagnose
 
 The operator decides between inpatient and outpatient by the provenance of each record (see [`provenance`](#provenance-operator)):
 
-- A record with `inpatient` provenance (which includes SNF) is an inpatient record.
+- A record with `inpatient` provenance (which includes SNF in our test data) is an inpatient record.
 - A record with `outpatient` or `carrier_claim` provenance is an outpatient record.
 - Other records, and records whose type is not `condition_occurrence`, are removed.
 
@@ -658,18 +699,39 @@ A label must be a string.
 
 <!-- conceptql-spec: operator recall-operator -->
 
-## Window Tables
+<a id="window-tables"></a>
 
-A system can run a statement inside windows. A window is a date range of one patient. Jigsaw's export engine uses windows. The system gives the windows in a window table, and it wraps the statement like this:
+## Windows
+
+A window is a span of time. A calling program can apply windows to a statement, usually one span of dates for each person. ConceptQL then ignores the data outside the windows, as though that data does not exist.
+
+An algorithm never contains a window, and no algorithm should assume that a window exists. Windows sit outside the algorithm. So any algorithm can later run inside a window with no change to the algorithm. A calling program, such as Jigsaw's export engine, applies the windows of a study to the algorithms that it runs. Then the results stay inside the spans of time of the study.
+
+The [`time_window`](#time-window-operator) operator is a different thing. It is part of a statement, and it changes the dates of results or makes spans of dates for each person. Its results are still subject to the windows that the calling program applies.
+
+The calling program wraps the statement like this:
 
 ```JSON
-[ "window", <statement>, { "window_table": <window table> } ]
+[ "window", <statement>, { <window options> } ]
 ```
 
-- The window table has the columns `person_id`, `start_date` and `end_date`. It is the name of a database table or a ConceptQL statement.
-- Each selection operator keeps only the records whose patient has a window and whose start_date is in that window. Both dates of the window are in the window. The person operators, such as `person` and `gender`, keep each patient who has a window, whatever the dates.
-- Each record gets the column `window_id`, which identifies its window. A record that is in two windows of its patient comes out once for each window.
-- Operators that work on each patient, such as `first`, `episode` and the temporal operators, work on each patient and window. For example, `first` keeps the first record of each window.
+These are the window options:
+
+- `window_table`: a table of windows, with the columns `person_id`, `start_date` and `end_date`. Each row is one window of one person. The value is the name of a database table or a ConceptQL statement.
+- `start_date` and `end_date`: one date range that is the window of every person. ConceptQL uses the date range only when both options are given.
+- `scope_by`: which dates of a result must be inside the window. With `start_date`, the default, the start_date of the result must be in the window. With `end_date`, the end_date of the result must be in the window. With `date_range`, both dates of the result must be in the window. Any other value is an error.
+- `adjust_window_start` and `adjust_window_end`: date adjustments, as [`time_window`](#time-window-operator) takes them. They move the start and the end of each window of the window table. They do not change a date range.
+- `precalculated_window_id`: the window table has its own `window_id` column, and ConceptQL uses it. Without this option, ConceptQL numbers the windows itself.
+- `person_ids`: a list of person IDs. ConceptQL keeps only the results of these persons.
+
+Jigsaw's export engine uses `window_table` and `scope_by`. A calling program can give several options, such as a window table and a list of person IDs. Then a result must pass each of them.
+
+The windows change a statement in these ways:
+
+- Each selection operator keeps only the results that are inside a window, as `scope_by` says. Both dates of a window are in the window.
+- The person operators, such as `person` and `gender`, and the operators `date_range` and `information_periods` ignore the dates of a window. With a window table, they keep each person who has a window. A date range does not change their results.
+- With a window table, each result gets the column `window_id`, which identifies its window. A result that is in two windows of its person comes out once for each window. Without `precalculated_window_id`, two rows of the window table with the same person and the same dates are one window. A date range adds no `window_id`.
+- With a window table, operators that work on each person, such as `first`, `episode` and the temporal operators, work on each person and window. For example, `first` keeps the first result of each window.
 - If the window table is a ConceptQL statement with errors, the statement that it wraps is invalid. A diagram reports the errors under `window_table`, and counts nothing.
 
 ## Appendix A - Experimental Operators

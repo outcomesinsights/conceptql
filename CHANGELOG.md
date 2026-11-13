@@ -44,6 +44,14 @@ All notable changes to this project will be documented in this file.
 - `ConceptQL::Diagram` (the render tree and the Jigsaw JSON), `Query#extract_metadata` and
   the spec build read `diagram_base` and the `upstreams` facet, not the old keys. Every
   diagram and every value of `codeset_only` is the same as before.
+- The spec (`docs/spec/README.md`) explains the parts of a statement (operator, arguments,
+  options, upstream and downstream), file and code provenance, inpatient and outpatient
+  settings, and information periods. The section "Window Tables" is now "Windows". It says
+  why windows sit outside an algorithm, how they differ from `time_window`, and every
+  window option: `window_table`, `start_date` and `end_date`, `scope_by`,
+  `adjust_window_start` and `adjust_window_end`, `precalculated_window_id` and `person_ids`.
+  Before, it said only that a result must start inside its window, which is true only for
+  the default `scope_by`. The old anchor `#window-tables` still works.
 
 ### Fixed
 
