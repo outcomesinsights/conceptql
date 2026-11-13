@@ -37,14 +37,16 @@ module ConceptQL
         left.multiple_vocabularies
       end
 
+      # A missing operand, or one that is not an array, is nil. The
+      # validations report it, and the walk skips it.
       def accept(visitor, opts = {})
         visitor.visit(self)
-        left.accept(visitor, opts)
-        right.accept(visitor, opts) unless opts[:avoid_rhs]
+        left&.accept(visitor, opts)
+        right&.accept(visitor, opts) unless opts[:avoid_rhs]
       end
 
       def all_upstreams
-        [ left, right ]
+        [ left, right ].compact
       end
 
       private
