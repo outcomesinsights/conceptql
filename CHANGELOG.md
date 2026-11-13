@@ -47,6 +47,11 @@ All notable changes to this project will be documented in this file.
   because the operator can then pass along several records of one person. Before, it was
   always `:single`, so a Jigsaw export of such an algorithm said that each patient had at
   most one event. `occurrence` without these options, `first` and `last` stay `:single`.
+- `Query#events_per_patient` is `:multiple` for `union` and `co_reported` with two or more
+  upstreams, because each upstream passes along its own records. Before, it was `:single`
+  when every upstream was `:single`: on the DuckDB fixture, a `union` of two `first`
+  operators gave 36 persons more than one row. With one upstream, they still report the
+  value of that upstream.
 - `ethnicity` applies the windows of a window table, as `gender` and `race` do. It keeps
   each patient who has a window, whatever the dates, and each record gets its `window_id`.
   Before, it ignored the windows: it kept the patients with no window, and their records
