@@ -67,6 +67,10 @@ All notable changes to this project will be documented in this file.
 - The long names of `ms_drg` and `cms_drg` (`long_name` in `ConceptQL.metadata` and the
   vocabulary table of the spec) say "discharges from 2007-10-01" and "discharges before
   2007-10-01", because a DRG applies to a discharge. Before, they said "events".
+- The deprecation warning of `drg` (`ConceptQL::Vocabularies::DrgSystems::DRG_DEPRECATION`)
+  says "drg selects the results of both" and "discharges from 2007-10-01" or "discharges
+  before 2007-10-01", the same as the long names. Before, it said "events" in all three
+  places. The rest of the message is the same.
 
 ### Fixed
 

@@ -4,12 +4,12 @@ require_relative "../../../helper"
 require "date"
 
 # A DRG code can have two meanings: its CMS-DRG meaning before the
-# 2007-10-01 MS-DRG renumbering and its MS-DRG meaning after it. Event rows do
-# not record which meaning applied, so Ryan ruled (seed conceptql-7p3,
-# 2026-10-30) that a statement names the DRG system: ms_drg selects the DRG
-# events from 2007-10-01, and cms_drg selects the DRG events before that day.
-# drg is deprecated (bead conceptql-alw). The test fixtures hold DRG events
-# from 2008 to 2010 only, so these tests check the generated SQL on a mock.
+# 2007-10-01 MS-DRG renumbering and its MS-DRG meaning after it. The rows of a
+# dataset table do not record which meaning applied, so Ryan ruled (seed
+# conceptql-7p3, 2026-10-30) that a statement names the DRG system: ms_drg
+# selects the DRG results from 2007-10-01, and cms_drg selects the DRG results
+# before that day. drg is deprecated (bead conceptql-alw). The test fixtures
+# hold DRG rows from 2008 to 2010 only, so these tests check the generated SQL on a mock.
 describe "the ms_drg and cms_drg operators" do
   let(:cutover) { ConceptQL::Vocabularies::DrgSystems::MS_DRG_START_DATE }
 
@@ -121,8 +121,8 @@ describe "the ms_drg and cms_drg operators" do
       [
         "deprecated operator",
         "drg will become an error in a later release. A DRG code can have two meanings, and drg " \
-        "selects the events of both. Use ms_drg for the MS-DRG meaning (events from 2007-10-01) or " \
-        "cms_drg for the CMS-DRG meaning (events before 2007-10-01)."
+        "selects the results of both. Use ms_drg for the MS-DRG meaning (discharges from " \
+        "2007-10-01) or cms_drg for the CMS-DRG meaning (discharges before 2007-10-01)."
       ]
     end
 

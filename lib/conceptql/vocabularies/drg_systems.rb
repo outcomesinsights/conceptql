@@ -10,24 +10,25 @@ module ConceptQL
     # CMS replaced the CMS-DRG system with MS-DRG on 2007-10-01 and reused
     # most DRG codes for new meanings: DRG 010 meant "Nervous System
     # Neoplasms" before that day and "Pancreas transplant" after it. One
-    # vocabulary, DRG, holds both systems, and an event row does not record
-    # which meaning applied: the ETL stores one concept ID for each source code
-    # whatever the event date. So a statement names the system, and the system
-    # decides by the event date. ["ms_drg", "010"] selects the DRG 010 events
-    # from 2007-10-01, and ["cms_drg", "010"] selects the DRG 010 events before
+    # vocabulary, DRG, holds both systems, and a row of a dataset table does
+    # not record which meaning applied: the ETL stores one concept ID for each
+    # source code whatever the start date of the row. So a statement names the
+    # system, and the system decides by that start date. ["ms_drg", "010"]
+    # selects the DRG 010 results
+    # from 2007-10-01, and ["cms_drg", "010"] selects the DRG 010 results before
     # that day. The concept-ID lookup is the one that drg uses. The
     # operators use no OHDSI validity date and no concept class to select
-    # events.
+    # results.
     #
     # Each operator is a vocabulary operator of vocabulary DRG. So its code
     # format is the DRG row of vocabulary_formats (a vocabulary operator uses
     # the row of the vocabulary it selects), and its unknown-code warning
     # checks the DRG vocabulary.
     #
-    # The deprecated drg operator selects the events of both systems.
+    # The deprecated drg operator selects the results of both systems.
     module DrgSystems
-      # The first day of MS-DRG. ms_drg selects the events on or after this
-      # day, and cms_drg the events before it.
+      # The first day of MS-DRG. ms_drg selects the results on or after this
+      # day, and cms_drg the results before it.
       MS_DRG_START_DATE = Date.new(2007, 10, 1)
 
       # The vocabulary and the operator that hold both systems.
@@ -35,15 +36,16 @@ module ConceptQL
       DRG_OPERATOR = "drg"
 
       DRG_DEPRECATION = "drg will become an error in a later release. A DRG code can have two meanings, " \
-                        "and drg selects the events of both. Use ms_drg for the MS-DRG meaning (events from " \
-                        "#{MS_DRG_START_DATE.iso8601}) or cms_drg for the CMS-DRG meaning (events before " \
+                        "and drg selects the results of both. Use ms_drg for the MS-DRG meaning " \
+                        "(discharges from #{MS_DRG_START_DATE.iso8601}) or cms_drg for the CMS-DRG " \
+                        "meaning (discharges before " \
                         "#{MS_DRG_START_DATE.iso8601}).".freeze
 
       # operator: the operator name. concept_class_id: the OHDSI concept class
       # of the system's meanings. from_cutover: true when the system starts on
       # MS_DRG_START_DATE, false when it ends the day before.
       System = Data.define(:operator, :name, :long_name, :concept_class_id, :from_cutover) do
-        # The condition on the event's start date.
+        # The condition on the start date of a row.
         def date_condition(start_date_column)
           column = Sequel.identifier(start_date_column)
           from_cutover ? column >= MS_DRG_START_DATE : column < MS_DRG_START_DATE
