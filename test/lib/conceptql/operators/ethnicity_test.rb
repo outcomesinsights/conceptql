@@ -21,6 +21,26 @@ describe ConceptQL::Operators::Ethnicity do
     Sequel[schema][:patients]
   end
 
+  # Runs statement inside the windows of window and checks the spec's rule for
+  # the person operators: each patient who has a window is kept, whatever the
+  # dates, the other patients are not, and each record has its window_id.
+  def assert_keeps_patients_with_a_window(statement, window)
+    selected = CDB.query(statement).query.select_map(:person_id).uniq.sort
+    window_people = CDB.query(window).query.select_map(:person_id).uniq.sort
+    expected = selected & window_people
+    _(expected).wont_be_empty "#{statement.inspect}: no patient has a window"
+    _(expected.size).must_be :<, selected.size, "#{statement.inspect}: the window excludes no patient"
+
+    rows = CDB.query([ "window", statement, { "window_table" => window } ]).query.all
+    _(rows.map { |r| r[:person_id] }.uniq.sort).must_equal expected
+    _(rows.select { |r| r[:window_id].nil? }).must_be_empty
+  end
+
+  it "keeps only the patients who have a window, as gender does" do
+    assert_keeps_patients_with_a_window(%w[gender Male], [ "icd9", "412" ])
+    assert_keeps_patients_with_a_window(%w[ethnicity Hispanic], %w[gender Male])
+  end
+
   it "selects the patients with no ethnicity or ethnicity concept 0 for Unknown" do
     skip "Spark cannot update the test data" if DB.database_type.to_sym == :spark
 

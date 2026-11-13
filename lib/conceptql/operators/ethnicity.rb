@@ -7,6 +7,9 @@ module ConceptQL
     class Ethnicity < Operator
       register __FILE__
 
+      include ConceptQL::Behaviors::Windowable
+      include ConceptQL::Behaviors::Timeless
+
       desc "Selects the patients with the given ethnicities."
       domains :person
       category "Select by Property"

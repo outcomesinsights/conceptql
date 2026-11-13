@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
   because the operator can then pass along several records of one person. Before, it was
   always `:single`, so a Jigsaw export of such an algorithm said that each patient had at
   most one event. `occurrence` without these options, `first` and `last` stay `:single`.
+- `ethnicity` applies the windows of a window table, as `gender` and `race` do. It keeps
+  each patient who has a window, whatever the dates, and each record gets its `window_id`.
+  Before, it ignored the windows: it kept the patients with no window, and their records
+  had no `window_id`.
 
 ## [0.8.0] - 2026-11-10
 
