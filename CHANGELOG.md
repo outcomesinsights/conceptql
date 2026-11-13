@@ -56,6 +56,10 @@ All notable changes to this project will be documented in this file.
   each patient who has a window, whatever the dates, and each record gets its `window_id`.
   Before, it ignored the windows: it kept the patients with no window, and their records
   had no `window_id`.
+- `Query#extract_metadata` works on a binary operator (`after`, `before`, `during`, ...)
+  whose `left` or `right` is missing or is not a statement. It lists only the operands
+  that exist. Before, it raised `NoMethodError`. The statement is still invalid, with the
+  same errors.
 
 ## [0.8.0] - 2026-11-10
 
