@@ -67,6 +67,12 @@ module ConceptQL
       @cdb = cdb
       @given_statement = statement
       @statement, opts = extract_statement(statement, opts)
+      # Window::Table queries a window table statement with this Database.
+      # Scope#windows merges the scope options with the window options, so a
+      # window table statement gets it from both places that a window table
+      # comes from: a window statement and the scope options of the calling
+      # program.
+      opts[:scope_opts] = (opts[:scope_opts] || {}).merge(cdb: cdb)
       @opts = opts
       opts[:algorithm_fetcher] ||= proc do |alg|
         statement, description = db[:concepts].where(concept_id: alg).get(%i[statement label])
@@ -319,7 +325,7 @@ module ConceptQL
     # window inside a window, the options of the inner window. Nil when the
     # statement is not a window statement.
     def statement_window_options
-      nodifier.scope.opts[:window_opts]&.except(:cdb) if @window_statement
+      nodifier.scope.opts[:window_opts] if @window_statement
     end
 
     # The annotated statement inside its window operator, when the statement
@@ -350,7 +356,7 @@ module ConceptQL
 
         # The options of an inner window replace those of an outer window.
         opts[:scope_opts] = (opts[:scope_opts] || {})
-        opts[:scope_opts].merge!(window_opts: stmt.last.merge(cdb: cdb))
+        opts[:scope_opts].merge!(window_opts: stmt.last)
         @window_statement = true
         extract_statement(stmt[1], opts)
       elsif stmt.length == 1 && stmt.first.is_a?(Array)

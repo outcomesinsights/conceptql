@@ -116,6 +116,11 @@ All notable changes to this project will be documented in this file.
   both windows merged, so an option of the outer window (for example `scope_by`) appeared
   in the diagram but did not run. The window checks read the options of the inner window,
   so a lone date in the outer window is not an error. The SQL does not change.
+- A `window_table` that is a ConceptQL statement works in the `scope_opts` of a calling
+  program, at the top or in `window_opts`. In `window_opts`, it gives the SQL, the rows and
+  the diagram of the same statement in a `window` statement. Before, building the SQL raised
+  `NoMethodError`, because only a `window` statement gave the window table the Database
+  that queries its statement. Its errors and the window checks apply, as before.
 
 ## [0.8.0] - 2026-11-10
 
