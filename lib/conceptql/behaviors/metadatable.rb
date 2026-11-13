@@ -154,7 +154,7 @@ module ConceptQL
       end
     end
 
-    # Declares what the operator does to rows, for example effects :keep,
+    # Declares what the operator does to results, for example effects :keep,
     # :change. The metadata lists them in this order. Without values, gives
     # the declared effects (an empty list when there are none). A subclass
     # inherits them, so the vocabulary operators get the effects of

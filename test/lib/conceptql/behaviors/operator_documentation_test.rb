@@ -19,7 +19,7 @@ describe "operator documentation in the metadata" do
       option :window, type: :string, instructions: "Enter a number of days", meaning: "The parent's window."
       option :other, type: :string, meaning: "The other option."
       argument :codes, type: :codelist, meaning: "The codes to select."
-      returns "One record for each parent record."
+      returns "One result for each parent result."
       example "Parent example", [ "icd9", "412" ]
       example "Parent example kept out of help", [ "icd9", "250.00" ], help: false
     end
@@ -44,7 +44,7 @@ describe "operator documentation in the metadata" do
     end
 
     it "serves returns" do
-      _(parent_metadata[:returns]).must_equal "One record for each parent record."
+      _(parent_metadata[:returns]).must_equal "One result for each parent result."
     end
 
     it "serves each example as title, statement and help, in order" do
@@ -61,7 +61,7 @@ describe "operator documentation in the metadata" do
 
       documented = ConceptQL.metadata(cdb)[:operators].fetch("documented")
       _(documented[:options][:window][:meaning]).must_equal "The parent's window."
-      _(documented[:returns]).must_equal "One record for each parent record."
+      _(documented[:returns]).must_equal "One result for each parent result."
       _(documented[:examples].map { |example| example[:title] }).must_equal [ "Parent example", "Parent example kept out of help" ]
     end
   end
@@ -154,7 +154,7 @@ describe "operator documentation in the metadata" do
     let(:cpt_or_hcpcs_example) { { title: "Office visit", statement: [ "cpt_or_hcpcs", "99214" ], help: false } }
 
     it "serves the returns text of Vocabulary on every operator of the section" do
-      with_vocabulary_texts("One record for each matching record.", []) do
+      with_vocabulary_texts("One result for each matching row.", []) do
         section = operators_metadata.select { |_name, metadata| metadata[:spec_id] == "vocabulary-operator" }
         # Premise: the section has a generated vocabulary operator, read and the multiple vocabulary one
         _(section.keys).must_include "icd9cm"
@@ -162,7 +162,7 @@ describe "operator documentation in the metadata" do
         _(section.keys).must_include "cpt_or_hcpcs"
 
         section.each do |name, metadata|
-          _(metadata[:returns]).must_equal "One record for each matching record.", name
+          _(metadata[:returns]).must_equal "One result for each matching row.", name
         end
       end
     end

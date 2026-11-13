@@ -13,7 +13,7 @@ module ConceptQL
       desc "Counts the number of results that exactly match across all columns."
       # Every stream is a set, so count returns 1 for nearly every row
       # (seed conceptql-e8n, ruled 2026-10-30).
-      deprecated "count will become an error in a later release. To count the events of each person, " \
+      deprecated "count will become an error in a later release. To count the results of each person, " \
                  'use ["sum", ["numeric", 1, <stream>], {"group_by_person": true}].'
       validate_one_upstream
       validate_no_arguments

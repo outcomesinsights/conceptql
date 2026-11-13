@@ -52,11 +52,11 @@ module ConceptQL
 
       SYSTEMS = [
         System.new(operator: "ms_drg", name: "MS-DRG",
-                   long_name: "Medicare Severity Diagnosis-Related Group (CMS), events from " \
+                   long_name: "Medicare Severity Diagnosis-Related Group (CMS), discharges from " \
                               "#{MS_DRG_START_DATE.iso8601}",
                    concept_class_id: "MS-DRG", from_cutover: true),
         System.new(operator: "cms_drg", name: "CMS-DRG",
-                   long_name: "CMS Diagnosis-Related Group, events before #{MS_DRG_START_DATE.iso8601}",
+                   long_name: "CMS Diagnosis-Related Group, discharges before #{MS_DRG_START_DATE.iso8601}",
                    concept_class_id: "DRG", from_cutover: false)
       ].to_h { |system| [ system.operator, system ] }.freeze
 

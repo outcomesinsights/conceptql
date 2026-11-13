@@ -213,22 +213,22 @@ ConceptQL creates one vocabulary operator for each vocabulary that it knows, so 
 
 These are the most common vocabulary operators:
 
-| Operator     | Alias          | Vocabulary                                   | Stream type          |
-| ------------ | -------------- | -------------------------------------------- | -------------------- |
-| cpt4         | cpt            | CPT-4 procedure codes                        | procedure_occurrence |
-| hcpcs        |                | HCPCS procedure codes                        | procedure_occurrence |
-| cpt_or_hcpcs |                | CPT-4 and HCPCS together                     | procedure_occurrence |
-| icd9cm       | icd9           | ICD-9-CM diagnosis codes                     | condition_occurrence |
-| icd9proc     | icd9_procedure | ICD-9-CM procedure codes (volume 3)          | procedure_occurrence |
-| icd10cm      |                | ICD-10-CM diagnosis codes                    | condition_occurrence |
-| icd10pcs     | icd10_pcs      | ICD-10-PCS procedure codes                   | procedure_occurrence |
-| ms_drg       |                | MS-DRG codes, for events from 2007-10-01     | procedure_occurrence |
-| cms_drg      |                | CMS-DRG codes, for events before 2007-10-01  | procedure_occurrence |
-| revenue_code |                | UB-04 revenue codes                          | procedure_occurrence |
-| loinc        |                | LOINC lab codes                              | observation          |
-| ndc          |                | National Drug Codes (11-digit package codes) | drug_exposure        |
-| rxnorm       |                | RxNorm codes                                 | drug_exposure        |
-| snomed       |                | SNOMED CT codes                              | condition_occurrence |
+| Operator     | Alias          | Vocabulary                                      | Stream type          |
+| ------------ | -------------- | ----------------------------------------------- | -------------------- |
+| cpt4         | cpt            | CPT-4 procedure codes                           | procedure_occurrence |
+| hcpcs        |                | HCPCS procedure codes                           | procedure_occurrence |
+| cpt_or_hcpcs |                | CPT-4 and HCPCS together                        | procedure_occurrence |
+| icd9cm       | icd9           | ICD-9-CM diagnosis codes                        | condition_occurrence |
+| icd9proc     | icd9_procedure | ICD-9-CM procedure codes (volume 3)             | procedure_occurrence |
+| icd10cm      |                | ICD-10-CM diagnosis codes                       | condition_occurrence |
+| icd10pcs     | icd10_pcs      | ICD-10-PCS procedure codes                      | procedure_occurrence |
+| ms_drg       |                | MS-DRG codes, for discharges from 2007-10-01    | procedure_occurrence |
+| cms_drg      |                | CMS-DRG codes, for discharges before 2007-10-01 | procedure_occurrence |
+| revenue_code |                | UB-04 revenue codes                             | procedure_occurrence |
+| loinc        |                | LOINC lab codes                                 | observation          |
+| ndc          |                | National Drug Codes (11-digit package codes)    | drug_exposure        |
+| rxnorm       |                | RxNorm codes                                    | drug_exposure        |
+| snomed       |                | SNOMED CT codes                                 | condition_occurrence |
 
 Examples of how codes match:
 
