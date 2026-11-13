@@ -27,13 +27,13 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc "Groups the records that have the same values in all columns except criterion_id, start_date, " \
-           "end_date and value_as_number. For each group, the operator passes along one record " \
+      desc "Groups the results that have the same values in all columns except criterion_id, start_date, " \
+           "end_date and value_as_number. For each group, the operator passes along one result " \
            "with the sum of value_as_number, the earliest start_date, the most recent end_date " \
-           "and a criterion_id of 0. With group_by_person, the operator groups all of the records " \
-           "of each person and passes along one person record for each person."
+           "and a criterion_id of 0. With group_by_person, the operator groups all of the results " \
+           "of each person and passes along one person result for each person."
       option :group_by_person, type: :boolean,
-                               instructions: "Choose whether to sum all of the records of each person into one person record, for example to count the events of each person"
+                               instructions: "Choose whether to sum all of the results of each person into one person result, for example to count the results of each person"
       default_query_columns
       validate_at_least_one_upstream
       validate_no_arguments

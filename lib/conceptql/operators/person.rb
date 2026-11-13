@@ -11,8 +11,8 @@ module ConceptQL
       register __FILE__
       effects :select, :cast
 
-      desc "Selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream."
-      returns "One record for each selected patient, from the patients table. The type of the records is person, " \
+      desc "Selects every patient. With one upstream operator, it selects the patients who have a result in the upstream stream."
+      returns "One result for each selected patient, from the patients table. The type of the results is person, " \
               "and their start_date and end_date are both the patient's birth date."
       example "All patients", [ "person" ]
       example "The patients with an old myocardial infarction (ICD-9-CM 412)", [ "person", [ "icd9cm", "412" ] ]

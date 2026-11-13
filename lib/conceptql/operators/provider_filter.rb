@@ -10,12 +10,12 @@ module ConceptQL
       register __FILE__
       effects :keep, :change
 
-      desc "Passes along the records whose provider matches the given specialties and roles. " \
+      desc "Passes along the results whose provider matches the given specialties and roles. " \
            "Each option is a comma-separated list of concept IDs, and * matches any value."
 
-      returns "The upstream records that have a provider who matches both the specialties and the roles. " \
-              "A record can have more than one provider, so a record comes out once for each provider who matches. " \
-              "Each record gets the columns provider_id, context_specialty_concept_id, practitioner_specialty_concept_id " \
+      returns "The upstream results that have a provider who matches both the specialties and the roles. " \
+              "A result can have more than one provider, so a result comes out once for each provider who matches. " \
+              "Each result gets the columns provider_id, context_specialty_concept_id, practitioner_specialty_concept_id " \
               "and role_type_concept_id."
 
       option :specialties, type: :string,

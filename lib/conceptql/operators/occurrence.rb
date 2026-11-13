@@ -35,17 +35,17 @@ module ConceptQL
 
       preferred_name "Nth Occurrence"
 
-      desc "For each person, orders the records by start_date and passes along the record at the given position. " \
-           "A positive position counts from the earliest record and a negative one from the most recent record."
+      desc "For each person, orders the results by start_date and passes along the result at the given position. " \
+           "A positive position counts from the earliest result and a negative one from the most recent result."
 
-      returns "One record per person: the record at the given position. " \
-              "A person who has fewer records than the position asks for is not passed along. " \
-              "With at_least or within, a person can have more than one record."
+      returns "One result per person: the result at the given position. " \
+              "A person who has fewer results than the position asks for is not passed along. " \
+              "With at_least or within, a person can have more than one result."
 
       argument :occurrence, type: :integer,
-                            meaning: "The position of the record to pass along, as an integer. " \
-                                     "A positive number counts from the earliest record, so 1 is the first record and 2 is the second. " \
-                                     "A negative number counts from the most recent record, so -1 is the last record and -3 is the third from the last. " \
+                            meaning: "The position of the result to pass along, as an integer. " \
+                                     "A positive number counts from the earliest result, so 1 is the first result and 2 is the second. " \
+                                     "A negative number counts from the most recent result, so -1 is the last result and -3 is the third from the last. " \
                                      "0 selects nothing."
       category "Filter Single Stream"
       diagram_base :temporal
@@ -53,23 +53,23 @@ module ConceptQL
 
       option :at_least, type: :string,
                         instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
-                        meaning: "A date adjustment, such as 30d. For each record, the operator counts that record and the later records " \
-                                 "that start at least this long after it ends, and passes along the record at the given position. " \
-                                 "So a person can have more than one record in the result."
+                        meaning: "A date adjustment, such as 30d. For each result, the operator counts that result and the later results " \
+                                 "that start at least this long after it ends, and passes along the result at the given position. " \
+                                 "So a person can have more than one result."
       option :within, type: :string,
                       instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years. Example: 30d.',
-                      meaning: "A date adjustment, such as 365d. For each record, the operator counts that record and the later records " \
-                               "that start at most this long after it ends, and passes along the record at the given position. " \
-                               "So a person can have more than one record in the result."
+                      meaning: "A date adjustment, such as 365d. For each result, the operator counts that result and the later results " \
+                               "that start at most this long after it ends, and passes along the result at the given position. " \
+                               "So a person can have more than one result."
       option :group_by_date, type: :boolean,
                              instructions: "Choose whether to group by date when determining the nth occurrence, treating occurrences on the same day as a single occurrence",
-                             meaning: "Treats the records of a person on one start_date as one occurrence, so the position counts dates. " \
-                                      "From the date at that position, the operator passes along the record with the lowest criterion_id, " \
+                             meaning: "Treats the results of a person on one start_date as one occurrence, so the position counts dates. " \
+                                      "From the date at that position, the operator passes along the result with the lowest criterion_id, " \
                                       "or the highest criterion_id for a negative position."
 
       example "For each patient, select the Condition that represents the second occurrence of an MI",
               [ "occurrence", 2, [ "icd9", "412" ] ]
-      example "For each patient, the first record on the second day with any of these diagnoses",
+      example "For each patient, the first result on the second day with any of these diagnoses",
               [ "occurrence", 2, [ "icd9", "410.00", "410.01", "250.00", "250.01" ], { "group_by_date" => true } ]
 
       def query_cols

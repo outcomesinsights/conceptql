@@ -32,17 +32,17 @@ module ConceptQL
                              "a bare number means days, and a unit without a number means 1 of it. " \
                              "For example, -1m is 1 month back, and 10d3m is 3 months and 10 days. " \
                              "An empty value or 0 leaves the date unchanged. The value start or end uses the " \
-                             "record's start_date or end_date, and a date in YYYY-MM-DD format sets the date to that date."
+                             "result's start_date or end_date, and a date in YYYY-MM-DD format sets the date to that date."
 
-      desc "Moves the start_date and the end_date of each record. " \
-           "Use it to shift or widen a record's dates before you compare them with other records."
+      desc "Moves the start_date and the end_date of each result. " \
+           "Use it to shift or widen a result's dates before you compare them with other results."
       option :start, type: :string,
                      instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years, such as 30d. A negative number moves the date earlier. You can also enter start, end or a date in YYYY-MM-DD format.',
                      meaning: "How to change the start_date. If you omit it, the start_date does not change. #{DATE_ADJUSTMENT_TEXT}"
       option :end, type: :string,
                    instructions: 'Enter a number followed by "d", "w", "m" or "y" for days, weeks, months or years, such as 30d. A negative number moves the date earlier. You can also enter start, end or a date in YYYY-MM-DD format.',
                    meaning: "How to change the end_date. If you omit it, the end_date does not change. #{DATE_ADJUSTMENT_TEXT}"
-      returns "One record for each upstream record, with the start_date and the end_date that the options give. " \
+      returns "One result for each upstream result, with the start_date and the end_date that the options give. " \
               "The other columns do not change."
       example "All Diagnoses of Diabetes (ICD-9 250.01) within 30 days of an MI",
               [ "during", { "left" => [ "icd9", "250.01" ], "right" => [ "time_window", [ "icd9", "412" ], { "start" => "-30d", "end" => "30d" } ] } ]

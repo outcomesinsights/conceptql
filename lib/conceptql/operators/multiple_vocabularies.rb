@@ -57,10 +57,10 @@ module ConceptQL
 
       register_many
 
-      desc "Selects records based on the given vocabularies."
+      desc "Selects results based on the given vocabularies."
       argument :codes, type: :codelist,
                        meaning: "One or more codes. The operator looks up each code in each of its vocabularies " \
-                                "(CPT-4 and HCPCS for cpt_or_hcpcs) and selects the matching records of all of them. " \
+                                "(CPT-4 and HCPCS for cpt_or_hcpcs) and selects the matching results of all of them. " \
                                 "A code gets a warning only when every one of the vocabularies rejects it."
       diagram_base :selection
       effects :select

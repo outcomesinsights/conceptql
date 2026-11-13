@@ -18,11 +18,11 @@ module ConceptQL
       register __FILE__
       effects :keep, :change
 
-      desc "For each patient, moves the start_date of each left-hand record forward to the end_date of the right-hand record with the latest start_date. A left-hand record that ends before that end_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged."
-      returns "The left-hand records, each with its start_date set to the later of its own start_date and the end_date of the patient's right-hand record. Left-hand records that end before that end_date are not returned. The right-hand records are not returned."
-      option_meaning :left, "The left-hand stream. The operator moves the start_date of these records and passes them on."
-      option_meaning :right, "The right-hand stream. For each patient, the end_date of the record with the latest start_date sets the earliest start_date of the left-hand records. These records are not passed on."
-      option_meaning :within, "A date adjustment, such as 30d, 2m or 1y-3d, that is added to the end_date of the right-hand record before the comparison. The adjusted date is the one that moves the start_date of the left-hand record."
+      desc "For each patient, moves the start_date of each left-hand result forward to the end_date of the right-hand result with the latest start_date. A left-hand result that ends before that end_date is removed, and the left-hand results of a patient without right-hand results pass through unchanged."
+      returns "The left-hand results, each with its start_date set to the later of its own start_date and the end_date of the patient's right-hand result. Left-hand results that end before that end_date are not returned. The right-hand results are not returned."
+      option_meaning :left, "The left-hand stream. The operator moves the start_date of these results and passes them on."
+      option_meaning :right, "The right-hand stream. For each patient, the end_date of the result with the latest start_date sets the earliest start_date of the left-hand results. These results are not passed on."
+      option_meaning :within, "A date adjustment, such as 30d, 2m or 1y-3d, that is added to the end_date of the right-hand result before the comparison. The adjusted date is the one that moves the start_date of the left-hand result."
 
       example "Each patient's span from birth to age 50, trimmed to start no earlier than 1980-01-01 (patients who were 50 before 1980 are dropped)",
               [ "trim_date_start", { left: [ "time_window", [ "person" ], { end: "+50y" } ],

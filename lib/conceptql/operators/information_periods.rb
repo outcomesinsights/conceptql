@@ -11,7 +11,7 @@ module ConceptQL
       include ConceptQL::Behaviors::Windowable
       include ConceptQL::Behaviors::Timeless
 
-      desc "Selects information periods: the spans of time in which the data has information about a patient, " \
+      desc "Selects information periods: the spans of time in which the dataset has information about a patient, " \
            "such as periods of insurance enrollment."
       argument :information_types, label: "Information Types", type: :codelist,
                                    meaning: "Zero or more information types, each as a concept ID (an integer) " \
@@ -20,8 +20,8 @@ module ConceptQL
                                             "With no information types, the operator selects every information period. " \
                                             "With information types, it selects only the information periods whose type is one of them. " \
                                             "An unknown code gets a warning and selects no period."
-      returns "One record for each selected information period, from the information_periods table. " \
-              "The type of the records is observation_period."
+      returns "One result for each selected information period, from the information_periods table. " \
+              "The type of the results is observation_period."
       example "All information periods", [ "information_periods" ]
       domains :observation_period
       category "Get Related Data"

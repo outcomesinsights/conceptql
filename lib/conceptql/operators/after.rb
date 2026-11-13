@@ -8,12 +8,12 @@ module ConceptQL
       register __FILE__
       effects :keep
 
-      desc "For each patient, keeps the left-hand records whose start_date is after the earliest end_date of the patient's right-hand records. With the within option, each left-hand record is compared with every right-hand record of the patient instead."
-      returns "The left-hand records that start after a right-hand record of the same patient ends, each record once. The right-hand records are not returned."
+      desc "For each patient, keeps the left-hand results whose start_date is after the earliest end_date of the patient's right-hand results. With the within option, each left-hand result is compared with every right-hand result of the patient instead."
+      returns "The left-hand results that start after a right-hand result of the same patient ends, each result once. The right-hand results are not returned."
 
       allows_at_least_option
-      option_meaning :within, "A date adjustment, such as 30d, 2m or 1y-3d. The left-hand record must also start no more than this amount after the end_date of the right-hand record. With this option, each left-hand record is compared with every right-hand record of the patient, not only with the one that ends first. Use a positive amount."
-      option_meaning :at_least, "A date adjustment, such as 7d or 1w. The left-hand record must start more than this amount after the end_date of the right-hand record. Use a positive amount."
+      option_meaning :within, "A date adjustment, such as 30d, 2m or 1y-3d. The left-hand result must also start no more than this amount after the end_date of the right-hand result. With this option, each left-hand result is compared with every right-hand result of the patient, not only with the one that ends first. Use a positive amount."
+      option_meaning :at_least, "A date adjustment, such as 7d or 1w. The left-hand result must start more than this amount after the end_date of the right-hand result. Use a positive amount."
 
       example "All MIs that occurred after a patient's first case of diabetes (250.01)",
               [ "after", { left: [ "icd9", "412" ], right: [ "icd9", "250.01" ] } ]

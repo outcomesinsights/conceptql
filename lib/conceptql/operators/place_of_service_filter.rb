@@ -31,15 +31,15 @@ module ConceptQL
       VOCABULARY_ID = "CMS Place of Service"
       ANY = "*"
 
-      desc "Passes along the records whose place of service is one of the given CMS Place of Service codes. " \
-           "A record that has no place of service is not passed along."
+      desc "Passes along the results whose place of service is one of the given CMS Place of Service codes. " \
+           "A result that has no place of service is not passed along."
 
-      returns "The upstream records whose place of service is one of the given codes."
+      returns "The upstream results whose place of service is one of the given codes."
 
       argument :places_of_service, type: :codelist, vocab: VOCABULARY_ID,
                                    meaning: "One or more CMS Place of Service codes, such as 21 (inpatient hospital) or 22 (outpatient hospital). " \
-                                            "The code * matches a record whose place of service is any code of that vocabulary. " \
-                                            "An unknown code gets a warning and matches no record."
+                                            "The code * matches a result whose place of service is any code of that vocabulary. " \
+                                            "An unknown code gets a warning and matches no result."
 
       # The test data has no place of service, so the example returns no rows
       example "Diabetes diagnoses (ICD-9 250.00) with the place of service outpatient hospital (22)",

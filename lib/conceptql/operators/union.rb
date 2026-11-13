@@ -67,11 +67,11 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc "Combines the records of all its upstream operators into one stream. " \
-           "Each record keeps its own type, so one stream can hold several types."
+      desc "Combines the results of all its upstream operators into one stream. " \
+           "Each result keeps its own type, so one stream can hold several types."
 
-      returns "Each record of each upstream. A record that comes from more than one upstream comes out once. " \
-              "Two records are the same only when every column is equal, including label."
+      returns "Each result of each upstream. A result that comes from more than one upstream comes out once. " \
+              "Two results are the same only when every column is equal, including label."
 
       example "Two streams of the same type (condition_occurrence) combined into one stream",
               [ "union", [ "icd9", "412" ], [ "icd9", "250.01" ] ]

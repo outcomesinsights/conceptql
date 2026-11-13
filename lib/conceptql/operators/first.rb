@@ -22,10 +22,10 @@ module ConceptQL
       register __FILE__
       effects :keep
 
-      desc "For each person, passes along the record with the earliest start_date."
+      desc "For each person, passes along the result with the earliest start_date."
 
-      returns "One record per person: the upstream record with the earliest start_date. " \
-              "When several records have that start_date, the one with the lowest criterion_id."
+      returns "One result per person: the upstream result with the earliest start_date. " \
+              "When several results have that start_date, the one with the lowest criterion_id."
 
       example "For each patient, select the Condition that represents the first occurrence of an MI",
               [ "first", [ "icd9", "412" ] ]

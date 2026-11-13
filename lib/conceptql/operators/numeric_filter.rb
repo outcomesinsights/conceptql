@@ -13,11 +13,11 @@ module ConceptQL
       register __FILE__
       effects :keep
 
-      desc "Passes along the records whose value_as_number is in the given range. " \
-           "Lab records, such as those of loinc, carry this value."
+      desc "Passes along the results whose value_as_number is in the given range. " \
+           "The results of lab tests, such as those of loinc, carry this value."
 
-      returns "The upstream records whose value_as_number is in the range. " \
-              "A record that has no value_as_number is not passed along."
+      returns "The upstream results whose value_as_number is in the range. " \
+              "A result that has no value_as_number is not passed along."
 
       option :greater_than_or_equal_to, type: :float,
                                         meaning: "The lowest value_as_number that passes. Without this option, the range has no lower limit."

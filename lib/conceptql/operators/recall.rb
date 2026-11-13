@@ -15,9 +15,9 @@ module ConceptQL
       register __FILE__
       effects :refer
 
-      desc "Passes on the records of the operator in the statement that has the given label. " \
-           "Use it to break a complex statement into parts, or to use a stream of records more than once."
-      returns "The records of the operator that has the given label."
+      desc "Passes on the results of the operator in the statement that has the given label. " \
+           "Use it to break a complex statement into parts, or to use a stream of results more than once."
+      returns "The results of the operator that has the given label."
       example 'Label neurological diagnoses as "neuro dxs". Recall them to remove those that were co-reported ' \
               "with a nervous-system MS-DRG. Then apply the one inpatient, two outpatient rule. " \
               "(The code lists are shortened.)",
@@ -47,7 +47,7 @@ module ConceptQL
               ]
 
       argument :name, type: :string,
-                      meaning: "The label of the operator whose records to pass on. It must match the label exactly, " \
+                      meaning: "The label of the operator whose results to pass on. It must match the label exactly, " \
                                "including case. The labeled operator can come before or after the recall in the " \
                                "statement, but labeled streams that recall each other in a loop are invalid."
       category "Get Related Data"

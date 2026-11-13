@@ -20,7 +20,7 @@ module ConceptQL
     module ReadCodes
       OPERATOR = "read"
       PREFERRED_NAME = "READ"
-      DESC = "Selects records based on the Read vocabulary."
+      DESC = "Selects results based on the Read vocabulary."
 
       # The entry of read: the entry of the Read vocabulary with the preferred
       # name READ, as id => Entry. Without a Read entry there is none.

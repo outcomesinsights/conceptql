@@ -20,21 +20,21 @@ module ConceptQL
       register __FILE__
       effects :keep
 
-      desc "Passes along the records whose provenance matches at least one of the given keywords. " \
-           "The provenance of a record says which kind of file it came from, such as inpatient, " \
+      desc "Passes along the results whose provenance matches at least one of the given keywords. " \
+           "The provenance of a result says which kind of file it came from, such as inpatient, " \
            "and where its code was on the claim, such as primary."
 
-      returns "The upstream records whose provenance matches at least one of the keywords."
+      returns "The upstream results whose provenance matches at least one of the keywords."
 
       argument :provenance_types, label: "Provenance Types", type: :codelist,
                                   meaning: "One or more provenance keywords, in lower case. " \
-                                           "A file keyword, such as inpatient, outpatient or carrier_claim, says which kind of file a record came from. " \
+                                           "A file keyword, such as inpatient, outpatient or carrier_claim, says which kind of file a result came from. " \
                                            "A code keyword, such as primary or first, says where the code was on the claim. " \
-                                           "A plain keyword matches a record when its file provenance or its code provenance matches it. " \
+                                           "A plain keyword matches a result when its file provenance or its code provenance matches it. " \
                                            "A keyword also matches the provenances under it, so inpatient includes snf. " \
                                            "A keyword of the form file:code, such as inpatient:primary, needs both the file and the code provenance to match. " \
-                                           "The keyword * matches a record that has any provenance. " \
-                                           "A statement with no keyword is invalid. An unknown keyword gets a warning and matches no record."
+                                           "The keyword * matches a result that has any provenance. " \
+                                           "A statement with no keyword is invalid. An unknown keyword gets a warning and matches no result."
 
       example "Diabetes diagnoses (ICD-9 250.00) from inpatient files",
               [ "provenance", "inpatient", [ "icd9", "250.00" ] ]

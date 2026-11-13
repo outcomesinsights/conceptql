@@ -25,8 +25,8 @@ module ConceptQL
                                 "The operator also selects the more detailed races under each given race, " \
                                 "and each concept that is a kind of one of the race concepts through an is-a relationship. " \
                                 "A value that contains Unknown also selects the patients who have no race or race concept ID 0."
-      returns "One person record for each patient whose race is one of the given races. " \
-              "The start_date and the end_date of each record are the patient's birth date."
+      returns "One person result for each patient whose race is one of the given races. " \
+              "The start_date and the end_date of each result are the patient's birth date."
       example "All patients recorded as white", [ "race", "White" ]
       domains :person
       category "Select by Property"

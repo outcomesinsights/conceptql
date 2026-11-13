@@ -13,14 +13,14 @@ module ConceptQL
       register __FILE__
       effects :keep, :change
 
-      desc "For each person, passes along the earliest confirmed condition record. " \
-           "One inpatient record confirms a condition, and so do two outpatient records whose start dates are a given gap apart."
+      desc "For each person, passes along the earliest confirmed condition result. " \
+           "One inpatient result confirms a condition, and so do two outpatient results whose start dates are a given gap apart."
 
-      returns "One record per person: the earliest confirmed condition record. " \
-              "A returned inpatient record has the admission date as its start_date and the discharge date as its end_date, " \
-              "when the claim has them. Only condition records with inpatient, outpatient or carrier_claim provenance can be confirmed."
+      returns "One result per person: the earliest confirmed condition result. " \
+              "A returned inpatient result has the admission date as its start_date and the discharge date as its end_date, " \
+              "when the claim has them. Only condition results with inpatient, outpatient or carrier_claim provenance can be confirmed."
 
-      example "First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart",
+      example "First diabetes diagnosis, either one inpatient result, or two outpatient results at least 30 days apart",
               [ "one_in_two_out", [ "icd9", "250.00" ], { "outpatient_minimum_gap" => "30d", "outpatient_event_to_return" => "Initial Event" } ]
 
       validate_one_upstream
@@ -29,22 +29,22 @@ module ConceptQL
       diagram_base :temporal
 
       option :inpatient_length_of_stay, type: :integer, min: 0, default: 0,
-                                        meaning: "An inpatient stay must be longer than this many days: an inpatient record counts only when its discharge date " \
+                                        meaning: "An inpatient stay must be longer than this many days: an inpatient result counts only when its discharge date " \
                                                  "is more than this many days after its admission date. 0 or no value means no length-of-stay check.",
                                         label: "Inpatient Length of Stay (Days)"
       option :outpatient_minimum_gap, type: :string, default: "30d",
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".',
-                                      meaning: "A date adjustment, such as 30d. The confirming outpatient record must start at least this long " \
-                                               "after the initial outpatient record. Without this option, the gap is 30 days."
+                                      meaning: "A date adjustment, such as 30d. The confirming outpatient result must start at least this long " \
+                                               "after the initial outpatient result. Without this option, the gap is 30 days."
       option :outpatient_maximum_gap, type: :string, default: "365d",
                                       instructions: 'Enter a numeric value and specify "d", "m", or "y" for "days", "months", or "years".',
-                                      meaning: "A date adjustment, such as 365d. The confirming outpatient record must start no more than this long " \
-                                               "after the initial outpatient record. Without this option, there is no maximum gap."
+                                      meaning: "A date adjustment, such as 365d. The confirming outpatient result must start no more than this long " \
+                                               "after the initial outpatient result. Without this option, there is no maximum gap."
       option :outpatient_event_to_return, type: :string, options: [ "Initial Event", "Confirming Event" ],
                                           default: "Initial Event",
-                                          meaning: "Which outpatient record the operator passes on when two outpatient records confirm the condition: " \
-                                                   "the initial record or the confirming record. " \
-                                                   "Without this option, or with any value other than Initial Event, it passes on the confirming record."
+                                          meaning: "Which outpatient result the operator passes on when two outpatient results confirm the condition: " \
+                                                   "the initial result or the confirming result. " \
+                                                   "Without this option, or with any value other than Initial Event, it passes on the confirming result."
 
       validate_option DateAdjuster::VALID_INPUT, :outpatient_minimum_gap, :outpatient_maximum_gap
 

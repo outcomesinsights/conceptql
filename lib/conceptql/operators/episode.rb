@@ -8,21 +8,21 @@ module ConceptQL
       register __FILE__
       effects :aggregate
 
-      desc "Merges each patient's records into episodes: spans of time in which the records are close together. " \
+      desc "Merges each patient's results into episodes: spans of time in which the results are close together. " \
            "For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug."
-      returns "One record for each episode. Its start_date is the earliest start_date in the episode, " \
+      returns "One result for each episode. Its start_date is the earliest start_date in the episode, " \
               "and its end_date is the latest end_date. Its criterion_table and criterion_domain are episode, " \
-              "and its criterion_id is 0, because an episode merges several records."
+              "and its criterion_id is 0, because an episode merges several results."
       example "Episodes of diabetes diagnoses", [ "episode", [ "icd9", "250.00" ], { "gap_of" => "90" } ]
 
       validate_one_upstream
       option :gap_of, type: :integer,
-                      instructions: "Enter a number of days. A record stays in the current episode when it starts no more than this many days after the latest end date of the earlier records. The default is 0.",
+                      instructions: "Enter a number of days. A result stays in the current episode when it starts no more than this many days after the latest end date of the earlier results. The default is 0.",
                       meaning: "The largest gap in days that stays in the same episode. The operator orders each " \
-                               "patient's records by start_date and then by end_date. A record stays in the current " \
+                               "patient's results by start_date and then by end_date. A result stays in the current " \
                                "episode when its start_date is no more than this many days after the latest end_date " \
-                               "of the earlier records, not only of the record just before. Otherwise it starts a " \
-                               "new episode. A record without an end_date counts as ending on its start_date. " \
+                               "of the earlier results, not only of the result just before. Otherwise it starts a " \
+                               "new episode. A result without an end_date counts as ending on its start_date. " \
                                "The default is 0."
       category "Modify Data"
       diagram_base :temporal

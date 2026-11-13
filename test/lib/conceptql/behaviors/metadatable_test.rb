@@ -80,9 +80,9 @@ describe ConceptQL::Metadatable do
 
     it "serves the desc that an operator sets" do
       _(ConceptQL.metadata(cdb)[:operators].fetch("after")[:desc])
-        .must_equal "For each patient, keeps the left-hand records whose start_date is after " \
-                    "the earliest end_date of the patient's right-hand records. With the within " \
-                    "option, each left-hand record is compared with every right-hand record of " \
+        .must_equal "For each patient, keeps the left-hand results whose start_date is after " \
+                    "the earliest end_date of the patient's right-hand results. With the within " \
+                    "option, each left-hand result is compared with every right-hand result of " \
                     "the patient instead."
     end
 
@@ -101,12 +101,12 @@ describe ConceptQL::Metadatable do
     it "serves the standard description for a vocabulary operator" do
       klass = operators.fetch("icd9cm")
       _(klass.to_metadata("icd9cm")[:desc]).must_equal klass.standard_description
-      _(klass.standard_description).must_equal "Selects records based on the #{klass.pref_name} vocabulary."
+      _(klass.standard_description).must_equal "Selects results based on the #{klass.pref_name} vocabulary."
     end
 
     it "does not store the standard description as the desc" do
       klass = Class.new(ConceptQL::Operators::Operator) { preferred_name "No Desc" }
-      _(klass.to_metadata("op")[:desc]).must_equal "Selects records based on the No Desc vocabulary."
+      _(klass.to_metadata("op")[:desc]).must_equal "Selects results based on the No Desc vocabulary."
       _(klass.desc).must_be_nil
     end
   end

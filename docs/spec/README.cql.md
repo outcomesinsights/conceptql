@@ -64,7 +64,7 @@ ConceptQL is a domain-specific, declarative language. It represents search crite
 ```YAML
 # Example 1: A simple example in YAML
 # The first element is the operator, icd9cm.  The second element is a code, 412.
-# This statement selects every record with the ICD-9-CM diagnosis code 412.
+# This statement selects every result with the ICD-9-CM diagnosis code 412.
 ---
 - icd9cm
 - '412'
@@ -92,7 +92,7 @@ ConceptQL in YAML or JSON can be hard to read. A directed graph is often easier 
 ]
 ```
 
-Each node in a diagram is an operator. A line between two operators shows that the records of the upper operator flow down into the lower operator. Each line is labeled with the number of records (`rows=`) and people (`n=`) that flow along it in our test data. Here is a slightly larger example:
+Each node in a diagram is an operator. A line between two operators shows that the results of the upper operator flow down into the lower operator. Each line is labeled with the number of results (`rows=`) and people (`n=`) that flow along it in our test dataset. Here is a slightly larger example:
 
 ```ConceptQL
 # First Office Visit Per Patient
@@ -109,15 +109,15 @@ The diagram above reads "get all procedures that match CPT 99214 (office visit),
 
 Every diagram ends with a line that leads to nothing. The next section explains why.
 
-### Think of Records as a Stream
+### Think of Results as a Stream
 
-A ConceptQL diagram has the "leaf" operators at the top and the "trunk" operator at the bottom. Think of the records of a ConceptQL statement as a stream of data. The leaf operators select records from the database, and they act as the sources of the stream. The records flow down through the diagram. Some operators combine streams, and others remove records, until one stream comes out at the bottom of the diagram.
+A ConceptQL diagram has the "leaf" operators at the top and the "trunk" operator at the bottom. Think of the results of a ConceptQL statement as a stream. The leaf operators select rows from the dataset and make results from them, so they act as the sources of the stream. The results flow down through the diagram. Some operators combine streams, and others remove results, until one stream comes out at the bottom of the diagram.
 
-The trailing line in each diagram is a reminder that every ConceptQL statement yields a stream of records.
+The trailing line in each diagram is a reminder that every ConceptQL statement yields a stream of results.
 
 ### Streams Have Types
 
-Each record has a type. The type is the `criterion_domain` column of the record. A vocabulary operator takes its type from the vocabulary's domain. For example, ICD-9-CM records are `condition_occurrence` records, and CPT records are `procedure_occurrence` records. Other operators produce a fixed type, such as `person` or `death`.
+Each result has a type. The type is the `criterion_domain` column of the result. A vocabulary operator takes its type from the vocabulary's domain. For example, ICD-9-CM results are `condition_occurrence` results, and CPT results are `procedure_occurrence` results. Other operators produce a fixed type, such as `person` or `death`.
 
 The diagrams use color to show types. The node of an operator and the lines that leave it have the color of the types that it outputs:
 
@@ -134,7 +134,7 @@ The diagrams use color to show types. The node of an operator and the lines that
 
 An operator that outputs more than one type has a gray node, and the line that leaves it is drawn as one colored line for each type, side by side.
 
-The type stays with each record as it moves through the operators. Some operators use the type when they compare records. For example, `filter` and `except` match a record only with a record from the same table. Other operators, such as `first` and `person_filter`, ignore the type. Each operator's description says which applies.
+The type stays with each result as it moves through the operators. Some operators use the type when they compare results. For example, `filter` and `except` match a result only with a result from the same table. Other operators, such as `first` and `person_filter`, ignore the type. Each operator's description says which applies.
 
 ### Why Types?
 
@@ -146,19 +146,19 @@ ConceptQL now runs against the [GDM](https://github.com/outcomesinsights/general
 
 Thinking in streams is helpful, but sometimes we need to know what happens in the database.
 
-A stream is a set of rows. Each row points back to one row of a GDM table, and it always has these columns:
+A stream is the set of results that passes from one operator to the next. ConceptQL is not a stream-processing system. Here, "stream" means only that set of results. Each result points back to one row of a GDM table, and it always has these columns:
 
 - `person_id`: the patient.
 - `criterion_id`: the ID of the row in its table of origin.
 - `criterion_table`: the table of origin, such as `clinical_codes`, `patients` or `deaths`.
-- `criterion_domain`: the type of the record (see above).
-- `start_date` and `end_date`: the dates of the record.
-- `source_value` and `source_vocabulary_id`: the code of the record and its vocabulary, when the record has a code.
+- `criterion_domain`: the type of the result (see above).
+- `start_date` and `end_date`: the dates of the result.
+- `source_value` and `source_vocabulary_id`: the code of the result and its vocabulary, when the result has a code.
 - `label`: the label of the nearest upstream operator that has one (see [`label`](#label-option-and-its-features)).
 
-Some operators add columns. For example, lab records (loinc) add `value_as_number` and unit columns, and the utilization operators add admission and discharge columns.
+Some operators add columns. For example, the results of lab codes (loinc) add `value_as_number` and unit columns, and the utilization operators add admission and discharge columns.
 
-So this statement yields one row for each male patient, pointing at the `patients` table:
+So this statement yields one result for each male patient, pointing at the `patients` table:
 
 ```ConceptQL
 # All Male Patients
@@ -168,7 +168,7 @@ So this statement yields one row for each male patient, pointing at the `patient
 ]
 ```
 
-This statement yields one row for each `clinical_codes` row that has the ICD-9-CM code 250.01:
+This statement yields one result for each `clinical_codes` row that has the ICD-9-CM code 250.01:
 
 ```ConceptQL
 # All Condition Occurrences that match ICD-9CM 250.01
@@ -180,14 +180,14 @@ This statement yields one row for each `clinical_codes` row that has the ICD-9-C
 
 It usually helps to think of these queries as a "stream of people" or a "stream of conditions", and not to think about tables and IDs.
 
-A ConceptQL statement yields the rows that pass all of its criteria. What to do with those rows is up to the system that runs the statement. For example, a system that has all 250.01 records could:
+A ConceptQL statement yields the results that pass all of its criteria. What to do with those results is up to the system that runs the statement. For example, a system that has all 250.01 results could:
 
 - Find the first and last date of occurrence for each person
 - Count the occurrences for each person
 - Count the people with the condition
 - Count the occurrences in the whole population
 
-That kind of aggregation and analysis is outside the scope of ConceptQL. ConceptQL finds the rows that you are interested in. Other parts of the system decide what to do with them.
+That kind of aggregation and analysis is outside the scope of ConceptQL. ConceptQL finds the results that you are interested in. Other parts of the system decide what to do with them.
 
 The rest of this document describes each operator. [Appendix E](#appendix-e---operator-quick-reference) lists every operator in one table.
 
@@ -197,13 +197,13 @@ ConceptQL checks each statement before it builds SQL for it. A statement with an
 
 A warning does not make a statement invalid. Examples of warnings are an unknown code, an improperly formatted code and a deprecated operator. A statement with warnings runs. When ConceptQL draws the diagram of a statement, it shows the errors and the warnings of each operator, and it does not refuse an invalid statement.
 
-ConceptQL finds the concept of each code in the vocabulary tables. It uses the OHDSI vocabulary tables (`concept`, `concept_ancestor`, `concept_relationship` and `vocabulary`). It looks for them in the search path of the data database, and then in the database that the environment variable `LEXICON_URL` names. If ConceptQL has a real data database and finds no complete set of vocabulary tables, it refuses to start. Without vocabulary tables, every code would match no records, and a statement would return no records with no warning. Without a database, for example when ConceptQL only draws a diagram, it uses no vocabulary tables. The vocabulary tables of a dataset can be trimmed to the codes that the data contains. Then ConceptQL can also read a full set of vocabulary tables, the reference lexicon, but only to tell a code that the dataset does not contain from a code that does not exist. When `LEXICON_URL` is set and the program names no other reference lexicon, the `LEXICON_URL` database is the reference lexicon.
+ConceptQL finds the concept of each code in the vocabulary tables. It uses the OHDSI vocabulary tables (`concept`, `concept_ancestor`, `concept_relationship` and `vocabulary`). It looks for them in the search path of the data database, and then in the database that the environment variable `LEXICON_URL` names. If ConceptQL has a real data database and finds no complete set of vocabulary tables, it refuses to start. Without vocabulary tables, every code would match no rows, and a statement would return no results with no warning. Without a database, for example when ConceptQL only draws a diagram, it uses no vocabulary tables. The vocabulary tables of a dataset can be trimmed to the codes that the dataset contains. Then ConceptQL can also read a full set of vocabulary tables, the reference lexicon, but only to tell a code that the dataset does not contain from a code that does not exist. When `LEXICON_URL` is set and the program names no other reference lexicon, the `LEXICON_URL` database is the reference lexicon.
 
 ## Selection Operators
 
-Selection operators select records from the database. For example, a search for diagnoses of old myocardial infarction (ICD-9-CM 412) is a selection. Most selection operators are leaf operators: no other operator flows into them. `person` and `death` can also take one upstream operator (see [`person`](#person-operator)).
+Selection operators select rows from the dataset and make results from them. For example, a search for diagnoses of old myocardial infarction (ICD-9-CM 412) is a selection. Most selection operators are leaf operators: no other operator flows into them. `person` and `death` can also take one upstream operator (see [`person`](#person-operator)).
 
-The vocabulary operators select records by their codes. The next section describes them, and [Other Selection Operators](#other-selection-operators) describes the rest.
+The vocabulary operators select rows by their codes. The next section describes them, and [Other Selection Operators](#other-selection-operators) describes the rest.
 
 ## `Vocabulary` Operator
 
@@ -239,26 +239,26 @@ Examples of how codes match:
 - A code that the vocabulary does not contain gives the warning "unknown code(s)".
 - When ConceptQL has a full lexicon (the reference lexicon) beside the vocabulary tables of the dataset, a code that only the full lexicon contains gives the warning "code(s) not present in this dataset", not "unknown code(s)". It is a warning, so the statement stays valid on a dataset that lacks some of its codes.
 - A code that has more than one meaning in the vocabulary gives the warning "code(s) with more than one meaning".
-- Some data stores CPT-4 and HCPCS codes only in the merged vocabulary CPT4_HCPCS. On that data, `cpt` and `hcpcs` select nothing, because they read only CPT4 and HCPCS. They give the warning "the data has no records of this vocabulary", which names `cpt_or_hcpcs`. Use `cpt_or_hcpcs`, which reads all three vocabularies.
-- When the data lists the vocabularies of its records (the GDM table `etl_vocabulary_ids`) and the operator's vocabulary is not in the list, the operator gives the warning "the data has no records of this vocabulary". Its counts are null, not 0, because the data cannot show whether a patient has the codes. This warning covers all of its codes, so they get no other warning, except the warning for an improperly formatted code.
-- `rxnorm` does not find records coded with NDC, because an operator does not follow mappings between vocabularies.
+- Some datasets store CPT-4 and HCPCS codes only in the merged vocabulary CPT4_HCPCS. On such a dataset, `cpt` and `hcpcs` select nothing, because they read only CPT4 and HCPCS. They give the warning "the data has no records of this vocabulary", which names `cpt_or_hcpcs`. Use `cpt_or_hcpcs`, which reads all three vocabularies.
+- When the dataset lists the vocabularies of its rows (the GDM table `etl_vocabulary_ids`) and the operator's vocabulary is not in the list, the operator gives the warning "the data has no records of this vocabulary". Its counts are null, not 0, because the dataset cannot show whether a patient has the codes. This warning covers all of its codes, so they get no other warning, except the warning for an improperly formatted code.
+- `rxnorm` does not find rows coded with NDC, because an operator does not follow mappings between vocabularies.
 
 ### DRG Codes
 
-CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning. For example, DRG 205 meant a liver disorder in CMS-DRG, and it means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a record does not say which meaning applied. So a statement names the DRG system, and ConceptQL selects each record by its code and by its start_date:
+CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning. For example, DRG 205 meant a liver disorder in CMS-DRG, and it means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a row does not say which meaning applied. So a statement names the DRG system, and ConceptQL selects each row by its code and by its start_date:
 
-- `ms_drg` selects the DRG records whose start_date is on or after 2007-10-01.
-- `cms_drg` selects the DRG records whose start_date is before 2007-10-01.
+- `ms_drg` selects the DRG rows whose start_date is on or after 2007-10-01.
+- `cms_drg` selects the DRG rows whose start_date is before 2007-10-01.
 
-The examples above show both operators. Our test data has no DRG record before 2007-10-01, so the `cms_drg` example returns no records.
+The examples above show both operators. Our test dataset has no DRG row before 2007-10-01, so the `cms_drg` example returns no results.
 
 Both operators check codes as the other vocabulary operators do. A DRG code has 3 digits, with leading zeros. A code that the DRG vocabulary does not have gets the warning "unknown code(s)". These operators never give the warning "code(s) with more than one meaning", because the operator chooses the meaning.
 
-The `drg` operator is deprecated. It selects the DRG records of both systems, whatever their dates. A statement that uses `drg` still runs, but `drg` gets the warning "deprecated operator", and a later release will make it an error. Use `ms_drg` or `cms_drg`.
+The `drg` operator is deprecated. It selects the DRG rows of both systems, whatever their dates. A statement that uses `drg` still runs, but `drg` gets the warning "deprecated operator", and a later release will make it an error. Use `ms_drg` or `cms_drg`.
 
 ### All Vocabulary Operators
 
-The build writes this table from the metadata of the operators. It lists the vocabulary operators of a ConceptQL database with no vocabulary tables, ordered by name. Each row gives the full name of the operator's vocabulary and the domain, which is the type of the records that the operator returns. The vocabulary tables of a database can add more operators. A deprecated operator still runs, with a warning.
+The build writes this table from the metadata of the operators. It lists the vocabulary operators of a ConceptQL database with no vocabulary tables, ordered by name. Each row gives the full name of the operator's vocabulary and the domain, which is the type of the results that the operator returns. The vocabulary tables of a database can add more operators. A deprecated operator still runs, with a warning.
 
 <!-- conceptql-spec: vocabulary-operators -->
 
@@ -268,7 +268,7 @@ This section describes the selection operators that are not vocabulary operators
 
 ### Person-related Operators
 
-Person operators select records from the `patients` table, which holds the patient demographics. The type of these records is `person`. The start_date and end_date of a person record are both the patient's birth date. [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) explains why that is useful.
+Person operators select rows from the `patients` table, which holds the patient demographics. The type of their results is `person`. The start_date and end_date of a person result are both the patient's birth date. [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) explains why that is useful.
 
 #### `Gender` Operator
 
@@ -308,11 +308,11 @@ In general, a period is a span of time in the dataset, and a window is a span of
 
 ### Utilization Operators
 
-Utilization operators select admissions. Each operator returns one record for each admission whose claim came from the matching kind of file. For example, `hospitalization` uses the claims whose file provenance is inpatient.
+Utilization operators select admissions. Each operator returns one result for each admission whose claim came from the matching kind of file. For example, `hospitalization` uses the claims whose file provenance is inpatient.
 
-The type of these records is `condition_occurrence`, because the GDM has no visit or admission type. So `union` combines them with diagnosis records into one stream. `source_value` usually holds a diagnosis.
+The type of these results is `condition_occurrence`, because the GDM has no visit or admission type. So `union` combines them with diagnosis results into one stream. `source_value` usually holds a diagnosis.
 
-Our test data has no SNF claims and no hospice claims, so the examples of `snf` and `hospice` return no records.
+Our test dataset has no SNF claims and no hospice claims, so the examples of `snf` and `hospice` return no results.
 
 #### `SNF` Operator
 
@@ -328,23 +328,23 @@ Our test data has no SNF claims and no hospice claims, so the examples of `snf` 
 
 ## Set Operators
 
-Streams are sets of records, so ConceptQL has operators that work on sets.
+Streams are sets of results, so ConceptQL has operators that work on sets.
 
 ### `Union` Operator
 
 <!-- conceptql-spec: operator union-operator -->
 
-Union does not change records of different types. Each later operator decides whether it treats the types separately or together.
+Union does not change results of different types. Each later operator decides whether it treats the types separately or together.
 
 ### `Except` Operator
 
 <!-- conceptql-spec: operator except-operator -->
 
-A left-hand record matches only a right-hand record from the same table, and only when the dates are the same. For example, a record whose dates `time_window` changed no longer matches the original record. The second example above shows that a left-hand record passes through unchanged when no right-hand record comes from its table. The third example has several types in the left-hand stream.
+A left-hand result matches only a right-hand result from the same table, and only when the dates are the same. For example, a result whose dates `time_window` changed no longer matches the original result. The second example above shows that a left-hand result passes through unchanged when no right-hand result comes from its table. The third example has several types in the left-hand stream.
 
 ### Discussion About Set Operators
 
-Why can one stream hold records of several types? Because operators such as `first` then act across all the types. For example, the statement below finds the first MI or death for each patient. Add a few more criteria, and you can find the first censoring event for each patient.
+Why can one stream hold results of several types? Because operators such as `first` then act across all the types. For example, the statement below finds the first MI or death for each patient. Add a few more criteria, and you can find the first censoring event for each patient.
 
 ```ConceptQL
 # First occurrence of either MI or Death for each patient
@@ -365,15 +365,15 @@ Why can one stream hold records of several types? Because operators such as `fir
 
 ## Time-oriented Operators
 
-Every record has a start_date and an end_date. All temporal comparisons use these two columns. Each record takes its dates from its row in its table of origin.
+Every result has a start_date and an end_date. All temporal comparisons use these two columns. Each result takes its dates from its row in its table of origin.
 
-If the table of origin has only one date, the record uses that date as both its start_date and its end_date. For example, a death record uses the `date` column of its row in `deaths`.
+If the table of origin has only one date, the result uses that date as both its start_date and its end_date. For example, a death result uses the `date` column of its row in `deaths`.
 
-Person records are a special case. A person record uses the patient's birth date as its start_date and end_date. This may sound strange, but [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) shows why it is useful.
+Person results are a special case. A person result uses the patient's birth date as its start_date and end_date. This may sound strange, but [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) shows why it is useful.
 
 ## Relative Temporal Operators
 
-For each patient, we may want only the chronologically first or last record, or the second, or the second-to-last. Relative temporal operators provide this filtering. They order each patient's records by start_date. When two records have the same start_date, the record with the lower `criterion_id` comes first.
+For each patient, we may want only the chronologically first or last result, or the second, or the second-to-last. Relative temporal operators provide this filtering. They order each patient's results by start_date. When two results have the same start_date, the result with the lower `criterion_id` comes first.
 
 ### `Nth Occurrence` Operator
 
@@ -405,13 +405,13 @@ The range includes both dates. A `YYYY-MM-DD` date has a four-digit year, a two-
 
 ## Temporal Comparison Operators
 
-As described above, each record has a start date and an end date, which define its own date range. Temporal operators filter streams by comparing these date ranges.
+As described above, each result has a start date and an end date, which define its own date range. Temporal operators filter streams by comparing these date ranges.
 
-A temporal operator takes two streams: the left-hand records (LHR) and the right-hand records (RHR). It compares each patient's LHR with the same patient's RHR, and it passes along the LHR that pass the comparison. It discards the RHR after the comparison.
+A temporal operator takes two streams: the left-hand results (LHR) and the right-hand results (RHR). It compares each patient's LHR with the same patient's RHR, and it passes along the LHR that pass the comparison. It discards the RHR after the comparison.
 
 - Each LHR is passed along at most once, however many RHR it matches.
 - A patient who has LHR but no RHR loses all of their LHR.
-- A record that is in both streams can match itself. For example, a record is during itself.
+- A result that is in both streams can match itself. For example, a result is during itself.
 
 Edge behaviors: `during`, `contains` and `any_overlap` compare each LHR with every RHR of the patient. `before` and `after` do not. Without the `within` option, `before` compares each LHR only with the latest start_date of the patient's RHR, and `after` compares each LHR only with the earliest end_date of the patient's RHR. [`before`](#before-operator) and [`after`](#after-operator) explain why, and [Working Around `Before`/`After` Behavior](#working-around-beforeafter-behavior) shows how to choose another RHR.
 
@@ -429,7 +429,7 @@ Each operator compares the dates in a different way. All of them take [some opti
 
 <!-- conceptql-spec: operator any-overlap-operator -->
 
-This diagram shows each kind of L record that has "any overlap" with an R record:
+This diagram shows each kind of L result that has "any overlap" with an R result:
 
 ![](images/any_overlap.png)
 
@@ -439,7 +439,7 @@ This diagram shows each kind of L record that has "any overlap" with an R record
 
 The comparison is strict, so an LHR that ends on the day the RHR starts does not pass.
 
-This rule needs some explanation. Imagine the events A-A-B-A-B-A. How many A's come before a B? One could argue that only the first two A's qualify, because they come before the first B. But three A's come before some B. The `before` operator uses the second answer, so it compares every LHR with the start_date of the patient's last RHR.
+This rule needs some explanation. Imagine the results A-A-B-A-B-A. How many A's come before a B? One could argue that only the first two A's qualify, because they come before the first B. But three A's come before some B. The `before` operator uses the second answer, so it compares every LHR with the start_date of the patient's last RHR.
 
 ### `After` Operator
 
@@ -447,7 +447,7 @@ This rule needs some explanation. Imagine the events A-A-B-A-B-A. How many A's c
 
 The comparison is strict, so an LHR that starts on the day the RHR ends does not pass.
 
-Imagine the events A-A-B-A-B-A again. How many A's come after a B? One could argue that only the last A qualifies, because it comes after the last B. But two A's come after some B. The `after` operator uses the second answer, so it compares every LHR with the earliest end_date of the patient's RHR.
+Imagine the results A-A-B-A-B-A again. How many A's come after a B? One could argue that only the last A qualifies, because it comes after the last B. But two A's come after some B. The `after` operator uses the second answer, so it compares every LHR with the earliest end_date of the patient's RHR.
 
 ### Working Around `Before`/`After` Behavior
 
@@ -471,7 +471,7 @@ More examples of date adjustments:
 
 <!-- conceptql-spec: operator trim-date-start-operator -->
 
-Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records. There are four cases:
+Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's results. There are four cases:
 
 - The patient has no RHR.
   - The LHR passes through unchanged.
@@ -486,7 +486,7 @@ Like a [temporal comparison operator](#temporal-comparison-operators), it takes 
 
 <!-- conceptql-spec: operator trim-date-end-operator -->
 
-Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records. There are four cases:
+Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's results. There are four cases:
 
 - The patient has no RHR.
   - The LHR passes through unchanged.
@@ -508,7 +508,7 @@ Systems that build statements, such as Jigsaw's export engine, give `trim_date_s
   - The `within` option moves each RHR date before the comparison, as above.
   - An LHR is discarded only when it has RHR (of its patient and its `join_columns` values) and none of them qualifies. An LHR without RHR passes through unchanged.
 
-These systems often join on the column `uuid`. A selection operator, such as a vocabulary operator, takes the option `uuid` (`{"uuid": true}`), which adds the column `uuid` to its records. The uuid is the `person_id`, `criterion_id`, `criterion_table`, start_date and end_date of the record, joined with `/`, such as `17/27269/observations/2008-08-25/2008-08-25`. An empty part is an empty string, so a record without an end_date has a uuid such as `1/2/observations/2008-03-10/`. The uuid keeps its value when a later operator, such as `time_window`, moves the dates. So two streams made from the same records can be joined record by record.
+These systems often join on the column `uuid`. A selection operator, such as a vocabulary operator, takes the option `uuid` (`{"uuid": true}`), which adds the column `uuid` to its results. The uuid is the `person_id`, `criterion_id`, `criterion_table`, start_date and end_date of the result, joined with `/`, such as `17/27269/observations/2008-08-25/2008-08-25`. An empty part is an empty string, so a result without an end_date has a uuid such as `1/2/observations/2008-03-10/`. The uuid keeps its value when a later operator, such as `time_window`, moves the dates. So two streams made from the same results can be joined result by result.
 
 This example makes a one-year window after each MI. Then it trims each window to end 30 days after its own MI. The `join_columns` option makes sure that no other MI of the same patient trims the window:
 
@@ -548,30 +548,30 @@ Walk-through of the second example of [`after`](#after-operator), which finds th
 Walk-through of the third example of [`before`](#before-operator), which asks whether anyone dies within a year of a heart attack:
 
 - Select heart attack diagnoses as the LHR.
-- Select death records as the RHR.
+- Select deaths as the RHR.
 - Keep the LHR whose end_date is before the date of death, and no more than 1 year before it.
 
 The third example of [`after`](#after-operator) shows how `at_least` works.
 
 ### Temporal Operators and Person Streams
 
-The start and end dates of a person record are the patient's birth date. So a person stream is rarely useful as the left-hand stream of a temporal operator. But it is useful as the right-hand stream. If we move the birth date with `time_window`, we can filter by the patient's age. The last example of [`after`](#after-operator) selects the MIs that occurred after a male patient's 50th birthday.
+The start and end dates of a person result are the patient's birth date. So a person stream is rarely useful as the left-hand stream of a temporal operator. But it is useful as the right-hand stream. If we move the birth date with `time_window`, we can filter by the patient's age. The last example of [`after`](#after-operator) selects the MIs that occurred after a male patient's 50th birthday.
 
 ## `Episode` Operator
 
 <!-- conceptql-spec: operator episode-operator -->
 
-A long record keeps the episode open: the records 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first record ends after the third record starts. An episode stream is often most useful as the right-hand stream of a [temporal operator](#temporal-comparison-operators).
+A long result keeps the episode open: the results 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first result ends after the third result starts. An episode stream is often most useful as the right-hand stream of a [temporal operator](#temporal-comparison-operators).
 
 ## Inline-Filter Operators
 
-These operators filter one incoming stream and pass along the records that remain.
+These operators filter one incoming stream and pass along the results that remain.
 
 ### `Place of Service Filter` Operator
 
 <!-- conceptql-spec: operator place-of-service-filter-operator -->
 
-Claims often report the place of service of an event with a CMS place of service code. Our test data has no place of service information, so the example returns no records.
+Claims often report the place of service with a CMS place of service code. Our test dataset has no place of service information, so the example returns no results.
 
 ### `Provenance` Operator
 
@@ -584,18 +584,18 @@ Provenance is information about the origin of a row of claims data. It is someti
 
 The [GDM](https://github.com/outcomesinsights/generalized_data_model#contexts) records both kinds during ETL. The file provenance of a row is the `source_type_concept_id` of its context. The code provenance of a row is its `provenance_concept_id`. ConceptQL names these two columns `file_provenance_type` and `code_provenance_type`.
 
-Each keyword names a concept in a provenance vocabulary. A file keyword names a concept of the file provenance vocabulary, and a code keyword names a concept of the code provenance vocabulary. A keyword matches its concept and each descendant of that concept in the `concept_ancestor` table of the dataset. For example, in our test data, the concept of the MedPAR file of inpatient stays is a descendant of `inpatient`.
+Each keyword names a concept in a provenance vocabulary. A file keyword names a concept of the file provenance vocabulary, and a code keyword names a concept of the code provenance vocabulary. A keyword matches its concept and each descendant of that concept in the `concept_ancestor` table of the dataset. For example, in our test dataset, the concept of the MedPAR file of inpatient stays is a descendant of `inpatient`.
 
 These are the keywords of each kind:
 
 - File keywords: `inpatient`, `outpatient`, `carrier_claim`, `claim`, `dme`, `hha`, `hospice`, `snf`, `prescription_drug` and `demographics`.
 - Code keywords: `primary`, `primary_or_first`, `first`, `second`, `admitting`, `discharge`, `problem_list`, `chief_complaint` and `unspecified`.
 
-The hierarchy of these concepts is part of the vocabulary tables of the dataset. It is not a rule of ConceptQL. In the vocabulary tables of our test data, `inpatient` includes `snf`, and `outpatient` includes `hha` and `hospice`. There, `carrier_claim` includes `dme`, and `claim` includes each claim file of the test data.
+The hierarchy of these concepts is part of the vocabulary tables of the dataset. It is not a rule of ConceptQL. In the vocabulary tables of our test dataset, `inpatient` includes `snf`, and `outpatient` includes `hha` and `hospice`. There, `carrier_claim` includes `dme`, and `claim` includes each claim file of the test dataset.
 
 #### Inpatient and Outpatient Settings
 
-Authors often describe "inpatient records" or "outpatient visits". An inpatient setting is meant to be a stay after admission to a hospital. In practice, the line between the inpatient and the outpatient setting is poorly defined. These are some of the hard cases:
+Authors often describe "inpatient records" or "outpatient visits". In ConceptQL terms, the authors mean the results whose rows came from an inpatient setting. An inpatient setting is meant to be a stay after admission to a hospital. In practice, the line between the inpatient and the outpatient setting is poorly defined. These are some of the hard cases:
 
 - In some data, the file decides. For example, the MedPAR file of Medicare data holds the inpatient stays.
 - A carrier claim can be for a service given in a hospital.
@@ -605,9 +605,9 @@ Authors often describe "inpatient records" or "outpatient visits". An inpatient 
 
 Outpatient visits have the same problems.
 
-ConceptQL does not decide these cases. The dataset declares what counts as inpatient and what counts as outpatient, through a mapping. The GDM stores the concrete facts of the data, such as the file that a row came from and the place of service. The mapping, not the ETL, decides which of these rows are inpatient. So the setting is a decision of the analysis. A different analysis can use a different mapping, with no new ETL.
+ConceptQL does not decide these cases. The dataset declares what counts as inpatient and what counts as outpatient, through a mapping. The GDM stores the concrete facts of the dataset, such as the file that a row came from and the place of service. The mapping, not the ETL, decides which of these rows are inpatient. So the setting is a decision of the analysis. A different analysis can use a different mapping, with no new ETL.
 
-The mapping is the hierarchy of the file and code provenance concepts in the vocabulary tables of the dataset. For example, our test data maps its inpatient claims file to `inpatient` and its outpatient claims file to `outpatient`. [`one_in_two_out`](#one-in-two-out-operator) uses the keywords `inpatient`, `outpatient` and `carrier_claim`. As plain keywords, they match either kind of provenance. In our test data, only the file provenance matches them, because no code provenance of the data is a descendant of these keywords. The [utilization operators](#utilization-operators), such as `hospitalization`, use only the file provenance.
+The mapping is the hierarchy of the file and code provenance concepts in the vocabulary tables of the dataset. For example, our test dataset maps its inpatient claims file to `inpatient` and its outpatient claims file to `outpatient`. [`one_in_two_out`](#one-in-two-out-operator) uses the keywords `inpatient`, `outpatient` and `carrier_claim`. As plain keywords, they match either kind of provenance. In our test dataset, only the file provenance matches them, because no code provenance of the dataset is a descendant of these keywords. The [utilization operators](#utilization-operators), such as `hospitalization`, use only the file provenance.
 
 ### `Provider Filter` Operator
 
@@ -626,13 +626,13 @@ Use `*` to skip one half of the filter. This example keeps the diabetes diagnose
 
 <!-- conceptql-spec: operator one-in-two-out-operator -->
 
-The operator decides between inpatient and outpatient by the provenance of each record (see [`provenance`](#provenance-operator)):
+The operator decides between inpatient and outpatient by the provenance of each result (see [`provenance`](#provenance-operator)):
 
-- A record with `inpatient` provenance (which includes SNF in our test data) is an inpatient record.
-- A record with `outpatient` or `carrier_claim` provenance is an outpatient record.
-- Other records, and records whose type is not `condition_occurrence`, are removed.
+- A result with `inpatient` provenance (which includes SNF in our test dataset) is an inpatient result.
+- A result with `outpatient` or `carrier_claim` provenance is an outpatient result.
+- Other results, and results whose type is not `condition_occurrence`, are removed.
 
-The place of service of a record does not matter. The two outpatient records need not have the same code. Any two records from the upstream stream can confirm each other. For outpatient records, the operator compares start_dates.
+The place of service of a result does not matter. The two outpatient results need not have the same code. Any two results from the upstream stream can confirm each other. For outpatient results, the operator compares start_dates.
 
 More about the options:
 
@@ -641,13 +641,13 @@ More about the options:
 
 ## Comparison Operators
 
-These operators compare records of incoming streams to produce a set of records.
+These operators compare the results of incoming streams to produce a set of results.
 
 ### `Filter` Operator
 
 <!-- conceptql-spec: operator filter-operator -->
 
-It is an intersection of the two streams. Filter compares records, not date ranges. A record whose dates `time_window` changed no longer matches the original record.
+It is an intersection of the two streams. Filter compares results, not date ranges. A result whose dates `time_window` changed no longer matches the original result.
 
 ### `Match` Operator
 
@@ -659,7 +659,7 @@ It is stricter than [`filter`](#filter-operator), so most users want `filter`. S
 
 <!-- conceptql-spec: operator person-filter-operator -->
 
-For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any record of a patient counts. The left-hand stream can also have several types, as the last example shows.
+For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any result of a patient counts. The left-hand stream can also have several types, as the last example shows.
 
 ### `Co-Reported` Operator
 
@@ -703,7 +703,7 @@ A label must be a string.
 
 ## Windows
 
-A window is a span of time. A calling program can apply windows to a statement, usually one span of dates for each person. ConceptQL then ignores the data outside the windows, as though that data does not exist.
+A window is a span of time. A calling program can apply windows to a statement, usually one span of dates for each person. ConceptQL then ignores the rows of the dataset outside the windows, as though those rows do not exist.
 
 An algorithm never contains a window, and no algorithm should assume that a window exists. Windows sit outside the algorithm. So any algorithm can later run inside a window with no change to the algorithm. A calling program, such as Jigsaw's export engine, applies the windows of a study to the algorithms that it runs. Then the results stay inside the spans of time of the study.
 
@@ -736,7 +736,7 @@ The windows change a statement in these ways:
 
 ## Appendix A - Experimental Operators
 
-These operators work, but they may change or be removed. They compare the `value_as_number` column, which lab records (such as `loinc`) carry.
+These operators work, but they may change or be removed. They compare the `value_as_number` column, which the results of lab codes (such as `loinc`) carry.
 
 ### `Numeric Filter` Operator
 
@@ -914,21 +914,21 @@ This document is part of the [ConceptQL](https://github.com/outcomesinsights/con
 
 The reference section of each operator, the text of the `label` option, the table of all vocabulary operators and Appendix E come from the metadata of the operators (`ConceptQL.metadata`), so the texts in the operator classes are their only copy. A directive in `README.cql.md`, an HTML comment on a line of its own, marks the place of each generated block:
 
-- `<!-- conceptql-spec: operator <spec_id> -->` writes the reference section of the operators with that `spec_id`. It comes directly after the heading of the section, whose anchor is the `spec_id`. The section has the operator's description, its upstream operators or its operands (`left` and `right`), its arguments, its options, the records it returns, and its examples. Text about more than one operator, and longer explanations of one operator, follow the directive as markdown.
+- `<!-- conceptql-spec: operator <spec_id> -->` writes the reference section of the operators with that `spec_id`. It comes directly after the heading of the section, whose anchor is the `spec_id`. The section has the operator's description, its upstream operators or its operands (`left` and `right`), its arguments, its options, the results it returns, and its examples. Text about more than one operator, and longer explanations of one operator, follow the directive as markdown.
 - `<!-- conceptql-spec: label-option -->` writes the text of the `label` option, which every operator takes.
 - `<!-- conceptql-spec: quick-reference -->` writes the table of Appendix E, with one row for each `spec_id`.
 - `<!-- conceptql-spec: vocabulary-operators -->` writes the table of [All Vocabulary Operators](#all-vocabulary-operators), with one row for each vocabulary operator: its name, the full name of its vocabulary and its domain. It marks a deprecated operator.
 
 The metadata comes from a ConceptQL database with the data model `gdm`, no data database and no custom vocabularies, so it decides which operators get a section. Each `spec_id` of that metadata needs exactly one directive, and the build stops when one is missing, repeated or not after its heading. The other directives appear exactly once each, and the build also stops on an unknown directive.
 
-`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md` and each example of a reference section, the build writes the example: the statement as JSON, its diagram, and the first 10 records of its result. It orders the records by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same records. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
+`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md` and each example of a reference section, the build writes the example: the statement as JSON, its diagram, and its first 10 results. It orders the results by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same results. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
 
 The results and the counts come from ConceptQL's DuckDB test data, `synpuf_test_data.duckdb`, with the data model `gdm_wide` and the OHDSI vocabulary tables. `just spec` runs the build through `just test-duckdb`, so it needs what the DuckDB tests need:
 
 - Linux on x86-64. `just test-duckdb` downloads the pinned version of the DuckDB library on the first run.
 - The DuckDB test data. `just test-duckdb` copies it from the path in `DUCKDB_TEST_DATA_SOURCE`, and it fails unless the copy matches the checksum in `.github/synpuf_test_data.sha256`.
 
-The diagrams are drawn with ConceptQL's diagram renderer, `ConceptQL::DiagramRenderer`, which runs the resvg program. The build needs resvg 0.33.0 exactly, which `mise.toml` pins and `just setup` installs. It fails when resvg is missing or is another version. The renderer labels each line with the records (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. The build draws every diagram on each run, and writes each one as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the SVG images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
+The diagrams are drawn with ConceptQL's diagram renderer, `ConceptQL::DiagramRenderer`, which runs the resvg program. The build needs resvg 0.33.0 exactly, which `mise.toml` pins and `just setup` installs. It fails when resvg is missing or is another version. The renderer labels each line with the results (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. The build draws every diagram on each run, and writes each one as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the SVG images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
 
 Between releases, the results and the images on the main branch can be out of date. Before a release, `just release-check` runs `just spec-check`. It rebuilds the document and the diagram data, and it draws every image into a temporary directory. It fails when `README.md` does not match the code, or when an image differs from its new drawing, is missing, or is not used. It names each such image.
 

@@ -21,8 +21,8 @@ module ConceptQL
                                     "the patients who are not Hispanic or Latino. A value that contains Unknown " \
                                     "selects the patients who have no ethnicity or ethnicity concept ID 0. Case does not matter, " \
                                     "and any other value selects no patients."
-      returns "One person record for each patient whose ethnicity is one of the given ethnicities. " \
-              "The start_date and the end_date of each record are the patient's birth date."
+      returns "One person result for each patient whose ethnicity is one of the given ethnicities. " \
+              "The start_date and the end_date of each result are the patient's birth date."
       example "All patients recorded as Hispanic", [ "ethnicity", "Hispanic" ]
       validate_no_upstreams
       validate_at_least_one_argument

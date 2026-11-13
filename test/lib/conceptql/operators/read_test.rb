@@ -103,7 +103,7 @@ describe "the read operator" do
 
         _(metadata.slice(:preferred_name, :short_name, :long_name, :desc, :predominant_domains, :spec_id))
           .must_equal({ preferred_name: "READ", short_name: "READ", long_name: read_name,
-                        desc: "Selects records based on the Read vocabulary.",
+                        desc: "Selects results based on the Read vocabulary.",
                         predominant_domains: [ "condition_occurrence" ], spec_id: "vocabulary-operator" })
         _(metadata[:categories]).must_equal [ [ "Select by Clinical Codes" ] ]
         _(metadata[:arguments].map { |name, opts| [ name, opts[:label] ] }).must_equal [ [ :codes, "READ Codes" ] ]
