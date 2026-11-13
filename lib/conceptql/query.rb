@@ -247,7 +247,7 @@ module ConceptQL
     # around it. It annotates this Query's own operator tree, so only a fresh
     # Query calls it.
     def annotate_without_ids(opts)
-      opts = opts.merge(skip_counts: true) unless window_table_errors.empty?
+      opts = opts.merge(skip_counts: true) unless window_table_errors.empty? && window_option_errors.empty?
       nodifier.scope.one_query_counts = OneQueryCounts.new(operator, db, opts)
       with_window(operator.annotate(db, opts), opts)
     end
@@ -283,11 +283,24 @@ module ConceptQL
       @valid = true
     end
 
+    # The window options of the scope, as Scope#windows reads them: the
+    # scope options of the calling program, merged with the options of the
+    # statement's window
+    def window_opts
+      scope_opts = nodifier.scope.opts
+      scope_opts.merge(scope_opts[:window_opts] || {})
+    end
+
     # The window table of the scope, as Window::Table reads it: a table name
     # or a ConceptQL statement (an Array)
     def window_table
-      scope_opts = nodifier.scope.opts
-      scope_opts.merge(scope_opts[:window_opts] || {})[:window_table]
+      window_opts[:window_table]
+    end
+
+    # The errors of the window options (Window.option_errors), as
+    # [message, *details]. The window operator of the annotation has them.
+    def window_option_errors
+      Window.option_errors(window_opts)
     end
 
     # The validation errors of the window table's statement, when the window
@@ -303,17 +316,19 @@ module ConceptQL
     end
 
     # The annotated statement inside its window operator, when the statement
-    # is a window statement or the scope's window table is a statement. The
-    # window operator has the options of the statement's window and an
-    # annotation hash, which holds only its id. A window table statement is
-    # annotated in place, with the same opts.
+    # is a window statement, the scope's window table is a statement, or the
+    # window options have errors. The window operator has the options of the
+    # statement's window and an annotation hash, which holds its id and the
+    # errors of the window options. A window table statement is annotated in
+    # place, with the same opts.
     def with_window(annotated, opts)
       table = window_table
-      return annotated unless @window_options || table.is_a?(Array)
+      errors = window_option_errors
+      return annotated unless @window_options || table.is_a?(Array) || errors.any?
 
       options = (@window_options || {}).dup
       options[:window_table] = cdb.query(table).annotate_without_ids(opts) if table.is_a?(Array)
-      [ "window", annotated, options.merge(annotation: {}) ]
+      [ "window", annotated, options.merge(annotation: errors.empty? ? {} : { errors: errors }) ]
     end
 
     def extract_statement(stmt, opts)
