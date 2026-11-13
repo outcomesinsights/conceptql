@@ -55,11 +55,17 @@ describe ConceptQL::Operators::Numeric do
     end
 
     describe "wrapped in Union (cascade from leaf override)" do
-      it "union(numeric, numeric) reports :single because both leaves are :single" do
-        # Union returns :single only when ALL upstreams are :single. Both
-        # numeric leaves use the as_criterion path and report :single via
-        # the override, so Union also reports :single.
+      it "union(numeric, numeric) reports :multiple although both leaves are :single" do
+        # Each numeric leaf gives one row per person, and union passes along
+        # the rows of both. On the DuckDB fixture, each of the 249 persons
+        # gets two rows (bead conceptql-8q8h).
         query = db.query([ :union, [ :numeric, 1 ], [ :numeric, 2 ] ])
+
+        _(query.events_per_patient).must_equal :multiple
+      end
+
+      it "union(numeric) reports :single from its one leaf" do
+        query = db.query([ :union, [ :numeric, 1 ] ])
 
         _(query.events_per_patient).must_equal :single
       end

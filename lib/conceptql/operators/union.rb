@@ -55,8 +55,10 @@ module ConceptQL
         end
       end
 
+      # Each upstream passes along its own records, so with two or more
+      # upstreams one person can get one row from each (bead conceptql-8q8h).
       def events_per_patient
-        upstreams.all? { |u| u.events_per_patient == :single } ? :single : :multiple
+        upstreams.length > 1 ? :multiple : super
       end
 
       def multiple_vocabularies

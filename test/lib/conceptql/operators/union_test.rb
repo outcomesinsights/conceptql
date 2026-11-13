@@ -71,3 +71,27 @@ describe ConceptQL::Operators::Union do
     end
   end
 end
+
+# union passes along the records of every upstream, so one person can get one
+# row from each. On the DuckDB fixture, a union of two first operators gave 36
+# persons more than one row (bead conceptql-8q8h). t_shank writes this value
+# into each export. No live database: the mock never answers a query.
+describe "union events_per_patient" do
+  let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide) }
+
+  def events_per_patient(statement)
+    cdb.query(statement).events_per_patient
+  end
+
+  it "is multiple with two first upstreams" do
+    _(events_per_patient([ "union", [ "first", %w[icd9 412] ], [ "first", %w[icd9 250.00] ] ])).must_equal :multiple
+  end
+
+  it "is multiple with two vocabulary upstreams" do
+    _(events_per_patient([ "union", %w[icd9 412], %w[icd9 250.00] ])).must_equal :multiple
+  end
+
+  it "is single with one first upstream" do
+    _(events_per_patient([ "union", [ "first", %w[icd9 412] ] ])).must_equal :single
+  end
+end
