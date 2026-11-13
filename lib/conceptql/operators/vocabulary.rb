@@ -35,6 +35,9 @@ module ConceptQL
            "Each vocabulary has its own operator, and a few operators search several vocabularies at once."
       validate_no_upstreams
       validate_at_least_one_argument
+      # MultipleVocabularies gets this error from its vocabulary operators
+      # (#aggregate_messages), so it does not declare the validation itself.
+      validate_string_codes
       validate_codes_match
 
       # VocabularyClassFactory gives each vocabulary operator a copy of this

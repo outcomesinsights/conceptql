@@ -48,6 +48,11 @@ module ConceptQL
       NDC_BAD_FORMAT = "#{BAD_FORMAT} (claims use 11-digit package NDCs, so it matches no rows)"
       BAD_FORMATS = [ BAD_FORMAT, NDC_BAD_FORMAT ].freeze
       UNKNOWN_CODE = "unknown code(s)"
+      # A code given as a JSON number (412, not "412") is an error of the
+      # statement, not a warning (Ryan ruled 2026-11-13, bead conceptql-uob6).
+      # The lookups would send the number to SQL, and Postgres cannot compare
+      # a text column with an integer. The error names each such code.
+      NON_STRING_CODE = "codes must be strings"
       ONE_UPSTREAM = "has only one upstream"
 
       option :label, type: :string,
@@ -90,6 +95,7 @@ module ConceptQL
           option
           required_options
           codes_match
+          string_codes
         END
 
         validation_meths.each do |type|
@@ -624,12 +630,14 @@ module ConceptQL
         end
       end
 
+      # A code that is not a string is the error of validate_string_codes,
+      # so it gets no format warning too.
       def bad_arguments
         return [] unless code_regexp
         # Vocabulary#select_all? is private, so include private methods.
         return [] if respond_to?(:select_all?, true) && select_all?
 
-        @bad_arguments ||= arguments.reject do |arg|
+        @bad_arguments ||= arguments.grep(String).reject do |arg|
           code_regexp === arg
         end
       end
@@ -641,6 +649,11 @@ module ConceptQL
       # Only Vocabulary operators carry a code format (Vocabulary#code_regexp)
       def code_regexp
         nil
+      end
+
+      def validate_string_codes
+        non_strings = arguments.grep_v(String)
+        add_error(NON_STRING_CODE, *non_strings) unless non_strings.empty?
       end
 
       def validate_codes_match
