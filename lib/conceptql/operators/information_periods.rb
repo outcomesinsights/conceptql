@@ -25,7 +25,7 @@ module ConceptQL
       example "All information periods", [ "information_periods" ]
       domains :observation_period
       category "Get Related Data"
-      basic_type :selection
+      diagram_base :selection
       validate_no_upstreams
 
       def query(db)

@@ -35,7 +35,7 @@ end
 describe "SpecBuild::Reference" do
   def operator(name, spec_id, **overrides)
     { name: name, spec_id: spec_id, desc: "Desc of #{name}.", returns: "Returns of #{name}.",
-      min_upstreams: 1, max_upstreams: 1, categories: [ [ "Combine Streams" ] ], arguments: [],
+      upstreams: "one", categories: [ [ "Combine Streams" ] ], arguments: [],
       options: { label: { type: :string, meaning: "The label text." } }, examples: [] }.merge(overrides)
   end
 
@@ -45,7 +45,7 @@ describe "SpecBuild::Reference" do
 
   let(:joiner) do
     operator("joiner", "joiner-operator",
-             min_upstreams: 0, max_upstreams: 0, categories: [ [ "Filter by Comparing" ] ],
+             upstreams: "left_right", categories: [ [ "Filter by Comparing" ] ],
              arguments: [ [ :codes, { type: :codelist, meaning: "The codes." } ] ],
              options: { label: { type: :string, meaning: "The label text." },
                         left: { type: :upstream, required: true, meaning: "The left stream." },
@@ -55,7 +55,7 @@ describe "SpecBuild::Reference" do
              examples: [ { title: "No rows", statement: [ "joiner", "1" ], help: false },
                          { title: "Rows", statement: [ "joiner", { left: [ "icd9", "412" ] } ], help: true } ])
   end
-  let(:merger) { operator("merger", "merger-operator", min_upstreams: 1, max_upstreams: 99) }
+  let(:merger) { operator("merger", "merger-operator", upstreams: "one_or_more") }
   let(:reference) { SpecBuild::Reference.new(metadata(joiner, merger)) }
 
   let(:source) do
@@ -125,8 +125,13 @@ describe "SpecBuild::Reference" do
       _(reference.section("merger-operator")).must_include "- **Upstream:** one or more operators.\n- **Returns:**"
     end
 
-    it "raises for upstream counts that it has no text for" do
-      odd = SpecBuild::Reference.new(metadata(operator("odd", "odd-operator", min_upstreams: 2, max_upstreams: 3)))
+    it "says two or more for an operator that combines its upstreams" do
+      combiner = SpecBuild::Reference.new(metadata(operator("combiner", "combiner-operator", upstreams: "two_or_more")))
+      _(combiner.section("combiner-operator")).must_include "- **Upstream:** two or more operators.\n"
+    end
+
+    it "raises for an upstreams value that it has no text for" do
+      odd = SpecBuild::Reference.new(metadata(operator("odd", "odd-operator", upstreams: "two_to_three")))
       _ { odd.section("odd-operator") }.must_raise KeyError
     end
   end

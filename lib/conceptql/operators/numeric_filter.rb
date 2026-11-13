@@ -28,7 +28,7 @@ module ConceptQL
               [ "numeric_filter", [ "loinc", "4548-4" ], { "greater_than_or_equal_to" => 5, "less_than_or_equal_to" => 7 } ]
 
       category "Filter Single Stream"
-      basic_type :temporal
+      diagram_base :temporal
       allows_one_upstream
       validate_one_upstream
       require_column :value_as_number

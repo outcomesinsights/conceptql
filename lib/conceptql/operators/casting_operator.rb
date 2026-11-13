@@ -26,7 +26,7 @@ module ConceptQL
     # rows in its table as records.
     class CastingOperator < Operator
       category "Get Related Data"
-      basic_type :cast
+      diagram_base :cast
       validate_at_most_one_upstream
       validate_no_arguments
 

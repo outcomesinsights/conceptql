@@ -27,13 +27,15 @@ module ConceptQL
         @operator_names ||= operators.map(&:op_name)
       end
 
+      # True when every operator except union takes no upstreams. t_shank
+      # saves this value in its performance statistics.
       def codeset_only?
         return @codeset_only if defined?(@codeset_only)
 
         @codeset_only = operators.reject do |op|
           # We skip Unions because they don't count against codesets
           op.op_name == "union"
-        end.map(&:class).map(&:basic_type).all? { |type| type == :selection }
+        end.map(&:class).all? { |klass| klass.upstreams_facet == "none" }
       end
 
       def max_depth

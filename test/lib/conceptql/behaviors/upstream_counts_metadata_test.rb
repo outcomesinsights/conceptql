@@ -2,12 +2,14 @@
 
 require_relative "../../../helper"
 
-# ConceptQL.metadata says how many positional upstreams each operator takes:
-# a statement with n positional upstreams validates with no upstream-count
-# error exactly when min_upstreams <= n <= max_upstreams (99 means no limit).
-# Before, min_upstreams always equalled max_upstreams, so union, first, last,
-# co_reported and occurrence served 99/99, person and death served 1/1, and
-# trim_date_end and trim_date_start served 1/1 (bead conceptql-jwsv.1).
+# The upstreams facet of ConceptQL.metadata says how many positional
+# upstreams each operator takes: a statement with n positional upstreams
+# validates with no upstream-count error exactly when n is in the range of
+# the facet's value (upstream_ranges). Before, the metadata said it with
+# min_upstreams and max_upstreams, which always had the same value, so union,
+# first, last, co_reported and occurrence served 99/99, person and death
+# served 1/1, and trim_date_end and trim_date_start served 1/1 (bead
+# conceptql-jwsv.1). Bead conceptql-9h85 moved this test to the facet.
 #
 # The operators whose operands are the left and right options, and read, take
 # no positional upstream. Ryan ruled on 2026-11-03 that a positional upstream
@@ -15,9 +17,25 @@ require_relative "../../../helper"
 #
 # occurrence, first and last use only their first upstream, so a second one
 # was dropped with no error. Ryan ruled on 2026-11-03 that they take exactly
-# one upstream, so they serve 1/1 (bead conceptql-pqy5). Before, 1/99.
+# one upstream, so they serve "one" (bead conceptql-pqy5). Before, 1/99.
+#
+# union and co_reported serve "two_or_more", but one upstream gives only a
+# warning, not an error.
 # No database: Database.new(nil) decides which operators are published.
 describe "upstream counts in ConceptQL.metadata" do
+  # The numbers of positional upstreams that each value of the upstreams
+  # facet accepts with no upstream-count error
+  let(:upstream_ranges) do
+    {
+      "none" => 0..0,
+      "left_right" => 0..0,
+      "none_or_one" => 0..1,
+      "one" => 1..1,
+      "one_or_more" => 1..,
+      "two_or_more" => 1..
+    }
+  end
+
   let(:cdb) { ConceptQL::Database.new(nil, data_model: :gdm) }
   let(:operators_metadata) { ConceptQL.metadata(cdb)[:operators] }
   let(:upstream_count_errors) { [ "has upstreams", "has multiple upstreams", "has no upstream" ] }
@@ -25,14 +43,17 @@ describe "upstream counts in ConceptQL.metadata" do
     %w[after any_overlap before contains during equal except filter match person_filter trim_date_end trim_date_start]
   end
 
+  def query_with(name, count)
+    cdb.query([ name ] + Array.new(count) { [ "icd9", "412" ] })
+  end
+
   def upstream_count_error?(name, count)
-    statement = [ name ] + Array.new(count) { [ "icd9", "412" ] }
-    errors = by_operator(cdb.query(statement).errors)
+    errors = by_operator(query_with(name, count).errors)
     errors.fetch(name, []).any? { |message, *| upstream_count_errors.include?(message) }
   end
 
-  def counts_in_metadata(name)
-    operators_metadata.fetch(name).values_at(:min_upstreams, :max_upstreams)
+  def upstreams_in_metadata(name)
+    operators_metadata.fetch(name).fetch(:upstreams)
   end
 
   it "publishes all 119 operators" do
@@ -41,33 +62,42 @@ describe "upstream counts in ConceptQL.metadata" do
 
   it "matches what validation accepts for every published operator" do
     operators_metadata.each_key do |name|
-      min, max = counts_in_metadata(name)
+      range = upstream_ranges.fetch(upstreams_in_metadata(name))
       (0..3).each do |n|
-        in_metadata = n >= min && (max == 99 || n <= max)
-        _(!upstream_count_error?(name, n)).must_equal in_metadata, "#{name} with #{n} positional upstreams"
+        _(!upstream_count_error?(name, n)).must_equal range.cover?(n), "#{name} with #{n} positional upstreams"
       end
     end
   end
 
-  {
-    "union" => [ 1, 99 ],
-    "first" => [ 1, 1 ],
-    "last" => [ 1, 1 ],
-    "co_reported" => [ 1, 99 ],
-    "occurrence" => [ 1, 1 ],
-    "person" => [ 0, 1 ],
-    "death" => [ 0, 1 ],
-    "episode" => [ 1, 1 ],
-    "icd9cm" => [ 0, 0 ]
-  }.each do |name, expected|
-    it "serves #{expected.join('/')} for #{name}" do
-      _(counts_in_metadata(name)).must_equal expected
+  it "warns about one upstream on each operator that serves two_or_more" do
+    names = operators_metadata.select { |_name, metadata| metadata[:upstreams] == "two_or_more" }.keys
+    _(names.sort).must_equal %w[co_reported union]
+    names.each do |name|
+      warnings = by_operator(query_with(name, 1).warnings)
+      _(warnings.fetch(name)).must_equal [ [ ConceptQL::Operators::Operator::ONE_UPSTREAM ] ], name
     end
   end
 
-  it "serves 0/0 for read and for each operator whose operands are the left and right options" do
-    (left_right_operators + [ "read" ]).each do |name|
-      _(counts_in_metadata(name)).must_equal [ 0, 0 ], name
+  {
+    "union" => "two_or_more",
+    "first" => "one",
+    "last" => "one",
+    "co_reported" => "two_or_more",
+    "occurrence" => "one",
+    "person" => "none_or_one",
+    "death" => "none_or_one",
+    "episode" => "one",
+    "icd9cm" => "none"
+  }.each do |name, expected|
+    it "serves #{expected} for #{name}" do
+      _(upstreams_in_metadata(name)).must_equal expected
+    end
+  end
+
+  it "serves none for read and left_right for each operator whose operands are the left and right options" do
+    _(upstreams_in_metadata("read")).must_equal "none"
+    left_right_operators.each do |name|
+      _(upstreams_in_metadata(name)).must_equal "left_right", name
     end
   end
 

@@ -27,7 +27,7 @@ module ConceptQL
       validate_one_upstream
       validate_no_arguments
       category "Filter Single Stream"
-      basic_type :temporal
+      diagram_base :temporal
 
       option :inpatient_length_of_stay, type: :integer, min: 0, default: 0,
                                         meaning: "An inpatient stay must be longer than this many days: an inpatient record counts only when its discharge date " \

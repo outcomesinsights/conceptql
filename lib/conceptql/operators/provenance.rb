@@ -40,7 +40,7 @@ module ConceptQL
               [ "provenance", "inpatient", [ "icd9", "250.00" ] ]
 
       category "Filter Single Stream"
-      basic_type :temporal
+      diagram_base :temporal
       allows_one_upstream
       validate_one_upstream
       default_query_columns

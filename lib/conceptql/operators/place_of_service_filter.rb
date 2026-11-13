@@ -46,7 +46,7 @@ module ConceptQL
               [ "place_of_service_filter", 22, [ "icd9", "250.00" ] ], help: false
 
       category "Filter Single Stream"
-      basic_type :temporal
+      diagram_base :temporal
       allows_one_upstream
       validate_one_upstream
       validate_at_least_one_argument

@@ -24,6 +24,7 @@ The metadata for each operator should be complete enough that a UI can understan
 ### Operator Metadata Outline
 
 - min_upstreams
+  - The upstreams facet replaces min_upstreams and max_upstreams. A later release removes both
   - 0 or 1
   - 0 means this operator does not need inputs from an upstream operator
   - 1 means this operator needs input from at least one upstream operator
@@ -57,8 +58,15 @@ The metadata for each operator should be complete enough that a UI can understan
   - A list of one or more domains that the operator is known to represent
   - This should be used as a means to declare what domain color(s) to use to represent the operator and how many lines the operator should generate
   - This option should only appear in selection operators and casting operators
+- diagram_base
+  - One of "selection", "filter", "set", "temporal" or "cast" (a symbol in Ruby), or null
+  - The symbol that a diagram draws for the operator. Only the drawing reads it, because
+    the facets cannot give it: count and dedup draw "set", while episode, numeric_filter and
+    time_window draw "temporal", and all five take one upstream
+  - It is not a facet. The operator class declares it with `diagram_base :temporal`. A
+    subclass inherits it, so every vocabulary operator draws "selection". Only invalid has null
 - basic_type
-  - I don't know what this does but it seemed like information needed for Envy's JAM
+  - The old name of diagram_base, with the same value. A later release removes it
 - returns
   - A plain text that says which records the operator returns, or null
   - The operator class sets it with `returns "..."`. A subclass does not inherit it

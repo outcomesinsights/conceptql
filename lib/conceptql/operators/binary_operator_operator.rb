@@ -17,7 +17,7 @@ module ConceptQL
       validate_option Array, :left, :right
       validate_required_options :left, :right
       category "Filter by Comparing"
-      basic_type :filter
+      diagram_base :filter
 
       def upstreams
         [ left ]

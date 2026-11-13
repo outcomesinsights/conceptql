@@ -23,7 +23,7 @@ module ConceptQL
       example "All male patients", [ "gender", "Male" ]
       domains :person
       category "Select by Property"
-      basic_type :selection
+      diagram_base :selection
       validate_no_upstreams
       validate_at_least_one_argument
 

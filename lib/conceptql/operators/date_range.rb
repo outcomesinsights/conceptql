@@ -35,7 +35,7 @@ module ConceptQL
       example "Each patient, with the dates of the year 2010", [ "date_range", { "start" => "2010-01-01", "end" => "2010-12-31" } ]
       example "Each patient, with the dates from the start to the end of the data", [ "date_range", { "start" => "START", "end" => "END" } ]
       category "Select by Property"
-      basic_type :selection
+      diagram_base :selection
       validate_no_upstreams
       validate_no_arguments
       validate_option DATE_FORMAT, :start, :end
