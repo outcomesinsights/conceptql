@@ -10,7 +10,7 @@ require_relative "../../../helper"
 describe ConceptQL::LexiconNoDB do
   let(:lexicon) { ConceptQL::LexiconNoDB.new(Sequel.mock(host: :postgres)) }
 
-  it "names the GDM-layout vocabulary tables" do
+  it "names its placeholder vocabulary tables" do
     _(lexicon.concepts_table(nil).sql).must_equal 'SELECT * FROM "concepts"'
     _(lexicon.ancestors_table(nil).sql).must_equal 'SELECT * FROM "ancestors"'
     _(lexicon.is_a_relationships(nil).sql).must_equal(
