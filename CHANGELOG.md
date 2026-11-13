@@ -60,6 +60,10 @@ All notable changes to this project will be documented in this file.
   whose `left` or `right` is missing or is not a statement. It lists only the operands
   that exist. Before, it raised `NoMethodError`. The statement is still invalid, with the
   same errors.
+- `Query#events_per_patient` is `:multiple` and `Query#multiple_vocabularies` is `false` for
+  a binary operator whose `left` is missing or is not a statement. These are the values of
+  an operator with no upstream. Before, both raised `NoMethodError`. The statement is still
+  invalid, with the same errors.
 
 ## [0.8.0] - 2026-11-10
 
