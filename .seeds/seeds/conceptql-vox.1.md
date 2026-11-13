@@ -5,7 +5,7 @@ status: captured
 type: exploration
 parent: conceptql-vox
 created_at: 2026-11-12T18:31:14.399662+00:00
-updated_at: 2026-11-13T14:02:12.382512+00:00
+updated_at: 2026-11-13T14:04:42.050832+00:00
 tags:
   - glossary
   - ontology
@@ -283,3 +283,11 @@ Not changed by him: the status column. 13 rows still say "draft". The open quest
 Wording kept verbatim, with three apparent typos not fixed: "appear in datat that represent a concepts" (vocabulary), "The focus on how to find" (algorithm notes), and no final period in cohort, protocol, concept, code and dataset.
 
 Next step (Claude, not ruled): by the 2026-11-12 ruling, this CSV becomes the one glossary source file. Committing it, generating the spec section from it, and serving it as JSON need beads first.
+
+## UPDATE 2026-11-13 (later): typos fixed, every row reviewed
+
+RULED 2026-11-13 (Ryan): "I ignored the status column. I reviewed each row and I'm fine with what's in there." The status column now says "Ryan reviewed" for 26 rows. cohort and protocol keep "Mark review".
+
+Ryan asked for his typos to be fixed. Fixed in the CSV: "datat" became "data", "a concepts" became "concepts", "The focus on" became "The focus is on", final periods were added, and double spaces became single spaces.
+
+RULED 2026-11-13 (Ryan): label uniqueness is a spec topic, not a glossary topic ("The spec should discuss the label uniqueness, but why put that in a ... glossary?"). The open question was removed from the label row. The spec already covers it: the label option's text in `lib/conceptql/operators/operator.rb` says "Each label in a statement must be different", and the spec's `label` section prints that text. `Scope#duplicate_label?` enforces it.
