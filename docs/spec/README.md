@@ -84,7 +84,7 @@ ConceptQL is a domain-specific, declarative language. It represents search crite
 ```YAML
 # Example 1: A simple example in YAML
 # The first element is the operator, icd9cm.  The second element is a code, 412.
-# This statement selects every record with the ICD-9-CM diagnosis code 412.
+# This statement selects every result with the ICD-9-CM diagnosis code 412.
 ---
 - icd9cm
 - '412'
@@ -129,7 +129,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-Each node in a diagram is an operator. A line between two operators shows that the records of the upper operator flow down into the lower operator. Each line is labeled with the number of records (`rows=`) and people (`n=`) that flow along it in our test data. Here is a slightly larger example:
+Each node in a diagram is an operator. A line between two operators shows that the results of the upper operator flow down into the lower operator. Each line is labeled with the number of results (`rows=`) and people (`n=`) that flow along it in our test dataset. Here is a slightly larger example:
 
 ______________________________________________________________________
 
@@ -160,15 +160,15 @@ The diagram above reads "get all procedures that match CPT 99214 (office visit),
 
 Every diagram ends with a line that leads to nothing. The next section explains why.
 
-### Think of Records as a Stream
+### Think of Results as a Stream
 
-A ConceptQL diagram has the "leaf" operators at the top and the "trunk" operator at the bottom. Think of the records of a ConceptQL statement as a stream of data. The leaf operators select records from the database, and they act as the sources of the stream. The records flow down through the diagram. Some operators combine streams, and others remove records, until one stream comes out at the bottom of the diagram.
+A ConceptQL diagram has the "leaf" operators at the top and the "trunk" operator at the bottom. Think of the results of a ConceptQL statement as a stream. The leaf operators select rows from the dataset and make results from them, so they act as the sources of the stream. The results flow down through the diagram. Some operators combine streams, and others remove results, until one stream comes out at the bottom of the diagram.
 
-The trailing line in each diagram is a reminder that every ConceptQL statement yields a stream of records.
+The trailing line in each diagram is a reminder that every ConceptQL statement yields a stream of results.
 
 ### Streams Have Types
 
-Each record has a type. The type is the `criterion_domain` column of the record. A vocabulary operator takes its type from the vocabulary's domain. For example, ICD-9-CM records are `condition_occurrence` records, and CPT records are `procedure_occurrence` records. Other operators produce a fixed type, such as `person` or `death`.
+Each result has a type. The type is the `criterion_domain` column of the result. A vocabulary operator takes its type from the vocabulary's domain. For example, ICD-9-CM results are `condition_occurrence` results, and CPT results are `procedure_occurrence` results. Other operators produce a fixed type, such as `person` or `death`.
 
 The diagrams use color to show types. The node of an operator and the lines that leave it have the color of the types that it outputs:
 
@@ -185,7 +185,7 @@ The diagrams use color to show types. The node of an operator and the lines that
 
 An operator that outputs more than one type has a gray node, and the line that leaves it is drawn as one colored line for each type, side by side.
 
-The type stays with each record as it moves through the operators. Some operators use the type when they compare records. For example, `filter` and `except` match a record only with a record from the same table. Other operators, such as `first` and `person_filter`, ignore the type. Each operator's description says which applies.
+The type stays with each result as it moves through the operators. Some operators use the type when they compare results. For example, `filter` and `except` match a result only with a result from the same table. Other operators, such as `first` and `person_filter`, ignore the type. Each operator's description says which applies.
 
 ### Why Types?
 
@@ -197,19 +197,19 @@ ConceptQL now runs against the [GDM](https://github.com/outcomesinsights/general
 
 Thinking in streams is helpful, but sometimes we need to know what happens in the database.
 
-A stream is a set of rows. Each row points back to one row of a GDM table, and it always has these columns:
+A stream is the set of results that passes from one operator to the next. ConceptQL is not a stream-processing system. Here, "stream" means only that set of results. Each result points back to one row of a GDM table, and it always has these columns:
 
 - `person_id`: the patient.
 - `criterion_id`: the ID of the row in its table of origin.
 - `criterion_table`: the table of origin, such as `clinical_codes`, `patients` or `deaths`.
-- `criterion_domain`: the type of the record (see above).
-- `start_date` and `end_date`: the dates of the record.
-- `source_value` and `source_vocabulary_id`: the code of the record and its vocabulary, when the record has a code.
+- `criterion_domain`: the type of the result (see above).
+- `start_date` and `end_date`: the dates of the result.
+- `source_value` and `source_vocabulary_id`: the code of the result and its vocabulary, when the result has a code.
 - `label`: the label of the nearest upstream operator that has one (see [`label`](#label-option-and-its-features)).
 
-Some operators add columns. For example, lab records (loinc) add `value_as_number` and unit columns, and the utilization operators add admission and discharge columns.
+Some operators add columns. For example, the results of lab codes (loinc) add `value_as_number` and unit columns, and the utilization operators add admission and discharge columns.
 
-So this statement yields one row for each male patient, pointing at the `patients` table:
+So this statement yields one result for each male patient, pointing at the `patients` table:
 
 ______________________________________________________________________
 
@@ -236,7 +236,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-This statement yields one row for each `clinical_codes` row that has the ICD-9-CM code 250.01:
+This statement yields one result for each `clinical_codes` row that has the ICD-9-CM code 250.01:
 
 ______________________________________________________________________
 
@@ -265,14 +265,14 @@ ______________________________________________________________________
 
 It usually helps to think of these queries as a "stream of people" or a "stream of conditions", and not to think about tables and IDs.
 
-A ConceptQL statement yields the rows that pass all of its criteria. What to do with those rows is up to the system that runs the statement. For example, a system that has all 250.01 records could:
+A ConceptQL statement yields the results that pass all of its criteria. What to do with those results is up to the system that runs the statement. For example, a system that has all 250.01 results could:
 
 - Find the first and last date of occurrence for each person
 - Count the occurrences for each person
 - Count the people with the condition
 - Count the occurrences in the whole population
 
-That kind of aggregation and analysis is outside the scope of ConceptQL. ConceptQL finds the rows that you are interested in. Other parts of the system decide what to do with them.
+That kind of aggregation and analysis is outside the scope of ConceptQL. ConceptQL finds the results that you are interested in. Other parts of the system decide what to do with them.
 
 The rest of this document describes each operator. [Appendix E](#appendix-e---operator-quick-reference) lists every operator in one table.
 
@@ -282,32 +282,32 @@ ConceptQL checks each statement before it builds SQL for it. A statement with an
 
 A warning does not make a statement invalid. Examples of warnings are an unknown code, an improperly formatted code and a deprecated operator. A statement with warnings runs. When ConceptQL draws the diagram of a statement, it shows the errors and the warnings of each operator, and it does not refuse an invalid statement.
 
-ConceptQL finds the concept of each code in the vocabulary tables. It uses the OHDSI vocabulary tables (`concept`, `concept_ancestor`, `concept_relationship` and `vocabulary`). It looks for them in the search path of the data database, and then in the database that the environment variable `LEXICON_URL` names. If ConceptQL has a real data database and finds no complete set of vocabulary tables, it refuses to start. Without vocabulary tables, every code would match no records, and a statement would return no records with no warning. Without a database, for example when ConceptQL only draws a diagram, it uses no vocabulary tables. The vocabulary tables of a dataset can be trimmed to the codes that the data contains. Then ConceptQL can also read a full set of vocabulary tables, the reference lexicon, but only to tell a code that the dataset does not contain from a code that does not exist. When `LEXICON_URL` is set and the program names no other reference lexicon, the `LEXICON_URL` database is the reference lexicon.
+ConceptQL finds the concept of each code in the vocabulary tables. It uses the OHDSI vocabulary tables (`concept`, `concept_ancestor`, `concept_relationship` and `vocabulary`). It looks for them in the search path of the data database, and then in the database that the environment variable `LEXICON_URL` names. If ConceptQL has a real data database and finds no complete set of vocabulary tables, it refuses to start. Without vocabulary tables, every code would match no rows, and a statement would return no results with no warning. Without a database, for example when ConceptQL only draws a diagram, it uses no vocabulary tables. The vocabulary tables of a dataset can be trimmed to the codes that the dataset contains. Then ConceptQL can also read a full set of vocabulary tables, the reference lexicon, but only to tell a code that the dataset does not contain from a code that does not exist. When `LEXICON_URL` is set and the program names no other reference lexicon, the `LEXICON_URL` database is the reference lexicon.
 
 ## Selection Operators
 
-Selection operators select records from the database. For example, a search for diagnoses of old myocardial infarction (ICD-9-CM 412) is a selection. Most selection operators are leaf operators: no other operator flows into them. `person` and `death` can also take one upstream operator (see [`person`](#person-operator)).
+Selection operators select rows from the dataset and make results from them. For example, a search for diagnoses of old myocardial infarction (ICD-9-CM 412) is a selection. Most selection operators are leaf operators: no other operator flows into them. `person` and `death` can also take one upstream operator (see [`person`](#person-operator)).
 
-The vocabulary operators select records by their codes. The next section describes them, and [Other Selection Operators](#other-selection-operators) describes the rest.
+The vocabulary operators select rows by their codes. The next section describes them, and [Other Selection Operators](#other-selection-operators) describes the rest.
 
 ## `Vocabulary` Operator
 
-Selects the records whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. Each vocabulary has its own operator, and a few operators search several vocabularies at once.
+Selects the results whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. Each vocabulary has its own operator, and a few operators search several vocabularies at once.
 
 - **Upstream:** none.
 - **Arguments:**
-  - `codes` (codelist): One or more codes of the vocabulary. Write each code as the vocabulary writes it, including any dots: 250.01, not 25001. A code matches exactly, including case, and it does not select its child codes. A code alone of * selects every record of the vocabulary, and there is no other wildcard. A code that does not have the vocabulary's format matches nothing and gives a warning.
-- **Returns:** Every record whose code is one of the given codes in the operator's vocabulary. The type of the records depends on the vocabulary, for example condition_occurrence for icd9cm and procedure_occurrence for cpt4. An operator does not follow mappings to other vocabularies.
+  - `codes` (codelist): One or more codes of the vocabulary. Write each code as the vocabulary writes it, including any dots: 250.01, not 25001. A code matches exactly, including case, and it does not select its child codes. A code alone of * selects every result of the vocabulary, and there is no other wildcard. A code that does not have the vocabulary's format matches nothing and gives a warning.
+- **Returns:** Every result whose code is one of the given codes in the operator's vocabulary. The type of the results depends on the vocabulary, for example condition_occurrence for icd9cm and procedure_occurrence for cpt4. An operator does not follow mappings to other vocabularies.
 
 ______________________________________________________________________
 
-**Example 6 - All records with the ICD-9-CM diagnosis code 412 (old myocardial infarction)**
+**Example 6 - All results with the ICD-9-CM diagnosis code 412 (old myocardial infarction)**
 
 ```JSON
 ["icd9cm","412"]
 ```
 
-![All records with the ICD-9-CM diagnosis code 412 (old myocardial infarction)](images/b48f871538250e6a219b3eec4c469815db03de9cfdc382a409de1ba014d60f50.svg)
+![All results with the ICD-9-CM diagnosis code 412 (old myocardial infarction)](images/b48f871538250e6a219b3eec4c469815db03de9cfdc382a409de1ba014d60f50.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
 | --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
@@ -326,13 +326,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 7 - All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity**
+**Example 7 - All MS-DRG 205 results: other respiratory system diagnoses with a major complication or comorbidity**
 
 ```JSON
 ["ms_drg","205"]
 ```
 
-![All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity](images/cbf9ae203087a1deb86ecd49670a7883fa238a8912360411f090e1c90b11015d.svg)
+![All MS-DRG 205 results: other respiratory system diagnoses with a major complication or comorbidity](images/cbf9ae203087a1deb86ecd49670a7883fa238a8912360411f090e1c90b11015d.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
 | --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
@@ -344,13 +344,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 8 - All CMS-DRG 205 records (a liver disorder)**
+**Example 8 - All CMS-DRG 205 results (a liver disorder)**
 
 ```JSON
 ["cms_drg","205"]
 ```
 
-![All CMS-DRG 205 records (a liver disorder)](images/8ade3c4d946893bea0b378aa7f732ff2b62f43a149e996dc4783128c54482f9b.svg)
+![All CMS-DRG 205 results (a liver disorder)](images/8ade3c4d946893bea0b378aa7f732ff2b62f43a149e996dc4783128c54482f9b.svg)
 
 No results.
 
@@ -386,26 +386,26 @@ Examples of how codes match:
 - A code that the vocabulary does not contain gives the warning "unknown code(s)".
 - When ConceptQL has a full lexicon (the reference lexicon) beside the vocabulary tables of the dataset, a code that only the full lexicon contains gives the warning "code(s) not present in this dataset", not "unknown code(s)". It is a warning, so the statement stays valid on a dataset that lacks some of its codes.
 - A code that has more than one meaning in the vocabulary gives the warning "code(s) with more than one meaning".
-- Some data stores CPT-4 and HCPCS codes only in the merged vocabulary CPT4_HCPCS. On that data, `cpt` and `hcpcs` select nothing, because they read only CPT4 and HCPCS. They give the warning "the data has no records of this vocabulary", which names `cpt_or_hcpcs`. Use `cpt_or_hcpcs`, which reads all three vocabularies.
-- When the data lists the vocabularies of its records (the GDM table `etl_vocabulary_ids`) and the operator's vocabulary is not in the list, the operator gives the warning "the data has no records of this vocabulary". Its counts are null, not 0, because the data cannot show whether a patient has the codes. This warning covers all of its codes, so they get no other warning, except the warning for an improperly formatted code.
-- `rxnorm` does not find records coded with NDC, because an operator does not follow mappings between vocabularies.
+- Some datasets store CPT-4 and HCPCS codes only in the merged vocabulary CPT4_HCPCS. On such a dataset, `cpt` and `hcpcs` select nothing, because they read only CPT4 and HCPCS. They give the warning "the data has no records of this vocabulary", which names `cpt_or_hcpcs`. Use `cpt_or_hcpcs`, which reads all three vocabularies.
+- When the dataset lists the vocabularies of its rows (the GDM table `etl_vocabulary_ids`) and the operator's vocabulary is not in the list, the operator gives the warning "the data has no records of this vocabulary". Its counts are null, not 0, because the dataset cannot show whether a patient has the codes. This warning covers all of its codes, so they get no other warning, except the warning for an improperly formatted code.
+- `rxnorm` does not find rows coded with NDC, because an operator does not follow mappings between vocabularies.
 
 ### DRG Codes
 
-CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning. For example, DRG 205 meant a liver disorder in CMS-DRG, and it means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a record does not say which meaning applied. So a statement names the DRG system, and ConceptQL selects each record by its code and by its start_date:
+CMS renumbered the Diagnosis-Related Group (DRG) codes on 2007-10-01, when the MS-DRG system replaced the CMS-DRG system. Most codes got a new meaning. For example, DRG 205 meant a liver disorder in CMS-DRG, and it means other respiratory system diagnoses in MS-DRG. One vocabulary, DRG, holds the codes of both systems, and a row does not say which meaning applied. So a statement names the DRG system, and ConceptQL selects each row by its code and by its start_date:
 
-- `ms_drg` selects the DRG records whose start_date is on or after 2007-10-01.
-- `cms_drg` selects the DRG records whose start_date is before 2007-10-01.
+- `ms_drg` selects the DRG rows whose start_date is on or after 2007-10-01.
+- `cms_drg` selects the DRG rows whose start_date is before 2007-10-01.
 
-The examples above show both operators. Our test data has no DRG record before 2007-10-01, so the `cms_drg` example returns no records.
+The examples above show both operators. Our test dataset has no DRG row before 2007-10-01, so the `cms_drg` example returns no results.
 
 Both operators check codes as the other vocabulary operators do. A DRG code has 3 digits, with leading zeros. A code that the DRG vocabulary does not have gets the warning "unknown code(s)". These operators never give the warning "code(s) with more than one meaning", because the operator chooses the meaning.
 
-The `drg` operator is deprecated. It selects the DRG records of both systems, whatever their dates. A statement that uses `drg` still runs, but `drg` gets the warning "deprecated operator", and a later release will make it an error. Use `ms_drg` or `cms_drg`.
+The `drg` operator is deprecated. It selects the DRG rows of both systems, whatever their dates. A statement that uses `drg` still runs, but `drg` gets the warning "deprecated operator", and a later release will make it an error. Use `ms_drg` or `cms_drg`.
 
 ### All Vocabulary Operators
 
-The build writes this table from the metadata of the operators. It lists the vocabulary operators of a ConceptQL database with no vocabulary tables, ordered by name. Each row gives the full name of the operator's vocabulary and the domain, which is the type of the records that the operator returns. The vocabulary tables of a database can add more operators. A deprecated operator still runs, with a warning.
+The build writes this table from the metadata of the operators. It lists the vocabulary operators of a ConceptQL database with no vocabulary tables, ordered by name. Each row gives the full name of the operator's vocabulary and the domain, which is the type of the results that the operator returns. The vocabulary tables of a database can add more operators. A deprecated operator still runs, with a warning.
 
 | Operator                 | Vocabulary                                                                                             | Domain               |
 | ------------------------ | ------------------------------------------------------------------------------------------------------ | -------------------- |
@@ -500,7 +500,7 @@ This section describes the selection operators that are not vocabulary operators
 
 ### Person-related Operators
 
-Person operators select records from the `patients` table, which holds the patient demographics. The type of these records is `person`. The start_date and end_date of a person record are both the patient's birth date. [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) explains why that is useful.
+Person operators select rows from the `patients` table, which holds the patient demographics. The type of their results is `person`. The start_date and end_date of a person result are both the patient's birth date. [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) explains why that is useful.
 
 #### `Gender` Operator
 
@@ -509,7 +509,7 @@ Selects the patients with the given genders.
 - **Upstream:** none.
 - **Arguments:**
   - `gender` (string, one of `Male`, `Female`, `Unknown`): One or more genders. A value that starts with M selects the male patients, and a value that starts with F selects the female patients. Any other value, such as Unknown, selects the patients whose gender is neither male nor female, including the patients with no gender. Case does not matter.
-- **Returns:** One person record for each patient whose gender is one of the given genders. The start_date and the end_date of each record are the patient's birth date.
+- **Returns:** One person result for each patient whose gender is one of the given genders. The start_date and the end_date of each result are the patient's birth date.
 
 ______________________________________________________________________
 
@@ -568,7 +568,7 @@ Selects the patients with the given races.
 - **Upstream:** none.
 - **Arguments:**
   - `races` (codelist): One or more race names, such as White, or race concept IDs. A name matches the concepts with that name in any vocabulary, and case does not matter. The operator also selects the more detailed races under each given race, and each concept that is a kind of one of the race concepts through an is-a relationship. A value that contains Unknown also selects the patients who have no race or race concept ID 0.
-- **Returns:** One person record for each patient whose race is one of the given races. The start_date and the end_date of each record are the patient's birth date.
+- **Returns:** One person result for each patient whose race is one of the given races. The start_date and the end_date of each result are the patient's birth date.
 
 ______________________________________________________________________
 
@@ -602,7 +602,7 @@ Selects the patients with the given ethnicities.
 - **Upstream:** none.
 - **Arguments:**
   - `ethnicity` (string, one of `Hispanic or Latino`, `Not Hispanic or Latino`): One or more ethnicities. A value that starts with Hispanic selects the Hispanic or Latino patients, and a value that starts with Not Hispanic selects the patients who are not Hispanic or Latino. A value that contains Unknown selects the patients who have no ethnicity or ethnicity concept ID 0. Case does not matter, and any other value selects no patients.
-- **Returns:** One person record for each patient whose ethnicity is one of the given ethnicities. The start_date and the end_date of each record are the patient's birth date.
+- **Returns:** One person result for each patient whose ethnicity is one of the given ethnicities. The start_date and the end_date of each result are the patient's birth date.
 
 ______________________________________________________________________
 
@@ -626,10 +626,10 @@ ______________________________________________________________________
 
 #### `Person` Operator
 
-Selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream.
+Selects every patient. With one upstream operator, it selects the patients who have a result in the upstream stream.
 
 - **Upstream:** none, or one operator.
-- **Returns:** One record for each selected patient, from the patients table. The type of the records is person, and their start_date and end_date are both the patient's birth date.
+- **Returns:** One result for each selected patient, from the patients table. The type of the results is person, and their start_date and end_date are both the patient's birth date.
 
 ______________________________________________________________________
 
@@ -685,20 +685,20 @@ ______________________________________________________________________
 
 #### `Death` Operator
 
-Selects every death record. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream.
+Selects every death. With one upstream operator, it selects the deaths of the patients who have a result in the upstream stream.
 
 - **Upstream:** none, or one operator.
-- **Returns:** One record for each selected death, from the deaths table. The type of the records is death, and their start_date and end_date are both the date of death.
+- **Returns:** One result for each selected death, from the deaths table. The type of the results is death, and their start_date and end_date are both the date of death.
 
 ______________________________________________________________________
 
-**Example 15 - All death records**
+**Example 15 - All deaths**
 
 ```JSON
 ["death"]
 ```
 
-![All death records](images/e281558c677a04df02e53dcc7fd6497a0d831e4037560cd13942b67ab10f98f4.svg)
+![All deaths](images/e281558c677a04df02e53dcc7fd6497a0d831e4037560cd13942b67ab10f98f4.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value |
 | --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ------------ |
@@ -733,12 +733,12 @@ ______________________________________________________________________
 
 #### `Information Periods` Operator
 
-Selects information periods: the spans of time in which the data has information about a patient, such as periods of insurance enrollment.
+Selects information periods: the spans of time in which the dataset has information about a patient, such as periods of insurance enrollment.
 
 - **Upstream:** none.
 - **Arguments:**
   - `information_types` (codelist): Zero or more information types, each as a concept ID (an integer) or a concept code of the GDM_INFORMATION_TYPE vocabulary, such as PARTD (Medicare Part D). A statement may mix both. With no information types, the operator selects every information period. With information types, it selects only the information periods whose type is one of them. An unknown code gets a warning and selects no period.
-- **Returns:** One record for each selected information period, from the information_periods table. The type of the records is observation_period.
+- **Returns:** One result for each selected information period, from the information_periods table. The type of the results is observation_period.
 
 ______________________________________________________________________
 
@@ -777,18 +777,18 @@ In general, a period is a span of time in the dataset, and a window is a span of
 
 ### Utilization Operators
 
-Utilization operators select admissions. Each operator returns one record for each admission whose claim came from the matching kind of file. For example, `hospitalization` uses the claims whose file provenance is inpatient.
+Utilization operators select admissions. Each operator returns one result for each admission whose claim came from the matching kind of file. For example, `hospitalization` uses the claims whose file provenance is inpatient.
 
-The type of these records is `condition_occurrence`, because the GDM has no visit or admission type. So `union` combines them with diagnosis records into one stream. `source_value` usually holds a diagnosis.
+The type of these results is `condition_occurrence`, because the GDM has no visit or admission type. So `union` combines them with diagnosis results into one stream. `source_value` usually holds a diagnosis.
 
-Our test data has no SNF claims and no hospice claims, so the examples of `snf` and `hospice` return no records.
+Our test dataset has no SNF claims and no hospice claims, so the examples of `snf` and `hospice` return no results.
 
 #### `SNF` Operator
 
-Selects admissions to skilled nursing facilities (SNF): one record for each admission whose claim came from an SNF file.
+Selects admissions to skilled nursing facilities (SNF): one result for each admission whose claim came from an SNF file.
 
 - **Upstream:** none.
-- **Returns:** One record for each SNF admission. The type of the records is condition_occurrence, and their criterion_table is collections, the table of claims. Their start_date and end_date are the dates of the claim, and source_value holds the primary code of the admission when it has one. Each record also has admission and discharge columns, such as admission_date, discharge_date and length_of_stay.
+- **Returns:** One result for each SNF admission. The type of the results is condition_occurrence, and their criterion_table is collections, the table of claims. Their start_date and end_date are the dates of the claim, and source_value holds the primary code of the admission when it has one. Each result also has admission and discharge columns, such as admission_date, discharge_date and length_of_stay.
 
 ______________________________________________________________________
 
@@ -806,10 +806,10 @@ ______________________________________________________________________
 
 #### `Hospice` Operator
 
-Selects hospice admissions: one record for each admission whose claim came from a hospice file.
+Selects hospice admissions: one result for each admission whose claim came from a hospice file.
 
 - **Upstream:** none.
-- **Returns:** One record for each hospice admission. The type of the records is condition_occurrence, and their criterion_table is collections, the table of claims. Their start_date and end_date are the dates of the claim, and source_value holds the primary code of the admission when it has one. Each record also has admission and discharge columns, such as admission_date, discharge_date and length_of_stay.
+- **Returns:** One result for each hospice admission. The type of the results is condition_occurrence, and their criterion_table is collections, the table of claims. Their start_date and end_date are the dates of the claim, and source_value holds the primary code of the admission when it has one. Each result also has admission and discharge columns, such as admission_date, discharge_date and length_of_stay.
 
 ______________________________________________________________________
 
@@ -827,10 +827,10 @@ ______________________________________________________________________
 
 #### `Hospitalization` Operator
 
-Selects inpatient hospital admissions: one record for each admission whose claim came from an inpatient file.
+Selects inpatient hospital admissions: one result for each admission whose claim came from an inpatient file.
 
 - **Upstream:** none.
-- **Returns:** One record for each inpatient admission. The type of the records is condition_occurrence, and their criterion_table is collections, the table of claims. Their start_date and end_date are the dates of the claim, and source_value holds the primary code of the admission when it has one. Each record also has admission and discharge columns, such as admission_date, discharge_date and length_of_stay.
+- **Returns:** One result for each inpatient admission. The type of the results is condition_occurrence, and their criterion_table is collections, the table of claims. Their start_date and end_date are the dates of the claim, and source_value holds the primary code of the admission when it has one. Each result also has admission and discharge columns, such as admission_date, discharge_date and length_of_stay.
 
 ______________________________________________________________________
 
@@ -859,14 +859,14 @@ ______________________________________________________________________
 
 ## Set Operators
 
-Streams are sets of records, so ConceptQL has operators that work on sets.
+Streams are sets of results, so ConceptQL has operators that work on sets.
 
 ### `Union` Operator
 
-Combines the records of all its upstream operators into one stream. Each record keeps its own type, so one stream can hold several types.
+Combines the results of all its upstream operators into one stream. Each result keeps its own type, so one stream can hold several types.
 
 - **Upstream:** two or more operators.
-- **Returns:** Each record of each upstream. A record that comes from more than one upstream comes out once. Two records are the same only when every column is equal, including label.
+- **Returns:** Each result of each upstream. A result that comes from more than one upstream comes out once. Two results are the same only when every column is equal, including label.
 
 ______________________________________________________________________
 
@@ -943,16 +943,16 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-Union does not change records of different types. Each later operator decides whether it treats the types separately or together.
+Union does not change results of different types. Each later operator decides whether it treats the types separately or together.
 
 ### `Except` Operator
 
-Removes each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same criterion_table, criterion_id, start_date and end_date.
+Removes each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same criterion_table, criterion_id, start_date and end_date.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator removes each left-hand record that is also in this stream, and does not pass these records on.
-- **Returns:** The left-hand records that have no right-hand record with the same criterion_table, criterion_id, start_date and end_date. A left-hand record whose table has no right-hand record passes through unchanged. The right-hand records are not returned.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator removes each left-hand result that is also in this stream, and does not pass these results on.
+- **Returns:** The left-hand results that have no right-hand result with the same criterion_table, criterion_id, start_date and end_date. A left-hand result whose table has no right-hand result passes through unchanged. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1029,11 +1029,11 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-A left-hand record matches only a right-hand record from the same table, and only when the dates are the same. For example, a record whose dates `time_window` changed no longer matches the original record. The second example above shows that a left-hand record passes through unchanged when no right-hand record comes from its table. The third example has several types in the left-hand stream.
+A left-hand result matches only a right-hand result from the same table, and only when the dates are the same. For example, a result whose dates `time_window` changed no longer matches the original result. The second example above shows that a left-hand result passes through unchanged when no right-hand result comes from its table. The third example has several types in the left-hand stream.
 
 ### Discussion About Set Operators
 
-Why can one stream hold records of several types? Because operators such as `first` then act across all the types. For example, the statement below finds the first MI or death for each patient. Add a few more criteria, and you can find the first censoring event for each patient.
+Why can one stream hold results of several types? Because operators such as `first` then act across all the types. For example, the statement below finds the first MI or death for each patient. Add a few more criteria, and you can find the first censoring event for each patient.
 
 ______________________________________________________________________
 
@@ -1062,28 +1062,28 @@ ______________________________________________________________________
 
 ## Time-oriented Operators
 
-Every record has a start_date and an end_date. All temporal comparisons use these two columns. Each record takes its dates from its row in its table of origin.
+Every result has a start_date and an end_date. All temporal comparisons use these two columns. Each result takes its dates from its row in its table of origin.
 
-If the table of origin has only one date, the record uses that date as both its start_date and its end_date. For example, a death record uses the `date` column of its row in `deaths`.
+If the table of origin has only one date, the result uses that date as both its start_date and its end_date. For example, a death result uses the `date` column of its row in `deaths`.
 
-Person records are a special case. A person record uses the patient's birth date as its start_date and end_date. This may sound strange, but [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) shows why it is useful.
+Person results are a special case. A person result uses the patient's birth date as its start_date and end_date. This may sound strange, but [Temporal Operators and Person Streams](#temporal-operators-and-person-streams) shows why it is useful.
 
 ## Relative Temporal Operators
 
-For each patient, we may want only the chronologically first or last record, or the second, or the second-to-last. Relative temporal operators provide this filtering. They order each patient's records by start_date. When two records have the same start_date, the record with the lower `criterion_id` comes first.
+For each patient, we may want only the chronologically first or last result, or the second, or the second-to-last. Relative temporal operators provide this filtering. They order each patient's results by start_date. When two results have the same start_date, the result with the lower `criterion_id` comes first.
 
 ### `Nth Occurrence` Operator
 
-For each person, orders the records by start_date and passes along the record at the given position. A positive position counts from the earliest record and a negative one from the most recent record.
+For each person, orders the results by start_date and passes along the result at the given position. A positive position counts from the earliest result and a negative one from the most recent result.
 
 - **Upstream:** one operator.
 - **Arguments:**
-  - `occurrence` (integer): The position of the record to pass along, as an integer. A positive number counts from the earliest record, so 1 is the first record and 2 is the second. A negative number counts from the most recent record, so -1 is the last record and -3 is the third from the last. 0 selects nothing.
+  - `occurrence` (integer): The position of the result to pass along, as an integer. A positive number counts from the earliest result, so 1 is the first result and 2 is the second. A negative number counts from the most recent result, so -1 is the last result and -3 is the third from the last. 0 selects nothing.
 - **Options:**
-  - `at_least` (string): A date adjustment, such as 30d. For each record, the operator counts that record and the later records that start at least this long after it ends, and passes along the record at the given position. So a person can have more than one record in the result.
-  - `within` (string): A date adjustment, such as 365d. For each record, the operator counts that record and the later records that start at most this long after it ends, and passes along the record at the given position. So a person can have more than one record in the result.
-  - `group_by_date` (boolean): Treats the records of a person on one start_date as one occurrence, so the position counts dates. From the date at that position, the operator passes along the record with the lowest criterion_id, or the highest criterion_id for a negative position.
-- **Returns:** One record per person: the record at the given position. A person who has fewer records than the position asks for is not passed along. With at_least or within, a person can have more than one record.
+  - `at_least` (string): A date adjustment, such as 30d. For each result, the operator counts that result and the later results that start at least this long after it ends, and passes along the result at the given position. So a person can have more than one result.
+  - `within` (string): A date adjustment, such as 365d. For each result, the operator counts that result and the later results that start at most this long after it ends, and passes along the result at the given position. So a person can have more than one result.
+  - `group_by_date` (boolean): Treats the results of a person on one start_date as one occurrence, so the position counts dates. From the date at that position, the operator passes along the result with the lowest criterion_id, or the highest criterion_id for a negative position.
+- **Returns:** One result per person: the result at the given position. A person who has fewer results than the position asks for is not passed along. With at_least or within, a person can have more than one result.
 
 ______________________________________________________________________
 
@@ -1112,13 +1112,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 29 - For each patient, the first record on the second day with any of these diagnoses**
+**Example 29 - For each patient, the first result on the second day with any of these diagnoses**
 
 ```JSON
 ["occurrence",2,["icd9","410.00","410.01","250.00","250.01"],{"group_by_date":true}]
 ```
 
-![For each patient, the first record on the second day with any of these diagnoses](images/15987c0030e33d5ac57289ff7018fec87a2cc1252c4467719510035227fc91bc.svg)
+![For each patient, the first result on the second day with any of these diagnoses](images/15987c0030e33d5ac57289ff7018fec87a2cc1252c4467719510035227fc91bc.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
 | --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
@@ -1139,10 +1139,10 @@ ______________________________________________________________________
 
 ### `First` Operator
 
-For each person, passes along the record with the earliest start_date.
+For each person, passes along the result with the earliest start_date.
 
 - **Upstream:** one operator.
-- **Returns:** One record per person: the upstream record with the earliest start_date. When several records have that start_date, the one with the lowest criterion_id.
+- **Returns:** One result per person: the upstream result with the earliest start_date. When several results have that start_date, the one with the lowest criterion_id.
 
 ______________________________________________________________________
 
@@ -1173,10 +1173,10 @@ ______________________________________________________________________
 
 ### `Last` Operator
 
-For each person, passes along the record with the most recent start_date.
+For each person, passes along the result with the most recent start_date.
 
 - **Upstream:** one operator.
-- **Returns:** One record per person: the upstream record with the latest start_date. When several records have that start_date, the one with the highest criterion_id.
+- **Returns:** One result per person: the upstream result with the latest start_date. When several results have that start_date, the one with the highest criterion_id.
 
 ______________________________________________________________________
 
@@ -1211,13 +1211,13 @@ To represent a fixed range of dates, use the `date_range` operator.
 
 ### `Date Range` Operator
 
-Makes one person record for each patient, with the given start_date and end_date. Use it to compare other records with a fixed range of dates.
+Makes one person result for each patient, with the given start_date and end_date. Use it to compare other results with a fixed range of dates.
 
 - **Upstream:** none.
 - **Options:**
-  - `start` (string, required): The start_date of each record. It is a date in YYYY-MM-DD format, START or END. START is the earliest start date of any information period in the database, and END is the latest end date. START and END are not case-sensitive.
-  - `end` (string, required): The end_date of each record. It is a date in YYYY-MM-DD format, START or END. START is the earliest start date of any information period in the database, and END is the latest end date. START and END are not case-sensitive. For a single day, give the same date as the start option.
-- **Returns:** One record for each patient. The type of the records is person, and each record has the start_date and the end_date that the options give.
+  - `start` (string, required): The start_date of each result. It is a date in YYYY-MM-DD format, START or END. START is the earliest start date of any information period in the database, and END is the latest end date. START and END are not case-sensitive.
+  - `end` (string, required): The end_date of each result. It is a date in YYYY-MM-DD format, START or END. START is the earliest start date of any information period in the database, and END is the latest end date. START and END are not case-sensitive. For a single day, give the same date as the start option.
+- **Returns:** One result for each patient. The type of the results is person, and each result has the start_date and the end_date that the options give.
 
 ______________________________________________________________________
 
@@ -1246,13 +1246,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 33 - Each patient, with the dates from the start to the end of the data**
+**Example 33 - Each patient, with the dates from the start to the end of the dataset**
 
 ```JSON
 ["date_range",{"start":"START","end":"END"}]
 ```
 
-![Each patient, with the dates from the start to the end of the data](images/bac60c695e4b466108923e828da1c6b2a0fda21b11ec496d32fa23300c3a4c49.svg)
+![Each patient, with the dates from the start to the end of the dataset](images/bac60c695e4b466108923e828da1c6b2a0fda21b11ec496d32fa23300c3a4c49.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain | start_date | end_date   | source_value     |
 | --------- | ------------ | --------------- | ---------------- | ---------- | ---------- | ---------------- |
@@ -1273,13 +1273,13 @@ The range includes both dates. A `YYYY-MM-DD` date has a four-digit year, a two-
 
 ## Temporal Comparison Operators
 
-As described above, each record has a start date and an end date, which define its own date range. Temporal operators filter streams by comparing these date ranges.
+As described above, each result has a start date and an end date, which define its own date range. Temporal operators filter streams by comparing these date ranges.
 
-A temporal operator takes two streams: the left-hand records (LHR) and the right-hand records (RHR). It compares each patient's LHR with the same patient's RHR, and it passes along the LHR that pass the comparison. It discards the RHR after the comparison.
+A temporal operator takes two streams: the left-hand results (LHR) and the right-hand results (RHR). It compares each patient's LHR with the same patient's RHR, and it passes along the LHR that pass the comparison. It discards the RHR after the comparison.
 
 - Each LHR is passed along at most once, however many RHR it matches.
 - A patient who has LHR but no RHR loses all of their LHR.
-- A record that is in both streams can match itself. For example, a record is during itself.
+- A result that is in both streams can match itself. For example, a result is during itself.
 
 Edge behaviors: `during`, `contains` and `any_overlap` compare each LHR with every RHR of the patient. `before` and `after` do not. Without the `within` option, `before` compares each LHR only with the latest start_date of the patient's RHR, and `after` compares each LHR only with the earliest end_date of the patient's RHR. [`before`](#before-operator) and [`after`](#after-operator) explain why, and [Working Around `Before`/`After` Behavior](#working-around-beforeafter-behavior) shows how to choose another RHR.
 
@@ -1287,14 +1287,14 @@ Each operator compares the dates in a different way. All of them take [some opti
 
 ### `During` Operator
 
-For each patient, keeps the left-hand records whose date range is inside the date range of a right-hand record. The left-hand record starts on or after the start_date of the right-hand record and ends on or before its end_date.
+For each patient, keeps the left-hand results whose date range is inside the date range of a right-hand result. The left-hand result starts on or after the start_date of the right-hand result and ends on or before its end_date.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator compares the left-hand records with these records and does not pass them on.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator compares the left-hand results with these results and does not pass them on.
 - **Options:**
-  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each right-hand record is widened by this amount in each direction: its start_date moves back and its end_date moves forward. Use a positive amount.
-- **Returns:** The left-hand records that are inside the date range of at least one right-hand record of the same patient, each record once. The right-hand records are not returned.
+  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each right-hand result is widened by this amount in each direction: its start_date moves back and its end_date moves forward. Use a positive amount.
+- **Returns:** The left-hand results that are inside the date range of at least one right-hand result of the same patient, each result once. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1323,14 +1323,14 @@ ______________________________________________________________________
 
 ### `Contains` Operator
 
-For each patient, keeps the left-hand records whose date range encloses the date range of a right-hand record. The left-hand record starts on or before the start_date of the right-hand record and ends on or after its end_date.
+For each patient, keeps the left-hand results whose date range encloses the date range of a right-hand result. The left-hand result starts on or before the start_date of the right-hand result and ends on or after its end_date.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator compares the left-hand records with these records and does not pass them on.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator compares the left-hand results with these results and does not pass them on.
 - **Options:**
-  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each left-hand record is widened by this amount in each direction: its start_date moves back and its end_date moves forward. The returned records keep their own dates. Use a positive amount.
-- **Returns:** The left-hand records that enclose the date range of at least one right-hand record of the same patient, each record once. The right-hand records are not returned.
+  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each left-hand result is widened by this amount in each direction: its start_date moves back and its end_date moves forward. The returned results keep their own dates. Use a positive amount.
+- **Returns:** The left-hand results that enclose the date range of at least one right-hand result of the same patient, each result once. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1350,14 +1350,14 @@ ______________________________________________________________________
 
 ### `Any Overlap` Operator
 
-For each patient, keeps the left-hand records whose date range shares at least one day with the date range of a right-hand record.
+For each patient, keeps the left-hand results whose date range shares at least one day with the date range of a right-hand result.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator compares the left-hand records with these records and does not pass them on.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator compares the left-hand results with these results and does not pass them on.
 - **Options:**
-  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each right-hand record is widened by this amount in each direction: its start_date moves back and its end_date moves forward. Use a positive amount.
-- **Returns:** The left-hand records that overlap the date range of at least one right-hand record of the same patient, each record once. The right-hand records are not returned.
+  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each right-hand result is widened by this amount in each direction: its start_date moves back and its end_date moves forward. Use a positive amount.
+- **Returns:** The left-hand results that overlap the date range of at least one right-hand result of the same patient, each result once. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1376,21 +1376,21 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-This diagram shows each kind of L record that has "any overlap" with an R record:
+This diagram shows each kind of L result that has "any overlap" with an R result:
 
 ![](images/any_overlap.png)
 
 ### `Before` Operator
 
-For each patient, keeps the left-hand records whose end_date is before the latest start_date of the patient's right-hand records. With the within option, each left-hand record is compared with every right-hand record of the patient instead.
+For each patient, keeps the left-hand results whose end_date is before the latest start_date of the patient's right-hand results. With the within option, each left-hand result is compared with every right-hand result of the patient instead.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator compares the left-hand records with these records and does not pass them on.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator compares the left-hand results with these results and does not pass them on.
 - **Options:**
-  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. The left-hand record must also end no more than this amount before the start_date of the right-hand record. With this option, each left-hand record is compared with every right-hand record of the patient, not only with the one that starts last. Use a positive amount.
-  - `at_least` (string): A date adjustment, such as 7d or 1w. The left-hand record must end more than this amount before the start_date of the right-hand record. Use a positive amount.
-- **Returns:** The left-hand records that end before a right-hand record of the same patient starts, each record once. The right-hand records are not returned.
+  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. The left-hand result must also end no more than this amount before the start_date of the right-hand result. With this option, each left-hand result is compared with every right-hand result of the patient, not only with the one that starts last. Use a positive amount.
+  - `at_least` (string): A date adjustment, such as 7d or 1w. The left-hand result must end more than this amount before the start_date of the right-hand result. Use a positive amount.
+- **Returns:** The left-hand results that end before a right-hand result of the same patient starts, each result once. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1460,19 +1460,19 @@ ______________________________________________________________________
 
 The comparison is strict, so an LHR that ends on the day the RHR starts does not pass.
 
-This rule needs some explanation. Imagine the events A-A-B-A-B-A. How many A's come before a B? One could argue that only the first two A's qualify, because they come before the first B. But three A's come before some B. The `before` operator uses the second answer, so it compares every LHR with the start_date of the patient's last RHR.
+This rule needs some explanation. Imagine the results A-A-B-A-B-A. How many A's come before a B? One could argue that only the first two A's qualify, because they come before the first B. But three A's come before some B. The `before` operator uses the second answer, so it compares every LHR with the start_date of the patient's last RHR.
 
 ### `After` Operator
 
-For each patient, keeps the left-hand records whose start_date is after the earliest end_date of the patient's right-hand records. With the within option, each left-hand record is compared with every right-hand record of the patient instead.
+For each patient, keeps the left-hand results whose start_date is after the earliest end_date of the patient's right-hand results. With the within option, each left-hand result is compared with every right-hand result of the patient instead.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator compares the left-hand records with these records and does not pass them on.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator compares the left-hand results with these results and does not pass them on.
 - **Options:**
-  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. The left-hand record must also start no more than this amount after the end_date of the right-hand record. With this option, each left-hand record is compared with every right-hand record of the patient, not only with the one that ends first. Use a positive amount.
-  - `at_least` (string): A date adjustment, such as 7d or 1w. The left-hand record must start more than this amount after the end_date of the right-hand record. Use a positive amount.
-- **Returns:** The left-hand records that start after a right-hand record of the same patient ends, each record once. The right-hand records are not returned.
+  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d. The left-hand result must also start no more than this amount after the end_date of the right-hand result. With this option, each left-hand result is compared with every right-hand result of the patient, not only with the one that ends first. Use a positive amount.
+  - `at_least` (string): A date adjustment, such as 7d or 1w. The left-hand result must start more than this amount after the end_date of the right-hand result. Use a positive amount.
+- **Returns:** The left-hand results that start after a right-hand result of the same patient ends, each result once. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1557,7 +1557,7 @@ ______________________________________________________________________
 
 The comparison is strict, so an LHR that starts on the day the RHR ends does not pass.
 
-Imagine the events A-A-B-A-B-A again. How many A's come after a B? One could argue that only the last A qualifies, because it comes after the last B. But two A's come after some B. The `after` operator uses the second answer, so it compares every LHR with the earliest end_date of the patient's RHR.
+Imagine the results A-A-B-A-B-A again. How many A's come after a B? One could argue that only the last A qualifies, because it comes after the last B. But two A's come after some B. The `after` operator uses the second answer, so it compares every LHR with the earliest end_date of the patient's RHR.
 
 ### Working Around `Before`/`After` Behavior
 
@@ -1567,13 +1567,13 @@ If you want a different RHR for the comparison, use a relative temporal operator
 
 ### `Time Window` Operator
 
-Moves the start_date and the end_date of each record. Use it to shift or widen a record's dates before you compare them with other records.
+Moves the start_date and the end_date of each result. Use it to shift or widen a result's dates before you compare them with other results.
 
 - **Upstream:** one operator.
 - **Options:**
-  - `start` (string): How to change the start_date. If you omit it, the start_date does not change. The value is an amount of time, made of one or more numbers, each with a unit: d (days), w (weeks), m (months) or y (years). Each part can have a - or + sign, a bare number means days, and a unit without a number means 1 of it. For example, -1m is 1 month back, and 10d3m is 3 months and 10 days. An empty value or 0 leaves the date unchanged. The value start or end uses the record's start_date or end_date, and a date in YYYY-MM-DD format sets the date to that date.
-  - `end` (string): How to change the end_date. If you omit it, the end_date does not change. The value is an amount of time, made of one or more numbers, each with a unit: d (days), w (weeks), m (months) or y (years). Each part can have a - or + sign, a bare number means days, and a unit without a number means 1 of it. For example, -1m is 1 month back, and 10d3m is 3 months and 10 days. An empty value or 0 leaves the date unchanged. The value start or end uses the record's start_date or end_date, and a date in YYYY-MM-DD format sets the date to that date.
-- **Returns:** One record for each upstream record, with the start_date and the end_date that the options give. The other columns do not change.
+  - `start` (string): How to change the start_date. If you omit it, the start_date does not change. The value is an amount of time, made of one or more numbers, each with a unit: d (days), w (weeks), m (months) or y (years). Each part can have a - or + sign, a bare number means days, and a unit without a number means 1 of it. For example, -1m is 1 month back, and 10d3m is 3 months and 10 days. An empty value or 0 leaves the date unchanged. The value start or end uses the result's start_date or end_date, and a date in YYYY-MM-DD format sets the date to that date.
+  - `end` (string): How to change the end_date. If you omit it, the end_date does not change. The value is an amount of time, made of one or more numbers, each with a unit: d (days), w (weeks), m (months) or y (years). Each part can have a - or + sign, a bare number means days, and a unit without a number means 1 of it. For example, -1m is 1 month back, and 10d3m is 3 months and 10 days. An empty value or 0 leaves the date unchanged. The value start or end uses the result's start_date or end_date, and a date in YYYY-MM-DD format sets the date to that date.
+- **Returns:** One result for each upstream result, with the start_date and the end_date that the options give. The other columns do not change.
 
 ______________________________________________________________________
 
@@ -1702,14 +1702,14 @@ More examples of date adjustments:
 
 ### `Trim Date Start` Operator
 
-For each patient, moves the start_date of each left-hand record forward to the end_date of the right-hand record with the latest start_date. A left-hand record that ends before that end_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged.
+For each patient, moves the start_date of each left-hand result forward to the end_date of the right-hand result with the latest start_date. A left-hand result that ends before that end_date is removed, and the left-hand results of a patient without right-hand results pass through unchanged.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator moves the start_date of these records and passes them on.
-  - `right` (required): The right-hand stream. For each patient, the end_date of the record with the latest start_date sets the earliest start_date of the left-hand records. These records are not passed on.
+  - `left` (required): The left-hand stream. The operator moves the start_date of these results and passes them on.
+  - `right` (required): The right-hand stream. For each patient, the end_date of the result with the latest start_date sets the earliest start_date of the left-hand results. These results are not passed on.
 - **Options:**
-  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d, that is added to the end_date of the right-hand record before the comparison. The adjusted date is the one that moves the start_date of the left-hand record.
-- **Returns:** The left-hand records, each with its start_date set to the later of its own start_date and the end_date of the patient's right-hand record. Left-hand records that end before that end_date are not returned. The right-hand records are not returned.
+  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d, that is added to the end_date of the right-hand result before the comparison. The adjusted date is the one that moves the start_date of the left-hand result.
+- **Returns:** The left-hand results, each with its start_date set to the later of its own start_date and the end_date of the patient's right-hand result. Left-hand results that end before that end_date are not returned. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1736,7 +1736,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records. There are four cases:
+Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's results. There are four cases:
 
 - The patient has no RHR.
   - The LHR passes through unchanged.
@@ -1749,14 +1749,14 @@ Like a [temporal comparison operator](#temporal-comparison-operators), it takes 
 
 ### `Trim Date End` Operator
 
-For each patient, moves the end_date of each left-hand record back to the start_date of the right-hand record with the earliest start_date. A left-hand record that starts after that start_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged.
+For each patient, moves the end_date of each left-hand result back to the start_date of the right-hand result with the earliest start_date. A left-hand result that starts after that start_date is removed, and the left-hand results of a patient without right-hand results pass through unchanged.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator moves the end_date of these records and passes them on.
-  - `right` (required): The right-hand stream. For each patient, the earliest start_date of these records sets the latest end_date of the left-hand records. These records are not passed on.
+  - `left` (required): The left-hand stream. The operator moves the end_date of these results and passes them on.
+  - `right` (required): The right-hand stream. For each patient, the earliest start_date of these results sets the latest end_date of the left-hand results. These results are not passed on.
 - **Options:**
-  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d, that is subtracted from the start_date of the right-hand record before the comparison. The adjusted date is the one that moves the end_date of the left-hand record.
-- **Returns:** The left-hand records, each with its end_date set to the earlier of its own end_date and the start_date of the patient's right-hand record. Left-hand records that start after that start_date are not returned. The right-hand records are not returned.
+  - `within` (string): A date adjustment, such as 30d, 2m or 1y-3d, that is subtracted from the start_date of the right-hand result before the comparison. The adjusted date is the one that moves the end_date of the left-hand result.
+- **Returns:** The left-hand results, each with its end_date set to the earlier of its own end_date and the start_date of the patient's right-hand result. Left-hand results that start after that start_date are not returned. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -1783,7 +1783,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's records. There are four cases:
+Like a [temporal comparison operator](#temporal-comparison-operators), it takes left-hand and right-hand streams and compares each patient's results. There are four cases:
 
 - The patient has no RHR.
   - The LHR passes through unchanged.
@@ -1805,7 +1805,7 @@ Systems that build statements, such as Jigsaw's export engine, give `trim_date_s
   - The `within` option moves each RHR date before the comparison, as above.
   - An LHR is discarded only when it has RHR (of its patient and its `join_columns` values) and none of them qualifies. An LHR without RHR passes through unchanged.
 
-These systems often join on the column `uuid`. A selection operator, such as a vocabulary operator, takes the option `uuid` (`{"uuid": true}`), which adds the column `uuid` to its records. The uuid is the `person_id`, `criterion_id`, `criterion_table`, start_date and end_date of the record, joined with `/`, such as `17/27269/observations/2008-08-25/2008-08-25`. An empty part is an empty string, so a record without an end_date has a uuid such as `1/2/observations/2008-03-10/`. The uuid keeps its value when a later operator, such as `time_window`, moves the dates. So two streams made from the same records can be joined record by record.
+These systems often join on the column `uuid`. A selection operator, such as a vocabulary operator, takes the option `uuid` (`{"uuid": true}`), which adds the column `uuid` to its results. The uuid is the `person_id`, `criterion_id`, `criterion_table`, start_date and end_date of the result, joined with `/`, such as `17/27269/observations/2008-08-25/2008-08-25`. An empty part is an empty string, so a result without an end_date has a uuid such as `1/2/observations/2008-03-10/`. The uuid keeps its value when a later operator, such as `time_window`, moves the dates. So two streams made from the same results can be joined result by result.
 
 This example makes a one-year window after each MI. Then it trims each window to end 30 days after its own MI. The `join_columns` option makes sure that no other MI of the same patient trims the window:
 
@@ -1849,23 +1849,23 @@ Walk-through of the second example of [`after`](#after-operator), which finds th
 Walk-through of the third example of [`before`](#before-operator), which asks whether anyone dies within a year of a heart attack:
 
 - Select heart attack diagnoses as the LHR.
-- Select death records as the RHR.
+- Select deaths as the RHR.
 - Keep the LHR whose end_date is before the date of death, and no more than 1 year before it.
 
 The third example of [`after`](#after-operator) shows how `at_least` works.
 
 ### Temporal Operators and Person Streams
 
-The start and end dates of a person record are the patient's birth date. So a person stream is rarely useful as the left-hand stream of a temporal operator. But it is useful as the right-hand stream. If we move the birth date with `time_window`, we can filter by the patient's age. The last example of [`after`](#after-operator) selects the MIs that occurred after a male patient's 50th birthday.
+The start and end dates of a person result are the patient's birth date. So a person stream is rarely useful as the left-hand stream of a temporal operator. But it is useful as the right-hand stream. If we move the birth date with `time_window`, we can filter by the patient's age. The last example of [`after`](#after-operator) selects the MIs that occurred after a male patient's 50th birthday.
 
 ## `Episode` Operator
 
-Merges each patient's records into episodes: spans of time in which the records are close together. For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug.
+Merges each patient's results into episodes: spans of time in which the results are close together. For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug.
 
 - **Upstream:** one operator.
 - **Options:**
-  - `gap_of` (integer): The largest gap in days that stays in the same episode. The operator orders each patient's records by start_date and then by end_date. A record stays in the current episode when its start_date is no more than this many days after the latest end_date of the earlier records, not only of the record just before. Otherwise it starts a new episode. A record without an end_date counts as ending on its start_date. The default is 0.
-- **Returns:** One record for each episode. Its start_date is the earliest start_date in the episode, and its end_date is the latest end_date. Its criterion_table and criterion_domain are episode, and its criterion_id is 0, because an episode merges several records.
+  - `gap_of` (integer): The largest gap in days that stays in the same episode. The operator orders each patient's results by start_date and then by end_date. A result stays in the current episode when its start_date is no more than this many days after the latest end_date of the earlier results, not only of the result just before. Otherwise it starts a new episode. A result without an end_date counts as ending on its start_date. The default is 0.
+- **Returns:** One result for each episode. Its start_date is the earliest start_date in the episode, and its end_date is the latest end_date. Its criterion_table and criterion_domain are episode, and its criterion_id is 0, because an episode merges several results.
 
 ______________________________________________________________________
 
@@ -1892,20 +1892,20 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-A long record keeps the episode open: the records 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first record ends after the third record starts. An episode stream is often most useful as the right-hand stream of a [temporal operator](#temporal-comparison-operators).
+A long result keeps the episode open: the results 2020-01-01 to 2020-03-01 and 2020-01-05 to 2020-01-10 and 2020-02-15 to 2020-02-20 make one episode with `gap_of` 0, because the first result ends after the third result starts. An episode stream is often most useful as the right-hand stream of a [temporal operator](#temporal-comparison-operators).
 
 ## Inline-Filter Operators
 
-These operators filter one incoming stream and pass along the records that remain.
+These operators filter one incoming stream and pass along the results that remain.
 
 ### `Place of Service Filter` Operator
 
-Passes along the records whose place of service is one of the given CMS Place of Service codes. A record that has no place of service is not passed along.
+Passes along the results whose place of service is one of the given CMS Place of Service codes. A result that has no place of service is not passed along.
 
 - **Upstream:** one operator.
 - **Arguments:**
-  - `places_of_service` (codelist): One or more CMS Place of Service codes, such as 21 (inpatient hospital) or 22 (outpatient hospital). The code * matches a record whose place of service is any code of that vocabulary. An unknown code gets a warning and matches no record.
-- **Returns:** The upstream records whose place of service is one of the given codes.
+  - `places_of_service` (codelist): One or more CMS Place of Service codes, such as 21 (inpatient hospital) or 22 (outpatient hospital). The code * matches a result whose place of service is any code of that vocabulary. An unknown code gets a warning and matches no result.
+- **Returns:** The upstream results whose place of service is one of the given codes.
 
 ______________________________________________________________________
 
@@ -1921,16 +1921,16 @@ No results.
 
 ______________________________________________________________________
 
-Claims often report the place of service of an event with a CMS place of service code. Our test data has no place of service information, so the example returns no records.
+Claims often report the place of service with a CMS place of service code. Our test dataset has no place of service information, so the example returns no results.
 
 ### `Provenance` Operator
 
-Passes along the records whose provenance matches at least one of the given keywords. The provenance of a record says which kind of file it came from, such as inpatient, and where its code was on the claim, such as primary.
+Passes along the results whose provenance matches at least one of the given keywords. The provenance of a result says which kind of file it came from, such as inpatient, and where its code was on the claim, such as primary.
 
 - **Upstream:** one operator.
 - **Arguments:**
-  - `provenance_types` (codelist): One or more provenance keywords, in lower case. A file keyword, such as inpatient, outpatient or carrier_claim, says which kind of file a record came from. A code keyword, such as primary or first, says where the code was on the claim. A plain keyword matches a record when its file provenance or its code provenance matches it. A keyword also matches the provenances under it, so inpatient includes snf. A keyword of the form file:code, such as inpatient:primary, needs both the file and the code provenance to match. The keyword * matches a record that has any provenance. A statement with no keyword is invalid. An unknown keyword gets a warning and matches no record.
-- **Returns:** The upstream records whose provenance matches at least one of the keywords.
+  - `provenance_types` (codelist): One or more provenance keywords, in lower case. A file keyword, such as inpatient, outpatient or carrier_claim, says which kind of file a result came from. A code keyword, such as primary or first, says where the code was on the claim. A plain keyword matches a result when its file provenance or its code provenance matches it. A keyword also matches the provenances under it, so inpatient includes snf. A keyword of the form file:code, such as inpatient:primary, needs both the file and the code provenance to match. The keyword * matches a result that has any provenance. A statement with no keyword is invalid. An unknown keyword gets a warning and matches no result.
+- **Returns:** The upstream results whose provenance matches at least one of the keywords.
 
 ______________________________________________________________________
 
@@ -1964,18 +1964,18 @@ Provenance is information about the origin of a row of claims data. It is someti
 
 The [GDM](https://github.com/outcomesinsights/generalized_data_model#contexts) records both kinds during ETL. The file provenance of a row is the `source_type_concept_id` of its context. The code provenance of a row is its `provenance_concept_id`. ConceptQL names these two columns `file_provenance_type` and `code_provenance_type`.
 
-Each keyword names a concept in a provenance vocabulary. A file keyword names a concept of the file provenance vocabulary, and a code keyword names a concept of the code provenance vocabulary. A keyword matches its concept and each descendant of that concept in the `concept_ancestor` table of the dataset. For example, in our test data, the concept of the MedPAR file of inpatient stays is a descendant of `inpatient`.
+Each keyword names a concept in a provenance vocabulary. A file keyword names a concept of the file provenance vocabulary, and a code keyword names a concept of the code provenance vocabulary. A keyword matches its concept and each descendant of that concept in the `concept_ancestor` table of the dataset. For example, in our test dataset, the concept of the MedPAR file of inpatient stays is a descendant of `inpatient`.
 
 These are the keywords of each kind:
 
 - File keywords: `inpatient`, `outpatient`, `carrier_claim`, `claim`, `dme`, `hha`, `hospice`, `snf`, `prescription_drug` and `demographics`.
 - Code keywords: `primary`, `primary_or_first`, `first`, `second`, `admitting`, `discharge`, `problem_list`, `chief_complaint` and `unspecified`.
 
-The hierarchy of these concepts is part of the vocabulary tables of the dataset. It is not a rule of ConceptQL. In the vocabulary tables of our test data, `inpatient` includes `snf`, and `outpatient` includes `hha` and `hospice`. There, `carrier_claim` includes `dme`, and `claim` includes each claim file of the test data.
+The hierarchy of these concepts is part of the vocabulary tables of the dataset. It is not a rule of ConceptQL. In the vocabulary tables of our test dataset, `inpatient` includes `snf`, and `outpatient` includes `hha` and `hospice`. There, `carrier_claim` includes `dme`, and `claim` includes each claim file of the test dataset.
 
 #### Inpatient and Outpatient Settings
 
-Authors often describe "inpatient records" or "outpatient visits". An inpatient setting is meant to be a stay after admission to a hospital. In practice, the line between the inpatient and the outpatient setting is poorly defined. These are some of the hard cases:
+Authors often describe "inpatient records" or "outpatient visits". In ConceptQL terms, the authors mean the results whose rows came from an inpatient setting. An inpatient setting is meant to be a stay after admission to a hospital. In practice, the line between the inpatient and the outpatient setting is poorly defined. These are some of the hard cases:
 
 - In some data, the file decides. For example, the MedPAR file of Medicare data holds the inpatient stays.
 - A carrier claim can be for a service given in a hospital.
@@ -1985,19 +1985,19 @@ Authors often describe "inpatient records" or "outpatient visits". An inpatient 
 
 Outpatient visits have the same problems.
 
-ConceptQL does not decide these cases. The dataset declares what counts as inpatient and what counts as outpatient, through a mapping. The GDM stores the concrete facts of the data, such as the file that a row came from and the place of service. The mapping, not the ETL, decides which of these rows are inpatient. So the setting is a decision of the analysis. A different analysis can use a different mapping, with no new ETL.
+ConceptQL does not decide these cases. The dataset declares what counts as inpatient and what counts as outpatient, through a mapping. The GDM stores the concrete facts of the dataset, such as the file that a row came from and the place of service. The mapping, not the ETL, decides which of these rows are inpatient. So the setting is a decision of the analysis. A different analysis can use a different mapping, with no new ETL.
 
-The mapping is the hierarchy of the file and code provenance concepts in the vocabulary tables of the dataset. For example, our test data maps its inpatient claims file to `inpatient` and its outpatient claims file to `outpatient`. [`one_in_two_out`](#one-in-two-out-operator) uses the keywords `inpatient`, `outpatient` and `carrier_claim`. As plain keywords, they match either kind of provenance. In our test data, only the file provenance matches them, because no code provenance of the data is a descendant of these keywords. The [utilization operators](#utilization-operators), such as `hospitalization`, use only the file provenance.
+The mapping is the hierarchy of the file and code provenance concepts in the vocabulary tables of the dataset. For example, our test dataset maps its inpatient claims file to `inpatient` and its outpatient claims file to `outpatient`. [`one_in_two_out`](#one-in-two-out-operator) uses the keywords `inpatient`, `outpatient` and `carrier_claim`. As plain keywords, they match either kind of provenance. In our test dataset, only the file provenance matches them, because no code provenance of the dataset is a descendant of these keywords. The [utilization operators](#utilization-operators), such as `hospitalization`, use only the file provenance.
 
 ### `Provider Filter` Operator
 
-Passes along the records whose provider matches the given specialties and roles. Each option is a comma-separated list of concept IDs, and * matches any value.
+Passes along the results whose provider matches the given specialties and roles. Each option is a comma-separated list of concept IDs, and * matches any value.
 
 - **Upstream:** one operator.
 - **Options:**
   - `specialties` (string, required): A comma-separated list of specialty concept IDs, such as 38003868 (Endocrinology, Diabetes & Metabolism Physician), or * for any specialty. A provider matches when the specialty recorded for the provider on the claim, or the provider's own specialty, is in the list.
   - `roles` (string, required): A comma-separated list of role concept IDs of the GDM_ROLE vocabulary, such as 100000067 (Attending physician) or 100176860 (Billing provider), or * for any role.
-- **Returns:** The upstream records that have a provider who matches both the specialties and the roles. A record can have more than one provider, so a record comes out once for each provider who matches. Each record gets the columns provider_id, context_specialty_concept_id, practitioner_specialty_concept_id and role_type_concept_id.
+- **Returns:** The upstream results that have a provider who matches both the specialties and the roles. A result can have more than one provider, so a result comes out once for each provider who matches. Each result gets the columns provider_id, context_specialty_concept_id, practitioner_specialty_concept_id and role_type_concept_id.
 
 ______________________________________________________________________
 
@@ -2046,25 +2046,25 @@ ______________________________________________________________________
 
 ### `One In Two Out` Operator
 
-For each person, passes along the earliest confirmed condition record. One inpatient record confirms a condition, and so do two outpatient records whose start dates are a given gap apart.
+For each person, passes along the earliest confirmed condition result. One inpatient result confirms a condition, and so do two outpatient results whose start dates are a given gap apart.
 
 - **Upstream:** one operator.
 - **Options:**
-  - `inpatient_length_of_stay` (integer): An inpatient stay must be longer than this many days: an inpatient record counts only when its discharge date is more than this many days after its admission date. 0 or no value means no length-of-stay check.
-  - `outpatient_minimum_gap` (string): A date adjustment, such as 30d. The confirming outpatient record must start at least this long after the initial outpatient record. Without this option, the gap is 30 days.
-  - `outpatient_maximum_gap` (string): A date adjustment, such as 365d. The confirming outpatient record must start no more than this long after the initial outpatient record. Without this option, there is no maximum gap.
-  - `outpatient_event_to_return` (string, one of `Initial Event`, `Confirming Event`): Which outpatient record the operator passes on when two outpatient records confirm the condition: the initial record or the confirming record. Without this option, or with any value other than Initial Event, it passes on the confirming record.
-- **Returns:** One record per person: the earliest confirmed condition record. A returned inpatient record has the admission date as its start_date and the discharge date as its end_date, when the claim has them. Only condition records with inpatient, outpatient or carrier_claim provenance can be confirmed.
+  - `inpatient_length_of_stay` (integer): An inpatient stay must be longer than this many days: an inpatient result counts only when its discharge date is more than this many days after its admission date. 0 or no value means no length-of-stay check.
+  - `outpatient_minimum_gap` (string): A date adjustment, such as 30d. The confirming outpatient result must start at least this long after the initial outpatient result. Without this option, the gap is 30 days.
+  - `outpatient_maximum_gap` (string): A date adjustment, such as 365d. The confirming outpatient result must start no more than this long after the initial outpatient result. Without this option, there is no maximum gap.
+  - `outpatient_event_to_return` (string, one of `Initial Event`, `Confirming Event`): Which outpatient result the operator passes on when two outpatient results confirm the condition: the initial result or the confirming result. Without this option, or with any value other than Initial Event, it passes on the confirming result.
+- **Returns:** One result per person: the earliest confirmed condition result. A returned inpatient result has the admission date as its start_date and the discharge date as its end_date, when the claim has them. Only condition results with inpatient, outpatient or carrier_claim provenance can be confirmed.
 
 ______________________________________________________________________
 
-**Example 57 - First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart**
+**Example 57 - First diabetes diagnosis, either one inpatient result, or two outpatient results at least 30 days apart**
 
 ```JSON
 ["one_in_two_out",["icd9","250.00"],{"outpatient_minimum_gap":"30d","outpatient_event_to_return":"Initial Event"}]
 ```
 
-![First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart](images/b960e22cfff80e63e8cc513360fa42bd42c4227b922685008febdc033fb2d32b.svg)
+![First diabetes diagnosis, either one inpatient result, or two outpatient results at least 30 days apart](images/b960e22cfff80e63e8cc513360fa42bd42c4227b922685008febdc033fb2d32b.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
 | --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
@@ -2081,13 +2081,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-The operator decides between inpatient and outpatient by the provenance of each record (see [`provenance`](#provenance-operator)):
+The operator decides between inpatient and outpatient by the provenance of each result (see [`provenance`](#provenance-operator)):
 
-- A record with `inpatient` provenance (which includes SNF in our test data) is an inpatient record.
-- A record with `outpatient` or `carrier_claim` provenance is an outpatient record.
-- Other records, and records whose type is not `condition_occurrence`, are removed.
+- A result with `inpatient` provenance (which includes SNF in our test dataset) is an inpatient result.
+- A result with `outpatient` or `carrier_claim` provenance is an outpatient result.
+- Other results, and results whose type is not `condition_occurrence`, are removed.
 
-The place of service of a record does not matter. The two outpatient records need not have the same code. Any two records from the upstream stream can confirm each other. For outpatient records, the operator compares start_dates.
+The place of service of a result does not matter. The two outpatient results need not have the same code. Any two results from the upstream stream can confirm each other. For outpatient results, the operator compares start_dates.
 
 More about the options:
 
@@ -2096,16 +2096,16 @@ More about the options:
 
 ## Comparison Operators
 
-These operators compare records of incoming streams to produce a set of records.
+These operators compare the results of incoming streams to produce a set of results.
 
 ### `Filter` Operator
 
-Keeps each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date.
+Keeps each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator keeps each left-hand record that is also in this stream, and does not pass these records on.
-- **Returns:** The left-hand records that have a right-hand record with the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date. The right-hand records are not returned.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator keeps each left-hand result that is also in this stream, and does not pass these results on.
+- **Returns:** The left-hand results that have a right-hand result with the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -2132,16 +2132,16 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-It is an intersection of the two streams. Filter compares records, not date ranges. A record whose dates `time_window` changed no longer matches the original record.
+It is an intersection of the two streams. Filter compares results, not date ranges. A result whose dates `time_window` changed no longer matches the original result.
 
 ### `Match` Operator
 
-Keeps each left-hand record that is equal to a right-hand record in every column, including label. Two empty (NULL) values count as equal.
+Keeps each left-hand result that is equal to a right-hand result in every column, including label. Two empty (NULL) values count as equal.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator keeps each left-hand record that is equal to a record of this stream, and does not pass these records on.
-- **Returns:** The left-hand records that have a right-hand record with the same value in every column. The right-hand records are not returned.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator keeps each left-hand result that is equal to a result of this stream, and does not pass these results on.
+- **Returns:** The left-hand results that have a right-hand result with the same value in every column. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -2172,12 +2172,12 @@ It is stricter than [`filter`](#filter-operator), so most users want `filter`. S
 
 ### `Person Filter` Operator
 
-Keeps each left-hand record whose patient has at least one record in the right-hand stream. The type and the dates of the right-hand records do not matter.
+Keeps each left-hand result whose patient has at least one result in the right-hand stream. The type and the dates of the right-hand results do not matter.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator keeps the left-hand records of each patient who has a record in this stream, and does not pass these records on.
-- **Returns:** The left-hand records of every type whose patient has at least one right-hand record. The right-hand records are not returned.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator keeps the left-hand results of each patient who has a result in this stream, and does not pass these results on.
+- **Returns:** The left-hand results of every type whose patient has at least one right-hand result. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -2206,13 +2206,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 61 - All MI Conditions for people who had an office visit at some point in the data**
+**Example 61 - All MI Conditions for people who had an office visit at some point in the dataset**
 
 ```JSON
 ["person_filter",{"left":["icd9","412"],"right":["cpt","99214"]}]
 ```
 
-![All MI Conditions for people who had an office visit at some point in the data](images/cc16bcf500d096db934dc11e48140704bf8b255d116e52aaf9bde84387f818a1.svg)
+![All MI Conditions for people who had an office visit at some point in the dataset](images/cc16bcf500d096db934dc11e48140704bf8b255d116e52aaf9bde84387f818a1.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
 | --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
@@ -2256,13 +2256,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Example 63 - All MI Conditions for people who are Male OR had an office visit at some point in the data**
+**Example 63 - All MI Conditions for people who are Male OR had an office visit at some point in the dataset**
 
 ```JSON
 ["person_filter",{"left":["icd9","412"],"right":["union",["cpt","99214"],["gender","Male"]]}]
 ```
 
-![All MI Conditions for people who are Male OR had an office visit at some point in the data](images/72bbf4f2895aa831fd4fc3a86969b5266aaac3c2e856cb3281f74780f0d4b927.svg)
+![All MI Conditions for people who are Male OR had an office visit at some point in the dataset](images/72bbf4f2895aa831fd4fc3a86969b5266aaac3c2e856cb3281f74780f0d4b927.svg)
 
 | person_id | criterion_id | criterion_table | criterion_domain     | start_date | end_date   | source_value |
 | --------- | ------------ | --------------- | -------------------- | ---------- | ---------- | ------------ |
@@ -2304,14 +2304,14 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any record of a patient counts. The left-hand stream can also have several types, as the last example shows.
+For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any result of a patient counts. The left-hand stream can also have several types, as the last example shows.
 
 ### `Co-Reported` Operator
 
-Passes along the records of its upstreams that were reported in the same context as a record of every other upstream. In the GDM, a context is the claim or other source record that reported the record.
+Passes along the results of its upstreams that were reported in the same context as a result of every other upstream. In the GDM, a context is the claim or other source row of the dataset that reported the row behind a result.
 
 - **Upstream:** two or more operators.
-- **Returns:** The records of each upstream whose context also has a record of every other upstream. The operator does not compare dates. If one upstream has no record in a context, the records of all upstreams in that context are not passed along. Person and death records have no context, so they never pass.
+- **Returns:** The results of each upstream whose context also has a result of every other upstream. The operator does not compare dates. If one upstream has no result in a context, the results of all upstreams in that context are not passed along. Person and death results have no context, so they never pass.
 
 ______________________________________________________________________
 
@@ -2344,7 +2344,7 @@ Claims data often reports diagnoses on the same claim as a procedure. This is do
 
 Every ConceptQL operator takes a `label` option, so the reference sections of the operators do not list it:
 
-A short description of the operator's records. The operator writes it into the label column of each of its records, and a recall operator selects those records by it. Each label in a statement must be different.
+A short description of the operator's results. The operator writes it into the label column of each of its results, and a recall operator selects those results by it. Each label in a statement must be different.
 
 An operator without a label passes the upstream label through.
 
@@ -2433,12 +2433,12 @@ A label must be a string.
 
 ### `Recall` Operator
 
-Passes on the records of the operator in the statement that has the given label. Use it to break a complex statement into parts, or to use a stream of records more than once.
+Passes on the results of the operator in the statement that has the given label. Use it to break a complex statement into parts, or to use a stream of results more than once.
 
 - **Upstream:** none.
 - **Arguments:**
-  - `name` (string): The label of the operator whose records to pass on. It must match the label exactly, including case. The labeled operator can come before or after the recall in the statement, but labeled streams that recall each other in a loop are invalid.
-- **Returns:** The records of the operator that has the given label.
+  - `name` (string): The label of the operator whose results to pass on. It must match the label exactly, including case. The labeled operator can come before or after the recall in the statement, but labeled streams that recall each other in a loop are invalid.
+- **Returns:** The results of the operator that has the given label.
 
 ______________________________________________________________________
 
@@ -2469,7 +2469,7 @@ ______________________________________________________________________
 
 ## Windows
 
-A window is a span of time. A calling program can apply windows to a statement, usually one span of dates for each person. ConceptQL then ignores the data outside the windows, as though that data does not exist.
+A window is a span of time. A calling program can apply windows to a statement, usually one span of dates for each person. ConceptQL then ignores the rows of the dataset outside the windows, as though those rows do not exist.
 
 An algorithm never contains a window, and no algorithm should assume that a window exists. Windows sit outside the algorithm. So any algorithm can later run inside a window with no change to the algorithm. A calling program, such as Jigsaw's export engine, applies the windows of a study to the algorithms that it runs. Then the results stay inside the spans of time of the study.
 
@@ -2502,17 +2502,17 @@ The windows change a statement in these ways:
 
 ## Appendix A - Experimental Operators
 
-These operators work, but they may change or be removed. They compare the `value_as_number` column, which lab records (such as `loinc`) carry.
+These operators work, but they may change or be removed. They compare the `value_as_number` column, which the results of lab codes (such as `loinc`) carry.
 
 ### `Numeric Filter` Operator
 
-Passes along the records whose value_as_number is in the given range. Lab records, such as those of loinc, carry this value.
+Passes along the results whose value_as_number is in the given range. The results of lab tests, such as those of loinc, carry this value.
 
 - **Upstream:** one operator.
 - **Options:**
   - `greater_than_or_equal_to` (float): The lowest value_as_number that passes. Without this option, the range has no lower limit.
   - `less_than_or_equal_to` (float): The highest value_as_number that passes. Without this option, the range has no upper limit.
-- **Returns:** The upstream records whose value_as_number is in the range. A record that has no value_as_number is not passed along.
+- **Returns:** The upstream results whose value_as_number is in the range. A result that has no value_as_number is not passed along.
 
 ______________________________________________________________________
 
@@ -2534,12 +2534,12 @@ It is an [inline filter operator](#inline-filter-operators).
 
 ### `Equal` Operator
 
-For each patient, keeps the left-hand records whose value_as_number equals the value_as_number of a right-hand record. It does not compare dates.
+For each patient, keeps the left-hand results whose value_as_number equals the value_as_number of a right-hand result. It does not compare dates.
 
 - **Operands:**
-  - `left` (required): The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition.
-  - `right` (required): The right-hand stream. The operator compares the left-hand records with these records and does not pass them on.
-- **Returns:** The left-hand records that have a right-hand record of the same patient with the same value_as_number, each record once. Left-hand records without a value_as_number (NULL) are not returned. The right-hand records are not returned.
+  - `left` (required): The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition.
+  - `right` (required): The right-hand stream. The operator compares the left-hand results with these results and does not pass them on.
+- **Returns:** The left-hand results that have a right-hand result of the same patient with the same value_as_number, each result once. Left-hand results without a value_as_number (NULL) are not returned. The right-hand results are not returned.
 
 ______________________________________________________________________
 
@@ -2626,21 +2626,21 @@ This document is part of the [ConceptQL](https://github.com/outcomesinsights/con
 
 The reference section of each operator, the text of the `label` option, the table of all vocabulary operators and Appendix E come from the metadata of the operators (`ConceptQL.metadata`), so the texts in the operator classes are their only copy. A directive in `README.cql.md`, an HTML comment on a line of its own, marks the place of each generated block:
 
-- `<!-- conceptql-spec: operator <spec_id> -->` writes the reference section of the operators with that `spec_id`. It comes directly after the heading of the section, whose anchor is the `spec_id`. The section has the operator's description, its upstream operators or its operands (`left` and `right`), its arguments, its options, the records it returns, and its examples. Text about more than one operator, and longer explanations of one operator, follow the directive as markdown.
+- `<!-- conceptql-spec: operator <spec_id> -->` writes the reference section of the operators with that `spec_id`. It comes directly after the heading of the section, whose anchor is the `spec_id`. The section has the operator's description, its upstream operators or its operands (`left` and `right`), its arguments, its options, the results it returns, and its examples. Text about more than one operator, and longer explanations of one operator, follow the directive as markdown.
 - `<!-- conceptql-spec: label-option -->` writes the text of the `label` option, which every operator takes.
 - `<!-- conceptql-spec: quick-reference -->` writes the table of Appendix E, with one row for each `spec_id`.
 - `<!-- conceptql-spec: vocabulary-operators -->` writes the table of [All Vocabulary Operators](#all-vocabulary-operators), with one row for each vocabulary operator: its name, the full name of its vocabulary and its domain. It marks a deprecated operator.
 
 The metadata comes from a ConceptQL database with the data model `gdm`, no data database and no custom vocabularies, so it decides which operators get a section. Each `spec_id` of that metadata needs exactly one directive, and the build stops when one is missing, repeated or not after its heading. The other directives appear exactly once each, and the build also stops on an unknown directive.
 
-`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md` and each example of a reference section, the build writes the example: the statement as JSON, its diagram, and the first 10 records of its result. It orders the records by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same records. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
+`just spec` runs `docs/spec/build/run.rb` with the working tree's ConceptQL. For each `ConceptQL` block of `README.cql.md` and each example of a reference section, the build writes the example: the statement as JSON, its diagram, and its first 10 results. It orders the results by `person_id`, `criterion_domain`, start_date, `criterion_table` and `criterion_id`, so each run shows the same results. An example that is not a valid statement stops the build. Then `just spec` formats `README.md` with treefmt. If `README.md` or an image changed, `just spec` lists the changed files and fails, so that you review and commit them. A second run then changes nothing and passes.
 
 The results and the counts come from ConceptQL's DuckDB test data, `synpuf_test_data.duckdb`, with the data model `gdm_wide` and the OHDSI vocabulary tables. `just spec` runs the build through `just test-duckdb`, so it needs what the DuckDB tests need:
 
 - Linux on x86-64. `just test-duckdb` downloads the pinned version of the DuckDB library on the first run.
 - The DuckDB test data. `just test-duckdb` copies it from the path in `DUCKDB_TEST_DATA_SOURCE`, and it fails unless the copy matches the checksum in `.github/synpuf_test_data.sha256`.
 
-The diagrams are drawn with ConceptQL's diagram renderer, `ConceptQL::DiagramRenderer`, which runs the resvg program. The build needs resvg 0.33.0 exactly, which `mise.toml` pins and `just setup` installs. It fails when resvg is missing or is another version. The renderer labels each line with the records (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. The build draws every diagram on each run, and writes each one as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the SVG images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
+The diagrams are drawn with ConceptQL's diagram renderer, `ConceptQL::DiagramRenderer`, which runs the resvg program. The build needs resvg 0.33.0 exactly, which `mise.toml` pins and `just setup` installs. It fails when resvg is missing or is another version. The renderer labels each line with the results (`rows=`) and the people (`n=`) that flow along it, and it lists the options of each operator. The build draws every diagram on each run, and writes each one as `images/<name>.svg`, where the name is the SHA-256 of the statement as canonical JSON. It removes the SVG images that no example uses, and it writes `images/manifest.tsv`, which gives the SHA-256 of the diagram data (with its counts) for each image.
 
 Between releases, the results and the images on the main branch can be out of date. Before a release, `just release-check` runs `just spec-check`. It rebuilds the document and the diagram data, and it draws every image into a temporary directory. It fails when `README.md` does not match the code, or when an image differs from its new drawing, is missing, or is not used. It names each such image.
 
@@ -2650,39 +2650,39 @@ The build writes this table from the metadata of the operators. It has one row f
 
 | Operator                                                       | Jigsaw category          | What it does                                                                                                                                                                                                                                                                                           |
 | -------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`Vocabulary` Operator](#vocabulary-operator)                  | Select by Clinical Codes | Selects the records whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. Each vocabulary has its own operator, and a few operators search several vocabularies at once.                                                                                 |
+| [`Vocabulary` Operator](#vocabulary-operator)                  | Select by Clinical Codes | Selects the results whose code is one of the given codes in a vocabulary, such as ICD-9-CM diagnoses or CPT procedures. Each vocabulary has its own operator, and a few operators search several vocabularies at once.                                                                                 |
 | [`gender`](#gender-operator)                                   | Select by Property       | Selects the patients with the given genders.                                                                                                                                                                                                                                                           |
 | [`race`](#race-operator)                                       | Select by Property       | Selects the patients with the given races.                                                                                                                                                                                                                                                             |
 | [`ethnicity`](#ethnicity-operator)                             | Select by Property       | Selects the patients with the given ethnicities.                                                                                                                                                                                                                                                       |
-| [`snf`](#snf-operator)                                         | Select by Property       | Selects admissions to skilled nursing facilities (SNF): one record for each admission whose claim came from an SNF file.                                                                                                                                                                               |
-| [`hospice`](#hospice-operator)                                 | Select by Property       | Selects hospice admissions: one record for each admission whose claim came from a hospice file.                                                                                                                                                                                                        |
-| [`hospitalization`](#hospitalization-operator)                 | Select by Property       | Selects inpatient hospital admissions: one record for each admission whose claim came from an inpatient file.                                                                                                                                                                                          |
-| [`date_range`](#date-range-operator)                           | Select by Property       | Makes one person record for each patient, with the given start_date and end_date. Use it to compare other records with a fixed range of dates.                                                                                                                                                         |
-| [`person`](#person-operator)                                   | Get Related Data         | Selects every patient. With one upstream operator, it selects the patients who have a record in the upstream stream.                                                                                                                                                                                   |
-| [`death`](#death-operator)                                     | Get Related Data         | Selects every death record. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream.                                                                                                                                                                |
-| [`information_periods`](#information-periods-operator)         | Get Related Data         | Selects information periods: the spans of time in which the data has information about a patient, such as periods of insurance enrollment.                                                                                                                                                             |
-| [`recall`](#recall-operator)                                   | Get Related Data         | Passes on the records of the operator in the statement that has the given label. Use it to break a complex statement into parts, or to use a stream of records more than once.                                                                                                                         |
-| [`time_window`](#time-window-operator)                         | Modify Data              | Moves the start_date and the end_date of each record. Use it to shift or widen a record's dates before you compare them with other records.                                                                                                                                                            |
-| [`episode`](#episode-operator)                                 | Modify Data              | Merges each patient's records into episodes: spans of time in which the records are close together. For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug.                                                                                            |
-| [`union`](#union-operator)                                     | Combine Streams          | Combines the records of all its upstream operators into one stream. Each record keeps its own type, so one stream can hold several types.                                                                                                                                                              |
-| [`co_reported`](#co-reported-operator)                         | Combine Streams          | Passes along the records of its upstreams that were reported in the same context as a record of every other upstream. In the GDM, a context is the claim or other source record that reported the record.                                                                                              |
-| [`except`](#except-operator)                                   | Filter by Comparing      | Removes each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same criterion_table, criterion_id, start_date and end_date.                                                                                                                     |
-| [`during`](#during-operator)                                   | Filter by Comparing      | For each patient, keeps the left-hand records whose date range is inside the date range of a right-hand record. The left-hand record starts on or after the start_date of the right-hand record and ends on or before its end_date.                                                                    |
-| [`contains`](#contains-operator)                               | Filter by Comparing      | For each patient, keeps the left-hand records whose date range encloses the date range of a right-hand record. The left-hand record starts on or before the start_date of the right-hand record and ends on or after its end_date.                                                                     |
-| [`any_overlap`](#any-overlap-operator)                         | Filter by Comparing      | For each patient, keeps the left-hand records whose date range shares at least one day with the date range of a right-hand record.                                                                                                                                                                     |
-| [`before`](#before-operator)                                   | Filter by Comparing      | For each patient, keeps the left-hand records whose end_date is before the latest start_date of the patient's right-hand records. With the within option, each left-hand record is compared with every right-hand record of the patient instead.                                                       |
-| [`after`](#after-operator)                                     | Filter by Comparing      | For each patient, keeps the left-hand records whose start_date is after the earliest end_date of the patient's right-hand records. With the within option, each left-hand record is compared with every right-hand record of the patient instead.                                                      |
-| [`trim_date_start`](#trim-date-start-operator)                 | Filter by Comparing      | For each patient, moves the start_date of each left-hand record forward to the end_date of the right-hand record with the latest start_date. A left-hand record that ends before that end_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged.   |
-| [`trim_date_end`](#trim-date-end-operator)                     | Filter by Comparing      | For each patient, moves the end_date of each left-hand record back to the start_date of the right-hand record with the earliest start_date. A left-hand record that starts after that start_date is removed, and the left-hand records of a patient without right-hand records pass through unchanged. |
-| [`filter`](#filter-operator)                                   | Filter by Comparing      | Keeps each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date.                                                                                          |
-| [`match`](#match-operator)                                     | Filter by Comparing      | Keeps each left-hand record that is equal to a right-hand record in every column, including label. Two empty (NULL) values count as equal.                                                                                                                                                             |
-| [`person_filter`](#person-filter-operator)                     | Filter by Comparing      | Keeps each left-hand record whose patient has at least one record in the right-hand stream. The type and the dates of the right-hand records do not matter.                                                                                                                                            |
-| [`equal`](#equal-operator)                                     | Filter by Comparing      | For each patient, keeps the left-hand records whose value_as_number equals the value_as_number of a right-hand record. It does not compare dates.                                                                                                                                                      |
-| [`occurrence`](#nth-occurrence-operator)                       | Filter Single Stream     | For each person, orders the records by start_date and passes along the record at the given position. A positive position counts from the earliest record and a negative one from the most recent record.                                                                                               |
-| [`first`](#first-operator)                                     | Filter Single Stream     | For each person, passes along the record with the earliest start_date.                                                                                                                                                                                                                                 |
-| [`last`](#last-operator)                                       | Filter Single Stream     | For each person, passes along the record with the most recent start_date.                                                                                                                                                                                                                              |
-| [`place_of_service_filter`](#place-of-service-filter-operator) | Filter Single Stream     | Passes along the records whose place of service is one of the given CMS Place of Service codes. A record that has no place of service is not passed along.                                                                                                                                             |
-| [`provenance`](#provenance-operator)                           | Filter Single Stream     | Passes along the records whose provenance matches at least one of the given keywords. The provenance of a record says which kind of file it came from, such as inpatient, and where its code was on the claim, such as primary.                                                                        |
-| [`provider_filter`](#provider-filter-operator)                 | Filter Single Stream     | Passes along the records whose provider matches the given specialties and roles. Each option is a comma-separated list of concept IDs, and * matches any value.                                                                                                                                        |
-| [`one_in_two_out`](#one-in-two-out-operator)                   | Filter Single Stream     | For each person, passes along the earliest confirmed condition record. One inpatient record confirms a condition, and so do two outpatient records whose start dates are a given gap apart.                                                                                                            |
-| [`numeric_filter`](#numeric-filter-operator)                   | Filter Single Stream     | Passes along the records whose value_as_number is in the given range. Lab records, such as those of loinc, carry this value.                                                                                                                                                                           |
+| [`snf`](#snf-operator)                                         | Select by Property       | Selects admissions to skilled nursing facilities (SNF): one result for each admission whose claim came from an SNF file.                                                                                                                                                                               |
+| [`hospice`](#hospice-operator)                                 | Select by Property       | Selects hospice admissions: one result for each admission whose claim came from a hospice file.                                                                                                                                                                                                        |
+| [`hospitalization`](#hospitalization-operator)                 | Select by Property       | Selects inpatient hospital admissions: one result for each admission whose claim came from an inpatient file.                                                                                                                                                                                          |
+| [`date_range`](#date-range-operator)                           | Select by Property       | Makes one person result for each patient, with the given start_date and end_date. Use it to compare other results with a fixed range of dates.                                                                                                                                                         |
+| [`person`](#person-operator)                                   | Get Related Data         | Selects every patient. With one upstream operator, it selects the patients who have a result in the upstream stream.                                                                                                                                                                                   |
+| [`death`](#death-operator)                                     | Get Related Data         | Selects every death. With one upstream operator, it selects the deaths of the patients who have a result in the upstream stream.                                                                                                                                                                       |
+| [`information_periods`](#information-periods-operator)         | Get Related Data         | Selects information periods: the spans of time in which the dataset has information about a patient, such as periods of insurance enrollment.                                                                                                                                                          |
+| [`recall`](#recall-operator)                                   | Get Related Data         | Passes on the results of the operator in the statement that has the given label. Use it to break a complex statement into parts, or to use a stream of results more than once.                                                                                                                         |
+| [`time_window`](#time-window-operator)                         | Modify Data              | Moves the start_date and the end_date of each result. Use it to shift or widen a result's dates before you compare them with other results.                                                                                                                                                            |
+| [`episode`](#episode-operator)                                 | Modify Data              | Merges each patient's results into episodes: spans of time in which the results are close together. For example, it can turn a set of prescriptions into the spans of time in which a patient takes a drug.                                                                                            |
+| [`union`](#union-operator)                                     | Combine Streams          | Combines the results of all its upstream operators into one stream. Each result keeps its own type, so one stream can hold several types.                                                                                                                                                              |
+| [`co_reported`](#co-reported-operator)                         | Combine Streams          | Passes along the results of its upstreams that were reported in the same context as a result of every other upstream. In the GDM, a context is the claim or other source row of the dataset that reported the row behind a result.                                                                     |
+| [`except`](#except-operator)                                   | Filter by Comparing      | Removes each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same criterion_table, criterion_id, start_date and end_date.                                                                                                                     |
+| [`during`](#during-operator)                                   | Filter by Comparing      | For each patient, keeps the left-hand results whose date range is inside the date range of a right-hand result. The left-hand result starts on or after the start_date of the right-hand result and ends on or before its end_date.                                                                    |
+| [`contains`](#contains-operator)                               | Filter by Comparing      | For each patient, keeps the left-hand results whose date range encloses the date range of a right-hand result. The left-hand result starts on or before the start_date of the right-hand result and ends on or after its end_date.                                                                     |
+| [`any_overlap`](#any-overlap-operator)                         | Filter by Comparing      | For each patient, keeps the left-hand results whose date range shares at least one day with the date range of a right-hand result.                                                                                                                                                                     |
+| [`before`](#before-operator)                                   | Filter by Comparing      | For each patient, keeps the left-hand results whose end_date is before the latest start_date of the patient's right-hand results. With the within option, each left-hand result is compared with every right-hand result of the patient instead.                                                       |
+| [`after`](#after-operator)                                     | Filter by Comparing      | For each patient, keeps the left-hand results whose start_date is after the earliest end_date of the patient's right-hand results. With the within option, each left-hand result is compared with every right-hand result of the patient instead.                                                      |
+| [`trim_date_start`](#trim-date-start-operator)                 | Filter by Comparing      | For each patient, moves the start_date of each left-hand result forward to the end_date of the right-hand result with the latest start_date. A left-hand result that ends before that end_date is removed, and the left-hand results of a patient without right-hand results pass through unchanged.   |
+| [`trim_date_end`](#trim-date-end-operator)                     | Filter by Comparing      | For each patient, moves the end_date of each left-hand result back to the start_date of the right-hand result with the earliest start_date. A left-hand result that starts after that start_date is removed, and the left-hand results of a patient without right-hand results pass through unchanged. |
+| [`filter`](#filter-operator)                                   | Filter by Comparing      | Keeps each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same person_id, criterion_id, criterion_table, criterion_domain, start_date and end_date.                                                                                          |
+| [`match`](#match-operator)                                     | Filter by Comparing      | Keeps each left-hand result that is equal to a right-hand result in every column, including label. Two empty (NULL) values count as equal.                                                                                                                                                             |
+| [`person_filter`](#person-filter-operator)                     | Filter by Comparing      | Keeps each left-hand result whose patient has at least one result in the right-hand stream. The type and the dates of the right-hand results do not matter.                                                                                                                                            |
+| [`equal`](#equal-operator)                                     | Filter by Comparing      | For each patient, keeps the left-hand results whose value_as_number equals the value_as_number of a right-hand result. It does not compare dates.                                                                                                                                                      |
+| [`occurrence`](#nth-occurrence-operator)                       | Filter Single Stream     | For each person, orders the results by start_date and passes along the result at the given position. A positive position counts from the earliest result and a negative one from the most recent result.                                                                                               |
+| [`first`](#first-operator)                                     | Filter Single Stream     | For each person, passes along the result with the earliest start_date.                                                                                                                                                                                                                                 |
+| [`last`](#last-operator)                                       | Filter Single Stream     | For each person, passes along the result with the most recent start_date.                                                                                                                                                                                                                              |
+| [`place_of_service_filter`](#place-of-service-filter-operator) | Filter Single Stream     | Passes along the results whose place of service is one of the given CMS Place of Service codes. A result that has no place of service is not passed along.                                                                                                                                             |
+| [`provenance`](#provenance-operator)                           | Filter Single Stream     | Passes along the results whose provenance matches at least one of the given keywords. The provenance of a result says which kind of file it came from, such as inpatient, and where its code was on the claim, such as primary.                                                                        |
+| [`provider_filter`](#provider-filter-operator)                 | Filter Single Stream     | Passes along the results whose provider matches the given specialties and roles. Each option is a comma-separated list of concept IDs, and * matches any value.                                                                                                                                        |
+| [`one_in_two_out`](#one-in-two-out-operator)                   | Filter Single Stream     | For each person, passes along the earliest confirmed condition result. One inpatient result confirms a condition, and so do two outpatient results whose start dates are a given gap apart.                                                                                                            |
+| [`numeric_filter`](#numeric-filter-operator)                   | Filter Single Stream     | Passes along the results whose value_as_number is in the given range. The results of lab tests, such as those of loinc, carry this value.                                                                                                                                                              |

@@ -10,9 +10,9 @@ module ConceptQL
       register __FILE__
       effects :keep
 
-      desc "Keeps each left-hand record that is equal to a right-hand record in every column, including label. Two empty (NULL) values count as equal."
-      returns "The left-hand records that have a right-hand record with the same value in every column. The right-hand records are not returned."
-      option_meaning :right, "The right-hand stream. The operator keeps each left-hand record that is equal to a record of this stream, and does not pass these records on."
+      desc "Keeps each left-hand result that is equal to a right-hand result in every column, including label. Two empty (NULL) values count as equal."
+      returns "The left-hand results that have a right-hand result with the same value in every column. The right-hand results are not returned."
+      option_meaning :right, "The right-hand stream. The operator keeps each left-hand result that is equal to a result of this stream, and does not pass these results on."
 
       example "MIs that are a patient's first MI",
               [ "match", { left: [ "icd9", "412" ], right: [ "first", [ "icd9", "412" ] ] } ]

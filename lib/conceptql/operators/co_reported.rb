@@ -20,12 +20,12 @@ module ConceptQL
         vocabularies.length > 1
       end
 
-      desc "Passes along the records of its upstreams that were reported in the same context as a record of every other upstream. " \
-           "In the GDM, a context is the claim or other source record that reported the record."
+      desc "Passes along the results of its upstreams that were reported in the same context as a result of every other upstream. " \
+           "In the GDM, a context is the claim or other source row of the dataset that reported the row behind a result."
 
-      returns "The records of each upstream whose context also has a record of every other upstream. " \
-              "The operator does not compare dates. If one upstream has no record in a context, the records of all upstreams " \
-              "in that context are not passed along. Person and death records have no context, so they never pass."
+      returns "The results of each upstream whose context also has a result of every other upstream. " \
+              "The operator does not compare dates. If one upstream has no result in a context, the results of all upstreams " \
+              "in that context are not passed along. Person and death results have no context, so they never pass."
 
       example "Diabetes diagnoses reported as a reason for an office visit, and those office visits",
               [ "co_reported", [ "icd9", "250.00" ], [ "cpt", "99214" ] ]

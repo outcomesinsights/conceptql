@@ -2,7 +2,7 @@
   "spec_id": "one-in-two-out-operator",
   "examples": [
     {
-      "title": "First diabetes diagnosis, either found once in an inpatient record, or twice in outpatient records at least 30 days apart",
+      "title": "First diabetes diagnosis, either one inpatient result, or two outpatient results at least 30 days apart",
       "statement": [
         "one_in_two_out",
         ["icd9", "250.00"],

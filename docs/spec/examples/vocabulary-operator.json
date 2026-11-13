@@ -2,7 +2,7 @@
   "spec_id": "vocabulary-operator",
   "examples": [
     {
-      "title": "All records with the ICD-9-CM diagnosis code 412 (old myocardial infarction)",
+      "title": "All results with the ICD-9-CM diagnosis code 412 (old myocardial infarction)",
       "statement": ["icd9cm", "412"],
       "help": true,
       "columns": [
@@ -129,7 +129,7 @@
       }
     },
     {
-      "title": "All MS-DRG 205 records: other respiratory system diagnoses with a major complication or comorbidity",
+      "title": "All MS-DRG 205 results: other respiratory system diagnoses with a major complication or comorbidity",
       "statement": ["ms_drg", "205"],
       "help": true,
       "columns": [
@@ -193,7 +193,7 @@
       }
     },
     {
-      "title": "All CMS-DRG 205 records (a liver disorder)",
+      "title": "All CMS-DRG 205 results (a liver disorder)",
       "statement": ["cms_drg", "205"],
       "help": false,
       "columns": [

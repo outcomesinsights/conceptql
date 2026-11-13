@@ -7,9 +7,9 @@ module ConceptQL
     # Base class for all operators that take two streams, a left-hand and a right-hand
     class BinaryOperatorOperator < Operator
       option :left, type: :upstream,
-                    meaning: "The left-hand stream. The operator compares these records with the right-hand stream and passes on the ones that meet its condition."
+                    meaning: "The left-hand stream. The operator compares these results with the right-hand stream and passes on the ones that meet its condition."
       option :right, type: :upstream,
-                     meaning: "The right-hand stream. The operator compares the left-hand records with these records and does not pass them on."
+                     meaning: "The right-hand stream. The operator compares the left-hand results with these results and does not pass them on."
       # The operands are the left and right options. A positional upstream
       # would be ignored, so it is an error (Ryan ruled 2026-11-03).
       validate_no_upstreams

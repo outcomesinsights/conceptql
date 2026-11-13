@@ -51,7 +51,7 @@ module ConceptQL
       ONE_UPSTREAM = "has only one upstream"
 
       option :label, type: :string,
-                     meaning: "A short description of the operator's records. The operator writes it into the label column of each of its records, and a recall operator selects those records by it. Each label in a statement must be different."
+                     meaning: "A short description of the operator's results. The operator writes it into the label column of each of its results, and a recall operator selects those results by it. Each label in a statement must be different."
 
       @validations = []
 

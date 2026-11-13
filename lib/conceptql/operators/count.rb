@@ -10,7 +10,7 @@ module ConceptQL
       hidden
       category "Modify Data"
 
-      desc "Counts the number of records that exactly match across all columns."
+      desc "Counts the number of results that exactly match across all columns."
       # Every stream is a set, so count returns 1 for nearly every row
       # (seed conceptql-e8n, ruled 2026-10-30).
       deprecated "count will become an error in a later release. To count the events of each person, " \

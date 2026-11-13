@@ -10,10 +10,10 @@ module ConceptQL
       register __FILE__
       effects :select, :cast
 
-      desc "Selects every death record. With one upstream operator, it selects the deaths of the patients who have a record in the upstream stream."
-      returns "One record for each selected death, from the deaths table. The type of the records is death, " \
+      desc "Selects every death. With one upstream operator, it selects the deaths of the patients who have a result in the upstream stream."
+      returns "One result for each selected death, from the deaths table. The type of the results is death, " \
               "and their start_date and end_date are both the date of death."
-      example "All death records", [ "death" ]
+      example "All deaths", [ "death" ]
       example "The deaths of the patients with an old myocardial infarction (ICD-9-CM 412)", [ "death", [ "icd9cm", "412" ] ]
       domains :death
 

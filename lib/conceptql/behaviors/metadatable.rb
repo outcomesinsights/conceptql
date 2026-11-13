@@ -332,7 +332,7 @@ module ConceptQL
     end
 
     def standard_description
-      "Selects records based on the #{pref_name} vocabulary."
+      "Selects results based on the #{pref_name} vocabulary."
     end
 
     def no_desc

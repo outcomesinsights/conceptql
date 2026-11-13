@@ -52,6 +52,15 @@ All notable changes to this project will be documented in this file.
   `adjust_window_start` and `adjust_window_end`, `precalculated_window_id` and `person_ids`.
   Before, it said only that a result must start inside its window, which is true only for
   the default `scope_by`. The old anchor `#window-tables` still works.
+- The spec and the operator texts in `ConceptQL.metadata` (`desc`, `returns`, the meanings
+  of the arguments and the options, and the example titles) use the terms of the glossary.
+  A ConceptQL row is a "result", a row of a dataset table is a "row", and a "stream" is the
+  set of results that passes from one operator to the next. Before, the texts said "record"
+  for both. The heading "Think of Records as a Stream" is now "Think of Results as a
+  Stream", and "What *are* Streams Really?" says that ConceptQL is not a stream-processing
+  system. The standard description of a vocabulary operator is now "Selects results based
+  on the ... vocabulary.". No warning or error message changed: the warning "the data has
+  no records of this vocabulary" keeps its text, because Jigsaw's tests match it.
 
 ### Fixed
 

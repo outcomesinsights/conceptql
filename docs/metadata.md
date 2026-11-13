@@ -56,7 +56,7 @@ The metadata for each operator should be complete enough that a UI can understan
   - It is not a facet. The operator class declares it with `diagram_base :temporal`. A
     subclass inherits it, so every vocabulary operator draws "selection". Only invalid has null
 - returns
-  - A plain text that says which records the operator returns, or null
+  - A plain text that says which results the operator returns, or null
   - The operator class sets it with `returns "..."`. A subclass does not inherit it
   - Every vocabulary operator serves the text of `ConceptQL::Operators::Vocabulary`, because
     the vocabulary operators share one reference section (spec_id `vocabulary-operator`). The
@@ -110,7 +110,7 @@ below. A reader that needs every facet iterates that list and does not name the 
   - true when the operator includes `ConceptQL::Behaviors::CodeLister`: its arguments are
     codes (the vocabulary operators and cpt_or_hcpcs)
 - uses_provenance
-  - true when the operator includes `ConceptQL::Provenanceable`: its options select records
+  - true when the operator includes `ConceptQL::Provenanceable`: its options select results
     by their provenance (provenance, one_in_two_out)
 - utilization
   - true when the operator includes `ConceptQL::Behaviors::Utilizable`: it selects
@@ -123,10 +123,10 @@ below. A reader that needs every facet iterates that list and does not name the 
   - except, filter, match and person_filter also take left and right, but they do not
     compare dates, so they are false
 - effects
-  - A list of strings that says what the operator does to rows. An operator can have
+  - A list of strings that says what the operator does to results. An operator can have
     several, and the list is in the order that the operator declares them
   - The values and their meanings:
-    - select: makes results from rows of the data set.
+    - select: makes results from rows of the dataset.
     - keep: passes on some upstream results, unchanged.
     - change: changes the dates or the values of results, or adds columns to them.
     - combine: puts the results of several streams into one stream.

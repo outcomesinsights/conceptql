@@ -8,9 +8,9 @@ module ConceptQL
       register __FILE__
       effects :keep
 
-      desc "Removes each left-hand record that also appears in the right-hand stream. Two records are the same when they have the same criterion_table, criterion_id, start_date and end_date."
-      returns "The left-hand records that have no right-hand record with the same criterion_table, criterion_id, start_date and end_date. A left-hand record whose table has no right-hand record passes through unchanged. The right-hand records are not returned."
-      option_meaning :right, "The right-hand stream. The operator removes each left-hand record that is also in this stream, and does not pass these records on."
+      desc "Removes each left-hand result that also appears in the right-hand stream. Two results are the same when they have the same criterion_table, criterion_id, start_date and end_date."
+      returns "The left-hand results that have no right-hand result with the same criterion_table, criterion_id, start_date and end_date. A left-hand result whose table has no right-hand result passes through unchanged. The right-hand results are not returned."
+      option_meaning :right, "The right-hand stream. The operator removes each left-hand result that is also in this stream, and does not pass these results on."
 
       example "All males who are not white",
               [ "except", { left: [ "gender", "male" ], right: [ "race", "white" ] } ]

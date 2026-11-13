@@ -2,7 +2,7 @@
   "spec_id": "death-operator",
   "examples": [
     {
-      "title": "All death records",
+      "title": "All deaths",
       "statement": ["death"],
       "help": true,
       "columns": [

@@ -145,7 +145,7 @@
       }
     },
     {
-      "title": "For each patient, the first record on the second day with any of these diagnoses",
+      "title": "For each patient, the first result on the second day with any of these diagnoses",
       "statement": [
         "occurrence",
         2,

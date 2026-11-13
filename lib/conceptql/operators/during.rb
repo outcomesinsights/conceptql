@@ -8,9 +8,9 @@ module ConceptQL
       register __FILE__
       effects :keep
 
-      desc "For each patient, keeps the left-hand records whose date range is inside the date range of a right-hand record. The left-hand record starts on or after the start_date of the right-hand record and ends on or before its end_date."
-      returns "The left-hand records that are inside the date range of at least one right-hand record of the same patient, each record once. The right-hand records are not returned."
-      option_meaning :within, "A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each right-hand record is widened by this amount in each direction: its start_date moves back and its end_date moves forward. Use a positive amount."
+      desc "For each patient, keeps the left-hand results whose date range is inside the date range of a right-hand result. The left-hand result starts on or after the start_date of the right-hand result and ends on or before its end_date."
+      returns "The left-hand results that are inside the date range of at least one right-hand result of the same patient, each result once. The right-hand results are not returned."
+      option_meaning :within, "A date adjustment, such as 30d, 2m or 1y-3d. Before the comparison, the date range of each right-hand result is widened by this amount in each direction: its start_date moves back and its end_date moves forward. Use a positive amount."
 
       example "All MIs for the year 2010",
               [ "during", { left: [ "icd9", "412" ], right: [ "date_range", { start: "2010-01-01", end: "2010-12-31" } ] } ]

@@ -17,8 +17,8 @@ module ConceptQL
                                  "and a value that starts with F selects the female patients. " \
                                  "Any other value, such as Unknown, selects the patients whose gender is " \
                                  "neither male nor female, including the patients with no gender. Case does not matter."
-      returns "One person record for each patient whose gender is one of the given genders. " \
-              "The start_date and the end_date of each record are the patient's birth date."
+      returns "One person result for each patient whose gender is one of the given genders. " \
+              "The start_date and the end_date of each result are the patient's birth date."
       example "All female patients", [ "gender", "Female" ]
       example "All male patients", [ "gender", "Male" ]
       domains :person

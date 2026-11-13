@@ -166,7 +166,7 @@
       }
     },
     {
-      "title": "All MI Conditions for people who had an office visit at some point in the data",
+      "title": "All MI Conditions for people who had an office visit at some point in the dataset",
       "statement": [
         "person_filter",
         {
@@ -512,7 +512,7 @@
       }
     },
     {
-      "title": "All MI Conditions for people who are Male OR had an office visit at some point in the data",
+      "title": "All MI Conditions for people who are Male OR had an office visit at some point in the dataset",
       "statement": [
         "person_filter",
         {
