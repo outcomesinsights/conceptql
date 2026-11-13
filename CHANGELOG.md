@@ -100,6 +100,16 @@ All notable changes to this project will be documented in this file.
   window options have an error, `annotate` puts the statement inside a `window` operator
   that holds the error, and it counts nothing, as for an invalid window table statement.
   `Query#sql` raises `ConceptQL::InvalidStatementError` with the same errors.
+- Window options with String keys in the `scope_opts` of `Database#query` and
+  `Database.new` (and in their `window_opts`) take effect, as Symbol keys do. A calling
+  program that builds its options from JSON has String keys. Before, ConceptQL ignored
+  them with no error, so the statement ran over all dates and persons. Both window checks
+  above also read String keys.
+- For a window inside a window, the diagram (`Query#annotate`) shows the options of the
+  inner window, which are the options that the SQL uses. Before, it showed the options of
+  both windows merged, so an option of the outer window (for example `scope_by`) appeared
+  in the diagram but did not run. The window checks read the options of the inner window,
+  so a lone date in the outer window is not an error. The SQL does not change.
 
 ## [0.8.0] - 2026-11-10
 

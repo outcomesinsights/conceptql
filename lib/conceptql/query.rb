@@ -315,18 +315,26 @@ module ConceptQL
       end
     end
 
+    # The options of the statement's window, as the scope runs them: for a
+    # window inside a window, the options of the inner window. Nil when the
+    # statement is not a window statement.
+    def statement_window_options
+      nodifier.scope.opts[:window_opts]&.except(:cdb) if @window_statement
+    end
+
     # The annotated statement inside its window operator, when the statement
     # is a window statement, the scope's window table is a statement, or the
     # window options have errors. The window operator has the options of the
-    # statement's window and an annotation hash, which holds its id and the
-    # errors of the window options. A window table statement is annotated in
-    # place, with the same opts.
+    # statement's window (statement_window_options) and an annotation hash,
+    # which holds its id and the errors of the window options. A window table
+    # statement is annotated in place, with the same opts.
     def with_window(annotated, opts)
       table = window_table
       errors = window_option_errors
-      return annotated unless @window_options || table.is_a?(Array) || errors.any?
+      window_options = statement_window_options
+      return annotated unless window_options || table.is_a?(Array) || errors.any?
 
-      options = (@window_options || {}).dup
+      options = (window_options || {}).dup
       options[:window_table] = cdb.query(table).annotate_without_ids(opts) if table.is_a?(Array)
       [ "window", annotated, options.merge(annotation: errors.empty? ? {} : { errors: errors }) ]
     end
@@ -340,9 +348,10 @@ module ConceptQL
           raise "window operator needs a ConceptQL statement followed by a hash as the last item of the array."
         end
 
+        # The options of an inner window replace those of an outer window.
         opts[:scope_opts] = (opts[:scope_opts] || {})
         opts[:scope_opts].merge!(window_opts: stmt.last.merge(cdb: cdb))
-        @window_options = (@window_options || {}).merge(stmt.last)
+        @window_statement = true
         extract_statement(stmt[1], opts)
       elsif stmt.length == 1 && stmt.first.is_a?(Array)
         extract_statement(stmt.first, opts)

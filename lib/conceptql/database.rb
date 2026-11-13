@@ -45,7 +45,7 @@ module ConceptQL
       @opts[:scope_opts] = {
         force_temp_tables: opts.fetch(:force_temp_tables, ENV["CONCEPTQL_FORCE_TEMP_TABLES"] == "true"),
         scratch_database: opts.fetch(:scratch_database, ENV["DOCKER_SCRATCH_DATABASE"])
-      }.merge(opts[:scope_opts] || {})
+      }.merge(rekey_scope_opts(opts[:scope_opts]))
       @opts[:scope_opts][:lexicon] = lexicon
 
       @shared_utilization_tables = {}
@@ -54,7 +54,7 @@ module ConceptQL
     end
 
     def query(statement, opts = {})
-      opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(opts.delete(:scope_opts) || {})
+      opts[:scope_opts] = (@opts[:scope_opts] || {}).merge(rekey_scope_opts(opts.delete(:scope_opts)))
       if @opts[:share_utilization] && opts[:scope_opts][:table_prefix].to_s.empty?
         raise ArgumentError, "share_utilization needs a table_prefix in scope_opts, to name its tables"
       end
@@ -203,6 +203,20 @@ module ConceptQL
                                         "so it cannot be the reference lexicon"
     end
     private :lexicon_url_lexicon
+
+    # The scope options of a calling program with Symbol keys, as every
+    # reader of the scope expects them. A program that builds its options
+    # from JSON has String keys, and a String key had no effect. The keys of
+    # the window_opts hash are rekeyed too. The values do not change: a
+    # window table statement is rekeyed where it is queried, as the window
+    # options of a window statement are (Utils.rekey of the statement).
+    def rekey_scope_opts(scope_opts)
+      symbolize = ->(hash) { hash.transform_keys { |key| key.respond_to?(:to_sym) ? key.to_sym : key } }
+      symbolize.call(scope_opts || {}).tap do |opts|
+        opts[:window_opts] = symbolize.call(opts[:window_opts]) if opts[:window_opts].is_a?(Hash)
+      end
+    end
+    private :rekey_scope_opts
 
     # This Database's operators for a data model, as a frozen name => class
     # Hash: a vocabulary operator for every vocabulary in config/vocabularies.csv
