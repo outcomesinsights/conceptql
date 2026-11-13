@@ -100,7 +100,7 @@ module ConceptQL
       @operator_cte_names = {}.compare_by_identity
       @opts = opts.dup
       @query_columns = DEFAULT_COLUMNS.keys
-      @query_columns << :window_id if opts.dig(:window_opts, :window_table)
+      @query_columns << :window_id if window_opts[:window_table]
 
       @i = 0
       @mutex = Mutex.new
@@ -634,7 +634,15 @@ module ConceptQL
     end
 
     def windows
-      @windows ||= Window.from(opts.merge(opts[:window_opts] || {}))
+      @windows ||= Window.from(window_opts)
+    end
+
+    # The window options that run: the scope options, merged with the options
+    # of the statement's window (window_opts), which win. A window_table at the
+    # top of the scope options is a window table, as one in window_opts is
+    # (bead conceptql-6t7q).
+    def window_opts
+      opts.merge(opts[:window_opts] || {})
     end
 
     def force_temp_tables?(options = {})

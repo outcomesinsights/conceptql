@@ -720,7 +720,7 @@ module ConceptQL
       end
 
       def matching_columns
-        if scope.opts.dig(:window_opts, :window_table)
+        if scope.window_opts[:window_table]
           %i[person_id window_id]
         else
           [ :person_id ]

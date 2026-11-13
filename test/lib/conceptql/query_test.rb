@@ -423,23 +423,17 @@ describe ConceptQL::Query do
 
     {
       "in window_opts" => { window_opts: { window_table: table } },
-      "in window_opts, with String keys" => { "window_opts" => { "window_table" => table } }
+      "in window_opts, with String keys" => { "window_opts" => { "window_table" => table } },
+      "at the top" => { window_table: table },
+      "at the top, with String keys" => { "window_table" => table }
     }.each do |name, scope_opts|
       it "runs and annotates #{name} as a window statement does" do
         query = CDB.query(statement, scope_opts: scope_opts)
         _(sql.call(query)).must_equal sql.call(window_statement)
         _(rows.call(query)).must_equal rows.call(window_statement)
         _(query.annotate(skip_counts: true)).must_equal window_statement.annotate(skip_counts: true)
+        _(query.count).wont_equal CDB.query(statement).count
       end
-    end
-
-    # A window table at the top of the scope options does not add window_id
-    # to the columns that operators match on, for a table name too, so the
-    # SQL differs. The rows are the same.
-    it "gives the rows of a window statement at the top of the scope options" do
-      query = CDB.query(statement, scope_opts: { "window_table" => table })
-      _(rows.call(query)).must_equal rows.call(window_statement)
-      _(query.count).wont_equal CDB.query(statement).count
     end
 
     it "reports the errors of the window table statement" do
@@ -454,6 +448,43 @@ describe ConceptQL::Query do
       query = CDB.query(statement, scope_opts: { window_table: table, scope_by: "bogus" })
       _(query.errors.map { |error| [ error[:operator], error[:message], *error[:details] ] })
         .must_equal [ [ "window", ConceptQL::Window::SCOPE_BY_ERROR, "bogus" ] ]
+    end
+  end
+
+  # conceptql-6t7q: only a window_table in window_opts added window_id to the
+  # columns of a statement and to the columns that operators match on. A
+  # window_table at the top of the scope options filtered the rows, but first
+  # kept one result per person, not one per window.
+  describe "a window table at the top of the scope options" do
+    statement = [ "first", [ "icd9", "412" ] ]
+    # Each 412 result is a window, so a person with 412 results on two dates
+    # has two windows.
+    table = [ "icd9", "412" ]
+    # The CTE names end in a random hex.
+    sql = ->(query) { query.sql.gsub(/_\h{32}\b/, "_HEX") }
+    rows = ->(query) { query.query.order(:person_id, :window_id, :criterion_id).all }
+    let(:window_opts_query) { CDB.query(statement, scope_opts: { window_opts: { window_table: table } }) }
+
+    it "keeps one result for each window, as a window_table in window_opts does" do
+      query = CDB.query(statement, scope_opts: { window_table: table })
+      results = rows.call(query)
+      _(results.first.keys).must_include :window_id
+      _(results.map { |row| row.values_at(:person_id, :window_id) }.uniq.length).must_equal results.length
+      # The fixture has a person with two windows, so the test can fail.
+      _(results.map { |row| row[:person_id] }.uniq.length).must_be :<, results.length
+      _(results).must_equal rows.call(window_opts_query)
+      _(sql.call(query)).must_equal sql.call(window_opts_query)
+    end
+
+    # A calling program gives a window table as a table name or a dataset,
+    # and Window::Table reads both the same way.
+    it "keeps one result for each window for a dataset" do
+      dataset = CDB.query(table).query
+      top = CDB.query(statement, scope_opts: { window_table: dataset })
+      nested = CDB.query(statement, scope_opts: { window_opts: { window_table: dataset } })
+      _(sql.call(top)).must_equal sql.call(nested)
+      _(rows.call(top)).must_equal rows.call(nested)
+      _(rows.call(top).length).must_equal rows.call(window_opts_query).length
     end
   end
 

@@ -121,10 +121,15 @@ All notable changes to this project will be documented in this file.
   in the diagram but did not run. The window checks read the options of the inner window,
   so a lone date in the outer window is not an error. The SQL does not change.
 - A `window_table` that is a ConceptQL statement works in the `scope_opts` of a calling
-  program, at the top or in `window_opts`. In `window_opts`, it gives the SQL, the rows and
+  program, at the top or in `window_opts`. In both places, it gives the SQL, the rows and
   the diagram of the same statement in a `window` statement. Before, building the SQL raised
   `NoMethodError`, because only a `window` statement gave the window table the Database
   that queries its statement. Its errors and the window checks apply, as before.
+- A `window_table` at the top of the `scope_opts` of a calling program works as one in
+  `window_opts` does: each result gets its `window_id`, and the operators that work on each
+  person, such as `first`, work on each person and window. Before, a window table there (a
+  table name or a dataset) only filtered the results. The results had no `window_id`, and
+  `first` kept one result for each person, not one for each window.
 
 ## [0.8.0] - 2026-11-10
 
