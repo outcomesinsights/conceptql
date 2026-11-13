@@ -209,7 +209,7 @@ describe "SpecBuild::Reference" do
   # bead conceptql-rx42
   describe "the table of the vocabulary operators" do
     def vocabulary(name, long_name, domains = [ "condition_occurrence" ], **overrides)
-      operator(name, "vocabulary-operator", long_name: long_name, predominant_domains: domains, **overrides)
+      operator(name, "vocabulary-operator", long_name: long_name, predominant_domains: domains, effects: [ "select" ], **overrides)
     end
 
     let(:vocabularies) do
@@ -276,6 +276,76 @@ describe "SpecBuild::Reference" do
       _(table).must_include "| `drg` (deprecated) | Diagnosis-related group (CMS) | procedure_occurrence |"
       _(table).must_include "| `read` | NHS UK Read Codes Version 2 (HSCIC) | condition_occurrence |"
       _(table).must_include "| `cpt_or_hcpcs` | CPT4, HCPCS and CPT4_HCPCS | procedure_occurrence |"
+    end
+  end
+
+  # bead conceptql-tc0q
+  describe "the class terms" do
+    let(:during) { operator("during", "during-operator", upstreams: "left_right", temporal_comparison: true, effects: [ "keep" ]) }
+    let(:sieve) { operator("sieve", "sieve-operator", upstreams: "one", temporal_comparison: false, effects: [ "keep" ]) }
+    let(:terms) { SpecBuild::Reference.new(metadata(during, sieve)) }
+
+    def terms_source(during_heading, claim = nil)
+      <<~MD.lines
+        # Spec
+
+        #{during_heading}
+
+        ### `During` Operator
+
+        <!-- conceptql-spec: operator during-operator -->
+
+        #{claim}
+
+        ```ConceptQL
+        # A comment is not a heading
+        ["during", {"left": ["icd9", "412"], "right": ["icd9", "412"]}]
+        ```
+
+        ## Inline-Filter Operators
+
+        ### `Sieve` Operator
+
+        <!-- conceptql-spec: operator sieve-operator -->
+
+        It is an [inline filter operator](#inline-filter-operators).
+
+        ## Label
+
+        <!-- conceptql-spec: label-option -->
+
+        ## Appendix E
+
+        <!-- conceptql-spec: quick-reference -->
+      MD
+    end
+
+    it "pass for operators whose facets meet the rule of their heading and of their claims" do
+      _(terms.expand(terms_source("## Temporal Comparison Operators")).map(&:text).join).must_include "Desc of during."
+    end
+
+    it "fail for a temporal comparison operator under the Selection Operators heading, naming the operator, the term and the facets" do
+      message = _ { terms.expand(terms_source("## Selection Operators")) }.must_raise(RuntimeError).message
+      _(message).must_include 'README.cql.md:7: during is under the heading "## Selection Operators", the term "selection operator", ' \
+                              'whose rule is: effects includes "select". Its facets: effects ["keep"]'
+    end
+
+    it "fail for a claim 'It is a [term]' that the facets of the operator of its section do not meet" do
+      source = terms_source("## Temporal Comparison Operators", "It is an [inline filter operator](#inline-filter-operators).")
+      message = _ { terms.expand(source) }.must_raise(RuntimeError).message
+      _(message).must_include 'README.cql.md:9: during says "It is an [inline filter operator]", the term "inline filter operator", ' \
+                              'whose rule is: upstreams is "one" and effects includes "keep". Its facets: upstreams "left_right", effects ["keep"]'
+    end
+
+    it "do not check a heading or a term without a rule" do
+      source = terms_source("## Set Operators", "It is a [set operator](#set-operators).")
+      _(terms.expand(source).map(&:text).join).must_include "Desc of during."
+    end
+
+    it "fail for a claim outside an operator section" do
+      source = terms_source("## Temporal Comparison Operators") + [ "## Notes\n", "It is a [comparison operator](#comparison-operators).\n" ]
+      message = _ { terms.expand(source) }.must_raise(RuntimeError).message
+      _(message).must_include 'says "It is a [comparison operator]" outside an operator section'
     end
   end
 

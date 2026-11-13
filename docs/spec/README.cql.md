@@ -598,12 +598,6 @@ More about the options:
 - `outpatient_maximum_gap` helps with acute diseases. For example, to confirm the flu, set a maximum gap so that the two diagnoses come from the same illness. Jigsaw fills in 365 days.
 - `outpatient_event_to_return`: use `Initial Event` in most cases, for example when the algorithm records an exposure of interest or an outcome. Use `Confirming Event` when the algorithm finds an index event. The initial event would introduce immortal time bias. Jigsaw fills in `Initial Event`, but a statement that omits the option gets `Confirming Event`. So always set this option.
 
-### `Person Filter` Operator
-
-<!-- conceptql-spec: operator person-filter-operator -->
-
-For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any record of a patient counts. The left-hand stream can also have several types, as the last example shows.
-
 ## Comparison Operators
 
 These operators compare records of incoming streams to produce a set of records.
@@ -619,6 +613,12 @@ It is an intersection of the two streams. Filter compares records, not date rang
 <!-- conceptql-spec: operator match-operator -->
 
 It is stricter than [`filter`](#filter-operator), so most users want `filter`. Systems that build statements, such as Jigsaw's export engine, use match with options that Jigsaw does not show.
+
+### `Person Filter` Operator
+
+<!-- conceptql-spec: operator person-filter-operator -->
+
+For example, to find all MIs of males, use `person_filter`. The right-hand stream need not be a person stream, because any record of a patient counts. The left-hand stream can also have several types, as the last example shows.
 
 ### `Co-Reported` Operator
 
