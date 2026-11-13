@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Each operator in `ConceptQL.metadata` has seven facets as top-level keys: `upstreams`,
+  `reads_data`, `timeless`, `takes_codes`, `uses_provenance`, `utilization` and
+  `temporal_comparison`. Their values come from the code (the upstream validations, the
+  behavior modules and the superclasses), so no operator declares them.
+  `ConceptQL::Metadatable::FACET_KEYS` lists the keys. `docs/metadata.md` says what each one
+  means. `basic_type`, `arity`, `min_upstreams` and `max_upstreams` are unchanged.
+
 ### Fixed
 
 - `Query#events_per_patient` is `:multiple` for `occurrence` with `at_least` or `within`,

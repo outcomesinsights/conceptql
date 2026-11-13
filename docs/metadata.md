@@ -82,6 +82,51 @@ The metadata for each operator should be complete enough that a UI can understan
   - The results and the diagram of an example are not in the metadata. The spec build
     generates them
 
+#### Facets
+
+The facets are seven top-level keys whose values come from the code: the operator's
+upstream validations, the behavior modules it includes and its superclasses. No operator
+declares them. `ConceptQL::Metadatable::FACET_KEYS` lists them in the order below. A reader
+that needs every facet iterates that list and does not name the keys.
+
+- upstreams
+  - One of "none", "one", "none_or_one", "left_right", "one_or_more", "two_or_more", or null
+  - Says which upstreams the operator's validations accept. The first match below wins
+  - "left_right": the operator requires the `left` and `right` options and takes no
+    positional upstream (for example before, except, filter)
+  - "two_or_more": two or more positional upstreams. One upstream gives a warning, and none
+    gives an error (union, co_reported)
+  - "one_or_more": one or more positional upstreams (sum)
+  - "none_or_one": no positional upstream, or one (person, death)
+  - "one": exactly one positional upstream (first, last, occurrence)
+  - "none": no positional upstream (the selection operators and recall)
+  - null: no validation says (invalid)
+- reads_data
+  - true when the operator includes `ConceptQL::Behaviors::Windowable`: it reads the data
+    tables, and the scope windows of the statement apply to its results
+  - false for the operators that only work on the results of their upstreams, and for recall
+- timeless
+  - true when the operator includes `ConceptQL::Behaviors::Timeless`: windows never filter
+    its results by date
+  - A date range for the whole study skips it. A window table keeps only the people who
+    have a window, whatever the dates (for example gender, race, person, date_range)
+- takes_codes
+  - true when the operator includes `ConceptQL::Behaviors::CodeLister`: its arguments are
+    codes (the vocabulary operators and cpt_or_hcpcs)
+- uses_provenance
+  - true when the operator includes `ConceptQL::Provenanceable`: its options select records
+    by their provenance (provenance, one_in_two_out)
+- utilization
+  - true when the operator includes `ConceptQL::Behaviors::Utilizable`: it selects
+    stays, which have an admission date, a discharge date and a length of stay (hospice,
+    hospitalization, snf)
+- temporal_comparison
+  - true when `ConceptQL::Operators::TemporalOperator` is among the operator's ancestors: it
+    compares the dates of its left results with the dates of its right results (for
+    example before, during, trim_date_start)
+  - except, filter, match and person_filter also take left and right, but they do not
+    compare dates, so they are false
+
 ### Option Metadata Outline
 
 - type
