@@ -40,3 +40,43 @@ describe "occurrence with blank at_least and within" do
     _(masked_sql(blank)).must_equal masked_sql(plain)
   end
 end
+
+# With at_least or within, occurrence's timed query can pass along several
+# records of one person: in test/results/gdm/occurrence, person 82 has 41
+# rows in results_4_icd9_within_60d.json. So only the plain query gives one
+# event per patient (bead conceptql-vsqm). t_shank writes this value into
+# each export. No live database: the mock never answers a query.
+describe "occurrence events_per_patient" do
+  let(:cdb) { ConceptQL::Database.new(Sequel.mock(host: :postgres), data_model: :gdm_wide) }
+
+  def events_per_patient(statement)
+    cdb.query(statement).events_per_patient
+  end
+
+  {
+    "at_least" => { at_least: "30d" },
+    "within" => { within: "60d" },
+    "at_least and within" => { at_least: "30d", within: "1y" },
+    "within and group_by_date" => { within: "60d", group_by_date: true }
+  }.each do |desc, opts|
+    it "is multiple with #{desc}" do
+      _(events_per_patient([ "occurrence", 2, %w[icd9 412], opts ])).must_equal :multiple
+    end
+  end
+
+  {
+    "no options" => {},
+    "a blank at_least and within" => { at_least: "", within: " " },
+    "group_by_date" => { group_by_date: true }
+  }.each do |desc, opts|
+    it "is single with #{desc}" do
+      _(events_per_patient([ "occurrence", 2, %w[icd9 412], opts ])).must_equal :single
+    end
+  end
+
+  %w[first last].each do |name|
+    it "is single for #{name}" do
+      _(events_per_patient([ name, %w[icd9 412] ])).must_equal :single
+    end
+  end
+end
