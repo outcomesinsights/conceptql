@@ -87,6 +87,19 @@ All notable changes to this project will be documented in this file.
   a binary operator whose `left` is missing or is not a statement. These are the values of
   an operator with no upstream. Before, both raised `NoMethodError`. The statement is still
   invalid, with the same errors.
+- A window with only one of `start_date` and `end_date` makes the statement invalid. The
+  error is on the `window` operator ("date range needs start_date and end_date"), and its
+  detail names the missing option. Before, ConceptQL ignored the lone date with no warning,
+  so the statement returned results from all dates.
+- A window with a `scope_by` other than `start_date`, `end_date` or `date_range` makes the
+  statement invalid. The error is on the `window` operator ("scope_by must be start_date,
+  end_date or date_range"), and its detail is the value. Before, building the SQL raised a
+  plain `RuntimeError`, so `Query#errors` and the diagram did not show it. A `scope_by` of
+  `nil` is the default, `start_date`. Before, it raised `NoMethodError`.
+- Both checks read the window statement and the `scope_opts` of a calling program. When the
+  window options have an error, `annotate` puts the statement inside a `window` operator
+  that holds the error, and it counts nothing, as for an invalid window table statement.
+  `Query#sql` raises `ConceptQL::InvalidStatementError` with the same errors.
 
 ## [0.8.0] - 2026-11-10
 

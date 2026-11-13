@@ -254,6 +254,91 @@ describe ConceptQL::Query do
     end
   end
 
+  # conceptql-ypog: one of start_date and end_date without the other was
+  # ignored with no warning, and an unknown scope_by raised a RuntimeError
+  # when the SQL was built. Now both are errors of the window operator, from
+  # the window statement or from the scope options of a calling program.
+  describe "a window with invalid window options" do
+    missing = ConceptQL::Window::MISSING_DATE_ERROR
+    scope_by = ConceptQL::Window::SCOPE_BY_ERROR
+    {
+      "only start_date" => [ { "start_date" => "2010-01-01" }, [ missing, "end_date" ] ],
+      "only end_date" => [ { "end_date" => "2010-12-31" }, [ missing, "start_date" ] ],
+      "an unknown scope_by" => [ { "scope_by" => "foo" }, [ scope_by, "foo" ] ]
+    }.each do |name, (window_options, (message, *details))|
+      errors = [ { operator: "window", id: "window-1", message: message, details: details } ]
+      line = "  window: #{message} (#{details.join(', ')})"
+
+      describe "with #{name} in the window statement" do
+        let(:statement) { [ "window", [ "icd9", "412" ], window_options ] }
+
+        it "reports the error on the window operator" do
+          query = CDB.query(statement)
+          _(query.errors).must_equal(errors)
+          _(query.valid?).must_equal false
+          _(query.validation_errors).must_equal(errors)
+        end
+
+        it "builds no SQL" do
+          error = _ { CDB.query(statement).sql }.must_raise(ConceptQL::InvalidStatementError)
+          _(error.errors).must_equal(errors)
+          _(error.message).must_include(line)
+          _ { CDB.query(statement).count }.must_raise(ConceptQL::InvalidStatementError)
+        end
+
+        it "annotates with counts and does not count" do
+          annotated = CDB.query(statement).annotate
+          _(annotated.first).must_equal "window"
+          _(annotated[1].last[:annotation][:counts]).must_equal({ condition_occurrence: { rows: 0, n: 0 } })
+          _(annotated.last[:annotation]).must_equal({ id: "window-1", errors: [ [ message, *details ] ] })
+        end
+      end
+
+      describe "with #{name} in the scope options" do
+        let(:query) { CDB.query([ "icd9", "412" ], scope_opts: window_options.transform_keys(&:to_sym)) }
+
+        it "reports the error on a window operator around the statement" do
+          _(query.errors).must_equal(errors)
+          _(query.annotate(skip_counts: true).first).must_equal "window"
+        end
+
+        it "builds no SQL" do
+          error = _ { query.sql }.must_raise(ConceptQL::InvalidStatementError)
+          _(error.errors).must_equal(errors)
+        end
+      end
+    end
+
+    it "reports both errors of one window" do
+      query = CDB.query([ "window", [ "icd9", "412" ], { "end_date" => "2010-12-31", "scope_by" => :bar } ])
+      _(query.errors.map { |error| [ error[:message], *error[:details] ] })
+        .must_equal [ [ missing, "start_date" ], [ scope_by, "bar" ] ]
+    end
+
+    it "keeps the raise of Window.prep_options as an assertion" do
+      error = _ { ConceptQL::Window.prep_options(scope_by: "foo") }.must_raise(RuntimeError)
+      _(error.message).must_equal "#{scope_by}: :foo"
+    end
+  end
+
+  describe "a window with valid window options" do
+    [ nil, "start_date", "end_date", "date_range", :date_range ].each do |scope_by|
+      it "builds the SQL of both dates with scope_by #{scope_by.inspect}" do
+        options = { "start_date" => "2008-01-01", "end_date" => "2010-12-31", "scope_by" => scope_by }
+        query = CDB.query([ "window", [ "icd9", "412" ], options ])
+        _(query.errors).must_be_empty
+        _(query.sql).must_match(/SELECT/i)
+        _(query.count).must_be_kind_of(Integer)
+      end
+    end
+
+    it "does not wrap a statement whose scope options are valid" do
+      query = CDB.query([ "icd9", "412" ], scope_opts: { start_date: "2008-01-01", end_date: "2010-12-31" })
+      _(query.annotate(skip_counts: true).first).must_equal "icd9"
+      _(query.valid?).must_equal true
+    end
+  end
+
   describe "#code_list" do
     it "should handle nil for a DB" do
       ClimateControl.modify(LEXICON_URL: nil) do

@@ -2484,8 +2484,8 @@ The calling program wraps the statement like this:
 These are the window options:
 
 - `window_table`: a table of windows, with the columns `person_id`, `start_date` and `end_date`. Each row is one window of one person. The value is the name of a database table or a ConceptQL statement.
-- `start_date` and `end_date`: one date range that is the window of every person. ConceptQL uses the date range only when both options are given.
-- `scope_by`: which dates of a result must be inside the window. With `start_date`, the default, the start_date of the result must be in the window. With `end_date`, the end_date of the result must be in the window. With `date_range`, both dates of the result must be in the window. Any other value is an error.
+- `start_date` and `end_date`: one date range that is the window of every person. Give both options or neither. One of them without the other makes the statement invalid, and the error names the missing option.
+- `scope_by`: which dates of a result must be inside the window. With `start_date`, the default, the start_date of the result must be in the window. With `end_date`, the end_date of the result must be in the window. With `date_range`, both dates of the result must be in the window. Any other value makes the statement invalid, and the error names the value.
 - `adjust_window_start` and `adjust_window_end`: date adjustments, as [`time_window`](#time-window-operator) takes them. They move the start and the end of each window of the window table. They do not change a date range.
 - `precalculated_window_id`: the window table has its own `window_id` column, and ConceptQL uses it. Without this option, ConceptQL numbers the windows itself.
 - `person_ids`: a list of person IDs. ConceptQL keeps only the results of these persons.
@@ -2499,6 +2499,7 @@ The windows change a statement in these ways:
 - With a window table, each result gets the column `window_id`, which identifies its window. A result that is in two windows of its person comes out once for each window. Without `precalculated_window_id`, two rows of the window table with the same person and the same dates are one window. A date range adds no `window_id`.
 - With a window table, operators that work on each person, such as `first`, `episode` and the temporal operators, work on each person and window. For example, `first` keeps the first result of each window.
 - If the window table is a ConceptQL statement with errors, the statement that it wraps is invalid. A diagram reports the errors under `window_table`, and counts nothing.
+- If the window options have an error, such as a lone `start_date` or an unknown `scope_by`, the statement is invalid. A diagram reports the error on the `window` operator, and counts nothing. This is also true when the calling program gives the window options outside the statement.
 
 ## Appendix A - Experimental Operators
 

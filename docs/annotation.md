@@ -28,7 +28,7 @@ The helpers walk an operator's positional upstreams and its `left`, `right` and 
 
 ## Window statements
 
-`annotate` of a window statement keeps the `window` operator at the top. Its options are the window's options, and its annotation hash holds only its id (`window-1`). A window table that is a ConceptQL statement is annotated in place, in the `window_table` option, so each of its errors stays on the operator that has it:
+`annotate` of a window statement keeps the `window` operator at the top. Its options are the window's options, and its annotation hash holds its id (`window-1`) and the errors of the window options, if it has any. A window table that is a ConceptQL statement is annotated in place, in the `window_table` option, so each of its errors stays on the operator that has it:
 
 ```ruby
 query = cdb.query(["window", ["icd9", "412"],
@@ -41,6 +41,16 @@ query.errors
 ```
 
 When the window table has errors, the statement around it is not counted, because every count joins the window table. `query.sql` raises `ConceptQL::InvalidStatementError` with the same errors.
+
+The errors of the window options are in the annotation hash of the `window` operator: one of `start_date` and `end_date` without the other, and an unknown `scope_by` (`ConceptQL::Window.option_errors`). Then the statement is not counted either. When the window options come from the `scope_opts` of the calling program, and not from a window statement, `annotate` puts the statement inside a `window` operator that holds the errors:
+
+```ruby
+query = cdb.query(["window", ["icd9", "412"], { "start_date" => "2010-01-01" }])
+
+query.errors
+# => [{ operator: "window", id: "window-1",
+#       message: "date range needs start_date and end_date", details: ["end_date"] }]
+```
 
 ## Example
 
