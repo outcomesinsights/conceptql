@@ -11,7 +11,7 @@ module ConceptQL
       included do
         domains :condition_occurrence
         category "Select by Property"
-        basic_type :selection
+        diagram_base :selection
         validate_no_upstreams
         validate_no_arguments
 

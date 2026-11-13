@@ -96,7 +96,7 @@ describe "the ms_drg and cms_drg operators" do
     it "lists ms_drg and cms_drg in the category of drg" do
       %w[ms_drg cms_drg].each do |name|
         _(operators.fetch(name)[:categories]).must_equal operators.fetch("drg")[:categories]
-        _(operators.fetch(name)[:basic_type]).must_equal :selection
+        _(operators.fetch(name)[:diagram_base]).must_equal :selection
         _(operators.fetch(name)[:predominant_domains]).must_equal operators.fetch("drg")[:predominant_domains]
         _(operators.fetch(name)[:deprecated]).must_be_nil
       end

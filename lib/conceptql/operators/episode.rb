@@ -26,7 +26,7 @@ module ConceptQL
                                "new episode. A record without an end_date counts as ending on its start_date. " \
                                "The default is 0."
       category "Modify Data"
-      basic_type :temporal
+      diagram_base :temporal
 
       def table
         nil

@@ -11,7 +11,7 @@ module ConceptQL
       # Reads a raw table. It is not a public operator.
       hidden
       category "Select by Property"
-      basic_type :selection
+      diagram_base :selection
       no_desc
       option :domains, type: Array
       option :query_cols, type: Array

@@ -14,7 +14,7 @@ module ConceptQL
       desc "Selects the patients with the given ethnicities."
       domains :person
       category "Select by Property"
-      basic_type :selection
+      diagram_base :selection
       argument :ethnicity, type: :string, options: [ "Hispanic or Latino", "Not Hispanic or Latino" ],
                            meaning: "One or more ethnicities. A value that starts with Hispanic selects the " \
                                     "Hispanic or Latino patients, and a value that starts with Not Hispanic selects " \

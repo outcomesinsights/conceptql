@@ -23,13 +23,14 @@ module SpecBuild
     KINDS = %w[operator label-option quick-reference vocabulary-operators].freeze
     SINGLE_KINDS = KINDS - %w[operator]
 
-    # min_upstreams and max_upstreams (99 means no limit) as text
+    # The upstreams facet as text. A "left_right" operator takes its operands
+    # as options, so its section has no upstream line.
     UPSTREAMS = {
-      [ 0, 0 ] => "none",
-      [ 0, 1 ] => "none, or one operator",
-      [ 1, 1 ] => "one operator",
-      [ 0, 99 ] => "none, or any number of operators",
-      [ 1, 99 ] => "one or more operators"
+      "none" => "none",
+      "none_or_one" => "none, or one operator",
+      "one" => "one operator",
+      "one_or_more" => "one or more operators",
+      "two_or_more" => "two or more operators"
     }.freeze
 
     # The options that hold the left-hand and the right-hand stream. The
@@ -81,7 +82,7 @@ module SpecBuild
       operator = @sections.fetch(spec_id).first
       operands, options = operator[:options].except(:label).partition { |name, _| OPERANDS.include?(name) }
       items = []
-      items << upstream(operator) unless operands.any? && operator[:max_upstreams].zero?
+      items << upstream(operator) unless operator[:upstreams] == "left_right"
       items << list("Operands", operands) if operands.any?
       items << list("Arguments", operator[:arguments]) if operator[:arguments].any?
       items << list("Options", options) if options.any?
@@ -194,7 +195,7 @@ module SpecBuild
     end
 
     def upstream(operator)
-      "- **Upstream:** #{UPSTREAMS.fetch([ operator[:min_upstreams], operator[:max_upstreams] ])}."
+      "- **Upstream:** #{UPSTREAMS.fetch(operator[:upstreams])}."
     end
 
     def list(heading, params)

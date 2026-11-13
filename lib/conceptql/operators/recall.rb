@@ -51,7 +51,7 @@ module ConceptQL
                                "including case. The labeled operator can come before or after the recall in the " \
                                "statement, but labeled streams that recall each other in a loop are invalid."
       category "Get Related Data"
-      basic_type :selection
+      diagram_base :selection
       validate_no_upstreams
       validate_one_argument
       default_query_columns

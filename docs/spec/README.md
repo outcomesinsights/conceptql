@@ -847,7 +847,7 @@ Streams are sets of records, so ConceptQL has operators that work on sets.
 
 Combines the records of all its upstream operators into one stream. Each record keeps its own type, so one stream can hold several types.
 
-- **Upstream:** one or more operators.
+- **Upstream:** two or more operators.
 - **Returns:** Each record of each upstream. A record that comes from more than one upstream comes out once. Two records are the same only when every column is equal, including label.
 
 ______________________________________________________________________
@@ -2269,7 +2269,7 @@ It is stricter than [`filter`](#filter-operator), so most users want `filter`. S
 
 Passes along the records of its upstreams that were reported in the same context as a record of every other upstream. In the GDM, a context is the claim or other source record that reported the record.
 
-- **Upstream:** one or more operators.
+- **Upstream:** two or more operators.
 - **Returns:** The records of each upstream whose context also has a record of every other upstream. The operator does not compare dates. If one upstream has no record in a context, the records of all upstreams in that context are not passed along. Person and death records have no context, so they never pass.
 
 ______________________________________________________________________

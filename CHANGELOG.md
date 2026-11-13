@@ -19,9 +19,23 @@ All notable changes to this project will be documented in this file.
   subclass inherits them, so every vocabulary operator is `select`. An unknown value raises
   `ConceptQL::Metadatable::UnknownEffectError` when the class loads. `effects` is the last
   key of `ConceptQL::Metadatable::FACET_KEYS`.
+- Each operator in `ConceptQL.metadata` has the key `diagram_base`: the symbol that a diagram
+  draws for it (`:selection`, `:filter`, `:set`, `:temporal` or `:cast`). It is not a facet.
+
+### Changed
+
+- **Breaking:** an operator class declares its diagram symbol with `diagram_base :set`. The
+  class method `basic_type` is gone. The metadata keys `basic_type`, `arity`,
+  `min_upstreams` and `max_upstreams` still have the same values, and a later release
+  removes them.
+- `ConceptQL::Diagram` (the render tree and the Jigsaw JSON), `Query#extract_metadata` and
+  the spec build read `diagram_base` and the `upstreams` facet, not the old keys. Every
+  diagram and every value of `codeset_only` is the same as before.
 
 ### Fixed
 
+- The reference sections of `union` and `co_reported` in `docs/spec/README.md` say that
+  they take two or more upstream operators. Before, they said one or more.
 - `Query#events_per_patient` is `:multiple` for `occurrence` with `at_least` or `within`,
   because the operator can then pass along several records of one person. Before, it was
   always `:single`, so a Jigsaw export of such an algorithm said that each patient had at

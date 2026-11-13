@@ -48,7 +48,7 @@ module ConceptQL
                                      "A negative number counts from the most recent record, so -1 is the last record and -3 is the third from the last. " \
                                      "0 selects nothing."
       category "Filter Single Stream"
-      basic_type :temporal
+      diagram_base :temporal
       validate_one_upstream
 
       option :at_least, type: :string,

@@ -58,7 +58,7 @@ module ConceptQL
       validate_no_arguments
       validate_option DateAdjuster::VALID_INPUT, :start, :end
       category "Modify Data"
-      basic_type :temporal
+      diagram_base :temporal
 
       def query(db)
         dm.selectify(db.from(stream.evaluate(db)).from_self,

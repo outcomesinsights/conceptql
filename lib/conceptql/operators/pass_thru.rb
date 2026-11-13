@@ -9,7 +9,7 @@ module ConceptQL
     # co_reported). It has no query method, so it does not register: pass_thru
     # is not an operator name.
     class PassThru < Operator
-      basic_type :set
+      diagram_base :set
       no_desc
 
       def domains(db)

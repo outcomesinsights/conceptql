@@ -30,7 +30,7 @@ module ConceptQL
               [ "provider_filter", [ "icd9", "250.00" ], { "specialties" => "38003868", "roles" => "100000067" } ]
 
       category "Filter Single Stream"
-      basic_type :temporal
+      diagram_base :temporal
       allows_one_upstream
       validate_one_upstream
       validate_required_options :specialties, :roles

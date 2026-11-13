@@ -82,7 +82,7 @@ module ConceptQL
         children = upstreams + opts.values_at(:left, :right).compact
         node = {
           name: name.to_s,
-          base: metadata_for(name)[:basic_type]&.to_s,
+          base: metadata_for(name)[:diagram_base]&.to_s,
           humanName: opts[:name] || metadata_for(name)[:preferred_name] || name.to_s
         }
         node[:vocabularyId] = metadata_for(name)[:preferred_name] if vocabulary?(name)
@@ -211,7 +211,7 @@ module ConceptQL
       attr_reader :statements, :cdb
 
       def binary
-        @binary ||= ConceptQL.metadata(cdb)[:operators].select { |_k, v| v[:basic_type] == :filter }.keys
+        @binary ||= ConceptQL.metadata(cdb)[:operators].select { |_k, v| v[:upstreams] == "left_right" }.keys
       end
 
       def build_node(operator)

@@ -168,10 +168,14 @@ module ConceptQL
       @effects = values
     end
 
-    def basic_type(value = nil)
-      return @basic_type unless value
+    # Declares the symbol that a diagram draws for the operator: :selection,
+    # :filter, :set, :temporal or :cast. Only the drawing reads it, because
+    # the facets cannot give it: count draws :set and episode draws
+    # :temporal, and both take one upstream. A subclass inherits it.
+    def diagram_base(value = nil)
+      return @diagram_base unless value
 
-      @basic_type = value
+      @diagram_base = value
     end
 
     # min_upstreams and max_upstreams say how many positional upstreams pass
@@ -214,7 +218,7 @@ module ConceptQL
         upstream.category cat
       end
 
-      upstream.basic_type @basic_type
+      upstream.diagram_base @diagram_base
       upstream.effects(*@effects) if @effects
 
       case @max_upstreams
@@ -250,7 +254,8 @@ module ConceptQL
         predominant_domains: (@domains || @predominant_domains || []).map(&:to_s),
         desc: get_desc,
         categories: @categories || [],
-        basic_type: @basic_type,
+        basic_type: @diagram_base, # the old name of diagram_base
+        diagram_base: @diagram_base,
         deprecated: (true if deprecated), # nil for an operator that is not deprecated
         arity: arity,
         aliases: @aliases,
@@ -306,7 +311,7 @@ module ConceptQL
     end
 
     def arity
-      case basic_type
+      case diagram_base
       when :set
         -1
       when :temporal, :cast
@@ -316,7 +321,7 @@ module ConceptQL
       when :filter
         2
       else
-        raise "#{name} has unknown basic_type: #{basic_type.pretty_inspect}"
+        raise "#{name} has unknown diagram_base: #{diagram_base.pretty_inspect}"
       end
     end
 
@@ -339,7 +344,7 @@ module ConceptQL
       missing = []
       missing << :categories if (@categories || []).empty?
       missing << :desc if get_desc.empty?
-      missing << :basic_type unless @basic_type
+      missing << :diagram_base unless @diagram_base
       puts "#{just_class_name} is missing #{missing.join(', ')}" unless missing.empty?
     end
 
